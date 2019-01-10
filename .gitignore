@@ -1,0 +1,7 @@
+*.x
+*.o
+*.dSYM
+.DS_Store
+*.d
+*.so
+*.root
