@@ -16,7 +16,7 @@ OUT = pwd
 LIST = "default.list"
 QUEUE = ""
 TREE = "stopTreeMaker/AUX"
-MAXN = 10
+MAXN = 500
 
 def new_listfile(rootlist, listfile):
     mylist = open(listfile,'w')
@@ -85,6 +85,8 @@ if __name__ == "__main__":
         p = sys.argv.index('-maxN')
         MAXN = sys.argv[p+1]
         argv_pos += 2
+
+    print "maxN is %d" % MAXN
 
     # input sample list
     listfile = LIST
