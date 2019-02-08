@@ -163,6 +163,7 @@ if __name__ == "__main__":
             tagtuple = [item for item in taglist if item[0] == filetag]
             if len(tagtuple) == 0:
                 taglist.append((filetag,rootlist))
+                os.system("mkdir -p "+ROOT+filetag+"/")
                 continue
 
             p = taglist.index(tagtuple[0])
