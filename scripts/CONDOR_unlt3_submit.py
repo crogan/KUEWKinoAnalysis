@@ -177,12 +177,6 @@ if __name__ == "__main__":
             filename = filename[-1]
             name = filename.replace(".list",'')
             write_sh(srcdir+name+".sh",f,ROOT+filetag+"/"+name+".root",logdir+name+".log",filetag)
+            os.system('condor_submit '+srcdir+name+".sh")
             
-            #line = line.split()
-            #line = line[0]
-            #filename = line.split("/")
-            #filename = filename[-1]
-            #name = filename.strip(".root");
-            #write_sh(srcdir+name+".sh",line,ROOT+filename,logdir+name+".log")
-            #os.system('condor_submit '+srcdir+name+".sh")
     
