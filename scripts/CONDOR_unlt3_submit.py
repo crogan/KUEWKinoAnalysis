@@ -142,7 +142,7 @@ if __name__ == "__main__":
                     print filetag
                     found = 1
                     break
-
+            print fold
             if found == 0:
                 continue
 
