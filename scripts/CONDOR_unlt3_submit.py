@@ -149,6 +149,8 @@ if __name__ == "__main__":
             if len(rootlist) < 1:
                 continue
 
+            print "first HERE!!!!"
+            
             if len(taglist) == 0:
                 taglist.append((filetag,rootlist))
                 continue
