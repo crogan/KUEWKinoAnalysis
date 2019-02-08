@@ -132,6 +132,7 @@ if __name__ == "__main__":
 
         # get dataset name (filetag) for bookkeeping
         for fold in inputlist:
+            print fold
             filetag = fold.split("/")
             found = 0
             for hint in hints:
