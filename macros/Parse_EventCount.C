@@ -23,7 +23,6 @@ void Parse_EventCount(string filename){
    TBranch        *b_Nabsweight;   //!
    TBranch        *b_dataset;   //!
 
-   cout << "HERE" << endl;
    tree->SetMakeClass(1);
    tree->SetBranchAddress("Nevent", &Nevent, &b_Nevent);
    tree->SetBranchAddress("Nweight", &Nweight, &b_Nweight);
