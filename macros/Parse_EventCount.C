@@ -1,4 +1,5 @@
 #include <iostream>
+#include <map>
 #include <string>
 #include "TFile.h"
 #include "TTree.h"
@@ -29,9 +30,22 @@ void Parse_EventCount(string filename){
    tree->SetBranchAddress("Nabsweight", &Nabsweight, &b_Nabsweight);
    tree->SetBranchAddress("dataset", &dataset, &b_dataset);
 
-   cout << Nevent << endl;
-   tree->GetEntry(0);
-   cout << Nevent << endl;
-   cout << *dataset << endl;
+   vector<string> datasets;
+   map<string,double> mapNevent;
+
+   for(int i = 0; i < N; i++){
+     tree->GetEntry(i);
+     if(mapNevent.count(*dataset) == 0){
+       mapNevent[*dataset] = Nevent;
+       datasets.push_back(*dataset);
+     } else {
+       mapNevent[*dataset] += Nevent;
+     }
+   }
+   
+   N = datasets.size();
+   for(int i = 0; i < N; i++){
+     cout << datasets[i] << " " << mapNevent[datasets[i]] << endl;
+   }
 
 }
