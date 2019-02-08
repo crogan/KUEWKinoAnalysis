@@ -132,7 +132,7 @@ if __name__ == "__main__":
 
         # get dataset name (filetag) for bookkeeping
         for fold in inputlist:
-            fold.replace("\n",'')
+            fold.replace('\n','')
             print fold
             filetag = fold.split("/")
             found = 0
