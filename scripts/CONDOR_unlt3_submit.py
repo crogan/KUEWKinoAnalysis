@@ -157,6 +157,7 @@ if __name__ == "__main__":
             
             if len(taglist) == 0:
                 taglist.append((filetag,rootlist))
+                os.system("mkdir -p "+ROOT+filetag+"/")
                 continue
             
             tagtuple = [item for item in taglist if item[0] == filetag]
@@ -174,7 +175,7 @@ if __name__ == "__main__":
             filename = f.split("/")
             filename = filename[-1]
             name = filename.replace(".list",'')
-            write_sh(srcdir+name+".sh",f,ROOT+name+".root",logdir+name+".log",filetag)
+            write_sh(srcdir+name+".sh",f,ROOT+filetag+"/"+name+".root",logdir+name+".log",filetag)
             
             #line = line.split()
             #line = line[0]
