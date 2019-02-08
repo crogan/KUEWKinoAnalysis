@@ -139,7 +139,6 @@ if __name__ == "__main__":
                 index = 0
                 for sub in filetag:
                     if hint in sub:
-                        p = filetag.index(hint)
                         filetag = filetag[index-3]
                         print filetag
                         print "found"
