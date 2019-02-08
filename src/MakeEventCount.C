@@ -13,6 +13,7 @@
 #include <TTree.h>
 #include <TChain.h>
 #include <TList.h>
+#include <TLeafElement.h>
 
 using namespace std;
 
@@ -148,12 +149,14 @@ int main(int argc, char* argv[]) {
   tout->Branch("Nabsweight", &Nabsweight);
   tout->Branch("dataset", &dataset);
 
+  bool is_float = string(chain->GetBranch("evtWeight")->GetLeaf("evtWeight")->GetTypeName()) == "Float_t";
+  
   for(int e = 0; e < NEVENT; e++){
     if(e%(std::max(1,NEVENT/100)) == 0)
       std::cout << "Processing event " << e << " | " << NEVENT << endl;
     chain->GetEntry(e);
     Nevent += 1.;
-    if(fabs(log(fabs(evtWeight_f))) < fabs(log(fabs(evtWeight_d)))){
+    if(is_float){
       Nweight += evtWeight_f;
       Nabsweight += fabs(evtWeight_f);
     } else {
