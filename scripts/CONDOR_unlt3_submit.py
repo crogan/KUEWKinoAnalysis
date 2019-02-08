@@ -152,6 +152,8 @@ if __name__ == "__main__":
             if len(taglist) == 0:
                 taglist.append((filetag,rootlist))
                 continue
+
+            print "HERE!!!!"
             
             tagtuple = [item for item in taglist if item[0] == filetag]
             if len(tagtuple) == 0:
