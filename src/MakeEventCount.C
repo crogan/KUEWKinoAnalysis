@@ -153,7 +153,7 @@ int main(int argc, char* argv[]) {
       std::cout << "Processing event " << e << " | " << NEVENT << endl;
     chain->GetEntry(e);
     Nevent += 1.;
-    if(fabs(log(evtWeight_f)) < fabs(log(evtWeight_d))){
+    if(fabs(log(fabs(evtWeight_f))) < fabs(log(fabs(evtWeight_d)))){
       Nweight += evtWeight_f;
       Nabsweight += fabs(evtWeight_f);
     } else {
