@@ -140,6 +140,7 @@ if __name__ == "__main__":
                     p = filetag.index(hint)
                     filetag = filetag[p-3]
                     print filetag
+                    print "found"
                     found = 1
                     break
             print fold
