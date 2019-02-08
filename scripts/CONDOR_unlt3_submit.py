@@ -136,13 +136,17 @@ if __name__ == "__main__":
             filetag = fold.split("/")
             found = 0
             for hint in hints:
-                print filetag[-1]
-                if hint in filetag:
-                    p = filetag.index(hint)
-                    filetag = filetag[p-3]
-                    print filetag
-                    print "found"
-                    found = 1
+                index = 0
+                for sub in filetag:
+                    if hint in sub:
+                        p = filetag.index(hint)
+                        filetag = filetag[index-3]
+                        print filetag
+                        print "found"
+                        found = 1
+                        break
+                    index += 1
+                if found == 1:
                     break
             print fold
             if found == 0:
