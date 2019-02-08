@@ -128,10 +128,14 @@ int main(int argc, char* argv[]) {
   TBranch        *b_stored_weight_d;   //!
   TBranch        *b_evtWeight_d;   //!
   chain->SetMakeClass(1);
-  chain->SetBranchAddress("stored_weight", &stored_weight_f, &b_stored_weight_f);
-  chain->SetBranchAddress("evtWeight", &evtWeight_f, &b_evtWeight_f);
-  chain->SetBranchAddress("stored_weight", &stored_weight_d, &b_stored_weight_d);
-  chain->SetBranchAddress("evtWeight", &evtWeight_d, &b_evtWeight_d);
+  bool is_float = string(chain->GetBranch("evtWeight")->GetLeaf("evtWeight")->GetTypeName()) == "Float_t";
+  if(is_float){
+    chain->SetBranchAddress("stored_weight", &stored_weight_f, &b_stored_weight_f);
+    chain->SetBranchAddress("evtWeight", &evtWeight_f, &b_evtWeight_f);
+  } else {
+    chain->SetBranchAddress("stored_weight", &stored_weight_d, &b_stored_weight_d);
+    chain->SetBranchAddress("evtWeight", &evtWeight_d, &b_evtWeight_d);
+  }
   chain->SetBranchStatus("*",0);
   chain->SetBranchStatus("stored_weight",1);
   chain->SetBranchStatus("evtWeight",1);
@@ -148,8 +152,6 @@ int main(int argc, char* argv[]) {
   tout->Branch("Nweight", &Nweight);
   tout->Branch("Nabsweight", &Nabsweight);
   tout->Branch("dataset", &dataset);
-
-  bool is_float = string(chain->GetBranch("evtWeight")->GetLeaf("evtWeight")->GetTypeName()) == "Float_t";
   
   for(int e = 0; e < NEVENT; e++){
     if(e%(std::max(1,NEVENT/100)) == 0)
