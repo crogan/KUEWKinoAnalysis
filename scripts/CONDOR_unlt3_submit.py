@@ -83,7 +83,7 @@ if __name__ == "__main__":
         argv_pos += 2
     if '-maxN' in sys.argv:
         p = sys.argv.index('-maxN')
-        MAXN = sys.argv[p+1]
+        MAXN = int(sys.argv[p+1])
         argv_pos += 2
 
     print "maxN is %d" % MAXN
