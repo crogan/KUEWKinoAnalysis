@@ -133,7 +133,7 @@ if __name__ == "__main__":
         # get dataset name (filetag) for bookkeeping
         for fold in inputlist:
             fold = fold.strip('\n\r')
-            print fold
+            print "Processing folder %s" % fold
             filetag = fold.split("/")
             found = 0
             for hint in hints:
@@ -141,28 +141,21 @@ if __name__ == "__main__":
                 for sub in filetag:
                     if hint in sub:
                         filetag = filetag[index-3]
-                        print filetag
-                        print "found"
                         found = 1
                         break
                     index += 1
                 if found == 1:
                     break
-            print fold
             if found == 0:
                 continue
 
             rootlist = [os.path.join(fold,f) for f in os.listdir(fold) if (os.path.isfile(os.path.join(fold, f)) and (".root" in f))]
             if len(rootlist) < 1:
                 continue
-
-            print "first HERE!!!!"
             
             if len(taglist) == 0:
                 taglist.append((filetag,rootlist))
                 continue
-
-            print "HERE!!!!"
             
             tagtuple = [item for item in taglist if item[0] == filetag]
             if len(tagtuple) == 0:
