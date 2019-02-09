@@ -49,8 +49,14 @@ private:
   map<string,double> m_IDtoNEVT;
   map<string,double> m_IDtoXSEC;
 
+  map<string,double> m_Label2Nevent;
+  map<string,double> m_Label2Nweight;
+  map<string,double> m_Label2Nabsweight;
+  map<string,double> m_Label2Xsec;
+
   void NewFile();
   void InitXSECmap();
+  void InitMaps();
 };
 
 #endif

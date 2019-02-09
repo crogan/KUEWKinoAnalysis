@@ -6,6 +6,7 @@
 #include <istream>
 #include <stdio.h>
 #include <dirent.h>
+#include <vector>
 
 // ROOT includes
 #include <TROOT.h>
@@ -14,8 +15,10 @@
 #include <TChain.h>
 #include <TList.h>
 #include <TLeafElement.h>
+#include <TLorentzVector.h>
 
 using namespace std;
+using std::vector;
 
 /// Main function that runs the analysis algorithm on the
 /// specified input files
@@ -121,24 +124,38 @@ int main(int argc, char* argv[]) {
   int NEVENT = chain->GetEntries();
   float        stored_weight_f;
   float        evtWeight_f;
-  TBranch        *b_stored_weight_f;   //!
-  TBranch        *b_evtWeight_f;   //!
   double        stored_weight_d;
   double        evtWeight_d;
-  TBranch        *b_stored_weight_d;   //!
-  TBranch        *b_evtWeight_d;   //!
+  TBranch        *b_stored_weight;   //!
+  TBranch        *b_evtWeight;   //!
+
+  vector<int>     *genDecayPdgIdVec;
+  TBranch        *b_genDecayPdgIdVec;   //!
+  vector<TLorentzVector> *genDecayLVec;
+  TBranch        *b_genDecayLVec;   //!
+
+  genDecayPdgIdVec = 0;
+  genDecayLVec = 0;
+  
   chain->SetMakeClass(1);
   bool is_float = string(chain->GetBranch("evtWeight")->GetLeaf("evtWeight")->GetTypeName()) == "Float_t";
   if(is_float){
-    chain->SetBranchAddress("stored_weight", &stored_weight_f, &b_stored_weight_f);
-    chain->SetBranchAddress("evtWeight", &evtWeight_f, &b_evtWeight_f);
+    chain->SetBranchAddress("stored_weight", &stored_weight_f, &b_stored_weight);
+    chain->SetBranchAddress("evtWeight", &evtWeight_f, &b_evtWeight);
   } else {
-    chain->SetBranchAddress("stored_weight", &stored_weight_d, &b_stored_weight_d);
-    chain->SetBranchAddress("evtWeight", &evtWeight_d, &b_evtWeight_d);
+    chain->SetBranchAddress("stored_weight", &stored_weight_d, &b_stored_weight);
+    chain->SetBranchAddress("evtWeight", &evtWeight_d, &b_evtWeight);
   }
+  
+  chain->SetBranchAddress("genDecayPdgIdVec", &genDecayPdgIdVec, &b_genDecayPdgIdVec);
+  chain->SetBranchAddress("genDecayLVec", &genDecayLVec, &b_genDecayLVec);
+
   chain->SetBranchStatus("*",0);
   chain->SetBranchStatus("stored_weight",1);
   chain->SetBranchStatus("evtWeight",1);
+  chain->SetBranchStatus("genDecayPdgIdVec",1);
+  chain->SetBranchStatus("genDecayLVec",1);
+  
   
   TFile* fout = new TFile(string(outputFileName).c_str(),"RECREATE");
   TTree* tout = (TTree*) new TTree("EventCount", "EventCount");
@@ -165,6 +182,15 @@ int main(int argc, char* argv[]) {
       Nweight += evtWeight_d;
       Nabsweight += fabs(evtWeight_d);
     }
+
+    int Ngen = genDecayPdgIdVec->size();
+    for(int i = 0; i < Ngen; i++){
+      if(fabs(genDecayPdgIdVec->at(i)) > 1000000 && fabs(genDecayPdgIdVec->at(i)) < 3000000){
+	cout << genDecayPdgIdVec->at(i) << " " << genDecayLVec->at(i).M() << endl;
+      }
+    }
+    
+    
   }
 
   tout->Fill();
