@@ -9,6 +9,9 @@
 #include <TH1D.h>
 #include <string>
 
+#include "NeventTool.hh"
+#include "XsecTool.hh"
+
 using namespace std;
 
 template <class Base>
@@ -18,11 +21,12 @@ public:
   AnalysisBase(TTree* tree = 0);
   virtual ~AnalysisBase();
 
-  void AddLabel(string& label);
-  void AddNevent(double nevt);
+  void AddLabel(const string& label);
+  void DoSMS(){ m_DoSMS = true; }
 
-  virtual Int_t GetEntry(Long64_t entry);
+  string GetEntry(int entry);
 
+  // analysis functions
   virtual TVector3 GetMET();
   virtual int GetJets(vector<TLorentzVector>& JETs, double pt_cut = -1, double eta_cut = -1);
   virtual int GetJetsBtag(vector<pair<TLorentzVector,bool> >& JETs, double pt_cut = -1, double eta_cut = -1){ return 0; }
@@ -36,27 +40,27 @@ public:
   void MomTensorCalc(vector<TLorentzVector>& input, vector<double>& eigenvalues, double pow = 1., bool threeD = true); 
 
 protected:
+  bool m_DoSMS;
+  
   virtual double GetEventWeight();
-  double GetXSEC(){ return m_XSEC; }
+  virtual double GetXsec();
 
 
 private:
-  int m_CurrentFile;
-  int m_DSID;
   string m_Label;
-  double m_Nevent;
-  double m_XSEC;
-  map<string,double> m_IDtoNEVT;
-  map<string,double> m_IDtoXSEC;
 
-  map<string,double> m_Label2Nevent;
-  map<string,double> m_Label2Nweight;
-  map<string,double> m_Label2Nabsweight;
-  map<string,double> m_Label2Xsec;
+  NeventTool m_NeventTool;
+  XsecTool   m_XsecTool;
 
-  void NewFile();
-  void InitXSECmap();
-  void InitMaps();
+  int m_SampleIndex;
+  virtual int GetSampleIndex();
+  int m_Nsample;
+  std::map<int,int>         m_HashToIndex;
+  std::map<int,std::string> m_IndexToSample;
+  std::map<int,double>      m_IndexToXsec;
+  std::map<int,double>      m_IndexToNevent;
+  std::map<int,double>      m_IndexToNweight;
+  
 };
 
 #endif

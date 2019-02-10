@@ -260,85 +260,83 @@ ReducedNtuple::~ReducedNtuple() {
   
 }
 
-void ReducedNtuple::InitOutputTree(){
-  if(m_Tree)
-    delete m_Tree;
+TTree* ReducedNtuple::InitOutputTree(const string& sample){
 
-  string name = string(fChain->GetName());
+  TTree* tree = (TTree*) new TTree(sample.c_str(), sample.c_str());
 
-  m_Tree = (TTree*) new TTree("KUAnalysis", "KUAnalysis");
-
-  m_Tree->Branch("weight", &m_weight);
+  tree->Branch("weight", &m_weight);
   
-  m_Tree->Branch("MET", &m_MET);
-  m_Tree->Branch("MET_phi", &m_MET_phi);
-  m_Tree->Branch("HT", &m_HT);
+  tree->Branch("MET", &m_MET);
+  tree->Branch("MET_phi", &m_MET_phi);
+  tree->Branch("HT", &m_HT);
 
   // SF?
-  m_Tree->Branch("Is_SF", &m_Is_SF);
+  tree->Branch("Is_SF", &m_Is_SF);
 
   // pre-computed lepton variables
-  m_Tree->Branch("nEl", &m_nEl);
-  m_Tree->Branch("nMu", &m_nMu);
-  m_Tree->Branch("nBjet", &m_nBjet);
+  tree->Branch("nEl", &m_nEl);
+  tree->Branch("nMu", &m_nMu);
+  tree->Branch("nBjet", &m_nBjet);
  
-  m_Tree->Branch("pT_1lep", &m_pT_1lep);
-  m_Tree->Branch("id_1lep", &m_id_1lep);
-  m_Tree->Branch("pT_2lep", &m_pT_2lep);
-  m_Tree->Branch("id_2lep", &m_id_2lep);
-  m_Tree->Branch("pT_3lep", &m_pT_3lep);
-  m_Tree->Branch("id_3lep", &m_id_3lep);
+  tree->Branch("pT_1lep", &m_pT_1lep);
+  tree->Branch("id_1lep", &m_id_1lep);
+  tree->Branch("pT_2lep", &m_pT_2lep);
+  tree->Branch("id_2lep", &m_id_2lep);
+  tree->Branch("pT_3lep", &m_pT_3lep);
+  tree->Branch("id_3lep", &m_id_3lep);
 
-  m_Tree->Branch("Nj", &m_Nj);
-  m_Tree->Branch("NjS", &m_NjS);
-  m_Tree->Branch("NjISR", &m_NjISR);
+  tree->Branch("Nj", &m_Nj);
+  tree->Branch("NjS", &m_NjS);
+  tree->Branch("NjISR", &m_NjISR);
 
-  m_Tree->Branch("PTCM_comb", &m_PTCM_comb);
-  m_Tree->Branch("PTISR_comb", &m_PTISR_comb);
-  m_Tree->Branch("RISR_comb", &m_RISR_comb);
-  m_Tree->Branch("cosCM_comb", &m_cosCM_comb);
-  m_Tree->Branch("cosS_comb", &m_cosS_comb);
-  m_Tree->Branch("MISR_comb", &m_MISR_comb);
-  m_Tree->Branch("MS_comb", &m_MS_comb);
-  m_Tree->Branch("dphiCMI_comb", &m_dphiCMI_comb);
-  m_Tree->Branch("dphiSI_comb", &m_dphiSI_comb);
-  m_Tree->Branch("dphiISRI_comb", &m_dphiISRI_comb);
+  tree->Branch("PTCM_comb", &m_PTCM_comb);
+  tree->Branch("PTISR_comb", &m_PTISR_comb);
+  tree->Branch("RISR_comb", &m_RISR_comb);
+  tree->Branch("cosCM_comb", &m_cosCM_comb);
+  tree->Branch("cosS_comb", &m_cosS_comb);
+  tree->Branch("MISR_comb", &m_MISR_comb);
+  tree->Branch("MS_comb", &m_MS_comb);
+  tree->Branch("dphiCMI_comb", &m_dphiCMI_comb);
+  tree->Branch("dphiSI_comb", &m_dphiSI_comb);
+  tree->Branch("dphiISRI_comb", &m_dphiISRI_comb);
 
-  m_Tree->Branch("PTCM_fix", &m_PTCM_fix);
-  m_Tree->Branch("PTISR_fix", &m_PTISR_fix);
-  m_Tree->Branch("RISR_fix", &m_RISR_fix);
-  m_Tree->Branch("cosCM_fix", &m_cosCM_fix);
-  m_Tree->Branch("cosS_fix", &m_cosS_fix);
-  m_Tree->Branch("MISR_fix", &m_MISR_fix);
-  m_Tree->Branch("MS_fix", &m_MS_fix);
-  m_Tree->Branch("dphiCMI_fix", &m_dphiCMI_fix);
-  m_Tree->Branch("dphiSI_fix", &m_dphiSI_fix);
-  m_Tree->Branch("dphiISRI_fix", &m_dphiISRI_fix);
+  tree->Branch("PTCM_fix", &m_PTCM_fix);
+  tree->Branch("PTISR_fix", &m_PTISR_fix);
+  tree->Branch("RISR_fix", &m_RISR_fix);
+  tree->Branch("cosCM_fix", &m_cosCM_fix);
+  tree->Branch("cosS_fix", &m_cosS_fix);
+  tree->Branch("MISR_fix", &m_MISR_fix);
+  tree->Branch("MS_fix", &m_MS_fix);
+  tree->Branch("dphiCMI_fix", &m_dphiCMI_fix);
+  tree->Branch("dphiSI_fix", &m_dphiSI_fix);
+  tree->Branch("dphiISRI_fix", &m_dphiISRI_fix);
 
-  m_Tree->Branch("MZ", &m_MZ);
-  m_Tree->Branch("cosZ", &m_cosZ);
+  tree->Branch("MZ", &m_MZ);
+  tree->Branch("cosZ", &m_cosZ);
 
   // which tree are we using for event?
  
-  m_Tree->Branch("Is_2LNJ", &m_Is_2LNJ);
-  m_Tree->Branch("Is_2L1L", &m_Is_2L1L);
+  tree->Branch("Is_2LNJ", &m_Is_2LNJ);
+  tree->Branch("Is_2L1L", &m_Is_2L1L);
   
-  m_Tree->Branch("HN2S", &m_HN2S);
-  m_Tree->Branch("HN2SR", &m_HN2SR);
-  m_Tree->Branch("H11S", &m_H11S);
-  m_Tree->Branch("HN1Ca", &m_HN1Ca);
-  m_Tree->Branch("HN1Cb", &m_HN1Cb);
-  m_Tree->Branch("H11Ca", &m_H11Ca);
-  m_Tree->Branch("H11Cb", &m_H11Cb);
-  m_Tree->Branch("cosC", &m_cosC);
+  tree->Branch("HN2S", &m_HN2S);
+  tree->Branch("HN2SR", &m_HN2SR);
+  tree->Branch("H11S", &m_H11S);
+  tree->Branch("HN1Ca", &m_HN1Ca);
+  tree->Branch("HN1Cb", &m_HN1Cb);
+  tree->Branch("H11Ca", &m_H11Ca);
+  tree->Branch("H11Cb", &m_H11Cb);
+  tree->Branch("cosC", &m_cosC);
 
-  m_Tree->Branch("MZ", &m_MZ);
-  m_Tree->Branch("MJ", &m_MJ);
-  m_Tree->Branch("cosZ", &m_cosZ);
-  m_Tree->Branch("cosJ", &m_cosJ);
+  tree->Branch("MZ", &m_MZ);
+  tree->Branch("MJ", &m_MJ);
+  tree->Branch("cosZ", &m_cosZ);
+  tree->Branch("cosJ", &m_cosJ);
+
+  return tree;
 }
 
-void ReducedNtuple::FillOutputTree(){
+void ReducedNtuple::FillOutputTree(TTree* tree){
 
   m_weight = GetEventWeight();
 
@@ -686,8 +684,8 @@ void ReducedNtuple::FillOutputTree(){
 
     break;
   }
-
-  if(m_Tree)
-    m_Tree->Fill();
+  
+  if(tree)
+    tree->Fill();
   
 }
