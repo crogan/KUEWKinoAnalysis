@@ -54,6 +54,8 @@ def write_sh(srcfile,ifile,ofile,lfile,tag):
     fsrc.write('-ilist='+ifile+" ")
     fsrc.write('-ofile='+ofile+" ")
     fsrc.write('-tree='+TREE+" ")
+    if DO_SMS == 1:
+        fsrc.write('--sms ')
     fsrc.write('-tag='+tag+" \n")
     fsrc.write('output = '+lfile+" \n")
     fsrc.write('queue \n')
@@ -63,11 +65,12 @@ def write_sh(srcfile,ifile,ofile,lfile,tag):
 
 if __name__ == "__main__":
     if not len(sys.argv) > 1 or '-h' in sys.argv or '--help' in sys.argv:
-        print "Usage: %s [-q queue] [-tree treename] [-list listfile.list] [-maxN N]" % sys.argv[0]
+        print "Usage: %s [-q queue] [-tree treename] [-list listfile.list] [-maxN N] [--sms]" % sys.argv[0]
         print
         sys.exit(1)
 
     argv_pos = 1
+    DO_SMS = 0
   
     if '-q' in sys.argv:
         p = sys.argv.index('-q')
@@ -85,6 +88,9 @@ if __name__ == "__main__":
         p = sys.argv.index('-maxN')
         MAXN = int(sys.argv[p+1])
         argv_pos += 2
+    if '--sms' in sys.argv:
+        DO_SMS = 1
+        argv_pos += 1
 
     print "maxN is %d" % MAXN
 
