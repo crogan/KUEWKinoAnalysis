@@ -235,7 +235,7 @@ int AnalysisBase<StopNtupleTree>::GetSampleIndex(){
     m_IndexToXsec[m_Nsample]    = m_XsecTool.GetXsec_SMS(m_Label, MP);
     m_IndexToNevent[m_Nsample]  = m_NeventTool.GetNevent_SMS(m_Label, MP, MC);
     m_IndexToNweight[m_Nsample] = m_NeventTool.GetNweight_SMS(m_Label, MP, MC);
-    
+  
     m_Nsample++;
   }
 
