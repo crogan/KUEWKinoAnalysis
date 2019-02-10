@@ -5,7 +5,7 @@
 #include "TFile.h"
 #include "TTree.h"
 
-void Parse_EventCount(string filename, bool xsec_template = false){
+void Parse_EventCount_SMS(string filename){
 
   TFile* f = new TFile(filename.c_str(),"READ");
   TTree* tree = (TTree*) f->Get("EventCount");
@@ -17,18 +17,24 @@ void Parse_EventCount(string filename, bool xsec_template = false){
    Double_t        Nweight;
    Double_t        Nabsweight;
    string          *dataset = new std::string();
+   int             MP;
+   int             MC;
 
    // List of branches
    TBranch        *b_Nevent;   //!
    TBranch        *b_Nweight;   //!
    TBranch        *b_Nabsweight;   //!
    TBranch        *b_dataset;   //!
+   TBranch        *b_MP;   //!
+   TBranch        *b_MC;   //!
 
    tree->SetMakeClass(1);
    tree->SetBranchAddress("Nevent", &Nevent, &b_Nevent);
    tree->SetBranchAddress("Nweight", &Nweight, &b_Nweight);
    tree->SetBranchAddress("Nabsweight", &Nabsweight, &b_Nabsweight);
    tree->SetBranchAddress("dataset", &dataset, &b_dataset);
+   tree->SetBranchAddress("MP", &MP, &b_MP);
+   tree->SetBranchAddress("MC", &MC, &b_MC);
 
    vector<string> datasets;
    map<string,double> mapNevent;

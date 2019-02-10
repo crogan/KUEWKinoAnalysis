@@ -37,13 +37,14 @@ int main(int argc, char* argv[]) {
   bool DO_LIST = false;
   bool DO_FOLDER = false;
   bool DO_TREE = false;
+  bool DO_SMS = false;
 
   if ( argc < 2 ){
     cout << "Error at Input: please specify an input file name, a list of input ROOT files and/or a folder path"; 
     cout << " and an output filename:" << endl; 
     cout << "  Example:      ./MakeEventCount.x -ifile=input.root -ofile=output.root -tag=sample_tag"  << endl;
     cout << "  Example:      ./MakeEventCount.x -ilist=input.list -ofile=output.root -tag=sample_tag"  << endl;
-    cout << "  Example:      ./MakeEventCount.x -ifold=folder_path -ofile=output.root -tag=sample_tag -tree=treename" << endl;
+    cout << "  Example:      ./MakeEventCount.x -ifold=folder_path -ofile=output.root -tag=sample_tag -tree=treename --sms" << endl;
     
     return 1;
   }
@@ -64,8 +65,9 @@ int main(int argc, char* argv[]) {
       sscanf(argv[i],"-tree=%s",  TreeName);
       DO_TREE = true;
     }
-    if (strncmp(argv[i],"-ofile",6)==0)  sscanf(argv[i],"-ofile=%s", outputFileName);
-    if (strncmp(argv[i],"-tag",4)==0)  sscanf(argv[i],"-tag=%s", FileTag);
+    if (strncmp(argv[i],"-ofile",6)==0) sscanf(argv[i],"-ofile=%s", outputFileName);
+    if (strncmp(argv[i],"-tag",4)==0)   sscanf(argv[i],"-tag=%s", FileTag);
+    if (strncmp(argv[i],"--sms",5)==0)  DO_SMS = true;
   }
 
   gROOT->ProcessLine("#include <vector>");
@@ -122,17 +124,17 @@ int main(int argc, char* argv[]) {
   }
 
   int NEVENT = chain->GetEntries();
-  float        stored_weight_f;
-  float        evtWeight_f;
-  double        stored_weight_d;
-  double        evtWeight_d;
-  TBranch        *b_stored_weight;   //!
-  TBranch        *b_evtWeight;   //!
+  float  stored_weight_f;
+  float  evtWeight_f;
+  double stored_weight_d;
+  double evtWeight_d;
+  TBranch *b_stored_weight;  
+  TBranch *b_evtWeight;   
 
-  vector<int>     *genDecayPdgIdVec;
-  TBranch        *b_genDecayPdgIdVec;   //!
+  vector<int>            *genDecayPdgIdVec;
+  TBranch                *b_genDecayPdgIdVec;  
   vector<TLorentzVector> *genDecayLVec;
-  TBranch        *b_genDecayLVec;   //!
+  TBranch                *b_genDecayLVec;   
 
   genDecayPdgIdVec = 0;
   genDecayLVec = 0;
@@ -146,34 +148,34 @@ int main(int argc, char* argv[]) {
     chain->SetBranchAddress("stored_weight", &stored_weight_d, &b_stored_weight);
     chain->SetBranchAddress("evtWeight", &evtWeight_d, &b_evtWeight);
   }
-  
-  chain->SetBranchAddress("genDecayPdgIdVec", &genDecayPdgIdVec, &b_genDecayPdgIdVec);
-  chain->SetBranchAddress("genDecayLVec", &genDecayLVec, &b_genDecayLVec);
+  if(DO_SMS){
+    chain->SetBranchAddress("genDecayPdgIdVec", &genDecayPdgIdVec, &b_genDecayPdgIdVec);
+    chain->SetBranchAddress("genDecayLVec", &genDecayLVec, &b_genDecayLVec);
+  }
 
   chain->SetBranchStatus("*",0);
   chain->SetBranchStatus("stored_weight",1);
   chain->SetBranchStatus("evtWeight",1);
-  chain->SetBranchStatus("genDecayPdgIdVec",1);
-  chain->SetBranchStatus("genDecayLVec",1);
-  
-  
-  TFile* fout = new TFile(string(outputFileName).c_str(),"RECREATE");
-  TTree* tout = (TTree*) new TTree("EventCount", "EventCount");
+  if(DO_SMS){
+    chain->SetBranchStatus("genDecayPdgIdVec",1);
+    chain->SetBranchStatus("genDecayLVec",1);
+  }
   
   double Nevent = 0.;
   double Nweight = 0.;
   double Nabsweight = 0.;
-  string dataset = string(FileTag);
-  
-  tout->Branch("Nevent", &Nevent);
-  tout->Branch("Nweight", &Nweight);
-  tout->Branch("Nabsweight", &Nabsweight);
-  tout->Branch("dataset", &dataset);
+
+  int MP, MC, PDGID;
+  std::vector<std::pair<int,int> > masses;
+  std::map<std::pair<int,int>,double > mapNevent;
+  std::map<std::pair<int,int>,double > mapNweight;
+  std::map<std::pair<int,int>,double > mapNabsweight;
   
   for(int e = 0; e < NEVENT; e++){
     if(e%(std::max(1,NEVENT/100)) == 0)
       std::cout << "Processing event " << e << " | " << NEVENT << endl;
     chain->GetEntry(e);
+
     Nevent += 1.;
     if(is_float){
       Nweight += evtWeight_f;
@@ -183,17 +185,65 @@ int main(int argc, char* argv[]) {
       Nabsweight += fabs(evtWeight_d);
     }
 
-    int Ngen = genDecayPdgIdVec->size();
-    for(int i = 0; i < Ngen; i++){
-      if(fabs(genDecayPdgIdVec->at(i)) > 1000000 && fabs(genDecayPdgIdVec->at(i)) < 3000000){
-	cout << genDecayPdgIdVec->at(i) << " " << genDecayLVec->at(i).M() << endl;
+    if(DO_SMS){
+      MP = 0;
+      MC = 0;
+      int Ngen = genDecayPdgIdVec->size();
+      for(int i = 0; i < Ngen; i++){
+	PDGID = fabs(genDecayPdgIdVec->at(i));
+	if(PDGID > 1000000 && PDGID < 3000000){
+	  int mass = int(genDecayLVec->at(i).M()+0.5);
+	  if(PDGID == 1000022)
+	    MC = mass;
+	  else
+	    if(mass > MP)
+	      MP = mass;
+	}
+      }
+      std::pair<int,int> masspair(MP,MC);
+      if(mapNevent.count(masspair) == 0){
+	masses.push_back(masspair);
+	mapNevent[masspair]    = 0.;
+	mapNweight[masspair]   = 0.;
+	mapNabsweight[masspair] = 0.;
+      }
+
+      mapNevent[masspair] += 1.;
+      if(is_float){
+	mapNweight[masspair] += evtWeight_f;
+	mapNabsweight[masspair] += fabs(evtWeight_f);
+      } else {
+	mapNweight[masspair] += evtWeight_d;
+	mapNabsweight[masspair] += fabs(evtWeight_d);
       }
     }
     
-    
   }
 
-  tout->Fill();
+  TFile* fout = new TFile(string(outputFileName).c_str(),"RECREATE");
+  TTree* tout = (TTree*) new TTree("EventCount", "EventCount");
+  
+  string dataset = string(FileTag);
+  tout->Branch("Nevent", &Nevent);
+  tout->Branch("Nweight", &Nweight);
+  tout->Branch("Nabsweight", &Nabsweight);
+  tout->Branch("dataset", &dataset);
+  if(DO_SMS){
+    tout->Branch("MP", &MP);
+    tout->Branch("MC", &MC);
+    int Nmass = masses.size();
+    for(int i = 0; i < Nmass; i++){
+      Nevent     = mapNevent[masses[i]];
+      Nweight    = mapNweight[masses[i]];
+      Nabsweight = mapNabsweight[masses[i]];
+      MP = masses[i].first;
+      MC = masses[i].second;
+      tout->Fill();
+    }
+  } else {
+    tout->Fill();
+  }
+
   fout->cd();
   tout->Write();
   fout->Close();

@@ -129,3 +129,16 @@ std::map<std::string,double> XsecTool::InitMap_Xsec_BKG(){
 }
 
 std::map<std::string,double> XsecTool::m_Label2Xsec_BKG = XsecTool::InitMap_Xsec_BKG();
+
+// C1C1 2016   1000022 1000024
+// C1N1 2016   1000022 1000024
+// N2C1 2016   1000022 1000023 1000024half
+// T2-4bd      1000022 1000006
+// T2bW        1000022 1000006 1000024half
+// T2cc         1000022 1000006
+// T2tt         1000022 1000006
+// TChiWG       1000022 1000023=1000024
+// TChiWH       1000022 1000023=1000024
+// TChiWH_2016  1000022 1000023=1000024
+// TChiWZ       1000022 1000023=1000024
+// TChiWZ_2016  1000022 1000023=1000024
