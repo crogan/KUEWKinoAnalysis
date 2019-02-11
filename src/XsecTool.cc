@@ -85,119 +85,119 @@ double XsecTool::GetXsec_SMS(const std::string& dataset, double MP) const {
 std::map<std::string,double> XsecTool::InitMap_Xsec_BKG(){
   std::map<std::string,double> Label2Xsec;
   
-  Label2Xsec["DYJetsToLL_M-50_HT-100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 1;
-  Label2Xsec["DYJetsToLL_M-50_HT-1200to2500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 1;
-  Label2Xsec["DYJetsToLL_M-50_HT-200to400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 1;
-  Label2Xsec["DYJetsToLL_M-50_HT-2500toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 1;
-  Label2Xsec["DYJetsToLL_M-50_HT-400to600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 1;
-  Label2Xsec["DYJetsToLL_M-50_HT-600to800_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 1;
-  Label2Xsec["DYJetsToLL_M-50_HT-70to100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 1;
-  Label2Xsec["DYJetsToLL_M-50_HT-800to1200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 1;
-  Label2Xsec["DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 1;
-  Label2Xsec["GJets_DR-0p4_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 1;
-  Label2Xsec["GJets_DR-0p4_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 1;
-  Label2Xsec["GJets_DR-0p4_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 1;
-  Label2Xsec["GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 1;
-  Label2Xsec["QCD_Pt_1000to1400_TuneCP5_13TeV_pythia8"] = 1;
-  Label2Xsec["QCD_Pt_1000to1400_TuneCUETP8M1_13TeV_pythia8"] = 1;
-  Label2Xsec["QCD_Pt_120to170_TuneCP5_13TeV_pythia8"] = 1;
-  Label2Xsec["QCD_Pt_120to170_TuneCUETP8M1_13TeV_pythia8"] = 1;
-  Label2Xsec["QCD_Pt_1400to1800_TuneCP5_13TeV_pythia8"] = 1;
-  Label2Xsec["QCD_Pt_1400to1800_TuneCUETP8M1_13TeV_pythia8"] = 1;
-  Label2Xsec["QCD_Pt_15to30_TuneCP5_13TeV_pythia8"] = 1;
-  Label2Xsec["QCD_Pt_15to30_TuneCUETP8M1_13TeV_pythia8"] = 1;
-  Label2Xsec["QCD_Pt_170to300_TuneCP5_13TeV_pythia8"] = 1;
-  Label2Xsec["QCD_Pt_170to300_TuneCUETP8M1_13TeV_pythia8"] = 1;
-  Label2Xsec["QCD_Pt_1800to2400_TuneCP5_13TeV_pythia8"] = 1;
-  Label2Xsec["QCD_Pt_1800to2400_TuneCUETP8M1_13TeV_pythia8"] = 1;
-  Label2Xsec["QCD_Pt_2400to3200_TuneCP5_13TeV_pythia8"] = 1;
-  Label2Xsec["QCD_Pt_2400to3200_TuneCUETP8M1_13TeV_pythia8"] = 1;
-  Label2Xsec["QCD_Pt_300to470_TuneCP5_13TeV_pythia8"] = 1;
-  Label2Xsec["QCD_Pt_300to470_TuneCUETP8M1_13TeV_pythia8"] = 1;
-  Label2Xsec["QCD_Pt_30to50_TuneCP5_13TeV_pythia8"] = 1;
-  Label2Xsec["QCD_Pt_30to50_TuneCUETP8M1_13TeV_pythia8"] = 1;
-  Label2Xsec["QCD_Pt_3200toInf_TuneCP5_13TeV_pythia8"] = 1;
-  Label2Xsec["QCD_Pt_3200toInf_TuneCUETP8M1_13TeV_pythia8"] = 1;
-  Label2Xsec["QCD_Pt_470to600_TuneCP5_13TeV_pythia8"] = 1;
-  Label2Xsec["QCD_Pt_470to600_TuneCUETP8M1_13TeV_pythia8"] = 1;
-  Label2Xsec["QCD_Pt_50to80_TuneCP5_13TeV_pythia8"] = 1;
-  Label2Xsec["QCD_Pt_50to80_TuneCUETP8M1_13TeV_pythia8"] = 1;
-  Label2Xsec["QCD_Pt_600to800_TuneCP5_13TeV_pythia8"] = 1;
-  Label2Xsec["QCD_Pt_600to800_TuneCUETP8M1_13TeV_pythia8"] = 1;
-  Label2Xsec["QCD_Pt_800to1000_TuneCP5_13TeV_pythia8"] = 1;
-  Label2Xsec["QCD_Pt_800to1000_TuneCUETP8M1_13TeV_pythia8"] = 1;
-  Label2Xsec["QCD_Pt_80to120_TuneCP5_13TeV_pythia8"] = 1;
-  Label2Xsec["QCD_Pt_80to120_TuneCUETP8M1_13TeV_pythia8"] = 1;
-  Label2Xsec["ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8"] = 1;
-  Label2Xsec["ST_t-channel_antitop_4f_inclusiveDecays_13TeV-powhegV2-madspin-pythia8_TuneCUETP8M1"] = 1;
-  Label2Xsec["ST_t-channel_antitop_5f_TuneCP5_PSweights_13TeV-powheg-pythia8"] = 1;
-  Label2Xsec["ST_t-channel_top_4f_inclusiveDecays_13TeV-powhegV2-madspin-pythia8_TuneCUETP8M1"] = 1;
-  Label2Xsec["ST_t-channel_top_5f_TuneCP5_13TeV-powheg-pythia8"] = 1;
-  Label2Xsec["ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M2T4"] = 1;
-  Label2Xsec["ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8"] = 1;
-  Label2Xsec["ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M2T4"] = 1;
-  Label2Xsec["ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8"] = 1;
-  Label2Xsec["TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8"] = 1;
-  Label2Xsec["TTJets_TuneCP5_13TeV-madgraphMLM-pythia8"] = 1;
-  Label2Xsec["TTJets_TuneCUETP8M2T4_13TeV-amcatnloFXFX-pythia8"] = 1;
-  Label2Xsec["TTTT_TuneCUETP8M1_13TeV-amcatnlo-pythia8"] = 1;
-  Label2Xsec["TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8"] = 1;
-  Label2Xsec["TTToHadronic_TuneCP5_13TeV-powheg-pythia8"] = 1;
-  Label2Xsec["TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8"] = 1;
-  Label2Xsec["TTWH_TuneCP5_13TeV-madgraph-pythia8"] = 1;
-  Label2Xsec["TTWJetsToLNu_TuneCP5_PSweights_13TeV-amcatnloFXFX-madspin-pythia8"] = 1;
-  Label2Xsec["TTWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8"] = 1;
-  Label2Xsec["TTWJetsToQQ_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8"] = 1;
-  Label2Xsec["TTWJetsToQQ_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8"] = 1;
-  Label2Xsec["TTWW_TuneCP5_13TeV-madgraph-pythia8"] = 1;
-  Label2Xsec["TTWZ_TuneCP5_13TeV-madgraph-pythia8"] = 1;
-  Label2Xsec["TTZH_TuneCP5_13TeV-madgraph-pythia8"] = 1;
-  Label2Xsec["TTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8"] = 1;
-  Label2Xsec["TTZToQQ_TuneCP5_13TeV-amcatnlo-pythia8"] = 1;
-  Label2Xsec["TTZToQQ_TuneCUETP8M1_13TeV-amcatnlo-pythia8"] = 1;
-  Label2Xsec["TTZZ_TuneCP5_13TeV-madgraph-pythia8"] = 1;
-  Label2Xsec["WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8"] = 1;
+  Label2Xsec["DYJetsToLL_M-50_HT-100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 147.40;
+  Label2Xsec["DYJetsToLL_M-50_HT-1200to2500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 0.1514;
+  Label2Xsec["DYJetsToLL_M-50_HT-200to400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 40.99;
+  Label2Xsec["DYJetsToLL_M-50_HT-2500toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 0.003565;
+  Label2Xsec["DYJetsToLL_M-50_HT-400to600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 5.678;
+  Label2Xsec["DYJetsToLL_M-50_HT-600to800_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 1.367;
+  Label2Xsec["DYJetsToLL_M-50_HT-70to100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 169.9;
+  Label2Xsec["DYJetsToLL_M-50_HT-800to1200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 0.6304;
+  Label2Xsec["DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 2075.14*3;
+  Label2Xsec["GJets_DR-0p4_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 5391;
+  Label2Xsec["GJets_DR-0p4_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 1168;
+  Label2Xsec["GJets_DR-0p4_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 132.5;
+  Label2Xsec["GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 44.05;
+  Label2Xsec["QCD_Pt_1000to1400_TuneCP5_13TeV_pythia8"] = 7.47;
+  Label2Xsec["QCD_Pt_1000to1400_TuneCUETP8M1_13TeV_pythia8"] = 9.365;
+  Label2Xsec["QCD_Pt_120to170_TuneCP5_13TeV_pythia8"] = 407300.0;
+  Label2Xsec["QCD_Pt_120to170_TuneCUETP8M1_13TeV_pythia8"] = 467500.0;
+  Label2Xsec["QCD_Pt_1400to1800_TuneCP5_13TeV_pythia8"] = 0.6484;
+  Label2Xsec["QCD_Pt_1400to1800_TuneCUETP8M1_13TeV_pythia8"] = 0.8398;
+  Label2Xsec["QCD_Pt_15to30_TuneCP5_13TeV_pythia8"] = 1246000000.0;
+  Label2Xsec["QCD_Pt_15to30_TuneCUETP8M1_13TeV_pythia8"] = 1820000000.0;
+  Label2Xsec["QCD_Pt_170to300_TuneCP5_13TeV_pythia8"] = 103500.0;
+  Label2Xsec["QCD_Pt_170to300_TuneCUETP8M1_13TeV_pythia8"] = 117400.0;
+  Label2Xsec["QCD_Pt_1800to2400_TuneCP5_13TeV_pythia8"] = 0.08743;
+  Label2Xsec["QCD_Pt_1800to2400_TuneCUETP8M1_13TeV_pythia8"] = 0.1124;
+  Label2Xsec["QCD_Pt_2400to3200_TuneCP5_13TeV_pythia8"] = 0.005236;
+  Label2Xsec["QCD_Pt_2400to3200_TuneCUETP8M1_13TeV_pythia8"] = 0.006752;
+  Label2Xsec["QCD_Pt_300to470_TuneCP5_13TeV_pythia8"] = 6830.0;
+  Label2Xsec["QCD_Pt_300to470_TuneCUETP8M1_13TeV_pythia8"] = 7753.0;
+  Label2Xsec["QCD_Pt_30to50_TuneCP5_13TeV_pythia8"] = 106900000.0;
+  Label2Xsec["QCD_Pt_30to50_TuneCUETP8M1_13TeV_pythia8"] = 138900000.0;
+  Label2Xsec["QCD_Pt_3200toInf_TuneCP5_13TeV_pythia8"] = 0.0001357;
+  Label2Xsec["QCD_Pt_3200toInf_TuneCUETP8M1_13TeV_pythia8"] = 0.0001626;
+  Label2Xsec["QCD_Pt_470to600_TuneCP5_13TeV_pythia8"] = 552.1;
+  Label2Xsec["QCD_Pt_470to600_TuneCUETP8M1_13TeV_pythia8"] = 642.1;
+  Label2Xsec["QCD_Pt_50to80_TuneCP5_13TeV_pythia8"] = 15710000.0;
+  Label2Xsec["QCD_Pt_50to80_TuneCUETP8M1_13TeV_pythia8"] = 19100000.0;
+  Label2Xsec["QCD_Pt_600to800_TuneCP5_13TeV_pythia8"] = 156.5;
+  Label2Xsec["QCD_Pt_600to800_TuneCUETP8M1_13TeV_pythia8"] = 185.9;
+  Label2Xsec["QCD_Pt_800to1000_TuneCP5_13TeV_pythia8"] = 26.28;
+  Label2Xsec["QCD_Pt_800to1000_TuneCUETP8M1_13TeV_pythia8"] = 32.05;
+  Label2Xsec["QCD_Pt_80to120_TuneCP5_13TeV_pythia8"] = 2336000.0;
+  Label2Xsec["QCD_Pt_80to120_TuneCUETP8M1_13TeV_pythia8"] = 2735000.0;
+  Label2Xsec["ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8"] = 3.36;
+  Label2Xsec["ST_t-channel_antitop_4f_inclusiveDecays_13TeV-powhegV2-madspin-pythia8_TuneCUETP8M1"] = 71.74;
+  Label2Xsec["ST_t-channel_antitop_5f_TuneCP5_PSweights_13TeV-powheg-pythia8"] = 71.74;
+  Label2Xsec["ST_t-channel_top_4f_inclusiveDecays_13TeV-powhegV2-madspin-pythia8_TuneCUETP8M1"] = 119.7;
+  Label2Xsec["ST_t-channel_top_5f_TuneCP5_13TeV-powheg-pythia8"] = 119.7;
+  Label2Xsec["ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M2T4"] = 35.85;
+  Label2Xsec["ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8"] = 35.85;
+  Label2Xsec["ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M2T4"] = 35.85;
+  Label2Xsec["ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8"] = 35.85;
+  Label2Xsec["TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8"] = 831.76;
+  Label2Xsec["TTJets_TuneCP5_13TeV-madgraphMLM-pythia8"] = 831.76;
+  Label2Xsec["TTJets_TuneCUETP8M2T4_13TeV-amcatnloFXFX-pythia8"] = 831.76;
+  Label2Xsec["TTTT_TuneCUETP8M1_13TeV-amcatnlo-pythia8"] = 0.009103;
+  Label2Xsec["TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8"] = 87.31;
+  Label2Xsec["TTToHadronic_TuneCP5_13TeV-powheg-pythia8"] = 687.1;
+  Label2Xsec["TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8"] = 687.1;
+  Label2Xsec["TTWH_TuneCP5_13TeV-madgraph-pythia8"] = 0.001141;
+  Label2Xsec["TTWJetsToLNu_TuneCP5_PSweights_13TeV-amcatnloFXFX-madspin-pythia8"] = 0.2043;
+  Label2Xsec["TTWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8"] = 0.2043;
+  Label2Xsec["TTWJetsToQQ_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8"] = 0.4062;
+  Label2Xsec["TTWJetsToQQ_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8"] = 0.4062;
+  Label2Xsec["TTWW_TuneCP5_13TeV-madgraph-pythia8"] = 0.006979;
+  Label2Xsec["TTWZ_TuneCP5_13TeV-madgraph-pythia8"] = 0.002441;
+  Label2Xsec["TTZH_TuneCP5_13TeV-madgraph-pythia8"] = 0.00113;
+  Label2Xsec["TTZToLLNuNu_M-10_TuneCUETP8M1_13TeV-amcatnlo-pythia8"] = 0.2529;
+  Label2Xsec["TTZToQQ_TuneCP5_13TeV-amcatnlo-pythia8"] = 0.5297;
+  Label2Xsec["TTZToQQ_TuneCUETP8M1_13TeV-amcatnlo-pythia8"] = 0.5297;
+  Label2Xsec["TTZZ_TuneCP5_13TeV-madgraph-pythia8"] = 0.001386;
+  Label2Xsec["WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8"] = 61526.7;
   Label2Xsec["WJetsToQQ_HT-800toInf_qc19_3j_TuneCP5_13TeV-madgraphMLM-pythia8"] = 1;
   Label2Xsec["WJetsToQQ_HT400to600_qc19_3j_TuneCP5_13TeV-madgraphMLM-pythia8"] = 1;
   Label2Xsec["WJetsToQQ_HT600to800_qc19_3j_TuneCP5_13TeV-madgraphMLM-pythia8"] = 1;
-  Label2Xsec["WWG_TuneCP5_13TeV-amcatnlo-pythia8"] = 1;
-  Label2Xsec["WWG_TuneCUETP8M1_13TeV-amcatnlo-pythia8"] = 1;
-  Label2Xsec["WWTo2L2Nu_13TeV-powheg"] = 1;
-  Label2Xsec["WWTo2L2Nu_NNPDF31_TuneCP5_13TeV-powheg-pythia8"] = 1;
-  Label2Xsec["WWTo2L2Nu_NNPDF31_TuneCP5_PSweights_13TeV-powheg-pythia8"] = 1;
-  Label2Xsec["WWTo4Q_13TeV-powheg"] = 1;
-  Label2Xsec["WWTo4Q_NNPDF31_TuneCP5_13TeV-powheg-pythia8"] = 1;
-  Label2Xsec["WWToLNuQQ_13TeV-powheg"] = 1;
-  Label2Xsec["WWToLNuQQ_NNPDF31_TuneCP5_13TeV-powheg-pythia8"] = 1;
-  Label2Xsec["WWW_4F_TuneCP5_13TeV-amcatnlo-pythia8"] = 1;
-  Label2Xsec["WWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8"] = 1;
-  Label2Xsec["WWZ_4F_TuneCP5_13TeV-amcatnlo-pythia8"] = 1;
-  Label2Xsec["WWZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8"] = 1;
-  Label2Xsec["WW_TuneCP5_13TeV-pythia8"] = 1;
-  Label2Xsec["WZ_TuneCP5_13TeV-pythia8"] = 1;
-  Label2Xsec["WZ_TuneCUETP8M1_13TeV-pythia8"] = 1;
-  Label2Xsec["ZJetsToNuNu_HT-100To200_13TeV-madgraph"] = 1;
-  Label2Xsec["ZJetsToNuNu_HT-1200To2500_13TeV-madgraph"] = 1;
-  Label2Xsec["ZJetsToNuNu_HT-200To400_13TeV-madgraph"] = 1;
-  Label2Xsec["ZJetsToNuNu_HT-2500ToInf_13TeV-madgraph"] = 1;
-  Label2Xsec["ZJetsToNuNu_HT-400To600_13TeV-madgraph"] = 1;
-  Label2Xsec["ZJetsToNuNu_HT-600To800_13TeV-madgraph"] = 1;
-  Label2Xsec["ZJetsToNuNu_HT-800To1200_13TeV-madgraph"] = 1;
-  Label2Xsec["ZJetsToQQ_HT-800toInf_TuneCP5_13TeV-madgraphMLM-pythia8"] = 1;
-  Label2Xsec["ZJetsToQQ_HT400to600_TuneCP5_13TeV-madgraphMLM-pythia8"] = 1;
-  Label2Xsec["ZJetsToQQ_HT600to800_3j_TuneCP5_13TeV-madgraphMLM-pythia8"] = 1;
-  Label2Xsec["ZZTo2L2Nu_13TeV_powheg_pythia8"] = 1;
-  Label2Xsec["ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8"] = 1;
-  Label2Xsec["ZZTo2Q2Nu_13TeV_amcatnloFXFX_madspin_pythia8"] = 1;
-  Label2Xsec["ZZTo2Q2Nu_TuneCP5_13TeV_amcatnloFXFX_madspin_pythia8"] = 1;
-  Label2Xsec["ZZTo4L_13TeV_powheg_pythia8"] = 1;
-  Label2Xsec["ZZTo4Q_13TeV_amcatnloFXFX_madspin_pythia8"] = 1;
-  Label2Xsec["ZZZ_TuneCP5_13TeV-amcatnlo-pythia8"] = 1;
-  Label2Xsec["ZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8"] = 1;
-  Label2Xsec["ZZ_TuneCP5_13TeV-pythia8"] = 1;
-  Label2Xsec["ttH_M125_TuneCP5_13TeV-powheg-pythia8"] = 1;
-  Label2Xsec["ttWJets_TuneCP5_13TeV_madgraphMLM_pythia8"] = 1;
-  Label2Xsec["ttZJets_TuneCP5_13TeV_madgraphMLM_pythia8"] = 1;
+  Label2Xsec["WWG_TuneCP5_13TeV-amcatnlo-pythia8"] = 0.2147;
+  Label2Xsec["WWG_TuneCUETP8M1_13TeV-amcatnlo-pythia8"] = 0.2147;
+  Label2Xsec["WWTo2L2Nu_13TeV-powheg"] = 12.178;
+  Label2Xsec["WWTo2L2Nu_NNPDF31_TuneCP5_13TeV-powheg-pythia8"] = 12.178;
+  Label2Xsec["WWTo2L2Nu_NNPDF31_TuneCP5_PSweights_13TeV-powheg-pythia8"] = 12.178;
+  Label2Xsec["WWTo4Q_13TeV-powheg"] = 51.723;
+  Label2Xsec["WWTo4Q_NNPDF31_TuneCP5_13TeV-powheg-pythia8"] = 51.723;
+  Label2Xsec["WWToLNuQQ_13TeV-powheg"] = 49.997;
+  Label2Xsec["WWToLNuQQ_NNPDF31_TuneCP5_13TeV-powheg-pythia8"] = 49.997;
+  Label2Xsec["WWW_4F_TuneCP5_13TeV-amcatnlo-pythia8"] = 0.2086;
+  Label2Xsec["WWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8"] = 0.2086;
+  Label2Xsec["WWZ_4F_TuneCP5_13TeV-amcatnlo-pythia8"] = 0.1651;
+  Label2Xsec["WWZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8"] = 0.1651;
+  Label2Xsec["WW_TuneCP5_13TeV-pythia8"] = 12.178+51.723+49.997;
+  Label2Xsec["WZ_TuneCP5_13TeV-pythia8"] = 47.13;
+  Label2Xsec["WZ_TuneCUETP8M1_13TeV-pythia8"] = 47.13;
+  Label2Xsec["ZJetsToNuNu_HT-100To200_13TeV-madgraph"] = 280.35;
+  Label2Xsec["ZJetsToNuNu_HT-1200To2500_13TeV-madgraph"] = 0.28833;
+  Label2Xsec["ZJetsToNuNu_HT-200To400_13TeV-madgraph"] = 77.67;
+  Label2Xsec["ZJetsToNuNu_HT-2500ToInf_13TeV-madgraph"] = 0.006945;
+  Label2Xsec["ZJetsToNuNu_HT-400To600_13TeV-madgraph"] = 10.73;
+  Label2Xsec["ZJetsToNuNu_HT-600To800_13TeV-madgraph"] = 2.559;
+  Label2Xsec["ZJetsToNuNu_HT-800To1200_13TeV-madgraph"] = 1.1796;
+  Label2Xsec["ZJetsToQQ_HT-800toInf_TuneCP5_13TeV-madgraphMLM-pythia8"] = 190.2;
+  Label2Xsec["ZJetsToQQ_HT400to600_TuneCP5_13TeV-madgraphMLM-pythia8"] = 1270.0;
+  Label2Xsec["ZJetsToQQ_HT600to800_3j_TuneCP5_13TeV-madgraphMLM-pythia8"] = 135.0;
+  Label2Xsec["ZZTo2L2Nu_13TeV_powheg_pythia8"] = 0.564;
+  Label2Xsec["ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8"] = 3.22;
+  Label2Xsec["ZZTo2Q2Nu_13TeV_amcatnloFXFX_madspin_pythia8"] = 4.04;
+  Label2Xsec["ZZTo2Q2Nu_TuneCP5_13TeV_amcatnloFXFX_madspin_pythia8"] = 4.04;
+  Label2Xsec["ZZTo4L_13TeV_powheg_pythia8"] = 1.212;
+  Label2Xsec["ZZTo4Q_13TeV_amcatnloFXFX_madspin_pythia8"] = 6.912;
+  Label2Xsec["ZZZ_TuneCP5_13TeV-amcatnlo-pythia8"] = 0.01398 ;
+  Label2Xsec["ZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8"] = 0.01398 ;
+  Label2Xsec["ZZ_TuneCP5_13TeV-pythia8"] = 16.523;
+  Label2Xsec["ttH_M125_TuneCP5_13TeV-powheg-pythia8"] = 0.5269;
+  Label2Xsec["ttWJets_TuneCP5_13TeV_madgraphMLM_pythia8"] = 0.4611;
+  Label2Xsec["ttZJets_TuneCP5_13TeV_madgraphMLM_pythia8"] = 0.5407;
 
   return Label2Xsec;
 }
@@ -1488,390 +1488,388 @@ std::map<std::string,std::vector<double> > XsecTool::InitMap_Xsec_SMS(){
   Label2Xsec["SlepSlep_right"].push_back(0.3);
   Label2Xsec["SlepSlep_right"].push_back(0.18);
 
-  /*
-  100 GeV	1521.11);
-    105 GeV	1233.18);
-    110 GeV	1013.76);
-    115 GeV	832.656);
-    120 GeV	689.799);
-    125 GeV	574.981);
-    130 GeV	481.397);
-    135 GeV	405.159);
-    140 GeV	342.865);
-    145 GeV	291.752);
-    150 GeV	249.409);
-    155 GeV	214.221);
-    160 GeV	184.623);
-    165 GeV	159.614);
-    170 GeV	139.252);
-    175 GeV	121.416);
-    180 GeV	106.194);
-    185 GeV	93.3347);
-    190 GeV	82.2541);
-    195 GeV	72.7397);
-    200 GeV	64.5085);
-    205 GeV	57.2279);
-    210 GeV	50.9226);
-    215 GeV	45.3761);
-    220 GeV	40.5941);
-    225 GeV	36.3818);
-    230 GeV	32.6679);
-    235 GeV	29.3155);
-    240 GeV	26.4761);
-    245 GeV	23.8853);
-    250 GeV	21.5949);
-    255 GeV	19.5614);
-    260 GeV	17.6836);
-    265 GeV	16.112);
-    270 GeV	14.6459);
-    275 GeV	13.3231);
-    280 GeV	12.1575);
-    285 GeV	11.0925);
-    290 GeV	10.1363);
-    295 GeV	9.29002);
-    300 GeV	8.51615);
-    305 GeV	7.81428);
-    310 GeV	7.17876);
-    315 GeV	6.60266);
-    320 GeV	6.08444);
-    325 GeV	5.60471);
-    330 GeV	5.17188);
-    335 GeV	4.77871);
-    340 GeV	4.41629);
-    345 GeV	4.08881);
-    350 GeV	3.78661);
-    355 GeV	3.50911);
-    360 GeV	3.25619);
-    365 GeV	3.02472);
-    370 GeV	2.8077);
-    375 GeV	2.61162);
-    380 GeV	2.43031);
-    385 GeV	2.26365);
-    390 GeV	2.10786);
-    395 GeV	1.9665);
-    400 GeV	1.83537);
-    405 GeV	1.70927);
-    410 GeV	1.60378);
-    415 GeV	1.49798);
-    420 GeV	1.39688);
-    425 GeV	1.31169);
-    430 GeV	1.22589);
-    435 GeV	1.14553);
-    440 GeV	1.07484);
-    445 GeV	1.01019);
-    450 GeV	0.948333);
-    455 GeV	0.890847);
-    460 GeV	0.836762);
-    465 GeV	0.787221);
-    470 GeV	0.740549);
-    475 GeV	0.697075);
-    480 GeV	0.655954);
-    485 GeV	0.618562);
-    490 GeV	0.582467);
-    495 GeV	0.549524);
-    500 GeV	0.51848);
-    505 GeV	0.489324);
-    510 GeV	0.462439);
-    515 GeV	0.436832);
-    520 GeV	0.412828);
-    525 GeV	0.390303);
-    530 GeV	0.368755);
-    535 GeV	0.348705);
-    540 GeV	0.330157);
-    545 GeV	0.312672);
-    550 GeV	0.296128);
-    555 GeV	0.280734);
-    560 GeV	0.266138);
-    565 GeV	0.251557);
-    570 GeV	0.238537);
-    575 GeV	0.226118);
-    580 GeV	0.214557);
-    585 GeV	0.203566);
-    590 GeV	0.193079);
-    595 GeV	0.183604);
-    600 GeV	0.174599);
-    605 GeV	0.166131);
-    610 GeV	0.158242);
-    615 GeV	0.150275);
-    620 GeV	0.142787);
-    625 GeV	0.136372);
-    630 GeV	0.129886);
-    635 GeV	0.123402);
-    640 GeV	0.11795);
-    645 GeV	0.112008);
-    650 GeV	0.107045);
-    655 GeV	0.102081);
-    660 GeV	0.09725);
-    665 GeV	0.0927515);
-    670 GeV	0.0885084);
-    675 GeV	0.0844877);
-    680 GeV	0.0806192);
-    685 GeV	0.0769099);
-    690 GeV	0.0734901);
-    695 GeV	0.0701805);
-    700 GeV	0.0670476);
-    705 GeV	0.0641426);
-    710 GeV	0.0612942);
-    715 GeV	0.0585678);
-    720 GeV	0.0560753);
-    725 GeV	0.0536438);
-    730 GeV	0.0513219);
-    735 GeV	0.0491001);
-    740 GeV	0.0470801);
-    745 GeV	0.045061);
-    750 GeV	0.0431418);
-    755 GeV	0.0413447);
-    760 GeV	0.0396264);
-    765 GeV	0.0379036);
-    770 GeV	0.0363856);
-    775 GeV	0.0348796);
-    780 GeV	0.0334669);
-    785 GeV	0.0320548);
-    790 GeV	0.0307373);
-    795 GeV	0.0295348);
-    800 GeV	0.0283338);
-    805 GeV	0.0272206);
-    810 GeV	0.0261233);
-    815 GeV	0.0251107);
-    820 GeV	0.0241099);
-    825 GeV	0.0230866);
-    830 GeV	0.0221834);
-    835 GeV	0.0213766);
-    840 GeV	0.0204715);
-    845 GeV	0.0197653);
-    850 GeV	0.0189612);
-    855 GeV	0.0182516);
-    860 GeV	0.0175509);
-    865 GeV	0.0168336);
-    870 GeV	0.0162314);
-    875 GeV	0.015625);
-    880 GeV	0.0150143);
-    885 GeV	0.0144112);
-    890 GeV	0.0138979);
-    895 GeV	0.0133962);
-    900 GeV	0.0128895);
-    905 GeV	0.0123843);
-    910 GeV	0.0119837);
-    915 GeV	0.0114713);
-    920 GeV	0.0110688);
-    925 GeV	0.0106631);
-    930 GeV	0.0102629);
-    935 GeV	0.0098874);
-    940 GeV	0.00952142);
-    945 GeV	0.00916636);
-    950 GeV	0.00883465);
-    955 GeV	0.00851073);
-    960 GeV	0.00820884);
-    965 GeV	0.00791403);
-    970 GeV	0.00763112);
-    975 GeV	0.00735655);
-    980 GeV	0.00710317);
-    985 GeV	0.00684867);
-    990 GeV	0.00660695);
-    995 GeV	0.00637546);
-    1000 GeV	0.00615134);
-    1005 GeV	0.00593765 ± 16.3716%
-    1010 GeV	0.00572452 ± 16.3857%
-    1015 GeV	0.00553094 ± 16.4628%
-    1020 GeV	0.00533968 ± 16.4963%
-    1025 GeV	0.00514619 ± 16.5762%
-    1030 GeV	0.00497235 ± 16.5838%
-    1035 GeV	0.00479906 ± 16.6646%
-    1040 GeV	0.00463806 ± 16.6947%
-    1045 GeV	0.00447537 ± 16.7071%
-    1050 GeV	0.00432261 ± 16.7859%
-    1055 GeV	0.00417983 ± 16.8637%
-    1060 GeV	0.00403886 ± 16.8981%
-    1065 GeV	0.0038962 ± 16.9794%
-    1070 GeV	0.00376343 ± 16.9764%
-    1075 GeV	0.00364174 ± 17.0634%
-    1080 GeV	0.00352093 ± 17.0908%
-    1085 GeV	0.00339813 ± 17.1929%
-    1090 GeV	0.00328695 ± 17.2274%
-    1095 GeV	0.00317628 ± 17.2617%
-    1100 GeV	0.00307413 ± 17.3377%
-    1105 GeV	0.00297377 ± 17.3822%
-    1110 GeV	0.00287148 ± 17.4725%
-    1115 GeV	0.00278078 ± 17.5091%
-    1120 GeV	0.00268873 ± 17.5883%
-    1125 GeV	0.00260821 ± 17.6126%
-    1130 GeV	0.00251529 ± 17.6836%
-    1135 GeV	0.00243484 ± 17.7128%
-    1140 GeV	0.00236295 ± 17.7977%
-    1145 GeV	0.00228192 ± 17.8507%
-    1150 GeV	0.00221047 ± 17.9259%
-    1155 GeV	0.00213907 ± 18.0255%
-    1160 GeV	0.00206845 ± 18.0518%
-    1165 GeV	0.0020063 ± 18.0954%
-    1170 GeV	0.00194569 ± 18.1194%
-    1175 GeV	0.0018741 ± 18.2145%
-    1180 GeV	0.00182266 ± 18.3074%
-    1185 GeV	0.00176211 ± 18.3375%
-    1190 GeV	0.00170006 ± 18.4075%
-    1195 GeV	0.00164968 ± 18.4438%
-    1200 GeV	0.00159844 ± 18.5209%
-    1205 GeV	0.0015472 ± 18.5977%
-    1210 GeV	0.00149657 ± 18.6485%
-    1215 GeV	0.00145544 ± 18.7347%
-    1220 GeV	0.00140288 ± 18.8774%
-    1225 GeV	0.00136155 ± 18.989%
-    1230 GeV	0.00131271 ± 18.8763%
-    1235 GeV	0.0012717 ± 18.9588%
-    1240 GeV	0.00123066 ± 19.049%
-    1245 GeV	0.00119994 ± 19.1442%
-    1250 GeV	0.0011583 ± 19.3006%
-    1255 GeV	0.00112694 ± 19.4441%
-    1260 GeV	0.00108716 ± 19.4141%
-    1265 GeV	0.00105517 ± 19.6361%
-    1270 GeV	0.00102241 ± 19.6297%
-    1275 GeV	0.000991293 ± 19.762%
-    1280 GeV	0.000961012 ± 19.7926%
-    1285 GeV	0.000932394 ± 19.8682%
-    1290 GeV	0.000903404 ± 19.9924%
-    1295 GeV	0.000876957 ± 20.0777%
-    1300 GeV	0.000850345 ± 20.1604%
-    1305 GeV	0.00082443 ± 20.2883%
-    1310 GeV	0.00079983 ± 20.373%
-    1315 GeV	0.000775222 ± 20.4622%
-    1320 GeV	0.000751372 ± 20.5919%
-    1325 GeV	0.000728912 ± 20.6884%
-    1330 GeV	0.000706867 ± 20.7763%
-    1335 GeV	0.000685372 ± 20.8587%
-    1340 GeV	0.000664649 ± 20.9879%
-    1345 GeV	0.000644804 ± 21.1487%
-    1350 GeV	0.000625155 ± 21.2761%
-    1355 GeV	0.000606802 ± 21.3529%
-    1360 GeV	0.000588512 ± 21.4428%
-    1365 GeV	0.000570506 ± 21.6584%
-    1370 GeV	0.000553379 ± 21.6036%
-    1375 GeV	0.000536646 ± 21.775%
-    1380 GeV	0.000521404 ± 21.8383%
-    1385 GeV	0.000505008 ± 21.9675%
-    1390 GeV	0.000490353 ± 22.1444%
-    1395 GeV	0.000476164 ± 22.2016%
-    1400 GeV	0.000461944 ± 22.2704%
-    1405 GeV	0.000448172 ± 22.4911%
-    1410 GeV	0.000435082 ± 22.5606%
-    1415 GeV	0.000422967 ± 22.6095%
-    1420 GeV	0.000410381 ± 22.797%
-    1425 GeV	0.000398106 ± 22.8949%
-    1430 GeV	0.000386792 ± 23.1319%
-    1435 GeV	0.000375724 ± 23.1724%
-    1440 GeV	0.000364616 ± 23.2234%
-    1445 GeV	0.000353965 ± 23.4637%
-    1450 GeV	0.000343923 ± 23.4948%
-    1455 GeV	0.000333885 ± 23.5468%
-    1460 GeV	0.000324344 ± 23.771%
-    1465 GeV	0.0003153 ± 23.8004%
-    1470 GeV	0.00030583 ± 24.0064%
-    1475 GeV	0.000296811 ± 24.0314%
-    1480 GeV	0.000288149 ± 23.9248%
-    1485 GeV	0.000279711 ± 24.1257%
-    1490 GeV	0.000271724 ± 24.1274%
-    1495 GeV	0.000264275 ± 24.3545%
-    1500 GeV	0.000256248 ± 24.372%
-    1505 GeV	0.000248853 ± 24.5827%
-    1510 GeV	0.000241844 ± 24.6187%
-    1515 GeV	0.000234438 ± 24.8442%
-    1520 GeV	0.000227374 ± 24.8909%
-    1525 GeV	0.000221045 ± 25.0895%
-    1530 GeV	0.000214431 ± 24.8728%
-    1535 GeV	0.000208092 ± 25.1043%
-    1540 GeV	0.000201748 ± 25.3207%
-    1545 GeV	0.000196399 ± 25.5641%
-    1550 GeV	0.000190474 ± 25.5213%
-    1555 GeV	0.000185188 ± 25.7329%
-    1560 GeV	0.000179263 ± 25.6931%
-    1565 GeV	0.000174021 ± 25.9111%
-    1570 GeV	0.000169176 ± 25.8106%
-    1575 GeV	0.000163861 ± 26.0597%
-    1580 GeV	0.000159583 ± 26.2958%
-    1585 GeV	0.000154719 ± 26.195%
-    1590 GeV	0.000150506 ± 26.4111%
-    1595 GeV	0.000145626 ± 26.3077%
-    1600 GeV	0.000141382 ± 26.5291%
-    1605 GeV	0.000137131 ± 26.7424%
-    1610 GeV	0.000132187 ± 26.668%
-    1615 GeV	0.000127929 ± 26.9117%
-    1620 GeV	0.000124086 ± 26.7738%
-    1625 GeV	0.00011982 ± 27.0483%
-    1630 GeV	0.000116042 ± 26.8071%
-    1635 GeV	0.000112767 ± 27.127%
-    1640 GeV	0.000108936 ± 26.9351%
-    1645 GeV	0.000105746 ± 27.1783%
-    1650 GeV	0.000102693 ± 27.292%
-    1655 GeV	0.000100112 ± 27.4445%
-    1660 GeV	9.75763e-05 ± 27.5431%
-    1665 GeV	9.52062e-05 ± 27.6946%
-    1670 GeV	9.29857e-05 ± 27.7869%
-    1675 GeV	9.08285e-05 ± 27.9347%
-    1680 GeV	8.87433e-05 ± 28.1539%
-    1685 GeV	8.66618e-05 ± 28.3509%
-    1690 GeV	8.46535e-05 ± 28.4432%
-    1695 GeV	8.27102e-05 ± 28.591%
-    1700 GeV	8.07774e-05 ± 28.7497%
-    1705 GeV	7.8666e-05 ± 28.8194%
-    1710 GeV	7.6572e-05 ± 29.0265%
-    1715 GeV	7.45994e-05 ± 29.1193%
-    1720 GeV	7.25199e-05 ± 29.3013%
-    1725 GeV	7.05189e-05 ± 29.3697%
-    1730 GeV	6.85712e-05 ± 29.4972%
-    1735 GeV	6.67296e-05 ± 29.6167%
-    1740 GeV	6.49184e-05 ± 29.7686%
-    1745 GeV	6.30949e-05 ± 29.8524%
-    1750 GeV	6.13637e-05 ± 29.9789%
-    1755 GeV	5.97301e-05 ± 30.0928%
-    1760 GeV	5.80751e-05 ± 30.2585%
-    1765 GeV	5.65479e-05 ± 30.366%
-    1770 GeV	5.49998e-05 ± 30.5241%
-    1775 GeV	5.35686e-05 ± 30.6718%
-    1780 GeV	5.20828e-05 ± 30.6799%
-    1785 GeV	5.07079e-05 ± 30.9201%
-    1790 GeV	4.93948e-05 ± 31.0043%
-    1795 GeV	4.80635e-05 ± 31.138%
-    1800 GeV	4.67492e-05 ± 31.2291%
-    1805 GeV	4.55055e-05 ± 31.4321%
-    1810 GeV	4.42835e-05 ± 31.5499%
-    1815 GeV	4.30744e-05 ± 31.6302%
-    1820 GeV	4.19954e-05 ± 31.7151%
-    1825 GeV	4.08527e-05 ± 31.9048%
-    1830 GeV	3.97561e-05 ± 31.9718%
-    1835 GeV	3.87041e-05 ± 32.2028%
-    1840 GeV	3.76008e-05 ± 32.268%
-    1845 GeV	3.66914e-05 ± 32.4529%
-    1850 GeV	3.56995e-05 ± 32.5039%
-    1855 GeV	3.47689e-05 ± 32.6767%
-    1860 GeV	3.38528e-05 ± 32.8878%
-    1865 GeV	3.29644e-05 ± 32.8975%
-    1870 GeV	3.20679e-05 ± 32.9608%
-    1875 GeV	3.12583e-05 ± 33.1541%
-    1880 GeV	3.04342e-05 ± 33.3117%
-    1885 GeV	2.96516e-05 ± 33.2866%
-    1890 GeV	2.88952e-05 ± 33.6279%
-    1895 GeV	2.81145e-05 ± 33.6845%
-    1900 GeV	2.73974e-05 ± 33.8247%
-    1905 GeV	2.66796e-05 ± 33.9708%
-    1910 GeV	2.59941e-05 ± 33.9526%
-    1915 GeV	2.52784e-05 ± 34.1137%
-    1920 GeV	2.46598e-05 ± 34.2714%
-    1925 GeV	2.39932e-05 ± 34.2328%
-    1930 GeV	2.33737e-05 ± 34.394%
-    1935 GeV	2.27623e-05 ± 34.5138%
-    1940 GeV	2.21454e-05 ± 34.6933%
-    1945 GeV	2.15924e-05 ± 35.0815%
-    1950 GeV	2.10232e-05 ± 34.9444%
-    1955 GeV	2.05211e-05 ± 35.0155%
-    1960 GeV	1.98996e-05 ± 35.2135%
-    1965 GeV	1.9408e-05 ± 35.3328%
-    1970 GeV	1.88974e-05 ± 35.4643%
-    1975 GeV	1.84612e-05 ± 35.7904%
-    1980 GeV	1.79562e-05 ± 35.8898%
-    1985 GeV	1.75673e-05 ± 35.989%
-    1990 GeV	1.70612e-05 ± 36.0953%
-    1995 GeV	1.66228e-05 ± 36.4709%
-    2000 GeV	1.62355e-05 ± 36.5277%
-  */
-  
+  Label2Xsec["StopStop"].push_back(1521.11);
+  Label2Xsec["StopStop"].push_back(1233.18);
+  Label2Xsec["StopStop"].push_back(1013.76);
+  Label2Xsec["StopStop"].push_back(832.656);
+  Label2Xsec["StopStop"].push_back(689.799);
+  Label2Xsec["StopStop"].push_back(574.981);
+  Label2Xsec["StopStop"].push_back(481.397);
+  Label2Xsec["StopStop"].push_back(405.159);
+  Label2Xsec["StopStop"].push_back(342.865);
+  Label2Xsec["StopStop"].push_back(291.752);
+  Label2Xsec["StopStop"].push_back(249.409);
+  Label2Xsec["StopStop"].push_back(214.221);
+  Label2Xsec["StopStop"].push_back(184.623);
+  Label2Xsec["StopStop"].push_back(159.614);
+  Label2Xsec["StopStop"].push_back(139.252);
+  Label2Xsec["StopStop"].push_back(121.416);
+  Label2Xsec["StopStop"].push_back(106.194);
+  Label2Xsec["StopStop"].push_back(93.3347);
+  Label2Xsec["StopStop"].push_back(82.2541);
+  Label2Xsec["StopStop"].push_back(72.7397);
+  Label2Xsec["StopStop"].push_back(64.5085);
+  Label2Xsec["StopStop"].push_back(57.2279);
+  Label2Xsec["StopStop"].push_back(50.9226);
+  Label2Xsec["StopStop"].push_back(45.3761);
+  Label2Xsec["StopStop"].push_back(40.5941);
+  Label2Xsec["StopStop"].push_back(36.3818);
+  Label2Xsec["StopStop"].push_back(32.6679);
+  Label2Xsec["StopStop"].push_back(29.3155);
+  Label2Xsec["StopStop"].push_back(26.4761);
+  Label2Xsec["StopStop"].push_back(23.8853);
+  Label2Xsec["StopStop"].push_back(21.5949);
+  Label2Xsec["StopStop"].push_back(19.5614);
+  Label2Xsec["StopStop"].push_back(17.6836);
+  Label2Xsec["StopStop"].push_back(16.112);
+  Label2Xsec["StopStop"].push_back(14.6459);
+  Label2Xsec["StopStop"].push_back(13.3231);
+  Label2Xsec["StopStop"].push_back(12.1575);
+  Label2Xsec["StopStop"].push_back(11.0925);
+  Label2Xsec["StopStop"].push_back(10.1363);
+  Label2Xsec["StopStop"].push_back(9.29002);
+  Label2Xsec["StopStop"].push_back(8.51615);
+  Label2Xsec["StopStop"].push_back(7.81428);
+  Label2Xsec["StopStop"].push_back(7.17876);
+  Label2Xsec["StopStop"].push_back(6.60266);
+  Label2Xsec["StopStop"].push_back(6.08444);
+  Label2Xsec["StopStop"].push_back(5.60471);
+  Label2Xsec["StopStop"].push_back(5.17188);
+  Label2Xsec["StopStop"].push_back(4.77871);
+  Label2Xsec["StopStop"].push_back(4.41629);
+  Label2Xsec["StopStop"].push_back(4.08881);
+  Label2Xsec["StopStop"].push_back(3.78661);
+  Label2Xsec["StopStop"].push_back(3.50911);
+  Label2Xsec["StopStop"].push_back(3.25619);
+  Label2Xsec["StopStop"].push_back(3.02472);
+  Label2Xsec["StopStop"].push_back(2.8077);
+  Label2Xsec["StopStop"].push_back(2.61162);
+  Label2Xsec["StopStop"].push_back(2.43031);
+  Label2Xsec["StopStop"].push_back(2.26365);
+  Label2Xsec["StopStop"].push_back(2.10786);
+  Label2Xsec["StopStop"].push_back(1.9665);
+  Label2Xsec["StopStop"].push_back(1.83537);
+  Label2Xsec["StopStop"].push_back(1.70927);
+  Label2Xsec["StopStop"].push_back(1.60378);
+  Label2Xsec["StopStop"].push_back(1.49798);
+  Label2Xsec["StopStop"].push_back(1.39688);
+  Label2Xsec["StopStop"].push_back(1.31169);
+  Label2Xsec["StopStop"].push_back(1.22589);
+  Label2Xsec["StopStop"].push_back(1.14553);
+  Label2Xsec["StopStop"].push_back(1.07484);
+  Label2Xsec["StopStop"].push_back(1.01019);
+  Label2Xsec["StopStop"].push_back(0.948333);
+  Label2Xsec["StopStop"].push_back(0.890847);
+  Label2Xsec["StopStop"].push_back(0.836762);
+  Label2Xsec["StopStop"].push_back(0.787221);
+  Label2Xsec["StopStop"].push_back(0.740549);
+  Label2Xsec["StopStop"].push_back(0.697075);
+  Label2Xsec["StopStop"].push_back(0.655954);
+  Label2Xsec["StopStop"].push_back(0.618562);
+  Label2Xsec["StopStop"].push_back(0.582467);
+  Label2Xsec["StopStop"].push_back(0.549524);
+  Label2Xsec["StopStop"].push_back(0.51848);
+  Label2Xsec["StopStop"].push_back(0.489324);
+  Label2Xsec["StopStop"].push_back(0.462439);
+  Label2Xsec["StopStop"].push_back(0.436832);
+  Label2Xsec["StopStop"].push_back(0.412828);
+  Label2Xsec["StopStop"].push_back(0.390303);
+  Label2Xsec["StopStop"].push_back(0.368755);
+  Label2Xsec["StopStop"].push_back(0.348705);
+  Label2Xsec["StopStop"].push_back(0.330157);
+  Label2Xsec["StopStop"].push_back(0.312672);
+  Label2Xsec["StopStop"].push_back(0.296128);
+  Label2Xsec["StopStop"].push_back(0.280734);
+  Label2Xsec["StopStop"].push_back(0.266138);
+  Label2Xsec["StopStop"].push_back(0.251557);
+  Label2Xsec["StopStop"].push_back(0.238537);
+  Label2Xsec["StopStop"].push_back(0.226118);
+  Label2Xsec["StopStop"].push_back(0.214557);
+  Label2Xsec["StopStop"].push_back(0.203566);
+  Label2Xsec["StopStop"].push_back(0.193079);
+  Label2Xsec["StopStop"].push_back(0.183604);
+  Label2Xsec["StopStop"].push_back(0.174599);
+  Label2Xsec["StopStop"].push_back(0.166131);
+  Label2Xsec["StopStop"].push_back(0.158242);
+  Label2Xsec["StopStop"].push_back(0.150275);
+  Label2Xsec["StopStop"].push_back(0.142787);
+  Label2Xsec["StopStop"].push_back(0.136372);
+  Label2Xsec["StopStop"].push_back(0.129886);
+  Label2Xsec["StopStop"].push_back(0.123402);
+  Label2Xsec["StopStop"].push_back(0.11795);
+  Label2Xsec["StopStop"].push_back(0.112008);
+  Label2Xsec["StopStop"].push_back(0.107045);
+  Label2Xsec["StopStop"].push_back(0.102081);
+  Label2Xsec["StopStop"].push_back(0.09725);
+  Label2Xsec["StopStop"].push_back(0.0927515);
+  Label2Xsec["StopStop"].push_back(0.0885084);
+  Label2Xsec["StopStop"].push_back(0.0844877);
+  Label2Xsec["StopStop"].push_back(0.0806192);
+  Label2Xsec["StopStop"].push_back(0.0769099);
+  Label2Xsec["StopStop"].push_back(0.0734901);
+  Label2Xsec["StopStop"].push_back(0.0701805);
+  Label2Xsec["StopStop"].push_back(0.0670476);
+  Label2Xsec["StopStop"].push_back(0.0641426);
+  Label2Xsec["StopStop"].push_back(0.0612942);
+  Label2Xsec["StopStop"].push_back(0.0585678);
+  Label2Xsec["StopStop"].push_back(0.0560753);
+  Label2Xsec["StopStop"].push_back(0.0536438);
+  Label2Xsec["StopStop"].push_back(0.0513219);
+  Label2Xsec["StopStop"].push_back(0.0491001);
+  Label2Xsec["StopStop"].push_back(0.0470801);
+  Label2Xsec["StopStop"].push_back(0.045061);
+  Label2Xsec["StopStop"].push_back(0.0431418);
+  Label2Xsec["StopStop"].push_back(0.0413447);
+  Label2Xsec["StopStop"].push_back(0.0396264);
+  Label2Xsec["StopStop"].push_back(0.0379036);
+  Label2Xsec["StopStop"].push_back(0.0363856);
+  Label2Xsec["StopStop"].push_back(0.0348796);
+  Label2Xsec["StopStop"].push_back(0.0334669);
+  Label2Xsec["StopStop"].push_back(0.0320548);
+  Label2Xsec["StopStop"].push_back(0.0307373);
+  Label2Xsec["StopStop"].push_back(0.0295348);
+  Label2Xsec["StopStop"].push_back(0.0283338);
+  Label2Xsec["StopStop"].push_back(0.0272206);
+  Label2Xsec["StopStop"].push_back(0.0261233);
+  Label2Xsec["StopStop"].push_back(0.0251107);
+  Label2Xsec["StopStop"].push_back(0.0241099);
+  Label2Xsec["StopStop"].push_back(0.0230866);
+  Label2Xsec["StopStop"].push_back(0.0221834);
+  Label2Xsec["StopStop"].push_back(0.0213766);
+  Label2Xsec["StopStop"].push_back(0.0204715);
+  Label2Xsec["StopStop"].push_back(0.0197653);
+  Label2Xsec["StopStop"].push_back(0.0189612);
+  Label2Xsec["StopStop"].push_back(0.0182516);
+  Label2Xsec["StopStop"].push_back(0.0175509);
+  Label2Xsec["StopStop"].push_back(0.0168336);
+  Label2Xsec["StopStop"].push_back(0.0162314);
+  Label2Xsec["StopStop"].push_back(0.015625);
+  Label2Xsec["StopStop"].push_back(0.0150143);
+  Label2Xsec["StopStop"].push_back(0.0144112);
+  Label2Xsec["StopStop"].push_back(0.0138979);
+  Label2Xsec["StopStop"].push_back(0.0133962);
+  Label2Xsec["StopStop"].push_back(0.0128895);
+  Label2Xsec["StopStop"].push_back(0.0123843);
+  Label2Xsec["StopStop"].push_back(0.0119837);
+  Label2Xsec["StopStop"].push_back(0.0114713);
+  Label2Xsec["StopStop"].push_back(0.0110688);
+  Label2Xsec["StopStop"].push_back(0.0106631);
+  Label2Xsec["StopStop"].push_back(0.0102629);
+  Label2Xsec["StopStop"].push_back(0.0098874);
+  Label2Xsec["StopStop"].push_back(0.00952142);
+  Label2Xsec["StopStop"].push_back(0.00916636);
+  Label2Xsec["StopStop"].push_back(0.00883465);
+  Label2Xsec["StopStop"].push_back(0.00851073);
+  Label2Xsec["StopStop"].push_back(0.00820884);
+  Label2Xsec["StopStop"].push_back(0.00791403);
+  Label2Xsec["StopStop"].push_back(0.00763112);
+  Label2Xsec["StopStop"].push_back(0.00735655);
+  Label2Xsec["StopStop"].push_back(0.00710317);
+  Label2Xsec["StopStop"].push_back(0.00684867);
+  Label2Xsec["StopStop"].push_back(0.00660695);
+  Label2Xsec["StopStop"].push_back(0.00637546);
+  Label2Xsec["StopStop"].push_back(0.00615134);
+  Label2Xsec["StopStop"].push_back(0.00593765);
+  Label2Xsec["StopStop"].push_back(0.00572452);
+  Label2Xsec["StopStop"].push_back(0.00553094);
+  Label2Xsec["StopStop"].push_back(0.00533968);
+  Label2Xsec["StopStop"].push_back(0.00514619);
+  Label2Xsec["StopStop"].push_back(0.00497235);
+  Label2Xsec["StopStop"].push_back(0.00479906);
+  Label2Xsec["StopStop"].push_back(0.00463806);
+  Label2Xsec["StopStop"].push_back(0.00447537);
+  Label2Xsec["StopStop"].push_back(0.00432261);
+  Label2Xsec["StopStop"].push_back(0.00417983);
+  Label2Xsec["StopStop"].push_back(0.00403886);
+  Label2Xsec["StopStop"].push_back(0.0038962);
+  Label2Xsec["StopStop"].push_back(0.00376343);
+  Label2Xsec["StopStop"].push_back(0.00364174);
+  Label2Xsec["StopStop"].push_back(0.00352093);
+  Label2Xsec["StopStop"].push_back(0.00339813);
+  Label2Xsec["StopStop"].push_back(0.00328695);
+  Label2Xsec["StopStop"].push_back(0.00317628);
+  Label2Xsec["StopStop"].push_back(0.00307413);
+  Label2Xsec["StopStop"].push_back(0.00297377);
+  Label2Xsec["StopStop"].push_back(0.00287148);
+  Label2Xsec["StopStop"].push_back(0.00278078);
+  Label2Xsec["StopStop"].push_back(0.00268873);
+  Label2Xsec["StopStop"].push_back(0.00260821);
+  Label2Xsec["StopStop"].push_back(0.00251529);
+  Label2Xsec["StopStop"].push_back(0.00243484);
+  Label2Xsec["StopStop"].push_back(0.00236295);
+  Label2Xsec["StopStop"].push_back(0.00228192);
+  Label2Xsec["StopStop"].push_back(0.00221047);
+  Label2Xsec["StopStop"].push_back(0.00213907);
+  Label2Xsec["StopStop"].push_back(0.00206845);
+  Label2Xsec["StopStop"].push_back(0.0020063);
+  Label2Xsec["StopStop"].push_back(0.00194569);
+  Label2Xsec["StopStop"].push_back(0.0018741);
+  Label2Xsec["StopStop"].push_back(0.00182266);
+  Label2Xsec["StopStop"].push_back(0.00176211);
+  Label2Xsec["StopStop"].push_back(0.00170006);
+  Label2Xsec["StopStop"].push_back(0.00164968);
+  Label2Xsec["StopStop"].push_back(0.00159844);
+  Label2Xsec["StopStop"].push_back(0.0015472);
+  Label2Xsec["StopStop"].push_back(0.00149657);
+  Label2Xsec["StopStop"].push_back(0.00145544);
+  Label2Xsec["StopStop"].push_back(0.00140288);
+  Label2Xsec["StopStop"].push_back(0.00136155);
+  Label2Xsec["StopStop"].push_back(0.00131271);
+  Label2Xsec["StopStop"].push_back(0.0012717);
+  Label2Xsec["StopStop"].push_back(0.00123066);
+  Label2Xsec["StopStop"].push_back(0.00119994);
+  Label2Xsec["StopStop"].push_back(0.0011583);
+  Label2Xsec["StopStop"].push_back(0.00112694);
+  Label2Xsec["StopStop"].push_back(0.00108716);
+  Label2Xsec["StopStop"].push_back(0.00105517);
+  Label2Xsec["StopStop"].push_back(0.00102241);
+  Label2Xsec["StopStop"].push_back(0.000991293);
+  Label2Xsec["StopStop"].push_back(0.000961012);
+  Label2Xsec["StopStop"].push_back(0.000932394);
+  Label2Xsec["StopStop"].push_back(0.000903404);
+  Label2Xsec["StopStop"].push_back(0.000876957);
+  Label2Xsec["StopStop"].push_back(0.000850345);
+  Label2Xsec["StopStop"].push_back(0.00082443);
+  Label2Xsec["StopStop"].push_back(0.00079983);
+  Label2Xsec["StopStop"].push_back(0.000775222);
+  Label2Xsec["StopStop"].push_back(0.000751372);
+  Label2Xsec["StopStop"].push_back(0.000728912);
+  Label2Xsec["StopStop"].push_back(0.000706867);
+  Label2Xsec["StopStop"].push_back(0.000685372);
+  Label2Xsec["StopStop"].push_back(0.000664649);
+  Label2Xsec["StopStop"].push_back(0.000644804);
+  Label2Xsec["StopStop"].push_back(0.000625155);
+  Label2Xsec["StopStop"].push_back(0.000606802);
+  Label2Xsec["StopStop"].push_back(0.000588512);
+  Label2Xsec["StopStop"].push_back(0.000570506);
+  Label2Xsec["StopStop"].push_back(0.000553379);
+  Label2Xsec["StopStop"].push_back(0.000536646);
+  Label2Xsec["StopStop"].push_back(0.000521404);
+  Label2Xsec["StopStop"].push_back(0.000505008);
+  Label2Xsec["StopStop"].push_back(0.000490353);
+  Label2Xsec["StopStop"].push_back(0.000476164);
+  Label2Xsec["StopStop"].push_back(0.000461944);
+  Label2Xsec["StopStop"].push_back(0.000448172);
+  Label2Xsec["StopStop"].push_back(0.000435082);
+  Label2Xsec["StopStop"].push_back(0.000422967);
+  Label2Xsec["StopStop"].push_back(0.000410381);
+  Label2Xsec["StopStop"].push_back(0.000398106);
+  Label2Xsec["StopStop"].push_back(0.000386792);
+  Label2Xsec["StopStop"].push_back(0.000375724);
+  Label2Xsec["StopStop"].push_back(0.000364616);
+  Label2Xsec["StopStop"].push_back(0.000353965);
+  Label2Xsec["StopStop"].push_back(0.000343923);
+  Label2Xsec["StopStop"].push_back(0.000333885);
+  Label2Xsec["StopStop"].push_back(0.000324344);
+  Label2Xsec["StopStop"].push_back(0.0003153);
+  Label2Xsec["StopStop"].push_back(0.00030583);
+  Label2Xsec["StopStop"].push_back(0.000296811);
+  Label2Xsec["StopStop"].push_back(0.000288149);
+  Label2Xsec["StopStop"].push_back(0.000279711);
+  Label2Xsec["StopStop"].push_back(0.000271724);
+  Label2Xsec["StopStop"].push_back(0.000264275);
+  Label2Xsec["StopStop"].push_back(0.000256248);
+  Label2Xsec["StopStop"].push_back(0.000248853);
+  Label2Xsec["StopStop"].push_back(0.000241844);
+  Label2Xsec["StopStop"].push_back(0.000234438);
+  Label2Xsec["StopStop"].push_back(0.000227374);
+  Label2Xsec["StopStop"].push_back(0.000221045);
+  Label2Xsec["StopStop"].push_back(0.000214431);
+  Label2Xsec["StopStop"].push_back(0.000208092);
+  Label2Xsec["StopStop"].push_back(0.000201748);
+  Label2Xsec["StopStop"].push_back(0.000196399);
+  Label2Xsec["StopStop"].push_back(0.000190474);
+  Label2Xsec["StopStop"].push_back(0.000185188);
+  Label2Xsec["StopStop"].push_back(0.000179263);
+  Label2Xsec["StopStop"].push_back(0.000174021);
+  Label2Xsec["StopStop"].push_back(0.000169176);
+  Label2Xsec["StopStop"].push_back(0.000163861);
+  Label2Xsec["StopStop"].push_back(0.000159583);
+  Label2Xsec["StopStop"].push_back(0.000154719);
+  Label2Xsec["StopStop"].push_back(0.000150506);
+  Label2Xsec["StopStop"].push_back(0.000145626);
+  Label2Xsec["StopStop"].push_back(0.000141382);
+  Label2Xsec["StopStop"].push_back(0.000137131);
+  Label2Xsec["StopStop"].push_back(0.000132187);
+  Label2Xsec["StopStop"].push_back(0.000127929);
+  Label2Xsec["StopStop"].push_back(0.000124086);
+  Label2Xsec["StopStop"].push_back(0.00011982);
+  Label2Xsec["StopStop"].push_back(0.000116042);
+  Label2Xsec["StopStop"].push_back(0.000112767);
+  Label2Xsec["StopStop"].push_back(0.000108936);
+  Label2Xsec["StopStop"].push_back(0.000105746);
+  Label2Xsec["StopStop"].push_back(0.000102693);
+  Label2Xsec["StopStop"].push_back(0.000100112);
+  Label2Xsec["StopStop"].push_back(9.75763e-05);
+  Label2Xsec["StopStop"].push_back(9.52062e-05);
+  Label2Xsec["StopStop"].push_back(9.29857e-05);
+  Label2Xsec["StopStop"].push_back(9.08285e-05);
+  Label2Xsec["StopStop"].push_back(8.87433e-05);
+  Label2Xsec["StopStop"].push_back(8.66618e-05);
+  Label2Xsec["StopStop"].push_back(8.46535e-05);
+  Label2Xsec["StopStop"].push_back(8.27102e-05);
+  Label2Xsec["StopStop"].push_back(8.07774e-05);
+  Label2Xsec["StopStop"].push_back(7.8666e-05);
+  Label2Xsec["StopStop"].push_back(7.6572e-05);
+  Label2Xsec["StopStop"].push_back(7.45994e-05);
+  Label2Xsec["StopStop"].push_back(7.25199e-05);
+  Label2Xsec["StopStop"].push_back(7.05189e-05);
+  Label2Xsec["StopStop"].push_back(6.85712e-05);
+  Label2Xsec["StopStop"].push_back(6.67296e-05);
+  Label2Xsec["StopStop"].push_back(6.49184e-05);
+  Label2Xsec["StopStop"].push_back(6.30949e-05);
+  Label2Xsec["StopStop"].push_back(6.13637e-05);
+  Label2Xsec["StopStop"].push_back(5.97301e-05);
+  Label2Xsec["StopStop"].push_back(5.80751e-05);
+  Label2Xsec["StopStop"].push_back(5.65479e-05);
+  Label2Xsec["StopStop"].push_back(5.49998e-05);
+  Label2Xsec["StopStop"].push_back(5.35686e-05);
+  Label2Xsec["StopStop"].push_back(5.20828e-05);
+  Label2Xsec["StopStop"].push_back(5.07079e-05);
+  Label2Xsec["StopStop"].push_back(4.93948e-05);
+  Label2Xsec["StopStop"].push_back(4.80635e-05);
+  Label2Xsec["StopStop"].push_back(4.67492e-05);
+  Label2Xsec["StopStop"].push_back(4.55055e-05);
+  Label2Xsec["StopStop"].push_back(4.42835e-05);
+  Label2Xsec["StopStop"].push_back(4.30744e-05);
+  Label2Xsec["StopStop"].push_back(4.19954e-05);
+  Label2Xsec["StopStop"].push_back(4.08527e-05);
+  Label2Xsec["StopStop"].push_back(3.97561e-05);
+  Label2Xsec["StopStop"].push_back(3.87041e-05);
+  Label2Xsec["StopStop"].push_back(3.76008e-05);
+  Label2Xsec["StopStop"].push_back(3.66914e-05);
+  Label2Xsec["StopStop"].push_back(3.56995e-05);
+  Label2Xsec["StopStop"].push_back(3.47689e-05);
+  Label2Xsec["StopStop"].push_back(3.38528e-05);
+  Label2Xsec["StopStop"].push_back(3.29644e-05);
+  Label2Xsec["StopStop"].push_back(3.20679e-05);
+  Label2Xsec["StopStop"].push_back(3.12583e-05);
+  Label2Xsec["StopStop"].push_back(3.04342e-05);
+  Label2Xsec["StopStop"].push_back(2.96516e-05);
+  Label2Xsec["StopStop"].push_back(2.88952e-05);
+  Label2Xsec["StopStop"].push_back(2.81145e-05);
+  Label2Xsec["StopStop"].push_back(2.73974e-05);
+  Label2Xsec["StopStop"].push_back(2.66796e-05);
+  Label2Xsec["StopStop"].push_back(2.59941e-05);
+  Label2Xsec["StopStop"].push_back(2.52784e-05);
+  Label2Xsec["StopStop"].push_back(2.46598e-05);
+  Label2Xsec["StopStop"].push_back(2.39932e-05);
+  Label2Xsec["StopStop"].push_back(2.33737e-05);
+  Label2Xsec["StopStop"].push_back(2.27623e-05);
+  Label2Xsec["StopStop"].push_back(2.21454e-05);
+  Label2Xsec["StopStop"].push_back(2.15924e-05);
+  Label2Xsec["StopStop"].push_back(2.10232e-05);
+  Label2Xsec["StopStop"].push_back(2.05211e-05);
+  Label2Xsec["StopStop"].push_back(1.98996e-05);
+  Label2Xsec["StopStop"].push_back(1.9408e-05);
+  Label2Xsec["StopStop"].push_back(1.88974e-05);
+  Label2Xsec["StopStop"].push_back(1.84612e-05);
+  Label2Xsec["StopStop"].push_back(1.79562e-05);
+  Label2Xsec["StopStop"].push_back(1.75673e-05);
+  Label2Xsec["StopStop"].push_back(1.70612e-05);
+  Label2Xsec["StopStop"].push_back(1.66228e-05);
+  Label2Xsec["StopStop"].push_back(1.62355e-05);
+   
   return Label2Xsec;
 }
 
