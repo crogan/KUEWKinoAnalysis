@@ -7,35 +7,24 @@ template <class Base>
 NtupleBase<Base>::NtupleBase(TTree* tree)
   : AnalysisBase<Base>(tree)
 {
-  m_Tree = nullptr;
-  m_EvtTree = nullptr;
+  
 }
 
 template <class Base>
 NtupleBase<Base>::~NtupleBase(){
-  if(m_Tree)
-    delete m_Tree;
-  if(m_EvtTree)
-    delete m_EvtTree;
+  int Ntree = m_Trees.size();
+  for(int i = 0; i < Ntree; i++)
+    if(m_Trees[i])
+      delete m_Trees[i];
 }
 
 template <class Base>
 void NtupleBase<Base>::WriteNtuple(const string& filename){
   TFile* outfile = new TFile(filename.c_str(),"UPDATE");
   outfile->cd();
-  InitOutputTree();
 
-  m_EvtTree = (TTree*) new TTree("EventCount", "EventCount");
-  m_EvtTree->Branch("EvtTotal", &m_EvtTotal);
-  m_EvtTree->Branch("EvtSample", &m_EvtSample);
-  m_EvtTree->Branch("EvtPreselection", &m_EvtPreselection);
-  m_EvtTree->Branch("EvtSelected", &m_EvtSelected);
-
-  m_EvtTotal = AnalysisBase<Base>::GetXSEC()*1000.; // xsec in fb
-  m_EvtSample = 0.;
-  m_EvtPreselection = 0.;
-  m_EvtSelected = 0.; 
-
+  string sample;
+  
   Long64_t N = Base::fChain->GetEntries();
   for(Long64_t i = 0; i < N; i++){
     int mymod = N/10;
@@ -43,24 +32,33 @@ void NtupleBase<Base>::WriteNtuple(const string& filename){
       mymod = 1;
     if(i%mymod == 0)
       cout << " event = " << i << " : " << N << endl;
-    
-    AnalysisBase<Base>::GetEntry(i);
-    m_EvtSample += AnalysisBase<Base>::GetEventWeight();
+
+    sample = AnalysisBase<Base>::GetEntry(i);
+        
+    if(m_Label2Tree.count(sample) == 0){
+      TTree* tree = InitOutputTree(sample);
+      m_Trees.push_back(tree);
+      m_Label2Tree[sample] = tree;
+    }
    
     outfile->cd();
-    FillOutputTree();
+    FillOutputTree(m_Label2Tree[sample]);
   }
 
-  m_EvtTree->Fill();
-  m_EvtTree->Write("",TObject::kOverwrite);
-  delete m_EvtTree;
-  m_EvtTree = nullptr;
-
-  m_Tree->Write("",TObject::kOverwrite);
-  delete m_Tree;
-  m_Tree = nullptr;
+  int Ntree = m_Trees.size();
+  cout << "Ntree " << Ntree << endl;
+  for(int i = 0; i < Ntree; i++){
+    outfile->cd();
+    m_Trees[i]->Write("",TObject::kOverwrite);
+    delete m_Trees[i];
+    m_Trees[i] = nullptr;
+  }
+  
   outfile->Close();
   delete outfile;
+
+  m_Trees.clear();
+  m_Label2Tree.clear();
 }
 
 template class NtupleBase<StopNtupleTree>;

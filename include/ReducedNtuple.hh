@@ -14,8 +14,8 @@ public:
   virtual ~ReducedNtuple();
 
 private:
-  void InitOutputTree();
-  void FillOutputTree();
+  TTree* InitOutputTree(const string& sample);
+  void FillOutputTree(TTree* tree);
 
   double m_MET;
   double m_MET_phi;

@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Thu Jan 10 09:58:22 2019 by ROOT version 6.10/08
+// Sun Feb 10 02:08:57 2019 by ROOT version 6.14/04
 // from TTree AUX/AUX
-// found on file: /Users/crogan/Dropbox/SAMPLES/EWKino/stopFlatNtuples_6.root
+// found on file: SIG/TChiWZ.root
 //////////////////////////////////////////////////////////
 
 #ifndef StopNtupleTree_h
@@ -11,9 +11,13 @@
 #include <TROOT.h>
 #include <TChain.h>
 #include <TFile.h>
+#include <TLeafElement.h>
 #include <TLorentzVector.h>
 
 // Header file for the classes stored in the TTree if any.
+#include "vector"
+#include "vector"
+#include "vector"
 #include "vector"
 
 using std::vector;
@@ -26,6 +30,22 @@ public :
 
 // Fixed size dimensions of array or collections stored in the TTree if any.
 
+  bool m_USEFLOAT;
+  // "special" declarations
+  Float_t         met_f;
+  Float_t         metphi_f;
+  Float_t         calomet_f;
+  Float_t         calometphi_f;
+  Float_t         stored_weight_f;
+  Float_t         evtWeight_f;
+
+  double          met_d;
+  double          metphi_d;
+  double          calomet_d;
+  double          calometphi_d;
+  double          stored_weight_d;
+  double          evtWeight_d;
+  
    // Declaration of leaf types
    UInt_t          run;
    UInt_t          lumi;
@@ -35,17 +55,11 @@ public :
    Float_t         mht;
    Float_t         mhtphi;
    Float_t         ht;
-   Float_t         met;
-   Float_t         metphi;
-   Float_t         calomet;
-   Float_t         calometphi;
    Float_t         dPhi0_CUT;
    Float_t         dPhi1_CUT;
    Float_t         dPhi2_CUT;
    Float_t         tru_npv;
    Float_t         avg_npv;
-   Float_t         stored_weight;
-   Float_t         evtWeight;
    Int_t           METFilters;
    Int_t           CSCTightHaloFilter;
    Int_t           globalSuperTightHalo2016Filter;
@@ -463,11 +477,11 @@ inline StopNtupleTree::StopNtupleTree(TTree *tree) : fChain(0)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/Users/crogan/Dropbox/SAMPLES/EWKino/stopFlatNtuples_6.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("SIG/TChiWZ.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("/Users/crogan/Dropbox/SAMPLES/EWKino/stopFlatNtuples_6.root");
+         f = new TFile("SIG/TChiWZ.root");
       }
-      TDirectory * dir = (TDirectory*)f->Get("/Users/crogan/Dropbox/SAMPLES/EWKino/stopFlatNtuples_6.root:/stopTreeMaker");
+      TDirectory * dir = (TDirectory*)f->Get("SIG/TChiWZ.root:/stopTreeMaker");
       dir->GetObject("AUX",tree);
 
    }
@@ -672,6 +686,24 @@ inline void StopNtupleTree::Init(TTree *tree)
    fCurrent = -1;
    fChain->SetMakeClass(1);
 
+   m_USEFLOAT = string(fChain->GetBranch("evtWeight")->GetLeaf("evtWeight")->GetTypeName()) == "Float_t";
+   // "special" declarations
+   if(m_USEFLOAT){
+     fChain->SetBranchAddress("met", &met_f, &b_met);
+     fChain->SetBranchAddress("metphi", &metphi_f, &b_metphi);
+     fChain->SetBranchAddress("calomet", &calomet_f, &b_calomet);
+     fChain->SetBranchAddress("calometphi", &calometphi_f, &b_calometphi);
+     fChain->SetBranchAddress("stored_weight", &stored_weight_f, &b_stored_weight);
+     fChain->SetBranchAddress("evtWeight", &evtWeight_f, &b_evtWeight);
+   } else {
+     fChain->SetBranchAddress("met", &met_d, &b_met);
+     fChain->SetBranchAddress("metphi", &metphi_d, &b_metphi);
+     fChain->SetBranchAddress("calomet", &calomet_d, &b_calomet);
+     fChain->SetBranchAddress("calometphi", &calometphi_d, &b_calometphi);
+     fChain->SetBranchAddress("stored_weight", &stored_weight_d, &b_stored_weight);
+     fChain->SetBranchAddress("evtWeight", &evtWeight_d, &b_evtWeight);
+   }
+   
    fChain->SetBranchAddress("run", &run, &b_run);
    fChain->SetBranchAddress("lumi", &lumi, &b_lumi);
    fChain->SetBranchAddress("event", &event, &b_event);
@@ -680,17 +712,11 @@ inline void StopNtupleTree::Init(TTree *tree)
    fChain->SetBranchAddress("mht", &mht, &b_mht);
    fChain->SetBranchAddress("mhtphi", &mhtphi, &b_mhtphi);
    fChain->SetBranchAddress("ht", &ht, &b_ht);
-   fChain->SetBranchAddress("met", &met, &b_met);
-   fChain->SetBranchAddress("metphi", &metphi, &b_metphi);
-   fChain->SetBranchAddress("calomet", &calomet, &b_calomet);
-   fChain->SetBranchAddress("calometphi", &calometphi, &b_calometphi);
    fChain->SetBranchAddress("dPhi0_CUT", &dPhi0_CUT, &b_dPhi0_CUT);
    fChain->SetBranchAddress("dPhi1_CUT", &dPhi1_CUT, &b_dPhi1_CUT);
    fChain->SetBranchAddress("dPhi2_CUT", &dPhi2_CUT, &b_dPhi2_CUT);
    fChain->SetBranchAddress("tru_npv", &tru_npv, &b_tru_npv);
    fChain->SetBranchAddress("avg_npv", &avg_npv, &b_avg_npv);
-   fChain->SetBranchAddress("stored_weight", &stored_weight, &b_stored_weight);
-   fChain->SetBranchAddress("evtWeight", &evtWeight, &b_evtWeight);
    fChain->SetBranchAddress("METFilters", &METFilters, &b_METFilters);
    fChain->SetBranchAddress("CSCTightHaloFilter", &CSCTightHaloFilter, &b_CSCTightHaloFilter);
    fChain->SetBranchAddress("globalSuperTightHalo2016Filter", &globalSuperTightHalo2016Filter, &b_globalSuperTightHalo2016Filter);
@@ -908,3 +934,4 @@ inline Int_t StopNtupleTree::Cut(Long64_t entry)
 // returns -1 otherwise.
    return 1;
 }
+

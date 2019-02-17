@@ -30,21 +30,22 @@ int main(int argc, char* argv[]) {
   char outputFileName[400];
   char outputFolderName[400];
   char TreeName[400];
+  char FileTag[400];
 
   bool DO_FILE = false;
   bool DO_LIST = false;
   bool DO_FOLDER = false;
   bool DO_OFOLD = false;
   bool DO_TREE = false;
+  bool DO_SMS = false;
 
   if ( argc < 2 ){
     cout << "Error at Input: please specify an input file name, a list of input ROOT files and/or a folder path"; 
     cout << " and an output filename:" << endl; 
-    cout << "  Example:      ./MakeReducedTree.x -ifile=input.root -ofile=output.root"  << endl;
-    cout << "  Example:      ./MakeReducedTree.x -ilist=input.list -ofile=output.root"  << endl;
-    cout << "  Example:      ./MakeReducedTree.x -ifold=folder_path -ofile=output.root" << endl;
-    cout << "  Example:      ./MakeReducedTree.x -ifold=folder_path -ofold=folder_path" << endl;
-    cout << "  Example:      ./MakeReducedTree.x -ifold=folder_path -ofold=folder_path -tree=treename" << endl;
+    cout << "  Example:      ./MakeReducedTree.x -ifile=input.root -ofile=output.root -tag=sample_tag"  << endl;
+    cout << "  Example:      ./MakeReducedTree.x -ilist=input.list -ofile=output.root -tag=sample_tag"  << endl;
+    cout << "  Example:      ./MakeReducedTree.x -ifold=folder_path -ofile=output.root -tag=sample_tag" << endl;
+    cout << "  Example:      ./MakeReducedTree.x -ifold=folder_path -ofile=output.root -tag=sample_tag -tree=treename --sms" << endl;
     
     return 1;
   }
@@ -70,6 +71,8 @@ int main(int argc, char* argv[]) {
       DO_TREE = true;
     }
     if (strncmp(argv[i],"-ofile",6)==0)  sscanf(argv[i],"-ofile=%s",  outputFileName);
+    if (strncmp(argv[i],"-tag",4)==0)   sscanf(argv[i],"-tag=%s", FileTag);
+    if (strncmp(argv[i],"--sms",5)==0)  DO_SMS = true;
   }
 
   gROOT->ProcessLine("#include <vector>");
@@ -112,51 +115,29 @@ int main(int argc, char* argv[]) {
   if(DO_FILE){
     filenames.push_back(inputFileName);
   }
+  
+  TChain* chain;
+  if(DO_TREE)
+    chain = (TChain*) new TChain(TreeName);
+  else
+    chain = (TChain*) new TChain("stopTreeMaker/AUX");
+  
   int Nfile = filenames.size();
   for(int i = 0; i < Nfile; i++){
-
-    //TTree* chain = (TTree*) f->Get("anaCHS/tree");
-    
-    TChain* chain;
-    if(DO_TREE)
-      chain = (TChain*) new TChain(TreeName);
-    else
-      chain = (TChain*) new TChain("stopTreeMaker/AUX");
     chain->Add(filenames[i].c_str());
-    cout << "   Running file " << filenames[i] << endl;
-    if(DO_TREE)
-      cout << "   Running tree " << TreeName << " " << chain->GetEntries() << endl;
-    else
-      cout << "   Running tree " << "stopTreeMaker/AUX" << " " << chain->GetEntries() << endl;
-    ReducedNtuple* ntuple = new ReducedNtuple(chain);
-    
-    // pass filename label
-    string label = filenames[i];
-    if(label.find(".root") != string::npos )
-      label.erase(label.find(".root"));
-    while(label.find("/") != string::npos)
-      label.erase(0, label.find("/")+1);
-    ntuple->AddLabel(label);
-
-    if(label.find("_treeProducerSusyMultilepton_tree") != string::npos)
-      label.erase(label.find("_treeProducerSusyMultilepton_tree"));
-
-    cout << label << " label " << endl;
-    
-    //Get event count
-    // TH1D* hevt = nullptr;
-    // TFile* f = new TFile(filenames[i].c_str(),"READ");
-    // hevt = (TH1D*) f->Get("SumGenWeights");
-    // if(hevt){
-    //   ntuple->AddNevent( hevt->Integral() );
-    //   delete hevt;
-    // }
-    if(DO_OFOLD)
-      ntuple->WriteNtuple(string(outputFolderName)+"/"+label+".root");
-    else
-      ntuple->WriteNtuple(string(outputFileName));
-    delete ntuple;
+    cout << "   Adding file " << filenames[i] << endl;
   }
+
+  ReducedNtuple* ntuple = new ReducedNtuple(chain);
+  
+  ntuple->AddLabel(string(FileTag));
+
+  if(DO_SMS)
+    ntuple->DoSMS();
+
+  ntuple->WriteNtuple(string(outputFileName));
+
+  delete ntuple;
  
   return 0;
 }

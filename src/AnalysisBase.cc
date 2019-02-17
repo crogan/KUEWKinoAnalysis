@@ -2,9 +2,9 @@
 #include <iostream>
 
 #include "AnalysisBase.hh"
-#include "StopNtupleTree.hh"
 #include "TMatrixDSym.h"
 #include "TVectorD.h"
+#include "StopNtupleTree.hh"
 
 using namespace std;
 
@@ -12,69 +12,48 @@ template <class Base>
 AnalysisBase<Base>::AnalysisBase(TTree* tree)
   : Base(tree)
 {
-  m_CurrentFile = -1;
-  m_DSID = -1;
-  m_Nevent = 1.;
-  m_Label  = "";
-  m_XSEC = 0.;
-  InitXSECmap();
+  m_Nsample = 0;
+  m_SampleIndex = 0;
+  m_DoSMS = false;
 }
 
 template <class Base>
 AnalysisBase<Base>::~AnalysisBase() {}
 
 template <class Base>
-Int_t AnalysisBase<Base>::GetEntry(Long64_t entry){
+string AnalysisBase<Base>::GetEntry(int entry){
   if (!Base::fChain) return 0;
   
-  Int_t ret = Base::fChain->GetEntry(entry);
- 
-  // if(Base::fChain->GetTreeNumber() != m_CurrentFile)
-  //   NewFile();
+  Base::fChain->GetEntry(entry);
+  m_SampleIndex = GetSampleIndex();
 
-  return ret;
+  return m_IndexToSample[m_SampleIndex];
 }
 
 template <class Base>
-void AnalysisBase<Base>::AddLabel(string& label){
+int AnalysisBase<Base>::GetSampleIndex(){
+  if(m_Nsample == 0){
+    m_IndexToSample[0] = "KUAnalysis";
+    m_IndexToXsec[0] = 1.;
+    m_IndexToNevent[0] = 1.;
+    m_IndexToNweight[0] = 1.;
+    m_Nsample++;
+  }
+
+  return 0;
+}
+
+template <class Base>
+double AnalysisBase<Base>::GetXsec(){
+  if(m_Nsample)
+    return m_IndexToXsec[m_SampleIndex];
+  else
+    return 0.;
+}
+  
+template <class Base>
+void AnalysisBase<Base>::AddLabel(const string& label){
   m_Label = label;
-  m_XSEC = m_IDtoXSEC[m_Label];
-  return;
-}
-
-template <class Base>
-void AnalysisBase<Base>::AddNevent(double nevt){
-  m_Nevent = nevt;
-  return;
-}
-
-template <class Base>
-void AnalysisBase<Base>::NewFile(){
-  // m_CurrentFile = Base::fChain->GetTreeNumber();
-
-  // TFile* F = ((TChain*)Base::fChain)->GetFile();
-  // if(!F) return;
-
-  // char *p, *q;
-  // char fname[256];
-  // sprintf(fname,"%s",F->GetName());
-  // p = strtok(fname, "/");
-
-  // q = p;
-  // while(p){
-  //   q = p;
-  //   p = strtok(NULL,"/");
-  // }
-  // m_DSID = atoi(strtok(q,"."));
-
-  // TH1D* h_counter = (TH1D*) F->Get("Counter_JobBookeeping_JobBookeeping");
-  // int nevt_wgt = h_counter->GetBinContent(2);
-  // m_IDtoNEVT[m_DSID] = nevt_wgt;
-
-  // cout << "Initialized file " << F->GetName() << ": ";
-  // cout << "   DSID   = " << m_DSID << endl;
-  // cout << "   XSEC   = " << m_IDtoXSEC[m_DSID] << endl;
-  // cout << "   Nevt^W = " << m_IDtoNEVT[m_DSID] << endl;
 }
 
 template <class Base>
@@ -98,9 +77,6 @@ double AnalysisBase<Base>::DeltaPhiMin(const vector<pair<TLorentzVector, bool> >
   }
   return dphimin;
 }
-
-template <class Base>
-void AnalysisBase<Base>::InitXSECmap() {}
 
 template <class Base>
 double AnalysisBase<Base>::GetEventWeight(){
@@ -224,14 +200,64 @@ void AnalysisBase<Base>::MomTensorCalc(vector<TLorentzVector>& input, vector<dou
 /////////////////////////////////////////////////
 
 template <>
+int AnalysisBase<StopNtupleTree>::GetSampleIndex(){
+  if(!m_DoSMS){
+    if(m_Nsample == 0){
+      m_IndexToSample[0]  = "KUAnalysis";
+      m_IndexToXsec[0]    = m_XsecTool.GetXsec_BKG(m_Label);
+      m_IndexToNevent[0]  = m_NeventTool.GetNevent_BKG(m_Label);
+      m_IndexToNweight[0] = m_NeventTool.GetNweight_BKG(m_Label);
+      m_Nsample++;
+    }
+    return 0;
+  }
+  
+  int MP = 0;
+  int MC = 0;
+  int Ngen = genDecayPdgIdVec->size();
+  int PDGID;
+  for(int i = 0; i < Ngen; i++){
+    PDGID = fabs(genDecayPdgIdVec->at(i));
+    if(PDGID > 1000000 && PDGID < 3000000){
+      int mass = int(genDecayLVec->at(i).M()+0.5);
+      if(PDGID == 1000022)
+	MC = mass;
+      else
+	if(mass > MP)
+	  MP = mass;
+    }
+  }
+
+  int hash = 100000*MP + MC;
+  if(m_HashToIndex.count(hash) == 0){
+    m_HashToIndex[hash] = m_Nsample;
+    m_IndexToSample[m_Nsample]  = std::string(Form("%d_%d", MP, MC));
+    m_IndexToXsec[m_Nsample]    = m_XsecTool.GetXsec_SMS(m_Label, MP);
+    m_IndexToNevent[m_Nsample]  = m_NeventTool.GetNevent_SMS(m_Label, MP, MC);
+    m_IndexToNweight[m_Nsample] = m_NeventTool.GetNweight_SMS(m_Label, MP, MC);
+  
+    m_Nsample++;
+  }
+
+  return m_HashToIndex[hash];
+}
+
+
+template <>
 double AnalysisBase<StopNtupleTree>::GetEventWeight(){
-  return evtWeight;
+  if(m_IndexToNweight[m_SampleIndex] > 0.)
+    return (m_USEFLOAT ? evtWeight_f : evtWeight_d)*m_IndexToXsec[m_SampleIndex]/m_IndexToNweight[m_SampleIndex];
+  else
+    return 0.;
 }
 
 template <>
 TVector3 AnalysisBase<StopNtupleTree>::GetMET(){
   TVector3 vmet;
-  vmet.SetPtEtaPhi(met,0.0,metphi);
+  if(m_USEFLOAT)
+    vmet.SetPtEtaPhi(met_f,0.0,metphi_f);
+  else
+    vmet.SetPtEtaPhi(met_d,0.0,metphi_d);
   return vmet;
 }
 
@@ -259,7 +285,7 @@ int AnalysisBase<StopNtupleTree>::GetJets(vector<TLorentzVector>& JETs, double p
 
 template <>
 void AnalysisBase<StopNtupleTree>::GetLeptons(vector<TLorentzVector>& LEPs, vector<int>& IDs,
-					    double pt_cut, double eta_cut) {
+					      double pt_cut, double eta_cut) {
   LEPs.clear();
   IDs.clear();
   
@@ -283,7 +309,7 @@ void AnalysisBase<StopNtupleTree>::GetLeptons(vector<TLorentzVector>& LEPs, vect
 
   for(int i = 0; i < Nel; i++){
     // electrons ID medium
-    if(!elesFlagMedium->at(i))
+    if(!mediumElectronID->at(i))
       continue;
     
     TLorentzVector LEP = (*elesLVec)[i];
