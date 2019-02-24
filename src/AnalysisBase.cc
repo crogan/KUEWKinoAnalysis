@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "AnalysisBase.hh"
+#include "ParticleList.hh"
 #include "TMatrixDSym.h"
 #include "TVectorD.h"
 #include "StopNtupleTree.hh"
@@ -89,17 +90,18 @@ TVector3 AnalysisBase<Base>::GetMET(){
 }
 
 template <class Base>
-int AnalysisBase<Base>::GetJets(vector<TLorentzVector>& JETs, double pt_cut, double eta_cut) {
-  return 0.;
+ParticleList AnalysisBase<Base>::GetJets(){
+  return ParticleList();
 }
 
 template <class Base>
-void AnalysisBase<Base>::GetLeptons(vector<TLorentzVector>& LEPs, vector<int>& IDs,
-				    double pt_cut, double eta_cut) {}
+ParticleList AnalysisBase<Base>::GetElectrons(){
+  return ParticleList();
+}
 
 template <class Base>
-int AnalysisBase<Base>::GetLargeRJets(vector<TLorentzVector>& JETs, double pt_cut, double eta_cut) {
-  return 0.;
+ParticleList AnalysisBase<Base>::GetMuons(){
+  return ParticleList();
 }
 
 template <class Base>
@@ -262,88 +264,86 @@ TVector3 AnalysisBase<StopNtupleTree>::GetMET(){
 }
 
 template <>
-int AnalysisBase<StopNtupleTree>::GetJets(vector<TLorentzVector>& JETs, double pt_cut, double eta_cut){
+ParticleList AnalysisBase<StopNtupleTree>::GetJets(){
+  ParticleList list;
 
-  int Njet = jetsLVec->size();
+  int Njet = jetsLVecLepCleaned->size();
   for(int i = 0; i < Njet; i++){
-    TLorentzVector JET = (*jetsLVec)[i];
-    if(JET.Pt() >= pt_cut && (fabs(JET.Eta()) < eta_cut || eta_cut < 0)){
-      float mass = JET.M();
-      if(std::isnan(mass))
-	mass = 0;
-      if(std::isinf(mass))
-	mass = 0;
-      if(mass < 0.)
-	mass = 0.;
-      JET.SetPtEtaPhiM( JET.Pt(), JET.Eta(), JET.Phi(), mass );
-      JETs.push_back(JET);
-    }
+    TLorentzVector JET = (*jetsLVecLepCleaned)[i];
+    Particle jet;
+    float mass = JET.M();
+    if(std::isnan(mass))
+      mass = 0;
+    if(std::isinf(mass))
+      mass = 0;
+    if(mass < 0.)
+      mass = 0.;
+    jet.SetPtEtaPhiM( JET.Pt(), JET.Eta(), JET.Phi(), mass );
+    jet.SetBtag((*recoJetsBtag_0_LepCleaned)[i]);
+    // NOTE: ID is incomplete (all required variables not available)
+    // bool loose = true;
+    // bool tight = true;
+    
+    list.push_back(jet);
   }
-  return 0.;
+
+  return list;
+}
+
+template <>
+ParticleList AnalysisBase<StopNtupleTree>::GetElectrons(){
+  ParticleList list;
+
+  int N = elesLVec->size();
+  for(int i = 0; i < N; i++){
+    Particle lep;
+    lep.SetVectM((*elesLVec)[i].Vect(),(*elesLVec)[i].M());
+    lep.SetPDGID(13);
+    lep.SetCharge( (elesCharge->at(i) < 0. ? -1 : 1) );
+     
+    if(tightElectronID->at(i))
+      lep.SetParticleID(kTight);
+    else if(mediumElectronID->at(i))
+      lep.SetParticleID(kMedium);
+    else if(looseElectronID->at(i))
+      lep.SetParticleID(kLoose);
+    else if(vetoElectronID->at(i))
+      lep.SetParticleID(kVeryLoose);
+     
+    lep.SetRelIso(elesRelIso->at(i));
+    lep.SetMiniIso(elesMiniIso->at(i));
+
+    list.push_back(lep);
+  }
+
+  return list;
 
 }
 
 template <>
-void AnalysisBase<StopNtupleTree>::GetLeptons(vector<TLorentzVector>& LEPs, vector<int>& IDs,
-					      double pt_cut, double eta_cut) {
-  LEPs.clear();
-  IDs.clear();
-  
-  int Nmu = muonsLVec->size();
-  int Nel = elesLVec->size();
+ParticleList AnalysisBase<StopNtupleTree>::GetMuons(){
+  ParticleList list;
 
-  for(int i = 0; i < Nmu; i++){
-    // muon ID medium
-    if(!muonsFlagMedium->at(i))
-      continue;
-    
-    TLorentzVector LEP = (*muonsLVec)[i];
-    if((LEP.Pt() >= pt_cut) && (fabs(LEP.Eta()) < eta_cut || eta_cut < 0)){
-      LEPs.push_back(LEP);
-      if(muonsCharge->at(i) < 0.)
-	IDs.push_back(15);
-      else
-	IDs.push_back(-15);
-    }
+  int N = muonsLVec->size();
+  for(int i = 0; i < N; i++){
+    Particle lep;
+    lep.SetVectM((*muonsLVec)[i].Vect(),(*muonsLVec)[i].M());
+    lep.SetPDGID(15);
+    lep.SetCharge( (muonsCharge->at(i) < 0. ? -1 : 1) );
+     
+    if(muonsFlagTight->at(i))
+      lep.SetParticleID(kTight);
+    else if(muonsFlagMedium->at(i))
+      lep.SetParticleID(kMedium);
+     
+    lep.SetRelIso(muonsRelIso->at(i));
+    lep.SetMiniIso(muonsMiniIso->at(i));
+
+    list.push_back(lep);
   }
 
-  for(int i = 0; i < Nel; i++){
-    // electrons ID medium
-    if(!mediumElectronID->at(i))
-      continue;
-    
-    TLorentzVector LEP = (*elesLVec)[i];
-    if((LEP.Pt() >= pt_cut) && (fabs(LEP.Eta()) < eta_cut || eta_cut < 0)){
-      LEPs.push_back(LEP);
-      if(elesCharge->at(i) < 0.)
-	IDs.push_back(13);
-      else
-	IDs.push_back(-13);
-    }
-  }
+  return list;
 }
-
-// template<>
-// int AnalysisBase<InputTreeBase>::GetLargeRJets(vector<TLorentzVector>& JETs, double pt_cut, double eta_cut){
-  
-//   int Njet = ptAK8->size();
-//   for(int i = 0; i < Njet; i++){
-//     if((ptAK8->at(i) >= pt_cut) && (fabs(etaAK8->at(i)) < eta_cut || eta_cut < 0)){
-//       TLorentzVector JET;
-//       float mass = MAK8->at(i);
-//       if(std::isnan(mass))
-// 	mass = 0;
-//       if(std::isinf(mass))
-// 	mass = 0;
-//       if(mass < 0.)
-// 	mass = 0.;
-//       JET.SetPtEtaPhiM( ptAK8->at(i), etaAK8->at(i), phiAK8->at(i), mass );
-//       JETs.push_back(JET);
-//     }
-//   }
-//   return 0.;
-
-// }
 
 template class AnalysisBase<StopNtupleTree>;
 

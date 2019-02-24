@@ -20,4 +20,37 @@ int ParticleList::Charge() const {
   return charge;
 }
 
+ParticleList ParticleList::PtEtaCut(double pt, double eta) const {
+  ParticleList list;
+  int N = this->size();
+  for(int i = 0; i < N; i++)
+    if(this->at(i).Pt() >= pt &&
+       (eta <= 0. || fabs(this->at(i).Eta()) <= eta))
+      list.push_back(this->at(i));
 
+  return list;
+}
+
+ParticleList ParticleList::ParticleIDCut(ParticleIDType id) const {
+  ParticleList list;
+  int N = this->size();
+  for(int i = 0; i < N; i++)
+    if(this->at(i).ParticleID() >= id)
+      list.push_back(this->at(i));
+
+  return list;
+}
+
+ParticleList& ParticleList::SortByPt(){
+  sort(this->begin(),this->end(),sortbypt);
+  return *this;
+}
+
+ParticleList ParticleList::operator + (const ParticleList& parts) const {
+  ParticleList l1 = *this;
+  ParticleList l2 = parts;
+  int N = l2.size();
+  for(int i = 0; i < N; i++)
+    l1.push_back(l2[i]);
+  return l1;
+}

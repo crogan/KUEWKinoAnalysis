@@ -1,4 +1,5 @@
 #include "ReducedNtuple.hh"
+#include "ParticleList.hh"
 
 using namespace RestFrames;
 
@@ -340,12 +341,8 @@ void ReducedNtuple::FillOutputTree(TTree* tree){
 
   m_weight = GetEventWeight();
 
-  vector<TLorentzVector> Jets; 
-  GetJets(Jets, 20., 2.4); 
-  
-  // // need at least one jet to play
-  // if(Jets.size() < 1) 
-  //   return; 
+  ParticleList Jets = GetJets();
+  Jets = Jets.PtEtaCut(30., 3.);
 
   m_Nj = Jets.size();
   
@@ -353,10 +350,17 @@ void ReducedNtuple::FillOutputTree(TTree* tree){
 
   if(ETMiss.Mag() < 100.)
     return;
-      
-  vector<TLorentzVector> Leptons;
-  vector<int> LepIDs;
-  GetLeptons(Leptons, LepIDs, 3.5, 2.4);
+
+  ParticleList Muons = GetMuons();
+  Muons = Muons.ParticleIDCut(kMedium);
+  Muons = Muons.PtEtaCut(3.5);
+
+  ParticleList Electrons = GetElectrons();
+  Electrons = Electrons.ParticleIDCut(kMedium);
+  Electrons = Electrons.PtEtaCut(3.5);
+  
+  ParticleList Leptons = Electrons+Muons;
+  Leptons.SortByPt();
 
   // figure out which tree to use
   
@@ -364,21 +368,21 @@ void ReducedNtuple::FillOutputTree(TTree* tree){
   m_Is_2L1L = false;
   
   
-  if(Leptons.size() < 2) // at least 2 muons for now
+  if(Leptons.size() < 2) // at least 2 leptons for now
     return;
 
   if(Leptons.size() == 3){
     // at least 1 OS/SF pair
-    if(LepIDs[0]+LepIDs[1] == 0 ||
-       LepIDs[0]+LepIDs[2] == 0 ||
-       LepIDs[1]+LepIDs[2] == 0){
+    if(Leptons[0].Charge()*Leptons[0].PDGID()+Leptons[1].Charge()*Leptons[1].PDGID() == 0 ||
+       Leptons[0].Charge()*Leptons[0].PDGID()+Leptons[2].Charge()*Leptons[2].PDGID() == 0 ||
+       Leptons[2].Charge()*Leptons[2].PDGID()+Leptons[1].Charge()*Leptons[1].PDGID() == 0){
       m_Is_2L1L = true;
     }
   }
 
   if(Leptons.size() == 2){
     // SS and/or OF leptons
-    if(LepIDs[0]+LepIDs[1] == 0){
+    if(Leptons[0].Charge()*Leptons[0].PDGID()+Leptons[1].Charge()*Leptons[1].PDGID() == 0){
       if(Jets.size() >= 1){
 	m_Is_2LNJ = true;
       }
@@ -388,11 +392,8 @@ void ReducedNtuple::FillOutputTree(TTree* tree){
   if(!m_Is_2LNJ && !m_Is_2L1L)
     return;
 
-  if(Leptons[0].Pt() < 5. && Leptons[1].Pt() < 5.) // lead muon greater than 5 GeV in Pt
+  if(Leptons[0].Pt() < 5. && Leptons[1].Pt() < 5.) // lead leptons greater than 5 GeV in Pt
     return;
-
-  // if(Leptons[0].Pt() > 30. || Leptons[1].Pt() > 30.) // muon pT's less than 30
-  //   return;
 
   m_weight = GetEventWeight();
   
@@ -403,14 +404,14 @@ void ReducedNtuple::FillOutputTree(TTree* tree){
 
   
   m_pT_1lep = Leptons[0].Pt();
-  m_id_1lep = LepIDs[0];
+  m_id_1lep = Leptons[0].Charge()*Leptons[0].PDGID();
   
   m_pT_2lep = Leptons[1].Pt();
-  m_id_2lep = LepIDs[1];
+  m_id_2lep = Leptons[1].Charge()*Leptons[1].PDGID();
 
   if(Leptons.size() > 2){
     m_pT_3lep = Leptons[2].Pt();
-    m_id_3lep = Leptons[2].Pt();
+    m_id_3lep = Leptons[2].Charge()*Leptons[2].PDGID();
   } else {
     m_pT_3lep = 0.;
     m_id_3lep = 0;
@@ -429,7 +430,7 @@ void ReducedNtuple::FillOutputTree(TTree* tree){
       double mdiff = 100000.;
       for(int i = 0; i < NJ-1; i++){
 	for(int j = i+1; j < NJ; j++){
-	  double diff = fabs((Jets[i]+Jets[j]).M() - 80.);
+	  double diff = fabs(TLorentzVector(Jets[i]+Jets[j]).M() - 80.);
 	  if(diff < mdiff){
 	    mdiff = diff;
 	    i1 = i;
@@ -462,10 +463,10 @@ void ReducedNtuple::FillOutputTree(TTree* tree){
     double        mSFOS = -1.;
     for(int i = 0; i < 2; i++){
       for(int j = i+1; j < 3; j++){
-	if(LepIDs[i]+LepIDs[j] == 0){
+	if(Leptons[i].Charge()*Leptons[i].PDGID()+Leptons[j].Charge()*Leptons[j].PDGID() == 0){
 	  if(mSFOS < 0. ||
-	     (Leptons[i]+Leptons[j]).M() < mSFOS){
-	    mSFOS = (Leptons[i]+Leptons[j]).M();
+	     TLorentzVector(Leptons[i]+Leptons[j]).M() < mSFOS){
+	    mSFOS = TLorentzVector(Leptons).M();
 	    iSFOS.first  = i;
 	    iSFOS.second = j;
 	  }

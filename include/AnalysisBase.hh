@@ -14,6 +14,8 @@
 
 using namespace std;
 
+class ParticleList;
+
 template <class Base>
 class AnalysisBase : public Base {
 
@@ -28,14 +30,12 @@ public:
 
   // analysis functions
   virtual TVector3 GetMET();
-  virtual int GetJets(vector<TLorentzVector>& JETs, double pt_cut = -1, double eta_cut = -1);
-  virtual int GetJetsBtag(vector<pair<TLorentzVector,bool> >& JETs, double pt_cut = -1, double eta_cut = -1){ return 0; }
-  virtual int GetLargeRJets(vector<TLorentzVector>& JETs, double pt_cut = -1, double eta_cut = -1);
+  virtual ParticleList GetJets();
+  virtual ParticleList GetElectrons();
+  virtual ParticleList GetMuons();
+ 
   double DeltaPhiMin(const vector<TLorentzVector>& JETs, const TVector3& MET, int N = -1);
   double DeltaPhiMin(const vector<pair<TLorentzVector, bool> >& JETs, const TVector3& MET, int N = -1);
-
-  virtual void GetLeptons(vector<TLorentzVector>& LEPs, vector<int>& IDs,
-			  double pt_cut = -1, double eta_cut = -1);
   
   void MomTensorCalc(vector<TLorentzVector>& input, vector<double>& eigenvalues, double pow = 1., bool threeD = true); 
 
