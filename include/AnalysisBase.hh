@@ -39,7 +39,7 @@ public:
   virtual ParticleList GetGenMuons();
   virtual ParticleList GetGenNeutrinos();
   virtual ParticleList GetGenBosons();
-  virtual ParticleList GetGenSUSY();
+  virtual ParticleList GetGenSparticles();
  
   double DeltaPhiMin(const vector<TLorentzVector>& JETs, const TVector3& MET, int N = -1);
   double DeltaPhiMin(const vector<pair<TLorentzVector, bool> >& JETs, const TVector3& MET, int N = -1);

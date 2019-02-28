@@ -5,6 +5,8 @@
 #include "StopNtupleTree.hh"
 #include "RestFrames/RestFrames.hh"
 
+template class std::vector<std::vector<int> >;
+
 using namespace RestFrames;
 
 class ReducedNtuple : public NtupleBase<StopNtupleTree> {
@@ -17,6 +19,11 @@ private:
   TTree* InitOutputTree(const string& sample);
   void FillOutputTree(TTree* tree);
 
+  void ClearVariables();
+
+  // common variables for output tree
+  double m_weight;
+  
   double m_MET;
   double m_MET_phi;
 
@@ -39,8 +46,14 @@ private:
   vector<int>    m_MiniIso_lep;
   vector<int>    m_ID_lep;
   vector<int>    m_Index_lep;
-  
+
+  int m_Njet;
   int m_Nbjet;
+  vector<double> m_PT_jet;
+  vector<double> m_Eta_jet;
+  vector<double> m_Phi_jet;
+  vector<double> m_M_jet;
+  vector<double> m_Btag_jet;
 
   int m_genNele;
   int m_genNmu;
@@ -55,10 +68,10 @@ private:
   vector<int>    m_genIndex_lep;
 
   int m_genNnu;
-  vector<double> m_PT_nu;
-  vector<double> m_Eta_nu;
-  vector<double> m_Phi_nu;
-  vector<int>    m_PDGID_nu;
+  vector<double> m_genPT_nu;
+  vector<double> m_genEta_nu;
+  vector<double> m_genPhi_nu;
+  vector<int>    m_genPDGID_nu;
   
   int m_genNboson;
   vector<double> m_genPT_boson;
@@ -73,142 +86,116 @@ private:
   vector<double> m_genPhi_susy;
   vector<double> m_genM_susy;
   vector<int>    m_genPDGID_susy;
+
+  //////////////////////
+  // derived observables
+  //////////////////////
   
+  // Sparticle pair-production trees analysis
+  vector<int> m_Njet_a;
+  vector<int> m_Njet_b;
+  vector<int> m_Nbjet_a;
+  vector<int> m_Nbjet_b;
+  vector<int> m_Nlep_a;
+  vector<int> m_Nlep_b;
+  vector<vector<int> > m_index_jet_a;
+  vector<vector<int> > m_index_jet_b;
+  vector<vector<int> > m_index_lep_a;
+  vector<vector<int> > m_index_lep_b;
+
+  vector<double> m_MSS;
+  vector<double> m_PSS;
+  vector<double> m_cosSS;
+  vector<double> m_dphiSS;
+  vector<double> m_PTSS;
+  vector<double> m_PzSS;
+  vector<double> m_MCa;
+  vector<double> m_cosCa;
+  vector<double> m_MCb;
+  vector<double> m_cosCb;
+
+  vector<double> m_H11SS;
+  vector<double> m_H22SS;
+  vector<double> m_HN2SS;
+  
+  vector<double> m_H11Ca;
+  vector<double> m_H11Cb;
+  vector<double> m_H21Ca;
+  vector<double> m_H21Cb;
+  vector<double> m_HN1Ca;
+  vector<double> m_HN1Cb;
+ 
+  vector<double> m_MVa;
+  vector<double> m_cosVa;
+  vector<double> m_MVb;
+  vector<double> m_cosVb;
+
+  // ISR trees analysis
+  vector<int> m_Njet_ISR;
+  vector<int> m_Njet_S;
+  vector<int> m_Nbjet_ISR;
+  vector<int> m_Nbjet_S;
+  vector<int> m_Nlep_ISR;
+  vector<int> m_Nlep_S;
+  vector<vector<int> > m_index_jet_ISR;
+  vector<vector<int> > m_index_jet_S;
+  vector<vector<int> > m_index_lep_ISR;
+  vector<vector<int> > m_index_lep_S;
+  vector<double> m_PTISR;
+  vector<double> m_PTCM;
+  vector<double> m_RISR;
+  vector<double> m_cosCM;
+  vector<double> m_cosS;
+  vector<double> m_MISR;
+  vector<double> m_MS;
+  vector<double> m_MV;
+  vector<double> m_ML;
+  vector<double> m_dphiCMI;
+  vector<double> m_dphiSI;
+  vector<double> m_dphiISRI;
 
   // which tree are we using?
   
   bool m_Is_2LNJ;
   bool m_Is_2L1L;
-  
-  double m_HN2S;
-  double m_HN2SR;
-  double m_H11S;
-  double m_HN1Ca;
-  double m_HN1Cb;
-  double m_H11Ca;
-  double m_H11Cb;
-  double m_cosC;
-
-  double m_MZ;
-  double m_MJ;
-  double m_cosZ;
-  double m_cosJ;
-  
-  // common variables for output tree
-  double m_weight;
-
-  bool m_Is_SF;
-
-  int m_Nj;
-  int m_NjS;
-  int m_NjISR;
-  
-  // compressed observables
-  // common to all trees
-  double m_PTISR_comb;
-  double m_PTCM_comb;
-  double m_RISR_comb;
-  double m_cosCM_comb;
-  double m_cosS_comb;
-  double m_MISR_comb;
-  double m_MS_comb;
-  double m_dphiCMI_comb;
-  double m_dphiSI_comb;
-  double m_dphiISRI_comb;
-
-  double m_PTISR_fix;
-  double m_PTCM_fix;
-  double m_RISR_fix;
-  double m_cosCM_fix;
-  double m_cosS_fix;
-  double m_MISR_fix;
-  double m_MS_fix;
-  double m_dphiCMI_fix;
-  double m_dphiSI_fix;
-  double m_dphiISRI_fix;
-
-  // double m_MZ;
-  // double m_cosZ;
 
 
   // RestFrames frames and friends
 
-  // combinatoric (transverse) tree
-  // for jet assignment
-  LabRecoFrame*        LAB_comb;
-  DecayRecoFrame*      CM_comb;
-  DecayRecoFrame*      S_comb;
-  VisibleRecoFrame*    ISR_comb;
-  VisibleRecoFrame*    J_comb;
-  VisibleRecoFrame*    L_comb;
-  InvisibleRecoFrame*  I_comb;
-  InvisibleGroup*      INV_comb;
-  SetMassInvJigsaw*    InvMass_comb;
-  CombinatoricGroup*   JETS_comb;
-  MinMassesCombJigsaw* SplitJETS_comb;
+  // ISR-style trees
+  LabRecoFrame*       LAB_ISR[3];
+  DecayRecoFrame*     CM_ISR[3];
+  DecayRecoFrame*     S_ISR[3];
+  VisibleRecoFrame*   ISR_ISR[3];
+  VisibleRecoFrame*   V_ISR[3];
+  VisibleRecoFrame*   L_ISR[3];
+  InvisibleRecoFrame* I_ISR[3];
 
-  // OS 2L tree w/ fixed jet assign.
-  LabRecoFrame*        LAB_fix;
-  DecayRecoFrame*      CM_fix;
-  DecayRecoFrame*      S_fix;
-  VisibleRecoFrame*    ISR_fix;
-
-  DecayRecoFrame*      L_fix;  
-  VisibleRecoFrame*    L1_fix;
-  VisibleRecoFrame*    L2_fix;
- 
-  InvisibleRecoFrame*  I_fix;
-
-  InvisibleGroup*       INV_fix;
-  SetMassInvJigsaw*     InvMass_fix;
-  SetRapidityInvJigsaw* InvRapidity_fix;
-
-  // 2L+NJ tree (Z->ll + W/Z->qq)
-  LabRecoFrame*        LAB_2LNJ;
- 
-  DecayRecoFrame*      S_2LNJ;
- 
-
-  DecayRecoFrame*      Ca_2LNJ;  
-  DecayRecoFrame*      Z_2LNJ;
-  VisibleRecoFrame*    L1_2LNJ;
-  VisibleRecoFrame*    L2_2LNJ;
-
-  DecayRecoFrame*          Cb_2LNJ;
-  SelfAssemblingRecoFrame* JSA_2LNJ;
-  VisibleRecoFrame*        J_2LNJ;
+  InvisibleGroup*      INV_ISR[3];
+  SetMassInvJigsaw*    InvM_ISR[3];
+  CombinatoricGroup*   COMB_ISR[3];
+  MinMassesCombJigsaw* CombSplit_ISR[3];
   
-  InvisibleRecoFrame*  Ia_2LNJ;
-  InvisibleRecoFrame*  Ib_2LNJ;
+  // Sparticle pair-production trees
+  LabRecoFrame*            LAB_PAIR[3];
+  DecayRecoFrame*          S_PAIR[3];
+  DecayRecoFrame*          Ca_PAIR[3];
+  DecayRecoFrame*          Cb_PAIR[3];
+  SelfAssemblingRecoFrame* VSAa_PAIR[3];
+  SelfAssemblingRecoFrame* VSAb_PAIR[3];
+  VisibleRecoFrame*        Va_PAIR[3];
+  VisibleRecoFrame*        Vb_PAIR[3];
+  InvisibleRecoFrame*      Ia_PAIR[3];
+  InvisibleRecoFrame*      Ib_PAIR[3];
 
-  InvisibleGroup*       INV_2LNJ;
-  SetMassInvJigsaw*     InvMass_2LNJ;
-  SetRapidityInvJigsaw* InvRapidity_2LNJ;
-  ContraBoostInvJigsaw* SplitINV_2LNJ;
-  CombinatoricGroup*    JETS_2LNJ;
-
-  // 2L+1L tree (Z->ll + Z/W->l)
-  LabRecoFrame*        LAB_2L1L;
- 
-  DecayRecoFrame*      S_2L1L;
- 
-
-  DecayRecoFrame*      Ca_2L1L;
-  DecayRecoFrame*      Z_2L1L;  
-  VisibleRecoFrame*    L1_2L1L;
-  VisibleRecoFrame*    L2_2L1L;
-
-  DecayRecoFrame*      Cb_2L1L;  
-  VisibleRecoFrame*    Lb_2L1L;
-  
-  InvisibleRecoFrame*  Ia_2L1L;
-  InvisibleRecoFrame*  Ib_2L1L;
-
-  InvisibleGroup*       INV_2L1L;
-  SetMassInvJigsaw*     InvMass_2L1L;
-  SetRapidityInvJigsaw* InvRapidity_2L1L;
-  ContraBoostInvJigsaw* SplitINV_2L1L;
-
+  InvisibleGroup*       INV_PAIR[3];
+  SetMassInvJigsaw*     InvM_PAIR[3];
+  SetRapidityInvJigsaw* InvEta_PAIR[3];
+  MinMassesSqInvJigsaw* InvSplit_PAIR[3];
+  CombinatoricGroup*    COMB_PAIR[3];
+  MinMassesCombJigsaw*  CombSplit_PAIR[3];
+  CombinatoricGroup*    COMBa_PAIR[3];
+  CombinatoricGroup*    COMBb_PAIR[3];
 
 };
 

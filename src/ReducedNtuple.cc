@@ -1,268 +1,211 @@
 #include "ReducedNtuple.hh"
 #include "ParticleList.hh"
+#include "TInterpreter.h"
 
 using namespace RestFrames;
 
 ReducedNtuple::ReducedNtuple(TTree* tree)
   : NtupleBase<StopNtupleTree>(tree)
 {
-  // RestFrames stuff
-
-  // combinatoric (transverse) tree
-  // for jet assignment
-  LAB_comb = new LabRecoFrame("LAB_comb","LAB");
-  CM_comb  = new DecayRecoFrame("CM_comb","CM");
-  S_comb   = new DecayRecoFrame("S_comb","S");
-  ISR_comb = new VisibleRecoFrame("ISR_comb","ISR");
-  J_comb   = new VisibleRecoFrame("J_comb","Jets");
-  L_comb   = new VisibleRecoFrame("L_comb","#it{l}'s");
-  I_comb   = new InvisibleRecoFrame("I_comb","Inv");
+  // RestFrames stuff setup
   
-  LAB_comb->SetChildFrame(*CM_comb);
-  CM_comb->AddChildFrame(*ISR_comb);
-  CM_comb->AddChildFrame(*S_comb);
-  S_comb->AddChildFrame(*L_comb);
-  S_comb->AddChildFrame(*J_comb);
-  S_comb->AddChildFrame(*I_comb);
-  
-  LAB_comb->InitializeTree();
+  // ISR-style trees
+  for(int t = 0; t < 3; t++){
+    LAB_ISR[t] = new LabRecoFrame(Form("LAB_ISR%d",t),"LAB");
+    CM_ISR[t]  = new DecayRecoFrame(Form("CM_ISR%d",t),"CM");
+    S_ISR[t]   = new DecayRecoFrame(Form("S_ISR%d",t),"#tilde{S}");
+    ISR_ISR[t] = new VisibleRecoFrame(Form("ISR_ISR%d",t),"ISR");
+    V_ISR[t]   = new VisibleRecoFrame(Form("V_ISR%d",t),"Vis");
+    L_ISR[t]   = new VisibleRecoFrame(Form("L_ISR%d",t),"Lep");
+    I_ISR[t]   = new InvisibleRecoFrame(Form("I_ISR%d",t),"Inv");
 
-  // OS 2L tree w/ fixed jet assign.
-  LAB_fix = new LabRecoFrame("LAB_fix","LAB");
-  CM_fix  = new DecayRecoFrame("CM_fix","CM");
-  S_fix   = new DecayRecoFrame("S_fix","S");
-  ISR_fix = new VisibleRecoFrame("ISR_fix","ISR");
-  L_fix   = new DecayRecoFrame("L_fix","#it{ll}");
-  L1_fix  = new VisibleRecoFrame("L1_fix","#it{l}_{1}");
-  L2_fix  = new VisibleRecoFrame("L2_fix","#it{l}_{2}");
-  I_fix   = new InvisibleRecoFrame("I_fix","I");
+    LAB_ISR[t]->SetChildFrame(*CM_ISR[t]);
+    CM_ISR[t]->AddChildFrame(*S_ISR[t]);
+    CM_ISR[t]->AddChildFrame(*ISR_ISR[t]);
+    if(t == 0){ // jets in ISR, leptons in sparticle
+      S_ISR[t]->AddChildFrame(*L_ISR[t]);
+      S_ISR[t]->AddChildFrame(*I_ISR[t]);
+    }
+    if(t == 1){ // jets in ISR+V, leptons in sparticle
+      S_ISR[t]->AddChildFrame(*L_ISR[t]);
+      S_ISR[t]->AddChildFrame(*V_ISR[t]);
+      S_ISR[t]->AddChildFrame(*I_ISR[t]);
+    }
+    if(t == 2){ // everything combinatorically assigned
+      S_ISR[t]->AddChildFrame(*V_ISR[t]);
+      S_ISR[t]->AddChildFrame(*I_ISR[t]);
+    }
 
-  LAB_fix->SetChildFrame(*CM_fix);
-  CM_fix->AddChildFrame(*ISR_fix);
-  CM_fix->AddChildFrame(*S_fix);
-  S_fix->AddChildFrame(*L_fix);
-  S_fix->AddChildFrame(*I_fix);
-  L_fix->AddChildFrame(*L1_fix);
-  L_fix->AddChildFrame(*L2_fix);
-  
-  LAB_fix->InitializeTree();
+    if(!LAB_ISR[t]->InitializeTree()){
+      cout << "Problem initializing ISR tree " << t << endl;
+    }
+    
+    INV_ISR[t] = new InvisibleGroup(Form("INV_ISR%d",t),"Invisible System");
+    INV_ISR[t]->AddFrame(*I_ISR[t]);
+    InvM_ISR[t] = new SetMassInvJigsaw(Form("InvM_ISR%d",t), "Invisible mass Jigsaw");
+    INV_ISR[t]->AddJigsaw(*InvM_ISR[t]);
 
-  // 2L+NJ tree (Z->ll + W/Z->qq)
-  LAB_2LNJ = new LabRecoFrame("LAB_2LNJ","LAB");
-  
-  S_2LNJ   = new DecayRecoFrame("S_2LNJ","S");
-  
-  Ca_2LNJ  = new DecayRecoFrame("Ca_2LNJ","C_{a}");  
-  Z_2LNJ   = new DecayRecoFrame("Z_2LNJ","Z");
-  L1_2LNJ  = new VisibleRecoFrame("L1_2LNJ","#it{l}_{1}");
-  L2_2LNJ  = new VisibleRecoFrame("L2_2LNJ","#it{l}_{2}");
-  Cb_2LNJ  = new DecayRecoFrame("Cb_2LNJ","C_{b}");
-  JSA_2LNJ = new SelfAssemblingRecoFrame("JSA_2L2J", "J");
-  J_2LNJ   = new VisibleRecoFrame("J_2L2J","Jets");
-  Ia_2LNJ  = new InvisibleRecoFrame("Ia_2LNJ","I_{a}");
-  Ib_2LNJ  = new InvisibleRecoFrame("Ib_2LNJ","I_{b}");
+    COMB_ISR[t] = new CombinatoricGroup(Form("COMB_ISR%d",t), "Combinatoric System");
+    CombSplit_ISR[t] = new MinMassesCombJigsaw(Form("CombSplit_ISR%d",t), "Minimize M_{ISR} and M_{S} Jigsaw");
+   
+    if(t == 0){ // jets in ISR, leptons in sparticle
+      // No combinatoric jigsaw necessary
+    }
+    if(t == 1){ // jets in ISR+V, leptons in sparticle
+      COMB_ISR[t]->AddFrame(*ISR_ISR[t]);
+      COMB_ISR[t]->SetNElementsForFrame(*ISR_ISR[t], 1);
+      COMB_ISR[t]->AddFrame(*V_ISR[t]);
+      COMB_ISR[t]->SetNElementsForFrame(*V_ISR[t], 0);
+      COMB_ISR[t]->AddJigsaw(*CombSplit_ISR[t]);
+      CombSplit_ISR[t]->AddCombFrame(*ISR_ISR[t], 0);
+      CombSplit_ISR[t]->AddCombFrame(*V_ISR[t], 1);
+      CombSplit_ISR[t]->AddObjectFrame(*ISR_ISR[t], 0);
+      CombSplit_ISR[t]->AddObjectFrame(*S_ISR[t], 1);
+    }
+    if(t == 2){ // everything combinatorically assigned
+      COMB_ISR[t]->AddFrame(*ISR_ISR[t]);
+      COMB_ISR[t]->SetNElementsForFrame(*ISR_ISR[t], 1);
+      COMB_ISR[t]->AddFrame(*V_ISR[t]);
+      COMB_ISR[t]->SetNElementsForFrame(*V_ISR[t], 0);
+      COMB_ISR[t]->AddJigsaw(*CombSplit_ISR[t]);
+      CombSplit_ISR[t]->AddCombFrame(*ISR_ISR[t], 0);
+      CombSplit_ISR[t]->AddCombFrame(*V_ISR[t], 1);
+      CombSplit_ISR[t]->AddObjectFrame(*ISR_ISR[t], 0);
+      CombSplit_ISR[t]->AddObjectFrame(*S_ISR[t], 1);
+    }
 
-  LAB_2LNJ->SetChildFrame(*S_2LNJ);
-  S_2LNJ->AddChildFrame(*Ca_2LNJ);
-  S_2LNJ->AddChildFrame(*Cb_2LNJ);
-  Ca_2LNJ->AddChildFrame(*Z_2LNJ);
-  Ca_2LNJ->AddChildFrame(*Ia_2LNJ);
-  Cb_2LNJ->AddChildFrame(*JSA_2LNJ);
-  Cb_2LNJ->AddChildFrame(*Ib_2LNJ);
-  Z_2LNJ->AddChildFrame(*L1_2LNJ);
-  Z_2LNJ->AddChildFrame(*L2_2LNJ);
-  JSA_2LNJ->AddChildFrame(*J_2LNJ);
-
-  LAB_2LNJ->InitializeTree();
-
-  // 2L+1L tree (Z->ll + Z/W->l)
-  LAB_2L1L = new LabRecoFrame("LAB_2L1L","LAB");
- 
-  S_2L1L   = new DecayRecoFrame("S_2L1L","S");
-  
-  Ca_2L1L  = new DecayRecoFrame("Ca_2L1L","C_{a}");
-  Z_2L1L   = new DecayRecoFrame("Z_2L1L","Z");  
-  L1_2L1L  = new VisibleRecoFrame("L1_2L1L","#it{l}_{1}");
-  L2_2L1L  = new VisibleRecoFrame("L2_2L1L","#it{l}_{2}");
-  Cb_2L1L  = new DecayRecoFrame("Cb_2L1L","C_{b}");  
-  Lb_2L1L  = new VisibleRecoFrame("Lb_2L1L","#it{l}_{b}");
-  Ia_2L1L  = new InvisibleRecoFrame("Ia_2L1L","I_{a}");
-  Ib_2L1L  = new InvisibleRecoFrame("Ia_2L1L","I_{b}");
-
-  LAB_2L1L->SetChildFrame(*S_2L1L);
- 
-  S_2L1L->AddChildFrame(*Ca_2L1L);
-  S_2L1L->AddChildFrame(*Cb_2L1L);
-  Ca_2L1L->AddChildFrame(*Z_2L1L);
-  Ca_2L1L->AddChildFrame(*Ia_2L1L);
-  Z_2L1L->AddChildFrame(*L1_2L1L);
-  Z_2L1L->AddChildFrame(*L2_2L1L);
-  Cb_2L1L->AddChildFrame(*Lb_2L1L);
-  Cb_2L1L->AddChildFrame(*Ib_2L1L);
-
-  LAB_2L1L->InitializeTree(); 
-
-   ////////////// Jigsaw rules set-up /////////////////
-
-  // combinatoric (transverse) tree
-  // for jet assignment
-  INV_comb = new InvisibleGroup("INV_comb","Invisible System");
-  INV_comb->AddFrame(*I_comb);
-  
-  InvMass_comb = new SetMassInvJigsaw("InvMass_comb", "Invisible system mass Jigsaw");
-  INV_comb->AddJigsaw(*InvMass_comb);
-  
-  JETS_comb = new CombinatoricGroup("JETS_comb","Jets System");
-  JETS_comb->AddFrame(*ISR_comb);
-  JETS_comb->SetNElementsForFrame(*ISR_comb, 1);
-  JETS_comb->AddFrame(*J_comb);
-  JETS_comb->SetNElementsForFrame(*J_comb, 0);
-  
-  SplitJETS_comb = new MinMassesCombJigsaw("SplitJETS_comb", "Minimize M_{ISR} and M_{S} Jigsaw");
-  JETS_comb->AddJigsaw(*SplitJETS_comb);
-  SplitJETS_comb->AddCombFrame(*ISR_comb, 0);
-  SplitJETS_comb->AddCombFrame(*J_comb, 1);
-  SplitJETS_comb->AddObjectFrame(*ISR_comb,0);
-  SplitJETS_comb->AddObjectFrame(*S_comb,1);
-
-  if(!LAB_comb->InitializeAnalysis()){
-    cout << "Problem initializing \"comb\" analysis" << endl;
+    if(!LAB_ISR[t]->InitializeAnalysis()){
+      cout << "Problem initializing ISR analysis " << t << endl;
+    }
   }
 
-  // OS 2L tree w/ fixed jet assign.
-  INV_fix = new InvisibleGroup("INV_fix","Invisible System");
-  INV_fix->AddFrame(*I_fix);
-  
-  InvMass_fix = new SetMassInvJigsaw("InvMass_fix", "Invisible system mass Jigsaw");
-  INV_fix->AddJigsaw(*InvMass_fix);
-  InvRapidity_fix = new SetRapidityInvJigsaw("InvRapidity_fix", "Set inv. system rapidity");
-  INV_fix->AddJigsaw(*InvRapidity_fix);
-  InvRapidity_fix->AddVisibleFrames(S_fix->GetListVisibleFrames());
+  // Sparticle pair-production trees
+  for(int t = 0; t < 3; t++){
+    LAB_PAIR[t]  = new LabRecoFrame(Form("LAB_PAIR%d",t),"LAB");
+    S_PAIR[t]    = new DecayRecoFrame(Form("S_PAIR%d",t),"#tilde{C}a #tilde{C}b");
+    Ca_PAIR[t]   = new DecayRecoFrame(Form("Ca_PAIR%d",t),"#tilde{C}a");
+    Cb_PAIR[t]   = new DecayRecoFrame(Form("Cb_PAIR%d",t),"#tilde{C}b");
+    VSAa_PAIR[t] = new SelfAssemblingRecoFrame(Form("VSAa_PAIR%d",t),"Va");
+    VSAb_PAIR[t] = new SelfAssemblingRecoFrame(Form("VSAb_PAIR%d",t),"Vb"); 
+    Va_PAIR[t]   = new VisibleRecoFrame(Form("Va_PAIR%d",t),"Va");
+    Vb_PAIR[t]   = new VisibleRecoFrame(Form("Vb_PAIR%d",t),"Vb");
+    Ia_PAIR[t]   = new InvisibleRecoFrame(Form("Ia_PAIR%d",t),"Ia");
+    Ib_PAIR[t]   = new InvisibleRecoFrame(Form("Ib_PAIR%d",t),"Ib");
 
-  if(!LAB_fix->InitializeAnalysis()){
-    cout << "Problem initializing \"fix\" analysis" << endl;
+    LAB_PAIR[t]->SetChildFrame(*S_PAIR[t]);
+    S_PAIR[t]->AddChildFrame(*Ca_PAIR[t]);
+    S_PAIR[t]->AddChildFrame(*Cb_PAIR[t]);
+    Ca_PAIR[t]->AddChildFrame(*VSAa_PAIR[t]);
+    Ca_PAIR[t]->AddChildFrame(*Ia_PAIR[t]);
+    Cb_PAIR[t]->AddChildFrame(*VSAb_PAIR[t]);
+    Cb_PAIR[t]->AddChildFrame(*Ib_PAIR[t]);
+    VSAa_PAIR[t]->AddChildFrame(*Va_PAIR[t]);
+    VSAb_PAIR[t]->AddChildFrame(*Vb_PAIR[t]);
+
+    if(!LAB_PAIR[t]->InitializeTree()){
+      cout << "Problem initializing PAIR tree " << t << endl;
+    }
+    
+    INV_PAIR[t] = new InvisibleGroup(Form("INV_PAIR%d",t),"Invisible System");
+    INV_PAIR[t]->AddFrame(*Ia_PAIR[t]);
+    INV_PAIR[t]->AddFrame(*Ib_PAIR[t]);
+    InvM_PAIR[t] = new SetMassInvJigsaw(Form("InvM_PAIR%d",t), "Invisible mass Jigsaw");
+    INV_PAIR[t]->AddJigsaw(*InvM_PAIR[t]);
+    InvEta_PAIR[t] = new SetRapidityInvJigsaw(Form("InvEta_PAIR%d",t), "Set inv. system rapidity");
+    INV_PAIR[t]->AddJigsaw(*InvEta_PAIR[t]);
+    InvEta_PAIR[t]->AddVisibleFrames(S_PAIR[t]->GetListVisibleFrames());
+    InvSplit_PAIR[t] = new MinMassesSqInvJigsaw(Form("InvSplit_PAIR%d",t), "INV -> I_{a}+ I_{b} jigsaw", 2);
+    INV_PAIR[t]->AddJigsaw(*InvSplit_PAIR[t]);
+    InvSplit_PAIR[t]->AddVisibleFrames(Ca_PAIR[t]->GetListVisibleFrames(), 0);
+    InvSplit_PAIR[t]->AddVisibleFrames(Ca_PAIR[t]->GetListVisibleFrames(), 1);
+    InvSplit_PAIR[t]->AddInvisibleFrame(*Ia_PAIR[t], 0);
+    InvSplit_PAIR[t]->AddInvisibleFrame(*Ib_PAIR[t], 1);
+
+    COMB_PAIR[t] = new CombinatoricGroup(Form("COMB_PAIR%d",t), "Combinatoric System");
+    COMBa_PAIR[t] = new CombinatoricGroup(Form("COMBa_PAIR%d",t), "Combinatoric System a");
+    COMBb_PAIR[t] = new CombinatoricGroup(Form("COMBb_PAIR%d",t), "Combinatoric System b");
+    CombSplit_PAIR[t] = new MinMassesCombJigsaw(Form("CombSplit_PAIR%d",t), "Minimize M_{Va} and M_{Vb} Jigsaw");
+    
+    if(t == 0){ // fixed content hemispheres
+      COMBa_PAIR[t]->AddFrame(*Va_PAIR[t]);
+      COMBb_PAIR[t]->AddFrame(*Vb_PAIR[t]);
+      COMBa_PAIR[t]->SetNElementsForFrame(*Va_PAIR[t], 1);
+      COMBb_PAIR[t]->SetNElementsForFrame(*Vb_PAIR[t], 1);
+    }
+    if(t == 1){ // select objects combinatorically assigned
+      COMB_PAIR[t]->AddFrame(*Va_PAIR[t]);
+      COMB_PAIR[t]->AddFrame(*Vb_PAIR[t]);
+      COMB_PAIR[t]->SetNElementsForFrame(*Va_PAIR[t], 1);
+      COMB_PAIR[t]->SetNElementsForFrame(*Vb_PAIR[t], 1);
+      COMB_PAIR[t]->AddJigsaw(*CombSplit_PAIR[t]);
+      CombSplit_PAIR[t]->AddCombFrame(*Va_PAIR[t], 0);
+      CombSplit_PAIR[t]->AddCombFrame(*Vb_PAIR[t], 1);
+      CombSplit_PAIR[t]->AddObjectFrame(*Va_PAIR[t], 0);
+      CombSplit_PAIR[t]->AddObjectFrame(*Vb_PAIR[t], 1);
+    }
+    if(t == 2){ // everything combinatorically assigned
+      COMB_PAIR[t]->AddFrame(*Va_PAIR[t]);
+      COMB_PAIR[t]->AddFrame(*Vb_PAIR[t]);
+      COMB_PAIR[t]->SetNElementsForFrame(*Va_PAIR[t], 1);
+      COMB_PAIR[t]->SetNElementsForFrame(*Vb_PAIR[t], 1);
+      COMB_PAIR[t]->AddJigsaw(*CombSplit_PAIR[t]);
+      CombSplit_PAIR[t]->AddCombFrame(*Va_PAIR[t], 0);
+      CombSplit_PAIR[t]->AddCombFrame(*Vb_PAIR[t], 1);
+      CombSplit_PAIR[t]->AddObjectFrame(*Va_PAIR[t], 0);
+      CombSplit_PAIR[t]->AddObjectFrame(*Vb_PAIR[t], 1);
+    }
+
+    if(!LAB_PAIR[t]->InitializeAnalysis()){
+      cout << "Problem initializing PAIR analysis " << t << endl;
+    }
   }
 
-  // 2L+NJ tree (Z->ll + W/Z->qq)
-  INV_2LNJ = new InvisibleGroup("INV_2LNJ","Invisible System");
-  INV_2LNJ->AddFrame(*Ia_2LNJ);
-  INV_2LNJ->AddFrame(*Ib_2LNJ);
-  
-  InvMass_2LNJ = new SetMassInvJigsaw("InvMass_2LNJ", "Invisible system mass Jigsaw");
-  INV_2LNJ->AddJigsaw(*InvMass_2LNJ);
-  InvRapidity_2LNJ = new SetRapidityInvJigsaw("InvRapidity_2LNJ", "Set inv. system rapidity");
-  INV_2LNJ->AddJigsaw(*InvRapidity_2LNJ);
-  InvRapidity_2LNJ->AddVisibleFrames(S_2LNJ->GetListVisibleFrames());
-  SplitINV_2LNJ = new ContraBoostInvJigsaw("SplitINV_2LNJ", "INV -> I_{a}+ I_{b} jigsaw");
-  INV_2LNJ->AddJigsaw(*SplitINV_2LNJ);
-  SplitINV_2LNJ->AddVisibleFrames(Ca_2LNJ->GetListVisibleFrames(), 0);
-  SplitINV_2LNJ->AddVisibleFrames(Cb_2LNJ->GetListVisibleFrames(), 1);
-  SplitINV_2LNJ->AddInvisibleFrame(*Ia_2LNJ, 0);
-  SplitINV_2LNJ->AddInvisibleFrame(*Ib_2LNJ, 1);
-  
-  JETS_2LNJ = new CombinatoricGroup("JETS_comb","Jets System");
-  JETS_2LNJ->AddFrame(*J_2LNJ);
-  JETS_2LNJ->SetNElementsForFrame(*J_2LNJ, 0);
-
-  if(!LAB_2LNJ->InitializeAnalysis()){
-    cout << "Problem initializing \"2LNJ\" analysis" << endl;
-  }
-
-  // 2L+1L tree (Z->ll + Z/W->l)
-  INV_2L1L = new InvisibleGroup("INV_2L1L","Invisible System");
-  INV_2L1L->AddFrame(*Ia_2L1L);
-  INV_2L1L->AddFrame(*Ib_2L1L);
-  
-  InvMass_2L1L = new SetMassInvJigsaw("InvMass_2L1L", "Invisible system mass Jigsaw");
-  INV_2L1L->AddJigsaw(*InvMass_2L1L);
-  InvRapidity_2L1L = new SetRapidityInvJigsaw("InvRapidity_2L1L", "Set inv. system rapidity");
-  INV_2L1L->AddJigsaw(*InvRapidity_2L1L);
-  InvRapidity_2L1L->AddVisibleFrames(S_2L1L->GetListVisibleFrames());
-  SplitINV_2L1L = new ContraBoostInvJigsaw("SplitINV_2L1L", "INV -> I_{a}+ I_{b} jigsaw");
-  INV_2L1L->AddJigsaw(*SplitINV_2L1L);
-  SplitINV_2L1L->AddVisibleFrames(Ca_2L1L->GetListVisibleFrames(), 0);
-  SplitINV_2L1L->AddVisibleFrames(Cb_2L1L->GetListVisibleFrames(), 1);
-  SplitINV_2L1L->AddInvisibleFrame(*Ia_2L1L, 0);
-  SplitINV_2L1L->AddInvisibleFrame(*Ib_2L1L, 1);
-
-  if(!LAB_2L1L->InitializeAnalysis()){
-    cout << "Problem initializing \"2L1L\" analysis" << endl;
-  }
 }
 
 ReducedNtuple::~ReducedNtuple() {
-  // combinatoric (transverse) tree
-  // for jet assignment
-  delete LAB_comb;
-  delete CM_comb;
-  delete S_comb;
-  delete ISR_comb;
-  delete J_comb;
-  delete L_comb;
-  delete I_comb;
-  delete INV_comb;
-  delete InvMass_comb;
-  delete JETS_comb;
-  delete SplitJETS_comb;
+  for(int i = 0; i < 3; i++){
+    // ISR-style trees
+    delete LAB_ISR[i];
+    delete CM_ISR[i];
+    delete S_ISR[i];
+    delete ISR_ISR[i];
+    delete V_ISR[i];
+    delete L_ISR[i];
+    delete I_ISR[i];
 
-  // OS 2L tree w/ fixed jet assign.
-  delete LAB_fix;
-  delete CM_fix;
-  delete S_fix;
-  delete ISR_fix;
-
-  delete L_fix;  
-  delete L1_fix;
-  delete L2_fix;
- 
-  delete I_fix;
-
-  delete INV_fix;
-  delete InvMass_fix;
-  delete InvRapidity_fix;
-
-  // 2L+NJ tree (Z->ll + W/Z->qq)
-  delete LAB_2LNJ;
- 
-  delete S_2LNJ;
- 
-  delete Ca_2LNJ;  
-  delete Z_2LNJ;
-  delete L1_2LNJ;
-  delete L2_2LNJ;
-  delete Cb_2LNJ;
-  delete JSA_2LNJ;
-  delete J_2LNJ;
-  delete Ia_2LNJ;
-  delete Ib_2LNJ;
-  delete INV_2LNJ;
-  delete InvMass_2LNJ;
-  delete InvRapidity_2LNJ;
-  delete SplitINV_2LNJ;
-  delete JETS_2LNJ;
-
-  // 2L+1L tree (Z->ll + Z/W->l)
-  delete LAB_2L1L;
+    delete INV_ISR[i];
+    delete InvM_ISR[i];
+    delete COMB_ISR[i];
+    delete CombSplit_ISR[i];
   
-  delete S_2L1L;
-  
-  delete Ca_2L1L;
-  delete Z_2L1L;  
-  delete L1_2L1L;
-  delete L2_2L1L;
-  delete Cb_2L1L;  
-  delete Lb_2L1L;
-  delete Ia_2L1L;
-  delete Ib_2L1L;
-  delete INV_2L1L;
-  delete InvMass_2L1L;
-  delete InvRapidity_2L1L;
-  delete SplitINV_2L1L;
+    // Sparticle pair-production trees
+    delete LAB_PAIR[i];
+    delete S_PAIR[i];
+    delete Ca_PAIR[i];
+    delete Cb_PAIR[i];
+    delete VSAa_PAIR[i];
+    delete VSAb_PAIR[i];
+    delete Va_PAIR[i];
+    delete Vb_PAIR[i];
+    delete Ia_PAIR[i];
+    delete Ib_PAIR[i];
+
+    delete INV_PAIR[i];
+    delete InvM_PAIR[i];
+    delete InvEta_PAIR[i];
+    delete InvSplit_PAIR[i];
+    delete COMB_PAIR[i];
+    delete CombSplit_PAIR[i];
+    delete COMBa_PAIR[i];
+    delete COMBb_PAIR[i];
+  }
   
 }
 
 TTree* ReducedNtuple::InitOutputTree(const string& sample){
 
+  gInterpreter->GenerateDictionary("vector<vector<int>>", "vector");
+  
   TTree* tree = (TTree*) new TTree(sample.c_str(), sample.c_str());
 
   tree->Branch("weight", &m_weight);
@@ -289,7 +232,13 @@ TTree* ReducedNtuple::InitOutputTree(const string& sample){
   tree->Branch("ID_lep",      &m_ID_lep);
   tree->Branch("Index_lep",   &m_Index_lep);
 
+  tree->Branch("Njet", &m_Njet);
   tree->Branch("Nbjet", &m_Nbjet);
+  tree->Branch("PT_jet",  &m_PT_jet);
+  tree->Branch("Eta_jet", &m_Eta_jet);
+  tree->Branch("Phi_jet", &m_Phi_jet);
+  tree->Branch("M_jet",   &m_M_jet);
+  tree->Branch("Btag_jet",   &m_Btag_jet);
  
   tree->Branch("genNele", &m_genNele);
   tree->Branch("genNmu", &m_genNmu);
@@ -321,70 +270,207 @@ TTree* ReducedNtuple::InitOutputTree(const string& sample){
   tree->Branch("genEta_susy", &m_genEta_susy);
   tree->Branch("genPhi_susy", &m_genPhi_susy);
   tree->Branch("genM_susy",   &m_genM_susy);
-  tree->Branch("genPDGID_susy",   &m_genPDGID_susy);
-
+  tree->Branch("genPDGID_susy", &m_genPDGID_susy);
+  
   // Calculated Observables
-  tree->Branch("Nj", &m_Nj);
-  tree->Branch("NjS", &m_NjS);
-  tree->Branch("NjISR", &m_NjISR);
+  for(int i = 0; i < 3; i++){
+    m_Njet_a.push_back(0);
+    m_Njet_b.push_back(0);
+    m_Nbjet_a.push_back(0);
+    m_Nbjet_b.push_back(0);
+    m_Nlep_a.push_back(0);
+    m_Nlep_b.push_back(0);
+    m_index_jet_a.push_back(vector<int>());
+    m_index_jet_b.push_back(vector<int>());
+    m_index_lep_a.push_back(vector<int>());
+    m_index_lep_b.push_back(vector<int>());
+    m_MSS.push_back(0);
+    m_PSS.push_back(0);
+    m_cosSS.push_back(0);
+    m_dphiSS.push_back(0);
+    m_PTSS.push_back(0);
+    m_PzSS.push_back(0);
+    m_MCa.push_back(0);
+    m_cosCa.push_back(0);
+    m_MCb.push_back(0);
+    m_cosCb.push_back(0);
+    m_H11SS.push_back(0);
+    m_H22SS.push_back(0);
+    m_HN2SS.push_back(0);
+    m_H11Ca.push_back(0);
+    m_H11Cb.push_back(0);
+    m_H21Ca.push_back(0);
+    m_H21Cb.push_back(0);
+    m_HN1Ca.push_back(0);
+    m_HN1Cb.push_back(0);
+    m_MVa.push_back(0);
+    m_cosVa.push_back(0);
+    m_MVb.push_back(0);
+    m_cosVb.push_back(0);
+  }
+  tree->Branch("Njet_a", &m_Njet_a);
+  tree->Branch("Njet_b", &m_Njet_b);
+  tree->Branch("Nbjet_a", &m_Nbjet_a);
+  tree->Branch("Nbjet_b", &m_Nbjet_b);
+  tree->Branch("Nlep_a", &m_Nlep_a);
+  tree->Branch("Nlep_b", &m_Nlep_b);
+  tree->Branch("index_jet_a", &m_index_jet_a);
+  tree->Branch("index_jet_b", &m_index_jet_b);
+  tree->Branch("index_lep_a", &m_index_lep_a);
+  tree->Branch("index_lep_b", &m_index_lep_b);
+  tree->Branch("MSS", &m_MSS);
+  tree->Branch("PSS", &m_PSS);
+  tree->Branch("cosSS", &m_cosSS);
+  tree->Branch("dphiSS", &m_dphiSS);
+  tree->Branch("PTSS", &m_PTSS);
+  tree->Branch("PzSS", &m_PzSS);
+  tree->Branch("MCa", &m_MCa);
+  tree->Branch("cosCa", &m_cosCa);
+  tree->Branch("MCb", &m_MCb);
+  tree->Branch("cosCb", &m_cosCb);
+  tree->Branch("H11SS", &m_H11SS);
+  tree->Branch("H22SS", &m_H22SS);
+  tree->Branch("HN2SS", &m_HN2SS);
+  tree->Branch("H11Ca", &m_H11Ca);
+  tree->Branch("H11Cb", &m_H11Cb);
+  tree->Branch("H21Ca", &m_H21Ca);
+  tree->Branch("H21Cb", &m_H21Cb);
+  tree->Branch("HN1Ca", &m_HN1Ca);
+  tree->Branch("HN1Cb", &m_HN1Cb);
+  tree->Branch("MVa", &m_MVa);
+  tree->Branch("cosVa", &m_cosVa);
+  tree->Branch("MVb", &m_MVb);
+  tree->Branch("cosVb", &m_cosVb);
 
-  tree->Branch("PTCM_comb", &m_PTCM_comb);
-  tree->Branch("PTISR_comb", &m_PTISR_comb);
-  tree->Branch("RISR_comb", &m_RISR_comb);
-  tree->Branch("cosCM_comb", &m_cosCM_comb);
-  tree->Branch("cosS_comb", &m_cosS_comb);
-  tree->Branch("MISR_comb", &m_MISR_comb);
-  tree->Branch("MS_comb", &m_MS_comb);
-  tree->Branch("dphiCMI_comb", &m_dphiCMI_comb);
-  tree->Branch("dphiSI_comb", &m_dphiSI_comb);
-  tree->Branch("dphiISRI_comb", &m_dphiISRI_comb);
-
-  tree->Branch("PTCM_fix", &m_PTCM_fix);
-  tree->Branch("PTISR_fix", &m_PTISR_fix);
-  tree->Branch("RISR_fix", &m_RISR_fix);
-  tree->Branch("cosCM_fix", &m_cosCM_fix);
-  tree->Branch("cosS_fix", &m_cosS_fix);
-  tree->Branch("MISR_fix", &m_MISR_fix);
-  tree->Branch("MS_fix", &m_MS_fix);
-  tree->Branch("dphiCMI_fix", &m_dphiCMI_fix);
-  tree->Branch("dphiSI_fix", &m_dphiSI_fix);
-  tree->Branch("dphiISRI_fix", &m_dphiISRI_fix);
-
-  tree->Branch("MZ", &m_MZ);
-  tree->Branch("cosZ", &m_cosZ);
+  for(int i = 0; i < 3; i++){
+    m_Njet_ISR.push_back(0);
+    m_Njet_S.push_back(0);
+    m_Nbjet_ISR.push_back(0);
+    m_Nbjet_S.push_back(0);
+    m_Nlep_ISR.push_back(0);
+    m_Nlep_S.push_back(0);
+    m_index_jet_ISR.push_back(vector<int>());
+    m_index_jet_S.push_back(vector<int>());
+    m_index_lep_ISR.push_back(vector<int>());
+    m_index_lep_S.push_back(vector<int>());
+    m_PTISR.push_back(0);
+    m_PTCM.push_back(0);
+    m_RISR.push_back(0);
+    m_cosCM.push_back(0);
+    m_cosS.push_back(0);
+    m_MISR.push_back(0);
+    m_MS.push_back(0);
+    m_MV.push_back(0);
+    m_ML.push_back(0);
+    m_dphiCMI.push_back(0);
+    m_dphiSI.push_back(0);
+    m_dphiISRI.push_back(0);
+  }
+  tree->Branch("Njet_ISR", &m_Njet_ISR);
+  tree->Branch("Njet_S", &m_Njet_S);
+  tree->Branch("Nbjet_ISR", &m_Nbjet_ISR);
+  tree->Branch("Nbjet_S", &m_Nbjet_S);
+  tree->Branch("Nlep_ISR", &m_Nlep_ISR);
+  tree->Branch("Nlep_S", &m_Nlep_S);
+  tree->Branch("index_jet_ISR", &m_index_jet_ISR);
+  tree->Branch("index_jet_S", &m_index_jet_S);
+  tree->Branch("index_lep_ISR", &m_index_lep_ISR);
+  tree->Branch("index_lep_S", &m_index_lep_S);
+  tree->Branch("PTISR", &m_PTISR);
+  tree->Branch("PTCM", &m_PTCM);
+  tree->Branch("RISR", &m_RISR);
+  tree->Branch("cosCM", &m_cosCM);
+  tree->Branch("cosS", &m_cosS);
+  tree->Branch("MISR", &m_MISR);
+  tree->Branch("MS", &m_MS);
+  tree->Branch("MV", &m_MV);
+  tree->Branch("ML", &m_ML);
+  tree->Branch("dphiCMI", &m_dphiCMI);
+  tree->Branch("dphiSI", &m_dphiSI);
+  tree->Branch("dphiISRI", &m_dphiISRI);
+  
+ 
 
   // which tree are we using for event?
  
   tree->Branch("Is_2LNJ", &m_Is_2LNJ);
   tree->Branch("Is_2L1L", &m_Is_2L1L);
-  
-  tree->Branch("HN2S", &m_HN2S);
-  tree->Branch("HN2SR", &m_HN2SR);
-  tree->Branch("H11S", &m_H11S);
-  tree->Branch("HN1Ca", &m_HN1Ca);
-  tree->Branch("HN1Cb", &m_HN1Cb);
-  tree->Branch("H11Ca", &m_H11Ca);
-  tree->Branch("H11Cb", &m_H11Cb);
-  tree->Branch("cosC", &m_cosC);
-
-  tree->Branch("MZ", &m_MZ);
-  tree->Branch("MJ", &m_MJ);
-  tree->Branch("cosZ", &m_cosZ);
-  tree->Branch("cosJ", &m_cosJ);
 
   return tree;
 }
 
-void ReducedNtuple::FillOutputTree(TTree* tree){
+void ReducedNtuple::ClearVariables(){
+  for(int i = 0; i < 3; i++){
+    m_Njet_a[i] = 0;
+    m_Njet_b[i] = 0;
+    m_Nbjet_a[i] = 0;
+    m_Nbjet_b[i] = 0;
+    m_Nlep_a[i] = 0;
+    m_Nlep_b[i] = 0;
+    m_index_jet_a[i].clear();
+    m_index_jet_b[i].clear();
+    m_index_lep_a[i].clear();
+    m_index_lep_b[i].clear();
+    m_MSS[i] = 0;
+    m_PSS[i] = 0;
+    m_cosSS[i] = 0;
+    m_dphiSS[i] = 0;
+    m_PTSS[i] = 0;
+    m_PzSS[i] = 0;
+    m_MCa[i] = 0;
+    m_cosCa[i] = 0;
+    m_MCb[i] = 0;
+    m_cosCb[i] = 0;
+    m_H11SS[i] = 0;
+    m_H22SS[i] = 0;
+    m_HN2SS[i] = 0;
+    m_H11Ca[i] = 0;
+    m_H11Cb[i] = 0;
+    m_H21Ca[i] = 0;
+    m_H21Cb[i] = 0;
+    m_HN1Ca[i] = 0;
+    m_HN1Cb[i] = 0;
+    m_MVa[i] = 0;
+    m_cosVa[i] = 0;
+    m_MVb[i] = 0;
+    m_cosVb[i] = 0;
 
-  ParticleList Jets = GetJets();
-  Jets = Jets.PtEtaCut(30., 3.);
+
+    m_Njet_ISR[i] = 0;
+    m_Njet_S[i] = 0;
+    m_Nbjet_ISR[i] = 0;
+    m_Nbjet_S[i] = 0;
+    m_Nlep_ISR[i] = 0;
+    m_Nlep_S[i] = 0;
+    m_index_jet_ISR[i].clear();
+    m_index_jet_S[i].clear();
+    m_index_lep_ISR[i].clear();
+    m_index_lep_S[i].clear();
+    m_PTISR[i] = 0;
+    m_PTCM[i] = 0;
+    m_RISR[i] = 0;
+    m_cosCM[i] = 0;
+    m_cosS[i] = 0;
+    m_MISR[i] = 0;
+    m_MS[i] = 0;
+    m_MV[i] = 0;
+    m_ML[i] = 0;
+    m_dphiCMI[i] = 0;
+    m_dphiSI[i] = 0;
+    m_dphiISRI[i] = 0;
+  }
+}
+
+void ReducedNtuple::FillOutputTree(TTree* tree){
   
-  m_Nj = Jets.size();
+  ParticleList Jets = GetJets();
+  Jets = Jets.PtEtaCut(30., 2.4);
+  
+  m_Njet = Jets.size();
   
   TVector3 ETMiss = GetMET();
 
-  if(ETMiss.Mag() < 50.)
+  if(ETMiss.Mag() < 100.)
     return;
 
   ParticleList Muons = GetMuons();
@@ -398,113 +484,388 @@ void ReducedNtuple::FillOutputTree(TTree* tree){
   ParticleList Leptons = Electrons+Muons;
   Leptons.SortByPt();
 
+  m_Nele = Electrons.size();
+  m_Nmu  = Muons.size();
+  m_Nlep = Leptons.size();
+  
   // require at least one lepton for now
-  if(Leptons.size() < 1)
+  if(m_Nlep < 1)
     return;
+
+  // not enough stuff
+  if(m_Nlep + m_Njet < 2)
+    return;
+
+  ClearVariables();
+  
+  bool is_filled[3];
+  for(int i = 0; i < 3; i++)
+    is_filled[i] = true;
   
   // figure out which tree to use
   
   m_Is_2LNJ = false;
   m_Is_2L1L = false;
-  
-  
-  if(Leptons.size() < 2) // at least 2 leptons for now
-    return;
 
-  if(Leptons.size() == 3){
-    // at least 1 OS/SF pair
-    if(Leptons[0].Charge()*Leptons[0].PDGID()+Leptons[1].Charge()*Leptons[1].PDGID() == 0 ||
-       Leptons[0].Charge()*Leptons[0].PDGID()+Leptons[2].Charge()*Leptons[2].PDGID() == 0 ||
-       Leptons[2].Charge()*Leptons[2].PDGID()+Leptons[1].Charge()*Leptons[1].PDGID() == 0){
-      m_Is_2L1L = true;
+  // Sparticle pair-production trees analysis
+  for(int t = 0; t < 3; t++){
+    LAB_PAIR[t]->ClearEvent();
+
+    INV_PAIR[t]->SetLabFrameThreeVector(ETMiss);
+    
+    if(t == 0){ // fixed content hemispheres
+      is_filled[t] = false;
+      continue;
     }
-  }
+    
+    if(t == 1){ // select objects combinatorically assigned
+      std::vector<RFKey> jetID;
+      int Nb = 0;
+      for(int i = 0; i < m_Njet; i++){
+	// NOTE: fill in with correct discriminant
+	if(Jets[i].Btag() > 0.55){
+	  jetID.push_back(COMB_PAIR[t]->AddLabFrameFourVector(Jets[i]));
+	  Nb++;
+	} else
+	  jetID.push_back(RFKey(-1));
+      }
+      std::vector<RFKey> lepID;
+      for(int i = 0; i < m_Nlep; i++) 
+	lepID.push_back(COMB_PAIR[t]->AddLabFrameFourVector(Leptons[i]));
 
-  if(Leptons.size() == 2){
-    // SS and/or OF leptons
-    if(Leptons[0].Charge()*Leptons[0].PDGID()+Leptons[1].Charge()*Leptons[1].PDGID() == 0){
-      if(Jets.size() >= 1){
-	m_Is_2LNJ = true;
+      if(m_Nlep + Nb < 2){
+	is_filled[t] = false;
+	continue;
+      }	
+      
+      if(!LAB_PAIR[t]->AnalyzeEvent())
+	cout << "Something went wrong with PAIR tree event analysis " << t << endl;
+
+      for(int i = 0; i < m_Njet; i++){
+	if(jetID[i] == -1)
+	  continue;
+	if(COMB_PAIR[t]->GetFrame(jetID[i]) == *Va_PAIR[t]){
+	  m_Njet_a[t]++;
+	  m_Nbjet_a[t]++;
+	  m_index_jet_a[t].push_back(i);
+	} else {
+	  m_Njet_b[t]++;
+	  m_Nbjet_b[t]++;
+	  m_index_jet_b[t].push_back(i);
+	}
+      }
+      for(int i = 0; i < m_Nlep; i++){
+	if(COMB_PAIR[t]->GetFrame(lepID[i]) == *Va_PAIR[t]){
+	  m_Nlep_a[t]++;
+	  m_index_lep_a[t].push_back(i);
+	} else {
+	  m_Nlep_b[t]++;
+	  m_index_lep_b[t].push_back(i);
+	}
+      }
+    }
+    if(t == 2){ // everything combinatorically assigned
+      std::vector<RFKey> jetID;
+      for(int i = 0; i < m_Njet; i++) 
+	jetID.push_back(COMB_PAIR[t]->AddLabFrameFourVector(Jets[i]));
+      std::vector<RFKey> lepID;
+      for(int i = 0; i < m_Nlep; i++) 
+	lepID.push_back(COMB_PAIR[t]->AddLabFrameFourVector(Leptons[i]));
+
+      if(!LAB_PAIR[t]->AnalyzeEvent())
+	cout << "Something went wrong with PAIR tree event analysis " << t << endl;
+
+      for(int i = 0; i < m_Njet; i++){
+	if(COMB_PAIR[t]->GetFrame(jetID[i]) == *Va_PAIR[t]){
+	  m_Njet_a[t]++;
+	  // NOTE
+	  if(Jets[i].Btag() > 0.55)
+	    m_Nbjet_a[t]++;
+	  m_index_jet_a[t].push_back(i);
+	} else {
+	  m_Njet_b[t]++;
+	  // NOTE
+	  if(Jets[i].Btag() > 0.55)
+	    m_Nbjet_b[t]++;
+	  m_index_jet_b[t].push_back(i);
+	}
+      }
+      for(int i = 0; i < m_Nlep; i++){
+	if(COMB_PAIR[t]->GetFrame(lepID[i]) == *Va_PAIR[t]){
+	  m_Nlep_a[t]++;
+	  m_index_lep_a[t].push_back(i);
+	} else {
+	  m_Nlep_b[t]++;
+	  m_index_lep_b[t].push_back(i);
+	}
       }
     }
   }
 
-  if(!m_Is_2LNJ && !m_Is_2L1L)
-    return;
+  // ISR-style analysis
+  if(m_Njet > 0){
+    ParticleList JetsT = Jets;
+    ParticleList LeptonsT = Leptons;
+    
+    for(int i = 0; i < m_Njet; i++)
+      JetsT[i].SetPtEtaPhiM(JetsT[i].Pt(),0.,JetsT[i].Phi(),JetsT[i].M());
+    
+    for(int i = 0; i < m_Nlep; i++)
+      LeptonsT[i].SetPtEtaPhiM(LeptonsT[i].Pt(),0.,LeptonsT[i].Phi(),LeptonsT[i].M());
+    
+    // loop through different trees
+    for(int t = 0; t < 3; t++){
+      LAB_ISR[t]->ClearEvent();
+      
+      INV_ISR[t]->SetLabFrameThreeVector(ETMiss);
+      
+      if(t == 0){ // jets in ISR, leptons in sparticle
+	ISR_ISR[t]->SetLabFrameFourVector(JetsT);
+	L_ISR[t]->SetLabFrameFourVector(LeptonsT);
+	
+	if(!LAB_ISR[t]->AnalyzeEvent())
+	  cout << "Something went wrong with ISR tree event analysis " << t << endl;
 
-  if(Leptons[0].Pt() < 5. && Leptons[1].Pt() < 5.) // lead leptons greater than 5 GeV in Pt
-    return;
+	for(int i = 0; i < m_Njet; i++){
+	  m_Njet_ISR[t]++;
+	  // NOTE
+	  if(Jets[i].Btag() > 0.55)
+	    m_Nbjet_ISR[t]++;
+	  m_index_jet_ISR[t].push_back(i);
+	}
+	for(int i = 0; i < m_Nlep; i++){
+	  m_Nlep_S[t]++;
+	  m_index_lep_S[t].push_back(i);
+	}
+      }
+      
+      if(t == 1){ // jets in ISR+V, leptons in sparticle
+	std::vector<RFKey> jetID;
+	for(int i = 0; i < m_Njet; i++) 
+	  jetID.push_back(COMB_ISR[t]->AddLabFrameFourVector(JetsT[i]));
 
-  // 2LNJ analysis
-  if(m_Is_2LNJ){
-    LAB_2LNJ->ClearEvent();
+	L_ISR[t]->SetLabFrameFourVector(LeptonsT);
 
-    // put jets in their place
-    int NJ = Jets.size();
-    if(NJ == 1)
-      JETS_2LNJ->AddLabFrameFourVector(Jets[0]);
-    else {
-      int i1,i2;
-      double mdiff = 100000.;
-      for(int i = 0; i < NJ-1; i++){
-	for(int j = i+1; j < NJ; j++){
-	  double diff = fabs(TLorentzVector(Jets[i]+Jets[j]).M() - 80.);
-	  if(diff < mdiff){
-	    mdiff = diff;
-	    i1 = i;
-	    i2 = j;
+	if(!LAB_ISR[t]->AnalyzeEvent())
+	  cout << "Something went wrong with ISR tree event analysis " << t << endl;
+
+	for(int i = 0; i < m_Njet; i++){
+	  if(COMB_ISR[t]->GetFrame(jetID[i]) == *ISR_ISR[t]){
+	    m_Njet_ISR[t]++;
+	    // NOTE
+	    if(Jets[i].Btag() > 0.55)
+	      m_Nbjet_ISR[t]++;
+	    m_index_jet_ISR[t].push_back(i);
+	  } else {
+	    m_Njet_S[t]++;
+	    // NOTE
+	    if(Jets[i].Btag() > 0.55)
+	      m_Nbjet_S[t]++;
+	    m_index_jet_S[t].push_back(i);
+	  }
+	}
+	for(int i = 0; i < m_Nlep; i++){
+	  m_Nlep_S[t]++;
+	  m_index_lep_S[t].push_back(i);
+	}
+      }
+      
+      if(t == 2){ // everything combinatorically assigned
+	std::vector<RFKey> jetID;
+	for(int i = 0; i < m_Njet; i++) 
+	  jetID.push_back(COMB_ISR[t]->AddLabFrameFourVector(JetsT[i]));
+	std::vector<RFKey> lepID;
+	for(int i = 0; i < m_Nlep; i++) 
+	  lepID.push_back(COMB_ISR[t]->AddLabFrameFourVector(LeptonsT[i]));
+
+	if(!LAB_ISR[t]->AnalyzeEvent())
+	  cout << "Something went wrong with ISR tree event analysis " << t << endl;
+
+	for(int i = 0; i < m_Njet; i++){
+	  if(COMB_ISR[t]->GetFrame(jetID[i]) == *ISR_ISR[t]){
+	    m_Njet_ISR[t]++;
+	    // NOTE
+	    if(Jets[i].Btag() > 0.55)
+	      m_Nbjet_ISR[t]++;
+	    m_index_jet_ISR[t].push_back(i);
+	  } else {
+	    m_Njet_S[t]++;
+	    // NOTE
+	    if(Jets[i].Btag() > 0.55)
+	      m_Nbjet_S[t]++;
+	    m_index_jet_S[t].push_back(i);
+	  }
+	}
+	for(int i = 0; i < m_Nlep; i++){
+	  if(COMB_ISR[t]->GetFrame(lepID[i]) == *ISR_ISR[t]){
+	    m_Nlep_ISR[t]++;
+	    m_index_lep_ISR[t].push_back(i);
+	  } else {
+	    m_Nlep_S[t]++;
+	    m_index_lep_S[t].push_back(i);
 	  }
 	}
       }
-      JETS_2LNJ->AddLabFrameFourVector(Jets[i1]);
-      JETS_2LNJ->AddLabFrameFourVector(Jets[i2]);
-      
-    }
+
+      // Fill Observable Branches
+      m_cosCM[t] = CM_ISR[t]->GetCosDecayAngle();
+      m_cosS[t]  = S_ISR[t]->GetCosDecayAngle();
+      m_MISR[t]  = ISR_ISR[t]->GetMass();
+      m_MS[t]    = S_ISR[t]->GetMass();
+      if(t != 0)
+	m_MV[t] = V_ISR[t]->GetMass();
+      if(t != 2)
+	m_ML[t] = L_ISR[t]->GetMass();
+      m_dphiCMI[t] = acos(-1.)-fabs(CM_ISR[t]->GetDeltaPhiBoostVisible());
+      m_dphiSI[t]  = acos(-1.)-fabs(S_ISR[t]->GetDeltaPhiBoostVisible());
     
-    // put leptons in their place
-    L1_2LNJ->SetLabFrameFourVector(Leptons[0]);
-    L2_2LNJ->SetLabFrameFourVector(Leptons[1]);
+      m_PTCM[t]  = CM_ISR[t]->GetFourVector().Pt();
+   
+      TVector3 vPt_ISR = ISR_ISR[t]->GetFourVector(*CM_ISR[t]).Vect();
+      TVector3 vPt_I   = I_ISR[t]->GetFourVector(*CM_ISR[t]).Vect();
 
-    INV_2LNJ->SetLabFrameThreeVector(ETMiss);
+      m_PTISR[t]    = vPt_ISR.Mag();
+      m_RISR[t]     = m_Nlep_S[t]+m_Njet_S[t] > 0. ? -vPt_I.Dot(vPt_ISR.Unit())/ m_PTISR[t] : 0;
+      m_dphiISRI[t] = fabs(vPt_ISR.Angle(vPt_I));
+    }
+  }
+  
+  
+  /*
+  // 2LNJ analysis
+  if(m_Is_2LNJ){
+  LAB_2LNJ->ClearEvent();
 
-    if(!LAB_2LNJ->AnalyzeEvent())
-      cout << "Something went wrong with \"2LNJ\" tree event analysis" << endl;
+  // put jets in their place
+  int NJ = Jets.size();
+  if(NJ == 1)
+  JETS_2LNJ->AddLabFrameFourVector(Jets[0]);
+  else {
+  int i1,i2;
+  double mdiff = 100000.;
+  for(int i = 0; i < NJ-1; i++){
+  for(int j = i+1; j < NJ; j++){
+  double diff = fabs(TLorentzVector(Jets[i]+Jets[j]).M() - 80.);
+  if(diff < mdiff){
+  mdiff = diff;
+  i1 = i;
+  i2 = j;
+  }
+  }
+  }
+  JETS_2LNJ->AddLabFrameFourVector(Jets[i1]);
+  JETS_2LNJ->AddLabFrameFourVector(Jets[i2]);
+      
+  }
+    
+  // put leptons in their place
+  L1_2LNJ->SetLabFrameFourVector(Leptons[0]);
+  L2_2LNJ->SetLabFrameFourVector(Leptons[1]);
+
+  INV_2LNJ->SetLabFrameThreeVector(ETMiss);
+
+  if(!LAB_2LNJ->AnalyzeEvent())
+  cout << "Something went wrong with \"2LNJ\" tree event analysis" << endl;
+  }
+  
+  
+  if(Leptons.size() < 2) // at least 2 leptons for now
+  return;
+
+  if(Leptons.size() == 3){
+  // at least 1 OS/SF pair
+  if(Leptons[0].Charge()*Leptons[0].PDGID()+Leptons[1].Charge()*Leptons[1].PDGID() == 0 ||
+  Leptons[0].Charge()*Leptons[0].PDGID()+Leptons[2].Charge()*Leptons[2].PDGID() == 0 ||
+  Leptons[2].Charge()*Leptons[2].PDGID()+Leptons[1].Charge()*Leptons[1].PDGID() == 0){
+  m_Is_2L1L = true;
+  }
+  }
+
+  if(Leptons.size() == 2){
+  // SS and/or OF leptons
+  if(Leptons[0].Charge()*Leptons[0].PDGID()+Leptons[1].Charge()*Leptons[1].PDGID() == 0){
+  if(Jets.size() >= 1){
+  m_Is_2LNJ = true;
+  }
+  }
+  }
+
+  if(!m_Is_2LNJ && !m_Is_2L1L)
+  return;
+
+  if(Leptons[0].Pt() < 5. && Leptons[1].Pt() < 5.) // lead leptons greater than 5 GeV in Pt
+  return;
+
+  // 2LNJ analysis
+  if(m_Is_2LNJ){
+  LAB_2LNJ->ClearEvent();
+
+  // put jets in their place
+  int NJ = Jets.size();
+  if(NJ == 1)
+  JETS_2LNJ->AddLabFrameFourVector(Jets[0]);
+  else {
+  int i1,i2;
+  double mdiff = 100000.;
+  for(int i = 0; i < NJ-1; i++){
+  for(int j = i+1; j < NJ; j++){
+  double diff = fabs(TLorentzVector(Jets[i]+Jets[j]).M() - 80.);
+  if(diff < mdiff){
+  mdiff = diff;
+  i1 = i;
+  i2 = j;
+  }
+  }
+  }
+  JETS_2LNJ->AddLabFrameFourVector(Jets[i1]);
+  JETS_2LNJ->AddLabFrameFourVector(Jets[i2]);
+      
+  }
+    
+  // put leptons in their place
+  L1_2LNJ->SetLabFrameFourVector(Leptons[0]);
+  L2_2LNJ->SetLabFrameFourVector(Leptons[1]);
+
+  INV_2LNJ->SetLabFrameThreeVector(ETMiss);
+
+  if(!LAB_2LNJ->AnalyzeEvent())
+  cout << "Something went wrong with \"2LNJ\" tree event analysis" << endl;
   }
 
   // 2L1L analysis
   if(m_Is_2L1L){
-    LAB_2L1L->ClearEvent();
+  LAB_2L1L->ClearEvent();
     
-    // put leptons in their place
-    // find min mass SF/OS pair
-    pair<int,int> iSFOS;
-    double        mSFOS = -1.;
-    for(int i = 0; i < 2; i++){
-      for(int j = i+1; j < 3; j++){
-	if(Leptons[i].Charge()*Leptons[i].PDGID()+Leptons[j].Charge()*Leptons[j].PDGID() == 0){
-	  if(mSFOS < 0. ||
-	     TLorentzVector(Leptons[i]+Leptons[j]).M() < mSFOS){
-	    mSFOS = TLorentzVector(Leptons).M();
-	    iSFOS.first  = i;
-	    iSFOS.second = j;
-	  }
-	}
-      }
-    }
+  // put leptons in their place
+  // find min mass SF/OS pair
+  pair<int,int> iSFOS;
+  double        mSFOS = -1.;
+  for(int i = 0; i < 2; i++){
+  for(int j = i+1; j < 3; j++){
+  if(Leptons[i].Charge()*Leptons[i].PDGID()+Leptons[j].Charge()*Leptons[j].PDGID() == 0){
+  if(mSFOS < 0. ||
+  TLorentzVector(Leptons[i]+Leptons[j]).M() < mSFOS){
+  mSFOS = TLorentzVector(Leptons).M();
+  iSFOS.first  = i;
+  iSFOS.second = j;
+  }
+  }
+  }
+  }
     
-    for(int i = 0; i < 3; i++){
-      if(i == iSFOS.first)
-	L1_2L1L->SetLabFrameFourVector(Leptons[i]);
-      if(i == iSFOS.second)
-	L2_2L1L->SetLabFrameFourVector(Leptons[i]);
-      if(i != iSFOS.first && i != iSFOS.second)
-	Lb_2L1L->SetLabFrameFourVector(Leptons[i]);
-    }
+  for(int i = 0; i < 3; i++){
+  if(i == iSFOS.first)
+  L1_2L1L->SetLabFrameFourVector(Leptons[i]);
+  if(i == iSFOS.second)
+  L2_2L1L->SetLabFrameFourVector(Leptons[i]);
+  if(i != iSFOS.first && i != iSFOS.second)
+  Lb_2L1L->SetLabFrameFourVector(Leptons[i]);
+  }
 
-    INV_2L1L->SetLabFrameThreeVector(ETMiss);
+  INV_2L1L->SetLabFrameThreeVector(ETMiss);
     
-    if(!LAB_2L1L->AnalyzeEvent())
-      cout << "Something went wrong with \"2L1L\" tree event analysis" << endl;
+  if(!LAB_2L1L->AnalyzeEvent())
+  cout << "Something went wrong with \"2L1L\" tree event analysis" << endl;
   }
 
   m_HN2S = 0.;
@@ -523,187 +884,46 @@ void ReducedNtuple::FillOutputTree(TTree* tree){
 
   if(m_Is_2LNJ){
 
-    m_HN2S = Z_2LNJ->GetFourVector(*S_2LNJ).E() +
-      J_2LNJ->GetFourVector(*S_2LNJ).E() +
-      Ia_2LNJ->GetFourVector(*S_2LNJ).P() +
-      Ib_2LNJ->GetFourVector(*S_2LNJ).P();
-    m_H11S = 2.*(*Ia_2LNJ+*Ib_2LNJ).GetFourVector(*S_2LNJ).P();
-    m_HN1Ca = Z_2LNJ->GetFourVector(*Ca_2LNJ).E()+
-      Ia_2LNJ->GetFourVector(*Ca_2LNJ).P();
-    m_HN1Cb = J_2LNJ->GetFourVector(*Cb_2LNJ).E()+
-      Ib_2LNJ->GetFourVector(*Cb_2LNJ).P();
-    m_H11Ca = 2.*Ia_2LNJ->GetFourVector(*Ca_2LNJ).P();
-    m_H11Cb = 2.*Ib_2LNJ->GetFourVector(*Cb_2LNJ).P();
-    m_cosC  = Ca_2LNJ->GetCosDecayAngle();
+  m_HN2S = Z_2LNJ->GetFourVector(*S_2LNJ).E() +
+  J_2LNJ->GetFourVector(*S_2LNJ).E() +
+  Ia_2LNJ->GetFourVector(*S_2LNJ).P() +
+  Ib_2LNJ->GetFourVector(*S_2LNJ).P();
+  m_H11S = 2.*(*Ia_2LNJ+*Ib_2LNJ).GetFourVector(*S_2LNJ).P();
+  m_HN1Ca = Z_2LNJ->GetFourVector(*Ca_2LNJ).E()+
+  Ia_2LNJ->GetFourVector(*Ca_2LNJ).P();
+  m_HN1Cb = J_2LNJ->GetFourVector(*Cb_2LNJ).E()+
+  Ib_2LNJ->GetFourVector(*Cb_2LNJ).P();
+  m_H11Ca = 2.*Ia_2LNJ->GetFourVector(*Ca_2LNJ).P();
+  m_H11Cb = 2.*Ib_2LNJ->GetFourVector(*Cb_2LNJ).P();
+  m_cosC  = Ca_2LNJ->GetCosDecayAngle();
     
-    m_MZ = Z_2LNJ->GetMass();
-    m_MJ = J_2LNJ->GetMass();
-    m_cosZ = Z_2LNJ->GetCosDecayAngle();
-    if(Jets.size() > 1)
-      m_cosJ = JSA_2LNJ->GetCosDecayAngle();
+  m_MZ = Z_2LNJ->GetMass();
+  m_MJ = J_2LNJ->GetMass();
+  m_cosZ = Z_2LNJ->GetCosDecayAngle();
+  if(Jets.size() > 1)
+  m_cosJ = JSA_2LNJ->GetCosDecayAngle();
   }
 
   if(m_Is_2L1L){
     
-    m_HN2S = Z_2L1L->GetFourVector(*S_2L1L).E() +
-      Lb_2L1L->GetFourVector(*S_2L1L).E() +
-      Ia_2L1L->GetFourVector(*S_2L1L).P() +
-      Ib_2L1L->GetFourVector(*S_2L1L).P();
-    m_H11S = 2.*(*Ia_2L1L+*Ib_2L1L).GetFourVector(*S_2L1L).P();
-    m_HN1Ca = Z_2L1L->GetFourVector(*Ca_2L1L).E()+
-      Ia_2L1L->GetFourVector(*Ca_2L1L).P();
-    m_HN1Cb = Lb_2L1L->GetFourVector(*Cb_2L1L).E()+
-      Ib_2L1L->GetFourVector(*Cb_2L1L).P();
-    m_H11Ca = 2.*Ia_2L1L->GetFourVector(*Ca_2L1L).P();
-    m_H11Cb = 2.*Ib_2L1L->GetFourVector(*Cb_2L1L).P();
-    m_cosC  = Ca_2L1L->GetCosDecayAngle();
+  m_HN2S = Z_2L1L->GetFourVector(*S_2L1L).E() +
+  Lb_2L1L->GetFourVector(*S_2L1L).E() +
+  Ia_2L1L->GetFourVector(*S_2L1L).P() +
+  Ib_2L1L->GetFourVector(*S_2L1L).P();
+  m_H11S = 2.*(*Ia_2L1L+*Ib_2L1L).GetFourVector(*S_2L1L).P();
+  m_HN1Ca = Z_2L1L->GetFourVector(*Ca_2L1L).E()+
+  Ia_2L1L->GetFourVector(*Ca_2L1L).P();
+  m_HN1Cb = Lb_2L1L->GetFourVector(*Cb_2L1L).E()+
+  Ib_2L1L->GetFourVector(*Cb_2L1L).P();
+  m_H11Ca = 2.*Ia_2L1L->GetFourVector(*Ca_2L1L).P();
+  m_H11Cb = 2.*Ib_2L1L->GetFourVector(*Cb_2L1L).P();
+  m_cosC  = Ca_2L1L->GetCosDecayAngle();
     
-    m_MZ = Z_2L1L->GetMass();
-    m_cosZ = Z_2L1L->GetCosDecayAngle();
+  m_MZ = Z_2L1L->GetMass();
+  m_cosZ = Z_2L1L->GetCosDecayAngle();
   }
 
-  // ISR analysis
-  if(Jets.size() < 1)
-    return;
-  
-  // first - analyze jet combinatoric tree
-  // (regardless of later tree)
-  LAB_comb->ClearEvent();
-
-  TLorentzVector JetTOT(0.,0.,0.,0.);
-  m_HT = 0.;
-  
-  vector<RFKey> jetID; 
-  for(int i = 0; i < int(Jets.size()); i++){
-    TLorentzVector jet = Jets[i];
-    m_HT += jet.Pt();
-    JetTOT += jet;
-    
-    // transverse view of jet 4-vectors
-    jet.SetPtEtaPhiM(jet.Pt(),0.0,jet.Phi(),jet.M());
-    jetID.push_back(JETS_comb->AddLabFrameFourVector(jet));
-  }
-
-  TLorentzVector lepSys(0.,0.,0.,0.);
-  for(int i = 0; i < int(Leptons.size()); i++){
-    TLorentzVector lep1;
-    // transverse view of mu 4-vectors
-    lep1.SetPtEtaPhiM(Leptons[i].Pt(),0.0,Leptons[i].Phi(),Leptons[i].M());
-    lepSys = lepSys + lep1;
-  }  
-  L_comb->SetLabFrameFourVector(lepSys);
-
-  INV_comb->SetLabFrameThreeVector(ETMiss);
-  if(!LAB_comb->AnalyzeEvent())
-    cout << "Something went wrong with \"comb\" tree event analysis" << endl;
-
-
-  // Jet counting from comb tree
-  m_NjS   = 0;
-  m_NjISR = 0;
- 
-  for(int i = 0; i < int(Jets.size()); i++){
-    if(JETS_comb->GetFrame(jetID[i]) == *J_comb){ // sparticle group
-      m_NjS++;
-    } else {
-      m_NjISR++;
-    }
-  }
-
-
-  // fixed tree analysis
-  LAB_fix->ClearEvent();
-
-
-  ISR_fix->SetLabFrameFourVector(JetTOT);
-  // put leptons in their place
-  L1_fix->SetLabFrameFourVector(Leptons[0]);
-  L2_fix->SetLabFrameFourVector(Leptons[1]);
-
-  INV_fix->SetLabFrameThreeVector(ETMiss);
-    
-  if(!LAB_fix->AnalyzeEvent())
-    cout << "Something went wrong with \"fix\" tree event analysis" << endl;
-
-   
-  m_cosCM_comb = CM_comb->GetCosDecayAngle();
-  m_cosS_comb  = S_comb->GetCosDecayAngle();
-  m_MISR_comb = ISR_comb->GetMass();
-  m_MS_comb   = S_comb->GetCosDecayAngle();
-  m_dphiCMI_comb = acos(-1.)-fabs(CM_comb->GetDeltaPhiBoostVisible());
-  m_dphiSI_comb  = acos(-1.)-fabs(S_comb->GetDeltaPhiBoostVisible());
-
-  m_cosCM_fix = CM_fix->GetCosDecayAngle();
-  m_cosS_fix  = S_fix->GetCosDecayAngle();
-  m_MISR_fix = ISR_fix->GetMass();
-  m_MS_fix   = S_fix->GetCosDecayAngle();
-  m_dphiCMI_fix = acos(-1.)-fabs(CM_fix->GetDeltaPhiBoostVisible());
-  m_dphiSI_fix  = acos(-1.)-fabs(S_fix->GetDeltaPhiBoostVisible());
-
-  m_MZ = L_fix->GetMass();
-  m_cosZ = L_fix->GetCosDecayAngle();
-  for(;;){ //comb tree
-    TLorentzVector vP_CM  = CM_comb->GetFourVector();
-    TLorentzVector vP_ISR = ISR_comb->GetFourVector();
-    TLorentzVector vP_I   = I_comb->GetFourVector();
-    
-    m_PTCM_comb = vP_CM.Pt();
-    
-    TVector3 boostZ = vP_CM.BoostVector();
-    boostZ.SetX(0.);
-    boostZ.SetY(0.);
-    
-    vP_CM.Boost(-boostZ);
-    vP_ISR.Boost(-boostZ);
-    vP_I.Boost(-boostZ);
-    
-    TVector3 boostT = vP_CM.BoostVector();
-    vP_ISR.Boost(-boostT);
-    vP_I.Boost(-boostT);
-    
-    TVector3 vPt_ISR = vP_ISR.Vect();
-    TVector3 vPt_I   = vP_I.Vect();
-    vPt_ISR -= vPt_ISR.Dot(boostZ.Unit())*boostZ.Unit();
-    vPt_I   -= vPt_I.Dot(boostZ.Unit())*boostZ.Unit();
-    
-    m_PTISR_comb =  vPt_ISR.Mag();
-    m_RISR_comb  = -vPt_I.Dot(vPt_ISR.Unit()) / m_PTISR_comb;
-    m_dphiISRI_comb = fabs(vPt_ISR.Angle(vPt_I));
-
-    break;
-  }
-
-  for(;;){ // fixed jet tree
-    TLorentzVector vP_CM  = CM_fix->GetFourVector();
-    TLorentzVector vP_ISR = ISR_fix->GetFourVector();
-    TLorentzVector vP_I   = I_fix->GetFourVector();
-    
-    m_PTCM_fix = vP_CM.Pt();
-    
-    TVector3 boostZ = vP_CM.BoostVector();
-    boostZ.SetX(0.);
-    boostZ.SetY(0.);
-    
-    vP_CM.Boost(-boostZ);
-    vP_ISR.Boost(-boostZ);
-    vP_I.Boost(-boostZ);
-    
-    TVector3 boostT = vP_CM.BoostVector();
-    vP_ISR.Boost(-boostT);
-    vP_I.Boost(-boostT);
-    
-    TVector3 vPt_ISR = vP_ISR.Vect();
-    TVector3 vPt_I   = vP_I.Vect();
-    vPt_ISR -= vPt_ISR.Dot(boostZ.Unit())*boostZ.Unit();
-    vPt_I   -= vPt_I.Dot(boostZ.Unit())*boostZ.Unit();
-    
-    m_PTISR_fix =  vPt_ISR.Mag();
-    m_RISR_fix  = -vPt_I.Dot(vPt_ISR.Unit()) / m_PTISR_fix;
-    m_dphiISRI_fix = fabs(vPt_ISR.Angle(vPt_I));
-
-    break;
-  }
-
+  */
   m_weight = GetEventWeight();
   
   m_MET     = ETMiss.Pt();
@@ -713,9 +933,23 @@ void ReducedNtuple::FillOutputTree(TTree* tree){
   m_genMET     = genETMiss.Pt();
   m_genMET_phi = genETMiss.Phi();
 
-  m_Nele = Electrons.size();
-  m_Nmu  = Muons.size();
-  m_Nlep = Leptons.size();
+  // Fill Jets
+  m_Nbjet = 0;
+  m_PT_jet.clear();
+  m_Eta_jet.clear();
+  m_Phi_jet.clear();
+  m_M_jet.clear();
+  m_Btag_jet.clear();
+  for(int i = 0; i < m_Njet; i++){
+    m_PT_jet.push_back(Jets[i].Pt());
+    m_Eta_jet.push_back(Jets[i].Eta());
+    m_Phi_jet.push_back(Jets[i].Phi());
+    m_M_jet.push_back(Jets[i].M());
+    m_Btag_jet.push_back(Jets[i].Btag());
+    // NOTE: placeholder - replace with actual discriminant
+    if(Jets[i].Btag() > 0.55)
+      m_Nbjet++;
+  }
 
   ParticleList GenMuons = GetGenMuons();
   ParticleList GenElectrons = GetGenElectrons();
@@ -725,7 +959,7 @@ void ReducedNtuple::FillOutputTree(TTree* tree){
   m_genNele = GenElectrons.size();
   m_genNmu  = GenMuons.size();
   m_genNlep = GenLeptons.size();
-
+  
   // Fill reconstructed lepton branches
   m_PT_lep.clear();
   m_Eta_lep.clear();
@@ -759,7 +993,7 @@ void ReducedNtuple::FillOutputTree(TTree* tree){
       }
     m_Index_lep.push_back(index);
   }
- 
+  
   // Fill gen lepton branches
   m_genPT_lep.clear();
   m_genEta_lep.clear();
@@ -777,37 +1011,52 @@ void ReducedNtuple::FillOutputTree(TTree* tree){
     m_genPDGID_lep.push_back(GenLeptons[g].PDGID());
     m_genIndex_lep.push_back(genmatch[g]);
   }
-
+  
   // Fill gen neutrino branches
   ParticleList GenNus = GetGenNeutrinos();
   m_genNnu = GenNus.size();
-  m_PT_nu.clear();
-  m_Eta_nu.clear();
-  m_Phi_nu.clear();
-  m_PDGID_nu.clear();
-  for(int i  0; i < m_genNnu; i++){
-    m_PT_nu.push_back(GenNus[i].Pt());
-    m_Eta_nu.push_back(GenNus[i].Eta());
-    m_Phi_nu.push_back(GenNus[i].Phi());
-    m_PDGID_nu.push_back(GenNus[i].PDGID());
+  m_genPT_nu.clear();
+  m_genEta_nu.clear();
+  m_genPhi_nu.clear();
+  m_genPDGID_nu.clear();
+  for(int i = 0; i < m_genNnu; i++){
+    m_genPT_nu.push_back(GenNus[i].Pt());
+    m_genEta_nu.push_back(GenNus[i].Eta());
+    m_genPhi_nu.push_back(GenNus[i].Phi());
+    m_genPDGID_nu.push_back(GenNus[i].PDGID());
   }
   
-  int m_genNboson;
-  vector<double> m_genPT_boson;
-  vector<double> m_genEta_boson;
-  vector<double> m_genPhi_boson;
-  vector<double> m_genM_boson;
-  vector<int>    m_genPDGID_boson;
-  
-  int m_genNsusy;
-  vector<double> m_genPT_susy;
-  vector<double> m_genEta_susy;
-  vector<double> m_genPhi_susy;
-  vector<double> m_genM_susy;
-  vector<int>    m_genPDGID_susy;
+  // Fill gen boson branches
+  ParticleList GenBosons = GetGenBosons();
+  m_genNboson = GenBosons.size();
+  m_genPT_boson.clear();
+  m_genEta_boson.clear();
+  m_genPhi_boson.clear();
+  m_genM_boson.clear();
+  m_genPDGID_boson.clear();
+  for(int i = 0; i < m_genNboson; i++){
+    m_genPT_boson.push_back(GenBosons[i].Pt());
+    m_genEta_boson.push_back(GenBosons[i].Eta());
+    m_genPhi_boson.push_back(GenBosons[i].Phi());
+    m_genM_boson.push_back(GenBosons[i].Phi());
+    m_genPDGID_boson.push_back(GenBosons[i].PDGID());
+  }
 
-
-  int m_Nbjet;
+  // Fill gen sparticle branches
+  ParticleList GenSparticles = GetGenSparticles();
+  m_genNsusy = GenSparticles.size();
+  m_genPT_susy.clear();
+  m_genEta_susy.clear();
+  m_genPhi_susy.clear();
+  m_genM_susy.clear();
+  m_genPDGID_susy.clear();
+  for(int i = 0; i < m_genNsusy; i++){
+    m_genPT_susy.push_back(GenSparticles[i].Pt());
+    m_genEta_susy.push_back(GenSparticles[i].Eta());
+    m_genPhi_susy.push_back(GenSparticles[i].Phi());
+    m_genM_susy.push_back(GenSparticles[i].Phi());
+    m_genPDGID_susy.push_back(GenSparticles[i].PDGID());
+  }
 
   
   if(tree)

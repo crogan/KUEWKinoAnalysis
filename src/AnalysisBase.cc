@@ -125,7 +125,7 @@ ParticleList GetGenBosons(){
 }
 
 template <class Base>
-ParticleList GetGenSUSY(){
+ParticleList GetGenSparticles(){
   return ParticleList();
 }
 
@@ -329,7 +329,7 @@ ParticleList AnalysisBase<StopNtupleTree>::GetElectrons(){
   int N = elesLVec->size();
   for(int i = 0; i < N; i++){
     Particle lep;
-    lep.SetVectM((*elesLVec)[i].Vect(),(*elesLVec)[i].M());
+    lep.SetVectM((*elesLVec)[i].Vect(),std::max(0.,(*elesLVec)[i].M()));
     lep.SetPDGID( (elesCharge->at(i) < 0. ? 13 : -13) );
     lep.SetCharge( (elesCharge->at(i) < 0. ? -1 : 1) );
      
@@ -359,7 +359,7 @@ ParticleList AnalysisBase<StopNtupleTree>::GetMuons(){
   int N = muonsLVec->size();
   for(int i = 0; i < N; i++){
     Particle lep;
-    lep.SetVectM((*muonsLVec)[i].Vect(),(*muonsLVec)[i].M());
+    lep.SetVectM((*muonsLVec)[i].Vect(),std::max(0.,(*muonsLVec)[i].M()));
     lep.SetPDGID( (muonsCharge->at(i) < 0. ? 15 : -15) );
     lep.SetCharge( (muonsCharge->at(i) < 0. ? -1 : 1) );
      
@@ -390,7 +390,7 @@ ParticleList AnalysisBase<StopNtupleTree>::GetGenElectrons(){
       
       lep.SetPDGID(PDGID);
       lep.SetCharge( (PDGID > 0 ? -1 : 1) );
-      lep.SetVectM((*genDecayLVec)[i].Vect(),(*genDecayLVec)[i].M());
+      lep.SetVectM((*genDecayLVec)[i].Vect(),max(0.,(*genDecayLVec)[i].M()));
 
       list.push_back(lep);
     }
@@ -412,7 +412,7 @@ ParticleList AnalysisBase<StopNtupleTree>::GetGenMuons(){
       
       lep.SetPDGID(PDGID);
       lep.SetCharge( (PDGID > 0 ? -1 : 1) );
-      lep.SetVectM((*genDecayLVec)[i].Vect(),(*genDecayLVec)[i].M());
+      lep.SetVectM((*genDecayLVec)[i].Vect(),std::max(0.,(*genDecayLVec)[i].M()));
 
       list.push_back(lep);
     }
@@ -464,7 +464,7 @@ ParticleList AnalysisBase<StopNtupleTree>::GetGenBosons(){
 }
 
 template <>
-ParticleList AnalysisBase<StopNtupleTree>::GetGenSUSY(){
+ParticleList AnalysisBase<StopNtupleTree>::GetGenSparticles(){
   ParticleList list;
   
   int N = genDecayPdgIdVec->size();
