@@ -27,7 +27,7 @@ int Particle::PDGID() const {
 }
 
 void Particle::SetPDGID(int pdgid){
-  m_PDGID = abs(pdgid);
+  m_PDGID = pdgid;
 }
 
 ParticleIDType Particle::ParticleID() const {

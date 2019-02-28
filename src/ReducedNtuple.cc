@@ -269,23 +269,61 @@ TTree* ReducedNtuple::InitOutputTree(const string& sample){
   
   tree->Branch("MET", &m_MET);
   tree->Branch("MET_phi", &m_MET_phi);
+  tree->Branch("genMET", &m_genMET);
+  tree->Branch("genMET_phi", &m_genMET_phi);
+
   tree->Branch("HT", &m_HT);
 
-  // SF?
-  tree->Branch("Is_SF", &m_Is_SF);
+  tree->Branch("Nele", &m_Nele);
+  tree->Branch("Nmu", &m_Nmu);
+  
+  tree->Branch("Nlep", &m_Nlep);
+  tree->Branch("PT_lep",  &m_PT_lep);
+  tree->Branch("Eta_lep", &m_Eta_lep);
+  tree->Branch("Phi_lep", &m_Phi_lep);
+  tree->Branch("M_lep",   &m_M_lep);
+  tree->Branch("Charge_lep",  &m_Charge_lep);
+  tree->Branch("PDGID_lep",   &m_PDGID_lep);
+  tree->Branch("RelIso_lep",  &m_RelIso_lep);
+  tree->Branch("MiniIso_lep", &m_MiniIso_lep);
+  tree->Branch("ID_lep",      &m_ID_lep);
+  tree->Branch("Index_lep",   &m_Index_lep);
 
-  // pre-computed lepton variables
-  tree->Branch("nEl", &m_nEl);
-  tree->Branch("nMu", &m_nMu);
-  tree->Branch("nBjet", &m_nBjet);
+  tree->Branch("Nbjet", &m_Nbjet);
  
-  tree->Branch("pT_1lep", &m_pT_1lep);
-  tree->Branch("id_1lep", &m_id_1lep);
-  tree->Branch("pT_2lep", &m_pT_2lep);
-  tree->Branch("id_2lep", &m_id_2lep);
-  tree->Branch("pT_3lep", &m_pT_3lep);
-  tree->Branch("id_3lep", &m_id_3lep);
+  tree->Branch("genNele", &m_genNele);
+  tree->Branch("genNmu", &m_genNmu);
 
+  tree->Branch("genNlep", &m_genNlep);
+  tree->Branch("genPT_lep",  &m_genPT_lep);
+  tree->Branch("genEta_lep", &m_genEta_lep);
+  tree->Branch("genPhi_lep", &m_genPhi_lep);
+  tree->Branch("genM_lep",   &m_genM_lep);
+  tree->Branch("genCharge_lep",  &m_genCharge_lep);
+  tree->Branch("genPDGID_lep",   &m_genPDGID_lep);
+  tree->Branch("genIndex_lep",   &m_genIndex_lep);
+
+  tree->Branch("genNnu", &m_genNnu);
+  tree->Branch("genPT_nu",  &m_genPT_nu);
+  tree->Branch("genEta_nu", &m_genEta_nu);
+  tree->Branch("genPhi_nu", &m_genPhi_nu);
+  tree->Branch("genPDGID_nu",   &m_genPDGID_nu);
+
+  tree->Branch("genNboson", &m_genNboson);
+  tree->Branch("genPT_boson",  &m_genPT_boson);
+  tree->Branch("genEta_boson", &m_genEta_boson);
+  tree->Branch("genPhi_boson", &m_genPhi_boson);
+  tree->Branch("genM_boson",   &m_genM_boson);
+  tree->Branch("genPDGID_boson",   &m_genPDGID_boson);
+
+  tree->Branch("genNsusy", &m_genNsusy);
+  tree->Branch("genPT_susy",  &m_genPT_susy);
+  tree->Branch("genEta_susy", &m_genEta_susy);
+  tree->Branch("genPhi_susy", &m_genPhi_susy);
+  tree->Branch("genM_susy",   &m_genM_susy);
+  tree->Branch("genPDGID_susy",   &m_genPDGID_susy);
+
+  // Calculated Observables
   tree->Branch("Nj", &m_Nj);
   tree->Branch("NjS", &m_NjS);
   tree->Branch("NjISR", &m_NjISR);
@@ -339,16 +377,14 @@ TTree* ReducedNtuple::InitOutputTree(const string& sample){
 
 void ReducedNtuple::FillOutputTree(TTree* tree){
 
-  m_weight = GetEventWeight();
-
   ParticleList Jets = GetJets();
   Jets = Jets.PtEtaCut(30., 3.);
-
+  
   m_Nj = Jets.size();
   
   TVector3 ETMiss = GetMET();
 
-  if(ETMiss.Mag() < 100.)
+  if(ETMiss.Mag() < 50.)
     return;
 
   ParticleList Muons = GetMuons();
@@ -362,6 +398,10 @@ void ReducedNtuple::FillOutputTree(TTree* tree){
   ParticleList Leptons = Electrons+Muons;
   Leptons.SortByPt();
 
+  // require at least one lepton for now
+  if(Leptons.size() < 1)
+    return;
+  
   // figure out which tree to use
   
   m_Is_2LNJ = false;
@@ -394,28 +434,6 @@ void ReducedNtuple::FillOutputTree(TTree* tree){
 
   if(Leptons[0].Pt() < 5. && Leptons[1].Pt() < 5.) // lead leptons greater than 5 GeV in Pt
     return;
-
-  m_weight = GetEventWeight();
-  
-  m_MET     = ETMiss.Pt();
-  m_MET_phi = ETMiss.Phi();
-
-  //m_nBjet = nBJet30_MV2c10;
-
-  
-  m_pT_1lep = Leptons[0].Pt();
-  m_id_1lep = Leptons[0].Charge()*Leptons[0].PDGID();
-  
-  m_pT_2lep = Leptons[1].Pt();
-  m_id_2lep = Leptons[1].Charge()*Leptons[1].PDGID();
-
-  if(Leptons.size() > 2){
-    m_pT_3lep = Leptons[2].Pt();
-    m_id_3lep = Leptons[2].Charge()*Leptons[2].PDGID();
-  } else {
-    m_pT_3lep = 0.;
-    m_id_3lep = 0;
-  }
 
   // 2LNJ analysis
   if(m_Is_2LNJ){
@@ -685,6 +703,112 @@ void ReducedNtuple::FillOutputTree(TTree* tree){
 
     break;
   }
+
+  m_weight = GetEventWeight();
+  
+  m_MET     = ETMiss.Pt();
+  m_MET_phi = ETMiss.Phi();
+
+  TVector3 genETMiss = GetGenMET();
+  m_genMET     = genETMiss.Pt();
+  m_genMET_phi = genETMiss.Phi();
+
+  m_Nele = Electrons.size();
+  m_Nmu  = Muons.size();
+  m_Nlep = Leptons.size();
+
+  ParticleList GenMuons = GetGenMuons();
+  ParticleList GenElectrons = GetGenElectrons();
+  ParticleList GenLeptons = GenElectrons+GenMuons;
+  GenLeptons.SortByPt();
+
+  m_genNele = GenElectrons.size();
+  m_genNmu  = GenMuons.size();
+  m_genNlep = GenLeptons.size();
+
+  // Fill reconstructed lepton branches
+  m_PT_lep.clear();
+  m_Eta_lep.clear();
+  m_Phi_lep.clear();
+  m_M_lep.clear();
+  m_Charge_lep.clear();
+  m_PDGID_lep.clear();
+  m_RelIso_lep.clear();
+  m_MiniIso_lep.clear();
+  m_ID_lep.clear();
+  m_Index_lep.clear();
+  vector<int> genmatch;
+  for(int i = 0; i < m_genNlep; i++)
+    genmatch.push_back(-1);
+  for(int r = 0; r < m_Nlep; r++){
+    m_PT_lep.push_back(Leptons[r].Pt());
+    m_Eta_lep.push_back(Leptons[r].Eta());
+    m_Phi_lep.push_back(Leptons[r].Phi());
+    m_M_lep.push_back(Leptons[r].M());
+    m_Charge_lep.push_back(Leptons[r].Charge());
+    m_PDGID_lep.push_back(Leptons[r].PDGID());
+    m_RelIso_lep.push_back(Leptons[r].RelIso());
+    m_MiniIso_lep.push_back(Leptons[r].MiniIso());
+    m_ID_lep.push_back(Leptons[r].ParticleID());
+    int index = -1;
+    for(int g = 0; g < m_genNlep; g++)
+      if(Leptons[r].DeltaR(GenLeptons[g]) < 0.02){
+	index = g;
+	genmatch[g] = r;
+	break;
+      }
+    m_Index_lep.push_back(index);
+  }
+ 
+  // Fill gen lepton branches
+  m_genPT_lep.clear();
+  m_genEta_lep.clear();
+  m_genPhi_lep.clear();
+  m_genM_lep.clear();
+  m_genCharge_lep.clear();
+  m_genPDGID_lep.clear();
+  m_genIndex_lep.clear();
+  for(int g = 0; g < m_genNlep; g++){
+    m_genPT_lep.push_back(GenLeptons[g].Pt());
+    m_genEta_lep.push_back(GenLeptons[g].Eta());
+    m_genPhi_lep.push_back(GenLeptons[g].Phi());
+    m_genM_lep.push_back(GenLeptons[g].M());
+    m_genCharge_lep.push_back(GenLeptons[g].Charge());
+    m_genPDGID_lep.push_back(GenLeptons[g].PDGID());
+    m_genIndex_lep.push_back(genmatch[g]);
+  }
+
+  // Fill gen neutrino branches
+  ParticleList GenNus = GetGenNeutrinos();
+  m_genNnu = GenNus.size();
+  m_PT_nu.clear();
+  m_Eta_nu.clear();
+  m_Phi_nu.clear();
+  m_PDGID_nu.clear();
+  for(int i  0; i < m_genNnu; i++){
+    m_PT_nu.push_back(GenNus[i].Pt());
+    m_Eta_nu.push_back(GenNus[i].Eta());
+    m_Phi_nu.push_back(GenNus[i].Phi());
+    m_PDGID_nu.push_back(GenNus[i].PDGID());
+  }
+  
+  int m_genNboson;
+  vector<double> m_genPT_boson;
+  vector<double> m_genEta_boson;
+  vector<double> m_genPhi_boson;
+  vector<double> m_genM_boson;
+  vector<int>    m_genPDGID_boson;
+  
+  int m_genNsusy;
+  vector<double> m_genPT_susy;
+  vector<double> m_genEta_susy;
+  vector<double> m_genPhi_susy;
+  vector<double> m_genM_susy;
+  vector<int>    m_genPDGID_susy;
+
+
+  int m_Nbjet;
+
   
   if(tree)
     tree->Fill();

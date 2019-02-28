@@ -105,6 +105,31 @@ ParticleList AnalysisBase<Base>::GetMuons(){
 }
 
 template <class Base>
+ParticleList GetGenElectrons(){
+  return ParticleList();
+}
+
+template <class Base>
+ParticleList GetGenMuons(){
+  return ParticleList();
+}
+
+template <class Base>
+ParticleList GetGenNeutrinos(){
+  return ParticleList();
+}
+
+template <class Base>
+ParticleList GetGenBosons(){
+  return ParticleList();
+}
+
+template <class Base>
+ParticleList GetGenSUSY(){
+  return ParticleList();
+}
+
+template <class Base>
 void AnalysisBase<Base>::MomTensorCalc(vector<TLorentzVector>& input, vector<double>& eigenvalues, double power, bool threeD){
 
   eigenvalues.clear();
@@ -264,6 +289,13 @@ TVector3 AnalysisBase<StopNtupleTree>::GetMET(){
 }
 
 template <>
+TVector3 AnalysisBase<StopNtupleTree>::GetGenMET(){
+  TVector3 vmet;
+  vmet.SetPtEtaPhi(genmet,0.0,genmetphi);
+  return vmet;
+}
+
+template <>
 ParticleList AnalysisBase<StopNtupleTree>::GetJets(){
   ParticleList list;
 
@@ -298,7 +330,7 @@ ParticleList AnalysisBase<StopNtupleTree>::GetElectrons(){
   for(int i = 0; i < N; i++){
     Particle lep;
     lep.SetVectM((*elesLVec)[i].Vect(),(*elesLVec)[i].M());
-    lep.SetPDGID(13);
+    lep.SetPDGID( (elesCharge->at(i) < 0. ? 13 : -13) );
     lep.SetCharge( (elesCharge->at(i) < 0. ? -1 : 1) );
      
     if(tightElectronID->at(i))
@@ -328,7 +360,7 @@ ParticleList AnalysisBase<StopNtupleTree>::GetMuons(){
   for(int i = 0; i < N; i++){
     Particle lep;
     lep.SetVectM((*muonsLVec)[i].Vect(),(*muonsLVec)[i].M());
-    lep.SetPDGID(15);
+    lep.SetPDGID( (muonsCharge->at(i) < 0. ? 15 : -15) );
     lep.SetCharge( (muonsCharge->at(i) < 0. ? -1 : 1) );
      
     if(muonsFlagTight->at(i))
@@ -340,6 +372,113 @@ ParticleList AnalysisBase<StopNtupleTree>::GetMuons(){
     lep.SetMiniIso(muonsMiniIso->at(i));
 
     list.push_back(lep);
+  }
+
+  return list;
+}
+
+template <>
+ParticleList AnalysisBase<StopNtupleTree>::GetGenElectrons(){
+  ParticleList list;
+  
+  int N = genDecayPdgIdVec->size();
+  int PDGID;
+  for(int i = 0; i < N; i++){
+    PDGID = genDecayPdgIdVec->at(i);
+    if(abs(PDGID) == 13){
+      Particle lep;
+      
+      lep.SetPDGID(PDGID);
+      lep.SetCharge( (PDGID > 0 ? -1 : 1) );
+      lep.SetVectM((*genDecayLVec)[i].Vect(),(*genDecayLVec)[i].M());
+
+      list.push_back(lep);
+    }
+  }
+
+  return list;
+}
+
+template <>
+ParticleList AnalysisBase<StopNtupleTree>::GetGenMuons(){
+  ParticleList list;
+  
+  int N = genDecayPdgIdVec->size();
+  int PDGID;
+  for(int i = 0; i < N; i++){
+    PDGID = genDecayPdgIdVec->at(i);
+    if(abs(PDGID) == 15){
+      Particle lep;
+      
+      lep.SetPDGID(PDGID);
+      lep.SetCharge( (PDGID > 0 ? -1 : 1) );
+      lep.SetVectM((*genDecayLVec)[i].Vect(),(*genDecayLVec)[i].M());
+
+      list.push_back(lep);
+    }
+  }
+
+  return list;
+}
+
+template <>
+ParticleList AnalysisBase<StopNtupleTree>::GetGenNeutrinos(){
+  ParticleList list;
+  
+  int N = genDecayPdgIdVec->size();
+  int PDGID;
+  for(int i = 0; i < N; i++){
+    PDGID = genDecayPdgIdVec->at(i);
+    if(abs(PDGID) == 12 || abs(PDGID) == 14 || abs(PDGID) == 16){
+      Particle lep;
+      
+      lep.SetPDGID(PDGID);
+      lep.SetVectM((*genDecayLVec)[i].Vect(),(*genDecayLVec)[i].M());
+
+      list.push_back(lep);
+    }
+  }
+
+  return list;
+}
+
+template <>
+ParticleList AnalysisBase<StopNtupleTree>::GetGenBosons(){
+  ParticleList list;
+  
+  int N = genDecayPdgIdVec->size();
+  int PDGID;
+  for(int i = 0; i < N; i++){
+    PDGID = genDecayPdgIdVec->at(i);
+    if(abs(PDGID) == 23 || abs(PDGID) == 24 || abs(PDGID) == 25){
+      Particle p;
+      
+      p.SetPDGID(PDGID);
+      p.SetVectM((*genDecayLVec)[i].Vect(),(*genDecayLVec)[i].M());
+
+      list.push_back(p);
+    }
+  }
+
+  return list;
+}
+
+template <>
+ParticleList AnalysisBase<StopNtupleTree>::GetGenSUSY(){
+  ParticleList list;
+  
+  int N = genDecayPdgIdVec->size();
+  int PDGID;
+  for(int i = 0; i < N; i++){
+    PDGID = genDecayPdgIdVec->at(i);
+    if(abs(PDGID) >= 1000000 && abs(PDGID) < 3000000){
+      Particle p;
+      
+      p.SetPDGID(PDGID);
+      p.SetVectM((*genDecayLVec)[i].Vect(),(*genDecayLVec)[i].M());
+
+      list.push_back(p);
+    }
   }
 
   return list;

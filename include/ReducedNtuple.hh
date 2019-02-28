@@ -20,18 +20,60 @@ private:
   double m_MET;
   double m_MET_phi;
 
+  double m_genMET;
+  double m_genMET_phi;
+
   double m_HT;
 
-  int m_nEl;
-  int m_nMu;
-  int m_nBjet;
+  int m_Nele;
+  int m_Nmu;
   
-  double m_pT_1lep;
-  int m_id_1lep;
-  double m_pT_2lep;
-  int m_id_2lep;
-  double m_pT_3lep;
-  int m_id_3lep;
+  int m_Nlep;
+  vector<double> m_PT_lep;
+  vector<double> m_Eta_lep;
+  vector<double> m_Phi_lep;
+  vector<double> m_M_lep;
+  vector<int>    m_Charge_lep;
+  vector<int>    m_PDGID_lep;
+  vector<int>    m_RelIso_lep;
+  vector<int>    m_MiniIso_lep;
+  vector<int>    m_ID_lep;
+  vector<int>    m_Index_lep;
+  
+  int m_Nbjet;
+
+  int m_genNele;
+  int m_genNmu;
+
+  int m_genNlep;
+  vector<double> m_genPT_lep;
+  vector<double> m_genEta_lep;
+  vector<double> m_genPhi_lep;
+  vector<double> m_genM_lep;
+  vector<int>    m_genCharge_lep;
+  vector<int>    m_genPDGID_lep;
+  vector<int>    m_genIndex_lep;
+
+  int m_genNnu;
+  vector<double> m_PT_nu;
+  vector<double> m_Eta_nu;
+  vector<double> m_Phi_nu;
+  vector<int>    m_PDGID_nu;
+  
+  int m_genNboson;
+  vector<double> m_genPT_boson;
+  vector<double> m_genEta_boson;
+  vector<double> m_genPhi_boson;
+  vector<double> m_genM_boson;
+  vector<int>    m_genPDGID_boson;
+  
+  int m_genNsusy;
+  vector<double> m_genPT_susy;
+  vector<double> m_genEta_susy;
+  vector<double> m_genPhi_susy;
+  vector<double> m_genM_susy;
+  vector<int>    m_genPDGID_susy;
+  
 
   // which tree are we using?
   
