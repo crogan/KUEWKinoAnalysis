@@ -1058,7 +1058,7 @@ void ReducedNtuple::FillOutputTree(TTree* tree){
     m_genPDGID_susy.push_back(GenSparticles[i].PDGID());
   }
 
-  
+  // Fill output tree
   if(tree)
     tree->Fill();
   
