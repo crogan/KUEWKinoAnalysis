@@ -2,10 +2,13 @@
 #include "ParticleList.hh"
 #include "TInterpreter.h"
 
+#include "StopNtupleTree.hh"
+
 using namespace RestFrames;
 
-ReducedNtuple::ReducedNtuple(TTree* tree)
-  : NtupleBase<StopNtupleTree>(tree)
+template <class Base>
+ReducedNtuple<Base>::ReducedNtuple(TTree* tree)
+  : NtupleBase<Base>(tree)
 {
   // RestFrames stuff setup
   
@@ -162,7 +165,8 @@ ReducedNtuple::ReducedNtuple(TTree* tree)
 
 }
 
-ReducedNtuple::~ReducedNtuple() {
+template <class Base>
+ReducedNtuple<Base>::~ReducedNtuple() {
   for(int i = 0; i < 3; i++){
     // ISR-style trees
     delete LAB_ISR[i];
@@ -202,7 +206,8 @@ ReducedNtuple::~ReducedNtuple() {
   
 }
 
-TTree* ReducedNtuple::InitOutputTree(const string& sample){
+template <class Base>
+TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
 
   gInterpreter->GenerateDictionary("vector<vector<int>>", "vector");
   
@@ -399,7 +404,8 @@ TTree* ReducedNtuple::InitOutputTree(const string& sample){
   return tree;
 }
 
-void ReducedNtuple::ClearVariables(){
+template <class Base>
+void ReducedNtuple<Base>::ClearVariables(){
   for(int i = 0; i < 3; i++){
     m_Njet_a[i] = 0;
     m_Njet_b[i] = 0;
@@ -461,23 +467,24 @@ void ReducedNtuple::ClearVariables(){
   }
 }
 
-void ReducedNtuple::FillOutputTree(TTree* tree){
+template <class Base>
+void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
   
-  ParticleList Jets = GetJets();
+  ParticleList Jets = AnalysisBase<Base>::GetJets();
   Jets = Jets.PtEtaCut(30., 2.4);
   
   m_Njet = Jets.size();
   
-  TVector3 ETMiss = GetMET();
+  TVector3 ETMiss = AnalysisBase<Base>::GetMET();
 
   if(ETMiss.Mag() < 100.)
     return;
 
-  ParticleList Muons = GetMuons();
+  ParticleList Muons = AnalysisBase<Base>::GetMuons();
   Muons = Muons.ParticleIDCut(kMedium);
   Muons = Muons.PtEtaCut(3.5);
 
-  ParticleList Electrons = GetElectrons();
+  ParticleList Electrons = AnalysisBase<Base>::GetElectrons();
   Electrons = Electrons.ParticleIDCut(kMedium);
   Electrons = Electrons.PtEtaCut(3.5);
   
@@ -924,12 +931,12 @@ void ReducedNtuple::FillOutputTree(TTree* tree){
   }
 
   */
-  m_weight = GetEventWeight();
+  m_weight = AnalysisBase<Base>::GetEventWeight();
   
   m_MET     = ETMiss.Pt();
   m_MET_phi = ETMiss.Phi();
 
-  TVector3 genETMiss = GetGenMET();
+  TVector3 genETMiss = AnalysisBase<Base>::GetGenMET();
   m_genMET     = genETMiss.Pt();
   m_genMET_phi = genETMiss.Phi();
 
@@ -951,8 +958,8 @@ void ReducedNtuple::FillOutputTree(TTree* tree){
       m_Nbjet++;
   }
 
-  ParticleList GenMuons = GetGenMuons();
-  ParticleList GenElectrons = GetGenElectrons();
+  ParticleList GenMuons = AnalysisBase<Base>::GetGenMuons();
+  ParticleList GenElectrons = AnalysisBase<Base>::GetGenElectrons();
   ParticleList GenLeptons = GenElectrons+GenMuons;
   GenLeptons.SortByPt();
 
@@ -1013,7 +1020,7 @@ void ReducedNtuple::FillOutputTree(TTree* tree){
   }
   
   // Fill gen neutrino branches
-  ParticleList GenNus = GetGenNeutrinos();
+  ParticleList GenNus = AnalysisBase<Base>::GetGenNeutrinos();
   m_genNnu = GenNus.size();
   m_genPT_nu.clear();
   m_genEta_nu.clear();
@@ -1027,7 +1034,7 @@ void ReducedNtuple::FillOutputTree(TTree* tree){
   }
   
   // Fill gen boson branches
-  ParticleList GenBosons = GetGenBosons();
+  ParticleList GenBosons = AnalysisBase<Base>::GetGenBosons();
   m_genNboson = GenBosons.size();
   m_genPT_boson.clear();
   m_genEta_boson.clear();
@@ -1043,7 +1050,7 @@ void ReducedNtuple::FillOutputTree(TTree* tree){
   }
 
   // Fill gen sparticle branches
-  ParticleList GenSparticles = GetGenSparticles();
+  ParticleList GenSparticles = AnalysisBase<Base>::GetGenSparticles();
   m_genNsusy = GenSparticles.size();
   m_genPT_susy.clear();
   m_genEta_susy.clear();
@@ -1063,3 +1070,5 @@ void ReducedNtuple::FillOutputTree(TTree* tree){
     tree->Fill();
   
 }
+
+template class ReducedNtuple<StopNtupleTree>;

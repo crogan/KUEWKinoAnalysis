@@ -2,14 +2,14 @@
 #define ReducedNtuple_h
 
 #include "NtupleBase.hh"
-#include "StopNtupleTree.hh"
 #include "RestFrames/RestFrames.hh"
 
 template class std::vector<std::vector<int> >;
 
 using namespace RestFrames;
 
-class ReducedNtuple : public NtupleBase<StopNtupleTree> {
+template <class Base>
+class ReducedNtuple : public NtupleBase<Base> {
 
 public:
   ReducedNtuple(TTree* tree = 0);

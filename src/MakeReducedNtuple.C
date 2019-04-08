@@ -15,6 +15,7 @@
 #include <TList.h>
 
 #include "ReducedNtuple.hh"
+#include "StopNtupleTree.hh"
 
 using namespace std;
 
@@ -128,7 +129,7 @@ int main(int argc, char* argv[]) {
     cout << "   Adding file " << filenames[i] << endl;
   }
 
-  ReducedNtuple* ntuple = new ReducedNtuple(chain);
+  ReducedNtuple<StopNtupleTree>* ntuple = new ReducedNtuple<StopNtupleTree>(chain);
   
   ntuple->AddLabel(string(FileTag));
 
