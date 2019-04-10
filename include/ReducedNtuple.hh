@@ -90,6 +90,8 @@ private:
   //////////////////////
   // derived observables
   //////////////////////
+
+  
   
   // Sparticle pair-production trees analysis
   vector<int> m_Njet_a;
@@ -98,10 +100,20 @@ private:
   vector<int> m_Nbjet_b;
   vector<int> m_Nlep_a;
   vector<int> m_Nlep_b;
+  vector<int> m_Njet_ga;
+  vector<int> m_Njet_gb;
+  vector<int> m_Nbjet_ga;
+  vector<int> m_Nbjet_gb;
+  vector<int> m_Nlep_ga;
+  vector<int> m_Nlep_gb;
   vector<vector<int> > m_index_jet_a;
   vector<vector<int> > m_index_jet_b;
   vector<vector<int> > m_index_lep_a;
   vector<vector<int> > m_index_lep_b;
+  vector<vector<int> > m_index_jet_ga;
+  vector<vector<int> > m_index_jet_gb;
+  vector<vector<int> > m_index_lep_ga;
+  vector<vector<int> > m_index_lep_gb;
 
   vector<double> m_MSS;
   vector<double> m_PSS;
@@ -109,26 +121,37 @@ private:
   vector<double> m_dphiSS;
   vector<double> m_PTSS;
   vector<double> m_PzSS;
+
   vector<double> m_MCa;
   vector<double> m_cosCa;
   vector<double> m_MCb;
   vector<double> m_cosCb;
 
+  vector<double> m_MGCa;
+  vector<double> m_cosGCa;
+  vector<double> m_MGCb;
+  vector<double> m_cosGCb;
+
+  vector<double> m_MVa;
+  vector<double> m_PVa;
+  vector<double> m_cosVa;
+  vector<double> m_MVb;
+  vector<double> m_PVb;
+  vector<double> m_cosVb;
+
   vector<double> m_H11SS;
+  vector<double> m_H21SS;
+  vector<double> m_HT21SS;
   vector<double> m_H22SS;
-  vector<double> m_HN2SS;
+  vector<double> m_HT22SS;
+  vector<double> m_H42SS;
+  vector<double> m_HT42SS;
   
   vector<double> m_H11Ca;
   vector<double> m_H11Cb;
   vector<double> m_H21Ca;
   vector<double> m_H21Cb;
-  vector<double> m_HN1Ca;
-  vector<double> m_HN1Cb;
- 
-  vector<double> m_MVa;
-  vector<double> m_cosVa;
-  vector<double> m_MVb;
-  vector<double> m_cosVb;
+
 
   // ISR trees analysis
   vector<int> m_Njet_ISR;
@@ -154,10 +177,19 @@ private:
   vector<double> m_dphiSI;
   vector<double> m_dphiISRI;
 
-  // which tree are we using?
+  // which tree are we using for PAIR?
+  // vanilla - index 0
+  bool m_Is_1L_2J;
+  bool m_Is_2L_2J;
+  bool m_Is_1L_1L;
+  bool m_Is_2L_1L;
+  bool m_Is_2L_2L;
+  // b-aware - index 0
+  bool m_Is_1L_B;
+  bool m_Is_2L_B;
+  bool m_Is_1LB_1LB;
+  bool m_Is_3L_B;
   
-  bool m_Is_2LNJ;
-  bool m_Is_2L1L;
 
 
   // RestFrames frames and friends
@@ -177,25 +209,33 @@ private:
   MinMassesCombJigsaw* CombSplit_ISR[3];
   
   // Sparticle pair-production trees
-  LabRecoFrame*            LAB_PAIR[3];
-  DecayRecoFrame*          S_PAIR[3];
-  DecayRecoFrame*          Ca_PAIR[3];
-  DecayRecoFrame*          Cb_PAIR[3];
-  SelfAssemblingRecoFrame* VSAa_PAIR[3];
-  SelfAssemblingRecoFrame* VSAb_PAIR[3];
-  VisibleRecoFrame*        Va_PAIR[3];
-  VisibleRecoFrame*        Vb_PAIR[3];
-  InvisibleRecoFrame*      Ia_PAIR[3];
-  InvisibleRecoFrame*      Ib_PAIR[3];
+  LabRecoFrame*            LAB_PAIR[5];
+  DecayRecoFrame*          S_PAIR[5];
+  DecayRecoFrame*          Ca_PAIR[5];
+  DecayRecoFrame*          Cb_PAIR[5];
+  DecayRecoFrame*          GCa_PAIR[5];
+  DecayRecoFrame*          GCb_PAIR[5];
+  SelfAssemblingRecoFrame* VSAa_PAIR[5];
+  SelfAssemblingRecoFrame* VSAb_PAIR[5];
+  VisibleRecoFrame*        Va_PAIR[5];
+  VisibleRecoFrame*        Vb_PAIR[5];
+  SelfAssemblingRecoFrame* GVSAa_PAIR[5];
+  SelfAssemblingRecoFrame* GVSAb_PAIR[5];
+  VisibleRecoFrame*        GVa_PAIR[5];
+  VisibleRecoFrame*        GVb_PAIR[5];
+  InvisibleRecoFrame*      Ia_PAIR[5];
+  InvisibleRecoFrame*      Ib_PAIR[5];
 
-  InvisibleGroup*       INV_PAIR[3];
-  SetMassInvJigsaw*     InvM_PAIR[3];
-  SetRapidityInvJigsaw* InvEta_PAIR[3];
-  MinMassesSqInvJigsaw* InvSplit_PAIR[3];
-  CombinatoricGroup*    COMB_PAIR[3];
-  MinMassesCombJigsaw*  CombSplit_PAIR[3];
-  CombinatoricGroup*    COMBa_PAIR[3];
-  CombinatoricGroup*    COMBb_PAIR[3];
+  InvisibleGroup*       INV_PAIR[5];
+  SetMassInvJigsaw*     InvM_PAIR[5];
+  SetRapidityInvJigsaw* InvEta_PAIR[5];
+  MinMassesSqInvJigsaw* InvSplit_PAIR[5];
+  CombinatoricGroup*    COMB_PAIR[5];
+  MinMassesCombJigsaw*  CombSplit_PAIR[5];
+  MinMassesCombJigsaw*  CombSplita_PAIR[5];
+  MinMassesCombJigsaw*  CombSplitb_PAIR[5];
+  CombinatoricGroup*    COMBa_PAIR[5];
+  CombinatoricGroup*    COMBb_PAIR[5];
 
 };
 

@@ -312,10 +312,14 @@ ParticleList AnalysisBase<StopNtupleTree>::GetJets(){
       mass = 0.;
     jet.SetPtEtaPhiM( JET.Pt(), JET.Eta(), JET.Phi(), mass );
     jet.SetBtag((*recoJetsBtag_0_LepCleaned)[i]);
-    // NOTE: ID is incomplete (all required variables not available)
-    // bool loose = true;
-    // bool tight = true;
-    
+
+    if(jet.Btag() > 0.9535)
+      jet.SetParticleID(kTight);
+    else if(jet.Btag() > 0.8484) 
+      jet.SetParticleID(kMedium);
+    else if(jet.Btag() > 0.5426)
+      jet.SetParticleID(kLoose);
+      
     list.push_back(jet);
   }
 

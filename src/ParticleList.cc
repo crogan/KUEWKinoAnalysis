@@ -54,3 +54,10 @@ ParticleList ParticleList::operator + (const ParticleList& parts) const {
     l1.push_back(l2[i]);
   return l1;
 }
+
+void ParticleList::operator += (const ParticleList& parts){
+  ParticleList l2 = parts;
+  int N = l2.size();
+  for(int i = 0; i < N; i++)
+    (*this).push_back(l2[i]);
+}

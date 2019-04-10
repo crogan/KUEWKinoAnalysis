@@ -21,6 +21,7 @@ public:
   ParticleList& SortByPt();
 
   ParticleList operator + (const ParticleList& parts) const;
+  void operator += (const ParticleList& parts);
 };
 
   
