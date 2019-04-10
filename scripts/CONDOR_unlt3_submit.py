@@ -148,7 +148,7 @@ if __name__ == "__main__":
                 index = 0
                 for sub in filetag:
                     if hint in sub:
-                        filetag = filetag[index-3]
+                        filetag = filetag[index-3]+NAME
                         found = 1
                         break
                     index += 1
