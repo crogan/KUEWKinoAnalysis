@@ -141,6 +141,9 @@ int main(int argc, char* argv[]) {
    for(int e = 0; e < NEVENT; e++){
      chain->GetEntry(e);
 
+     cout << "event " << e << " | " << NEVENT << endl;
+     cout << genEventCount << " " << genEventSumw << endl;
+
      Nevent += genEventCount;
      Nweight += genEventSumw;
    }
