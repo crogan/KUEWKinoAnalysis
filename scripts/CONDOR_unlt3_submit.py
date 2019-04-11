@@ -9,10 +9,10 @@ home = os.environ['HOME']
 #######################################
 RUN_DIR = pwd
 TEMP = pwd
-#EXE  = "MakeReducedNtuple.x"
-EXE  = "MakeEventCount.x"
-#OUT  = "/home/t3-ku/crogan/NTUPLES/Processing/"
-OUT = pwd
+EXE  = "MakeReducedNtuple.x"
+#EXE  = "MakeEventCount.x"
+OUT  = "/home/t3-ku/crogan/NTUPLES/Processing/"
+#OUT = pwd
 LIST = "default.list"
 QUEUE = ""
 TREE = "stopTreeMaker/AUX"
