@@ -1,5 +1,5 @@
 #define SUSYNANORuneBase_cxx
-#include "SUSYNANORuneBase.hh"
+#include "SUSYNANORunsBase.hh"
 #include <TH2.h>
 #include <TStyle.h>
 #include <TCanvas.h>
