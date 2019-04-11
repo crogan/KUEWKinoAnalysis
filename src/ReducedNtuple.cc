@@ -94,10 +94,10 @@ ReducedNtuple<Base>::ReducedNtuple(TTree* tree)
     VSAb_PAIR[t] = new SelfAssemblingRecoFrame(Form("VSAb_PAIR%d",t),"Vb"); 
     Va_PAIR[t]   = new VisibleRecoFrame(Form("Va_PAIR%d",t),"Va");
     Vb_PAIR[t]   = new VisibleRecoFrame(Form("Vb_PAIR%d",t),"Vb");
-    GVSAa_PAIR[t] = new SelfAssemblingRecoFrame(Form("GVSAa_PAIR%d",t),"Va");
-    GVSAb_PAIR[t] = new SelfAssemblingRecoFrame(Form("GVSAb_PAIR%d",t),"Vb"); 
-    GVa_PAIR[t]   = new VisibleRecoFrame(Form("GVa_PAIR%d",t),"Va");
-    GVb_PAIR[t]   = new VisibleRecoFrame(Form("GVb_PAIR%d",t),"Vb");
+    GVSAa_PAIR[t] = new SelfAssemblingRecoFrame(Form("GVSAa_PAIR%d",t),"GVa");
+    GVSAb_PAIR[t] = new SelfAssemblingRecoFrame(Form("GVSAb_PAIR%d",t),"GVb"); 
+    GVa_PAIR[t]   = new VisibleRecoFrame(Form("GVa_PAIR%d",t),"GVa");
+    GVb_PAIR[t]   = new VisibleRecoFrame(Form("GVb_PAIR%d",t),"GVb");
     Ia_PAIR[t]   = new InvisibleRecoFrame(Form("Ia_PAIR%d",t),"Ia");
     Ib_PAIR[t]   = new InvisibleRecoFrame(Form("Ib_PAIR%d",t),"Ib");
 
@@ -209,6 +209,31 @@ ReducedNtuple<Base>::ReducedNtuple(TTree* tree)
       cout << "Problem initializing PAIR analysis " << t << endl;
     }
   }
+
+  /*
+  TreePlot tree_plot("TreePlot","TreePlot");
+
+  for(int t = 0; t < 3; t++){
+    tree_plot.SetTree(*LAB_ISR[t]);
+    tree_plot.Draw(Form("ISR_tree_%d",t), Form("ISR Reconstruction Tree %d",t));
+
+    tree_plot.SetTree(*COMB_ISR[t]);
+    tree_plot.Draw(Form("ISR_comb_%d",t), Form("ISR Combinatoric Jigsaws %d",t),1);
+  }
+
+  for(int t = 0; t < 5; t++){
+    tree_plot.SetTree(*LAB_PAIR[t]);
+    tree_plot.Draw(Form("PAIR_tree_%d",t), Form("PAIR Reconstruction Tree %d",t));
+
+    tree_plot.SetTree(*COMB_PAIR[t]);
+    tree_plot.Draw(Form("PAIR_comb_%d",t), Form("PAIR Combinatoric Jigsaws %d",t),1);
+
+    tree_plot.SetTree(*INV_PAIR[t]);
+    tree_plot.Draw(Form("PAIR_inv_%d",t), Form("PAIR Invisible Jigsaws %d",t),1);
+  }
+
+  tree_plot.WriteOutput("trees.root");
+  */
 
 }
 
@@ -1109,7 +1134,6 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
 	      m_index_lep_gb[t].push_back(i);
 	    }
 	  }
-	   cout << "here" << endl;
 	}
 	// 3 leptons
       } else if(Leptons.size() == 3){
