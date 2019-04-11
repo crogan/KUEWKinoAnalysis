@@ -1,0 +1,1 @@
+root://cmseos.fnal.gov//eos/uscms//store/group/lpcsusyhad/Stop_production/Autumn18_102X_v1/PreProcessed_25Feb2019//WZZ_TuneCP5_13TeV-amcatnlo-pythia8/2018_Data_RunIIAutumn18MiniAOD-102X_v15-v2-ext1/190301_034608/0000/prod2018MC_NANO_4.root
