@@ -123,7 +123,6 @@ int main(int argc, char* argv[]) {
     cout << "   Adding file " << filenames[i] << endl;
   }
 
-  int NEVENT = chain->GetEntries();
   Long64_t        genEventCount;
   Double_t        genEventSumw;
   TBranch        *b_genEventCount;   //!
@@ -138,7 +137,10 @@ int main(int argc, char* argv[]) {
    double Nevent = 0.;
    double Nweight = 0.;
 
+   int NEVENT = chain->GetEntries();
+   cout << "TOTAL of " << NEVENT << " entries" << endl;
    for(int e = 0; e < NEVENT; e++){
+     cout << "event " << e << " | " << NEVENT << endl;
      chain->GetEntry(e);
 
      cout << "event " << e << " | " << NEVENT << endl;
