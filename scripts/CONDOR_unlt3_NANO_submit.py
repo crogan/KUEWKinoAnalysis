@@ -50,6 +50,7 @@ def write_sh(srcfile,ifile,ofile,lfile,tag):
     fsrc.write('universe = vanilla \n')
     fsrc.write('executable = '+EXE+" \n")
     fsrc.write('getenv = True \n')
+    fsrc.write('use_x509userproxy = true \n')
     fsrc.write('Arguments = ');
     fsrc.write('-ilist='+ifile+" ")
     fsrc.write('-ofile='+ofile+" ")

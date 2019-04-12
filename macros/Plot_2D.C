@@ -38,9 +38,11 @@ double g_NY;
 void Plot_2D(){
   RestFrames::SetStyle();
 
-  g_File.push_back("TTJets_TuneCUETP8M2T4_13TeV-amcatnloFXFX-pythia8All.root");
-  g_PlotTitle = "t #bar{t} + jets";
-  
+  // g_File.push_back("TTJets_TuneCUETP8M2T4_13TeV-amcatnloFXFX-pythia8All.root");
+  // g_PlotTitle = "t #bar{t} + jets";
+
+  g_File.push_back("WJetsToLNu_HT.root");
+  g_PlotTitle = "W(#it{l} + #nu) + jets";
 
   int Nsample = g_File.size();
 
