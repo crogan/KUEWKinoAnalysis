@@ -43,9 +43,9 @@ int main(int argc, char* argv[]) {
   if ( argc < 2 ){
     cout << "Error at Input: please specify an input file name, a list of input ROOT files and/or a folder path"; 
     cout << " and an output filename:" << endl; 
-    cout << "  Example:      ./MakeEventCount.x -ifile=input.root -ofile=output.root -tag=sample_tag"  << endl;
-    cout << "  Example:      ./MakeEventCount.x -ilist=input.list -ofile=output.root -tag=sample_tag"  << endl;
-    cout << "  Example:      ./MakeEventCount.x -ifold=folder_path -ofile=output.root -tag=sample_tag -tree=treename --sms" << endl;
+    cout << "  Example:      ./MakeEventCount.x -ifile=input.root -ofile=output.root -dataset=dataset_name -filetag=sample_tag"  << endl;
+    cout << "  Example:      ./MakeEventCount.x -ilist=input.list -ofile=output.root -dataset=dataset_name -filetag=sample_tag"  << endl;
+    cout << "  Example:      ./MakeEventCount.x -ifold=folder_path -ofile=output.root -dataset=dataset_name -filetag=sample_tag -tree=treename --sms" << endl;
     
     return 1;
   }
@@ -139,6 +139,13 @@ int main(int argc, char* argv[]) {
    double Nevent = 0.;
    double Nweight = 0.;
 
+   int MP = 0;
+   int MC = 0;
+   int PDGID;
+   std::vector<std::pair<int,int> > masses;
+   std::map<std::pair<int,int>,double > mapNevent;
+   std::map<std::pair<int,int>,double > mapNweight;
+   
    int NEVENT = chain->GetEntries();
    cout << "TOTAL of " << NEVENT << " entries" << endl;
    for(int e = 0; e < NEVENT; e++){
@@ -161,6 +168,8 @@ int main(int argc, char* argv[]) {
   tout->Branch("Nweight", &Nweight);
   tout->Branch("filetag", &filetag);
   tout->Branch("dataset", &dataset);
+  tout->Branch("MP", &MP);
+  tout->Branch("MC", &MC);
  
   tout->Fill();
 

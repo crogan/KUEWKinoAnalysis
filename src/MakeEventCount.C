@@ -31,6 +31,7 @@ int main(int argc, char* argv[]) {
   char inputFolderName[400];
   char outputFileName[400];
   char TreeName[400];
+  char DataSet[400];
   char FileTag[400];
 
   bool DO_FILE = false;
@@ -42,9 +43,9 @@ int main(int argc, char* argv[]) {
   if ( argc < 2 ){
     cout << "Error at Input: please specify an input file name, a list of input ROOT files and/or a folder path"; 
     cout << " and an output filename:" << endl; 
-    cout << "  Example:      ./MakeEventCount.x -ifile=input.root -ofile=output.root -tag=sample_tag"  << endl;
-    cout << "  Example:      ./MakeEventCount.x -ilist=input.list -ofile=output.root -tag=sample_tag"  << endl;
-    cout << "  Example:      ./MakeEventCount.x -ifold=folder_path -ofile=output.root -tag=sample_tag -tree=treename --sms" << endl;
+    cout << "  Example:      ./MakeEventCount.x -ifile=input.root -ofile=output.root -dataset=dataset_name -filetag=sample_tag"  << endl;
+    cout << "  Example:      ./MakeEventCount.x -ilist=input.list -ofile=output.root -dataset=dataset_name -filetag=sample_tag"  << endl;
+    cout << "  Example:      ./MakeEventCount.x -ifold=folder_path -ofile=output.root -dataset=dataset_name -filetag=sample_tag -tree=treename --sms" << endl;
     
     return 1;
   }
@@ -66,7 +67,8 @@ int main(int argc, char* argv[]) {
       DO_TREE = true;
     }
     if (strncmp(argv[i],"-ofile",6)==0) sscanf(argv[i],"-ofile=%s", outputFileName);
-    if (strncmp(argv[i],"-tag",4)==0)   sscanf(argv[i],"-tag=%s", FileTag);
+    if (strncmp(argv[i],"-dataset",8)==0)   sscanf(argv[i],"-dataset=%s", DataSet);
+    if (strncmp(argv[i],"-filetag",8)==0)   sscanf(argv[i],"-filetag=%s", FileTag);
     if (strncmp(argv[i],"--sms",5)==0)  DO_SMS = true;
   }
 
@@ -163,13 +165,13 @@ int main(int argc, char* argv[]) {
   
   double Nevent = 0.;
   double Nweight = 0.;
-  double Nabsweight = 0.;
 
-  int MP, MC, PDGID;
+  int MP = 0;
+  int MC = 0;
+  int PDGID;
   std::vector<std::pair<int,int> > masses;
   std::map<std::pair<int,int>,double > mapNevent;
   std::map<std::pair<int,int>,double > mapNweight;
-  std::map<std::pair<int,int>,double > mapNabsweight;
   
   for(int e = 0; e < NEVENT; e++){
     if(e%(std::max(1,NEVENT/100)) == 0)
@@ -179,10 +181,8 @@ int main(int argc, char* argv[]) {
     Nevent += 1.;
     if(is_float){
       Nweight += evtWeight_f;
-      Nabsweight += fabs(evtWeight_f);
     } else {
       Nweight += evtWeight_d;
-      Nabsweight += fabs(evtWeight_d);
     }
 
     if(DO_SMS){
@@ -205,16 +205,13 @@ int main(int argc, char* argv[]) {
 	masses.push_back(masspair);
 	mapNevent[masspair]    = 0.;
 	mapNweight[masspair]   = 0.;
-	mapNabsweight[masspair] = 0.;
       }
 
       mapNevent[masspair] += 1.;
       if(is_float){
 	mapNweight[masspair] += evtWeight_f;
-	mapNabsweight[masspair] += fabs(evtWeight_f);
       } else {
 	mapNweight[masspair] += evtWeight_d;
-	mapNabsweight[masspair] += fabs(evtWeight_d);
       }
     }
     
@@ -223,19 +220,19 @@ int main(int argc, char* argv[]) {
   TFile* fout = new TFile(string(outputFileName).c_str(),"RECREATE");
   TTree* tout = (TTree*) new TTree("EventCount", "EventCount");
   
-  string dataset = string(FileTag);
+  string dataset = string(DataSet);
+  string filetag = string(FileTag);
   tout->Branch("Nevent", &Nevent);
   tout->Branch("Nweight", &Nweight);
-  tout->Branch("Nabsweight", &Nabsweight);
+  tout->Branch("filetag", &filetag);
   tout->Branch("dataset", &dataset);
+  tout->Branch("MP", &MP);
+  tout->Branch("MC", &MC);
   if(DO_SMS){
-    tout->Branch("MP", &MP);
-    tout->Branch("MC", &MC);
     int Nmass = masses.size();
     for(int i = 0; i < Nmass; i++){
       Nevent     = mapNevent[masses[i]];
       Nweight    = mapNweight[masses[i]];
-      Nabsweight = mapNabsweight[masses[i]];
       MP = masses[i].first;
       MC = masses[i].second;
       tout->Fill();

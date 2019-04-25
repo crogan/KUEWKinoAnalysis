@@ -22,17 +22,6 @@ samples/SUSYNANO/Summer16_94X/QCD_HT300to500_TuneCUETP8M1_13TeV-madgraphMLM-pyth
 samples/SUSYNANO/Summer16_94X/QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
 samples/SUSYNANO/Summer16_94X/QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
 samples/SUSYNANO/Summer16_94X/QCD_Pt-15to7000_TuneCUETP8M1_FlatP6_13TeV_pythia8.txt
-samples/SUSYNANO/Summer16_94X/SMS-T1tttt_mGluino-1200_mLSP-800_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
-samples/SUSYNANO/Summer16_94X/SMS-T1tttt_mGluino-1500_mLSP-100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
-samples/SUSYNANO/Summer16_94X/SMS-T1tttt_mGluino-2000_mLSP-100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
-samples/SUSYNANO/Summer16_94X/SMS-T2tt_mStop-225_mLSP-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
-samples/SUSYNANO/Summer16_94X/SMS-T2tt_mStop-250_mLSP-150_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
-samples/SUSYNANO/Summer16_94X/SMS-T2tt_mStop-250_mLSP-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
-samples/SUSYNANO/Summer16_94X/SMS-T2tt_mStop-300_mLSP-150_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
-samples/SUSYNANO/Summer16_94X/SMS-T2tt_mStop-425_mLSP-325_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
-samples/SUSYNANO/Summer16_94X/SMS-T2tt_mStop-500_mLSP-325_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
-samples/SUSYNANO/Summer16_94X/SMS-T2tt_mStop-650_mLSP-350_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
-samples/SUSYNANO/Summer16_94X/SMS-T2tt_mStop-850_mLSP-100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
 samples/SUSYNANO/Summer16_94X/ST_s-channel_4f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1.txt
 samples/SUSYNANO/Summer16_94X/ST_t-channel_antitop_4f_inclusiveDecays_13TeV-powhegV2-madspin-pythia8_TuneCUETP8M1.txt
 samples/SUSYNANO/Summer16_94X/ST_t-channel_top_4f_inclusiveDecays_13TeV-powhegV2-madspin-pythia8_TuneCUETP8M1.txt
