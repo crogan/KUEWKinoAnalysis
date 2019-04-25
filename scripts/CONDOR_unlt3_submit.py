@@ -176,7 +176,7 @@ if __name__ == "__main__":
                 os.system("mkdir -p "+ROOT+dataset+"_"+filetag+"/")
                 continue
             
-            tagtuple = [item for item in taglist if (item[0] == dataset and item[1] == filetag)]
+            tagtuple = [item for item in datasetlist if (item[0] == dataset and item[1] == filetag)]
             if len(tagtuple) == 0:
                 datasetlist.append((dataset,filetag,rootlist))
                 os.system("mkdir -p "+ROOT+dataset+"_"+filetag+"/")
