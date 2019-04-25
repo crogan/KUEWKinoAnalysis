@@ -9,10 +9,10 @@ home = os.environ['HOME']
 #######################################
 RUN_DIR = pwd
 TEMP = pwd
-EXE  = "MakeReducedNtuple.x"
-#EXE  = "MakeEventCount.x"
-OUT  = "/home/t3-ku/crogan/NTUPLES/Processing/"
-#OUT = pwd
+#EXE  = "MakeReducedNtuple.x"
+EXE  = "MakeEventCount.x"
+#OUT  = "/home/t3-ku/crogan/NTUPLES/Processing/"
+OUT = pwd
 LIST = "default.list"
 QUEUE = ""
 TREE = "stopTreeMaker/AUX"
@@ -24,7 +24,7 @@ def new_listfile(rootlist, listfile):
         mylist.write(f+" \n")
     mylist.close()
 
-def create_filelist(rootlist, filetag):
+def create_filelist(rootlist, dataset, filetag):
     listlist = []
     listcount = 0
     
@@ -32,20 +32,20 @@ def create_filelist(rootlist, filetag):
     for f in rootlist:
         sublist.append(f)
         if len(sublist) >= MAXN and MAXN > 0:
-            listfile = "%s/%s_%d.list" % (listdir, filetag, listcount)
+            listfile = "%s/%s_%s_%d.list" % (listdir, dataset, filetag, listcount)
             new_listfile(sublist, listfile)
             listlist.append(listfile)
             sublist = []
             listcount += 1
 
     if len(sublist) > 0:
-        listfile = "%s/%s_%d.list" % (listdir, filetag, listcount)
+        listfile = "%s/%s_%s_%d.list" % (listdir, dataset, filetag, listcount)
         new_listfile(sublist, listfile)
         listlist.append(listfile)
 
     return listlist
 
-def write_sh(srcfile,ifile,ofile,lfile,tag):
+def write_sh(srcfile,ifile,ofile,lfile,dataset,filetag):
     fsrc = open(srcfile,'w')
     fsrc.write('universe = vanilla \n')
     fsrc.write('executable = '+EXE+" \n")
@@ -56,7 +56,8 @@ def write_sh(srcfile,ifile,ofile,lfile,tag):
     fsrc.write('-tree='+TREE+" ")
     if DO_SMS == 1:
         fsrc.write('--sms ')
-    fsrc.write('-tag='+tag+" \n")
+    fsrc.write('-dataset='+dataset+" ")
+    fsrc.write('-filetag='+filetag+" \n")
     fsrc.write('output = '+lfile+" \n")
     fsrc.write('queue \n')
     #fsrc.write('cd '+RUN_DIR+" \n")
@@ -133,7 +134,9 @@ if __name__ == "__main__":
     hints.append("0003")
     hints.append("0004")
 
-    taglist = []
+    datasetlist = []
+
+    knowntags = ["Fall17","Autumn18","Summer16"]
     
     with open(listfile,'r') as mylist:
         inputlist = mylist.readlines()
@@ -142,13 +145,20 @@ if __name__ == "__main__":
         for fold in inputlist:
             fold = fold.strip('\n\r')
             print "Processing folder %s" % fold
-            filetag = fold.split("/")
+
+            filetag = ""
+            for ktag in knowntags:
+                if ktag in fold:
+                    filetag = ktag
+
+            
+            dataset = fold.split("/")
             found = 0
             for hint in hints:
                 index = 0
-                for sub in filetag:
+                for sub in dataset:
                     if hint in sub:
-                        filetag = filetag[index-3]+NAME
+                        dataset = dataset[index-3]
                         found = 1
                         break
                     index += 1
@@ -161,28 +171,28 @@ if __name__ == "__main__":
             if len(rootlist) < 1:
                 continue
             
-            if len(taglist) == 0:
-                taglist.append((filetag,rootlist))
-                os.system("mkdir -p "+ROOT+filetag+"/")
+            if len(datasetlist) == 0:
+                datasetlist.append((dataset,filetag,rootlist))
+                os.system("mkdir -p "+ROOT+dataset+"_"+filetag+"/")
                 continue
             
-            tagtuple = [item for item in taglist if item[0] == filetag]
+            tagtuple = [item for item in taglist if (item[0] == dataset and item[1] == filetag)]
             if len(tagtuple) == 0:
-                taglist.append((filetag,rootlist))
-                os.system("mkdir -p "+ROOT+filetag+"/")
+                datasetlist.append((dataset,filetag,rootlist))
+                os.system("mkdir -p "+ROOT+dataset+"_"+filetag+"/")
                 continue
 
-            p = taglist.index(tagtuple[0])
-            taglist[p][1].extend(rootlist)
+            p = datasetlist.index(tagtuple[0])
+            datasetlist[p][2].extend(rootlist)
 
-    for (filetag,rootlist) in taglist:
-        listlist = create_filelist(rootlist, filetag)
+    for (dataset,filetag,rootlist) in datasetlist:
+        listlist = create_filelist(rootlist, dataset, filetag)
 
         for f in listlist:
             filename = f.split("/")
             filename = filename[-1]
             name = filename.replace(".list",'')
-            write_sh(srcdir+name+".sh",f,ROOT+filetag+"/"+name+".root",logdir+name+".log",filetag)
+            write_sh(srcdir+name+".sh",f,ROOT+dataset+"_"+filetag+"/"+name+".root",logdir+name+".log",dataset,filetag)
             os.system('condor_submit '+srcdir+name+".sh")
             
     

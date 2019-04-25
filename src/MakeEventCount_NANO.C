@@ -43,9 +43,9 @@ int main(int argc, char* argv[]) {
   if ( argc < 2 ){
     cout << "Error at Input: please specify an input file name, a list of input ROOT files and/or a folder path"; 
     cout << " and an output filename:" << endl; 
-    cout << "  Example:      ./MakeEventCount.x -ifile=input.root -ofile=output.root -dataset=dataset_name -filetag=sample_tag"  << endl;
-    cout << "  Example:      ./MakeEventCount.x -ilist=input.list -ofile=output.root -dataset=dataset_name -filetag=sample_tag"  << endl;
-    cout << "  Example:      ./MakeEventCount.x -ifold=folder_path -ofile=output.root -dataset=dataset_name -filetag=sample_tag -tree=treename --sms" << endl;
+    cout << "  Example:      ./MakeEventCount_NANO.x -ifile=input.root -ofile=output.root -dataset=dataset_name -filetag=sample_tag"  << endl;
+    cout << "  Example:      ./MakeEventCount_NANO.x -ilist=input.list -ofile=output.root -dataset=dataset_name -filetag=sample_tag"  << endl;
+    cout << "  Example:      ./MakeEventCount_NANO.x -ifold=folder_path -ofile=output.root -dataset=dataset_name -filetag=sample_tag -tree=treename --sms" << endl;
     
     return 1;
   }
