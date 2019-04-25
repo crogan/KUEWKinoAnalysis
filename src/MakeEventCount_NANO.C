@@ -31,6 +31,7 @@ int main(int argc, char* argv[]) {
   char inputFolderName[400];
   char outputFileName[400];
   char TreeName[400];
+  char DataSet[400];
   char FileTag[400];
 
   bool DO_FILE = false;
@@ -66,7 +67,8 @@ int main(int argc, char* argv[]) {
       DO_TREE = true;
     }
     if (strncmp(argv[i],"-ofile",6)==0) sscanf(argv[i],"-ofile=%s", outputFileName);
-    if (strncmp(argv[i],"-tag",4)==0)   sscanf(argv[i],"-tag=%s", FileTag);
+    if (strncmp(argv[i],"-dataset",8)==0)   sscanf(argv[i],"-dataset=%s", DataSet);
+    if (strncmp(argv[i],"-filetag",8)==0)   sscanf(argv[i],"-filetag=%s", FileTag);
     if (strncmp(argv[i],"--sms",5)==0)  DO_SMS = true;
   }
 
@@ -153,9 +155,11 @@ int main(int argc, char* argv[]) {
   TFile* fout = new TFile(string(outputFileName).c_str(),"RECREATE");
   TTree* tout = (TTree*) new TTree("EventCount", "EventCount");
   
-  string dataset = string(FileTag);
+  string dataset = string(DataSet);
+  string filetag = string(FileTag);
   tout->Branch("Nevent", &Nevent);
   tout->Branch("Nweight", &Nweight);
+  tout->Branch("filetag", &filetag);
   tout->Branch("dataset", &dataset);
  
   tout->Fill();

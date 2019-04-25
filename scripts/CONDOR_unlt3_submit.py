@@ -16,7 +16,7 @@ OUT  = "/home/t3-ku/crogan/NTUPLES/Processing/"
 LIST = "default.list"
 QUEUE = ""
 TREE = "stopTreeMaker/AUX"
-MAXN = 500
+MAXN = 100
 
 def new_listfile(rootlist, listfile):
     mylist = open(listfile,'w')
@@ -39,7 +39,7 @@ def create_filelist(rootlist, filetag):
             listcount += 1
 
     if len(sublist) > 0:
-        listfile = "%s%s_%d.list" % (listdir, filetag, listcount)
+        listfile = "%s/%s_%d.list" % (listdir, filetag, listcount)
         new_listfile(sublist, listfile)
         listlist.append(listfile)
 
