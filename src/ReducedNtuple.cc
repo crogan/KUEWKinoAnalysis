@@ -235,6 +235,87 @@ ReducedNtuple<Base>::ReducedNtuple(TTree* tree)
   tree_plot.WriteOutput("trees.root");
   */
 
+   // Calculated Observables
+  for(int i = 0; i < 5; i++){
+    m_Njet_a.push_back(0);
+    m_Njet_b.push_back(0);
+    m_Nbjet_a.push_back(0);
+    m_Nbjet_b.push_back(0);
+    m_Nlep_a.push_back(0);
+    m_Nlep_b.push_back(0);
+    m_Njet_ga.push_back(0);
+    m_Njet_gb.push_back(0);
+    m_Nbjet_ga.push_back(0);
+    m_Nbjet_gb.push_back(0);
+    m_Nlep_ga.push_back(0);
+    m_Nlep_gb.push_back(0);
+    m_index_jet_a.push_back(vector<int>());
+    m_index_jet_b.push_back(vector<int>());
+    m_index_lep_a.push_back(vector<int>());
+    m_index_lep_b.push_back(vector<int>());
+    m_index_jet_ga.push_back(vector<int>());
+    m_index_jet_gb.push_back(vector<int>());
+    m_index_lep_ga.push_back(vector<int>());
+    m_index_lep_gb.push_back(vector<int>());
+    m_MSS.push_back(0);
+    m_PSS.push_back(0);
+    m_cosSS.push_back(0);
+    m_dphiSS.push_back(0);
+    m_PTSS.push_back(0);
+    m_PzSS.push_back(0);
+    m_MCa.push_back(0);
+    m_cosCa.push_back(0);
+    m_MCb.push_back(0);
+    m_cosCb.push_back(0);
+    m_MGCa.push_back(0);
+    m_cosGCa.push_back(0);
+    m_MGCb.push_back(0);
+    m_cosGCb.push_back(0);
+    m_H11SS.push_back(0);
+    m_H21SS.push_back(0);
+    m_HT21SS.push_back(0);
+    m_H22SS.push_back(0);
+    m_HT22SS.push_back(0);
+    m_H42SS.push_back(0);
+    m_HT42SS.push_back(0);
+    m_H11Ca.push_back(0);
+    m_H11Cb.push_back(0);
+    m_H21Ca.push_back(0);
+    m_H21Cb.push_back(0);
+
+    m_MVa.push_back(0);
+    m_PVa.push_back(0);
+    m_cosVa.push_back(0);
+    m_MVb.push_back(0);
+    m_PVb.push_back(0);
+    m_cosVb.push_back(0);
+  }
+
+  for(int i = 0; i < 3; i++){
+    m_Njet_ISR.push_back(0);
+    m_Njet_S.push_back(0);
+    m_Nbjet_ISR.push_back(0);
+    m_Nbjet_S.push_back(0);
+    m_Nlep_ISR.push_back(0);
+    m_Nlep_S.push_back(0);
+    m_index_jet_ISR.push_back(vector<int>());
+    m_index_jet_S.push_back(vector<int>());
+    m_index_lep_ISR.push_back(vector<int>());
+    m_index_lep_S.push_back(vector<int>());
+    m_PTISR.push_back(0);
+    m_PTCM.push_back(0);
+    m_RISR.push_back(0);
+    m_cosCM.push_back(0);
+    m_cosS.push_back(0);
+    m_MISR.push_back(0);
+    m_MS.push_back(0);
+    m_MV.push_back(0);
+    m_ML.push_back(0);
+    m_dphiCMI.push_back(0);
+    m_dphiSI.push_back(0);
+    m_dphiISRI.push_back(0);
+  }
+  
 }
 
 template <class Base>
@@ -358,61 +439,6 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("genM_susy",   &m_genM_susy);
   tree->Branch("genPDGID_susy", &m_genPDGID_susy);
   
-  // Calculated Observables
-  for(int i = 0; i < 5; i++){
-    m_Njet_a.push_back(0);
-    m_Njet_b.push_back(0);
-    m_Nbjet_a.push_back(0);
-    m_Nbjet_b.push_back(0);
-    m_Nlep_a.push_back(0);
-    m_Nlep_b.push_back(0);
-    m_Njet_ga.push_back(0);
-    m_Njet_gb.push_back(0);
-    m_Nbjet_ga.push_back(0);
-    m_Nbjet_gb.push_back(0);
-    m_Nlep_ga.push_back(0);
-    m_Nlep_gb.push_back(0);
-    m_index_jet_a.push_back(vector<int>());
-    m_index_jet_b.push_back(vector<int>());
-    m_index_lep_a.push_back(vector<int>());
-    m_index_lep_b.push_back(vector<int>());
-    m_index_jet_ga.push_back(vector<int>());
-    m_index_jet_gb.push_back(vector<int>());
-    m_index_lep_ga.push_back(vector<int>());
-    m_index_lep_gb.push_back(vector<int>());
-    m_MSS.push_back(0);
-    m_PSS.push_back(0);
-    m_cosSS.push_back(0);
-    m_dphiSS.push_back(0);
-    m_PTSS.push_back(0);
-    m_PzSS.push_back(0);
-    m_MCa.push_back(0);
-    m_cosCa.push_back(0);
-    m_MCb.push_back(0);
-    m_cosCb.push_back(0);
-    m_MGCa.push_back(0);
-    m_cosGCa.push_back(0);
-    m_MGCb.push_back(0);
-    m_cosGCb.push_back(0);
-    m_H11SS.push_back(0);
-    m_H21SS.push_back(0);
-    m_HT21SS.push_back(0);
-    m_H22SS.push_back(0);
-    m_HT22SS.push_back(0);
-    m_H42SS.push_back(0);
-    m_HT42SS.push_back(0);
-    m_H11Ca.push_back(0);
-    m_H11Cb.push_back(0);
-    m_H21Ca.push_back(0);
-    m_H21Cb.push_back(0);
-
-    m_MVa.push_back(0);
-    m_PVa.push_back(0);
-    m_cosVa.push_back(0);
-    m_MVb.push_back(0);
-    m_PVb.push_back(0);
-    m_cosVb.push_back(0);
-  }
   tree->Branch("Njet_a", &m_Njet_a);
   tree->Branch("Njet_b", &m_Njet_b);
   tree->Branch("Nbjet_a", &m_Nbjet_a);
@@ -477,31 +503,6 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("Is_1LB_1LB", &m_Is_1LB_1LB);
   tree->Branch("Is_3L_B", &m_Is_3L_B);
  
-
-  for(int i = 0; i < 3; i++){
-    m_Njet_ISR.push_back(0);
-    m_Njet_S.push_back(0);
-    m_Nbjet_ISR.push_back(0);
-    m_Nbjet_S.push_back(0);
-    m_Nlep_ISR.push_back(0);
-    m_Nlep_S.push_back(0);
-    m_index_jet_ISR.push_back(vector<int>());
-    m_index_jet_S.push_back(vector<int>());
-    m_index_lep_ISR.push_back(vector<int>());
-    m_index_lep_S.push_back(vector<int>());
-    m_PTISR.push_back(0);
-    m_PTCM.push_back(0);
-    m_RISR.push_back(0);
-    m_cosCM.push_back(0);
-    m_cosS.push_back(0);
-    m_MISR.push_back(0);
-    m_MS.push_back(0);
-    m_MV.push_back(0);
-    m_ML.push_back(0);
-    m_dphiCMI.push_back(0);
-    m_dphiSI.push_back(0);
-    m_dphiISRI.push_back(0);
-  }
   tree->Branch("Njet_ISR", &m_Njet_ISR);
   tree->Branch("Njet_S", &m_Njet_S);
   tree->Branch("Nbjet_ISR", &m_Nbjet_ISR);

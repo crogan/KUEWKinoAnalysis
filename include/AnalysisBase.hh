@@ -23,7 +23,8 @@ public:
   AnalysisBase(TTree* tree = 0);
   virtual ~AnalysisBase();
 
-  void AddLabel(const string& label);
+  void AddLabels(const string& dataset, const string& filetag);
+  void AddEventCountFile(const string& rootfile);
   void DoSMS(){ m_DoSMS = true; }
 
   string GetEntry(int entry);
@@ -54,7 +55,8 @@ protected:
 
 
 private:
-  string m_Label;
+  string m_DataSet;
+  string m_FileTag;
 
   NeventTool m_NeventTool;
   XsecTool   m_XsecTool;

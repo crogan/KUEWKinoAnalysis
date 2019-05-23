@@ -53,8 +53,14 @@ double AnalysisBase<Base>::GetXsec(){
 }
   
 template <class Base>
-void AnalysisBase<Base>::AddLabel(const string& label){
-  m_Label = label;
+void AnalysisBase<Base>::AddLabels(const string& dataset, const string& filetag){
+  m_DataSet = dataset;
+  m_FileTag = filetag;
+}
+
+template <class Base>
+void AnalysisBase<Base>::AddEventCountFile(const string& rootfile){
+  m_NeventTool.BuildMap(rootfile);
 }
 
 template <class Base>
@@ -231,9 +237,9 @@ int AnalysisBase<StopNtupleTree>::GetSampleIndex(){
   if(!m_DoSMS){
     if(m_Nsample == 0){
       m_IndexToSample[0]  = "KUAnalysis";
-      m_IndexToXsec[0]    = m_XsecTool.GetXsec_BKG(m_Label);
-      m_IndexToNevent[0]  = m_NeventTool.GetNevent_BKG(m_Label);
-      m_IndexToNweight[0] = m_NeventTool.GetNweight_BKG(m_Label);
+      m_IndexToXsec[0]    = m_XsecTool.GetXsec_BKG(m_DataSet);
+      m_IndexToNevent[0]  = m_NeventTool.GetNevent_BKG(m_DataSet, m_FileTag);
+      m_IndexToNweight[0] = m_NeventTool.GetNweight_BKG(m_DataSet, m_FileTag);
       m_Nsample++;
     }
     return 0;
@@ -259,9 +265,9 @@ int AnalysisBase<StopNtupleTree>::GetSampleIndex(){
   if(m_HashToIndex.count(hash) == 0){
     m_HashToIndex[hash] = m_Nsample;
     m_IndexToSample[m_Nsample]  = std::string(Form("%d_%d", MP, MC));
-    m_IndexToXsec[m_Nsample]    = m_XsecTool.GetXsec_SMS(m_Label, MP);
-    m_IndexToNevent[m_Nsample]  = m_NeventTool.GetNevent_SMS(m_Label, MP, MC);
-    m_IndexToNweight[m_Nsample] = m_NeventTool.GetNweight_SMS(m_Label, MP, MC);
+    m_IndexToXsec[m_Nsample]    = m_XsecTool.GetXsec_SMS(m_DataSet, MP);
+    m_IndexToNevent[m_Nsample]  = m_NeventTool.GetNevent_SMS(m_DataSet, m_FileTag, MP, MC);
+    m_IndexToNweight[m_Nsample] = m_NeventTool.GetNweight_SMS(m_DataSet, m_FileTag, MP, MC);
   
     m_Nsample++;
   }

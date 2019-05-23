@@ -33,6 +33,7 @@ int main(int argc, char* argv[]) {
   char TreeName[400];
   char DataSet[400];
   char FileTag[400];
+  char EventCount[400];
 
   bool DO_FILE = false;
   bool DO_LIST = false;
