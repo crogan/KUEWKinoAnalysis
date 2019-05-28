@@ -143,7 +143,7 @@ if __name__ == "__main__":
 
     datasetlist = []
 
-    knowntags = ["Fall17","Autumn18","Summer16"]
+    knowntags = ["Fall17","Autumn18","Summer16","TuneCP5","TuneCUETP"]
     
     with open(listfile,'r') as mylist:
         inputlist = mylist.readlines()
@@ -153,10 +153,11 @@ if __name__ == "__main__":
             fold = fold.strip('\n\r')
             print "Processing folder %s" % fold
 
-            filetag = ""
+            filetag = "unknown"
             for ktag in knowntags:
                 if ktag in fold:
                     filetag = ktag
+                    break
 
             
             dataset = fold.split("/")
