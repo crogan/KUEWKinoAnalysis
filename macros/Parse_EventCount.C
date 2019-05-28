@@ -45,7 +45,7 @@ void Parse_EventCount(string filename, bool xsec_template = false){
    
    N = datasets.size();
    for(int i = 0; i < N; i++){
-     cout << "Label2Nevent[\"" << datasets[i] << "\"] = " << std::setprecision(12) << mapNevent[datasets[i]] << ";" << endl;
+     //cout << "Label2Nevent[\"" << datasets[i] << "\"] = " << std::setprecision(12) << mapNevent[datasets[i]] << ";" << endl;
      //cout << "Label2Nweight[\"" << datasets[i] << "\"] = " << std::setprecision(12) << mapNweight[datasets[i]] << ";" << endl;
      //cout << endl;
    }
