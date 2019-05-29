@@ -20,6 +20,9 @@ public:
   int PDGID() const;
   void SetPDGID(int pdgid);
 
+  int MomPDGID() const;
+  void SetMomPDGID(int pdgid);
+
   ParticleIDType ParticleID() const;
   void SetParticleID(ParticleIDType id);
 
@@ -38,6 +41,7 @@ public:
 private:
   int m_Charge;
   int m_PDGID;
+  int m_MomPDGID;
   ParticleIDType m_ParticleID;
 
   double m_RelIso;

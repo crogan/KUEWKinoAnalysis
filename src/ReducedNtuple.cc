@@ -406,6 +406,7 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("Phi_jet", &m_Phi_jet);
   tree->Branch("M_jet",   &m_M_jet);
   tree->Branch("Btag_jet",   &m_Btag_jet);
+  tree->Branch("Flavor_jet",   &m_Flavor_jet);
  
   tree->Branch("genNele", &m_genNele);
   tree->Branch("genNmu", &m_genNmu);
@@ -417,6 +418,7 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("genM_lep",   &m_genM_lep);
   tree->Branch("genCharge_lep",  &m_genCharge_lep);
   tree->Branch("genPDGID_lep",   &m_genPDGID_lep);
+  tree->Branch("genMomPDGID_lep",   &m_genMomPDGID_lep);
   tree->Branch("genIndex_lep",   &m_genIndex_lep);
 
   tree->Branch("genNnu", &m_genNnu);
@@ -424,6 +426,7 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("genEta_nu", &m_genEta_nu);
   tree->Branch("genPhi_nu", &m_genPhi_nu);
   tree->Branch("genPDGID_nu",   &m_genPDGID_nu);
+  tree->Branch("genMomPDGID_nu",   &m_genMomPDGID_nu);
 
   tree->Branch("genNboson", &m_genNboson);
   tree->Branch("genPT_boson",  &m_genPT_boson);
@@ -431,6 +434,7 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("genPhi_boson", &m_genPhi_boson);
   tree->Branch("genM_boson",   &m_genM_boson);
   tree->Branch("genPDGID_boson",   &m_genPDGID_boson);
+  tree->Branch("genMomPDGID_boson",   &m_genMomPDGID_boson);
 
   tree->Branch("genNsusy", &m_genNsusy);
   tree->Branch("genPT_susy",  &m_genPT_susy);
@@ -438,6 +442,7 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("genPhi_susy", &m_genPhi_susy);
   tree->Branch("genM_susy",   &m_genM_susy);
   tree->Branch("genPDGID_susy", &m_genPDGID_susy);
+  tree->Branch("genMomPDGID_susy", &m_genMomPDGID_susy);
   
   tree->Branch("Njet_a", &m_Njet_a);
   tree->Branch("Njet_b", &m_Njet_b);
@@ -1583,12 +1588,14 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
   m_Phi_jet.clear();
   m_M_jet.clear();
   m_Btag_jet.clear();
+  m_Flavor_jet.clear();
   for(int i = 0; i < m_Njet; i++){
     m_PT_jet.push_back(Jets[i].Pt());
     m_Eta_jet.push_back(Jets[i].Eta());
     m_Phi_jet.push_back(Jets[i].Phi());
     m_M_jet.push_back(Jets[i].M());
     m_Btag_jet.push_back(Jets[i].Btag());
+    m_Flavor_jet.push_back(Jets[i].PDGID());
   }
 
   ParticleList GenMuons = AnalysisBase<Base>::GetGenMuons();
@@ -1641,6 +1648,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
   m_genM_lep.clear();
   m_genCharge_lep.clear();
   m_genPDGID_lep.clear();
+  m_genMomPDGID_lep.clear();
   m_genIndex_lep.clear();
   for(int g = 0; g < m_genNlep; g++){
     m_genPT_lep.push_back(GenLeptons[g].Pt());
@@ -1649,6 +1657,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
     m_genM_lep.push_back(GenLeptons[g].M());
     m_genCharge_lep.push_back(GenLeptons[g].Charge());
     m_genPDGID_lep.push_back(GenLeptons[g].PDGID());
+    m_genMomPDGID_lep.push_back(GenLeptons[g].MomPDGID());
     m_genIndex_lep.push_back(genmatch[g]);
   }
   
@@ -1659,11 +1668,13 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
   m_genEta_nu.clear();
   m_genPhi_nu.clear();
   m_genPDGID_nu.clear();
+  m_genMomPDGID_nu.clear();
   for(int i = 0; i < m_genNnu; i++){
     m_genPT_nu.push_back(GenNus[i].Pt());
     m_genEta_nu.push_back(GenNus[i].Eta());
     m_genPhi_nu.push_back(GenNus[i].Phi());
     m_genPDGID_nu.push_back(GenNus[i].PDGID());
+    m_genMomPDGID_nu.push_back(GenNus[i].MomPDGID());
   }
   
   // Fill gen boson branches
@@ -1674,12 +1685,14 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
   m_genPhi_boson.clear();
   m_genM_boson.clear();
   m_genPDGID_boson.clear();
+  m_genMomPDGID_boson.clear();
   for(int i = 0; i < m_genNboson; i++){
     m_genPT_boson.push_back(GenBosons[i].Pt());
     m_genEta_boson.push_back(GenBosons[i].Eta());
     m_genPhi_boson.push_back(GenBosons[i].Phi());
     m_genM_boson.push_back(GenBosons[i].Phi());
     m_genPDGID_boson.push_back(GenBosons[i].PDGID());
+    m_genMomPDGID_boson.push_back(GenBosons[i].MomPDGID());
   }
 
   // Fill gen sparticle branches
@@ -1690,12 +1703,14 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
   m_genPhi_susy.clear();
   m_genM_susy.clear();
   m_genPDGID_susy.clear();
+  m_genMomPDGID_susy.clear();
   for(int i = 0; i < m_genNsusy; i++){
     m_genPT_susy.push_back(GenSparticles[i].Pt());
     m_genEta_susy.push_back(GenSparticles[i].Eta());
     m_genPhi_susy.push_back(GenSparticles[i].Phi());
     m_genM_susy.push_back(GenSparticles[i].Phi());
     m_genPDGID_susy.push_back(GenSparticles[i].PDGID());
+    m_genMomPDGID_susy.push_back(GenSparticles[i].MomPDGID());
   }
 
   // Fill output tree

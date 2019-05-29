@@ -54,6 +54,7 @@ private:
   vector<double> m_Phi_jet;
   vector<double> m_M_jet;
   vector<double> m_Btag_jet;
+  vector<double> m_Flavor_jet;
 
   int m_genNele;
   int m_genNmu;
@@ -65,6 +66,7 @@ private:
   vector<double> m_genM_lep;
   vector<int>    m_genCharge_lep;
   vector<int>    m_genPDGID_lep;
+  vector<int>    m_genMomPDGID_lep;
   vector<int>    m_genIndex_lep;
 
   int m_genNnu;
@@ -72,6 +74,7 @@ private:
   vector<double> m_genEta_nu;
   vector<double> m_genPhi_nu;
   vector<int>    m_genPDGID_nu;
+  vector<int>    m_genMomPDGID_nu;
   
   int m_genNboson;
   vector<double> m_genPT_boson;
@@ -79,6 +82,7 @@ private:
   vector<double> m_genPhi_boson;
   vector<double> m_genM_boson;
   vector<int>    m_genPDGID_boson;
+  vector<int>    m_genMomPDGID_boson;
   
   int m_genNsusy;
   vector<double> m_genPT_susy;
@@ -86,6 +90,7 @@ private:
   vector<double> m_genPhi_susy;
   vector<double> m_genM_susy;
   vector<int>    m_genPDGID_susy;
+  vector<int>    m_genMomPDGID_susy;
 
   //////////////////////
   // derived observables

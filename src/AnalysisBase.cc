@@ -305,9 +305,9 @@ template <>
 ParticleList AnalysisBase<StopNtupleTree>::GetJets(){
   ParticleList list;
 
-  int Njet = jetsLVecLepCleaned->size();
+  int Njet = jetsLVec->size();
   for(int i = 0; i < Njet; i++){
-    TLorentzVector JET = (*jetsLVecLepCleaned)[i];
+    TLorentzVector JET = (*jetsLVec)[i];
     Particle jet;
     float mass = JET.M();
     if(std::isnan(mass))
@@ -317,7 +317,7 @@ ParticleList AnalysisBase<StopNtupleTree>::GetJets(){
     if(mass < 0.)
       mass = 0.;
     jet.SetPtEtaPhiM( JET.Pt(), JET.Eta(), JET.Phi(), mass );
-    jet.SetBtag((*recoJetsBtag_0_LepCleaned)[i]);
+    jet.SetBtag((*recoJetsBtag_0)[i]);
 
     if(jet.Btag() > 0.9535)
       jet.SetParticleID(kTight);
@@ -325,6 +325,8 @@ ParticleList AnalysisBase<StopNtupleTree>::GetJets(){
       jet.SetParticleID(kMedium);
     else if(jet.Btag() > 0.5426)
       jet.SetParticleID(kLoose);
+
+    jet.SetPDGID( (*recoJetsFlavor)[i] );
       
     list.push_back(jet);
   }
@@ -399,6 +401,9 @@ ParticleList AnalysisBase<StopNtupleTree>::GetGenElectrons(){
       Particle lep;
       
       lep.SetPDGID(PDGID);
+      int mom = genDecayMomRefVec->at(i);
+      if(mom >= 0 && mom < N)
+	lep.SetMomPDGID(genDecayPdgIdVec->at(mom));
       lep.SetCharge( (PDGID > 0 ? -1 : 1) );
       lep.SetVectM((*genDecayLVec)[i].Vect(),max(0.,(*genDecayLVec)[i].M()));
 
@@ -421,6 +426,9 @@ ParticleList AnalysisBase<StopNtupleTree>::GetGenMuons(){
       Particle lep;
       
       lep.SetPDGID(PDGID);
+      int mom = genDecayMomRefVec->at(i);
+      if(mom >= 0 && mom < N)
+	lep.SetMomPDGID(genDecayPdgIdVec->at(mom));
       lep.SetCharge( (PDGID > 0 ? -1 : 1) );
       lep.SetVectM((*genDecayLVec)[i].Vect(),std::max(0.,(*genDecayLVec)[i].M()));
 
@@ -443,6 +451,9 @@ ParticleList AnalysisBase<StopNtupleTree>::GetGenNeutrinos(){
       Particle lep;
       
       lep.SetPDGID(PDGID);
+      int mom = genDecayMomRefVec->at(i);
+      if(mom >= 0 && mom < N)
+	lep.SetMomPDGID(genDecayPdgIdVec->at(mom));
       lep.SetVectM((*genDecayLVec)[i].Vect(),(*genDecayLVec)[i].M());
 
       list.push_back(lep);
@@ -464,6 +475,9 @@ ParticleList AnalysisBase<StopNtupleTree>::GetGenBosons(){
       Particle p;
       
       p.SetPDGID(PDGID);
+      int mom = genDecayMomRefVec->at(i);
+      if(mom >= 0 && mom < N)
+	p.SetMomPDGID(genDecayPdgIdVec->at(mom));
       p.SetVectM((*genDecayLVec)[i].Vect(),(*genDecayLVec)[i].M());
 
       list.push_back(p);
@@ -485,6 +499,9 @@ ParticleList AnalysisBase<StopNtupleTree>::GetGenSparticles(){
       Particle p;
       
       p.SetPDGID(PDGID);
+      int mom = genDecayMomRefVec->at(i);
+      if(mom >= 0 && mom < N)
+	p.SetMomPDGID(genDecayPdgIdVec->at(mom));
       p.SetVectM((*genDecayLVec)[i].Vect(),(*genDecayLVec)[i].M());
 
       list.push_back(p);
