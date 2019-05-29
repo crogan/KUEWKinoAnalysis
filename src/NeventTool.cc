@@ -52,11 +52,11 @@ void NeventTool::Initialize_BKG(const std::string& dataset, const std::string& f
   int N = m_Tree->GetEntries();
   for(int i = 0; i < N; i++){
     m_Tree->GetEntry(i);
-    
+
     if((dataset == (*m_dataset)) &&
        (filetag == (*m_filetag))){
       Nevent += m_Nevent;
-      Nweight += Nweight;
+      Nweight += m_Nweight;
     }
   }
 
@@ -95,7 +95,7 @@ void NeventTool::Initialize_SMS(const std::string& dataset, const std::string& f
       }
       
       m_Label2Nevent_SMS[label][masses] += m_Nevent;
-      m_Label2Nweight_SMS[label][masses] += Nweight;
+      m_Label2Nweight_SMS[label][masses] += m_Nweight;
     }
   }
 }
@@ -130,13 +130,18 @@ double NeventTool::GetNevent_SMS(const std::string& dataset, const std::string& 
 }
 
 double NeventTool::GetNweight_BKG(const std::string& dataset, const std::string& filetag) const {
+  std::cout << "Getting Nevent count for " << dataset << " " << filetag << std::endl;
   if(!m_Tree)
     return 0.;
+
+  std::cout << "found the tree" << std::endl;
 
   std::pair<std::string,std::string> label(dataset,filetag);
   
   if(m_Label2Nweight_BKG.count(label) == 0)
     Initialize_BKG(dataset, filetag);
+
+  std::cout << "Nweight is " << m_Label2Nweight_BKG[label] << std::endl;
 
   return m_Label2Nweight_BKG[label];
 }

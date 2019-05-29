@@ -10,8 +10,9 @@ XsecTool::~XsecTool(){
 }
 
 double XsecTool::GetXsec_BKG(const std::string& dataset) const {
-  if(m_Label2Xsec_BKG.count(dataset) == 0)
+  if(m_Label2Xsec_BKG.count(dataset) == 0){
     return 0.;
+  }
 
   return m_Label2Xsec_BKG[dataset]*1000.;
 }
