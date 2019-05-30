@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "AnalysisBase.hh"
+#include "ParticleList.hh"
 #include "TMatrixDSym.h"
 #include "TVectorD.h"
 #include "StopNtupleTree.hh"
@@ -52,8 +53,14 @@ double AnalysisBase<Base>::GetXsec(){
 }
   
 template <class Base>
-void AnalysisBase<Base>::AddLabel(const string& label){
-  m_Label = label;
+void AnalysisBase<Base>::AddLabels(const string& dataset, const string& filetag){
+  m_DataSet = dataset;
+  m_FileTag = filetag;
+}
+
+template <class Base>
+void AnalysisBase<Base>::AddEventCountFile(const string& rootfile){
+  m_NeventTool.BuildMap(rootfile);
 }
 
 template <class Base>
@@ -89,17 +96,43 @@ TVector3 AnalysisBase<Base>::GetMET(){
 }
 
 template <class Base>
-int AnalysisBase<Base>::GetJets(vector<TLorentzVector>& JETs, double pt_cut, double eta_cut) {
-  return 0.;
+ParticleList AnalysisBase<Base>::GetJets(){
+  return ParticleList();
 }
 
 template <class Base>
-void AnalysisBase<Base>::GetLeptons(vector<TLorentzVector>& LEPs, vector<int>& IDs,
-				    double pt_cut, double eta_cut) {}
+ParticleList AnalysisBase<Base>::GetElectrons(){
+  return ParticleList();
+}
 
 template <class Base>
-int AnalysisBase<Base>::GetLargeRJets(vector<TLorentzVector>& JETs, double pt_cut, double eta_cut) {
-  return 0.;
+ParticleList AnalysisBase<Base>::GetMuons(){
+  return ParticleList();
+}
+
+template <class Base>
+ParticleList GetGenElectrons(){
+  return ParticleList();
+}
+
+template <class Base>
+ParticleList GetGenMuons(){
+  return ParticleList();
+}
+
+template <class Base>
+ParticleList GetGenNeutrinos(){
+  return ParticleList();
+}
+
+template <class Base>
+ParticleList GetGenBosons(){
+  return ParticleList();
+}
+
+template <class Base>
+ParticleList GetGenSparticles(){
+  return ParticleList();
 }
 
 template <class Base>
@@ -204,9 +237,9 @@ int AnalysisBase<StopNtupleTree>::GetSampleIndex(){
   if(!m_DoSMS){
     if(m_Nsample == 0){
       m_IndexToSample[0]  = "KUAnalysis";
-      m_IndexToXsec[0]    = m_XsecTool.GetXsec_BKG(m_Label);
-      m_IndexToNevent[0]  = m_NeventTool.GetNevent_BKG(m_Label);
-      m_IndexToNweight[0] = m_NeventTool.GetNweight_BKG(m_Label);
+      m_IndexToXsec[0]    = m_XsecTool.GetXsec_BKG(m_DataSet);
+      m_IndexToNevent[0]  = m_NeventTool.GetNevent_BKG(m_DataSet, m_FileTag);
+      m_IndexToNweight[0] = m_NeventTool.GetNweight_BKG(m_DataSet, m_FileTag);
       m_Nsample++;
     }
     return 0;
@@ -232,9 +265,9 @@ int AnalysisBase<StopNtupleTree>::GetSampleIndex(){
   if(m_HashToIndex.count(hash) == 0){
     m_HashToIndex[hash] = m_Nsample;
     m_IndexToSample[m_Nsample]  = std::string(Form("%d_%d", MP, MC));
-    m_IndexToXsec[m_Nsample]    = m_XsecTool.GetXsec_SMS(m_Label, MP);
-    m_IndexToNevent[m_Nsample]  = m_NeventTool.GetNevent_SMS(m_Label, MP, MC);
-    m_IndexToNweight[m_Nsample] = m_NeventTool.GetNweight_SMS(m_Label, MP, MC);
+    m_IndexToXsec[m_Nsample]    = m_XsecTool.GetXsec_SMS(m_DataSet, MP);
+    m_IndexToNevent[m_Nsample]  = m_NeventTool.GetNevent_SMS(m_DataSet, m_FileTag, MP, MC);
+    m_IndexToNweight[m_Nsample] = m_NeventTool.GetNweight_SMS(m_DataSet, m_FileTag, MP, MC);
   
     m_Nsample++;
   }
@@ -262,88 +295,221 @@ TVector3 AnalysisBase<StopNtupleTree>::GetMET(){
 }
 
 template <>
-int AnalysisBase<StopNtupleTree>::GetJets(vector<TLorentzVector>& JETs, double pt_cut, double eta_cut){
+TVector3 AnalysisBase<StopNtupleTree>::GetGenMET(){
+  TVector3 vmet;
+  vmet.SetPtEtaPhi(genmet,0.0,genmetphi);
+  return vmet;
+}
+
+template <>
+ParticleList AnalysisBase<StopNtupleTree>::GetJets(){
+  ParticleList list;
 
   int Njet = jetsLVec->size();
   for(int i = 0; i < Njet; i++){
     TLorentzVector JET = (*jetsLVec)[i];
-    if(JET.Pt() >= pt_cut && (fabs(JET.Eta()) < eta_cut || eta_cut < 0)){
-      float mass = JET.M();
-      if(std::isnan(mass))
-	mass = 0;
-      if(std::isinf(mass))
-	mass = 0;
-      if(mass < 0.)
-	mass = 0.;
-      JET.SetPtEtaPhiM( JET.Pt(), JET.Eta(), JET.Phi(), mass );
-      JETs.push_back(JET);
-    }
+    Particle jet;
+    float mass = JET.M();
+    if(std::isnan(mass))
+      mass = 0;
+    if(std::isinf(mass))
+      mass = 0;
+    if(mass < 0.)
+      mass = 0.;
+    jet.SetPtEtaPhiM( JET.Pt(), JET.Eta(), JET.Phi(), mass );
+    jet.SetBtag((*recoJetsBtag_0)[i]);
+
+    if(jet.Btag() > 0.9535)
+      jet.SetParticleID(kTight);
+    else if(jet.Btag() > 0.8484) 
+      jet.SetParticleID(kMedium);
+    else if(jet.Btag() > 0.5426)
+      jet.SetParticleID(kLoose);
+
+    jet.SetPDGID( (*recoJetsFlavor)[i] );
+      
+    list.push_back(jet);
   }
-  return 0.;
+
+  return list;
+}
+
+template <>
+ParticleList AnalysisBase<StopNtupleTree>::GetElectrons(){
+  ParticleList list;
+
+  int N = elesLVec->size();
+  for(int i = 0; i < N; i++){
+    Particle lep;
+    lep.SetVectM((*elesLVec)[i].Vect(),std::max(0.,(*elesLVec)[i].M()));
+    lep.SetPDGID( (elesCharge->at(i) < 0. ? 13 : -13) );
+    lep.SetCharge( (elesCharge->at(i) < 0. ? -1 : 1) );
+     
+    if(tightElectronID->at(i))
+      lep.SetParticleID(kTight);
+    else if(mediumElectronID->at(i))
+      lep.SetParticleID(kMedium);
+    else if(looseElectronID->at(i))
+      lep.SetParticleID(kLoose);
+    else if(vetoElectronID->at(i))
+      lep.SetParticleID(kVeryLoose);
+     
+    lep.SetRelIso(elesRelIso->at(i));
+    lep.SetMiniIso(elesMiniIso->at(i));
+
+    list.push_back(lep);
+  }
+
+  return list;
 
 }
 
 template <>
-void AnalysisBase<StopNtupleTree>::GetLeptons(vector<TLorentzVector>& LEPs, vector<int>& IDs,
-					      double pt_cut, double eta_cut) {
-  LEPs.clear();
-  IDs.clear();
-  
-  int Nmu = muonsLVec->size();
-  int Nel = elesLVec->size();
+ParticleList AnalysisBase<StopNtupleTree>::GetMuons(){
+  ParticleList list;
 
-  for(int i = 0; i < Nmu; i++){
-    // muon ID medium
-    if(!muonsFlagMedium->at(i))
-      continue;
-    
-    TLorentzVector LEP = (*muonsLVec)[i];
-    if((LEP.Pt() >= pt_cut) && (fabs(LEP.Eta()) < eta_cut || eta_cut < 0)){
-      LEPs.push_back(LEP);
-      if(muonsCharge->at(i) < 0.)
-	IDs.push_back(15);
-      else
-	IDs.push_back(-15);
-    }
+  int N = muonsLVec->size();
+  for(int i = 0; i < N; i++){
+    Particle lep;
+    lep.SetVectM((*muonsLVec)[i].Vect(),std::max(0.,(*muonsLVec)[i].M()));
+    lep.SetPDGID( (muonsCharge->at(i) < 0. ? 15 : -15) );
+    lep.SetCharge( (muonsCharge->at(i) < 0. ? -1 : 1) );
+     
+    if(muonsFlagTight->at(i))
+      lep.SetParticleID(kTight);
+    else if(muonsFlagMedium->at(i))
+      lep.SetParticleID(kMedium);
+     
+    lep.SetRelIso(muonsRelIso->at(i));
+    lep.SetMiniIso(muonsMiniIso->at(i));
+
+    list.push_back(lep);
   }
 
-  for(int i = 0; i < Nel; i++){
-    // electrons ID medium
-    if(!mediumElectronID->at(i))
-      continue;
-    
-    TLorentzVector LEP = (*elesLVec)[i];
-    if((LEP.Pt() >= pt_cut) && (fabs(LEP.Eta()) < eta_cut || eta_cut < 0)){
-      LEPs.push_back(LEP);
-      if(elesCharge->at(i) < 0.)
-	IDs.push_back(13);
-      else
-	IDs.push_back(-13);
-    }
-  }
+  return list;
 }
 
-// template<>
-// int AnalysisBase<InputTreeBase>::GetLargeRJets(vector<TLorentzVector>& JETs, double pt_cut, double eta_cut){
+template <>
+ParticleList AnalysisBase<StopNtupleTree>::GetGenElectrons(){
+  ParticleList list;
   
-//   int Njet = ptAK8->size();
-//   for(int i = 0; i < Njet; i++){
-//     if((ptAK8->at(i) >= pt_cut) && (fabs(etaAK8->at(i)) < eta_cut || eta_cut < 0)){
-//       TLorentzVector JET;
-//       float mass = MAK8->at(i);
-//       if(std::isnan(mass))
-// 	mass = 0;
-//       if(std::isinf(mass))
-// 	mass = 0;
-//       if(mass < 0.)
-// 	mass = 0.;
-//       JET.SetPtEtaPhiM( ptAK8->at(i), etaAK8->at(i), phiAK8->at(i), mass );
-//       JETs.push_back(JET);
-//     }
-//   }
-//   return 0.;
+  int N = genDecayPdgIdVec->size();
+  int PDGID;
+  for(int i = 0; i < N; i++){
+    PDGID = genDecayPdgIdVec->at(i);
+    if(abs(PDGID) == 13){
+      Particle lep;
+      
+      lep.SetPDGID(PDGID);
+      int mom = genDecayMomRefVec->at(i);
+      if(mom >= 0 && mom < N)
+	lep.SetMomPDGID(genDecayPdgIdVec->at(mom));
+      lep.SetCharge( (PDGID > 0 ? -1 : 1) );
+      lep.SetVectM((*genDecayLVec)[i].Vect(),max(0.,(*genDecayLVec)[i].M()));
 
-// }
+      list.push_back(lep);
+    }
+  }
+
+  return list;
+}
+
+template <>
+ParticleList AnalysisBase<StopNtupleTree>::GetGenMuons(){
+  ParticleList list;
+  
+  int N = genDecayPdgIdVec->size();
+  int PDGID;
+  for(int i = 0; i < N; i++){
+    PDGID = genDecayPdgIdVec->at(i);
+    if(abs(PDGID) == 15){
+      Particle lep;
+      
+      lep.SetPDGID(PDGID);
+      int mom = genDecayMomRefVec->at(i);
+      if(mom >= 0 && mom < N)
+	lep.SetMomPDGID(genDecayPdgIdVec->at(mom));
+      lep.SetCharge( (PDGID > 0 ? -1 : 1) );
+      lep.SetVectM((*genDecayLVec)[i].Vect(),std::max(0.,(*genDecayLVec)[i].M()));
+
+      list.push_back(lep);
+    }
+  }
+
+  return list;
+}
+
+template <>
+ParticleList AnalysisBase<StopNtupleTree>::GetGenNeutrinos(){
+  ParticleList list;
+  
+  int N = genDecayPdgIdVec->size();
+  int PDGID;
+  for(int i = 0; i < N; i++){
+    PDGID = genDecayPdgIdVec->at(i);
+    if(abs(PDGID) == 12 || abs(PDGID) == 14 || abs(PDGID) == 16){
+      Particle lep;
+      
+      lep.SetPDGID(PDGID);
+      int mom = genDecayMomRefVec->at(i);
+      if(mom >= 0 && mom < N)
+	lep.SetMomPDGID(genDecayPdgIdVec->at(mom));
+      lep.SetVectM((*genDecayLVec)[i].Vect(),(*genDecayLVec)[i].M());
+
+      list.push_back(lep);
+    }
+  }
+
+  return list;
+}
+
+template <>
+ParticleList AnalysisBase<StopNtupleTree>::GetGenBosons(){
+  ParticleList list;
+  
+  int N = genDecayPdgIdVec->size();
+  int PDGID;
+  for(int i = 0; i < N; i++){
+    PDGID = genDecayPdgIdVec->at(i);
+    if(abs(PDGID) == 23 || abs(PDGID) == 24 || abs(PDGID) == 25){
+      Particle p;
+      
+      p.SetPDGID(PDGID);
+      int mom = genDecayMomRefVec->at(i);
+      if(mom >= 0 && mom < N)
+	p.SetMomPDGID(genDecayPdgIdVec->at(mom));
+      p.SetVectM((*genDecayLVec)[i].Vect(),(*genDecayLVec)[i].M());
+
+      list.push_back(p);
+    }
+  }
+
+  return list;
+}
+
+template <>
+ParticleList AnalysisBase<StopNtupleTree>::GetGenSparticles(){
+  ParticleList list;
+  
+  int N = genDecayPdgIdVec->size();
+  int PDGID;
+  for(int i = 0; i < N; i++){
+    PDGID = genDecayPdgIdVec->at(i);
+    if(abs(PDGID) >= 1000000 && abs(PDGID) < 3000000){
+      Particle p;
+      
+      p.SetPDGID(PDGID);
+      int mom = genDecayMomRefVec->at(i);
+      if(mom >= 0 && mom < N)
+	p.SetMomPDGID(genDecayPdgIdVec->at(mom));
+      p.SetVectM((*genDecayLVec)[i].Vect(),(*genDecayLVec)[i].M());
+
+      list.push_back(p);
+    }
+  }
+
+  return list;
+}
 
 template class AnalysisBase<StopNtupleTree>;
 

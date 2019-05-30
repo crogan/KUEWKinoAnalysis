@@ -14,6 +14,14 @@ public:
   operator TLorentzVector() const;
 
   int Charge() const;
+
+  ParticleList PtEtaCut(double pt, double eta = -1) const;
+  ParticleList ParticleIDCut(ParticleIDType id) const;
+
+  ParticleList& SortByPt();
+
+  ParticleList operator + (const ParticleList& parts) const;
+  void operator += (const ParticleList& parts);
 };
 
   

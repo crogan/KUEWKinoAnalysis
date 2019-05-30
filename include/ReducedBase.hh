@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Wed Nov 28 20:18:09 2018 by ROOT version 6.10/08
-// from TTree SOSAnalysis/SOSAnalysis
-// found on file: /Users/crogan/Dropbox/SAMPLES/SOS/NTUPLES/SIG/TChiWZ_300_100.root
+// Thu Apr 11 12:53:08 2019 by ROOT version 6.14/04
+// from TTree KUAnalysis/KUAnalysis
+// found on file: TTJets_TuneCUETP8M2T4_13TeV-amcatnloFXFX-pythia8All.root
 //////////////////////////////////////////////////////////
 
 #ifndef ReducedBase_h
@@ -13,6 +13,10 @@
 #include <TFile.h>
 
 // Header file for the classes stored in the TTree if any.
+#include "vector"
+#include "vector"
+
+using std::vector;
 
 class ReducedBase {
 public :
@@ -25,110 +29,276 @@ public :
    Double_t        weight;
    Double_t        MET;
    Double_t        MET_phi;
+   Double_t        genMET;
+   Double_t        genMET_phi;
    Double_t        HT;
-   Bool_t          Is_SF;
-   Int_t           nEl;
-   Int_t           nMu;
-   Int_t           nBjet;
-   Double_t        pT_1lep;
-   Int_t           id_1lep;
-   Double_t        pT_2lep;
-   Int_t           id_2lep;
-   Double_t        pT_3lep;
-   Int_t           id_3lep;
-   Int_t           Nj;
-   Int_t           NjS;
-   Int_t           NjISR;
-   Double_t        PTCM_comb;
-   Double_t        PTISR_comb;
-   Double_t        RISR_comb;
-   Double_t        cosCM_comb;
-   Double_t        cosS_comb;
-   Double_t        MISR_comb;
-   Double_t        MS_comb;
-   Double_t        dphiCMI_comb;
-   Double_t        dphiSI_comb;
-   Double_t        dphiISRI_comb;
-   Double_t        PTCM_fix;
-   Double_t        PTISR_fix;
-   Double_t        RISR_fix;
-   Double_t        cosCM_fix;
-   Double_t        cosS_fix;
-   Double_t        MISR_fix;
-   Double_t        MS_fix;
-   Double_t        dphiCMI_fix;
-   Double_t        dphiSI_fix;
-   Double_t        dphiISRI_fix;
-   Double_t        MZ;
-   Double_t        cosZ;
-   Bool_t          Is_2LNJ;
-   Bool_t          Is_2L1L;
-   Double_t        HN2S;
-   Double_t        HN2SR;
-   Double_t        H11S;
-   Double_t        HN1Ca;
-   Double_t        HN1Cb;
-   Double_t        H11Ca;
-   Double_t        H11Cb;
-   Double_t        cosC;
+   Int_t           Nele;
+   Int_t           Nmu;
+   Int_t           Nlep;
+   vector<double>  *PT_lep;
+   vector<double>  *Eta_lep;
+   vector<double>  *Phi_lep;
+   vector<double>  *M_lep;
+   vector<int>     *Charge_lep;
+   vector<int>     *PDGID_lep;
+   vector<int>     *RelIso_lep;
+   vector<int>     *MiniIso_lep;
+   vector<int>     *ID_lep;
+   vector<int>     *Index_lep;
+   Int_t           Njet;
+   Int_t           Nbjet;
+   vector<double>  *PT_jet;
+   vector<double>  *Eta_jet;
+   vector<double>  *Phi_jet;
+   vector<double>  *M_jet;
+   vector<double>  *Btag_jet;
+   Int_t           genNele;
+   Int_t           genNmu;
+   Int_t           genNlep;
+   vector<double>  *genPT_lep;
+   vector<double>  *genEta_lep;
+   vector<double>  *genPhi_lep;
+   vector<double>  *genM_lep;
+   vector<int>     *genCharge_lep;
+   vector<int>     *genPDGID_lep;
+   vector<int>     *genIndex_lep;
+   Int_t           genNnu;
+   vector<double>  *genPT_nu;
+   vector<double>  *genEta_nu;
+   vector<double>  *genPhi_nu;
+   vector<int>     *genPDGID_nu;
+   Int_t           genNboson;
+   vector<double>  *genPT_boson;
+   vector<double>  *genEta_boson;
+   vector<double>  *genPhi_boson;
+   vector<double>  *genM_boson;
+   vector<int>     *genPDGID_boson;
+   Int_t           genNsusy;
+   vector<double>  *genPT_susy;
+   vector<double>  *genEta_susy;
+   vector<double>  *genPhi_susy;
+   vector<double>  *genM_susy;
+   vector<int>     *genPDGID_susy;
+   vector<int>     *Njet_a;
+   vector<int>     *Njet_b;
+   vector<int>     *Nbjet_a;
+   vector<int>     *Nbjet_b;
+   vector<int>     *Nlep_a;
+   vector<int>     *Nlep_b;
+   vector<int>     *Njet_ga;
+   vector<int>     *Njet_gb;
+   vector<int>     *Nbjet_ga;
+   vector<int>     *Nbjet_gb;
+   vector<int>     *Nlep_ga;
+   vector<int>     *Nlep_gb;
+   vector<vector<int> > *index_jet_a;
+   vector<vector<int> > *index_jet_b;
+   vector<vector<int> > *index_lep_a;
+   vector<vector<int> > *index_lep_b;
+   vector<vector<int> > *index_jet_ga;
+   vector<vector<int> > *index_jet_gb;
+   vector<vector<int> > *index_lep_ga;
+   vector<vector<int> > *index_lep_gb;
+   vector<double>  *MSS;
+   vector<double>  *PSS;
+   vector<double>  *cosSS;
+   vector<double>  *dphiSS;
+   vector<double>  *PTSS;
+   vector<double>  *PzSS;
+   vector<double>  *MCa;
+   vector<double>  *cosCa;
+   vector<double>  *MCb;
+   vector<double>  *cosCb;
+   vector<double>  *MGCa;
+   vector<double>  *cosGCa;
+   vector<double>  *MGCb;
+   vector<double>  *cosGCb;
+   vector<double>  *H11SS;
+   vector<double>  *H21SS;
+   vector<double>  *HT21SS;
+   vector<double>  *H22SS;
+   vector<double>  *HT22SS;
+   vector<double>  *H42SS;
+   vector<double>  *HT42SS;
+   vector<double>  *H11Ca;
+   vector<double>  *H11Cb;
+   vector<double>  *H21Ca;
+   vector<double>  *H21Cb;
+   vector<double>  *MVa;
+   vector<double>  *PVa;
+   vector<double>  *cosVa;
+   vector<double>  *MVb;
+   vector<double>  *PVb;
+   vector<double>  *cosVb;
+   Bool_t          Is_1L_2J;
+   Bool_t          Is_2L_2J;
+   Bool_t          Is_1L_1L;
+   Bool_t          Is_2L_1L;
+   Bool_t          Is_2L_2L;
+   Bool_t          Is_1L_B;
+   Bool_t          Is_2L_B;
+   Bool_t          Is_1LB_1LB;
+   Bool_t          Is_3L_B;
   
-   Double_t        MJ;
-  
-   Double_t        cosJ;
+   vector<int>     *Njet_ISR;
+   vector<int>     *Njet_S;
+   vector<int>     *Nbjet_ISR;
+   vector<int>     *Nbjet_S;
+   vector<int>     *Nlep_ISR;
+   vector<int>     *Nlep_S;
+   vector<vector<int> > *index_jet_ISR;
+   vector<vector<int> > *index_jet_S;
+   vector<vector<int> > *index_lep_ISR;
+   vector<vector<int> > *index_lep_S;
+   vector<double>  *PTISR;
+   vector<double>  *PTCM;
+   vector<double>  *RISR;
+   vector<double>  *cosCM;
+   vector<double>  *cosS;
+   vector<double>  *MISR;
+   vector<double>  *MS;
+   vector<double>  *MV;
+   vector<double>  *ML;
+   vector<double>  *dphiCMI;
+   vector<double>  *dphiSI;
+   vector<double>  *dphiISRI;
 
    // List of branches
    TBranch        *b_weight;   //!
    TBranch        *b_MET;   //!
    TBranch        *b_MET_phi;   //!
+   TBranch        *b_genMET;   //!
+   TBranch        *b_genMET_phi;   //!
    TBranch        *b_HT;   //!
-   TBranch        *b_Is_SF;   //!
-   TBranch        *b_nEl;   //!
-   TBranch        *b_nMu;   //!
-   TBranch        *b_nBjet;   //!
-   TBranch        *b_pT_1lep;   //!
-   TBranch        *b_id_1lep;   //!
-   TBranch        *b_pT_2lep;   //!
-   TBranch        *b_id_2lep;   //!
-   TBranch        *b_pT_3lep;   //!
-   TBranch        *b_id_3lep;   //!
-   TBranch        *b_Nj;   //!
-   TBranch        *b_NjS;   //!
-   TBranch        *b_NjISR;   //!
-   TBranch        *b_PTCM_comb;   //!
-   TBranch        *b_PTISR_comb;   //!
-   TBranch        *b_RISR_comb;   //!
-   TBranch        *b_cosCM_comb;   //!
-   TBranch        *b_cosS_comb;   //!
-   TBranch        *b_MISR_comb;   //!
-   TBranch        *b_MS_comb;   //!
-   TBranch        *b_dphiCMI_comb;   //!
-   TBranch        *b_dphiSI_comb;   //!
-   TBranch        *b_dphiISRI_comb;   //!
-   TBranch        *b_PTCM_fix;   //!
-   TBranch        *b_PTISR_fix;   //!
-   TBranch        *b_RISR_fix;   //!
-   TBranch        *b_cosCM_fix;   //!
-   TBranch        *b_cosS_fix;   //!
-   TBranch        *b_MISR_fix;   //!
-   TBranch        *b_MS_fix;   //!
-   TBranch        *b_dphiCMI_fix;   //!
-   TBranch        *b_dphiSI_fix;   //!
-   TBranch        *b_dphiISRI_fix;   //!
-   TBranch        *b_MZ;   //!
-   TBranch        *b_cosZ;   //!
-   TBranch        *b_Is_2LNJ;   //!
-   TBranch        *b_Is_2L1L;   //!
-   TBranch        *b_HN2S;   //!
-   TBranch        *b_HN2SR;   //!
-   TBranch        *b_H11S;   //!
-   TBranch        *b_HN1Ca;   //!
-   TBranch        *b_HN1Cb;   //!
+   TBranch        *b_Nele;   //!
+   TBranch        *b_Nmu;   //!
+   TBranch        *b_Nlep;   //!
+   TBranch        *b_PT_lep;   //!
+   TBranch        *b_Eta_lep;   //!
+   TBranch        *b_Phi_lep;   //!
+   TBranch        *b_M_lep;   //!
+   TBranch        *b_Charge_lep;   //!
+   TBranch        *b_PDGID_lep;   //!
+   TBranch        *b_RelIso_lep;   //!
+   TBranch        *b_MiniIso_lep;   //!
+   TBranch        *b_ID_lep;   //!
+   TBranch        *b_Index_lep;   //!
+   TBranch        *b_Njet;   //!
+   TBranch        *b_Nbjet;   //!
+   TBranch        *b_PT_jet;   //!
+   TBranch        *b_Eta_jet;   //!
+   TBranch        *b_Phi_jet;   //!
+   TBranch        *b_M_jet;   //!
+   TBranch        *b_Btag_jet;   //!
+   TBranch        *b_genNele;   //!
+   TBranch        *b_genNmu;   //!
+   TBranch        *b_genNlep;   //!
+   TBranch        *b_genPT_lep;   //!
+   TBranch        *b_genEta_lep;   //!
+   TBranch        *b_genPhi_lep;   //!
+   TBranch        *b_genM_lep;   //!
+   TBranch        *b_genCharge_lep;   //!
+   TBranch        *b_genPDGID_lep;   //!
+   TBranch        *b_genIndex_lep;   //!
+   TBranch        *b_genNnu;   //!
+   TBranch        *b_genPT_nu;   //!
+   TBranch        *b_genEta_nu;   //!
+   TBranch        *b_genPhi_nu;   //!
+   TBranch        *b_genPDGID_nu;   //!
+   TBranch        *b_genNboson;   //!
+   TBranch        *b_genPT_boson;   //!
+   TBranch        *b_genEta_boson;   //!
+   TBranch        *b_genPhi_boson;   //!
+   TBranch        *b_genM_boson;   //!
+   TBranch        *b_genPDGID_boson;   //!
+   TBranch        *b_genNsusy;   //!
+   TBranch        *b_genPT_susy;   //!
+   TBranch        *b_genEta_susy;   //!
+   TBranch        *b_genPhi_susy;   //!
+   TBranch        *b_genM_susy;   //!
+   TBranch        *b_genPDGID_susy;   //!
+   TBranch        *b_Njet_a;   //!
+   TBranch        *b_Njet_b;   //!
+   TBranch        *b_Nbjet_a;   //!
+   TBranch        *b_Nbjet_b;   //!
+   TBranch        *b_Nlep_a;   //!
+   TBranch        *b_Nlep_b;   //!
+   TBranch        *b_Njet_ga;   //!
+   TBranch        *b_Njet_gb;   //!
+   TBranch        *b_Nbjet_ga;   //!
+   TBranch        *b_Nbjet_gb;   //!
+   TBranch        *b_Nlep_ga;   //!
+   TBranch        *b_Nlep_gb;   //!
+   TBranch        *b_index_jet_a;   //!
+   TBranch        *b_index_jet_b;   //!
+   TBranch        *b_index_lep_a;   //!
+   TBranch        *b_index_lep_b;   //!
+   TBranch        *b_index_jet_ga;   //!
+   TBranch        *b_index_jet_gb;   //!
+   TBranch        *b_index_lep_ga;   //!
+   TBranch        *b_index_lep_gb;   //!
+   TBranch        *b_MSS;   //!
+   TBranch        *b_PSS;   //!
+   TBranch        *b_cosSS;   //!
+   TBranch        *b_dphiSS;   //!
+   TBranch        *b_PTSS;   //!
+   TBranch        *b_PzSS;   //!
+   TBranch        *b_MCa;   //!
+   TBranch        *b_cosCa;   //!
+   TBranch        *b_MCb;   //!
+   TBranch        *b_cosCb;   //!
+   TBranch        *b_MGCa;   //!
+   TBranch        *b_cosGCa;   //!
+   TBranch        *b_MGCb;   //!
+   TBranch        *b_cosGCb;   //!
+   TBranch        *b_H11SS;   //!
+   TBranch        *b_H21SS;   //!
+   TBranch        *b_HT21SS;   //!
+   TBranch        *b_H22SS;   //!
+   TBranch        *b_HT22SS;   //!
+   TBranch        *b_H42SS;   //!
+   TBranch        *b_HT42SS;   //!
    TBranch        *b_H11Ca;   //!
    TBranch        *b_H11Cb;   //!
-   TBranch        *b_cosC;   //!
-   
-   TBranch        *b_MJ;   //!
-     TBranch        *b_cosJ;   //!
+   TBranch        *b_H21Ca;   //!
+   TBranch        *b_H21Cb;   //!
+   TBranch        *b_MVa;   //!
+   TBranch        *b_PVa;   //!
+   TBranch        *b_cosVa;   //!
+   TBranch        *b_MVb;   //!
+   TBranch        *b_PVb;   //!
+   TBranch        *b_cosVb;   //!
+   TBranch        *b_Is_1L_2J;   //!
+   TBranch        *b_Is_2L_2J;   //!
+   TBranch        *b_Is_1L_1L;   //!
+   TBranch        *b_Is_2L_1L;   //!
+   TBranch        *b_Is_2L_2L;   //!
+   TBranch        *b_Is_1L_B;   //!
+   TBranch        *b_Is_2L_B;   //!
+   TBranch        *b_Is_1LB_1LB;   //!
+   TBranch        *b_Is_3L_B;   //!
+   TBranch        *b_Njet_ISR;   //!
+   TBranch        *b_Njet_S;   //!
+   TBranch        *b_Nbjet_ISR;   //!
+   TBranch        *b_Nbjet_S;   //!
+   TBranch        *b_Nlep_ISR;   //!
+   TBranch        *b_Nlep_S;   //!
+   TBranch        *b_index_jet_ISR;   //!
+   TBranch        *b_index_jet_S;   //!
+   TBranch        *b_index_lep_ISR;   //!
+   TBranch        *b_index_lep_S;   //!
+   TBranch        *b_PTISR;   //!
+   TBranch        *b_PTCM;   //!
+   TBranch        *b_RISR;   //!
+   TBranch        *b_cosCM;   //!
+   TBranch        *b_cosS;   //!
+   TBranch        *b_MISR;   //!
+   TBranch        *b_MS;   //!
+   TBranch        *b_MV;   //!
+   TBranch        *b_ML;   //!
+   TBranch        *b_dphiCMI;   //!
+   TBranch        *b_dphiSI;   //!
+   TBranch        *b_dphiISRI;   //!
 
    ReducedBase(TTree *tree=0);
    virtual ~ReducedBase();
@@ -148,11 +318,11 @@ inline ReducedBase::ReducedBase(TTree *tree) : fChain(0)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/Users/crogan/Dropbox/SAMPLES/SOS/NTUPLES/SIG/TChiWZ_300_100.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("TTJets_TuneCUETP8M2T4_13TeV-amcatnloFXFX-pythia8All.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("/Users/crogan/Dropbox/SAMPLES/SOS/NTUPLES/SIG/TChiWZ_300_100.root");
+         f = new TFile("TTJets_TuneCUETP8M2T4_13TeV-amcatnloFXFX-pythia8All.root");
       }
-      f->GetObject("SOSAnalysis",tree);
+      f->GetObject("KUAnalysis",tree);
 
    }
    Init(tree);
@@ -193,6 +363,116 @@ inline void ReducedBase::Init(TTree *tree)
    // Init() will be called many times when running on PROOF
    // (once per file to be processed).
 
+   // Set object pointer
+   PT_lep = 0;
+   Eta_lep = 0;
+   Phi_lep = 0;
+   M_lep = 0;
+   Charge_lep = 0;
+   PDGID_lep = 0;
+   RelIso_lep = 0;
+   MiniIso_lep = 0;
+   ID_lep = 0;
+   Index_lep = 0;
+   PT_jet = 0;
+   Eta_jet = 0;
+   Phi_jet = 0;
+   M_jet = 0;
+   Btag_jet = 0;
+   genPT_lep = 0;
+   genEta_lep = 0;
+   genPhi_lep = 0;
+   genM_lep = 0;
+   genCharge_lep = 0;
+   genPDGID_lep = 0;
+   genIndex_lep = 0;
+   genPT_nu = 0;
+   genEta_nu = 0;
+   genPhi_nu = 0;
+   genPDGID_nu = 0;
+   genPT_boson = 0;
+   genEta_boson = 0;
+   genPhi_boson = 0;
+   genM_boson = 0;
+   genPDGID_boson = 0;
+   genPT_susy = 0;
+   genEta_susy = 0;
+   genPhi_susy = 0;
+   genM_susy = 0;
+   genPDGID_susy = 0;
+   Njet_a = 0;
+   Njet_b = 0;
+   Nbjet_a = 0;
+   Nbjet_b = 0;
+   Nlep_a = 0;
+   Nlep_b = 0;
+   Njet_ga = 0;
+   Njet_gb = 0;
+   Nbjet_ga = 0;
+   Nbjet_gb = 0;
+   Nlep_ga = 0;
+   Nlep_gb = 0;
+   index_jet_a = 0;
+   index_jet_b = 0;
+   index_lep_a = 0;
+   index_lep_b = 0;
+   index_jet_ga = 0;
+   index_jet_gb = 0;
+   index_lep_ga = 0;
+   index_lep_gb = 0;
+   MSS = 0;
+   PSS = 0;
+   cosSS = 0;
+   dphiSS = 0;
+   PTSS = 0;
+   PzSS = 0;
+   MCa = 0;
+   cosCa = 0;
+   MCb = 0;
+   cosCb = 0;
+   MGCa = 0;
+   cosGCa = 0;
+   MGCb = 0;
+   cosGCb = 0;
+   H11SS = 0;
+   H21SS = 0;
+   HT21SS = 0;
+   H22SS = 0;
+   HT22SS = 0;
+   H42SS = 0;
+   HT42SS = 0;
+   H11Ca = 0;
+   H11Cb = 0;
+   H21Ca = 0;
+   H21Cb = 0;
+   MVa = 0;
+   PVa = 0;
+   cosVa = 0;
+   MVb = 0;
+   PVb = 0;
+   cosVb = 0;
+   Njet_ISR = 0;
+   Njet_S = 0;
+   Nbjet_ISR = 0;
+   Nbjet_S = 0;
+   Nlep_ISR = 0;
+   Nlep_S = 0;
+   index_jet_ISR = 0;
+   index_jet_S = 0;
+   index_lep_ISR = 0;
+   index_lep_S = 0;
+   PTISR = 0;
+   PTCM = 0;
+   RISR = 0;
+   cosCM = 0;
+   cosS = 0;
+   MISR = 0;
+   MS = 0;
+   MV = 0;
+   ML = 0;
+   dphiCMI = 0;
+   dphiSI = 0;
+   dphiISRI = 0;
    // Set branch addresses and branch pointers
    if (!tree) return;
    fChain = tree;
@@ -202,56 +482,138 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchAddress("weight", &weight, &b_weight);
    fChain->SetBranchAddress("MET", &MET, &b_MET);
    fChain->SetBranchAddress("MET_phi", &MET_phi, &b_MET_phi);
+   fChain->SetBranchAddress("genMET", &genMET, &b_genMET);
+   fChain->SetBranchAddress("genMET_phi", &genMET_phi, &b_genMET_phi);
    fChain->SetBranchAddress("HT", &HT, &b_HT);
-   fChain->SetBranchAddress("Is_SF", &Is_SF, &b_Is_SF);
-   fChain->SetBranchAddress("nEl", &nEl, &b_nEl);
-   fChain->SetBranchAddress("nMu", &nMu, &b_nMu);
-   fChain->SetBranchAddress("nBjet", &nBjet, &b_nBjet);
-   fChain->SetBranchAddress("pT_1lep", &pT_1lep, &b_pT_1lep);
-   fChain->SetBranchAddress("id_1lep", &id_1lep, &b_id_1lep);
-   fChain->SetBranchAddress("pT_2lep", &pT_2lep, &b_pT_2lep);
-   fChain->SetBranchAddress("id_2lep", &id_2lep, &b_id_2lep);
-   fChain->SetBranchAddress("pT_3lep", &pT_3lep, &b_pT_3lep);
-   fChain->SetBranchAddress("id_3lep", &id_3lep, &b_id_3lep);
-   fChain->SetBranchAddress("Nj", &Nj, &b_Nj);
-   fChain->SetBranchAddress("NjS", &NjS, &b_NjS);
-   fChain->SetBranchAddress("NjISR", &NjISR, &b_NjISR);
-   fChain->SetBranchAddress("PTCM_comb", &PTCM_comb, &b_PTCM_comb);
-   fChain->SetBranchAddress("PTISR_comb", &PTISR_comb, &b_PTISR_comb);
-   fChain->SetBranchAddress("RISR_comb", &RISR_comb, &b_RISR_comb);
-   fChain->SetBranchAddress("cosCM_comb", &cosCM_comb, &b_cosCM_comb);
-   fChain->SetBranchAddress("cosS_comb", &cosS_comb, &b_cosS_comb);
-   fChain->SetBranchAddress("MISR_comb", &MISR_comb, &b_MISR_comb);
-   fChain->SetBranchAddress("MS_comb", &MS_comb, &b_MS_comb);
-   fChain->SetBranchAddress("dphiCMI_comb", &dphiCMI_comb, &b_dphiCMI_comb);
-   fChain->SetBranchAddress("dphiSI_comb", &dphiSI_comb, &b_dphiSI_comb);
-   fChain->SetBranchAddress("dphiISRI_comb", &dphiISRI_comb, &b_dphiISRI_comb);
-   fChain->SetBranchAddress("PTCM_fix", &PTCM_fix, &b_PTCM_fix);
-   fChain->SetBranchAddress("PTISR_fix", &PTISR_fix, &b_PTISR_fix);
-   fChain->SetBranchAddress("RISR_fix", &RISR_fix, &b_RISR_fix);
-   fChain->SetBranchAddress("cosCM_fix", &cosCM_fix, &b_cosCM_fix);
-   fChain->SetBranchAddress("cosS_fix", &cosS_fix, &b_cosS_fix);
-   fChain->SetBranchAddress("MISR_fix", &MISR_fix, &b_MISR_fix);
-   fChain->SetBranchAddress("MS_fix", &MS_fix, &b_MS_fix);
-   fChain->SetBranchAddress("dphiCMI_fix", &dphiCMI_fix, &b_dphiCMI_fix);
-   fChain->SetBranchAddress("dphiSI_fix", &dphiSI_fix, &b_dphiSI_fix);
-   fChain->SetBranchAddress("dphiISRI_fix", &dphiISRI_fix, &b_dphiISRI_fix);
-   fChain->SetBranchAddress("MZ", &MZ, &b_MZ);
-   fChain->SetBranchAddress("cosZ", &cosZ, &b_cosZ);
-   fChain->SetBranchAddress("Is_2LNJ", &Is_2LNJ, &b_Is_2LNJ);
-   fChain->SetBranchAddress("Is_2L1L", &Is_2L1L, &b_Is_2L1L);
-   fChain->SetBranchAddress("HN2S", &HN2S, &b_HN2S);
-   fChain->SetBranchAddress("HN2SR", &HN2SR, &b_HN2SR);
-   fChain->SetBranchAddress("H11S", &H11S, &b_H11S);
-   fChain->SetBranchAddress("HN1Ca", &HN1Ca, &b_HN1Ca);
-   fChain->SetBranchAddress("HN1Cb", &HN1Cb, &b_HN1Cb);
+   fChain->SetBranchAddress("Nele", &Nele, &b_Nele);
+   fChain->SetBranchAddress("Nmu", &Nmu, &b_Nmu);
+   fChain->SetBranchAddress("Nlep", &Nlep, &b_Nlep);
+   fChain->SetBranchAddress("PT_lep", &PT_lep, &b_PT_lep);
+   fChain->SetBranchAddress("Eta_lep", &Eta_lep, &b_Eta_lep);
+   fChain->SetBranchAddress("Phi_lep", &Phi_lep, &b_Phi_lep);
+   fChain->SetBranchAddress("M_lep", &M_lep, &b_M_lep);
+   fChain->SetBranchAddress("Charge_lep", &Charge_lep, &b_Charge_lep);
+   fChain->SetBranchAddress("PDGID_lep", &PDGID_lep, &b_PDGID_lep);
+   fChain->SetBranchAddress("RelIso_lep", &RelIso_lep, &b_RelIso_lep);
+   fChain->SetBranchAddress("MiniIso_lep", &MiniIso_lep, &b_MiniIso_lep);
+   fChain->SetBranchAddress("ID_lep", &ID_lep, &b_ID_lep);
+   fChain->SetBranchAddress("Index_lep", &Index_lep, &b_Index_lep);
+   fChain->SetBranchAddress("Njet", &Njet, &b_Njet);
+   fChain->SetBranchAddress("Nbjet", &Nbjet, &b_Nbjet);
+   fChain->SetBranchAddress("PT_jet", &PT_jet, &b_PT_jet);
+   fChain->SetBranchAddress("Eta_jet", &Eta_jet, &b_Eta_jet);
+   fChain->SetBranchAddress("Phi_jet", &Phi_jet, &b_Phi_jet);
+   fChain->SetBranchAddress("M_jet", &M_jet, &b_M_jet);
+   fChain->SetBranchAddress("Btag_jet", &Btag_jet, &b_Btag_jet);
+   fChain->SetBranchAddress("genNele", &genNele, &b_genNele);
+   fChain->SetBranchAddress("genNmu", &genNmu, &b_genNmu);
+   fChain->SetBranchAddress("genNlep", &genNlep, &b_genNlep);
+   fChain->SetBranchAddress("genPT_lep", &genPT_lep, &b_genPT_lep);
+   fChain->SetBranchAddress("genEta_lep", &genEta_lep, &b_genEta_lep);
+   fChain->SetBranchAddress("genPhi_lep", &genPhi_lep, &b_genPhi_lep);
+   fChain->SetBranchAddress("genM_lep", &genM_lep, &b_genM_lep);
+   fChain->SetBranchAddress("genCharge_lep", &genCharge_lep, &b_genCharge_lep);
+   fChain->SetBranchAddress("genPDGID_lep", &genPDGID_lep, &b_genPDGID_lep);
+   fChain->SetBranchAddress("genIndex_lep", &genIndex_lep, &b_genIndex_lep);
+   fChain->SetBranchAddress("genNnu", &genNnu, &b_genNnu);
+   fChain->SetBranchAddress("genPT_nu", &genPT_nu, &b_genPT_nu);
+   fChain->SetBranchAddress("genEta_nu", &genEta_nu, &b_genEta_nu);
+   fChain->SetBranchAddress("genPhi_nu", &genPhi_nu, &b_genPhi_nu);
+   fChain->SetBranchAddress("genPDGID_nu", &genPDGID_nu, &b_genPDGID_nu);
+   fChain->SetBranchAddress("genNboson", &genNboson, &b_genNboson);
+   fChain->SetBranchAddress("genPT_boson", &genPT_boson, &b_genPT_boson);
+   fChain->SetBranchAddress("genEta_boson", &genEta_boson, &b_genEta_boson);
+   fChain->SetBranchAddress("genPhi_boson", &genPhi_boson, &b_genPhi_boson);
+   fChain->SetBranchAddress("genM_boson", &genM_boson, &b_genM_boson);
+   fChain->SetBranchAddress("genPDGID_boson", &genPDGID_boson, &b_genPDGID_boson);
+   fChain->SetBranchAddress("genNsusy", &genNsusy, &b_genNsusy);
+   fChain->SetBranchAddress("genPT_susy", &genPT_susy, &b_genPT_susy);
+   fChain->SetBranchAddress("genEta_susy", &genEta_susy, &b_genEta_susy);
+   fChain->SetBranchAddress("genPhi_susy", &genPhi_susy, &b_genPhi_susy);
+   fChain->SetBranchAddress("genM_susy", &genM_susy, &b_genM_susy);
+   fChain->SetBranchAddress("genPDGID_susy", &genPDGID_susy, &b_genPDGID_susy);
+   fChain->SetBranchAddress("Njet_a", &Njet_a, &b_Njet_a);
+   fChain->SetBranchAddress("Njet_b", &Njet_b, &b_Njet_b);
+   fChain->SetBranchAddress("Nbjet_a", &Nbjet_a, &b_Nbjet_a);
+   fChain->SetBranchAddress("Nbjet_b", &Nbjet_b, &b_Nbjet_b);
+   fChain->SetBranchAddress("Nlep_a", &Nlep_a, &b_Nlep_a);
+   fChain->SetBranchAddress("Nlep_b", &Nlep_b, &b_Nlep_b);
+   fChain->SetBranchAddress("Njet_ga", &Njet_ga, &b_Njet_ga);
+   fChain->SetBranchAddress("Njet_gb", &Njet_gb, &b_Njet_gb);
+   fChain->SetBranchAddress("Nbjet_ga", &Nbjet_ga, &b_Nbjet_ga);
+   fChain->SetBranchAddress("Nbjet_gb", &Nbjet_gb, &b_Nbjet_gb);
+   fChain->SetBranchAddress("Nlep_ga", &Nlep_ga, &b_Nlep_ga);
+   fChain->SetBranchAddress("Nlep_gb", &Nlep_gb, &b_Nlep_gb);
+   fChain->SetBranchAddress("index_jet_a", &index_jet_a, &b_index_jet_a);
+   fChain->SetBranchAddress("index_jet_b", &index_jet_b, &b_index_jet_b);
+   fChain->SetBranchAddress("index_lep_a", &index_lep_a, &b_index_lep_a);
+   fChain->SetBranchAddress("index_lep_b", &index_lep_b, &b_index_lep_b);
+   fChain->SetBranchAddress("index_jet_ga", &index_jet_ga, &b_index_jet_ga);
+   fChain->SetBranchAddress("index_jet_gb", &index_jet_gb, &b_index_jet_gb);
+   fChain->SetBranchAddress("index_lep_ga", &index_lep_ga, &b_index_lep_ga);
+   fChain->SetBranchAddress("index_lep_gb", &index_lep_gb, &b_index_lep_gb);
+   fChain->SetBranchAddress("MSS", &MSS, &b_MSS);
+   fChain->SetBranchAddress("PSS", &PSS, &b_PSS);
+   fChain->SetBranchAddress("cosSS", &cosSS, &b_cosSS);
+   fChain->SetBranchAddress("dphiSS", &dphiSS, &b_dphiSS);
+   fChain->SetBranchAddress("PTSS", &PTSS, &b_PTSS);
+   fChain->SetBranchAddress("PzSS", &PzSS, &b_PzSS);
+   fChain->SetBranchAddress("MCa", &MCa, &b_MCa);
+   fChain->SetBranchAddress("cosCa", &cosCa, &b_cosCa);
+   fChain->SetBranchAddress("MCb", &MCb, &b_MCb);
+   fChain->SetBranchAddress("cosCb", &cosCb, &b_cosCb);
+   fChain->SetBranchAddress("MGCa", &MGCa, &b_MGCa);
+   fChain->SetBranchAddress("cosGCa", &cosGCa, &b_cosGCa);
+   fChain->SetBranchAddress("MGCb", &MGCb, &b_MGCb);
+   fChain->SetBranchAddress("cosGCb", &cosGCb, &b_cosGCb);
+   fChain->SetBranchAddress("H11SS", &H11SS, &b_H11SS);
+   fChain->SetBranchAddress("H21SS", &H21SS, &b_H21SS);
+   fChain->SetBranchAddress("HT21SS", &HT21SS, &b_HT21SS);
+   fChain->SetBranchAddress("H22SS", &H22SS, &b_H22SS);
+   fChain->SetBranchAddress("HT22SS", &HT22SS, &b_HT22SS);
+   fChain->SetBranchAddress("H42SS", &H42SS, &b_H42SS);
+   fChain->SetBranchAddress("HT42SS", &HT42SS, &b_HT42SS);
    fChain->SetBranchAddress("H11Ca", &H11Ca, &b_H11Ca);
    fChain->SetBranchAddress("H11Cb", &H11Cb, &b_H11Cb);
-   fChain->SetBranchAddress("cosC", &cosC, &b_cosC);
-//    fChain->SetBranchAddress("MZ", &MZ, &b_MZ);
-   fChain->SetBranchAddress("MJ", &MJ, &b_MJ);
-//    fChain->SetBranchAddress("cosZ", &cosZ, &b_cosZ);
-   fChain->SetBranchAddress("cosJ", &cosJ, &b_cosJ);
+   fChain->SetBranchAddress("H21Ca", &H21Ca, &b_H21Ca);
+   fChain->SetBranchAddress("H21Cb", &H21Cb, &b_H21Cb);
+   fChain->SetBranchAddress("MVa", &MVa, &b_MVa);
+   fChain->SetBranchAddress("PVa", &PVa, &b_PVa);
+   fChain->SetBranchAddress("cosVa", &cosVa, &b_cosVa);
+   fChain->SetBranchAddress("MVb", &MVb, &b_MVb);
+   fChain->SetBranchAddress("PVb", &PVb, &b_PVb);
+   fChain->SetBranchAddress("cosVb", &cosVb, &b_cosVb);
+   fChain->SetBranchAddress("Is_1L_2J", &Is_1L_2J, &b_Is_1L_2J);
+   fChain->SetBranchAddress("Is_2L_2J", &Is_2L_2J, &b_Is_2L_2J);
+   fChain->SetBranchAddress("Is_1L_1L", &Is_1L_1L, &b_Is_1L_1L);
+   fChain->SetBranchAddress("Is_2L_1L", &Is_2L_1L, &b_Is_2L_1L);
+   fChain->SetBranchAddress("Is_2L_2L", &Is_2L_2L, &b_Is_2L_2L);
+   fChain->SetBranchAddress("Is_1L_B", &Is_1L_B, &b_Is_1L_B);
+   fChain->SetBranchAddress("Is_2L_B", &Is_2L_B, &b_Is_2L_B);
+   fChain->SetBranchAddress("Is_1LB_1LB", &Is_1LB_1LB, &b_Is_1LB_1LB);
+   fChain->SetBranchAddress("Is_3L_B", &Is_3L_B, &b_Is_3L_B);
+   fChain->SetBranchAddress("Njet_ISR", &Njet_ISR, &b_Njet_ISR);
+   fChain->SetBranchAddress("Njet_S", &Njet_S, &b_Njet_S);
+   fChain->SetBranchAddress("Nbjet_ISR", &Nbjet_ISR, &b_Nbjet_ISR);
+   fChain->SetBranchAddress("Nbjet_S", &Nbjet_S, &b_Nbjet_S);
+   fChain->SetBranchAddress("Nlep_ISR", &Nlep_ISR, &b_Nlep_ISR);
+   fChain->SetBranchAddress("Nlep_S", &Nlep_S, &b_Nlep_S);
+   fChain->SetBranchAddress("index_jet_ISR", &index_jet_ISR, &b_index_jet_ISR);
+   fChain->SetBranchAddress("index_jet_S", &index_jet_S, &b_index_jet_S);
+   fChain->SetBranchAddress("index_lep_ISR", &index_lep_ISR, &b_index_lep_ISR);
+   fChain->SetBranchAddress("index_lep_S", &index_lep_S, &b_index_lep_S);
+   fChain->SetBranchAddress("PTISR", &PTISR, &b_PTISR);
+   fChain->SetBranchAddress("PTCM", &PTCM, &b_PTCM);
+   fChain->SetBranchAddress("RISR", &RISR, &b_RISR);
+   fChain->SetBranchAddress("cosCM", &cosCM, &b_cosCM);
+   fChain->SetBranchAddress("cosS", &cosS, &b_cosS);
+   fChain->SetBranchAddress("MISR", &MISR, &b_MISR);
+   fChain->SetBranchAddress("MS", &MS, &b_MS);
+   fChain->SetBranchAddress("MV", &MV, &b_MV);
+   fChain->SetBranchAddress("ML", &ML, &b_ML);
+   fChain->SetBranchAddress("dphiCMI", &dphiCMI, &b_dphiCMI);
+   fChain->SetBranchAddress("dphiSI", &dphiSI, &b_dphiSI);
+   fChain->SetBranchAddress("dphiISRI", &dphiISRI, &b_dphiISRI);
    Notify();
 }
 
