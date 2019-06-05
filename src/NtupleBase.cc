@@ -2,6 +2,7 @@
 
 #include "NtupleBase.hh"
 #include "StopNtupleTree.hh"
+#include "SUSYNANOBase.hh"
 
 template <class Base>
 NtupleBase<Base>::NtupleBase(TTree* tree)
@@ -62,5 +63,6 @@ void NtupleBase<Base>::WriteNtuple(const string& filename){
 }
 
 template class NtupleBase<StopNtupleTree>;
+template class NtupleBase<SUSYNANOBase>;
 
 

@@ -3,6 +3,7 @@
 #include "TInterpreter.h"
 
 #include "StopNtupleTree.hh"
+#include "SUSYNANOBase.hh"
 
 using namespace RestFrames;
 
@@ -1720,3 +1721,4 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
 }
 
 template class ReducedNtuple<StopNtupleTree>;
+template class ReducedNtuple<SUSYNANOBase>;
