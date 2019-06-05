@@ -172,7 +172,7 @@ int main(int argc, char* argv[]) {
       MC = 0;
       int Ngen = nGenPart;
       for(int i = 0; i < Ngen; i++){
-	PDGID = fabs(GenPart_pdgId[i]);
+	PDGID = abs(GenPart_pdgId[i]);
 	if(PDGID > 1000000 && PDGID < 3000000){
 	  int mass = int(GenPart_mass[i]+0.5);
 	  if(PDGID == 1000022)
