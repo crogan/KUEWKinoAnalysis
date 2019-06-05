@@ -10,13 +10,14 @@ home = os.environ['HOME']
 RUN_DIR = pwd
 TEMP = pwd
 #EXE  = "MakeReducedNtuple.x"
+#TREE = "Runs"
 EXE  = "MakeEventCount_NANO.x"
+TREE = "Runs"
 #OUT  = "/home/t3-ku/crogan/NTUPLES/Processing/"
 OUT = pwd
 LIST = "default.list"
 QUEUE = ""
-TREE = "Runs"
-MAXN = 100
+MAXN = 25
 
 def new_listfile(rootlist, listfile):
     mylist = open(listfile,'w')
@@ -45,7 +46,7 @@ def create_filelist(rootlist, dataset, filetag):
 
     return listlist
 
-def write_sh(srcfile,ifile,ofile,lfile,dataset,filetag):
+def write_sh(srcfile,ifile,ofile,lfile,dataset,filetag,evtcnt):
     fsrc = open(srcfile,'w')
     fsrc.write('universe = vanilla \n')
     fsrc.write('executable = '+EXE+" \n")
@@ -58,7 +59,8 @@ def write_sh(srcfile,ifile,ofile,lfile,dataset,filetag):
     if DO_SMS == 1:
         fsrc.write('--sms ')
     fsrc.write('-dataset='+dataset+" ")
-    fsrc.write('-filetag='+filetag+" \n")
+    fsrc.write('-filetag='+filetag+" ")
+    fsrc.write('-eventcount='+evtcnt+" \n")
     fsrc.write('output = '+lfile+" \n")
     fsrc.write('queue \n')
     #fsrc.write('cd '+RUN_DIR+" \n")
@@ -118,6 +120,12 @@ if __name__ == "__main__":
     os.system("mkdir -p "+listdir)
     os.system("mkdir -p "+logdir)
     os.system("mkdir -p "+srcdir)
+
+    # make EventCount file and folder
+    evtcntdir  = TARGET+"evtcnt/"
+    os.system("mkdir -p "+evtcntdir)
+    os.system("hadd "+evtcntdir+"EventCount.root root/EventCount/*.root")
+    evtcnt = evtcntdir+"EventCount.root"
     
     # output root files
     ROOT = OUT+"/"+NAME+"/"
@@ -181,7 +189,7 @@ if __name__ == "__main__":
             filename = f.split("/")
             filename = filename[-1]
             name = filename.replace(".list",'')
-            write_sh(srcdir+name+".sh",f,ROOT+dataset+"_"+filetag+"/"+name+".root",logdir+name+".log",dataset,filetag)
+            write_sh(srcdir+name+".sh",f,ROOT+dataset+"_"+filetag+"/"+name+".root",logdir+name+".log",dataset,filetag,evtcnt)
             os.system('condor_submit '+srcdir+name+".sh")
             
     
