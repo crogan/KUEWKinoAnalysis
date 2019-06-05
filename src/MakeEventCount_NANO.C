@@ -117,7 +117,7 @@ int main(int argc, char* argv[]) {
   if(DO_TREE)
     chain = (TChain*) new TChain(TreeName);
   else
-    chain = (TChain*) new TChain("Runs");
+    chain = (TChain*) new TChain("Events");
   
   int Nfile = filenames.size();
   for(int i = 0; i < Nfile; i++){
@@ -125,39 +125,74 @@ int main(int argc, char* argv[]) {
     cout << "   Adding file " << filenames[i] << endl;
   }
 
-  Long64_t        genEventCount;
-  Double_t        genEventSumw;
-  TBranch        *b_genEventCount;   //!
-  TBranch        *b_genEventSumw;   //!
+  Float_t genWeight;
+  TBranch *b_genWeight;
+
+  UInt_t  nGenPart;
+  Float_t GenPart_mass[200];  
+  Int_t   GenPart_pdgId[200];
+  TBranch *b_nGenPart;
+  TBranch *b_GenPart_mass;
+  TBranch *b_GenPart_pdgId;
+
   
-  chain->SetBranchAddress("genEventCount", &genEventCount, &b_genEventCount);
-  chain->SetBranchAddress("genEventSumw", &genEventSumw, &b_genEventSumw);
+  chain->SetBranchAddress("genWeight", &genWeight, &b_genWeight);
+  chain->SetBranchAddress("nGenPart", &nGenPart, &b_nGenPart);
+  chain->SetBranchAddress("GenPart_mass", GenPart_mass, &b_GenPart_mass);
+  chain->SetBranchAddress("GenPart_pdgId", GenPart_pdgId, &b_GenPart_pdgId);
   chain->SetBranchStatus("*",0);
-  chain->SetBranchStatus("genEventCount", 1);
-  chain->SetBranchStatus("genEventSumw",1);
+  chain->SetBranchStatus("genWeight", 1);
+  chain->SetBranchStatus("nGenPart", 1);
+  chain->SetBranchStatus("GenPart_mass", 1);
+  chain->SetBranchStatus("GenPart_pdgId", 1);
 
-   double Nevent = 0.;
-   double Nweight = 0.;
+  double Nevent = 0.;
+  double Nweight = 0.;
 
-   int MP = 0;
-   int MC = 0;
-   int PDGID;
-   std::vector<std::pair<int,int> > masses;
-   std::map<std::pair<int,int>,double > mapNevent;
-   std::map<std::pair<int,int>,double > mapNweight;
+  int MP = 0;
+  int MC = 0;
+  int PDGID;
+  std::vector<std::pair<int,int> > masses;
+  std::map<std::pair<int,int>,double > mapNevent;
+  std::map<std::pair<int,int>,double > mapNweight;
    
-   int NEVENT = chain->GetEntries();
-   cout << "TOTAL of " << NEVENT << " entries" << endl;
-   for(int e = 0; e < NEVENT; e++){
-     cout << "event " << e << " | " << NEVENT << endl;
-     chain->GetEntry(e);
+  int NEVENT = chain->GetEntries();
+  cout << "TOTAL of " << NEVENT << " entries" << endl;
+  for(int e = 0; e < NEVENT; e++){
+    cout << "event " << e << " | " << NEVENT << endl;
+    chain->GetEntry(e);
 
-     cout << "event " << e << " | " << NEVENT << endl;
-     cout << genEventCount << " " << genEventSumw << endl;
+    cout << "event " << e << " | " << NEVENT << endl;
+  
+    Nevent += 1.;
+    Nweight += genWeight;
 
-     Nevent += genEventCount;
-     Nweight += genEventSumw;
-   }
+    if(DO_SMS){
+      MP = 0;
+      MC = 0;
+      int Ngen = nGenPart;
+      for(int i = 0; i < Ngen; i++){
+	PDGID = fabs(GenPart_pdgId[i]);
+	if(PDGID > 1000000 && PDGID < 3000000){
+	  int mass = int(GenPart_mass[i]+0.5);
+	  if(PDGID == 1000022)
+	    MC = mass;
+	  else
+	    if(mass > MP)
+	      MP = mass;
+	}
+      }
+      std::pair<int,int> masspair(MP,MC);
+      if(mapNevent.count(masspair) == 0){
+	masses.push_back(masspair);
+	mapNevent[masspair]    = 0.;
+	mapNweight[masspair]   = 0.;
+      }
+
+      mapNevent[masspair]  += 1.;
+      mapNweight[masspair] += genWeight;
+    }
+  }
 
   TFile* fout = new TFile(string(outputFileName).c_str(),"RECREATE");
   TTree* tout = (TTree*) new TTree("EventCount", "EventCount");
@@ -170,6 +205,18 @@ int main(int argc, char* argv[]) {
   tout->Branch("dataset", &dataset);
   tout->Branch("MP", &MP);
   tout->Branch("MC", &MC);
+  if(DO_SMS){
+    int Nmass = masses.size();
+    for(int i = 0; i < Nmass; i++){
+      Nevent     = mapNevent[masses[i]];
+      Nweight    = mapNweight[masses[i]];
+      MP = masses[i].first;
+      MC = masses[i].second;
+      tout->Fill();
+    }
+  } else {
+    tout->Fill();
+  }
  
   tout->Fill();
 
