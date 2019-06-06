@@ -631,21 +631,7 @@ void ReducedNtuple<Base>::ClearVariables(){
 
 template <class Base>
 void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
-  
-  ParticleList Jets = AnalysisBase<Base>::GetJets();
-  Jets = Jets.PtEtaCut(20., 2.4);
-  m_Njet = Jets.size();
-  
-  ParticleList BJets;
-  vector<int> BJets_index;
-  for(int i = 0; i < m_Njet; i++){
-    if(Jets[i].ParticleID() >= kMedium){
-      BJets += Jets[i];
-      BJets_index.push_back(i);
-    }
-  }
-  m_Nbjet = BJets.size();
-  
+    
   TVector3 ETMiss = AnalysisBase<Base>::GetMET();
 
   if(ETMiss.Mag() < 100.)
@@ -668,10 +654,25 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
   m_Nmu  = Muons.size();
   m_Nlep = Leptons.size();
 
+  ParticleList Jets = AnalysisBase<Base>::GetJets();
+  Jets = Jets.PtEtaCut(20., 2.4);
+  Jets = Jets.RemoveOverlap(Leptons, 0.2);
+  m_Njet = Jets.size();
+  
+  ParticleList BJets;
+  vector<int> BJets_index;
+  for(int i = 0; i < m_Njet; i++){
+    if(Jets[i].ParticleID() >= kMedium){
+      BJets += Jets[i];
+      BJets_index.push_back(i);
+    }
+  }
+  m_Nbjet = BJets.size();
+  
   // require at least one lepton for now
   if(m_Nlep < 1)
     return;
-
+  
   // not enough stuff
   if(m_Nlep + m_Njet < 2)
     return;
