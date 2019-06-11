@@ -41,6 +41,25 @@ ParticleList ParticleList::ParticleIDCut(ParticleIDType id) const {
   return list;
 }
 
+ParticleList ParticleList::RemoveOverlap(const ParticleList& parts, double deltaR) const {
+  ParticleList list;
+  int N = this->size();
+  int M = parts.size();
+  for(int i = 0; i < N; i++){
+    bool b_unique = true;
+    for(int j = 0; j < M; j++){
+      if(this->at(i).DeltaR(parts[j]) < deltaR){
+	b_unique = false;
+	break;
+      }
+    }
+    if(b_unique)
+      list.push_back(this->at(i));
+  }
+
+  return list;
+}
+
 ParticleList& ParticleList::SortByPt(){
   sort(this->begin(),this->end(),sortbypt);
   return *this;

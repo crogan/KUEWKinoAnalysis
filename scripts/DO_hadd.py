@@ -17,7 +17,7 @@ if __name__ == "__main__":
         argv_pos += 2
 
     if not len(sys.argv) > 1 or '-h' in sys.argv or '--help' in sys.argv or OUT_DIR == "dum" or IN_DIR == "dum":
-        print "Usage: %s [-odir /path/output_dir] [-odir /path/output_dir]" % sys.argv[0]
+        print "Usage: %s [-idir /path/input_dir] [-odir /path/output_dir]" % sys.argv[0]
         print
         sys.exit(1)
 
