@@ -14,6 +14,8 @@
 
 using namespace std;
 
+class ParticleList;
+
 template <class Base>
 class AnalysisBase : public Base {
 
@@ -21,21 +23,27 @@ public:
   AnalysisBase(TTree* tree = 0);
   virtual ~AnalysisBase();
 
-  void AddLabel(const string& label);
+  void AddLabels(const string& dataset, const string& filetag);
+  void AddEventCountFile(const string& rootfile);
   void DoSMS(){ m_DoSMS = true; }
 
   string GetEntry(int entry);
 
   // analysis functions
   virtual TVector3 GetMET();
-  virtual int GetJets(vector<TLorentzVector>& JETs, double pt_cut = -1, double eta_cut = -1);
-  virtual int GetJetsBtag(vector<pair<TLorentzVector,bool> >& JETs, double pt_cut = -1, double eta_cut = -1){ return 0; }
-  virtual int GetLargeRJets(vector<TLorentzVector>& JETs, double pt_cut = -1, double eta_cut = -1);
+  virtual ParticleList GetJets();
+  virtual ParticleList GetElectrons();
+  virtual ParticleList GetMuons();
+
+  virtual TVector3 GetGenMET();
+  virtual ParticleList GetGenElectrons();
+  virtual ParticleList GetGenMuons();
+  virtual ParticleList GetGenNeutrinos();
+  virtual ParticleList GetGenBosons();
+  virtual ParticleList GetGenSparticles();
+ 
   double DeltaPhiMin(const vector<TLorentzVector>& JETs, const TVector3& MET, int N = -1);
   double DeltaPhiMin(const vector<pair<TLorentzVector, bool> >& JETs, const TVector3& MET, int N = -1);
-
-  virtual void GetLeptons(vector<TLorentzVector>& LEPs, vector<int>& IDs,
-			  double pt_cut = -1, double eta_cut = -1);
   
   void MomTensorCalc(vector<TLorentzVector>& input, vector<double>& eigenvalues, double pow = 1., bool threeD = true); 
 
@@ -47,7 +55,8 @@ protected:
 
 
 private:
-  string m_Label;
+  string m_DataSet;
+  string m_FileTag;
 
   NeventTool m_NeventTool;
   XsecTool   m_XsecTool;
