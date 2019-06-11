@@ -344,7 +344,7 @@ ParticleList AnalysisBase<StopNtupleTree>::GetElectrons(){
   for(int i = 0; i < N; i++){
     Particle lep;
     lep.SetVectM((*elesLVec)[i].Vect(),std::max(0.,(*elesLVec)[i].M()));
-    lep.SetPDGID( (elesCharge->at(i) < 0. ? 13 : -13) );
+    lep.SetPDGID( (elesCharge->at(i) < 0. ? 11 : -11) );
     lep.SetCharge( (elesCharge->at(i) < 0. ? -1 : 1) );
      
     if(tightElectronID->at(i))
@@ -374,7 +374,7 @@ ParticleList AnalysisBase<StopNtupleTree>::GetMuons(){
   for(int i = 0; i < N; i++){
     Particle lep;
     lep.SetVectM((*muonsLVec)[i].Vect(),std::max(0.,(*muonsLVec)[i].M()));
-    lep.SetPDGID( (muonsCharge->at(i) < 0. ? 15 : -15) );
+    lep.SetPDGID( (muonsCharge->at(i) < 0. ? 13 : -13) );
     lep.SetCharge( (muonsCharge->at(i) < 0. ? -1 : 1) );
      
     if(muonsFlagTight->at(i))
@@ -399,7 +399,7 @@ ParticleList AnalysisBase<StopNtupleTree>::GetGenElectrons(){
   int PDGID;
   for(int i = 0; i < N; i++){
     PDGID = genDecayPdgIdVec->at(i);
-    if(abs(PDGID) == 13){
+    if(abs(PDGID) == 11){
       Particle lep;
       
       lep.SetPDGID(PDGID);
@@ -424,7 +424,7 @@ ParticleList AnalysisBase<StopNtupleTree>::GetGenMuons(){
   int PDGID;
   for(int i = 0; i < N; i++){
     PDGID = genDecayPdgIdVec->at(i);
-    if(abs(PDGID) == 15){
+    if(abs(PDGID) == 13){
       Particle lep;
       
       lep.SetPDGID(PDGID);
@@ -628,7 +628,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetElectrons(){
     Particle lep;
     lep.SetPtEtaPhiM(Electron_pt[i], Electron_eta[i],
 		     Electron_phi[i], std::max(Electron_mass[i],float(0.)));
-    lep.SetPDGID( (Electron_charge[i] < 0. ? 13 : -13) );
+    lep.SetPDGID( (Electron_charge[i] < 0. ? 11 : -11) );
     lep.SetCharge( (Electron_charge[i] < 0. ? -1 : 1) );
      
     if(Electron_mvaFall17V2Iso_WP90[i])
@@ -659,7 +659,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetMuons(){
     Particle lep;
     lep.SetPtEtaPhiM(Muon_pt[i], Muon_eta[i],
 		     Muon_phi[i], std::max(float(0.),Muon_mass[i]));
-    lep.SetPDGID( (Muon_charge[i] < 0. ? 15 : -15) );
+    lep.SetPDGID( (Muon_charge[i] < 0. ? 13 : -13) );
     lep.SetCharge( (Muon_charge[i] < 0. ? -1 : 1) );
      
     if(Muon_tightId[i])
@@ -686,7 +686,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetGenElectrons(){
   int PDGID;
   for(int i = 0; i < N; i++){
     PDGID = GenPart_pdgId[i];
-    if(abs(PDGID) == 13){
+    if(abs(PDGID) == 11){
       Particle lep;
       
       lep.SetPDGID(PDGID);
@@ -712,7 +712,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetGenMuons(){
   int PDGID;
   for(int i = 0; i < N; i++){
     PDGID = GenPart_pdgId[i];
-    if(abs(PDGID) == 15){
+    if(abs(PDGID) == 13){
       Particle lep;
       
       lep.SetPDGID(PDGID);
