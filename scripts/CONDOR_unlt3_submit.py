@@ -45,7 +45,7 @@ def create_filelist(rootlist, dataset, filetag):
 
     return listlist
 
-def write_sh(srcfile,ifile,ofile,lfile,dataset,filetag,evtcnt):
+def write_sh(srcfile,ifile,ofile,lfile,efile,dataset,filetag,evtcnt):
     fsrc = open(srcfile,'w')
     fsrc.write('universe = vanilla \n')
     fsrc.write('executable = '+EXE+" \n")
@@ -60,6 +60,7 @@ def write_sh(srcfile,ifile,ofile,lfile,dataset,filetag,evtcnt):
     fsrc.write('-filetag='+filetag+" ")
     fsrc.write('-eventcount='+evtcnt+" \n")
     fsrc.write('output = '+lfile+" \n")
+    fsrc.write('error = '+efile+" \n")
     fsrc.write('queue \n')
     #fsrc.write('cd '+RUN_DIR+" \n")
     #fsrc.write('source ../RestFrames/setup_RestFrames.sh \n')
@@ -200,7 +201,7 @@ if __name__ == "__main__":
             filename = f.split("/")
             filename = filename[-1]
             name = filename.replace(".list",'')
-            write_sh(srcdir+name+".sh",f,ROOT+dataset+"_"+filetag+"/"+name+".root",logdir+name+".log",dataset,filetag,evtcnt)
+            write_sh(srcdir+name+".sh",f,ROOT+dataset+"_"+filetag+"/"+name+".root",logdir+name+".log",logdir+name+"_err.log",dataset,filetag,evtcnt)
             os.system('condor_submit '+srcdir+name+".sh")
             
     
