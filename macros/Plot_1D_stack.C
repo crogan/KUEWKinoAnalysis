@@ -17,18 +17,14 @@
 #include <TStyle.h>
 
 #include "RestFrames/RestFrames.hh"
+#include "include/SampleSet.hh"
 #include "include/ReducedBase.hh"
 
 using namespace RestFrames;
 using namespace std;
 
-string g_Path;
-vector<string> g_File;
-vector<string> g_Tree;
-vector<int> g_Hist;
-vector<string> g_Title;
-vector<bool> g_Bkg;
-vector<int> g_Color;
+vector<SampleSet*> g_Samples;
+
 double g_Lumi;
 string g_PlotTitle;
 string g_Xname;
@@ -36,41 +32,55 @@ double g_Xmin;
 double g_Xmax;
 double g_NX;
 
+class SampleSet;
+
 void Plot_1D_stack(){
   RestFrames::SetStyle();
 
-  int ihist = 0;
+  string StopNtuplePath = "/Users/christopherrogan/Dropbox/SAMPLES/EWKino/StopNtuple/";
 
-  g_File.push_back("All_Bkg_2017/TTJets_TuneCP5_13TeV-madgraphMLM-pythia8_TuneCP5.root");
-  g_Hist.push_back(ihist);
-  g_File.push_back("All_Bkg_2017/ttWJets_TuneCP5_13TeV_madgraphMLM_pythia8_Fall17.root");
-  g_Hist.push_back(ihist);
-  g_File.push_back("All_Bkg_2017/ttZJets_TuneCP5_13TeV_madgraphMLM_pythia8_Fall17.root");
-  g_Hist.push_back(ihist);
-  g_Title.push_back("t#bar{t} + X");
-  g_Bkg.push_back(true);
-  g_Color.push_back(kAzure+1);
-  ihist++;
+  SampleSet ttX;
+  ttX.SetBkg(true);
+  ttX.SetTitle("t#bar{t} + X");
+  ttX.SetColor(kAzure+1);
+  ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_TuneCP5_13TeV-madgraphMLM-pythia8_TuneCP5.root");
+  ttX.AddFile(StopNtuplePath+"All_Bkg_2017/ttWJets_TuneCP5_13TeV_madgraphMLM_pythia8_Fall17.root");
+  ttX.AddFile(StopNtuplePath+"All_Bkg_2017/ttZJets_TuneCP5_13TeV_madgraphMLM_pythia8_Fall17.root");
+  ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTGJets_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8_Fall17.root");
+  g_Samples.push_back(&ttX);
 
-  g_File.push_back("All_Bkg_2017/DYJetsToLL_M-5to50_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
-  g_Hist.push_back(ihist);
-  g_File.push_back("All_Bkg_2017/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17.root");
-  g_Hist.push_back(ihist);
-  g_Title.push_back("Z/#gamma^{*} + jets");
-  g_Bkg.push_back(true);
-  g_Color.push_back(kGreen-9);
-  ihist++;
 
-  g_File.push_back("bkg/ST_antitop.root");
-  g_Hist.push_back(ihist);
-  g_File.push_back("bkg/ST_top.root");
-  g_Hist.push_back(ihist);
-  g_File.push_back("bkg/tHQ.root");
-  g_Hist.push_back(ihist);
-  g_Title.push_back("single t + X");
-  g_Bkg.push_back(true);
-  g_Color.push_back(10);
-  ihist++;
+  SampleSet DYjets;
+  DYjets.SetBkg(true);
+  DYjets.SetTitle("Z/#gamma^{*} + jets");
+  DYjets.SetColor(kGreen-9);
+  DYjets.AddFile(StopNtuplePath+"All_Bkg_2017/DYJetsToLL_M-5to50_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  DYjets.AddFile(StopNtuplePath+"All_Bkg_2017/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17.root");
+  g_Samples.push_back(DYjets);
+
+  SampleSet ST;
+  ST.SetBkg(true);
+  ST.SetTitle("single t + X");
+  ST.SetColor(10);
+  ST.AddFile(StopNtuplePath+"All_Bkg_2017/ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8_Fall17.root");
+  ST.AddFile(StopNtuplePath+"All_Bkg_2017/ST_t-channel_antitop_5f_TuneCP5_PSweights_13TeV-powheg-pythia8_Fall17.root");
+  ST.AddFile(StopNtuplePath+"All_Bkg_2017/ST_t-channel_top_5f_TuneCP5_13TeV-powheg-pythia8_Fall17.root");
+  ST.AddFile(StopNtuplePath+"All_Bkg_2017/ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8_Fall17.root");
+  ST.AddFile(StopNtuplePath+"All_Bkg_2017/ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8_Fall17.root");
+  ST.AddFile(StopNtuplePath+"All_Bkg_2017/TGJets_leptonDecays_TuneCP5_PSweights_13TeV-amcatnlo-pythia8_Fall17.root");
+  g_Samples.push_back(ST);
+
+  SampleSet Wjets;
+  Wjets.SetBkg(true);
+  Wjets.SetTitle("W + jets");
+  Wjets.SetColor(kRed);
+  ST.AddFile(StopNtuplePath+"");
+  
+  SampleSet DB;
+  DB.SetBkg(true);
+  DB.SetTitle("DiBoson");
+  DB.SetColor(kRed);
+  
 
   g_File.push_back("bkg/DYJets.root");
   g_Hist.push_back(ihist);
@@ -117,7 +127,6 @@ void Plot_1D_stack(){
   int Nsample = g_File.size();
   int Nhist = ihist;
 
-  g_Path = "/Users/crogan/Dropbox/SAMPLES/EWKino/StopNtuple/";
   g_PlotTitle = "Region D Strawberry";
   g_Lumi = 36;
 
