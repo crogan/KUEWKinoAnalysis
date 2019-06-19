@@ -27,6 +27,9 @@ public:
   
   void   SetTitle(const string& title);
   string GetTitle() const;
+
+  void   SetTreeName(const string& treename);
+  string GetTreeName() const;
   
   void SetColor(int icolor);
   int  GetColor() const;
@@ -40,6 +43,7 @@ public:
 private:
   bool m_IsBkg;
   std::vector<string> m_FileNames;
+  string m_TreeName;
   string m_Title;
   int m_Color;
   int m_Skip;
@@ -52,6 +56,7 @@ private:
 inline SampleSet::SampleSet(){
   m_IsBkg = true;
   m_Title = "";
+  m_TreeName = "KUAnalysis";
   m_Color = kBlue;
   m_Skip = 1;
   m_Scale = 1.;
@@ -59,57 +64,64 @@ inline SampleSet::SampleSet(){
     
 inline SampleSet::~SampleSet() {}
 
-inline void SetBkg(bool is_bkg){
+inline void SampleSet::SetBkg(bool is_bkg){
   m_IsBkg = is_bkg;
 }
 
-inline bool GetBkg() const {
+inline bool SampleSet::GetBkg() const {
   return m_IsBkg;
 }
   
-inline void AddFile(const string& filename){
+inline void SampleSet::AddFile(const string& filename){
   m_FileNames.push_back(filename);
 }
 
-inline int GetNFile() const {
+inline int SampleSet::GetNFile() const {
   return m_FileNames.size();
 }
 
-inline string GetFile(int n){
+inline string SampleSet::GetFile(int n){
   int N = GetNFile();
   if(n < 0 || n >= N)
     return "NO FILE";
   return m_FileNames[n];
 }
   
-inline void SetTitle(const string& title){
+inline void SampleSet::SetTitle(const string& title){
   m_Title = title;
 }
 
-inline string GetTitle() const {
+inline string SampleSet::GetTitle() const {
   return m_Title;
 }
+
+inline void SampleSet::SetTreeName(const string& treename){
+  m_TreeName = treename;
+}
+inline string SampleSet::GetTreeName() const {
+  return m_TreeName;
+}
   
-inline void SetColor(int icolor){
+inline void SampleSet::SetColor(int icolor){
   m_Color = icolor;
 }
 
-inline int  GetColor() const {
+inline int SampleSet::GetColor() const {
   return m_Color;
 }
   
-inline void SetSkip(int iskip){
+inline void SampleSet::SetSkip(int iskip){
   m_Skip = iskip;
 }
 
-inline int  GetSkip() const {
+inline int SampleSet::GetSkip() const {
   return m_Skip;
 }
   
-void SetScale(double scale){
+inline void SampleSet::SetScale(double scale){
   m_Scale = scale;
 }
 
-double GetScale() const {
+inline double SampleSet::GetScale() const {
   return m_Scale;
 }

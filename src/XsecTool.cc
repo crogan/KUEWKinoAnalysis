@@ -1,4 +1,4 @@
-#include "XsecTool.hh"
+#include "../include/XsecTool.hh"
 #include <math.h>
 
 XsecTool::XsecTool(){
