@@ -16,14 +16,13 @@
 
 #include "RestFrames/RestFrames.hh"
 #include "../include/ReducedBase.hh"
+#include "../include/SampleSet.hh"
 
 using namespace std;
 
 
-string g_Path;
-vector<string> g_File;
-vector<string> g_Tree;
-vector<string> g_Title;
+vector<SampleSet*> g_Samples;
+
 string g_PlotTitle;
 string g_Xname;
 double g_Xmin;
@@ -38,29 +37,44 @@ double g_NY;
 void Plot_2D(){
   RestFrames::SetStyle();
 
-  // g_File.push_back("TTJets_TuneCUETP8M2T4_13TeV-amcatnloFXFX-pythia8All.root");
-  // g_PlotTitle = "t #bar{t} + jets";
+  string StopNtuplePath = "/Users/christopherrogan/Dropbox/SAMPLES/EWKino/StopNtuple/";
 
-  g_File.push_back("WJetsToLNu_HT.root");
-  g_PlotTitle = "W(#it{l} + #nu) + jets";
+  // SampleSet ttX;
+  // ttX.SetBkg(true);
+  // ttX.SetTitle("t#bar{t} + X");
+  // ttX.SetColor(kAzure+1);
+  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_SingleLeptFromTbar_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  // // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/ttWJets_TuneCP5_13TeV_madgraphMLM_pythia8_Fall17.root");
+  // // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/ttZJets_TuneCP5_13TeV_madgraphMLM_pythia8_Fall17.root");
+  // // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTGJets_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8_Fall17.root");
+  // ttX.SetSkip(10);
+  // g_Samples.push_back(&ttX);
 
-  int Nsample = g_File.size();
+  SampleSet SIG1;
+  SIG1.SetBkg(false);
+  SIG1.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 300, m_{#chi^{0}_{1}} = 270");
+  SIG1.SetTreeName("SMS_300_270");
+  SIG1.SetColor(kMagenta);
+  SIG1.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
+  SIG1.SetSkip(1);
+  g_Samples.push_back(&SIG1);
 
-  //g_Path = "/Users/crogan/Dropbox/SAMPLES/SOS/NTUPLES/";
-  g_Path = "./";
+  int Nsample = g_Samples.size();
   
   //string g_Label = "No selection";
   string g_Label = "Region D";
 
 
-  g_Xname = "R_{ISR}";
-  g_Xmin = 0.2;
-  g_Xmax = 1.2; 
-  g_NX = 50;
-  g_Yname = "p_{T}^{ISR} [GeV]";
-  g_Ymin = 50.;
-  g_Ymax = 900.;
-  g_NY = 50;
+  g_Xname = "N_{lep}^{S}";
+  g_Xmin = -0.5;
+  g_Xmax = 4.5; 
+  g_NX = 5;
+  g_Yname = "N_{jet}^{S}";
+  g_Ymin = -0.5;
+  g_Ymax = 6.5;
+  g_NY = 7;
 
   int TREE = 2;
 
@@ -69,22 +83,39 @@ void Plot_2D(){
 			g_NY,g_Ymin,g_Ymax);
 
   for(int s = 0; s < Nsample; s++){
-    TChain* chain = new TChain("KUAnalysis");
-    chain->Add((g_Path+g_File[s]).c_str());
+    int Nfile = g_Samples[s]->GetNFile();
+    cout << "Processing " << Nfile << " files for sample " << g_Samples[s]->GetTitle() << endl;
+    for(int f = 0; f < Nfile; f++){
+      cout << "   Processing file " << g_Samples[s]->GetFile(f) << " w/ tree " << g_Samples[s]->GetTreeName() << endl;
+    
+      TChain* chain = new TChain(g_Samples[s]->GetTreeName().c_str());
+      chain->Add(g_Samples[s]->GetFile(f).c_str());
 
-    ReducedBase* base = new ReducedBase(chain);
+      ReducedBase* base = new ReducedBase(chain);
 
-    int Nentry = base->fChain->GetEntries();
-    for(int e = 0; e < Nentry; e++){
-      if(e % (std::max(1,Nentry/100)) == 0)
-	cout << "Event " << e << " | " << Nentry << endl;
-      base->GetEntry(e);
+      int Nentry = base->fChain->GetEntries();
+
+      int SKIP = g_Samples[s]->GetSkip();
+      for(int e = 0; e < Nentry; e += SKIP){
+	base->GetEntry(e);
+	if((e/SKIP)%(std::max(1, int(Nentry/SKIP/10))) == 0)
+	  cout << "      event " << e << " | " << Nentry << endl;
+
+	// if(base->Nlep_S->at(2)+base->Nlep_ISR->at(2) != 2)
+	//   continue;
+
+	if(base->RISR->at(2) < 0.7)
+	  continue;
+
+	if(base->PTISR->at(2) < 250)
+	  continue;
       
-      hist->Fill(base->RISR->at(TREE), base->PTISR->at(TREE) , base->weight);
-    }
+	hist->Fill(base->Nlep_S->at(2), base->Njet_S->at(2) , base->weight*double(SKIP));
+      }
 
-    delete base;
-    delete chain;
+      delete base;
+      delete chain;
+    }
   }
 
   gStyle->SetOptTitle(0);

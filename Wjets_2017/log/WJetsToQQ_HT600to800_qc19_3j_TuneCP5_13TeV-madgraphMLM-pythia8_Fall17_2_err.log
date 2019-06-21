@@ -1,0 +1,29 @@
+In file included from input_line_1:1:
+In file included from /cvmfs/cms.cern.ch/slc6_amd64_gcc630/external/gcc/6.3.0/bin/../lib/gcc/x86_64-unknown-linux-gnu/6.3.0/../../../../include/c++/6.3.0/new:39:
+In file included from /cvmfs/cms.cern.ch/slc6_amd64_gcc630/external/gcc/6.3.0/bin/../lib/gcc/x86_64-unknown-linux-gnu/6.3.0/../../../../include/c++/6.3.0/x86_64-unknown-linux-gnu/bits/c++config.h:507:
+/cvmfs/cms.cern.ch/slc6_amd64_gcc630/external/gcc/6.3.0/bin/../lib/gcc/x86_64-unknown-linux-gnu/6.3.0/../../../../include/c++/6.3.0/x86_64-unknown-linux-gnu/bits/os_defines.h:39:10: fatal error: 'features.h' file not found
+#include <features.h>
+         ^
+In file included from input_line_2:1:
+In file included from /cvmfs/cms.cern.ch/slc6_amd64_gcc630/lcg/root/6.10.09-omkpbe4/include/RtypesCore.h:25:
+/cvmfs/cms.cern.ch/slc6_amd64_gcc630/lcg/root/6.10.09-omkpbe4/etc/cling/lib/clang/3.9.0/include/stddef.h:51:9: error: unknown type name '__PTRDIFF_TYPE__'
+typedef __PTRDIFF_TYPE__ ptrdiff_t;
+        ^
+/cvmfs/cms.cern.ch/slc6_amd64_gcc630/lcg/root/6.10.09-omkpbe4/etc/cling/lib/clang/3.9.0/include/stddef.h:62:9: error: unknown type name '__SIZE_TYPE__'
+typedef __SIZE_TYPE__ size_t;
+        ^
+/cvmfs/cms.cern.ch/slc6_amd64_gcc630/lcg/root/6.10.09-omkpbe4/etc/cling/lib/clang/3.9.0/include/stddef.h:90:9: error: unknown type name '__WCHAR_TYPE__'
+typedef __WCHAR_TYPE__ wchar_t;
+        ^
+/cvmfs/cms.cern.ch/slc6_amd64_gcc630/lcg/root/6.10.09-omkpbe4/etc/cling/lib/clang/3.9.0/include/stddef.h:90:24: error: expected unqualified-id
+typedef __WCHAR_TYPE__ wchar_t;
+                       ^
+In file included from input_line_2:2:
+In file included from /cvmfs/cms.cern.ch/slc6_amd64_gcc630/external/gcc/6.3.0/bin/../lib/gcc/x86_64-unknown-linux-gnu/6.3.0/../../../../include/c++/6.3.0/string:38:
+In file included from /cvmfs/cms.cern.ch/slc6_amd64_gcc630/external/gcc/6.3.0/bin/../lib/gcc/x86_64-unknown-linux-gnu/6.3.0/../../../../include/c++/6.3.0/x86_64-unknown-linux-gnu/bits/c++config.h:507:
+/cvmfs/cms.cern.ch/slc6_amd64_gcc630/external/gcc/6.3.0/bin/../lib/gcc/x86_64-unknown-linux-gnu/6.3.0/../../../../include/c++/6.3.0/x86_64-unknown-linux-gnu/bits/os_defines.h:39:10: fatal error: 'features.h' file not found
+#include <features.h>
+         ^
+
+ *** Break *** segmentation violation
+Error in <ACLiC>: Dictionary generation failed!
