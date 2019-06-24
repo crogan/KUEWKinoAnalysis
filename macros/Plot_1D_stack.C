@@ -183,6 +183,8 @@ void Plot_1D_stack(){
 	if(base->Nlep != 2)
     continue;
 
+  if(e > 0 && e < 10) cout << base->Nlep << endl;
+
   // if(base->Nlep_ISR->at(2) > 0)
 	 //  continue;
 
@@ -257,7 +259,7 @@ void Plot_1D_stack(){
   gStyle->SetOptTitle(0);
   gStyle->SetOptStat(0);
   gStyle->SetOptFit(11111111);
-  if(logy) gPad->SetLogy();
+  // if(logy) gPad->SetLogy();
   TCanvas* can = (TCanvas*) new TCanvas("can","can",600.,500);
 
   cout << "point b" << endl;
