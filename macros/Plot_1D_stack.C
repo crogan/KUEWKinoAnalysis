@@ -107,14 +107,14 @@ void Plot_1D_stack(){
   // DB.SetSkip(BKG_SKIP);
   // g_Samples.push_back(&DB);
  
-  SampleSet SIG1;
-  SIG1.SetBkg(false);
-  SIG1.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 170");
-  SIG1.SetTreeName("SMS_200_170");
-  SIG1.SetColor(kMagenta-7);
-  SIG1.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
-  SIG1.SetSkip(1);
-  g_Samples.push_back(&SIG1);
+  // SampleSet SIG1;
+  // SIG1.SetBkg(false);
+  // SIG1.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 170");
+  // SIG1.SetTreeName("SMS_200_170");
+  // SIG1.SetColor(kMagenta-7);
+  // SIG1.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
+  // SIG1.SetSkip(1);
+  // g_Samples.push_back(&SIG1);
 
   SampleSet SIG2;
   SIG2.SetBkg(false);
@@ -126,14 +126,14 @@ void Plot_1D_stack(){
   g_Samples.push_back(&SIG2);
 
 
-  SampleSet SIG3;
-  SIG2.SetBkg(false);
-  SIG2.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 1");
-  SIG2.SetTreeName("SMS_200_1");
-  SIG2.SetColor(kViolet-7);
-  SIG2.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
-  SIG2.SetSkip(1);
-  g_Samples.push_back(&SIG3);
+  // SampleSet SIG3;
+  // SIG2.SetBkg(false);
+  // SIG2.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 1");
+  // SIG2.SetTreeName("SMS_200_1");
+  // SIG2.SetColor(kViolet-7);
+  // SIG2.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
+  // SIG2.SetSkip(1);
+  // g_Samples.push_back(&SIG3);
 
   //  g_File.push_back("signal/TttH_1200_RH.root");
   // g_Hist.push_back(ihist);
@@ -147,10 +147,10 @@ void Plot_1D_stack(){
   int Nsample = g_Samples.size();
   cout << "Nsample: " << Nsample << endl;
 
-  g_PlotTitle = "Single Lepton Mass";
+  g_PlotTitle = "Single Lepton MET";
   g_Lumi = 100;
 
-  g_Xname = "Lepton Mass";
+  g_Xname = "MET";
   g_Xmin = 0;
   g_Xmax = 1500.;
   g_NX = 32;
@@ -210,7 +210,7 @@ void Plot_1D_stack(){
 	// if(base->PDGID_lep->at(0)+base->PDGID_lep->at(1) != 0)
 	//   continue;
 	
-	hist[s]->Fill(base->M_lep, base->weight*g_Lumi*double(SKIP));
+	hist[s]->Fill(base->MET, base->weight*g_Lumi*double(SKIP));
       }
 
       delete base;
