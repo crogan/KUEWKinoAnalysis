@@ -282,7 +282,6 @@ void Plot_1D_stack(){
   hist[imax]->GetYaxis()->SetLabelSize(0.05);
   hist[imax]->GetYaxis()->SetTitle("a. u.");
   hist[imax]->GetYaxis()->SetTitle(yaxis);
-  hist[imax]->SetTitle(g_PlotTitle);
   //hist[imax]->GetYaxis()->SetTitle("N_{evt} / fb^{-1}");
 
   for(int i = 0; i < Nsample; i++){
