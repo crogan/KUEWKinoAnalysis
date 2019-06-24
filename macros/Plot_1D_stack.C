@@ -126,14 +126,14 @@ void Plot_1D_stack(){
   g_Samples.push_back(&SIG2);
 
 
-  // SampleSet SIG3;
-  // SIG2.SetBkg(false);
-  // SIG2.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 1");
-  // SIG2.SetTreeName("SMS_200_1");
-  // SIG2.SetColor(kViolet-7);
-  // SIG2.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
-  // SIG2.SetSkip(1);
-  // g_Samples.push_back(&SIG3);
+  SampleSet SIG3;
+  SIG2.SetBkg(false);
+  SIG2.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 1");
+  SIG2.SetTreeName("SMS_200_1");
+  SIG2.SetColor(kViolet-7);
+  SIG2.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
+  SIG2.SetSkip(1);
+  g_Samples.push_back(&SIG3);
 
   //  g_File.push_back("signal/TttH_1200_RH.root");
   // g_Hist.push_back(ihist);
