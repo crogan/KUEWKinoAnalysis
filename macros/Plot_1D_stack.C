@@ -154,9 +154,14 @@ void Plot_1D_stack(){
   g_Xname = "dPhi_CMI, Cat. 1";
   g_Xmin = 0;
 
-  //M_lep
-  g_Xmax = 1.5;
+
+  //dphiCMI
+  g_Xmax = 3.3;
   units_per_bin = 0.01;
+
+  //M_lep
+  // g_Xmax = 1.5;
+  // units_per_bin = 0.01;
 
   //MET
   // g_Xmax = 1500.;
@@ -280,7 +285,7 @@ void Plot_1D_stack(){
   hist[imax]->GetXaxis()->SetTitleOffset(1.06);
   hist[imax]->GetXaxis()->SetLabelFont(132);
   hist[imax]->GetXaxis()->SetLabelSize(0.05);
-  TString xaxis = g_Xname + " rad";
+  TString xaxis = g_Xname + " (rad)";
   hist[imax]->GetXaxis()->SetTitle(xaxis);
   hist[imax]->GetYaxis()->CenterTitle();
   hist[imax]->GetYaxis()->SetTitleFont(132);
@@ -352,7 +357,7 @@ void Plot_1D_stack(){
   l.DrawLatex(0.43,0.79,s_lumi.c_str());	
 
   
-  TString file_name = g_Xname+"stacked_plot.root";
+  TString file_name = "output/"+g_Xname+"stacked_plot.root";
   TFile* file = new TFile(file_name,"RECREATE");
   file->cd();
   can->Write();
