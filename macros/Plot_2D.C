@@ -139,7 +139,7 @@ SampleSet DYjets;
   int Nsample = g_Samples.size();
   
   //string g_Label = "No selection";
-  string g_Label = "RISR vs. pT_ISR, Cat. 1";
+  string g_Label = "RISR vs. pT_ISR, Cat. 2";
 
 
   g_Xname = "R_ISR";
@@ -193,7 +193,7 @@ SampleSet DYjets;
   if(base->Nlep != 1)
     continue;
       
-	hist->Fill(base->RISR->at(0), base->PTISR->at(0) , base->weight*double(SKIP));
+	hist->Fill(base->RISR->at(1), base->PTISR->at(1) , base->weight*double(SKIP));
       }
 
       delete base;
@@ -243,8 +243,7 @@ SampleSet DYjets;
   l.SetNDC();
   l.SetTextSize(0.035);
   l.SetTextFont(42);
-  // l.DrawLatex(0.17,0.855,g_PlotTitle.c_str());
-  l.DrawLatex(0.41,0.943,g_PlotTitle.c_str());
+  l.DrawLatex(0.41,0.943,g_Label.c_str());
   l.SetTextSize(0.04);
   l.SetTextFont(42);
   l.DrawLatex(0.01,0.943,"#bf{#it{CMS}} Internal 13 TeV Simulation");
