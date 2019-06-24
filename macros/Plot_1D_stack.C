@@ -151,7 +151,7 @@ void Plot_1D_stack(){
   g_PlotTitle = "Single Lepton MET";
   g_Lumi = 100;
 
-  g_Xname = "MET (GeV)";
+  g_Xname = "MET";
   g_Xmin = 0;
   g_Xmax = 1500.;
   units_per_bin = 50.;
@@ -274,7 +274,7 @@ void Plot_1D_stack(){
   hist[imax]->GetXaxis()->SetTitleOffset(1.06);
   hist[imax]->GetXaxis()->SetLabelFont(132);
   hist[imax]->GetXaxis()->SetLabelSize(0.05);
-  hist[imax]->GetXaxis()->SetTitle(g_Xname.c_str());
+  hist[imax]->GetXaxis()->SetTitle(g_Xname.c_str()+" (GeV)");
   hist[imax]->GetYaxis()->CenterTitle();
   hist[imax]->GetYaxis()->SetTitleFont(132);
   hist[imax]->GetYaxis()->SetTitleSize(0.06);
