@@ -180,10 +180,10 @@ void Plot_1D_stack(){
 	if((e/SKIP)%(std::max(1, int(Nentry/SKIP/10))) == 0)
 	  cout << "      event " << e << " | " << Nentry << endl;
 
-	if(base->Nlep != 2)
-    continue;
+	// if(base->Nlep != 2)
+ //    continue;
 
-  if(e > 0 && e < 10) cout << base->Nlep << endl;
+  if(e > 0 && e < 1000) cout << base->Nlep << endl;
 
   // if(base->Nlep_ISR->at(2) > 0)
 	 //  continue;
@@ -242,13 +242,11 @@ void Plot_1D_stack(){
   double fmax = -1.;
   int imax = -1;
   for(int i = 0; i < Nsample; i++){
-    cout << "point -1" << endl;
     if(hist[i]->GetMaximum() > fmax){
       fmax = hist[i]->GetMaximum();
       imax = i;
     }
   }
-  cout << "point 0" << endl;
   float width = hist[0]->GetBinWidth(1);
   char *yaxis = new char[100];
   //sprintf(yaxis,"Events / %f", width);
