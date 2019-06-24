@@ -154,6 +154,7 @@ void Plot_1D_stack(){
   g_Xmax = 1500.;
   g_NX = 32;
 
+  int nlep;
 
   TH1D* hist[Nsample];
   for(int i = 0; i < Nsample; i++)
@@ -183,7 +184,10 @@ void Plot_1D_stack(){
 	// if(base->Nlep != 2)
  //    continue;
 
-  if(e > 0 && e < 1000) cout << base->Nlep << endl;
+  if(e > 0 && e < 1000){
+    nlep = base->Nlep;
+    cout << nlep << endl;
+  }
 
   // if(base->Nlep_ISR->at(2) > 0)
 	 //  continue;
