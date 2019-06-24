@@ -145,6 +145,7 @@ void Plot_1D_stack(){
   //////////////////
 
   int Nsample = g_Samples.size();
+  cout << "Nsample: " << Nsample << endl;
 
   g_PlotTitle = "Single Lepton MET";
   g_Lumi = 100;
@@ -249,7 +250,6 @@ void Plot_1D_stack(){
   //sprintf(yaxis,"Events / %f", width);
   sprintf(yaxis,"Events / bin", width);
 
-  cout << "point a" << endl;
 
   gStyle->SetOptTitle(0);
   gStyle->SetOptStat(0);
@@ -257,7 +257,6 @@ void Plot_1D_stack(){
   // if(logy) gPad->SetLogy();
   TCanvas* can = (TCanvas*) new TCanvas("can","can",600.,500);
 
-  cout << "point b" << endl;
 
   can->SetLeftMargin(0.13);
   can->SetRightMargin(0.04);
@@ -343,6 +342,8 @@ void Plot_1D_stack(){
   l.SetTextFont(132);
   string s_lumi = "#scale[0.6]{#int} #it{L dt} = "+to_string(int(g_Lumi))+" fb^{-1}";
   l.DrawLatex(0.43,0.79,s_lumi.c_str());	
+
+  can->SaveAs(g_Xname.c_str()+"stacked_plot.root")
 
 }
 
