@@ -148,13 +148,19 @@ void Plot_1D_stack(){
   int Nsample = g_Samples.size();
   cout << "Nsample: " << Nsample << endl;
 
-  g_PlotTitle = "Single Lepton MET";
+  g_PlotTitle = "Single Lepton Mass";
   g_Lumi = 100;
 
-  g_Xname = "MET";
+  g_Xname = "1L Mass";
   g_Xmin = 0;
-  g_Xmax = 1500.;
-  units_per_bin = 50.;
+
+  //M_lep
+  g_Xmax = 10;
+  units_per_bin = 0.1;
+
+  //MET
+  // g_Xmax = 1500.;
+  // units_per_bin = 50.;
   g_NX = (int)(g_Xmax - g_Xmin)/units_per_bin;
 
   TH1D* hist[Nsample];
@@ -212,7 +218,7 @@ void Plot_1D_stack(){
 	// if(base->PDGID_lep->at(0)+base->PDGID_lep->at(1) != 0)
 	//   continue;
 	
-	hist[s]->Fill(base->MET, base->weight*g_Lumi*double(SKIP));
+	hist[s]->Fill(base->M_lep, base->weight*g_Lumi*double(SKIP));
       }
 
       delete base;
