@@ -58,7 +58,7 @@ void Plot_1D_stack(){
   
   SampleSet DYjets;
   DYjets.SetBkg(true);
-  DYjets.SetTitle("Z/#gamma^{*} + jets");
+  DYjets.SetTitle("DY + jets");
   DYjets.SetColor(kGreen-7);
   DYjets.AddFile(StopNtuplePath+"All_Bkg_2017/DYJetsToLL_M-5to50_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
   DYjets.AddFile(StopNtuplePath+"All_Bkg_2017/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17.root");
@@ -109,7 +109,7 @@ void Plot_1D_stack(){
  
   SampleSet SIG1;
   SIG1.SetBkg(false);
-  SIG1.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 300, m_{#chi^{0}_{1}} = 270");
+  SIG1.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 170");
   SIG1.SetTreeName("SMS_200_170");
   SIG1.SetColor(kMagenta-7);
   SIG1.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
@@ -118,7 +118,7 @@ void Plot_1D_stack(){
 
   SampleSet SIG2;
   SIG2.SetBkg(false);
-  SIG2.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 300, m_{#chi^{0}_{1}} = 100");
+  SIG2.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 190");
   SIG2.SetTreeName("SMS_200_197");
   SIG2.SetColor(kBlue-7);
   SIG2.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
@@ -128,7 +128,7 @@ void Plot_1D_stack(){
 
   SampleSet SIG3;
   SIG2.SetBkg(false);
-  SIG2.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 300, m_{#chi^{0}_{1}} = 100");
+  SIG2.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 1");
   SIG2.SetTreeName("SMS_200_1");
   SIG2.SetColor(kViolet-7);
   SIG2.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
@@ -151,7 +151,7 @@ void Plot_1D_stack(){
 
   g_Xname = "MET";
   g_Xmin = 0;
-  g_Xmax = 150.;
+  g_Xmax = 1500.;
   g_NX = 32;
 
 
@@ -210,7 +210,7 @@ void Plot_1D_stack(){
 	// if(base->PDGID_lep->at(0)+base->PDGID_lep->at(1) != 0)
 	//   continue;
 	
-	hist[s]->Fill(base->MET, base->weight*g_Lumi*double(SKIP));
+	hist[s]->Fill(base->MV, base->weight*g_Lumi*double(SKIP));
       }
 
       delete base;
