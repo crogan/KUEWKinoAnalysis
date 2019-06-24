@@ -32,6 +32,8 @@ string g_Yname;
 double g_Ymin;
 double g_Ymax;
 double g_NY;
+double units_per_bin_x;
+double units_per_bin_y;
 
 
 void Plot_2D(){
@@ -39,42 +41,118 @@ void Plot_2D(){
 
   string StopNtuplePath = "/Users/christopherrogan/Dropbox/SAMPLES/EWKino/StopNtuple/";
 
-  // SampleSet ttX;
-  // ttX.SetBkg(true);
-  // ttX.SetTitle("t#bar{t} + X");
-  // ttX.SetColor(kAzure+1);
+  SampleSet ttX;
+  ttX.SetBkg(true);
+  ttX.SetTitle("t#bar{t} + X");
+  ttX.SetColor(kAzure+1);
+  ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8_TuneCP5.root");
   // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
   // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
   // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_SingleLeptFromTbar_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
-  // // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/ttWJets_TuneCP5_13TeV_madgraphMLM_pythia8_Fall17.root");
-  // // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/ttZJets_TuneCP5_13TeV_madgraphMLM_pythia8_Fall17.root");
-  // // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTGJets_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8_Fall17.root");
-  // ttX.SetSkip(10);
-  // g_Samples.push_back(&ttX);
+  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/ttWJets_TuneCP5_13TeV_madgraphMLM_pythia8_Fall17.root");
+  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/ttZJets_TuneCP5_13TeV_madgraphMLM_pythia8_Fall17.root");
+  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTGJets_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8_Fall17.root");
+  ttX.SetSkip(10);
+  g_Samples.push_back(&ttX);
 
+SampleSet DYjets;
+  DYjets.SetBkg(true);
+  DYjets.SetTitle("DY + jets");
+  DYjets.SetColor(kGreen-7);
+  DYjets.AddFile(StopNtuplePath+"All_Bkg_2017/DYJetsToLL_M-5to50_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  DYjets.AddFile(StopNtuplePath+"All_Bkg_2017/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17.root");
+  DYjets.SetSkip(BKG_SKIP);
+  g_Samples.push_back(&DYjets);
+
+  SampleSet Wjets;
+  Wjets.SetBkg(true);
+  Wjets.SetTitle("W + jets");
+  Wjets.SetColor(kRed-7);
+  Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  Wjets.SetSkip(BKG_SKIP);
+  g_Samples.push_back(&Wjets);
+
+  // SampleSet ST;
+  // ST.SetBkg(true);
+  // ST.SetTitle("single t + X");
+  // ST.SetColor(10);
+  // ST.AddFile(StopNtuplePath+"All_Bkg_2017/ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8_Fall17.root");
+  // ST.AddFile(StopNtuplePath+"All_Bkg_2017/ST_t-channel_antitop_5f_TuneCP5_PSweights_13TeV-powheg-pythia8_Fall17.root");
+  // ST.AddFile(StopNtuplePath+"All_Bkg_2017/ST_t-channel_top_5f_TuneCP5_13TeV-powheg-pythia8_Fall17.root");
+  // ST.AddFile(StopNtuplePath+"All_Bkg_2017/ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8_Fall17.root");
+  // ST.AddFile(StopNtuplePath+"All_Bkg_2017/ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8_Fall17.root");
+  // ST.AddFile(StopNtuplePath+"All_Bkg_2017/TGJets_leptonDecays_TuneCP5_PSweights_13TeV-amcatnlo-pythia8_Fall17.root");
+  // ST.SetSkip(BKG_SKIP);
+  // g_Samples.push_back(&ST);
+
+  // SampleSet DB;
+  // DB.SetBkg(true);
+  // DB.SetTitle("DiBoson");
+  // DB.SetColor(kOrange);
+  // DB.AddFile(StopNtuplePath+"All_Bkg_2017/WWTo2L2Nu_NNPDF31_TuneCP5_13TeV-powheg-pythia8_Fall17.root");
+  // DB.AddFile(StopNtuplePath+"All_Bkg_2017/WWTo4Q_NNPDF31_TuneCP5_13TeV-powheg-pythia8_Fall17.root");
+  // DB.AddFile(StopNtuplePath+"All_Bkg_2017/WWToLNuQQ_NNPDF31_TuneCP5_13TeV-powheg-pythia8_Fall17.root");
+  // DB.AddFile(StopNtuplePath+"All_Bkg_2017/WZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8_Fall17.root");
+  // DB.AddFile(StopNtuplePath+"All_Bkg_2017/WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17.root");
+  // DB.AddFile(StopNtuplePath+"All_Bkg_2017/ZZTo2L2Nu_13TeV_powheg_pythia8_Fall17.root");
+  // DB.AddFile(StopNtuplePath+"All_Bkg_2017/ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8_Fall17.root");
+  // DB.AddFile(StopNtuplePath+"All_Bkg_2017/ZZTo2Q2Nu_TuneCP5_13TeV_amcatnloFXFX_madspin_pythia8_Fall17.root");
+  // DB.AddFile(StopNtuplePath+"All_Bkg_2017/ZZTo4L_13TeV_powheg_pythia8_Fall17.root");
+  // DB.SetSkip(BKG_SKIP);
+  // g_Samples.push_back(&DB);
+ 
   SampleSet SIG1;
   SIG1.SetBkg(false);
-  SIG1.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 300, m_{#chi^{0}_{1}} = 270");
-  SIG1.SetTreeName("SMS_300_270");
-  SIG1.SetColor(kMagenta);
+  SIG1.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 170");
+  SIG1.SetTreeName("SMS_200_170");
+  SIG1.SetColor(kMagenta-7);
   SIG1.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
   SIG1.SetSkip(1);
   g_Samples.push_back(&SIG1);
 
+  SampleSet SIG2;
+  SIG2.SetBkg(false);
+  SIG2.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 197");
+  SIG2.SetTreeName("SMS_200_197");
+  SIG2.SetColor(kBlue-7);
+  SIG2.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
+  SIG2.SetSkip(1);
+  g_Samples.push_back(&SIG2);
+
+
+  SampleSet SIG3;
+  SIG3.SetBkg(false);
+  SIG3.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 1");
+  SIG3.SetTreeName("SMS_200_1");
+  SIG3.SetColor(kViolet-7);
+  SIG3.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
+  SIG3.SetSkip(1);
+  g_Samples.push_back(&SIG3);
+
   int Nsample = g_Samples.size();
   
   //string g_Label = "No selection";
-  string g_Label = "Region D";
+  string g_Label = "RISR vs. pT_ISR, Cat. 1";
 
 
-  g_Xname = "N_{lep}^{S}";
-  g_Xmin = -0.5;
-  g_Xmax = 4.5; 
-  g_NX = 5;
-  g_Yname = "N_{jet}^{S}";
-  g_Ymin = -0.5;
-  g_Ymax = 6.5;
-  g_NY = 7;
+  g_Xname = "R_ISR";
+  g_Xmin = 0.0;
+  g_Xmax = 1.3; 
+  units_per_bin_x = 0.01;
+  g_NX = (int)(g_Xmax - g_Xmin)/units_per_bin_x;
+
+  g_Yname = "pT_ISR";
+  g_Ymin = 0.0;
+  g_Ymax = 1000.;
+  units_per_bin_y = 10;
+  g_NY = (int)(g_Ymax - g_Ymin)/units_per_bin_y;
+
+
 
   int TREE = 2;
 
@@ -104,13 +182,16 @@ void Plot_2D(){
 	// if(base->Nlep_S->at(2)+base->Nlep_ISR->at(2) != 2)
 	//   continue;
 
-	if(base->RISR->at(2) < 0.7)
-	  continue;
+	// if(base->RISR->at(2) < 0.7)
+	//   continue;
 
-	if(base->PTISR->at(2) < 250)
-	  continue;
+	// if(base->PTISR->at(2) < 250)
+	//   continue;
+
+  if(base->Nlep != 1)
+    continue;
       
-	hist->Fill(base->Nlep_S->at(2), base->Njet_S->at(2) , base->weight*double(SKIP));
+	hist->Fill(base->RISR->at(0), base->PTISR->at(0) , base->weight*double(SKIP));
       }
 
       delete base;
@@ -164,11 +245,17 @@ void Plot_2D(){
   l.DrawLatex(0.41,0.943,g_PlotTitle.c_str());
   l.SetTextSize(0.04);
   l.SetTextFont(42);
-  l.DrawLatex(0.01,0.943,"#bf{CMS} Simulation Preliminary");
+  l.DrawLatex(0.01,0.943,"#bf{#it{CMS}} Internal 13 TeV Simulation");
 
   // l.SetTextSize(0.04);
   // l.SetTextFont(132);
   // l.DrawLatex(0.74,0.04,g_Label.c_str());
+
+
+  TString file_name = "output/"+g_Label".root";
+  TFile* file = new TFile(file_name,"RECREATE");
+  file->cd();
+  can->Write();
 
 
 }
