@@ -39,7 +39,9 @@ double units_per_bin_y;
 void Plot_2D(){
   RestFrames::SetStyle();
 
-  string StopNtuplePath = "/Users/christopherrogan/Dropbox/SAMPLES/EWKino/StopNtuple/";
+  string StopNtuplePath = "/home/t3-ku/crogan/NTUPLES/StopNtuple/";
+  int BKG_SKIP = 10; //takes 1 in every BKG_SKIP events
+
 
   SampleSet ttX;
   ttX.SetBkg(true);
