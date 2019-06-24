@@ -148,10 +148,10 @@ void Plot_1D_stack(){
   int Nsample = g_Samples.size();
   cout << "Nsample: " << Nsample << endl;
 
-  g_PlotTitle = "Single Lepton Mass, Cat. 1";
+  g_PlotTitle = "Single Lepton Mass, Cat. 3";
   g_Lumi = 100;
 
-  g_Xname = "1L Mass, Cat. 1";
+  g_Xname = "1L Mass, Cat. 3";
   g_Xmin = 0;
 
   //M_lep
@@ -218,7 +218,7 @@ void Plot_1D_stack(){
 	// if(base->PDGID_lep->at(0)+base->PDGID_lep->at(1) != 0)
 	//   continue;
 	
-	hist[s]->Fill(base->M_lep->at(0), base->weight*g_Lumi*double(SKIP));
+	hist[s]->Fill(base->M_lep->at(2), base->weight*g_Lumi*double(SKIP));
       }
 
       delete base;
@@ -357,7 +357,7 @@ void Plot_1D_stack(){
   file->cd();
   can->Write();
 
-  can->Close();
+  // can->Close();
 
 }
 
