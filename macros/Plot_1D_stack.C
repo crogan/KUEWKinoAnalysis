@@ -37,13 +37,14 @@ class SampleSet;
 void Plot_1D_stack(){
   RestFrames::SetStyle();
 
-  string StopNtuplePath = "/Users/christopherrogan/Dropbox/SAMPLES/EWKino/StopNtuple/";
-  int BKG_SKIP = 10;
+  string StopNtuplePath = "/home/t3-ku/crogan/NTUPLES/StopNtuple/";
+  int BKG_SKIP = 10; //takes 1 in every BKG_SKIP events
+  bool logy = true;
   
   SampleSet ttX;
   ttX.SetBkg(true);
   ttX.SetTitle("t#bar{t} + X");
-  ttX.SetColor(kAzure+1);
+  ttX.SetColor(kAzure-7);
   ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8_TuneCP5.root");
   // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
   // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
@@ -58,7 +59,7 @@ void Plot_1D_stack(){
   SampleSet DYjets;
   DYjets.SetBkg(true);
   DYjets.SetTitle("Z/#gamma^{*} + jets");
-  DYjets.SetColor(kGreen-9);
+  DYjets.SetColor(kGreen-7);
   DYjets.AddFile(StopNtuplePath+"All_Bkg_2017/DYJetsToLL_M-5to50_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
   DYjets.AddFile(StopNtuplePath+"All_Bkg_2017/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17.root");
   DYjets.SetSkip(BKG_SKIP);
@@ -67,7 +68,7 @@ void Plot_1D_stack(){
   SampleSet Wjets;
   Wjets.SetBkg(true);
   Wjets.SetTitle("W + jets");
-  Wjets.SetColor(kRed);
+  Wjets.SetColor(kRed-7);
   Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
   Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
   Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
@@ -77,40 +78,40 @@ void Plot_1D_stack(){
   Wjets.SetSkip(BKG_SKIP);
   g_Samples.push_back(&Wjets);
 
-  SampleSet ST;
-  ST.SetBkg(true);
-  ST.SetTitle("single t + X");
-  ST.SetColor(10);
-  ST.AddFile(StopNtuplePath+"All_Bkg_2017/ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8_Fall17.root");
-  ST.AddFile(StopNtuplePath+"All_Bkg_2017/ST_t-channel_antitop_5f_TuneCP5_PSweights_13TeV-powheg-pythia8_Fall17.root");
-  ST.AddFile(StopNtuplePath+"All_Bkg_2017/ST_t-channel_top_5f_TuneCP5_13TeV-powheg-pythia8_Fall17.root");
-  ST.AddFile(StopNtuplePath+"All_Bkg_2017/ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8_Fall17.root");
-  ST.AddFile(StopNtuplePath+"All_Bkg_2017/ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8_Fall17.root");
-  ST.AddFile(StopNtuplePath+"All_Bkg_2017/TGJets_leptonDecays_TuneCP5_PSweights_13TeV-amcatnlo-pythia8_Fall17.root");
-  ST.SetSkip(BKG_SKIP);
-  g_Samples.push_back(&ST);
+  // SampleSet ST;
+  // ST.SetBkg(true);
+  // ST.SetTitle("single t + X");
+  // ST.SetColor(10);
+  // ST.AddFile(StopNtuplePath+"All_Bkg_2017/ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8_Fall17.root");
+  // ST.AddFile(StopNtuplePath+"All_Bkg_2017/ST_t-channel_antitop_5f_TuneCP5_PSweights_13TeV-powheg-pythia8_Fall17.root");
+  // ST.AddFile(StopNtuplePath+"All_Bkg_2017/ST_t-channel_top_5f_TuneCP5_13TeV-powheg-pythia8_Fall17.root");
+  // ST.AddFile(StopNtuplePath+"All_Bkg_2017/ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8_Fall17.root");
+  // ST.AddFile(StopNtuplePath+"All_Bkg_2017/ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8_Fall17.root");
+  // ST.AddFile(StopNtuplePath+"All_Bkg_2017/TGJets_leptonDecays_TuneCP5_PSweights_13TeV-amcatnlo-pythia8_Fall17.root");
+  // ST.SetSkip(BKG_SKIP);
+  // g_Samples.push_back(&ST);
 
-  SampleSet DB;
-  DB.SetBkg(true);
-  DB.SetTitle("DiBoson");
-  DB.SetColor(kOrange);
-  DB.AddFile(StopNtuplePath+"All_Bkg_2017/WWTo2L2Nu_NNPDF31_TuneCP5_13TeV-powheg-pythia8_Fall17.root");
-  DB.AddFile(StopNtuplePath+"All_Bkg_2017/WWTo4Q_NNPDF31_TuneCP5_13TeV-powheg-pythia8_Fall17.root");
-  DB.AddFile(StopNtuplePath+"All_Bkg_2017/WWToLNuQQ_NNPDF31_TuneCP5_13TeV-powheg-pythia8_Fall17.root");
-  DB.AddFile(StopNtuplePath+"All_Bkg_2017/WZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8_Fall17.root");
-  DB.AddFile(StopNtuplePath+"All_Bkg_2017/WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17.root");
-  DB.AddFile(StopNtuplePath+"All_Bkg_2017/ZZTo2L2Nu_13TeV_powheg_pythia8_Fall17.root");
-  DB.AddFile(StopNtuplePath+"All_Bkg_2017/ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8_Fall17.root");
-  DB.AddFile(StopNtuplePath+"All_Bkg_2017/ZZTo2Q2Nu_TuneCP5_13TeV_amcatnloFXFX_madspin_pythia8_Fall17.root");
-  DB.AddFile(StopNtuplePath+"All_Bkg_2017/ZZTo4L_13TeV_powheg_pythia8_Fall17.root");
-  DB.SetSkip(BKG_SKIP);
-  g_Samples.push_back(&DB);
+  // SampleSet DB;
+  // DB.SetBkg(true);
+  // DB.SetTitle("DiBoson");
+  // DB.SetColor(kOrange);
+  // DB.AddFile(StopNtuplePath+"All_Bkg_2017/WWTo2L2Nu_NNPDF31_TuneCP5_13TeV-powheg-pythia8_Fall17.root");
+  // DB.AddFile(StopNtuplePath+"All_Bkg_2017/WWTo4Q_NNPDF31_TuneCP5_13TeV-powheg-pythia8_Fall17.root");
+  // DB.AddFile(StopNtuplePath+"All_Bkg_2017/WWToLNuQQ_NNPDF31_TuneCP5_13TeV-powheg-pythia8_Fall17.root");
+  // DB.AddFile(StopNtuplePath+"All_Bkg_2017/WZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8_Fall17.root");
+  // DB.AddFile(StopNtuplePath+"All_Bkg_2017/WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17.root");
+  // DB.AddFile(StopNtuplePath+"All_Bkg_2017/ZZTo2L2Nu_13TeV_powheg_pythia8_Fall17.root");
+  // DB.AddFile(StopNtuplePath+"All_Bkg_2017/ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8_Fall17.root");
+  // DB.AddFile(StopNtuplePath+"All_Bkg_2017/ZZTo2Q2Nu_TuneCP5_13TeV_amcatnloFXFX_madspin_pythia8_Fall17.root");
+  // DB.AddFile(StopNtuplePath+"All_Bkg_2017/ZZTo4L_13TeV_powheg_pythia8_Fall17.root");
+  // DB.SetSkip(BKG_SKIP);
+  // g_Samples.push_back(&DB);
  
   SampleSet SIG1;
   SIG1.SetBkg(false);
   SIG1.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 300, m_{#chi^{0}_{1}} = 270");
   SIG1.SetTreeName("SMS_200_170");
-  SIG1.SetColor(kMagenta);
+  SIG1.SetColor(kMagenta-7);
   SIG1.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
   SIG1.SetSkip(1);
   g_Samples.push_back(&SIG1);
@@ -118,11 +119,21 @@ void Plot_1D_stack(){
   SampleSet SIG2;
   SIG2.SetBkg(false);
   SIG2.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 300, m_{#chi^{0}_{1}} = 100");
-  SIG2.SetTreeName("SMS_300_100");
-  SIG2.SetColor(kCyan+2);
+  SIG2.SetTreeName("SMS_200_197");
+  SIG2.SetColor(kBlue-7);
   SIG2.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
   SIG2.SetSkip(1);
   g_Samples.push_back(&SIG2);
+
+
+  SampleSet SIG3;
+  SIG2.SetBkg(false);
+  SIG2.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 300, m_{#chi^{0}_{1}} = 100");
+  SIG2.SetTreeName("SMS_200_1");
+  SIG2.SetColor(kViolet-7);
+  SIG2.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
+  SIG2.SetSkip(1);
+  g_Samples.push_back(&SIG3);
 
   //  g_File.push_back("signal/TttH_1200_RH.root");
   // g_Hist.push_back(ihist);
@@ -135,7 +146,7 @@ void Plot_1D_stack(){
 
   int Nsample = g_Samples.size();
 
-  g_PlotTitle = "Region D Strawberry";
+  g_PlotTitle = "Single Lepton MET";
   g_Lumi = 100;
 
   g_Xname = "MET";
@@ -169,34 +180,37 @@ void Plot_1D_stack(){
 	if((e/SKIP)%(std::max(1, int(Nentry/SKIP/10))) == 0)
 	  cout << "      event " << e << " | " << Nentry << endl;
 
-	// if(base->Nlep_ISR->at(2) > 0)
+	if(base->Nlep != 1)
+    continue;
+
+  // if(base->Nlep_ISR->at(2) > 0)
+	 //  continue;
+
+	// if(base->Njet_S->at(1) > 0)
 	//   continue;
 
-	if(base->Njet_S->at(1) > 0)
-	  continue;
+	// if(base->Nlep_S->at(2) != 2)
+	//   continue;
 
-	if(base->Nlep_S->at(2) != 2)
-	  continue;
+	// if(base->PTISR->at(1) < 350)
+	//   continue;
 
-	if(base->PTISR->at(1) < 350)
-	  continue;
-
-	if(base->RISR->at(1) < 0.8)
-	  continue;
+	// if(base->RISR->at(1) < 0.8)
+	//   continue;
 
 	// if(base->MV->at(1) > 30.)
 	//   continue;
 
-	if(base->PTCM->at(1) > 100.)
-	  continue;
+	// if(base->PTCM->at(1) > 100.)
+	//   continue;
 
-	if(base->ID_lep->at(0) < 4 || base->ID_lep->at(1) < 4)
-	  continue;
+	// if(base->ID_lep->at(0) < 4 || base->ID_lep->at(1) < 4)
+	//   continue;
 
-	if(base->PDGID_lep->at(0)+base->PDGID_lep->at(1) != 0)
-	  continue;
+	// if(base->PDGID_lep->at(0)+base->PDGID_lep->at(1) != 0)
+	//   continue;
 	
-	hist[s]->Fill(base->MV->at(1), base->weight*g_Lumi*double(SKIP));
+	hist[s]->Fill(base->MET, base->weight*g_Lumi*double(SKIP));
       }
 
       delete base;
@@ -239,6 +253,7 @@ void Plot_1D_stack(){
   gStyle->SetOptTitle(0);
   gStyle->SetOptStat(0);
   gStyle->SetOptFit(11111111);
+  if(logy) gPad->SetLogy();
   TCanvas* can = (TCanvas*) new TCanvas("can","can",600.,500);
 
   can->SetLeftMargin(0.13);
