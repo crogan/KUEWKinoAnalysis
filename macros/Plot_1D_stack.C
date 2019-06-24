@@ -148,24 +148,25 @@ void Plot_1D_stack(){
   int Nsample = g_Samples.size();
   cout << "Nsample: " << Nsample << endl;
 
-  g_PlotTitle = "Single Lepton d#Phi_{CM}^{I}, Cat. 1";
+  g_PlotTitle = "Single Lepton MET";
   g_Lumi = 100;
 
-  g_Xname = "dPhi_CMI, Cat. 1";
+  g_Xname = "MET";
   g_Xmin = 0;
 
 
   //dphiCMI
-  g_Xmax = 3.3;
-  units_per_bin = 0.01;
+  // g_Xmax = 3.3;
+  // units_per_bin = 0.01;
 
   //M_lep
   // g_Xmax = 1.5;
   // units_per_bin = 0.01;
 
   //MET
-  // g_Xmax = 1500.;
-  // units_per_bin = 50.;
+  g_Xmax = 1500.;
+  units_per_bin = 50.;
+
   g_NX = (int)(g_Xmax - g_Xmin)/units_per_bin;
 
   TH1D* hist[Nsample];
@@ -223,7 +224,7 @@ void Plot_1D_stack(){
 	// if(base->PDGID_lep->at(0)+base->PDGID_lep->at(1) != 0)
 	//   continue;
 	
-	hist[s]->Fill(base->dphiCMI->at(0), base->weight*g_Lumi*double(SKIP));
+	hist[s]->Fill(base->MET, base->weight*g_Lumi*double(SKIP));
       }
 
       delete base;
@@ -285,7 +286,7 @@ void Plot_1D_stack(){
   hist[imax]->GetXaxis()->SetTitleOffset(1.06);
   hist[imax]->GetXaxis()->SetLabelFont(132);
   hist[imax]->GetXaxis()->SetLabelSize(0.05);
-  TString xaxis = g_Xname + " (rad)";
+  TString xaxis = g_Xname + " (GeV)";
   hist[imax]->GetXaxis()->SetTitle(xaxis);
   hist[imax]->GetYaxis()->CenterTitle();
   hist[imax]->GetYaxis()->SetTitleFont(132);
