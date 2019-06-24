@@ -38,7 +38,7 @@ void Plot_1D_stack(){
   RestFrames::SetStyle();
 
   string StopNtuplePath = "/home/t3-ku/crogan/NTUPLES/StopNtuple/";
-  int BKG_SKIP = 10; //takes 1 in every BKG_SKIP events
+  int BKG_SKIP = 1000; //takes 1 in every BKG_SKIP events
   bool logy = true;
   
   SampleSet ttX;
@@ -254,7 +254,6 @@ void Plot_1D_stack(){
   gStyle->SetOptTitle(0);
   gStyle->SetOptStat(0);
   gStyle->SetOptFit(11111111);
-  // if(logy) gPad->SetLogy();
   TCanvas* can = (TCanvas*) new TCanvas("can","can",600.,500);
 
 
@@ -343,7 +342,9 @@ void Plot_1D_stack(){
   string s_lumi = "#scale[0.6]{#int} #it{L dt} = "+to_string(int(g_Lumi))+" fb^{-1}";
   l.DrawLatex(0.43,0.79,s_lumi.c_str());	
 
-  can->SaveAs(g_Xname.c_str()+"stacked_plot.root")
+  TFile* file = new TFile(g_Xname.c_str()+"stacked_plot.root","RECREATE");
+  file->cd();
+  can->Write()
 
 }
 
