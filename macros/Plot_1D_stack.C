@@ -148,15 +148,15 @@ void Plot_1D_stack(){
   int Nsample = g_Samples.size();
   cout << "Nsample: " << Nsample << endl;
 
-  g_PlotTitle = "Single Lepton Mass";
+  g_PlotTitle = "Single Lepton Mass, Cat. 1";
   g_Lumi = 100;
 
-  g_Xname = "1L Mass";
+  g_Xname = "1L Mass, Cat. 1";
   g_Xmin = 0;
 
   //M_lep
-  g_Xmax = 10;
-  units_per_bin = 0.1;
+  g_Xmax = 1.5;
+  units_per_bin = 0.01;
 
   //MET
   // g_Xmax = 1500.;
