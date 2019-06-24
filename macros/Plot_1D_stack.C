@@ -31,6 +31,7 @@ string g_Xname;
 double g_Xmin;
 double g_Xmax;
 double g_NX;
+double units_per_bin;
 
 class SampleSet;
 
