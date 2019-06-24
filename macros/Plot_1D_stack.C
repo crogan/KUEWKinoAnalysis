@@ -147,10 +147,10 @@ void Plot_1D_stack(){
   int Nsample = g_Samples.size();
   cout << "Nsample: " << Nsample << endl;
 
-  g_PlotTitle = "Single Lepton MET";
+  g_PlotTitle = "Single Lepton Mass";
   g_Lumi = 100;
 
-  g_Xname = "MET";
+  g_Xname = "Lepton Mass";
   g_Xmin = 0;
   g_Xmax = 1500.;
   g_NX = 32;
@@ -210,7 +210,7 @@ void Plot_1D_stack(){
 	// if(base->PDGID_lep->at(0)+base->PDGID_lep->at(1) != 0)
 	//   continue;
 	
-	hist[s]->Fill(base->MET, base->weight*g_Lumi*double(SKIP));
+	hist[s]->Fill(base->M_lep, base->weight*g_Lumi*double(SKIP));
       }
 
       delete base;
@@ -342,10 +342,13 @@ void Plot_1D_stack(){
   string s_lumi = "#scale[0.6]{#int} #it{L dt} = "+to_string(int(g_Lumi))+" fb^{-1}";
   l.DrawLatex(0.43,0.79,s_lumi.c_str());	
 
+  
   TString file_name = g_Xname+"stacked_plot.root";
   TFile* file = new TFile(file_name,"RECREATE");
   file->cd();
   can->Write();
+
+  can->Close();
 
 }
 
