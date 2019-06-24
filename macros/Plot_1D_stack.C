@@ -118,7 +118,7 @@ void Plot_1D_stack(){
 
   SampleSet SIG2;
   SIG2.SetBkg(false);
-  SIG2.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 190");
+  SIG2.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 197");
   SIG2.SetTreeName("SMS_200_197");
   SIG2.SetColor(kBlue-7);
   SIG2.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
@@ -180,8 +180,8 @@ void Plot_1D_stack(){
 	if((e/SKIP)%(std::max(1, int(Nentry/SKIP/10))) == 0)
 	  cout << "      event " << e << " | " << Nentry << endl;
 
-	if(base->Nlep != 1)
-    continue;
+	// if(base->Nlep != 1)
+ //    continue;
 
   // if(base->Nlep_ISR->at(2) > 0)
 	 //  continue;
@@ -210,7 +210,7 @@ void Plot_1D_stack(){
 	// if(base->PDGID_lep->at(0)+base->PDGID_lep->at(1) != 0)
 	//   continue;
 	
-	hist[s]->Fill(base->MV->at(1), base->weight*g_Lumi*double(SKIP));
+	hist[s]->Fill(base->MET, base->weight*g_Lumi*double(SKIP));
       }
 
       delete base;
