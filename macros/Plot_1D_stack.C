@@ -218,7 +218,7 @@ void Plot_1D_stack(){
 	// if(base->PDGID_lep->at(0)+base->PDGID_lep->at(1) != 0)
 	//   continue;
 	
-	hist[s]->Fill(base->M_lep, base->weight*g_Lumi*double(SKIP));
+	hist[s]->Fill(base->M_lep->at(0), base->weight*g_Lumi*double(SKIP));
       }
 
       delete base;
