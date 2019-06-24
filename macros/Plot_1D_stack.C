@@ -274,7 +274,8 @@ void Plot_1D_stack(){
   hist[imax]->GetXaxis()->SetTitleOffset(1.06);
   hist[imax]->GetXaxis()->SetLabelFont(132);
   hist[imax]->GetXaxis()->SetLabelSize(0.05);
-  hist[imax]->GetXaxis()->SetTitle(g_Xname.c_str()+" (GeV)");
+  TString xaxis = g_Xname + " (Gev)";
+  hist[imax]->GetXaxis()->SetTitle(xaxis);
   hist[imax]->GetYaxis()->CenterTitle();
   hist[imax]->GetYaxis()->SetTitleFont(132);
   hist[imax]->GetYaxis()->SetTitleSize(0.06);
