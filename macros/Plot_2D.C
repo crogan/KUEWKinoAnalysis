@@ -252,7 +252,7 @@ SampleSet DYjets;
   // l.DrawLatex(0.74,0.04,g_Label.c_str());
 
 
-  TString file_name = "output/"+g_Label".root";
+  TString file_name = "output/"+g_Label+".root";
   TFile* file = new TFile(file_name,"RECREATE");
   file->cd();
   can->Write();
