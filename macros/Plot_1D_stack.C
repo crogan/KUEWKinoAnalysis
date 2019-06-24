@@ -38,7 +38,7 @@ void Plot_1D_stack(){
   RestFrames::SetStyle();
 
   string StopNtuplePath = "/home/t3-ku/crogan/NTUPLES/StopNtuple/";
-  int BKG_SKIP = 100; //takes 1 in every BKG_SKIP events
+  int BKG_SKIP = 10; //takes 1 in every BKG_SKIP events
   bool logy = true;
   
   SampleSet ttX;
@@ -154,10 +154,6 @@ void Plot_1D_stack(){
   g_Xmax = 1500.;
   g_NX = 32;
 
-  int nlep;
-  int nele;
-  int nlep_ISR;
-
   TH1D* hist[Nsample];
   for(int i = 0; i < Nsample; i++)
     hist[i] = new TH1D(("h"+to_string(i)).c_str(),
@@ -183,17 +179,8 @@ void Plot_1D_stack(){
 	if((e/SKIP)%(std::max(1, int(Nentry/SKIP/10))) == 0)
 	  cout << "      event " << e << " | " << Nentry << endl;
 
-	// if(base->Nlep != 2)
- //    continue;
-
-  if(e > 0 && e < 1000){
-    nlep = base->Nlep;
-    nele = base->Nele;
-    nlep_ISR = base->Nlep_ISR->at(2);
-    cout << "nlep: " << nlep << endl;
-    cout << "nele: " << nele << endl;
-    cout << "nlep_ISR: " << nlep_ISR << endl;
-  }
+	if(base->Nlep != 1)
+    continue;
 
   // if(base->Nlep_ISR->at(2) > 0)
 	 //  continue;
