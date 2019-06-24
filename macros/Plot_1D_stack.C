@@ -153,7 +153,8 @@ void Plot_1D_stack(){
   g_Xname = "MET (GeV)";
   g_Xmin = 0;
   g_Xmax = 1500.;
-  g_NX = 32;
+  units_per_bin = 50.;
+  g_NX = (int)(g_Xmax - g_Xmin)/units_per_bin;
 
   TH1D* hist[Nsample];
   for(int i = 0; i < Nsample; i++)
