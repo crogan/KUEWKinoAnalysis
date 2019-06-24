@@ -344,7 +344,7 @@ void Plot_1D_stack(){
 
   TFile* file = new TFile(g_Xname.c_str()+"stacked_plot.root","RECREATE");
   file->cd();
-  can->Write()
+  can->Write();
 
 }
 
