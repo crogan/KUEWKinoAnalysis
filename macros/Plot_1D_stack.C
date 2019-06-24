@@ -156,6 +156,7 @@ void Plot_1D_stack(){
 
   int nlep;
   int nele;
+  int nlep_ISR;
 
   TH1D* hist[Nsample];
   for(int i = 0; i < Nsample; i++)
@@ -188,8 +189,10 @@ void Plot_1D_stack(){
   if(e > 0 && e < 1000){
     nlep = base->Nlep;
     nele = base->Nele;
+    nlep_ISR = base->Nlep_ISR;
     cout << "nlep: " << nlep << endl;
     cout << "nele: " << nele << endl;
+    cout << "nlep_ISR: " << nlep_ISR << endl;
   }
 
   // if(base->Nlep_ISR->at(2) > 0)
