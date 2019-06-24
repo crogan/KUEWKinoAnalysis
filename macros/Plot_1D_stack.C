@@ -342,7 +342,7 @@ void Plot_1D_stack(){
   string s_lumi = "#scale[0.6]{#int} #it{L dt} = "+to_string(int(g_Lumi))+" fb^{-1}";
   l.DrawLatex(0.43,0.79,s_lumi.c_str());	
 
-  TString file_name = g_Xname+"stacked_plot.root"
+  TString file_name = g_Xname+"stacked_plot.root";
   TFile* file = new TFile(file_name,"RECREATE");
   file->cd();
   can->Write();
