@@ -253,7 +253,7 @@ void Plot_2D(){
   // l.DrawLatex(0.74,0.04,g_Label.c_str());
 
 
-  TString file_name = "output/"+g_Label+".root";
+  TString file_name = "output/"+g_Label+"signal30.root";
   TFile* file = new TFile(file_name,"RECREATE");
   file->cd();
   can->Write();
