@@ -160,7 +160,7 @@ void Plot_1D_stack(){
   // units_per_bin = 0.01;
 
   //M_lep
-  g_Xmax = 1.5;
+  g_Xmax = 0.5;
   units_per_bin = 0.01;
 
   //MET
@@ -224,7 +224,7 @@ void Plot_1D_stack(){
 	// if(base->PDGID_lep->at(0)+base->PDGID_lep->at(1) != 0)
 	//   continue;
 	
-	hist[s]->Fill(base->M_lep, base->weight*g_Lumi*double(SKIP));
+	hist[s]->Fill(base->M_lep->at(0), base->weight*g_Lumi*double(SKIP));
       }
 
       delete base;
