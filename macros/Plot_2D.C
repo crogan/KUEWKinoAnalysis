@@ -117,29 +117,29 @@ void Plot_2D(){
   // SIG1.SetSkip(1);
   // g_Samples.push_back(&SIG1);
 
-  SampleSet SIG2;
-  SIG2.SetBkg(false);
-  SIG2.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 197");
-  SIG2.SetTreeName("SMS_200_197");
-  SIG2.SetColor(kBlue-7);
-  SIG2.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
-  SIG2.SetSkip(1);
-  g_Samples.push_back(&SIG2);
+  // SampleSet SIG2;
+  // SIG2.SetBkg(false);
+  // SIG2.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 197");
+  // SIG2.SetTreeName("SMS_200_197");
+  // SIG2.SetColor(kBlue-7);
+  // SIG2.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
+  // SIG2.SetSkip(1);
+  // g_Samples.push_back(&SIG2);
 
 
-  // SampleSet SIG3;
-  // SIG3.SetBkg(false);
-  // SIG3.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 1");
-  // SIG3.SetTreeName("SMS_200_1");
-  // SIG3.SetColor(kViolet-7);
-  // SIG3.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
-  // SIG3.SetSkip(1);
-  // g_Samples.push_back(&SIG3);
+  SampleSet SIG3;
+  SIG3.SetBkg(false);
+  SIG3.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 1");
+  SIG3.SetTreeName("SMS_200_1");
+  SIG3.SetColor(kViolet-7);
+  SIG3.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
+  SIG3.SetSkip(1);
+  g_Samples.push_back(&SIG3);
 
   int Nsample = g_Samples.size();
   
   //string g_Label = "No selection";
-  string g_Label = "RISR vs. pT_ISR, Cat. 3";
+  string g_Label = "RISR vs. pT_ISR, Cat. 1";
 
 
   g_Xname = "R_ISR";
@@ -193,7 +193,7 @@ void Plot_2D(){
   if(base->Nlep != 1)
     continue;
       
-	hist->Fill(base->RISR->at(2), base->PTISR->at(2) , base->weight*double(SKIP));
+	hist->Fill(base->RISR->at(0), base->PTISR->at(0) , base->weight*double(SKIP));
       }
 
       delete base;
@@ -253,7 +253,7 @@ void Plot_2D(){
   // l.DrawLatex(0.74,0.04,g_Label.c_str());
 
 
-  TString file_name = "output/"+g_Label+"signal3.root";
+  TString file_name = "output/"+g_Label+"signal199.root";
   TFile* file = new TFile(file_name,"RECREATE");
   file->cd();
   can->Write();
