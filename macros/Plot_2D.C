@@ -37,7 +37,7 @@ double g_NY;
 void Plot_2D(){
   RestFrames::SetStyle();
 
-  string StopNtuplePath = "/Users/christopherrogan/Dropbox/SAMPLES/EWKino/StopNtuple/";
+  string StopNtuplePath = "/Users/crogan/Dropbox/SAMPLES/EWKino/StopNtuple/";
 
   // SampleSet ttX;
   // ttX.SetBkg(true);
@@ -68,13 +68,13 @@ void Plot_2D(){
 
 
   g_Xname = "N_{lep}^{S}";
-  g_Xmin = -0.5;
-  g_Xmax = 4.5; 
-  g_NX = 5;
+  g_Xmin = 0.;
+  g_Xmax = 1; 
+  g_NX = 32;
   g_Yname = "N_{jet}^{S}";
-  g_Ymin = -0.5;
-  g_Ymax = 6.5;
-  g_NY = 7;
+  g_Ymin = 0;
+  g_Ymax = 800;
+  g_NY = 32;
 
   int TREE = 2;
 
@@ -104,13 +104,13 @@ void Plot_2D(){
 	// if(base->Nlep_S->at(2)+base->Nlep_ISR->at(2) != 2)
 	//   continue;
 
-	if(base->RISR->at(2) < 0.7)
-	  continue;
+	// if(base->RISR->at(2) < 0.7)
+	//   continue;
 
-	if(base->PTISR->at(2) < 250)
-	  continue;
+	// if(base->PTISR->at(2) < 250)
+	//   continue;
       
-	hist->Fill(base->Nlep_S->at(2), base->Njet_S->at(2) , base->weight*double(SKIP));
+	hist->Fill(base->RISR->at(2), base->PTISR->at(2) , base->weight*double(SKIP));
       }
 
       delete base;
