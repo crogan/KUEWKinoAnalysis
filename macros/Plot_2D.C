@@ -108,14 +108,14 @@ void Plot_2D(){
   // DB.SetSkip(BKG_SKIP);
   // g_Samples.push_back(&DB);
  
-  // SampleSet SIG1;
-  // SIG1.SetBkg(false);
-  // SIG1.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 170");
-  // SIG1.SetTreeName("SMS_200_170");
-  // SIG1.SetColor(kMagenta-7);
-  // SIG1.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
-  // SIG1.SetSkip(1);
-  // g_Samples.push_back(&SIG1);
+  SampleSet SIG1;
+  SIG1.SetBkg(false);
+  SIG1.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 170");
+  SIG1.SetTreeName("SMS_200_170");
+  SIG1.SetColor(kMagenta-7);
+  SIG1.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
+  SIG1.SetSkip(1);
+  g_Samples.push_back(&SIG1);
 
   // SampleSet SIG2;
   // SIG2.SetBkg(false);
