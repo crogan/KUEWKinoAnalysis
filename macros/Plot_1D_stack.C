@@ -151,7 +151,7 @@ void Plot_1D_stack(){
   g_PlotTitle = "d#Phi_{CM}^{I}, Cat. 2";
   g_Lumi = 100;
 
-  g_Xname = "d#Phi_{CM}^{I}, Cat. 2";
+  g_Xname = "dPhi_{CM}^{I}, Cat. 2";
   g_Xmin = 0.0;
 
 
