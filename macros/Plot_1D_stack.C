@@ -170,6 +170,7 @@ void Plot_1D_stack(){
 
   g_NX = (int)(g_Xmax - g_Xmin)/units_per_bin;
   cout << "number of bins: " << g_NX << endl;
+  cout << g_Xmax - g_Xmin/units_per_bin << endl;
 
   TH1D* hist[Nsample];
   for(int i = 0; i < Nsample; i++)
