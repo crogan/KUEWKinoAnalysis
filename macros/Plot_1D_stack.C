@@ -168,7 +168,7 @@ void Plot_1D_stack(){
   // units_per_bin = 50.;
 
 
-  g_NX = (int)(g_Xmax - g_Xmin)/units_per_bin;
+  g_NX = (int)((g_Xmax - g_Xmin)/units_per_bin);
   cout << "number of bins: " << g_NX << endl;
   cout << (g_Xmax - g_Xmin)/units_per_bin << endl;
 
