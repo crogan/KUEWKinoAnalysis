@@ -148,10 +148,10 @@ void Plot_1D_stack(){
   int Nsample = g_Samples.size();
   cout << "Nsample: " << Nsample << endl;
 
-  g_PlotTitle = "d#Phi_{CM}^{I}, Cat. 2";
+  g_PlotTitle = "d#Phi_{CM}^{I}, Cat. 3";
   g_Lumi = 100;
 
-  g_Xname = "dPhi_{CM}^{I}, Cat. 2";
+  g_Xname = "dPhi_{CM}^{I}, Cat. 3";
   g_Xmin = 0.0;
 
 
@@ -225,7 +225,7 @@ void Plot_1D_stack(){
 	// if(base->PDGID_lep->at(0)+base->PDGID_lep->at(1) != 0)
 	//   continue;
 	
-	hist[s]->Fill(base->dphiCMI->at(1), base->weight*g_Lumi*double(SKIP));
+	hist[s]->Fill(base->dphiCMI->at(2), base->weight*g_Lumi*double(SKIP));
       }
 
       delete base;
