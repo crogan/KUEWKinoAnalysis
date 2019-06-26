@@ -139,7 +139,7 @@ void Plot_2D(){
   int Nsample = g_Samples.size();
   
   //string g_Label = "No selection";
-  string g_Label = "RISR vs. pT_ISR, Cat. 1";
+  string g_Label = "RISR vs. pT_ISR, Cat. 2";
 
 
   g_Xname = "R_ISR";
