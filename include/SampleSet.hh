@@ -3,6 +3,7 @@
 
 #include <string>
 
+
 using std::string;
 
 vector<string> g_File;
@@ -39,6 +40,9 @@ public:
   
   void   SetScale(double scale);
   double GetScale() const;
+
+  TDirectory* make_subdir( TFile* outfile, string subdir );
+  TFile * makeTFile( string outfile_name, string subdir );
   
 private:
   bool m_IsBkg;
@@ -125,3 +129,29 @@ inline void SampleSet::SetScale(double scale){
 inline double SampleSet::GetScale() const {
   return m_Scale;
 }
+
+
+inline TDirectory* make_subdir( TFile* outfile, string subdir ){
+  outfile->cd();
+  TDirectory* fileSubDir;
+  if( subdir != "" ){
+    fileSubDir = outfile->GetDirectory(subdir.c_str());
+    if( fileSubDir == 0 ){
+      outfile->mkdir( subdir.c_str() );
+      fileSubDir = outfile->GetDirectory(subdir.c_str());
+    }
+  }
+  return fileSubDir;
+}
+
+
+
+inline void write_plot(string outfile_name, string subdir, TCanvas* cv){
+  auto outfile = new TFile( outfile_name.c_str(), "update" );
+  outfile->cd();
+  auto fileSubDir = make_subdir( outfile, subdir );
+  fileSubDir->cd();
+  cv->Write();
+}
+
+
