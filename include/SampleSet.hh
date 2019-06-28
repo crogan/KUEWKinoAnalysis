@@ -42,7 +42,9 @@ public:
   double GetScale() const;
 
   TDirectory* make_subdir( TFile* outfile, string subdir );
-  TFile * makeTFile( string outfile_name, string subdir );
+  // TFile * makeTFile( string outfile_name, string subdir );
+  void write_plot(string outfile_name, string subdir, TCanvas* cv);
+
   
 private:
   bool m_IsBkg;
