@@ -154,7 +154,7 @@ SampleSet DYjets;
   // units_per_bin_y = 10;
   // g_NY = (int)(g_Ymax - g_Ymin)/units_per_bin_y;
 
-  g_Xname = "Njets_S"
+  g_Xname = "Njets_S";
   g_Xmin = 0.0;
   g_Xmax = 5.0; 
   units_per_bin_x = 1.0;
