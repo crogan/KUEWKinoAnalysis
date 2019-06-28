@@ -139,7 +139,7 @@ SampleSet DYjets;
   int Nsample = g_Samples.size();
   
   //string g_Label = "No selection";
-  string g_Label = "RISR vs. pT_ISR, Cat. 3";
+  string g_Label = "Njets_S vs. Njets_ISR, Cat. 3";
 
 
   // g_Xname = "R_ISR";
