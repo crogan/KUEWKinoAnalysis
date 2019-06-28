@@ -142,17 +142,30 @@ SampleSet DYjets;
   string g_Label = "RISR vs. pT_ISR, Cat. 3";
 
 
-  g_Xname = "R_ISR";
+  // g_Xname = "R_ISR";
+  // g_Xmin = 0.0;
+  // g_Xmax = 1.3; 
+  // units_per_bin_x = 0.01;
+  // g_NX = (int)(g_Xmax - g_Xmin)/units_per_bin_x;
+
+  // g_Yname = "pT_ISR";
+  // g_Ymin = 0.0;
+  // g_Ymax = 1000.;
+  // units_per_bin_y = 10;
+  // g_NY = (int)(g_Ymax - g_Ymin)/units_per_bin_y;
+
+  g_Xname = "Njets_S"
   g_Xmin = 0.0;
-  g_Xmax = 1.3; 
-  units_per_bin_x = 0.01;
+  g_Xmax = 5.0; 
+  units_per_bin_x = 1.0;
   g_NX = (int)(g_Xmax - g_Xmin)/units_per_bin_x;
 
-  g_Yname = "pT_ISR";
+  g_Yname = "Njets_ISR";
   g_Ymin = 0.0;
-  g_Ymax = 1000.;
-  units_per_bin_y = 10;
+  g_Ymax = 5.0;
+  units_per_bin_y = 1.0;
   g_NY = (int)(g_Ymax - g_Ymin)/units_per_bin_y;
+
 
 
 
@@ -253,7 +266,7 @@ SampleSet DYjets;
   l.SetNDC();
   l.SetTextSize(0.05);
   l.SetTextFont(132);
-  l.DrawLatex(0.65,0.943,g_PlotTitle.c_str());
+  l.DrawLatex(0.65,0.943,g_Label.c_str());
   l.SetTextSize(0.04);
   l.SetTextFont(42);
   l.DrawLatex(0.15,0.943,"#bf{#it{CMS}} Internal 13 TeV Simulation");
