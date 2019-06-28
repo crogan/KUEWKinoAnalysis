@@ -193,7 +193,7 @@ SampleSet DYjets;
   if(base->Nlep != 1)
     continue;
       
-	hist->Fill(base->RISR->at(2), base->PTISR->at(2) , base->weight*double(SKIP));
+	hist->Fill(base->Njet_S->at(2), base->Njet_ISR->at(2) , base->weight*double(SKIP));
       }
 
       delete base;
@@ -253,10 +253,12 @@ SampleSet DYjets;
   // l.DrawLatex(0.74,0.04,g_Label.c_str());
 
 
-  TString file_name = "output/"+g_Label+"bkg17.root";
-  TFile* file = new TFile(file_name,"RECREATE");
-  file->cd();
-  can->Write();
+  SampleSet sample;
+  sample.write_plot("output/2Dplots.root",g_Label, can);
+  // TString file_name = "output/"+g_Label+"bkg17.root";
+  // TFile* file = new TFile(file_name,"RECREATE");
+  // file->cd();
+  // can->Write();
 
 
 }
