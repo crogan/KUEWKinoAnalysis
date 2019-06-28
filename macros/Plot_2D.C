@@ -238,15 +238,26 @@ SampleSet DYjets;
   hist->GetZaxis()->SetTitle("a. u.");
   hist->GetZaxis()->SetRangeUser(0.9*hist->GetMinimum(0.0),1.1*hist->GetMaximum());
 
+  // TLatex l;
+  // l.SetTextFont(42);
+  // l.SetNDC();
+  // l.SetTextSize(0.035);
+  // l.SetTextFont(42);
+  // l.DrawLatex(0.41,0.943,g_Label.c_str());
+  // l.SetTextSize(0.04);
+  // l.SetTextFont(42);
+  // l.DrawLatex(0.01,0.943,"#bf{#it{CMS}} Internal 13 TeV Simulation");
+
   TLatex l;
-  l.SetTextFont(42);
+  l.SetTextFont(132);
   l.SetNDC();
-  l.SetTextSize(0.035);
-  l.SetTextFont(42);
-  l.DrawLatex(0.41,0.943,g_Label.c_str());
+  l.SetTextSize(0.05);
+  l.SetTextFont(132);
+  l.DrawLatex(0.65,0.943,g_PlotTitle.c_str());
   l.SetTextSize(0.04);
   l.SetTextFont(42);
-  l.DrawLatex(0.01,0.943,"#bf{#it{CMS}} Internal 13 TeV Simulation");
+  l.DrawLatex(0.15,0.943,"#bf{#it{CMS}} Internal 13 TeV Simulation");
+
 
   // l.SetTextSize(0.04);
   // l.SetTextFont(132);
