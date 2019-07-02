@@ -148,10 +148,10 @@ void Plot_1D_stack(){
   int Nsample = g_Samples.size();
   cout << "Nsample: " << Nsample << endl;
 
-  g_PlotTitle = "d#Phi_{CM}^{I}, Cat. 3";
+  g_PlotTitle = "#Eta";
   g_Lumi = 100;
 
-  g_Xname = "dPhi_{CM}^{I}, Cat. 3";
+  g_Xname = "Eta";
   g_Xmin = 0.0;
 
 
