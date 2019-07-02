@@ -156,14 +156,17 @@ void Plot_1D_stack(){
 
 
   //dphiCMI
+  g_Xmin = -3.3;
   g_Xmax = 3.3;
   units_per_bin = 0.01;
 
   //M_lep
+  // g_Xmin = 0.0;
   // g_Xmax = 0.5;
   // units_per_bin = 0.01;
 
   //MET
+  // g_Xmin = 0.0;
   // g_Xmax = 1500.;
   // units_per_bin = 50.;
 
