@@ -198,6 +198,9 @@ void Plot_1D_stack(){
 	if(base->Nlep != 1)
     continue;
 
+  // if(base->Nlep != 3) //medium working point
+  //   continue;
+
   // if(base->Nlep_ISR->at(2) > 0)
 	 //  continue;
 
@@ -225,7 +228,7 @@ void Plot_1D_stack(){
 	// if(base->PDGID_lep->at(0)+base->PDGID_lep->at(1) != 0)
 	//   continue;
 	
-	hist[s]->Fill(base->dphiCMI->at(2), base->weight*g_Lumi*double(SKIP));
+	hist[s]->Fill(base->Eta_lep->at(0), base->weight*g_Lumi*double(SKIP));
       }
 
       delete base;

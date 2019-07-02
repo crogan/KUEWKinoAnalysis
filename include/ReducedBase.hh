@@ -633,6 +633,11 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchStatus("PTCM", 1);
    fChain->SetBranchStatus("ID_lep",1);
    fChain->SetBranchStatus("PDGID_lep",1);
+   fChain->SetBranchStatus("RelIso_lep", 1);
+   fChain->SetBranchStatus("MiniIso_lep", 1);
+   fChain->SetBranchStatus("ID_lep", 1);
+   fChain->SetBranchStatus("Eta_lep", 1);
+
 }
 
 inline Bool_t ReducedBase::Notify()
