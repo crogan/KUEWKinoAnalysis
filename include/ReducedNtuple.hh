@@ -42,8 +42,8 @@ private:
   vector<double> m_M_lep;
   vector<int>    m_Charge_lep;
   vector<int>    m_PDGID_lep;
-  vector<int>    m_RelIso_lep;
-  vector<int>    m_MiniIso_lep;
+  vector<double> m_RelIso_lep;
+  vector<double> m_MiniIso_lep;
   vector<int>    m_ID_lep;
   vector<int>    m_Index_lep;
 

@@ -615,11 +615,12 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchAddress("dphiSI", &dphiSI, &b_dphiSI);
    fChain->SetBranchAddress("dphiISRI", &dphiISRI, &b_dphiISRI);
    Notify();
-
+   
    // Turn off/on different branches to improve processing speed
    fChain->SetBranchStatus("*",0);
    fChain->SetBranchStatus("weight", 1);
    fChain->SetBranchStatus("MET", 1);
+   fChain->SetBranchStatus("MET_phi", 1);
    fChain->SetBranchStatus("N*_ISR", 1);
    fChain->SetBranchStatus("N*_S", 1);
    fChain->SetBranchStatus("PTISR", 1);
@@ -631,6 +632,15 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchStatus("PTCM", 1);
    fChain->SetBranchStatus("ID_lep",1);
    fChain->SetBranchStatus("PDGID_lep",1);
+   fChain->SetBranchStatus("*_lep",1);
+   fChain->SetBranchStatus("Nlep", 1);
+   fChain->SetBranchStatus("*_jet",1);
+   fChain->SetBranchStatus("Njet", 1);
+   fChain->SetBranchStatus("index_*_ISR", 1);
+   fChain->SetBranchStatus("index_*_S", 1);
+   fChain->SetBranchStatus("Nbjet", 1);
+  
+   
 }
 
 inline Bool_t ReducedBase::Notify()
