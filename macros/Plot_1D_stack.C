@@ -148,19 +148,22 @@ void Plot_1D_stack(){
   int Nsample = g_Samples.size();
   cout << "Nsample: " << Nsample << endl;
 
-  g_PlotTitle = "d#Phi_{CM}^{I}, Cat. 3";
+  g_PlotTitle = "#eta_{lep}";
   g_Lumi = 100;
 
-  g_Xname = "dPhi_{CM}^{I}, Cat. 3";
+  g_Xname = "eta_{lep}";
   g_Xmin = 0.0;
 
 
   //Eta
   g_Xmin = -3.3;
   g_Xmax = 3.3;
-  units_per_bin = 0.01;
+  units_per_bin = 0.1;
 
   //dPhiCMI
+  // g_Xmin = 0.0;
+  // g_Xmax = 3.3;
+  // units_per_bin = 0.1;
 
   //M_lep
   // g_Xmin = 0.0;
