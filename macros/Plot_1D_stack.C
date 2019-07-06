@@ -148,17 +148,21 @@ void Plot_1D_stack(){
   int Nsample = g_Samples.size();
   cout << "Nsample: " << Nsample << endl;
 
-  g_PlotTitle = "#eta_{lep}";
+  g_PlotTitle = "Nlep_{ISR}, Cat. 3";
   g_Lumi = 100;
 
-  g_Xname = "eta_{lep}";
+  g_Xname = "Nlep_ISR, Cat. 3";
   g_Xmin = 0.0;
+
+  //Nlep_ISR
+  g_Xmax = 5;
+  units_per_bin = 1.;
 
 
   //Eta
-  g_Xmin = -3.3;
-  g_Xmax = 3.3;
-  units_per_bin = 0.1;
+  // g_Xmin = -3.3;
+  // g_Xmax = 3.3;
+  // units_per_bin = 0.1;
 
   //dPhiCMI
   // g_Xmin = 0.0;
@@ -236,7 +240,7 @@ void Plot_1D_stack(){
 	// if(base->PDGID_lep->at(0)+base->PDGID_lep->at(1) != 0)
 	//   continue;
 	
-	hist[s]->Fill(base->Eta_lep->at(0), base->weight*g_Lumi*double(SKIP));
+	hist[s]->Fill(base->Nlep_ISR->at(2), base->weight*g_Lumi*double(SKIP));
       }
 
       delete base;
