@@ -206,7 +206,7 @@ void Plot_1D_stack(){
 	if(base->Nlep != 1)
     continue;
 
-  if(base->PDGID_lep->at(0) != 13 || base->PDGID_lep->at(0) != -13)
+  if(base->PDGID_lep->at(0) == 11 || base->PDGID_lep->at(0) == -11)
     continue;
 
   // if(base->Nlep != 3) //medium working point
