@@ -9,14 +9,14 @@ home = os.environ['HOME']
 #######################################
 RUN_DIR = pwd
 TEMP = pwd
-#EXE  = "MakeReducedNtuple.x"
+#EXE  = "MakeReducedNtuple_NANO.x"
 EXE  = "MakeEventCount_NANO.x"
 TREE = "Events"
 #OUT  = "/home/t3-ku/crogan/NTUPLES/Processing/"
 OUT = pwd
 LIST = "default.list"
 QUEUE = ""
-MAXN = 25
+MAXN = 20
 
 def new_listfile(rootlist, listfile):
     mylist = open(listfile,'w')
