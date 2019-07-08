@@ -143,14 +143,14 @@ void Plot_2D(){
 
   g_Yname = "pT_lep";
   g_Ymin = 0.0;
-  g_Ymax = 100.;
-  units_per_bin_y = 1.;
+  g_Ymax = 50.;
+  units_per_bin_y = 5.;
   g_NY = (int)(g_Ymax - g_Ymin)/units_per_bin_y;
 
   g_Xname = "pT_ISR";
   g_Xmin = 0.0;
-  g_Xmax = 600.; 
-  units_per_bin_x = 10.;
+  g_Xmax = 300.; 
+  units_per_bin_x = 5.;
   g_NX = (int)(g_Xmax - g_Xmin)/units_per_bin_x;
 
   // g_Xname = "Njets_S";
