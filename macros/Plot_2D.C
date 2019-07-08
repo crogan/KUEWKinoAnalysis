@@ -57,27 +57,28 @@ void Plot_2D(){
   ttX.SetSkip(10);
   g_Samples.push_back(&ttX);
 
-SampleSet DYjets;
-  DYjets.SetBkg(true);
-  DYjets.SetTitle("DY + jets");
-  DYjets.SetColor(kGreen-7);
-  DYjets.AddFile(StopNtuplePath+"All_Bkg_2017/DYJetsToLL_M-5to50_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
-  DYjets.AddFile(StopNtuplePath+"All_Bkg_2017/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17.root");
-  DYjets.SetSkip(BKG_SKIP);
-  g_Samples.push_back(&DYjets);
 
-  SampleSet Wjets;
-  Wjets.SetBkg(true);
-  Wjets.SetTitle("W + jets");
-  Wjets.SetColor(kRed-7);
-  Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
-  Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
-  Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
-  Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
-  Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
-  Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
-  Wjets.SetSkip(BKG_SKIP);
-  g_Samples.push_back(&Wjets);
+// SampleSet DYjets;
+//   DYjets.SetBkg(true);
+//   DYjets.SetTitle("DY + jets");
+//   DYjets.SetColor(kGreen-7);
+//   DYjets.AddFile(StopNtuplePath+"All_Bkg_2017/DYJetsToLL_M-5to50_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+//   DYjets.AddFile(StopNtuplePath+"All_Bkg_2017/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17.root");
+//   DYjets.SetSkip(BKG_SKIP);
+//   g_Samples.push_back(&DYjets);
+
+//   SampleSet Wjets;
+//   Wjets.SetBkg(true);
+//   Wjets.SetTitle("W + jets");
+//   Wjets.SetColor(kRed-7);
+//   Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+//   Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+//   Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+//   Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+//   Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+//   Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+//   Wjets.SetSkip(BKG_SKIP);
+//   g_Samples.push_back(&Wjets);
 
   // SampleSet ST;
   // ST.SetBkg(true);
@@ -139,20 +140,22 @@ SampleSet DYjets;
   int Nsample = g_Samples.size();
   
   //string g_Label = "No selection";
-  string g_Label = "R_ISR vs. pT_lep, Cat. 3 (all bkgs)";
+  string g_Label = "R_ISR vs. pT_lep, Cat. 3 (tt+X)";
 
+
+
+
+  g_Xname = "pT_lep";
+  g_Xmin = 0.0;
+  g_Xmax = 1000.;
+  units_per_bin_x = 10;
+  g_NX = (int)(g_Xmax - g_Xmin)/units_per_bin_x;
 
   g_Yname = "R_ISR";
   g_Ymin = 0.0;
   g_Ymax = 1.3; 
   units_per_bin_y = 0.01;
   g_NY = (int)(g_Ymax - g_Ymin)/units_per_bin_y;
-
-  g_Xname = "pT_lep";
-  g_Xmin = 0.0;
-  g_Xmax = 1000.;
-  units_per_bin_x = 10;
-  g_NY = (int)(g_Xmax - g_Xmin)/units_per_bin_x;
 
   // g_Xname = "Njets_S";
   // g_Xmin = 0.0;
@@ -165,7 +168,6 @@ SampleSet DYjets;
   // g_Ymax = 5.0;
   // units_per_bin_y = 1.0;
   // g_NY = (int)(g_Ymax - g_Ymin)/units_per_bin_y;
-
 
 
 
