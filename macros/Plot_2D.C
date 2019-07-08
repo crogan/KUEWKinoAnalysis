@@ -138,7 +138,7 @@ void Plot_2D(){
 
   int Nsample = g_Samples.size();
   //string g_Label = "No selection";
-  string g_Label = "R_ISR vs. pT_lep, Cat. 3 (tt+X)";
+  string g_Label = "pT_ISR vs. pT_lep, Cat. 3 (tt+X)";
 
 
   g_Yname = "pT_lep";
@@ -147,10 +147,10 @@ void Plot_2D(){
   units_per_bin_y = 10;
   g_NY = (int)(g_Ymax - g_Ymin)/units_per_bin_y;
 
-  g_Xname = "R_ISR";
+  g_Xname = "pT_ISR";
   g_Xmin = 0.0;
-  g_Xmax = 1.3; 
-  units_per_bin_x = 0.01;
+  g_Xmax = 1000.; 
+  units_per_bin_x = 10.;
   g_NX = (int)(g_Xmax - g_Xmin)/units_per_bin_x;
 
   // g_Xname = "Njets_S";
@@ -203,7 +203,7 @@ void Plot_2D(){
   if(base->Nlep != 1)
     continue;
       
-	hist->Fill(base->RISR->at(2), base->PT_lep->at(0), base->weight*double(SKIP));
+	hist->Fill(base->PTISR->at(2), base->PT_lep->at(0), base->weight*double(SKIP));
       }
 
       delete base;
@@ -246,7 +246,7 @@ void Plot_2D(){
   hist->GetZaxis()->SetLabelFont(42);
   hist->GetZaxis()->SetLabelSize(0.05);
   hist->GetZaxis()->SetTitle("a. u.");
-  hist->GetZaxis()->SetRangeUser(10E-3,1.1*hist->GetMaximum()); //0.9*hist->GetMinimum(0.0)
+  hist->GetZaxis()->SetRangeUser(0.9*hist->GetMinimum(0.0),1.1*hist->GetMaximum()); //0.9*hist->GetMinimum(0.0)
 
   // TLatex l;
   // l.SetTextFont(42);
