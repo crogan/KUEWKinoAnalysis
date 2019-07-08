@@ -279,7 +279,7 @@ void Plot_2D(){
 
   // SampleSet sample;
   // sample.write_plot("output/2Dplots.root",g_Label, can);
-  TString file_name = "output/"+g_Label+"bkg17.root";
+  TString file_name = "output/2D_plots"+g_Label+"bkg17.root";
   TFile* file = new TFile(file_name,"RECREATE");
   file->cd();
   can->Write();
