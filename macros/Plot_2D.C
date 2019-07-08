@@ -246,8 +246,7 @@ void Plot_2D(){
   hist->GetZaxis()->SetLabelFont(42);
   hist->GetZaxis()->SetLabelSize(0.05);
   hist->GetZaxis()->SetTitle("a. u.");
-  hist->GetZaxis()->SetMinimum(10E-10);
-  hist->GetZaxis()->SetRangeUser(0.9*hist->GetMinimum(0.0),1.1*hist->GetMaximum());
+  hist->GetZaxis()->SetRangeUser(10E-10,1.1*hist->GetMaximum()); //0.9*hist->GetMinimum(0.0)
 
   // TLatex l;
   // l.SetTextFont(42);
