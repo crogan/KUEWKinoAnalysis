@@ -231,14 +231,14 @@ void Plot_2D(){
   hist->GetXaxis()->SetTitleOffset(1.06);
   hist->GetXaxis()->SetLabelFont(42);
   hist->GetXaxis()->SetLabelSize(0.05);
-  hist->GetXaxis()->SetTitle(g_Xname.c_str()+" (GeV)");
+  hist->GetXaxis()->SetTitle(g_Xname.c_str());
   hist->GetYaxis()->CenterTitle();
   hist->GetYaxis()->SetTitleFont(42);
   hist->GetYaxis()->SetTitleSize(0.06);
   hist->GetYaxis()->SetTitleOffset(1.12);
   hist->GetYaxis()->SetLabelFont(42);
   hist->GetYaxis()->SetLabelSize(0.05);
-  hist->GetYaxis()->SetTitle(g_Yname.c_str()+" (GeV)");
+  hist->GetYaxis()->SetTitle(g_Yname.c_str());
   hist->GetZaxis()->CenterTitle();
   hist->GetZaxis()->SetTitleFont(42);
   hist->GetZaxis()->SetTitleSize(0.06);
