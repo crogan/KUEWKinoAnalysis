@@ -141,17 +141,17 @@ void Plot_2D(){
   string g_Label = "R_ISR vs. pT_lep, Cat. 3 (tt+X)";
 
 
-  g_Xname = "pT_lep";
-  g_Xmin = 0.0;
-  g_Xmax = 1000.;
-  units_per_bin_x = 10;
-  g_NX = (int)(g_Xmax - g_Xmin)/units_per_bin_x;
-
-  g_Yname = "R_ISR";
+  g_Yname = "pT_lep";
   g_Ymin = 0.0;
-  g_Ymax = 1.3; 
-  units_per_bin_y = 0.01;
+  g_Ymax = 1000.;
+  units_per_bin_y = 10;
   g_NY = (int)(g_Ymax - g_Ymin)/units_per_bin_y;
+
+  g_Xname = "R_ISR";
+  g_Xmin = 0.0;
+  g_Xmax = 1.3; 
+  units_per_bin_x = 0.01;
+  g_NX = (int)(g_Xmax - g_Xmin)/units_per_bin_x;
 
   // g_Xname = "Njets_S";
   // g_Xmin = 0.0;
@@ -203,7 +203,7 @@ void Plot_2D(){
   if(base->Nlep != 1)
     continue;
       
-	hist->Fill(base->PT_lep->at(0), base->RISR->at(2) , base->weight*double(SKIP));
+	hist->Fill(base->RISR->at(2), base->PT_lep->at(0), base->weight*double(SKIP));
       }
 
       delete base;
