@@ -57,7 +57,6 @@ void Plot_2D(){
   ttX.SetSkip(10);
   g_Samples.push_back(&ttX);
 
-
 // SampleSet DYjets;
 //   DYjets.SetBkg(true);
 //   DYjets.SetTitle("DY + jets");
@@ -138,11 +137,9 @@ void Plot_2D(){
   // g_Samples.push_back(&SIG3);
 
   int Nsample = g_Samples.size();
-  
+  cout << "set samples" << endl;
   //string g_Label = "No selection";
   string g_Label = "R_ISR vs. pT_lep, Cat. 3 (tt+X)";
-
-
 
 
   g_Xname = "pT_lep";
@@ -170,7 +167,7 @@ void Plot_2D(){
   // g_NY = (int)(g_Ymax - g_Ymin)/units_per_bin_y;
 
 
-
+  cout << "labels" << endl;
   int TREE = 2;
 
   TH2D* hist = new TH2D("hist","hist",
@@ -207,8 +204,10 @@ void Plot_2D(){
 
   if(base->Nlep != 1)
     continue;
+  cout << "point a" << endl;
       
 	hist->Fill(base->PT_lep->at(0), base->RISR->at(2) , base->weight*double(SKIP));
+  cout << "hist fill" <<endl;
       }
 
       delete base;
