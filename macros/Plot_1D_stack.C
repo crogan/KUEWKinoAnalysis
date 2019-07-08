@@ -148,17 +148,21 @@ void Plot_1D_stack(){
   int Nsample = g_Samples.size();
   cout << "Nsample: " << Nsample << endl;
 
-  g_PlotTitle = "#eta_{electron}";
+  g_PlotTitle = "Njets_ISR, Cat. 3";
   g_Lumi = 100;
 
-  g_Xname = "eta_{electron}";
+  g_Xname = "Njets_ISR, Cat. 3";
   g_Xmin = 0.0;
 
+  //Njets_X
+  g_Xmin = 0.0;
+  g_Xmax = 15.;
+  units_per_bin = 1.;
 
   //Eta
-  g_Xmin = -3.3;
-  g_Xmax = 3.3;
-  units_per_bin = 0.1;
+  // g_Xmin = -3.3;
+  // g_Xmax = 3.3;
+  // units_per_bin = 0.1;
 
   //dPhiCMI
   // g_Xmin = 0.0;
@@ -206,8 +210,8 @@ void Plot_1D_stack(){
 	if(base->Nlep != 1)
     continue;
 
-  if(base->PDGID_lep->at(0) != 11 && base->PDGID_lep->at(0) != -11)
-    continue;
+  // if(base->PDGID_lep->at(0) != 11 && base->PDGID_lep->at(0) != -11) //lepton flavor (11: e; 13: mu)
+  //   continue;
 
   // if(base->Nlep != 3) //medium working point
   //   continue;
@@ -239,7 +243,7 @@ void Plot_1D_stack(){
 	// if(base->PDGID_lep->at(0)+base->PDGID_lep->at(1) != 0)
 	//   continue;
 	
-	hist[s]->Fill(base->Eta_lep->at(0), base->weight*g_Lumi*double(SKIP));
+	hist[s]->Fill(base->Njet_ISR->at(2), base->weight*g_Lumi*double(SKIP));
       }
 
       delete base;
