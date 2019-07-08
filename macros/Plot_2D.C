@@ -149,7 +149,7 @@ void Plot_2D(){
 
   g_Xname = "pT_ISR";
   g_Xmin = 0.0;
-  g_Xmax = 1000.; 
+  g_Xmax = 2000.; 
   units_per_bin_x = 10.;
   g_NX = (int)(g_Xmax - g_Xmin)/units_per_bin_x;
 
@@ -246,7 +246,7 @@ void Plot_2D(){
   hist->GetZaxis()->SetLabelFont(42);
   hist->GetZaxis()->SetLabelSize(0.05);
   hist->GetZaxis()->SetTitle("a. u.");
-  hist->GetZaxis()->SetRangeUser(0.9*hist->GetMinimum(0.0),1.1*hist->GetMaximum()); //0.9*hist->GetMinimum(0.0)
+  hist->GetZaxis()->SetRangeUser(10E-3,1.1*hist->GetMaximum()); //0.9*hist->GetMinimum(0.0)
 
   // TLatex l;
   // l.SetTextFont(42);
