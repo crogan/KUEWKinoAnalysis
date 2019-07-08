@@ -148,10 +148,10 @@ void Plot_1D_stack(){
   int Nsample = g_Samples.size();
   cout << "Nsample: " << Nsample << endl;
 
-  g_PlotTitle = "#eta_{#mu}";
+  g_PlotTitle = "#eta_{electron}";
   g_Lumi = 100;
 
-  g_Xname = "eta_{mu}";
+  g_Xname = "eta_{electron}";
   g_Xmin = 0.0;
 
 
@@ -206,7 +206,7 @@ void Plot_1D_stack(){
 	if(base->Nlep != 1)
     continue;
 
-  if(base->PDGID_lep->at(0) != 13 && base->PDGID_lep->at(0) != -13)
+  if(base->PDGID_lep->at(0) != 11 && base->PDGID_lep->at(0) != -11)
     continue;
 
   // if(base->Nlep != 3) //medium working point
