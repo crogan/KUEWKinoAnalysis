@@ -57,27 +57,27 @@ void Plot_2D(){
   ttX.SetSkip(10);
   g_Samples.push_back(&ttX);
 
-// SampleSet DYjets;
-//   DYjets.SetBkg(true);
-//   DYjets.SetTitle("DY + jets");
-//   DYjets.SetColor(kGreen-7);
-//   DYjets.AddFile(StopNtuplePath+"All_Bkg_2017/DYJetsToLL_M-5to50_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
-//   DYjets.AddFile(StopNtuplePath+"All_Bkg_2017/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17.root");
-//   DYjets.SetSkip(BKG_SKIP);
-//   g_Samples.push_back(&DYjets);
+SampleSet DYjets;
+  DYjets.SetBkg(true);
+  DYjets.SetTitle("DY + jets");
+  DYjets.SetColor(kGreen-7);
+  DYjets.AddFile(StopNtuplePath+"All_Bkg_2017/DYJetsToLL_M-5to50_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  DYjets.AddFile(StopNtuplePath+"All_Bkg_2017/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17.root");
+  DYjets.SetSkip(BKG_SKIP);
+  g_Samples.push_back(&DYjets);
 
-//   SampleSet Wjets;
-//   Wjets.SetBkg(true);
-//   Wjets.SetTitle("W + jets");
-//   Wjets.SetColor(kRed-7);
-//   Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
-//   Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
-//   Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
-//   Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
-//   Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
-//   Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
-//   Wjets.SetSkip(BKG_SKIP);
-//   g_Samples.push_back(&Wjets);
+  SampleSet Wjets;
+  Wjets.SetBkg(true);
+  Wjets.SetTitle("W + jets");
+  Wjets.SetColor(kRed-7);
+  Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  Wjets.SetSkip(BKG_SKIP);
+  g_Samples.push_back(&Wjets);
 
   // SampleSet ST;
   // ST.SetBkg(true);
