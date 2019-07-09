@@ -141,8 +141,9 @@ ReducedNtuple<Base>::ReducedNtuple(TTree* tree)
     tree_plot.SetTree(*INV[t]);
     tree_plot.Draw(Form("ANA_inv_%d",t), Form("Invisible Jigsaws %d",t),1);
   }
-  */
+
   tree_plot.WriteOutput("trees.root");
+  */
 
    // Calculated Observables
   for(int i = 0; i < 2; i++){
