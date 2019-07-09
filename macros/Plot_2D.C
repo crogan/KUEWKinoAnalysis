@@ -108,14 +108,14 @@ void Plot_2D(){
   // DB.SetSkip(BKG_SKIP);
   // g_Samples.push_back(&DB);
  
-  SampleSet SIG1;
-  SIG1.SetBkg(false);
-  SIG1.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 170");
-  SIG1.SetTreeName("SMS_200_170");
-  SIG1.SetColor(kMagenta-7);
-  SIG1.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
-  SIG1.SetSkip(1);
-  g_Samples.push_back(&SIG1);
+  // SampleSet SIG1;
+  // SIG1.SetBkg(false);
+  // SIG1.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 170");
+  // SIG1.SetTreeName("SMS_200_170");
+  // SIG1.SetColor(kMagenta-7);
+  // SIG1.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
+  // SIG1.SetSkip(1);
+  // g_Samples.push_back(&SIG1);
 
   // SampleSet SIG2;
   // SIG2.SetBkg(false);
@@ -127,23 +127,23 @@ void Plot_2D(){
   // g_Samples.push_back(&SIG2);
 
 
-  // SampleSet SIG3;
-  // SIG3.SetBkg(false);
-  // SIG3.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 1");
-  // SIG3.SetTreeName("SMS_200_1");
-  // SIG3.SetColor(kViolet-7);
-  // SIG3.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
-  // SIG3.SetSkip(1);
-  // g_Samples.push_back(&SIG3);
+  SampleSet SIG3;
+  SIG3.SetBkg(false);
+  SIG3.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 1");
+  SIG3.SetTreeName("SMS_200_1");
+  SIG3.SetColor(kViolet-7);
+  SIG3.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
+  SIG3.SetSkip(1);
+  g_Samples.push_back(&SIG3);
 
   int Nsample = g_Samples.size();
   //string g_Label = "No selection";
-  string g_Label = "pT_ISR vs. pT_lep, Cat. 3 (sig: 200-170 GeV)";
+  string g_Label = "pT_ISR vs. pT_lep, Cat. 3 (sig: 200-1 GeV)";
 
 
   g_Yname = "pT_lep (GeV)";
   g_Ymin = 0.0;
-  g_Ymax = 100.;
+  g_Ymax = 50.;
   units_per_bin_y = 1.;
   g_NY = (int)(g_Ymax - g_Ymin)/units_per_bin_y;
 
