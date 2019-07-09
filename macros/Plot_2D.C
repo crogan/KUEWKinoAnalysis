@@ -150,7 +150,7 @@ void Plot_2D(){
   g_Xname = "pT_ISR (GeV)";
   g_Xmin = 0.0;
   g_Xmax = 1000.; 
-  units_per_bin_x = 10.;
+  units_per_bin_x = 5.;
   g_NX = (int)(g_Xmax - g_Xmin)/units_per_bin_x;
 
   // g_Xname = "Njets_S";
