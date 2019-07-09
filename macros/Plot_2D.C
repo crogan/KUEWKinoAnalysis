@@ -143,7 +143,7 @@ void Plot_2D(){
 
   g_Yname = "pT_lep (GeV)";
   g_Ymin = 0.0;
-  g_Ymax = 50.;
+  g_Ymax = 100.;
   units_per_bin_y = 1.;
   g_NY = (int)(g_Ymax - g_Ymin)/units_per_bin_y;
 
