@@ -108,23 +108,23 @@ void Plot_2D(){
   // DB.SetSkip(BKG_SKIP);
   // g_Samples.push_back(&DB);
  
-  SampleSet SIG1;
-  SIG1.SetBkg(false);
-  SIG1.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 170");
-  SIG1.SetTreeName("SMS_200_170");
-  SIG1.SetColor(kMagenta-7);
-  SIG1.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
-  SIG1.SetSkip(1);
-  g_Samples.push_back(&SIG1);
+  // SampleSet SIG1;
+  // SIG1.SetBkg(false);
+  // SIG1.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 170");
+  // SIG1.SetTreeName("SMS_200_170");
+  // SIG1.SetColor(kMagenta-7);
+  // SIG1.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
+  // SIG1.SetSkip(1);
+  // g_Samples.push_back(&SIG1);
 
-  // SampleSet SIG2;
-  // SIG2.SetBkg(false);
-  // SIG2.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 197");
-  // SIG2.SetTreeName("SMS_200_197");
-  // SIG2.SetColor(kBlue-7);
-  // SIG2.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
-  // SIG2.SetSkip(1);
-  // g_Samples.push_back(&SIG2);
+  SampleSet SIG2;
+  SIG2.SetBkg(false);
+  SIG2.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 197");
+  SIG2.SetTreeName("SMS_200_197");
+  SIG2.SetColor(kBlue-7);
+  SIG2.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
+  SIG2.SetSkip(1);
+  g_Samples.push_back(&SIG2);
 
 
   // SampleSet SIG3;
@@ -138,7 +138,7 @@ void Plot_2D(){
 
   int Nsample = g_Samples.size();
   //string g_Label = "No selection";
-  string g_Label = "pT_ISR vs. pT_lep, Cat. 3 (sig: 200-170 GeV)";
+  string g_Label = "pT_ISR vs. pT_lep, Cat. 3 (sig: 200-197 GeV)";
 
 
   g_Yname = "pT_lep";
@@ -276,7 +276,7 @@ void Plot_2D(){
 
   // SampleSet sample;
   // sample.write_plot("output/2Dplots.root",g_Label, can);
-  TString file_name = "output/2D_plots"+g_Label+"bkg17.root";
+  TString file_name = "output/2D_plots/"+g_Label+".root";
   TFile* file = new TFile(file_name,"RECREATE");
   file->cd();
   can->Write();
