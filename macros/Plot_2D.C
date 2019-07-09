@@ -42,6 +42,7 @@ void Plot_2D(){
 
   int BKG_SKIP = 10;
 
+  double CORRECT2 = 0.;
   double CORRECT = 0.;
   double TOTAL   = 0.;
   
@@ -55,7 +56,7 @@ void Plot_2D(){
   // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/ttWJets_TuneCP5_13TeV_madgraphMLM_pythia8_Fall17.root");
   // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/ttZJets_TuneCP5_13TeV_madgraphMLM_pythia8_Fall17.root");
   // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTGJets_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8_Fall17.root");
-  ttX.SetSkip(50);
+  ttX.SetSkip(500);
   g_Samples.push_back(&ttX);
 
   // SampleSet DYjets;
@@ -99,7 +100,7 @@ void Plot_2D(){
   // SampleSet SIG1;
   // SIG1.SetBkg(false);
   // SIG1.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 100");
-  // SIG1.SetTreeName("SMS_300_240");
+  // SIG1.SetTreeName("SMS_300_270");
   // SIG1.SetColor(kMagenta);
   // SIG1.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
   // SIG1.SetSkip(1);
@@ -112,12 +113,12 @@ void Plot_2D(){
 
 
   g_Xname = "N_{lep}^{S}";
-  g_Xmin = -1.;
-  g_Xmax = 1.; 
+  g_Xmin = 0.4;
+  g_Xmax = 1.1; 
   g_NX = 32;
   g_Yname = "N_{jet}^{S}";
-  g_Ymin = -1.;
-  g_Ymax = 1.;
+  g_Ymin = 0.;
+  g_Ymax = 180.;
   g_NY = 32;
 
   int TREE = 2;
@@ -133,8 +134,12 @@ void Plot_2D(){
   DecayRecoFrame     X2X2("X2X2","#tilde{#chi}^{ 0}_{2} #tilde{#chi}^{ 0}_{2}");
   DecayRecoFrame     X2a("X2a","#tilde{#chi}^{ 0}_{2 a}");
   DecayRecoFrame     X2b("X2b","#tilde{#chi}^{ 0}_{2 b}");
-  VisibleRecoFrame   Va("Za","Z_{a}");
-  VisibleRecoFrame   Vb("Hb","H_{b}");
+  DecayRecoFrame     Va("Va","V_{a}");
+  DecayRecoFrame     Vb("Vb","V_{b}");
+  VisibleRecoFrame   La("La","lep_{a}");
+  VisibleRecoFrame   Lb("Lb","lep_{b}");
+  VisibleRecoFrame   Ja("Ja","jet_{a}");
+  VisibleRecoFrame   Jb("Jb","jet_{b}");
   InvisibleRecoFrame X1a("X1a","#tilde{#chi}^{ 0}_{1 a}");
   InvisibleRecoFrame X1b("X1b","#tilde{#chi}^{ 0}_{1 b}");
 
@@ -149,6 +154,10 @@ void Plot_2D(){
   X2a.AddChildFrame(X1a);
   X2b.AddChildFrame(Vb);
   X2b.AddChildFrame(X1b);
+  Va.AddChildFrame(La);
+  Vb.AddChildFrame(Lb);
+  Va.AddChildFrame(Ja);
+  Vb.AddChildFrame(Jb);
 
   if(LAB.InitializeTree())
     g_Log << LogInfo << "...Successfully initialized reconstruction trees" << LogEnd;
@@ -173,25 +182,47 @@ void Plot_2D(){
 
   //ContraBoostInvJigsaw X1X1_minM2("X1X1_contra","Contraboost invariant Jigsaw");
   //MinMassDiffInvJigsaw X1X1_contra("MinMh_R","min M_{h}, M_{h}^{ a}= M_{h}^{ b}",2);
-  MinMassesSqInvJigsaw X1X1_contra("MinMWa_R","min M_{W}, M_{W}^{a,a}= M_{W}^{a,b}", 2);
+  MinMassesSqInvJigsaw X1X1_contra("MinM2Inv","min M_{W}, M_{X}^{,a}= M_{W}^{a,b}", 2);
   INV.AddJigsaw(X1X1_contra);
   X1X1_contra.AddVisibleFrames(X2a.GetListVisibleFrames(), 0);
   X1X1_contra.AddVisibleFrames(X2b.GetListVisibleFrames(), 1);
   X1X1_contra.AddInvisibleFrame(X1a, 0);
   X1X1_contra.AddInvisibleFrame(X1b, 1);
 
-  CombinatoricGroup COMB("COMB", "Combinatoric System");
-  COMB.AddFrame(Va);
-  COMB.AddFrame(Vb);
-  COMB.SetNElementsForFrame(Va, 1);
-  COMB.SetNElementsForFrame(Vb, 1);
-  MinMassesCombJigsaw CombSplit("CombSplit", "Minimize M_{Va} and M_{Vb} Jigsaw");
-  CombSplit.AddCombFrame(Va, 0);
-  CombSplit.AddCombFrame(Vb, 1);
-  CombSplit.AddObjectFrame(Va, 0);
-  CombSplit.AddObjectFrame(Vb, 1);
-  COMB.AddJigsaw(CombSplit);
-     
+  CombinatoricGroup COMB_J("COMB_J", "Combinatoric System of jets");
+  COMB_J.AddFrame(ISR);
+  COMB_J.AddFrame(Ja);
+  COMB_J.AddFrame(Jb);
+  COMB_J.SetNElementsForFrame(ISR, 1);
+  COMB_J.SetNElementsForFrame(Ja, 0);
+  COMB_J.SetNElementsForFrame(Jb, 0);
+  MinMassesCombJigsaw CombSplit_ISR("CombSplit_ISR", "Minimize M_{ISR} and M_{S} Jigsaw");
+  CombSplit_ISR.SetTransverse();
+  CombSplit_ISR.AddCombFrame(ISR, 0);
+  CombSplit_ISR.AddCombFrame(Ja, 1);
+  CombSplit_ISR.AddCombFrame(Jb, 1);
+  CombSplit_ISR.AddObjectFrame(ISR, 0);
+  CombSplit_ISR.AddObjectFrame(X2X2, 1);
+  COMB_J.AddJigsaw(CombSplit_ISR);
+  MinMassesSqCombJigsaw CombSplit_J("CombSplit_J", "Minimize M_{Va} and M_{Vb} Jigsaw",2,2);
+  CombSplit_J.AddCombFrame(Ja, 0);
+  CombSplit_J.AddCombFrame(Jb, 1);
+  CombSplit_J.AddObjectFrame(Va, 0);
+  CombSplit_J.AddObjectFrame(Vb, 1);
+  COMB_J.AddJigsaw(CombSplit_J);
+
+  CombinatoricGroup COMB_L("COMB_L", "Combinatoric System of leptons");
+  COMB_L.AddFrame(La);
+  COMB_L.AddFrame(Lb);
+  COMB_L.SetNElementsForFrame(La, 1);
+  COMB_L.SetNElementsForFrame(Lb, 0);
+  MinMassesSqCombJigsaw CombSplit_L("CombSplit_L", "Minimize M_{Va} and M_{Vb} Jigsaw",2,2);
+  CombSplit_L.AddCombFrame(La, 0);
+  CombSplit_L.AddCombFrame(Lb, 1);
+  CombSplit_L.AddObjectFrame(Va, 0);
+  CombSplit_L.AddObjectFrame(Vb, 1);
+  COMB_L.AddJigsaw(CombSplit_L);
+
   
   if(LAB.InitializeAnalysis())
     g_Log << LogInfo << "...Successfully initialized analysis" << std::endl << LogEnd;
@@ -199,8 +230,9 @@ void Plot_2D(){
     g_Log << LogError << "...Failed initializing analysis" << LogEnd;
   ////////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////////////
-
+  
   for(int s = 0; s < Nsample; s++){
+    
     int Nfile = g_Samples[s]->GetNFile();
     cout << "Processing " << Nfile << " files for sample " << g_Samples[s]->GetTitle() << endl;
     for(int f = 0; f < Nfile; f++){
@@ -214,7 +246,8 @@ void Plot_2D(){
       int Nentry = base->fChain->GetEntries();
 
       int SKIP = g_Samples[s]->GetSkip();
-      for(int e = 0; e < Nentry; e += SKIP){
+      //for(int e = 0; e < 10; e += SKIP){
+	for(int e = 0; e < Nentry; e += SKIP){
 	base->GetEntry(e);
 	if((e/SKIP)%(std::max(1, int(Nentry/SKIP/10))) == 0)
 	  cout << "      event " << e << " | " << Nentry << endl;
@@ -222,7 +255,7 @@ void Plot_2D(){
 	if(base->Nlep != 2)
 	  continue;
 
-	if(base->Njet_S->at(1) != 2)
+	if(base->Njet < 3)
 	  continue;
 
 	if(base->ID_lep->at(0) < 3 || base->ID_lep->at(1) < 3)
@@ -274,75 +307,40 @@ void Plot_2D(){
 	if(base->PDGID_lep->at(0)+base->PDGID_lep->at(1) != 0)
 	  continue;
 
-	TLorentzVector vV, vVa, vVb;
-	
-	TLorentzVector lep[2];
-	for(int i = 0; i < 2; i++){
-	  lep[i].SetPtEtaPhiM(base->PT_lep->at(i),base->Eta_lep->at(i),base->Phi_lep->at(i),base->M_lep->at(i));
-	  vV += lep[i];
-	  vVa += lep[i];
-	}
-	  
-	TLorentzVector vISR;
-	for(int i = 0; i < base->Njet; i++){
-	  TLorentzVector jeti;
-	  jeti.SetPtEtaPhiM(base->PT_jet->at(i),base->Eta_jet->at(i),base->Phi_jet->at(i),base->M_jet->at(i));
-	  vISR += jeti;
-	}
 
-	TLorentzVector jet[2];
-	for(int i = 0; i < 2; i++){
-	  int index = base->index_jet_S->at(1)[i];
-	  jet[i].SetPtEtaPhiM(base->PT_jet->at(index),base->Eta_jet->at(index),base->Phi_jet->at(index),base->M_jet->at(index));
-	  vISR -= jet[i];
-	  vV += jet[i];
-	  vVb += jet[i];
-	}
-	
-	TLorentzVector P_V = vV;
-	TLorentzVector P_I;
-	P_I.SetPtEtaPhiM(base->MET, 0., base->MET_phi, 0.);
-	
-	P_V.SetPxPyPzE(P_V.Px(),P_V.Py(),0.,sqrt(P_V.Pt()*P_V.Pt() + P_V.M2()));
-	P_I.SetPxPyPzE(P_I.Px(),P_I.Py(),0.,sqrt(P_I.Pt()*P_I.Pt() + P_I.M2()));
-
-	double Ei = P_V.E()*(P_I.P()*P_I.P() + P_V.Vect().Dot(P_I.Vect()))/(P_V.P()*P_V.P() + P_V.Vect().Dot(P_I.Vect()));
-
-	
-	
-	// if(Ei < 0){
-	//   //cout << "HERE " << endl;
-	//   continue;
-	// } 
-      
-	double MI2 = (pow(P_V.E()*(P_I.P()*P_I.P() + P_V.Vect().Dot(P_I.Vect()))/(P_V.P()*P_V.P() + P_V.Vect().Dot(P_I.Vect())),2.) -
-		      P_I.P()*P_I.P() - P_V.M2() +
-		      pow(vVa.M()+vVb.M(),2.)) / 4.;
-
-	// if(MI2 < 0.)
-	//   continue;
-	
-	double MI = sqrt( MI2 );
-
-	double Minv = sqrt(Ei*Ei - P_I.P()*P_I.P());
 
 	// analyze event
 	LAB.ClearEvent();                                 // clear the reco tree
 
+	// std::vector<RFKey> jetID;
+	// std::vector<RFKey> lepID;
+	// for(int i = 0; i < 2; i++){
+	//   jetID.push_back(COMB.AddLabFrameFourVector(jet[i]));
+	//   lepID.push_back(COMB.AddLabFrameFourVector(lep[i]));
+	// }
+
 	std::vector<RFKey> jetID;
-	std::vector<RFKey> lepID;
-	for(int i = 0; i < 2; i++){
-	  jetID.push_back(COMB.AddLabFrameFourVector(jet[i]));
-	  lepID.push_back(COMB.AddLabFrameFourVector(lep[i]));
+	for(int i = 0; i < base->Njet; i++){
+	  TLorentzVector jet;
+	  jet.SetPtEtaPhiM(base->PT_jet->at(i),base->Eta_jet->at(i),base->Phi_jet->at(i),base->M_jet->at(i));
+	  jetID.push_back(COMB_J.AddLabFrameFourVector(jet));
 	}
+
+	std::vector<RFKey> lepID;
+	for(int i = 0; i < base->Nlep; i++){
+	  TLorentzVector lep;
+	  lep.SetPtEtaPhiM(base->PT_lep->at(i),base->Eta_lep->at(i),base->Phi_lep->at(i),base->M_lep->at(i));
+	  lepID.push_back(COMB_L.AddLabFrameFourVector(lep));
+	}
+	
 	
 	//Va.SetLabFrameFourVector(vVa); // Set lepton 4-vectors
 	//Vb.SetLabFrameFourVector(vVb); 
-	ISR.SetLabFrameFourVector(vISR);
+	//ISR.SetLabFrameFourVector(vISR);
 	TLorentzVector MET;
-	MET.SetVectM(P_I.Vect(), Minv);    // Get the MET from gen tree
+	MET.SetPtEtaPhiM(base->MET, 0., base->MET_phi, 0.);    // Get the MET from gen tree
 	//INV.SetLabFrameFourVector(MET);
-	INV.SetLabFrameThreeVector(P_I.Vect());                  // Set the MET in reco tree
+	INV.SetLabFrameThreeVector(MET.Vect());                  // Set the MET in reco tree
 
 	// X1a.SetMinimumMass(MI);
 	// X1b.SetMinimumMass(MI);
@@ -356,21 +354,44 @@ void Plot_2D(){
 	int Njet_Vb   = 0;
 	int Nlep_Va = 0;
 	int Nlep_Vb   = 0;
-	for(int i = 0; i < 2; i++){
-	  if(COMB.GetFrame(jetID[i]) == Va)
-	    Njet_Va++;
-	  else
-	    Njet_Vb++;
-	  if(COMB.GetFrame(lepID[i]) == Va)
-	    Nlep_Va++;
-	  else
-	    Nlep_Vb++;
+	int Njet_ISR = 0;
+	int Njet_V  = 0;
+
+	for(int i = 0; i < int(jetID.size()); i++){
+	  if(COMB_J.GetFrame(jetID[i]) == ISR){
+	    Njet_ISR++;
+	  } else {
+	    Njet_V++;
+	    if(COMB_J.GetFrame(jetID[i]) == Ja)
+	      Njet_Va++;
+	    else
+	      Njet_Vb++;
+	  }
 	}
 
+	for(int i = 0; i < int(lepID.size()); i++){
+	  if(COMB_L.GetFrame(lepID[i]) == La){
+	    Nlep_Va++;
+	  } else {
+	    Nlep_Vb++;
+	  }
+	}
+
+
 	TOTAL += base->weight;
-	if((Njet_Va == 2 && Nlep_Va == 0) ||
-	   (Njet_Va == 0 && Nlep_Va == 2))
+	//if(Njet_V == 2){
+	if(base->Njet_S->at(1) == 2){
 	  CORRECT += base->weight;
+	  if(Njet_Vb == 2 && Nlep_Va == 2 && Njet_Va == 0)
+	    CORRECT2 += base->weight;
+	}
+
+	// TOTAL += base->weight;
+	// if((base->Njet_S->at(1) == 2 &&
+	//     base->Nlep_S->at(1) == 2)) 
+	//   CORRECT += base->weight;
+      
+	//cout << base->Njet_S->at(1) << " " << Njet_Va << " " << Njet_Vb << endl;
 	
 	//cout << Njet_Va << " " << Nlep_Va << endl;
 	
@@ -389,13 +410,13 @@ void Plot_2D(){
 
 	double MP = X2a.GetMass();
 
-	double RISR2 = MI/MP;
+
 
 	if(base->PTISR->at(1) < 200.)
 	  continue;
 
-	// if(base->RISR->at(1) < 0.6)
-	//   continue;
+	if(base->RISR->at(1) < 0.6)
+	  continue;
 
 	TVector3 vP_ISR = X2X2.GetFourVector(CM).Vect();
 	TVector3 vP_I   = X2X2.GetListInvisibleFrames().GetFourVector(CM).Vect();
@@ -418,16 +439,16 @@ void Plot_2D(){
 
 	//cout << base->MiniIso_lep->at(0) << " " << base->MiniIso_lep->at(1) << endl;
 
-	if(!((Njet_Va == 2 && Nlep_Va == 0) ||
-	     (Njet_Va == 0 && Nlep_Va == 2)))
+	if(!((Njet_Va == 2 && Nlep_Va == 0 && Njet_Vb == 0 && Nlep_Vb == 2) ||
+	     (Njet_Va == 0 && Nlep_Va == 2 && Njet_Vb == 2 && Nlep_Vb == 0)))
 	  continue;
 	//   hist->Fill(RISR, 0.5, base->weight*double(SKIP));
 	// else
 	//   hist->Fill(RISR, -0.5, base->weight*double(SKIP));
 	if(Njet_Va == 0)
-	  hist->Fill(X2X2.GetCosDecayAngle(), X2b.GetCosDecayAngle(), base->weight*double(SKIP));
+	  hist->Fill(RISR, Vb.GetEnergy(X2b), base->weight*double(SKIP));
 	else
-	  hist->Fill(-X2X2.GetCosDecayAngle(), X2a.GetCosDecayAngle(), base->weight*double(SKIP));
+	  hist->Fill(RISR, Va.GetEnergy(X2a), base->weight*double(SKIP));
       }
 
       delete base;
@@ -436,6 +457,7 @@ void Plot_2D(){
   }
 
   cout << "TOTAL CORRECT ASSIGNMENT = " << CORRECT/TOTAL << endl;
+  cout << "TOTAL CORRECT2 ASSIGNMENT = " << CORRECT2/CORRECT << endl;
   
   gStyle->SetOptTitle(0);
   gStyle->SetOptStat(0);

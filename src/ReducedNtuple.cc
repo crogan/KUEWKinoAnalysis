@@ -12,359 +12,265 @@ ReducedNtuple<Base>::ReducedNtuple(TTree* tree)
   : NtupleBase<Base>(tree)
 {
   // RestFrames stuff setup
+
   
-  // ISR-style trees
-  for(int t = 0; t < 3; t++){
-    LAB_ISR[t] = new LabRecoFrame(Form("LAB_ISR%d",t),"LAB");
-    CM_ISR[t]  = new DecayRecoFrame(Form("CM_ISR%d",t),"CM");
-    S_ISR[t]   = new DecayRecoFrame(Form("S_ISR%d",t),"#tilde{S}");
-    ISR_ISR[t] = new VisibleRecoFrame(Form("ISR_ISR%d",t),"ISR");
-    V_ISR[t]   = new VisibleRecoFrame(Form("V_ISR%d",t),"Vis");
-    L_ISR[t]   = new VisibleRecoFrame(Form("L_ISR%d",t),"Lep");
-    I_ISR[t]   = new InvisibleRecoFrame(Form("I_ISR%d",t),"Inv");
+  // RestFrame Decay Trees
+  for(int t = 0; t < 2; t++){
+    LAB[t] = new LabRecoFrame(Form("LAB_%d",t),"LAB");
+    CM[t]  = new DecayRecoFrame(Form("CM_%d",t),"CM");
+    S[t]   = new DecayRecoFrame(Form("S_%d",t),"#tilde{S}");
+    X3a[t] = new DecayRecoFrame(Form("X3a_%d",t),"#tilde{#chi}_{3a}");
+    X3b[t] = new DecayRecoFrame(Form("X3b_%d",t),"#tilde{#chi}_{3b}");
+    X2a[t] = new DecayRecoFrame(Form("X2a_%d",t),"#tilde{#chi}_{2a}");
+    X2b[t] = new DecayRecoFrame(Form("X2b_%d",t),"#tilde{#chi}_{2b}");
+    saJa[t]  = new SelfAssemblingRecoFrame(Form("saJa_%d",t),"jets_{a}");
+    saJb[t]  = new SelfAssemblingRecoFrame(Form("saJb_%d",t),"jets_{b}");
+    saLa[t]  = new SelfAssemblingRecoFrame(Form("saLa_%d",t),"leps_{a}");
+    saLb[t]  = new SelfAssemblingRecoFrame(Form("saLb_%d",t),"leps_{b}");
 
-    LAB_ISR[t]->SetChildFrame(*CM_ISR[t]);
-    CM_ISR[t]->AddChildFrame(*S_ISR[t]);
-    CM_ISR[t]->AddChildFrame(*ISR_ISR[t]);
-    if(t == 0){ // jets in ISR, leptons in sparticle
-      S_ISR[t]->AddChildFrame(*L_ISR[t]);
-      S_ISR[t]->AddChildFrame(*I_ISR[t]);
-    }
-    if(t == 1){ // jets in ISR+V, leptons in sparticle
-      S_ISR[t]->AddChildFrame(*L_ISR[t]);
-      S_ISR[t]->AddChildFrame(*V_ISR[t]);
-      S_ISR[t]->AddChildFrame(*I_ISR[t]);
-    }
-    if(t == 2){ // everything combinatorically assigned
-      S_ISR[t]->AddChildFrame(*V_ISR[t]);
-      S_ISR[t]->AddChildFrame(*I_ISR[t]);
-    }
+    ISR[t] = new VisibleRecoFrame(Form("ISR_%d",t),"ISR");
+    Ja[t] = new VisibleRecoFrame(Form("Ja_%d",t),"jets_{a}");
+    Jb[t] = new VisibleRecoFrame(Form("Jb_%d",t),"jets_{b}");
+    La[t] = new VisibleRecoFrame(Form("La_%d",t),"leps_{a}");
+    Lb[t] = new VisibleRecoFrame(Form("Lb_%d",t),"leps_{b}");
+    X1a[t] = new InvisibleRecoFrame(Form("X1a_%d",t),"#tilde{#chi}_{1a}");
+    X1b[t] = new InvisibleRecoFrame(Form("X1b_%d",t),"#tilde{#chi}_{1b}");
 
-    if(!LAB_ISR[t]->InitializeTree()){
-      cout << "Problem initializing ISR tree " << t << endl;
+    LAB[t]->SetChildFrame(*CM[t]);
+    CM[t]->AddChildFrame(*S[t]);
+    CM[t]->AddChildFrame(*ISR[t]);
+    S[t]->AddChildFrame(*X3a[t]);
+    S[t]->AddChildFrame(*X3b[t]);
+    X3a[t]->AddChildFrame(*X2a[t]);
+    X3b[t]->AddChildFrame(*X2b[t]);
+    X3a[t]->AddChildFrame(*saJa[t]);
+    X3b[t]->AddChildFrame(*saJb[t]);
+    X2a[t]->AddChildFrame(*X1a[t]);
+    X2b[t]->AddChildFrame(*X1b[t]);
+    X2a[t]->AddChildFrame(*saLa[t]);
+    X2b[t]->AddChildFrame(*saLb[t]);
+    saJa[t]->AddChildFrame(*Ja[t]);
+    saJb[t]->AddChildFrame(*Jb[t]);
+    saLa[t]->AddChildFrame(*La[t]);
+    saLb[t]->AddChildFrame(*Lb[t]);
+    
+    if(!LAB[t]->InitializeTree()){
+      cout << "Problem initializing tree #" << t << endl;
     }
     
-    INV_ISR[t] = new InvisibleGroup(Form("INV_ISR%d",t),"Invisible System");
-    INV_ISR[t]->AddFrame(*I_ISR[t]);
-    InvM_ISR[t] = new SetMassInvJigsaw(Form("InvM_ISR%d",t), "Invisible mass Jigsaw");
-    INV_ISR[t]->AddJigsaw(*InvM_ISR[t]);
+    INV[t] = new InvisibleGroup(Form("INV_%d",t),"Invisible System");
+    INV[t]->AddFrame(*X1a[t]);
+    INV[t]->AddFrame(*X1b[t]);
+    
+    InvM[t] = new SetMassInvJigsaw(Form("InvM_%d",t), "Invisible mass Jigsaw");
+    INV[t]->AddJigsaw(*InvM[t]);
 
-    COMB_ISR[t] = new CombinatoricGroup(Form("COMB_ISR%d",t), "Combinatoric System");
-    CombSplit_ISR[t] = new MinMassesCombJigsaw(Form("CombSplit_ISR%d",t), "Minimize M_{ISR} and M_{S} Jigsaw");
+    InvEta[t] = new SetRapidityInvJigsaw(Form("InvEta_%d",t), "Set inv. system rapidity");
+    INV[t]->AddJigsaw(*InvEta[t]);
+    InvEta[t]->AddVisibleFrames(S[t]->GetListVisibleFrames());
+    
+    InvSplit[t] = new MinMassesSqInvJigsaw(Form("InvSplit%d",t), "INV -> I_{a}+ I_{b} jigsaw", 2);
+    INV[t]->AddJigsaw(*InvSplit[t]);
+    InvSplit[t]->AddVisibleFrame(*Ja[t], 0);
+    InvSplit[t]->AddVisibleFrame(*Jb[t], 1);
+    InvSplit[t]->AddVisibleFrame(*La[t], 0);
+    InvSplit[t]->AddVisibleFrame(*Lb[t], 1);
+    // InvSplit[t]->AddVisibleFrames(X3a[t]->GetListVisibleFrames(), 0);
+    // InvSplit[t]->AddVisibleFrames(X3b[t]->GetListVisibleFrames(), 1);
+    InvSplit[t]->AddInvisibleFrame(*X1a[t], 0);
+    InvSplit[t]->AddInvisibleFrame(*X1b[t], 1);
+
+    COMB_J[t] =  new CombinatoricGroup(Form("COMB_J_%d",t), "Combinatoric System of Jets");
+    CombSplit_ISR[t] = new MinMassesCombJigsaw(Form("CombSplit_ISR_%d",t), "Minimize M_{ISR} and M_{S} Jigsaw");
+    CombSplit_J[t] = new MinMassesSqCombJigsaw(Form("CombSplit_J_%d",t), "Minimize M_{Ja} and M_{Jb} Jigsaw",2,2);
    
-    if(t == 0){ // jets in ISR, leptons in sparticle
-      // No combinatoric jigsaw necessary
-    }
-    if(t == 1){ // jets in ISR+V, leptons in sparticle
-      COMB_ISR[t]->AddFrame(*ISR_ISR[t]);
-      COMB_ISR[t]->SetNElementsForFrame(*ISR_ISR[t], 1);
-      COMB_ISR[t]->AddFrame(*V_ISR[t]);
-      COMB_ISR[t]->SetNElementsForFrame(*V_ISR[t], 0);
-      COMB_ISR[t]->AddJigsaw(*CombSplit_ISR[t]);
-      CombSplit_ISR[t]->AddCombFrame(*ISR_ISR[t], 0);
-      CombSplit_ISR[t]->AddCombFrame(*V_ISR[t], 1);
-      CombSplit_ISR[t]->AddObjectFrame(*ISR_ISR[t], 0);
-      CombSplit_ISR[t]->AddObjectFrame(*S_ISR[t], 1);
-    }
-    if(t == 2){ // everything combinatorically assigned
-      COMB_ISR[t]->AddFrame(*ISR_ISR[t]);
-      COMB_ISR[t]->SetNElementsForFrame(*ISR_ISR[t], 1);
-      COMB_ISR[t]->AddFrame(*V_ISR[t]);
-      COMB_ISR[t]->SetNElementsForFrame(*V_ISR[t], 0);
-      COMB_ISR[t]->AddJigsaw(*CombSplit_ISR[t]);
-      CombSplit_ISR[t]->AddCombFrame(*ISR_ISR[t], 0);
-      CombSplit_ISR[t]->AddCombFrame(*V_ISR[t], 1);
-      CombSplit_ISR[t]->AddObjectFrame(*ISR_ISR[t], 0);
-      CombSplit_ISR[t]->AddObjectFrame(*S_ISR[t], 1);
-    }
+    COMB_L[t] =  new CombinatoricGroup(Form("COMB_L_%d",t), "Combinatoric System of Leps");
+    CombSplit_L[t] = new MinMassesSqCombJigsaw(Form("CombSplit_L_%d",t), "Minimize M_{Ja} and M_{Jb} Jigsaw",2,2);
+   
+    if(t > 0){
+      COMB_J[t]->AddFrame(*ISR[t]);
+      COMB_J[t]->SetNElementsForFrame(*ISR[t], 1);
+      COMB_J[t]->AddFrame(*Ja[t]);
+      COMB_J[t]->SetNElementsForFrame(*Ja[t], 0);
+      COMB_J[t]->AddFrame(*Jb[t]);
+      COMB_J[t]->SetNElementsForFrame(*Jb[t], 0);
 
-    if(!LAB_ISR[t]->InitializeAnalysis()){
-      cout << "Problem initializing ISR analysis " << t << endl;
-    }
-  }
+      COMB_J[t]->AddJigsaw(*CombSplit_ISR[t]);
+      CombSplit_ISR[t]->SetTransverse();
+      CombSplit_ISR[t]->AddCombFrame(*ISR[t], 0);
+      CombSplit_ISR[t]->AddCombFrame(*Ja[t], 1);
+      CombSplit_ISR[t]->AddCombFrame(*Jb[t], 1);
+      CombSplit_ISR[t]->AddObjectFrame(*ISR[t], 0);
+      CombSplit_ISR[t]->AddObjectFrame(*S[t], 1);
 
-  // Sparticle pair-production trees
-  for(int t = 0; t < 5; t++){
-    LAB_PAIR[t]  = new LabRecoFrame(Form("LAB_PAIR%d",t),"LAB");
-    S_PAIR[t]    = new DecayRecoFrame(Form("S_PAIR%d",t),"#tilde{C}a #tilde{C}b");
-    Ca_PAIR[t]   = new DecayRecoFrame(Form("Ca_PAIR%d",t),"#tilde{C}a");
-    Cb_PAIR[t]   = new DecayRecoFrame(Form("Cb_PAIR%d",t),"#tilde{C}b");
-    GCa_PAIR[t]   = new DecayRecoFrame(Form("GCa_PAIR%d",t),"#tilde{GC}a");
-    GCb_PAIR[t]   = new DecayRecoFrame(Form("GCb_PAIR%d",t),"#tilde{GC}b");
-    VSAa_PAIR[t] = new SelfAssemblingRecoFrame(Form("VSAa_PAIR%d",t),"Va");
-    VSAb_PAIR[t] = new SelfAssemblingRecoFrame(Form("VSAb_PAIR%d",t),"Vb"); 
-    Va_PAIR[t]   = new VisibleRecoFrame(Form("Va_PAIR%d",t),"Va");
-    Vb_PAIR[t]   = new VisibleRecoFrame(Form("Vb_PAIR%d",t),"Vb");
-    GVSAa_PAIR[t] = new SelfAssemblingRecoFrame(Form("GVSAa_PAIR%d",t),"GVa");
-    GVSAb_PAIR[t] = new SelfAssemblingRecoFrame(Form("GVSAb_PAIR%d",t),"GVb"); 
-    GVa_PAIR[t]   = new VisibleRecoFrame(Form("GVa_PAIR%d",t),"GVa");
-    GVb_PAIR[t]   = new VisibleRecoFrame(Form("GVb_PAIR%d",t),"GVb");
-    Ia_PAIR[t]   = new InvisibleRecoFrame(Form("Ia_PAIR%d",t),"Ia");
-    Ib_PAIR[t]   = new InvisibleRecoFrame(Form("Ib_PAIR%d",t),"Ib");
+      COMB_J[t]->AddJigsaw(*CombSplit_J[t]);
+      CombSplit_J[t]->AddCombFrame(*Ja[t], 0);
+      CombSplit_J[t]->AddCombFrame(*Jb[t], 1);
+      CombSplit_J[t]->AddObjectFrames(X3a[t]->GetListVisibleFrames(), 0);
+      CombSplit_J[t]->AddObjectFrames(X3b[t]->GetListVisibleFrames(), 1);
 
-    LAB_PAIR[t]->SetChildFrame(*S_PAIR[t]);
-    S_PAIR[t]->AddChildFrame(*Ca_PAIR[t]);
-    S_PAIR[t]->AddChildFrame(*Cb_PAIR[t]);
+      COMB_L[t]->AddFrame(*La[t]);
+      COMB_L[t]->SetNElementsForFrame(*La[t], 1);
+      COMB_L[t]->AddFrame(*Lb[t]);
+      COMB_L[t]->SetNElementsForFrame(*Lb[t], 0);
 
-    Ca_PAIR[t]->AddChildFrame(*VSAa_PAIR[t]);
-    Ca_PAIR[t]->AddChildFrame(*GCa_PAIR[t]);
-    Cb_PAIR[t]->AddChildFrame(*VSAb_PAIR[t]);
-    Cb_PAIR[t]->AddChildFrame(*GCb_PAIR[t]);
-
-    GCa_PAIR[t]->AddChildFrame(*GVSAa_PAIR[t]);
-    GCa_PAIR[t]->AddChildFrame(*Ia_PAIR[t]);
-    GCb_PAIR[t]->AddChildFrame(*GVSAb_PAIR[t]);
-    GCb_PAIR[t]->AddChildFrame(*Ib_PAIR[t]);
-    
-    VSAa_PAIR[t]->AddChildFrame(*Va_PAIR[t]);
-    VSAb_PAIR[t]->AddChildFrame(*Vb_PAIR[t]);
-    GVSAa_PAIR[t]->AddChildFrame(*GVa_PAIR[t]);
-    GVSAb_PAIR[t]->AddChildFrame(*GVb_PAIR[t]);
-
-    if(!LAB_PAIR[t]->InitializeTree()){
-      cout << "Problem initializing PAIR tree " << t << endl;
-    }
-    
-    INV_PAIR[t] = new InvisibleGroup(Form("INV_PAIR%d",t),"Invisible System");
-    INV_PAIR[t]->AddFrame(*Ia_PAIR[t]);
-    INV_PAIR[t]->AddFrame(*Ib_PAIR[t]);
-    InvM_PAIR[t] = new SetMassInvJigsaw(Form("InvM_PAIR%d",t), "Invisible mass Jigsaw");
-    INV_PAIR[t]->AddJigsaw(*InvM_PAIR[t]);
-    InvEta_PAIR[t] = new SetRapidityInvJigsaw(Form("InvEta_PAIR%d",t), "Set inv. system rapidity");
-    INV_PAIR[t]->AddJigsaw(*InvEta_PAIR[t]);
-    InvEta_PAIR[t]->AddVisibleFrames(S_PAIR[t]->GetListVisibleFrames());
-    InvSplit_PAIR[t] = new MinMassesSqInvJigsaw(Form("InvSplit_PAIR%d",t), "INV -> I_{a}+ I_{b} jigsaw", 2);
-    INV_PAIR[t]->AddJigsaw(*InvSplit_PAIR[t]);
-    InvSplit_PAIR[t]->AddVisibleFrames(Ca_PAIR[t]->GetListVisibleFrames(), 0);
-    InvSplit_PAIR[t]->AddVisibleFrames(Cb_PAIR[t]->GetListVisibleFrames(), 1);
-    InvSplit_PAIR[t]->AddInvisibleFrame(*Ia_PAIR[t], 0);
-    InvSplit_PAIR[t]->AddInvisibleFrame(*Ib_PAIR[t], 1);
-
-    COMB_PAIR[t] = new CombinatoricGroup(Form("COMB_PAIR%d",t), "Combinatoric System");
-    COMBa_PAIR[t] = new CombinatoricGroup(Form("COMBa_PAIR%d",t), "Combinatoric System a");
-    COMBb_PAIR[t] = new CombinatoricGroup(Form("COMBb_PAIR%d",t), "Combinatoric System b");
-    CombSplit_PAIR[t] = new MinMassesCombJigsaw(Form("CombSplit_PAIR%d",t), "Minimize M_{Va} and M_{Vb} Jigsaw");
-    CombSplita_PAIR[t] = new MinMassesCombJigsaw(Form("CombSplita_PAIR%d",t), "Minimize M_{Ca} Comb. Jigsaw");
-    CombSplitb_PAIR[t] = new MinMassesCombJigsaw(Form("CombSplitb_PAIR%d",t), "Minimize M_{Cb} Comb. Jigsaw");
-    
-    if(t == 0 || t == 1){ // fixed content hemispheres
-      COMBa_PAIR[t]->AddFrame(*Va_PAIR[t]);
-      COMBb_PAIR[t]->AddFrame(*Vb_PAIR[t]);
-      COMBa_PAIR[t]->SetNElementsForFrame(*Va_PAIR[t], 1);
-      COMBb_PAIR[t]->SetNElementsForFrame(*Vb_PAIR[t], 1);
-      COMBa_PAIR[t]->AddFrame(*GVa_PAIR[t]);
-      COMBb_PAIR[t]->AddFrame(*GVb_PAIR[t]);
-      COMBa_PAIR[t]->SetNElementsForFrame(*GVa_PAIR[t], 0);
-      COMBb_PAIR[t]->SetNElementsForFrame(*GVb_PAIR[t], 0);
-
-      COMBa_PAIR[t]->AddJigsaw(*CombSplita_PAIR[t]);
-      COMBb_PAIR[t]->AddJigsaw(*CombSplitb_PAIR[t]);
-
-      CombSplita_PAIR[t]->AddCombFrame(*Va_PAIR[t], 0);
-      CombSplita_PAIR[t]->AddCombFrame(*GVa_PAIR[t], 1);
-      CombSplita_PAIR[t]->AddObjectFrame(*Va_PAIR[t], 0);
-      CombSplita_PAIR[t]->AddObjectFrame(*GVa_PAIR[t], 1);
-      CombSplitb_PAIR[t]->AddObjectFrame(*Ia_PAIR[t], 1);
-      CombSplitb_PAIR[t]->AddCombFrame(*Vb_PAIR[t], 0);
-      CombSplitb_PAIR[t]->AddCombFrame(*GVb_PAIR[t], 1);
-      CombSplitb_PAIR[t]->AddObjectFrame(*Vb_PAIR[t], 0);
-      CombSplitb_PAIR[t]->AddObjectFrame(*GVb_PAIR[t], 1);
-      CombSplitb_PAIR[t]->AddObjectFrame(*Ib_PAIR[t], 1);
-      
-    }
-    if(t >= 2){ // select objects combinatorically assigned
-      COMB_PAIR[t]->AddFrame(*Va_PAIR[t]);
-      COMB_PAIR[t]->AddFrame(*Vb_PAIR[t]);
-      COMB_PAIR[t]->SetNElementsForFrame(*Va_PAIR[t], 1);
-      COMB_PAIR[t]->SetNElementsForFrame(*Vb_PAIR[t], 1);
-      COMB_PAIR[t]->AddFrame(*GVa_PAIR[t]);
-      COMB_PAIR[t]->AddFrame(*GVb_PAIR[t]);
-      COMB_PAIR[t]->SetNElementsForFrame(*GVa_PAIR[t], 0);
-      COMB_PAIR[t]->SetNElementsForFrame(*GVb_PAIR[t], 0);
-      COMB_PAIR[t]->AddJigsaw(*CombSplit_PAIR[t]);
-      CombSplit_PAIR[t]->AddCombFrame(*Va_PAIR[t], 0);
-      CombSplit_PAIR[t]->AddCombFrame(*GVa_PAIR[t], 0);
-      CombSplit_PAIR[t]->AddCombFrame(*Vb_PAIR[t], 1);
-      CombSplit_PAIR[t]->AddCombFrame(*GVb_PAIR[t], 1);
-      CombSplit_PAIR[t]->AddObjectFrame(*Va_PAIR[t], 0);
-      CombSplit_PAIR[t]->AddObjectFrame(*GVa_PAIR[t], 0);
-      CombSplit_PAIR[t]->AddObjectFrame(*Vb_PAIR[t], 1);
-      CombSplit_PAIR[t]->AddObjectFrame(*GVb_PAIR[t], 1);
-
-      COMB_PAIR[t]->AddJigsaw(*CombSplita_PAIR[t]);
-      COMB_PAIR[t]->AddJigsaw(*CombSplitb_PAIR[t]);
-      
-      CombSplita_PAIR[t]->AddCombFrame(*Va_PAIR[t], 0);
-      CombSplita_PAIR[t]->AddCombFrame(*GVa_PAIR[t], 1);
-      CombSplita_PAIR[t]->AddObjectFrame(*Va_PAIR[t], 0);
-      CombSplita_PAIR[t]->AddObjectFrame(*GVa_PAIR[t], 1);
-      CombSplitb_PAIR[t]->AddObjectFrame(*Ia_PAIR[t], 1);
-      CombSplitb_PAIR[t]->AddCombFrame(*Vb_PAIR[t], 0);
-      CombSplitb_PAIR[t]->AddCombFrame(*GVb_PAIR[t], 1);
-      CombSplitb_PAIR[t]->AddObjectFrame(*Vb_PAIR[t], 0);
-      CombSplitb_PAIR[t]->AddObjectFrame(*GVb_PAIR[t], 1);
-      CombSplitb_PAIR[t]->AddObjectFrame(*Ib_PAIR[t], 1);
+      COMB_L[t]->AddJigsaw(*CombSplit_L[t]);
+      CombSplit_L[t]->AddCombFrame(*La[t], 0);
+      CombSplit_L[t]->AddCombFrame(*Lb[t], 1);
+      CombSplit_L[t]->AddObjectFrames(X3a[t]->GetListVisibleFrames(), 0);
+      CombSplit_L[t]->AddObjectFrames(X3b[t]->GetListVisibleFrames(), 1);
     }
 
-    if(!LAB_PAIR[t]->InitializeAnalysis()){
-      cout << "Problem initializing PAIR analysis " << t << endl;
-    }
+    if(!LAB[t]->InitializeAnalysis())
+	cout << "Problem initializing analysis tree #" << t << endl;
   }
 
   /*
   TreePlot tree_plot("TreePlot","TreePlot");
 
-  for(int t = 0; t < 3; t++){
-    tree_plot.SetTree(*LAB_ISR[t]);
-    tree_plot.Draw(Form("ISR_tree_%d",t), Form("ISR Reconstruction Tree %d",t));
+  for(int t = 0; t < 2; t++){
+    tree_plot.SetTree(*LAB[t]);
+    tree_plot.Draw(Form("ANA_tree_%d",t), Form("Reconstruction Tree %d",t));
 
-    tree_plot.SetTree(*COMB_ISR[t]);
-    tree_plot.Draw(Form("ISR_comb_%d",t), Form("ISR Combinatoric Jigsaws %d",t),1);
+    tree_plot.SetTree(*COMB_J[t]);
+    tree_plot.Draw(Form("ANA_comb_J_%d",t), Form("Combinatoric Jigsaws for jets %d",t),1);
+
+    tree_plot.SetTree(*COMB_L[t]);
+    tree_plot.Draw(Form("ANA_comb_L_%d",t), Form("Combinatoric Jigsaws for leps %d",t),1);
+
+    tree_plot.SetTree(*INV[t]);
+    tree_plot.Draw(Form("ANA_inv_%d",t), Form("Invisible Jigsaws %d",t),1);
   }
-
-  for(int t = 0; t < 5; t++){
-    tree_plot.SetTree(*LAB_PAIR[t]);
-    tree_plot.Draw(Form("PAIR_tree_%d",t), Form("PAIR Reconstruction Tree %d",t));
-
-    tree_plot.SetTree(*COMB_PAIR[t]);
-    tree_plot.Draw(Form("PAIR_comb_%d",t), Form("PAIR Combinatoric Jigsaws %d",t),1);
-
-    tree_plot.SetTree(*INV_PAIR[t]);
-    tree_plot.Draw(Form("PAIR_inv_%d",t), Form("PAIR Invisible Jigsaws %d",t),1);
-  }
-
-  tree_plot.WriteOutput("trees.root");
   */
+  tree_plot.WriteOutput("trees.root");
 
    // Calculated Observables
-  for(int i = 0; i < 5; i++){
-    m_Njet_a.push_back(0);
-    m_Njet_b.push_back(0);
-    m_Nbjet_a.push_back(0);
-    m_Nbjet_b.push_back(0);
-    m_Nlep_a.push_back(0);
-    m_Nlep_b.push_back(0);
-    m_Njet_ga.push_back(0);
-    m_Njet_gb.push_back(0);
-    m_Nbjet_ga.push_back(0);
-    m_Nbjet_gb.push_back(0);
-    m_Nlep_ga.push_back(0);
-    m_Nlep_gb.push_back(0);
-    m_index_jet_a.push_back(vector<int>());
-    m_index_jet_b.push_back(vector<int>());
-    m_index_lep_a.push_back(vector<int>());
-    m_index_lep_b.push_back(vector<int>());
-    m_index_jet_ga.push_back(vector<int>());
-    m_index_jet_gb.push_back(vector<int>());
-    m_index_lep_ga.push_back(vector<int>());
-    m_index_lep_gb.push_back(vector<int>());
-    m_MSS.push_back(0);
-    m_PSS.push_back(0);
-    m_cosSS.push_back(0);
-    m_dphiSS.push_back(0);
-    m_PTSS.push_back(0);
-    m_PzSS.push_back(0);
-    m_MCa.push_back(0);
-    m_cosCa.push_back(0);
-    m_MCb.push_back(0);
-    m_cosCb.push_back(0);
-    m_MGCa.push_back(0);
-    m_cosGCa.push_back(0);
-    m_MGCb.push_back(0);
-    m_cosGCb.push_back(0);
-    m_H11SS.push_back(0);
-    m_H21SS.push_back(0);
-    m_HT21SS.push_back(0);
-    m_H22SS.push_back(0);
-    m_HT22SS.push_back(0);
-    m_H42SS.push_back(0);
-    m_HT42SS.push_back(0);
-    m_H11Ca.push_back(0);
-    m_H11Cb.push_back(0);
-    m_H21Ca.push_back(0);
-    m_H21Cb.push_back(0);
-
-    m_MVa.push_back(0);
-    m_PVa.push_back(0);
-    m_cosVa.push_back(0);
-    m_MVb.push_back(0);
-    m_PVb.push_back(0);
-    m_cosVb.push_back(0);
-  }
-
-  for(int i = 0; i < 3; i++){
+  for(int i = 0; i < 2; i++){
     m_Njet_ISR.push_back(0);
     m_Njet_S.push_back(0);
     m_Nbjet_ISR.push_back(0);
     m_Nbjet_S.push_back(0);
     m_Nlep_ISR.push_back(0);
     m_Nlep_S.push_back(0);
+
+    m_Njet_a.push_back(0);
+    m_Njet_b.push_back(0);
+    m_Nbjet_a.push_back(0);
+    m_Nbjet_b.push_back(0);
+    m_Nlep_a.push_back(0);
+    m_Nlep_b.push_back(0);
+
     m_index_jet_ISR.push_back(vector<int>());
     m_index_jet_S.push_back(vector<int>());
     m_index_lep_ISR.push_back(vector<int>());
     m_index_lep_S.push_back(vector<int>());
-    m_PTISR.push_back(0);
+    
+    m_index_jet_a.push_back(vector<int>());
+    m_index_jet_b.push_back(vector<int>());
+    m_index_lep_a.push_back(vector<int>());
+    m_index_lep_b.push_back(vector<int>());
+
     m_PTCM.push_back(0);
-    m_RISR.push_back(0);
+    m_dphiCM.push_back(0);
     m_cosCM.push_back(0);
-    m_cosS.push_back(0);
-    m_MISR.push_back(0);
-    m_MS.push_back(0);
-    m_MV.push_back(0);
-    m_ML.push_back(0);
     m_dphiCMI.push_back(0);
+    
+    m_MS.push_back(0);
+    m_PS.push_back(0);
+    m_cosS.push_back(0);
+    m_dphiS.push_back(0);
     m_dphiSI.push_back(0);
-    m_dphiISRI.push_back(0);
+    m_PTS.push_back(0);
+    m_PzS.push_back(0);
+    
+    m_MX3a.push_back(0);
+    m_cosX3a.push_back(0);
+    m_MX3b.push_back(0);
+    m_cosX3b.push_back(0);
+    m_EVa.push_back(0);
+    m_EVb.push_back(0);
+    m_PVa.push_back(0);
+    m_PVb.push_back(0);
+    m_EJa.push_back(0);
+    m_EJb.push_back(0);
+    m_PJa.push_back(0);
+    m_PJb.push_back(0);
+    
+    m_MX2a.push_back(0);
+    m_cosX2a.push_back(0);
+    m_MX2b.push_back(0);
+    m_cosX2b.push_back(0);
+    m_ELa.push_back(0);
+    m_ELb.push_back(0);
+    m_PLa.push_back(0);
+    m_PLb.push_back(0);
+    
+    m_MV.push_back(0);
+    m_PV.push_back(0);
+    m_MVa.push_back(0);
+    m_MVb.push_back(0);
+
+    m_MJa.push_back(0);
+    m_MJb.push_back(0);
+    m_MLa.push_back(0);
+    m_MLb.push_back(0);
+    m_cosJa.push_back(0);
+    m_cosJb.push_back(0);
+    m_cosLa.push_back(0);
+    m_cosLb.push_back(0);
+    
+    m_H11S.push_back(0);
+    m_H21S.push_back(0);
+    m_HT21S.push_back(0);
+    m_H22S.push_back(0);
+    m_HT22S.push_back(0);
+    m_H42S.push_back(0);
+    m_HT42S.push_back(0);
+    m_H11X3a.push_back(0);
+    m_H11X3b.push_back(0);
+    m_H21X3a.push_back(0);
+    m_H21X3b.push_back(0);
+
+    m_PTISR.push_back(0);
+    m_RISR.push_back(0);
+    m_MISR.push_back(0);
   }
   
 }
 
 template <class Base>
 ReducedNtuple<Base>::~ReducedNtuple() {
-  for(int i = 0; i < 3; i++){
-    // ISR-style trees
-    delete LAB_ISR[i];
-    delete CM_ISR[i];
-    delete S_ISR[i];
-    delete ISR_ISR[i];
-    delete V_ISR[i];
-    delete L_ISR[i];
-    delete I_ISR[i];
-
-    delete INV_ISR[i];
-    delete InvM_ISR[i];
-    delete COMB_ISR[i];
+  for(int i = 0; i < 2; i++){
+    delete LAB[i];
+    delete CM[i];
+    delete S[i];
+    delete X3a[i];
+    delete X3b[i];
+    delete X2a[i];
+    delete X2b[i];
+    delete saJa[i];
+    delete saJb[i];
+    delete saLa[i];
+    delete saLb[i];
+    delete ISR[i];
+    delete Ja[i];
+    delete Jb[i];
+    delete La[i];
+    delete Lb[i];
+    delete X1a[i];
+    delete X1b[i];
+    
+    delete INV[i];
+    delete InvM[i];
+    delete InvEta[i];
+    delete InvSplit[i];
+    
+    delete COMB_J[i];
     delete CombSplit_ISR[i];
-  }
-  for(int i = 0; i < 5; i++){
-    // Sparticle pair-production trees
-    delete LAB_PAIR[i];
-    delete S_PAIR[i];
-    delete Ca_PAIR[i];
-    delete Cb_PAIR[i];
-    delete GCa_PAIR[i];
-    delete GCb_PAIR[i];
-    delete VSAa_PAIR[i];
-    delete VSAb_PAIR[i];
-    delete Va_PAIR[i];
-    delete Vb_PAIR[i];
-    delete GVSAa_PAIR[i];
-    delete GVSAb_PAIR[i];
-    delete GVa_PAIR[i];
-    delete GVb_PAIR[i];
-    delete Ia_PAIR[i];
-    delete Ib_PAIR[i];
-
-    delete INV_PAIR[i];
-    delete InvM_PAIR[i];
-    delete InvEta_PAIR[i];
-    delete InvSplit_PAIR[i];
-    delete COMB_PAIR[i];
-    delete CombSplit_PAIR[i];
-    delete COMBa_PAIR[i];
-    delete COMBb_PAIR[i];
-    delete CombSplita_PAIR[i];
-    delete CombSplitb_PAIR[i];
+    delete CombSplit_J[i];
+    
+    delete COMB_L[i];
+    delete CombSplit_L[i];
   }
   
 }
@@ -382,7 +288,7 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("MET_phi", &m_MET_phi);
   tree->Branch("genMET", &m_genMET);
   tree->Branch("genMET_phi", &m_genMET_phi);
-
+  
   tree->Branch("HT", &m_HT);
 
   tree->Branch("Nele", &m_Nele);
@@ -444,71 +350,8 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("genM_susy",   &m_genM_susy);
   tree->Branch("genPDGID_susy", &m_genPDGID_susy);
   tree->Branch("genMomPDGID_susy", &m_genMomPDGID_susy);
+
   
-  tree->Branch("Njet_a", &m_Njet_a);
-  tree->Branch("Njet_b", &m_Njet_b);
-  tree->Branch("Nbjet_a", &m_Nbjet_a);
-  tree->Branch("Nbjet_b", &m_Nbjet_b);
-  tree->Branch("Nlep_a", &m_Nlep_a);
-  tree->Branch("Nlep_b", &m_Nlep_b);
-  tree->Branch("Njet_ga", &m_Njet_ga);
-  tree->Branch("Njet_gb", &m_Njet_gb);
-  tree->Branch("Nbjet_ga", &m_Nbjet_ga);
-  tree->Branch("Nbjet_gb", &m_Nbjet_gb);
-  tree->Branch("Nlep_ga", &m_Nlep_ga);
-  tree->Branch("Nlep_gb", &m_Nlep_gb);
-  tree->Branch("index_jet_a", &m_index_jet_a);
-  tree->Branch("index_jet_b", &m_index_jet_b);
-  tree->Branch("index_lep_a", &m_index_lep_a);
-  tree->Branch("index_lep_b", &m_index_lep_b);
-  tree->Branch("index_jet_ga", &m_index_jet_ga);
-  tree->Branch("index_jet_gb", &m_index_jet_gb);
-  tree->Branch("index_lep_ga", &m_index_lep_ga);
-  tree->Branch("index_lep_gb", &m_index_lep_gb);
-  tree->Branch("MSS", &m_MSS);
-  tree->Branch("PSS", &m_PSS);
-  tree->Branch("cosSS", &m_cosSS);
-  tree->Branch("dphiSS", &m_dphiSS);
-  tree->Branch("PTSS", &m_PTSS);
-  tree->Branch("PzSS", &m_PzSS);
-  tree->Branch("MCa", &m_MCa);
-  tree->Branch("cosCa", &m_cosCa);
-  tree->Branch("MCb", &m_MCb);
-  tree->Branch("cosCb", &m_cosCb);
-  tree->Branch("MGCa", &m_MGCa);
-  tree->Branch("cosGCa", &m_cosGCa);
-  tree->Branch("MGCb", &m_MGCb);
-  tree->Branch("cosGCb", &m_cosGCb);
-  tree->Branch("H11SS", &m_H11SS);
-  tree->Branch("H21SS", &m_H21SS);
-  tree->Branch("HT21SS", &m_HT21SS);
-  tree->Branch("H22SS", &m_H22SS);
-  tree->Branch("HT22SS", &m_HT22SS);
-  tree->Branch("H42SS", &m_H42SS);
-  tree->Branch("HT42SS", &m_HT42SS);
-  tree->Branch("H11Ca", &m_H11Ca);
-  tree->Branch("H11Cb", &m_H11Cb);
-  tree->Branch("H21Ca", &m_H21Ca);
-  tree->Branch("H21Cb", &m_H21Cb);
-  tree->Branch("MVa", &m_MVa);
-  tree->Branch("PVa", &m_PVa);
-  tree->Branch("cosVa", &m_cosVa);
-  tree->Branch("MVb", &m_MVb);
-  tree->Branch("PVb", &m_PVb);
-  tree->Branch("cosVb", &m_cosVb);
-  // which tree are we using for PAIR?
-  // vanilla - index 0
-  tree->Branch("Is_1L_2J", &m_Is_1L_2J);
-  tree->Branch("Is_2L_2J", &m_Is_2L_2J);
-  tree->Branch("Is_1L_1L", &m_Is_1L_1L);
-  tree->Branch("Is_2L_1L", &m_Is_2L_1L);
-  tree->Branch("Is_2L_2L", &m_Is_2L_2L);
-  // b-aware - index 0
-  tree->Branch("Is_1L_B", &m_Is_1L_B);
-  tree->Branch("Is_2L_B", &m_Is_2L_B);
-  tree->Branch("Is_1LB_1LB", &m_Is_1LB_1LB);
-  tree->Branch("Is_3L_B", &m_Is_3L_B);
- 
   tree->Branch("Njet_ISR", &m_Njet_ISR);
   tree->Branch("Njet_S", &m_Njet_S);
   tree->Branch("Nbjet_ISR", &m_Nbjet_ISR);
@@ -519,92 +362,96 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("index_jet_S", &m_index_jet_S);
   tree->Branch("index_lep_ISR", &m_index_lep_ISR);
   tree->Branch("index_lep_S", &m_index_lep_S);
-  tree->Branch("PTISR", &m_PTISR);
-  tree->Branch("PTCM", &m_PTCM);
-  tree->Branch("RISR", &m_RISR);
-  tree->Branch("cosCM", &m_cosCM);
-  tree->Branch("cosS", &m_cosS);
-  tree->Branch("MISR", &m_MISR);
-  tree->Branch("MS", &m_MS);
-  tree->Branch("MV", &m_MV);
-  tree->Branch("ML", &m_ML);
-  tree->Branch("dphiCMI", &m_dphiCMI);
-  tree->Branch("dphiSI", &m_dphiSI);
-  tree->Branch("dphiISRI", &m_dphiISRI);
+  
+  tree->Branch("Njet_a", &m_Njet_a);
+  tree->Branch("Njet_b", &m_Njet_b);
+  tree->Branch("Nbjet_a", &m_Nbjet_a);
+  tree->Branch("Nbjet_b", &m_Nbjet_b);
+  tree->Branch("Nlep_a", &m_Nlep_a);
+  tree->Branch("Nlep_b", &m_Nlep_b);
+  
+  tree->Branch("index_jet_a", &m_index_jet_a);
+  tree->Branch("index_jet_b", &m_index_jet_b);
+  tree->Branch("index_lep_a", &m_index_lep_a);
+  tree->Branch("index_lep_b", &m_index_lep_b);
 
+  tree->Branch("PTCM", &m_PTCM);
+  tree->Branch("cosCM", &m_cosCM);
+  tree->Branch("dphiCM", &m_dphiCM);
+  tree->Branch("dphiCMI", &m_dphiCMI);
+  
+  tree->Branch("MS", &m_MS);
+  tree->Branch("PS", &m_PS);
+  tree->Branch("cosS", &m_cosS);
+  tree->Branch("dphiS", &m_dphiS);
+  tree->Branch("dphiSI", &m_dphiSI);
+  tree->Branch("PTS", &m_PTS);
+  tree->Branch("PzS", &m_PzS);
+
+  tree->Branch("MX3a", &m_MX3a);
+  tree->Branch("cosX3a", &m_cosX3a);
+  tree->Branch("MX3b", &m_MX3b);
+  tree->Branch("cosX3b", &m_cosX3b);
+  tree->Branch("EVa", &m_EVa);
+  tree->Branch("EVb", &m_EVb);
+  tree->Branch("PVa", &m_PVa);
+  tree->Branch("PVb", &m_PVb);
+  tree->Branch("EJa", &m_EJa);
+  tree->Branch("EJb", &m_EJb);
+  tree->Branch("PJa", &m_PJa);
+  tree->Branch("PJb", &m_PJb);
+
+  tree->Branch("MX2a", &m_MX2a);
+  tree->Branch("cosX2a", &m_cosX2a);
+  tree->Branch("MX2b", &m_MX2b);
+  tree->Branch("cosX2b", &m_cosX2b);
+  tree->Branch("ELa", &m_ELa);
+  tree->Branch("ELb", &m_ELb);
+  tree->Branch("PLa", &m_PLa);
+  tree->Branch("PLb", &m_PLb);
+
+  tree->Branch("MV", &m_MV);
+  tree->Branch("PV", &m_PV);
+  tree->Branch("MVa", &m_MVa);
+  tree->Branch("MVb", &m_MVb);
+
+  tree->Branch("MJa", &m_MJa);
+  tree->Branch("MJb", &m_MJb);
+  tree->Branch("MLa", &m_MLa);
+  tree->Branch("MLb", &m_MLb);
+  tree->Branch("cosJa", &m_cosJa);
+  tree->Branch("cosJb", &m_cosJb);
+  tree->Branch("cosLa", &m_cosLa);
+  tree->Branch("cosLb", &m_cosLb);
+  
+  tree->Branch("H11S", &m_H11S);
+  tree->Branch("H21S", &m_H21S);
+  tree->Branch("HT21S", &m_HT21S);
+  tree->Branch("H22S", &m_H22S);
+  tree->Branch("HT22S", &m_HT22S);
+  tree->Branch("H42S", &m_H42S);
+  tree->Branch("HT42S", &m_HT42S);
+  tree->Branch("H11X3a", &m_H11X3a);
+  tree->Branch("H11X3b", &m_H11X3b);
+  tree->Branch("H21X3a", &m_H21X3a);
+  tree->Branch("H21X3b", &m_H21X3b);
+
+  tree->Branch("PTISR", &m_PTISR);
+  tree->Branch("RISR", &m_RISR);
+  tree->Branch("MISR", &m_MISR);
+  
+  tree->Branch("Is_1L", &m_Is_1L);
+  tree->Branch("Is_2L", &m_Is_2L);
+  tree->Branch("Is_3L", &m_Is_3L);
+  tree->Branch("Is_4L", &m_Is_4L);
+  
   return tree;
 }
 
 template <class Base>
 void ReducedNtuple<Base>::ClearVariables(){
-  for(int i = 0; i < 5; i++){
-    m_Njet_a[i] = 0;
-    m_Njet_b[i] = 0;
-    m_Nbjet_a[i] = 0;
-    m_Nbjet_b[i] = 0;
-    m_Nlep_a[i] = 0;
-    m_Nlep_b[i] = 0;
-    m_Njet_ga[i] = 0;
-    m_Njet_gb[i] = 0;
-    m_Nbjet_ga[i] = 0;
-    m_Nbjet_gb[i] = 0;
-    m_Nlep_ga[i] = 0;
-    m_Nlep_gb[i] = 0;
-    m_index_jet_a[i].clear();
-    m_index_jet_b[i].clear();
-    m_index_lep_a[i].clear();
-    m_index_lep_b[i].clear();
-    m_index_jet_ga[i].clear();
-    m_index_jet_gb[i].clear();
-    m_index_lep_ga[i].clear();
-    m_index_lep_gb[i].clear();
-    m_MSS[i] = 0;
-    m_PSS[i] = 0;
-    m_cosSS[i] = 0;
-    m_dphiSS[i] = 0;
-    m_PTSS[i] = 0;
-    m_PzSS[i] = 0;
-    m_MCa[i] = 0;
-    m_cosCa[i] = 0;
-    m_MCb[i] = 0;
-    m_cosCb[i] = 0;
-    m_MGCa[i] = 0;
-    m_cosGCa[i] = 0;
-    m_MGCb[i] = 0;
-    m_cosCb[i] = 0;
-    m_H11SS[i] = 0;
-    m_H21SS[i] = 0;
-    m_HT21SS[i] = 0;
-    m_H22SS[i] = 0;
-    m_HT22SS[i] = 0;
-    m_H42SS[i] = 0;
-    m_HT42SS[i] = 0;
-    m_H11Ca[i] = 0;
-    m_H11Cb[i] = 0;
-    m_H21Ca[i] = 0;
-    m_H21Cb[i] = 0;
-   
-    m_MVa[i] = 0;
-    m_PVa[i] = 0;
-    m_cosVa[i] = 0;
-    m_MVb[i] = 0;
-    m_PVb[i] = 0;
-    m_cosVb[i] = 0;
-  }
-
-  m_Is_1L_2J = false;
-  m_Is_2L_2J = false;
-  m_Is_1L_1L = false;
-  m_Is_2L_1L = false;
-  m_Is_2L_2L = false;
-  
-  m_Is_1L_B = false;
-  m_Is_2L_B = false;
-  m_Is_1LB_1LB = false;
-  m_Is_3L_B = false;
-  
-  for(int i = 0; i < 3; i++){
-    m_Njet_ISR[i] = 0;
+  for(int i = 0; i < 2; i++){
+     m_Njet_ISR[i] = 0;
     m_Njet_S[i] = 0;
     m_Nbjet_ISR[i] = 0;
     m_Nbjet_S[i] = 0;
@@ -614,19 +461,92 @@ void ReducedNtuple<Base>::ClearVariables(){
     m_index_jet_S[i].clear();
     m_index_lep_ISR[i].clear();
     m_index_lep_S[i].clear();
-    m_PTISR[i] = 0;
-    m_PTCM[i] = 0;
-    m_RISR[i] = 0;
-    m_cosCM[i] = 0;
-    m_cosS[i] = 0;
-    m_MISR[i] = 0;
-    m_MS[i] = 0;
-    m_MV[i] = 0;
-    m_ML[i] = 0;
-    m_dphiCMI[i] = 0;
-    m_dphiSI[i] = 0;
-    m_dphiISRI[i] = 0;
+    
+    m_Njet_a[i] = 0;
+    m_Njet_b[i] = 0;
+    m_Nbjet_a[i] = 0;
+    m_Nbjet_b[i] = 0;
+    m_Nlep_a[i] = 0;
+    m_Nlep_b[i] = 0;
+   
+    m_index_jet_a[i].clear();
+    m_index_jet_b[i].clear();
+    m_index_lep_a[i].clear();
+    m_index_lep_b[i].clear();
+
+    m_PTCM[i] = 0.;
+    m_cosCM[i] = 0.;
+    m_dphiCM[i] = 0.;
+    m_dphiCMI[i] = 0.;
+  
+    m_MS[i] = 0.;
+    m_PS[i] = 0.;
+    m_cosS[i] = 0.;
+    m_dphiS[i] = 0.;
+    m_dphiSI[i] = 0.;
+    m_PTS[i] = 0.;
+    m_PzS[i] = 0.;
+
+    m_MX3a[i] = 0.;
+    m_cosX3a[i] = 0.;
+    m_MX3b[i] = 0.;
+    m_cosX3b[i] = 0.;
+    m_EVa[i] = 0.;
+    m_EVb[i] = 0.;
+    m_PVa[i] = 0.;
+    m_PVb[i] = 0.;
+    m_EJa[i] = 0.;
+    m_EJb[i] = 0.;
+    m_PJa[i] = 0.;
+    m_PJb[i] = 0.;
+
+    m_MX2a[i] = 0.;
+    m_cosX2a[i] = 0.;
+    m_MX2b[i] = 0.;
+    m_cosX2b[i] = 0.;
+    m_ELa[i] = 0.;
+    m_ELb[i] = 0.;
+    m_PLa[i] = 0.;
+    m_PLb[i] = 0.;
+
+    m_MV[i] = 0.;
+    m_PV[i] = 0.;
+    m_MVa[i] = 0.;
+    m_MVb[i] = 0.;
+
+    m_MJa[i] = 0.;
+    m_MJb[i] = 0.;
+    m_MLa[i] = 0.;
+    m_MLb[i] = 0.;
+    m_cosJa[i] = 0.;
+    m_cosJb[i] = 0.;
+    m_cosLa[i] = 0.;
+    m_cosLb[i] = 0.;
+
+    m_H11S[i] = 0.;
+    m_H21S[i] = 0.;
+    m_HT21S[i] = 0.;
+    m_H22S[i] = 0.;
+    m_HT22S[i] = 0.;
+    m_H42S[i] = 0.;
+    m_HT42S[i] = 0.;
+  
+    m_H11X3a[i] = 0.;
+    m_H11X3b[i] = 0.;
+    m_H21X3a[i] = 0.;
+    m_H21X3b[i] = 0.;
+
+    // ISR related variables
+    m_PTISR[i] = 0.;
+    m_MISR[i] = 0.;
+    m_RISR[i] = 0.;
   }
+
+  m_Is_1L = false;
+  m_Is_2L = false;
+  m_Is_3L = false;
+  m_Is_4L = false;
+ 
 }
 
 template <class Base>
@@ -677,179 +597,60 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
   if(m_Nlep + m_Njet < 2)
     return;
   
-  bool is_filled[3];
-  for(int i = 0; i < 5; i++)
+  bool is_filled[2];
+  for(int i = 0; i < 2; i++)
     is_filled[i] = true;
   
 
   // Sparticle pair-production trees analysis
-  for(int t = 0; t < 5; t++){
-    LAB_PAIR[t]->ClearEvent();
+  for(int t = 0; t < 2; t++){
 
-    INV_PAIR[t]->SetLabFrameThreeVector(ETMiss);
+    LAB[t]->ClearEvent();
+
+    INV[t]->SetLabFrameThreeVector(ETMiss);
     
     if(t == 0){ // fixed content hemispheres
       is_filled[t] = false;
+
+      TLorentzVector vISR;
+      for(int i = 0; i < m_Njet; i++){
+	vISR += Jets[i]; 
+	m_Njet_ISR[t]++;
+	if(Jets[i].ParticleID() >= kMedium)
+	  m_Nbjet_ISR[t]++;
+	m_index_jet_ISR[t].push_back(i);
+      }
+      
+      ISR[t]->SetLabFrameFourVector(vISR);
       
       // 1 leptons
       if(Leptons.size() == 1){
-	m_Is_1L_2J = true;
+	m_Is_1L = true;
 	is_filled[t] = true;
-	
-	COMBa_PAIR[t]->AddLabFrameFourVector(Leptons[0]);
+
 	m_Nlep_a[t]++;
+	
+	La[t]->SetLabFrameFourVector(Leptons[0]);
+	
 	m_index_lep_a[t].push_back(0);
-
-	double Mjet = -1.;
-	int Mjet_index[2];
-	Mjet_index[0] = 0;
-	Mjet_index[1] = -1;
-	
-	for(int i = 0; i < m_Njet; i++){
-	  if(fabs(Jets[i].M()-81.) < Mjet || Mjet < 0.){
-	    Mjet = fabs(Jets[i].M()-81.);
-	    Mjet_index[0] = i;
-	    Mjet_index[1] = -1;
-	  }
-	  for(int j = i+1; j < m_Njet; j++){
-	    double Mjets = TLorentzVector(Jets[i]+Jets[j]).M();
-	    if(fabs(Mjets - 81.) < Mjet){
-	      Mjet = fabs(Mjets - 81.);
-	      Mjet_index[0] = i;
-	      Mjet_index[1] = j;
-	    }
-	  }
-	}
-	
-	std::vector<RFKey> jetID;
-	jetID.push_back(COMBb_PAIR[t]->AddLabFrameFourVector(Jets[Mjet_index[0]]));
-	if(Mjet_index[1] >= 0)
-	  jetID.push_back(COMBb_PAIR[t]->AddLabFrameFourVector(Jets[Mjet_index[1]]));
-	
-	if(!LAB_PAIR[t]->AnalyzeEvent())
-	  cout << "Something went wrong with PAIR tree event analysis " << t << endl;
-
-	if(COMBb_PAIR[t]->GetFrame(jetID[0]) == *Vb_PAIR[t]){
-	  m_Njet_b[t]++;
-	  if(Jets[Mjet_index[0]].ParticleID() >= kMedium)
-	    m_Nbjet_b[t]++;
-	  m_index_jet_b[t].push_back(Mjet_index[0]);
-	}
-	if(COMBb_PAIR[t]->GetFrame(jetID[0]) == *GVb_PAIR[t]){
-	  m_Njet_gb[t]++;
-	  if(Jets[Mjet_index[0]].ParticleID() >= kMedium)
-	    m_Nbjet_gb[t]++;
-	  m_index_jet_gb[t].push_back(Mjet_index[0]);
-	}
-	if(Mjet_index[1] >= 0){
-	  if(COMBb_PAIR[t]->GetFrame(jetID[1]) == *Vb_PAIR[t]){
-	    m_Njet_b[t]++;
-	    if(Jets[Mjet_index[1]].ParticleID() >= kMedium)
-	      m_Nbjet_b[t]++;
-	    m_index_jet_b[t].push_back(Mjet_index[1]);
-	  }
-	  if(COMBb_PAIR[t]->GetFrame(jetID[1]) == *GVb_PAIR[t]){
-	    m_Njet_gb[t]++;
-	    if(Jets[Mjet_index[1]].ParticleID() >= kMedium)
-	      m_Nbjet_gb[t]++;
-	    m_index_jet_gb[t].push_back(Mjet_index[1]);
-	  }
-	}
       
 	// 2 leptons
       } else if(Leptons.size() == 2){
-	if(Leptons[0].PDGID()+Leptons[1].PDGID() == 0){
-	  m_Is_2L_2J = true;
-	  is_filled[t] = true;
+	m_Is_2L = true;
+	is_filled[t] = true;
 
-	  std::vector<RFKey> lepID;
-	  for(int i = 0; i < m_Nlep; i++) 
-	    lepID.push_back(COMBa_PAIR[t]->AddLabFrameFourVector(Leptons[i]));
-
-	  double Mjet = -1.;
-	  int Mjet_index[2];
-	  Mjet_index[0] = 0;
-	  Mjet_index[1] = -1;
-	  
-	  for(int i = 0; i < m_Njet; i++){
-	    if(fabs(Jets[i].M()-81.) < Mjet || Mjet < 0.){
-	      Mjet_index[0] = i;
-	      Mjet_index[1] = -1;
-	    }
-	    for(int j = i+1; j < m_Njet; j++){
-	      double Mjets = TLorentzVector(Jets[i]+Jets[j]).M();
-	      if(fabs(Mjets - 81.) < Mjet){
-		Mjet_index[0] = i;
-		Mjet_index[1] = j;
-	      }
-	    }
-	  }
+	m_Nlep_a[t]++;
+	m_Nlep_b[t]++;
 	
-	  std::vector<RFKey> jetID;
-	  jetID.push_back(COMBb_PAIR[t]->AddLabFrameFourVector(Jets[Mjet_index[0]]));
-	  if(Mjet_index[1] >= 0)
-	    jetID.push_back(COMBb_PAIR[t]->AddLabFrameFourVector(Jets[Mjet_index[1]]));
+	La[t]->SetLabFrameFourVector(Leptons[0]);
+	Lb[t]->SetLabFrameFourVector(Leptons[1]);
 	
-	  if(!LAB_PAIR[t]->AnalyzeEvent())
-	    cout << "Something went wrong with PAIR tree event analysis " << t << endl;
-
-	  if(COMBb_PAIR[t]->GetFrame(jetID[0]) == *Vb_PAIR[t]){
-	    m_Njet_b[t]++;
-	    if(Jets[Mjet_index[0]].ParticleID() >= kMedium)
-	      m_Nbjet_b[t]++;
-	    m_index_jet_b[t].push_back(Mjet_index[0]);
-	  }
-	  if(COMBb_PAIR[t]->GetFrame(jetID[0]) == *GVb_PAIR[t]){
-	    m_Njet_gb[t]++;
-	    if(Jets[Mjet_index[0]].ParticleID() >= kMedium)
-	      m_Nbjet_gb[t]++;
-	    m_index_jet_gb[t].push_back(Mjet_index[0]);
-	  }
-	  if(Mjet_index[1] >= 0){
-	    if(COMBb_PAIR[t]->GetFrame(jetID[1]) == *Vb_PAIR[t]){
-	      m_Njet_b[t]++;
-	      if(Jets[Mjet_index[1]].ParticleID() >= kMedium)
-		m_Nbjet_b[t]++;
-	      m_index_jet_b[t].push_back(Mjet_index[1]);
-	    }
-	    if(COMBb_PAIR[t]->GetFrame(jetID[1]) == *GVb_PAIR[t]){
-	      m_Njet_gb[t]++;
-	      if(Jets[Mjet_index[1]].ParticleID() >= kMedium)
-		m_Nbjet_gb[t]++;
-	      m_index_jet_gb[t].push_back(Mjet_index[1]);
-	    }
-	  }
-
-	  for(int i = 0; i < m_Nlep; i++){
-	    if(COMBa_PAIR[t]->GetFrame(lepID[i]) == *Va_PAIR[t]){
-	      m_Nlep_a[t]++;
-	      m_index_lep_a[t].push_back(i);
-	    }
-	    if(COMBa_PAIR[t]->GetFrame(lepID[i]) == *GVa_PAIR[t]){
-	      m_Njet_ga[t]++;
-	      m_index_lep_ga[t].push_back(i);
-	    }
-	  }
-
-	} else {
-	  m_Is_1L_1L = true;
-	  is_filled[t] = true;
-
-	  std::vector<RFKey> lepID; 
-	  lepID.push_back(COMBa_PAIR[t]->AddLabFrameFourVector(Leptons[0]));
-	  lepID.push_back(COMBb_PAIR[t]->AddLabFrameFourVector(Leptons[1]));
+	m_index_lep_a[t].push_back(0);
+	m_index_lep_b[t].push_back(1);
 	
-	  if(!LAB_PAIR[t]->AnalyzeEvent())
-	    cout << "Something went wrong with PAIR tree event analysis " << t << endl;
-
-	  m_Nlep_a[t]++;
-	  m_index_lep_a[t].push_back(0);
-	  m_Nlep_b[t]++;
-	  m_index_lep_b[t].push_back(0);
-	}
 	// 3 leptons
       } else if(Leptons.size() == 3){
-	m_Is_2L_1L = true;
+	m_Is_3L = true;
 	is_filled[t] = true;
 
 	std::pair<int,int> OSSF;
@@ -876,51 +677,46 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
 	  }
 	}
 
-	std::vector<RFKey> lepID;
-	
+	TLorentzVector vLa, vLb;
 	// no OSSF pair
 	if(M_OSSF < 0.){
 	  for(int i = 0; i < m_Nlep; i++){
-	    if(i == minM.first)
-	      lepID.push_back(COMBa_PAIR[t]->AddLabFrameFourVector(Leptons[i]));
-	    else if(i == minM.second)
-	      lepID.push_back(COMBa_PAIR[t]->AddLabFrameFourVector(Leptons[i]));
-	    else 
-	      lepID.push_back(COMBb_PAIR[t]->AddLabFrameFourVector(Leptons[i]));
+	    if(i == minM.first){
+	      vLa += Leptons[i];
+	      m_index_lep_a[t].push_back(i);
+	    } else if(i == minM.second){
+	      vLa += Leptons[i];
+	      m_index_lep_a[t].push_back(i);
+	    } else {
+	      vLb += Leptons[i];
+	      m_index_lep_b[t].push_back(i);
+	    }
 	  }
 	  // OSSF pair
 	} else {
 	  for(int i = 0; i < m_Nlep; i++){
-	    if(i == OSSF.first)
-	      lepID.push_back(COMBa_PAIR[t]->AddLabFrameFourVector(Leptons[i]));
-	    else if(i == OSSF.second)
-	      lepID.push_back(COMBa_PAIR[t]->AddLabFrameFourVector(Leptons[i]));
-	    else 
-	      lepID.push_back(COMBb_PAIR[t]->AddLabFrameFourVector(Leptons[i]));
+	    if(i == OSSF.first){
+	      vLa += Leptons[i];
+	      m_index_lep_a[t].push_back(i);
+	    } else if(i == OSSF.second){
+	      vLa += Leptons[i];
+	      m_index_lep_a[t].push_back(i);
+	    } else {
+	      vLb += Leptons[i];
+	      m_index_lep_b[t].push_back(i);
+	    }
 	  }
 	}
 
-	if(!LAB_PAIR[t]->AnalyzeEvent())
-	  cout << "Something went wrong with PAIR tree event analysis " << t << endl;
-	
-	for(int i = 0; i < m_Nlep; i++){
-	  if(COMBa_PAIR[t]->GetFrame(lepID[i]) == *Va_PAIR[t]){
-	    m_Nlep_a[t]++;
-	    m_index_lep_a[t].push_back(i);
-	  }
-	  if(COMBa_PAIR[t]->GetFrame(lepID[i]) == *GVa_PAIR[t]){
-	    m_Nlep_ga[t]++;
-	    m_index_lep_ga[t].push_back(i);
-	  }
-	  if(COMBb_PAIR[t]->GetFrame(lepID[i]) == *Vb_PAIR[t]){
-	    m_Nlep_b[t]++;
-	    m_index_lep_b[t].push_back(i);
-	  }
-	}
+	La[t]->SetLabFrameFourVector(vLa);
+	Lb[t]->SetLabFrameFourVector(vLb);
+
+	m_Nlep_a[t] = 2;
+	m_Nlep_b[t]++;
      
 	// 4 leptons
       } else if(Leptons.size() == 4){
-	m_Is_2L_2L = true;
+	m_Is_4L = true;
 	is_filled[t] = true;
 
 	
@@ -961,620 +757,199 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
 	    } 
 	  }
 	}
-	
-	std::vector<RFKey> lepID;
+
+	TLorentzVector vLa, vLb;
 	for(int i = 0; i < m_Nlep; i++){
-	  if(i == OSSF[0] || i == OSSF[1]){
-	    lepID.push_back(COMBa_PAIR[t]->AddLabFrameFourVector(Leptons[i]));
-	  } else {
-	    lepID.push_back(COMBb_PAIR[t]->AddLabFrameFourVector(Leptons[i]));
-	  }
-	}
-	  
-	if(!LAB_PAIR[t]->AnalyzeEvent())
-	  cout << "Something went wrong with PAIR tree event analysis " << t << " 4L" << endl;
-	
-	for(int i = 0; i < m_Nlep; i++){
-	  if(COMBa_PAIR[t]->GetFrame(lepID[i]) == *Va_PAIR[t]){
-	    m_Nlep_a[t]++;
+	  if(i == OSSF[0]){
+	    vLa += Leptons[i];
 	    m_index_lep_a[t].push_back(i);
-	  }
-	  if(COMBa_PAIR[t]->GetFrame(lepID[i]) == *GVa_PAIR[t]){
-	    m_Nlep_ga[t]++;
-	    m_index_lep_ga[t].push_back(i);
-	  }
-	  if(COMBb_PAIR[t]->GetFrame(lepID[i]) == *Vb_PAIR[t]){
-	    m_Nlep_b[t]++;
+	  } else if(i == OSSF[1]){
+	    vLa += Leptons[i];
+	    m_index_lep_a[t].push_back(i);
+	  } else if(m_index_lep_b[t].size() == 0){
+	    vLb += Leptons[i];
+	    m_index_lep_b[t].push_back(i);
+	  } else {
+	    vLb += Leptons[i];
 	    m_index_lep_b[t].push_back(i);
 	  }
-	  if(COMBb_PAIR[t]->GetFrame(lepID[i]) == *GVb_PAIR[t]){
-	    m_Nlep_gb[t]++;
-	    m_index_lep_gb[t].push_back(i);
-	  }
-	}	
-      } 
-    }
-
-    if(t == 1){ // fixed content hemispheres
-      is_filled[t] = false;
-
-      if(m_Nbjet == 0)
-	continue;
-      
-      // 1 leptons
-      if(Leptons.size() == 1){
-	m_Is_1L_B = true;
-	is_filled[t] = true;
-	
-	COMBa_PAIR[t]->AddLabFrameFourVector(Leptons[0]);
-	m_Nlep_a[t]++;
-	m_index_lep_a[t].push_back(0);
-	
-	std::vector<RFKey> jetID;
-	for(int i = 0; i < m_Nbjet; i++)
-	  jetID.push_back(COMBb_PAIR[t]->AddLabFrameFourVector(BJets[i]));
-	
-	if(!LAB_PAIR[t]->AnalyzeEvent())
-	  cout << "Something went wrong with PAIR tree event analysis " << t << endl;
-
-	for(int i = 0; i < m_Nbjet; i++){
-	  if(COMBb_PAIR[t]->GetFrame(jetID[i]) == *Vb_PAIR[t]){
-	    m_Njet_b[t]++;
-	    m_Nbjet_b[t]++;
-	    m_index_jet_b[t].push_back(BJets_index[i]);
-	  }
-	  if(COMBb_PAIR[t]->GetFrame(jetID[i]) == *GVb_PAIR[t]){
-	    m_Njet_gb[t]++;
-	    m_Nbjet_gb[t]++;
-	    m_index_jet_gb[t].push_back(BJets_index[i]);
-	  }
-	}
-      
-      
-	// 2 leptons
-      } else if(Leptons.size() == 2){
-	if(Leptons[0].PDGID()+Leptons[1].PDGID() == 0){
-	  m_Is_2L_B = true;
-	  is_filled[t] = true;
-
-	  std::vector<RFKey> lepID;
-	  for(int i = 0; i < m_Nlep; i++) 
-	    lepID.push_back(COMBa_PAIR[t]->AddLabFrameFourVector(Leptons[i]));
-
-	  std::vector<RFKey> jetID;
-	  for(int i = 0; i < m_Nbjet; i++)
-	    jetID.push_back(COMBb_PAIR[t]->AddLabFrameFourVector(BJets[i]));
-	
-	  if(!LAB_PAIR[t]->AnalyzeEvent())
-	    cout << "Something went wrong with PAIR tree event analysis " << t << endl;
-
-	  for(int i = 0; i < m_Nbjet; i++){
-	    if(COMBb_PAIR[t]->GetFrame(jetID[i]) == *Vb_PAIR[t]){
-	      m_Njet_b[t]++;
-	      m_Nbjet_b[t]++;
-	      m_index_jet_b[t].push_back(BJets_index[i]);
-	    }
-	    if(COMBb_PAIR[t]->GetFrame(jetID[i]) == *GVb_PAIR[t]){
-	      m_Njet_gb[t]++;
-	      m_Nbjet_gb[t]++;
-	      m_index_jet_gb[t].push_back(BJets_index[i]);
-	    }
-	  }
-
-	  for(int i = 0; i < m_Nlep; i++){
-	    if(COMBa_PAIR[t]->GetFrame(lepID[i]) == *Va_PAIR[t]){
-	      m_Nlep_a[t]++;
-	      m_index_lep_a[t].push_back(i);
-	    }
-	    if(COMBa_PAIR[t]->GetFrame(lepID[i]) == *GVa_PAIR[t]){
-	      m_Njet_ga[t]++;
-	      m_index_lep_ga[t].push_back(i);
-	    }
-	  }
-
-	} else {
-	  if(m_Nbjet != 2){
-	    continue;
-	  }
-	  
-	  m_Is_1LB_1LB = true;
-	  is_filled[t] = true;
-
-	  std::vector<RFKey> lepID; 
-	  lepID.push_back(COMBa_PAIR[t]->AddLabFrameFourVector(Leptons[0]));
-	  lepID.push_back(COMBb_PAIR[t]->AddLabFrameFourVector(Leptons[1]));
-	  
-	  std::vector<RFKey> jetID;
-	  if(TLorentzVector(Leptons[0]+BJets[0]).M2()+
-	     TLorentzVector(Leptons[1]+BJets[1]).M2() <
-	     TLorentzVector(Leptons[0]+BJets[1]).M2()+
-	     TLorentzVector(Leptons[1]+BJets[0]).M2()){
-	    jetID.push_back(COMBa_PAIR[t]->AddLabFrameFourVector(BJets[0]));
-	    jetID.push_back(COMBb_PAIR[t]->AddLabFrameFourVector(BJets[1]));
-	  } else {
-	    jetID.push_back(COMBa_PAIR[t]->AddLabFrameFourVector(BJets[1]));
-	    jetID.push_back(COMBb_PAIR[t]->AddLabFrameFourVector(BJets[0]));
-	  }
-
-	  
-	  if(!LAB_PAIR[t]->AnalyzeEvent())
-	    cout << "Something went wrong with PAIR tree event analysis " << t << endl;
-
-	  
-	  for(int i = 0; i < m_Nbjet; i++){
-	    if(COMBa_PAIR[t]->GetFrame(jetID[i]) == *Va_PAIR[t]){
-	      m_Njet_a[t]++;
-	      m_Nbjet_a[t]++;
-	      m_index_jet_a[t].push_back(BJets_index[i]);
-	    }
-	    if(COMBa_PAIR[t]->GetFrame(jetID[i]) == *GVa_PAIR[t]){
-	      m_Njet_ga[t]++;
-	      m_Nbjet_ga[t]++;
-	      m_index_jet_ga[t].push_back(BJets_index[i]);
-	    }
-	    if(COMBb_PAIR[t]->GetFrame(jetID[i]) == *Vb_PAIR[t]){
-	      m_Njet_b[t]++;
-	      m_Nbjet_b[t]++;
-	      m_index_jet_b[t].push_back(BJets_index[i]);
-	    }
-	    if(COMBb_PAIR[t]->GetFrame(jetID[i]) == *GVb_PAIR[t]){
-	      m_Njet_gb[t]++;
-	      m_Nbjet_gb[t]++;
-	      m_index_jet_gb[t].push_back(BJets_index[i]);
-	    }
-	  }
-	  
-	  for(int i = 0; i < m_Nlep; i++){
-	    if(COMBa_PAIR[t]->GetFrame(lepID[i]) == *Va_PAIR[t]){
-	      m_Nlep_a[t]++;
-	      m_index_lep_a[t].push_back(i);
-	    }
-	    if(COMBa_PAIR[t]->GetFrame(lepID[i]) == *GVa_PAIR[t]){
-	      m_Njet_ga[t]++;
-	      m_index_lep_ga[t].push_back(i);
-	    }
-	    if(COMBb_PAIR[t]->GetFrame(lepID[i]) == *Vb_PAIR[t]){
-	      m_Nlep_b[t]++;
-	      m_index_lep_b[t].push_back(i);
-	    }
-	    if(COMBb_PAIR[t]->GetFrame(lepID[i]) == *GVb_PAIR[t]){
-	      m_Njet_gb[t]++;
-	      m_index_lep_gb[t].push_back(i);
-	    }
-	  }
-	}
-	// 3 leptons
-      } else if(Leptons.size() == 3){
-	m_Is_3L_B = true;
-	is_filled[t] = true;
-
-	std::vector<RFKey> lepID;
-	for(int i = 0; i < m_Nlep; i++)
-	  lepID.push_back(COMBa_PAIR[t]->AddLabFrameFourVector(Leptons[i]));
-
-	std::vector<RFKey> jetID;
-	for(int i = 0; i < m_Nbjet; i++)
-	  jetID.push_back(COMBb_PAIR[t]->AddLabFrameFourVector(BJets[i]));
-
-	if(!LAB_PAIR[t]->AnalyzeEvent())
-	  cout << "Something went wrong with PAIR tree event analysis " << t << endl;
-	
-	for(int i = 0; i < m_Nlep; i++){
-	  if(COMBa_PAIR[t]->GetFrame(lepID[i]) == *Va_PAIR[t]){
-	    m_Nlep_a[t]++;
-	    m_index_lep_a[t].push_back(i);
-	  }
-	  if(COMBa_PAIR[t]->GetFrame(lepID[i]) == *GVa_PAIR[t]){
-	    m_Nlep_ga[t]++;
-	    m_index_lep_ga[t].push_back(i);
-	  }
 	}
 
-	for(int i = 0; i < m_Nbjet; i++){
-	  if(COMBb_PAIR[t]->GetFrame(jetID[i]) == *Vb_PAIR[t]){
-	    m_Njet_b[t]++;
-	    m_Nbjet_b[t]++;
-	    m_index_jet_b[t].push_back(BJets_index[i]);
-	  }
-	  if(COMBb_PAIR[t]->GetFrame(jetID[i]) == *GVb_PAIR[t]){
-	    m_Njet_gb[t]++;
-	    m_Nbjet_gb[t]++;
-	    m_index_jet_gb[t].push_back(BJets_index[i]);
-	  }
-	}
+	La[t]->SetLabFrameFourVector(vLa);
+	Lb[t]->SetLabFrameFourVector(vLb);
+	
+	m_Nlep_a[t] = 2;
+	m_Nlep_b[t] = 2;
       }
+    
+      if(!LAB[t]->AnalyzeEvent())
+	  cout << "Something went wrong with tree event analysis #" << t << endl;
     }
-
-    if(t == 2){ // leptons combinatorically assigned
-      
-      std::vector<RFKey> lepID;
-      for(int i = 0; i < m_Nlep; i++) 
-	lepID.push_back(COMB_PAIR[t]->AddLabFrameFourVector(Leptons[i]));
-
-      if(m_Nlep < 2){
+	
+    if(t == 1){ // with combinatorics
+      if(m_Njet == 0){
 	is_filled[t] = false;
 	continue;
-      }	
-      
-      if(!LAB_PAIR[t]->AnalyzeEvent())
-	cout << "Something went wrong with PAIR tree event analysis " << t << endl;
-
-      for(int i = 0; i < m_Nlep; i++){
-	if(COMB_PAIR[t]->GetFrame(lepID[i]) == *Va_PAIR[t]){
-	  m_Nlep_a[t]++;
-	  m_index_lep_a[t].push_back(i);
-	}
-	if(COMB_PAIR[t]->GetFrame(lepID[i]) == *GVa_PAIR[t]){
-	  m_Nlep_ga[t]++;
-	  m_index_lep_ga[t].push_back(i);
-	}
-	if(COMB_PAIR[t]->GetFrame(lepID[i]) == *Vb_PAIR[t]){
-	  m_Nlep_b[t]++;
-	  m_index_lep_b[t].push_back(i);
-	}
-	if(COMB_PAIR[t]->GetFrame(lepID[i]) == *GVb_PAIR[t]){
-	  m_Nlep_gb[t]++;
-	  m_index_lep_gb[t].push_back(i);
-	}
       }
-    }
-    
-    if(t == 3){ // leptons and b's combinatorically assigned
+      is_filled[t] = true;
+
       std::vector<RFKey> jetID;
-      int Nb = 0;
       for(int i = 0; i < m_Njet; i++){
-	if(Jets[i].ParticleID() >= kMedium){
-	  jetID.push_back(COMB_PAIR[t]->AddLabFrameFourVector(Jets[i]));
-	  Nb++;
-	} else
-	  jetID.push_back(RFKey(-1));
+	jetID.push_back(COMB_J[t]->AddLabFrameFourVector(Jets[i]));
       }
+
       std::vector<RFKey> lepID;
-      for(int i = 0; i < m_Nlep; i++) 
-	lepID.push_back(COMB_PAIR[t]->AddLabFrameFourVector(Leptons[i]));
-
-      if(m_Nlep + Nb < 2){
-	is_filled[t] = false;
-	continue;
-      }	
-      
-      if(!LAB_PAIR[t]->AnalyzeEvent())
-	cout << "Something went wrong with PAIR tree event analysis " << t << endl;
+      for(int i = 0; i < m_Nlep; i++){
+	lepID.push_back(COMB_L[t]->AddLabFrameFourVector(Leptons[i]));
+      }
+    
+      if(!LAB[t]->AnalyzeEvent())
+	cout << "Something went wrong with tree event analysis #" << t << endl;
 
       for(int i = 0; i < m_Njet; i++){
-	if(jetID[i] == -1)
-	  continue;
-	if(COMB_PAIR[t]->GetFrame(jetID[i]) == *Va_PAIR[t]){
-	  m_Njet_a[t]++;
-	  m_Nbjet_a[t]++;
-	  m_index_jet_a[t].push_back(i);
-	}
-	if(COMB_PAIR[t]->GetFrame(jetID[i]) == *GVa_PAIR[t]){
-	  m_Njet_ga[t]++;
-	  m_Nbjet_ga[t]++;
-	  m_index_jet_ga[t].push_back(i);
-	}
-	if(COMB_PAIR[t]->GetFrame(jetID[i]) == *Vb_PAIR[t]){
-	  m_Njet_b[t]++;
-	  m_Nbjet_b[t]++;
-	  m_index_jet_b[t].push_back(i);
-	}
-	if(COMB_PAIR[t]->GetFrame(jetID[i]) == *GVb_PAIR[t]){
-	  m_Njet_gb[t]++;
-	  m_Nbjet_gb[t]++;
-	  m_index_jet_gb[t].push_back(i);
-	} 
-      }
-      for(int i = 0; i < m_Nlep; i++){
-	if(COMB_PAIR[t]->GetFrame(lepID[i]) == *Va_PAIR[t]){
-	  m_Nlep_a[t]++;
-	  m_index_lep_a[t].push_back(i);
-	}
-	if(COMB_PAIR[t]->GetFrame(lepID[i]) == *GVa_PAIR[t]){
-	  m_Nlep_ga[t]++;
-	  m_index_lep_ga[t].push_back(i);
-	}
-	if(COMB_PAIR[t]->GetFrame(lepID[i]) == *Vb_PAIR[t]){
-	  m_Nlep_b[t]++;
-	  m_index_lep_b[t].push_back(i);
-	}
-	if(COMB_PAIR[t]->GetFrame(lepID[i]) == *GVb_PAIR[t]){
-	  m_Nlep_gb[t]++;
-	  m_index_lep_gb[t].push_back(i);
-	}
-      }
-    }
-    if(t == 4){ // everything combinatorically assigned
-      std::vector<RFKey> jetID;
-      for(int i = 0; i < m_Njet; i++) 
-	jetID.push_back(COMB_PAIR[t]->AddLabFrameFourVector(Jets[i]));
-      std::vector<RFKey> lepID;
-      for(int i = 0; i < m_Nlep; i++) 
-	lepID.push_back(COMB_PAIR[t]->AddLabFrameFourVector(Leptons[i]));
-
-      if(!LAB_PAIR[t]->AnalyzeEvent())
-	cout << "Something went wrong with PAIR tree event analysis " << t << endl;
-
-      for(int i = 0; i < m_Njet; i++){
-	if(COMB_PAIR[t]->GetFrame(jetID[i]) == *Va_PAIR[t]){
-	  m_Njet_a[t]++;
-	  if(Jets[i].ParticleID() >= kMedium)
-	    m_Nbjet_a[t]++;
-	  m_index_jet_a[t].push_back(i);
-	}
-	if(COMB_PAIR[t]->GetFrame(jetID[i]) == *GVa_PAIR[t]){
-	  m_Njet_ga[t]++;
-	  if(Jets[i].ParticleID() >= kMedium)
-	    m_Nbjet_ga[t]++;
-	  m_index_jet_ga[t].push_back(i);
-	}
-	if(COMB_PAIR[t]->GetFrame(jetID[i]) == *Vb_PAIR[t]){
-	  m_Njet_b[t]++;
-	  if(Jets[i].ParticleID() >= kMedium)
-	    m_Nbjet_b[t]++;
-	  m_index_jet_b[t].push_back(i);
-	}
-	if(COMB_PAIR[t]->GetFrame(jetID[i]) == *GVb_PAIR[t]){
-	  m_Njet_gb[t]++;
-	  if(Jets[i].ParticleID() >= kMedium)
-	    m_Nbjet_gb[t]++;
-	  m_index_jet_gb[t].push_back(i);
-	} 
-      }
-      for(int i = 0; i < m_Nlep; i++){
-	if(COMB_PAIR[t]->GetFrame(lepID[i]) == *Va_PAIR[t]){
-	  m_Nlep_a[t]++;
-	  m_index_lep_a[t].push_back(i);
-	}
-	if(COMB_PAIR[t]->GetFrame(lepID[i]) == *GVa_PAIR[t]){
-	  m_Nlep_ga[t]++;
-	  m_index_lep_ga[t].push_back(i);
-	}
-	if(COMB_PAIR[t]->GetFrame(lepID[i]) == *Vb_PAIR[t]){
-	  m_Nlep_b[t]++;
-	  m_index_lep_b[t].push_back(i);
-	}
-	if(COMB_PAIR[t]->GetFrame(lepID[i]) == *GVb_PAIR[t]){
-	  m_Nlep_gb[t]++;
-	  m_index_lep_gb[t].push_back(i);
-	}
-      }
-    }   
-
-    if(!is_filled[t])
-      continue;
-    
-    // Fill Observable Branches
-    
-    m_MSS[t] = S_PAIR[t]->GetMass();
-    m_PSS[t] = Ca_PAIR[t]->GetMomentum(*S_PAIR[t]);
-    m_cosSS[t] = S_PAIR[t]->GetCosDecayAngle();
-    m_dphiSS[t] = S_PAIR[t]->GetDeltaPhiDecayAngle();
-    TLorentzVector vPSS = S_PAIR[t]->GetFourVector();
-    m_PTSS[t] = vPSS.Pt();
-    m_PzSS[t] = vPSS.Pz();
-
-    m_MCa[t] = Ca_PAIR[t]->GetMass();
-    m_cosCa[t] = Ca_PAIR[t]->GetCosDecayAngle();
-    m_MCb[t] = Cb_PAIR[t]->GetMass();
-    m_cosCb[t] = Cb_PAIR[t]->GetCosDecayAngle();
-
-    m_MGCa[t] = GCa_PAIR[t]->GetMass();
-    m_cosGCa[t] = GCa_PAIR[t]->GetCosDecayAngle();
-    m_MGCb[t] = GCb_PAIR[t]->GetMass();
-    m_cosGCb[t] = GCb_PAIR[t]->GetCosDecayAngle();
-
-    TLorentzVector vP_Va_SS  = Va_PAIR[t]->GetFourVector(*S_PAIR[t]);
-    TLorentzVector vP_Vb_SS  = Vb_PAIR[t]->GetFourVector(*S_PAIR[t]);
-    TLorentzVector vP_GVa_SS = GVa_PAIR[t]->GetFourVector(*S_PAIR[t]);
-    TLorentzVector vP_GVb_SS = GVb_PAIR[t]->GetFourVector(*S_PAIR[t]);
-    TLorentzVector vP_Ia_SS  = Ia_PAIR[t]->GetFourVector(*S_PAIR[t]);
-    TLorentzVector vP_Ib_SS  = Ib_PAIR[t]->GetFourVector(*S_PAIR[t]);
-    
-    m_H11SS[t] = 2.*(vP_Ia_SS+vP_Ib_SS).P();
-    m_H21SS[t] = (vP_Va_SS+vP_GVa_SS).P() + (vP_Vb_SS+vP_GVb_SS).P() + m_H11SS[t]/2.;
-    m_H22SS[t] = (vP_Va_SS+vP_GVa_SS).P() + (vP_Vb_SS+vP_GVb_SS).P() + vP_Ia_SS.P() + vP_Ia_SS.P();
-    m_HT21SS[t] = m_H11SS[t]/2.
-      + S_PAIR[t]->GetTransverseMomentum(Va_PAIR[t]->GetFourVector()+GVa_PAIR[t]->GetFourVector())
-      + S_PAIR[t]->GetTransverseMomentum(Vb_PAIR[t]->GetFourVector()+GVb_PAIR[t]->GetFourVector());
-    m_HT22SS[t] = Ia_PAIR[t]->GetTransverseMomentum(*S_PAIR[t]) + Ib_PAIR[t]->GetTransverseMomentum(*S_PAIR[t])
-      + S_PAIR[t]->GetTransverseMomentum(Va_PAIR[t]->GetFourVector()+GVa_PAIR[t]->GetFourVector())
-      + S_PAIR[t]->GetTransverseMomentum(Vb_PAIR[t]->GetFourVector()+GVb_PAIR[t]->GetFourVector());
-    m_H42SS[t] = vP_Va_SS.P() + vP_GVa_SS.P() + vP_Vb_SS.P() + vP_GVb_SS.P() + vP_Ia_SS.P() + vP_Ia_SS.P();;
-    m_HT42SS[t] = Ia_PAIR[t]->GetTransverseMomentum(*S_PAIR[t]) + Ib_PAIR[t]->GetTransverseMomentum(*S_PAIR[t])
-      + Va_PAIR[t]->GetTransverseMomentum(*S_PAIR[t]) + Vb_PAIR[t]->GetTransverseMomentum(*S_PAIR[t])
-      + GVa_PAIR[t]->GetTransverseMomentum(*S_PAIR[t]) + GVb_PAIR[t]->GetTransverseMomentum(*S_PAIR[t]);
-
-    TLorentzVector vP_Va_Ca  = Va_PAIR[t]->GetFourVector(*Ca_PAIR[t]);
-    TLorentzVector vP_Vb_Cb  = Vb_PAIR[t]->GetFourVector(*Cb_PAIR[t]);
-    TLorentzVector vP_GVa_Ca = GVa_PAIR[t]->GetFourVector(*Ca_PAIR[t]);
-    TLorentzVector vP_GVb_Cb = GVb_PAIR[t]->GetFourVector(*Cb_PAIR[t]);
-    TLorentzVector vP_Ia_Ca  = Ia_PAIR[t]->GetFourVector(*Ca_PAIR[t]);
-    TLorentzVector vP_Ib_Cb  = Ib_PAIR[t]->GetFourVector(*Cb_PAIR[t]);
-
-    m_MVa[t] = (vP_Va_Ca+vP_GVa_Ca).M();
-    m_PVa[t] = (vP_Va_Ca+vP_GVa_Ca).P();
-    m_cosVa[t] = Ca_PAIR[t]->GetCosDecayAngle(*Ia_PAIR[t]);
-    m_MVb[t] = (vP_Vb_Cb+vP_GVb_Cb).M();
-    m_PVb[t] = (vP_Vb_Cb+vP_GVb_Cb).P();
-    m_cosVb[t] = Cb_PAIR[t]->GetCosDecayAngle(*Ib_PAIR[t]);
-    
-    m_H11Ca[t] = 2.*vP_Ia_Ca.P();
-    m_H11Cb[t] = 2.*vP_Ib_Cb.P();
-    m_H21Ca[t] = vP_Va_Ca.P() + vP_GVa_Ca.P() + vP_Ia_Ca.P();
-    m_H21Cb[t] = vP_Vb_Cb.P() + vP_GVb_Cb.P() + vP_Ib_Cb.P();
-  }
-
-  // ISR-style analysis
-  if(m_Njet > 0){
-    ParticleList JetsT = Jets;
-    ParticleList LeptonsT = Leptons;
-    
-    for(int i = 0; i < m_Njet; i++)
-      JetsT[i].SetPtEtaPhiM(JetsT[i].Pt(),0.,JetsT[i].Phi(),JetsT[i].M());
-    
-    for(int i = 0; i < m_Nlep; i++)
-      LeptonsT[i].SetPtEtaPhiM(LeptonsT[i].Pt(),0.,LeptonsT[i].Phi(),LeptonsT[i].M());
-    
-    // loop through different trees
-    for(int t = 0; t < 3; t++){
-      LAB_ISR[t]->ClearEvent();
-      
-      INV_ISR[t]->SetLabFrameThreeVector(ETMiss);
-      
-      if(t == 0){ // jets in ISR, leptons in sparticle
-	ISR_ISR[t]->SetLabFrameFourVector(JetsT);
-	L_ISR[t]->SetLabFrameFourVector(LeptonsT);
-	
-	if(!LAB_ISR[t]->AnalyzeEvent())
-	  cout << "Something went wrong with ISR tree event analysis " << t << endl;
-
-	for(int i = 0; i < m_Njet; i++){
+	if(COMB_J[t]->GetFrame(jetID[i]) == *ISR[t]){
 	  m_Njet_ISR[t]++;
-	  // NOTE
 	  if(Jets[i].ParticleID() >= kMedium)
 	    m_Nbjet_ISR[t]++;
 	  m_index_jet_ISR[t].push_back(i);
 	}
-	for(int i = 0; i < m_Nlep; i++){
-	  m_Nlep_S[t]++;
+	if(COMB_J[t]->GetFrame(jetID[i]) == *Ja[t]){
+	  m_Njet_S[t]++;
+	  m_Njet_a[t]++;
+	  if(Jets[i].ParticleID() >= kMedium){
+	    m_Nbjet_S[t]++;
+	    m_Nbjet_a[t]++;
+	  }
+	  m_index_jet_S[t].push_back(i);
+	  m_index_jet_a[t].push_back(i);
+	}
+	if(COMB_J[t]->GetFrame(jetID[i]) == *Jb[t]){
+	  m_Njet_S[t]++;
+	  m_Njet_b[t]++;
+	  if(Jets[i].ParticleID() >= kMedium){
+	    m_Nbjet_S[t]++;
+	    m_Nbjet_b[t]++;
+	  }
+	  m_index_jet_S[t].push_back(i);
+	  m_index_jet_b[t].push_back(i);
+	}
+      }
+
+      for(int i = 0; i < m_Nlep; i++){
+	m_Nlep_S[t]++;
+	m_index_lep_S[t].push_back(i);
+	if(COMB_L[t]->GetFrame(lepID[i]) == *La[t]){
+	  m_Nlep_a[t]++;
 	  m_index_lep_S[t].push_back(i);
+	  m_index_lep_a[t].push_back(i);
 	}
-      }
-      
-      if(t == 1){ // jets in ISR+V, leptons in sparticle
-	std::vector<RFKey> jetID;
-	for(int i = 0; i < m_Njet; i++) 
-	  jetID.push_back(COMB_ISR[t]->AddLabFrameFourVector(JetsT[i]));
-
-	L_ISR[t]->SetLabFrameFourVector(LeptonsT);
-
-	if(!LAB_ISR[t]->AnalyzeEvent())
-	  cout << "Something went wrong with ISR tree event analysis " << t << endl;
-
-	for(int i = 0; i < m_Njet; i++){
-	  if(COMB_ISR[t]->GetFrame(jetID[i]) == *ISR_ISR[t]){
-	    m_Njet_ISR[t]++;
-	    if(Jets[i].ParticleID() >= kMedium)
-	      m_Nbjet_ISR[t]++;
-	    m_index_jet_ISR[t].push_back(i);
-	  } else {
-	    m_Njet_S[t]++;
-	    if(Jets[i].ParticleID() >= kMedium)
-	      m_Nbjet_S[t]++;
-	    m_index_jet_S[t].push_back(i);
-	  }
-	}
-	for(int i = 0; i < m_Nlep; i++){
-	  m_Nlep_S[t]++;
+	if(COMB_L[t]->GetFrame(lepID[i]) == *Lb[t]){
+	  m_Nlep_b[t]++;
 	  m_index_lep_S[t].push_back(i);
+	  m_index_lep_b[t].push_back(i);
 	}
       }
-      
-      if(t == 2){ // everything combinatorically assigned
-	std::vector<RFKey> jetID;
-	for(int i = 0; i < m_Njet; i++) 
-	  jetID.push_back(COMB_ISR[t]->AddLabFrameFourVector(JetsT[i]));
-	std::vector<RFKey> lepID;
-	for(int i = 0; i < m_Nlep; i++) 
-	  lepID.push_back(COMB_ISR[t]->AddLabFrameFourVector(LeptonsT[i]));
-
-	if(!LAB_ISR[t]->AnalyzeEvent())
-	  cout << "Something went wrong with ISR tree event analysis " << t << endl;
-
-	for(int i = 0; i < m_Njet; i++){
-	  if(COMB_ISR[t]->GetFrame(jetID[i]) == *ISR_ISR[t]){
-	    m_Njet_ISR[t]++;
-	    if(Jets[i].ParticleID() >= kMedium)
-	      m_Nbjet_ISR[t]++;
-	    m_index_jet_ISR[t].push_back(i);
-	  } else {
-	    m_Njet_S[t]++;
-	    if(Jets[i].ParticleID() >= kMedium)
-	      m_Nbjet_S[t]++;
-	    m_index_jet_S[t].push_back(i);
-	  }
-	}
-	for(int i = 0; i < m_Nlep; i++){
-	  if(COMB_ISR[t]->GetFrame(lepID[i]) == *ISR_ISR[t]){
-	    m_Nlep_ISR[t]++;
-	    m_index_lep_ISR[t].push_back(i);
-	  } else {
-	    m_Nlep_S[t]++;
-	    m_index_lep_S[t].push_back(i);
-	  }
-	}
-      }
-
-      // Fill Observable Branches
-      m_cosCM[t] = CM_ISR[t]->GetCosDecayAngle();
-      m_cosS[t]  = S_ISR[t]->GetCosDecayAngle();
-      m_MISR[t]  = ISR_ISR[t]->GetMass();
-      m_MS[t]    = S_ISR[t]->GetMass();
-      if(t != 0)
-	m_MV[t] = V_ISR[t]->GetMass();
-      if(t != 2)
-	m_ML[t] = L_ISR[t]->GetMass();
-      m_dphiCMI[t] = acos(-1.)-fabs(CM_ISR[t]->GetDeltaPhiBoostVisible());
-      m_dphiSI[t]  = acos(-1.)-fabs(S_ISR[t]->GetDeltaPhiBoostVisible());
+    }
     
-      m_PTCM[t]  = CM_ISR[t]->GetFourVector().Pt();
-   
-      TVector3 vPt_ISR = ISR_ISR[t]->GetFourVector(*CM_ISR[t]).Vect();
-      TVector3 vPt_I   = I_ISR[t]->GetFourVector(*CM_ISR[t]).Vect();
+    if(!is_filled[t])
+      continue;
+    
+    // Fill Observable Branches
 
-      m_PTISR[t]    = vPt_ISR.Mag();
-      m_RISR[t]     = m_Nlep_S[t]+m_Njet_S[t] > 0. ? -vPt_I.Dot(vPt_ISR.Unit())/ m_PTISR[t] : 0;
-      m_dphiISRI[t] = fabs(vPt_ISR.Angle(vPt_I));
+    m_PTCM[t] = CM[t]->GetFourVector().Pt();
+    m_cosCM[t] = CM[t]->GetCosDecayAngle();
+    m_dphiCM[t] = CM[t]->GetDeltaPhiDecayAngle();
+    m_dphiCMI[t] = CM[t]->GetDeltaPhiBoostVisible();
+  
+    m_MS[t] = S[t]->GetMass();
+    m_PS[t] = S[t]->GetMomentum(*CM[t]);
+    m_cosS[t]  = S[t]->GetCosDecayAngle();
+    m_dphiS[t] = S[t]->GetDeltaPhiDecayAngle();;
+    m_dphiSI[t]  = S[t]->GetDeltaPhiBoostVisible();;
+    m_PTS[t] = S[t]->GetFourVector().Pt();
+    m_PzS[t] = S[t]->GetFourVector().Pz();
+
+    m_MX3a[t] = X3a[t]->GetMass();
+    m_cosX3a[t] = X3a[t]->GetCosDecayAngle();
+    m_MX3b[t] = X3b[t]->GetMass();
+    m_cosX3b[t] = X3b[t]->GetCosDecayAngle();
+    m_EVa[t] = X3a[t]->GetListVisibleFrames().GetFourVector(*X3a[t]).E();
+    m_EVb[t] = X3b[t]->GetListVisibleFrames().GetFourVector(*X3b[t]).E();
+    m_PVa[t] = X3a[t]->GetListVisibleFrames().GetFourVector(*X3a[t]).P();
+    m_PVb[t] = X3b[t]->GetListVisibleFrames().GetFourVector(*X3b[t]).P();
+    m_EJa[t] = saJa[t]->GetFourVector(*X3a[t]).E();
+    m_EJb[t] = saJb[t]->GetFourVector(*X3b[t]).E();;
+    m_PJa[t] = saJa[t]->GetFourVector(*X3a[t]).P();
+    m_PJb[t] = saJb[t]->GetFourVector(*X3b[t]).P();
+
+    m_MX2a[t] = X2a[t]->GetMass();
+    m_cosX2a[t] = X2a[t]->GetCosDecayAngle();
+    m_MX2b[t] = X2b[t]->GetMass();
+    m_cosX2b[t] = X2b[t]->GetCosDecayAngle();
+    m_ELa[t] = saLa[t]->GetFourVector(*X2a[t]).E();
+    m_ELb[t] = saLb[t]->GetFourVector(*X2b[t]).E();;
+    m_PLa[t] = saLa[t]->GetFourVector(*X2a[t]).P();
+    m_PLb[t] = saLb[t]->GetFourVector(*X2b[t]).P();
+
+    m_MV[t] = S[t]->GetListVisibleFrames().GetMass();
+    m_PV[t] = S[t]->GetListVisibleFrames().GetFourVector().P();
+    m_MVa[t] = X3a[t]->GetListVisibleFrames().GetMass();
+    m_MVb[t] = X3b[t]->GetListVisibleFrames().GetMass();
+
+    m_MJa[t] = saJa[t]->GetMass();
+    m_MJb[t] = saJb[t]->GetMass();
+    m_MLa[t] = saLa[t]->GetMass();
+    m_MLb[t] = saLb[t]->GetMass();
+    m_cosJa[t] = saJa[t]->GetCosDecayAngle();
+    m_cosJb[t] = saJb[t]->GetCosDecayAngle();
+    m_cosLa[t] = saLa[t]->GetCosDecayAngle();
+    m_cosLb[t] = saLb[t]->GetCosDecayAngle();
+
+    TLorentzVector vP_Ja_S  = Ja[t]->GetFourVector(*S[t]);
+    TLorentzVector vP_Jb_S  = Jb[t]->GetFourVector(*S[t]);
+    TLorentzVector vP_La_S  = La[t]->GetFourVector(*S[t]);
+    TLorentzVector vP_Lb_S  = Lb[t]->GetFourVector(*S[t]);
+    TLorentzVector vP_Ia_S  = X1a[t]->GetFourVector(*S[t]);
+    TLorentzVector vP_Ib_S  = X1b[t]->GetFourVector(*S[t]);
+    
+    m_H11S[t] = 2.*(vP_Ia_S+vP_Ib_S).P();
+    m_H21S[t] = (vP_Ja_S+vP_La_S).P() +
+      (vP_Jb_S+vP_Lb_S).P() + m_H11S[t]/2.;
+    m_H22S[t] = (vP_Ja_S+vP_La_S).P() +
+      (vP_Jb_S+vP_Lb_S).P() + vP_Ia_S.P() + vP_Ia_S.P();
+    m_HT21S[t] = m_H11S[t]/2.
+      + S[t]->GetTransverseMomentum(X3a[t]->GetListVisibleFrames().GetFourVector())
+      + S[t]->GetTransverseMomentum(X3b[t]->GetListVisibleFrames().GetFourVector());
+    m_HT22S[t] = X1a[t]->GetTransverseMomentum(*S[t]) + X1b[t]->GetTransverseMomentum(*S[t])
+      + m_HT21S[t] - m_H11S[t]/2.;
+    m_H42S[t] = vP_Ja_S.P() + vP_Jb_S.P() + vP_La_S.P() + vP_Lb_S.P() + vP_Ia_S.P() + vP_Ia_S.P();
+    m_HT42S[t] = X1a[t]->GetTransverseMomentum(*S[t]) + X1b[t]->GetTransverseMomentum(*S[t])
+      + Ja[t]->GetTransverseMomentum(*S[t]) + Jb[t]->GetTransverseMomentum(*S[t])
+      + La[t]->GetTransverseMomentum(*S[t]) + Lb[t]->GetTransverseMomentum(*S[t]);
+    
+    TLorentzVector vP_Ja_X3a  = Ja[t]->GetFourVector(*X3a[t]);
+    TLorentzVector vP_Jb_X3b  = Jb[t]->GetFourVector(*X3b[t]);
+    TLorentzVector vP_La_X3a  = La[t]->GetFourVector(*X3a[t]);
+    TLorentzVector vP_Lb_X3b  = Lb[t]->GetFourVector(*X3b[t]);
+    TLorentzVector vP_Ia_X3a  = X1a[t]->GetFourVector(*X3a[t]);
+    TLorentzVector vP_Ib_X3b  = X1b[t]->GetFourVector(*X3b[t]);
+    
+    m_H11X3a[t] = 2.*vP_Ia_X3a.P();
+    m_H11X3b[t] = 2.*vP_Ib_X3b.P();
+    m_H21X3a[t] = vP_Ja_X3a.P() + vP_La_X3a.P() + vP_Ia_X3a.P();
+    m_H21X3b[t] = vP_Jb_X3b.P() + vP_Lb_X3b.P() + vP_Ib_X3b.P();
+    
+    // ISR related variables
+    if(m_Njet_ISR[t] > 0){
+      TVector3 vPTISR = S[t]->GetTransverseFourVector(*CM[t]).Vect();
+      TVector3 vPTINV = (X1a[t]->GetTransverseFourVector(*CM[t])+X1b[t]->GetTransverseFourVector(*CM[t])).Vect();
+
+      m_PTISR[t] = vPTISR.Mag();
+      m_MISR[t] = ISR[t]->GetMass();
+      m_RISR[t] = fabs(vPTINV.Dot(vPTISR.Unit())) / vPTISR.Mag();
     }
   }
-  
-  
-  /*
- 
 
-  if(m_Is_2LNJ){
-
-  m_HN2S = Z_2LNJ->GetFourVector(*S_2LNJ).E() +
-  J_2LNJ->GetFourVector(*S_2LNJ).E() +
-  Ia_2LNJ->GetFourVector(*S_2LNJ).P() +
-  Ib_2LNJ->GetFourVector(*S_2LNJ).P();
-  m_H11S = 2.*(*Ia_2LNJ+*Ib_2LNJ).GetFourVector(*S_2LNJ).P();
-  m_HN1Ca = Z_2LNJ->GetFourVector(*Ca_2LNJ).E()+
-  Ia_2LNJ->GetFourVector(*Ca_2LNJ).P();
-  m_HN1Cb = J_2LNJ->GetFourVector(*Cb_2LNJ).E()+
-  Ib_2LNJ->GetFourVector(*Cb_2LNJ).P();
-  m_H11Ca = 2.*Ia_2LNJ->GetFourVector(*Ca_2LNJ).P();
-  m_H11Cb = 2.*Ib_2LNJ->GetFourVector(*Cb_2LNJ).P();
-  m_cosC  = Ca_2LNJ->GetCosDecayAngle();
-    
-  m_MZ = Z_2LNJ->GetMass();
-  m_MJ = J_2LNJ->GetMass();
-  m_cosZ = Z_2LNJ->GetCosDecayAngle();
-  if(Jets.size() > 1)
-  m_cosJ = JSA_2LNJ->GetCosDecayAngle();
-  }
-
-  if(m_Is_2L1L){
-    
-  m_HN2S = Z_2L1L->GetFourVector(*S_2L1L).E() +
-  Lb_2L1L->GetFourVector(*S_2L1L).E() +
-  Ia_2L1L->GetFourVector(*S_2L1L).P() +
-  Ib_2L1L->GetFourVector(*S_2L1L).P();
-  m_H11S = 2.*(*Ia_2L1L+*Ib_2L1L).GetFourVector(*S_2L1L).P();
-  m_HN1Ca = Z_2L1L->GetFourVector(*Ca_2L1L).E()+
-  Ia_2L1L->GetFourVector(*Ca_2L1L).P();
-  m_HN1Cb = Lb_2L1L->GetFourVector(*Cb_2L1L).E()+
-  Ib_2L1L->GetFourVector(*Cb_2L1L).P();
-  m_H11Ca = 2.*Ia_2L1L->GetFourVector(*Ca_2L1L).P();
-  m_H11Cb = 2.*Ib_2L1L->GetFourVector(*Cb_2L1L).P();
-  m_cosC  = Ca_2L1L->GetCosDecayAngle();
-    
-  m_MZ = Z_2L1L->GetMass();
-  m_cosZ = Z_2L1L->GetCosDecayAngle();
-  }
-
-  */
   m_weight = AnalysisBase<Base>::GetEventWeight();
   
   m_MET     = ETMiss.Pt();
