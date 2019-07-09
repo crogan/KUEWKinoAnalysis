@@ -149,7 +149,7 @@ void Plot_2D(){
 
   g_Xname = "RISR";
   g_Xmin = 0.0;
-  g_Xmax = 1.3.; 
+  g_Xmax = 1.3; 
   units_per_bin_x = 0.1;
   g_NX = (int)(g_Xmax - g_Xmin)/units_per_bin_x;
 
