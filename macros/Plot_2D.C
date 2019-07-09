@@ -138,16 +138,16 @@ void Plot_2D(){
 
   int Nsample = g_Samples.size();
   //string g_Label = "No selection";
-  string g_Label = "pT_ISR vs. pT_lep, Cat. 3 (sig: 200-199 GeV)";
+  string g_Label = "pT_ISR vs. pT_lep, Cat. 3 (sig: 200-197 GeV)";
 
 
-  g_Yname = "pT_lep";
+  g_Yname = "pT_lep (GeV)";
   g_Ymin = 0.0;
   g_Ymax = 50.;
   units_per_bin_y = 1.;
   g_NY = (int)(g_Ymax - g_Ymin)/units_per_bin_y;
 
-  g_Xname = "pT_ISR";
+  g_Xname = "pT_ISR (GeV)";
   g_Xmin = 0.0;
   g_Xmax = 1000.; 
   units_per_bin_x = 10.;
