@@ -148,15 +148,15 @@ void Plot_1D_stack(){
   int Nsample = g_Samples.size();
   cout << "Nsample: " << Nsample << endl;
 
-  g_PlotTitle = "pT_lep, Cat. 2";
+  g_PlotTitle = "pT_lep";
   g_Lumi = 100;
 
-  g_Xname = "pT_lep, Cat. 2";
+  g_Xname = "pT_lep";
   g_Xmin = 0.0;
 
   //Njets_X
   g_Xmin = 0.0;
-  g_Xmax = 1000.;
+  g_Xmax = 300.;
   units_per_bin = 1.;
 
   //Eta
@@ -310,7 +310,7 @@ void Plot_1D_stack(){
   hist[imax]->GetXaxis()->SetTitleOffset(1.06);
   hist[imax]->GetXaxis()->SetLabelFont(132);
   hist[imax]->GetXaxis()->SetLabelSize(0.05);
-  TString xaxis = g_Xname + " (rad)";
+  TString xaxis = g_Xname + " (GeV)";
   hist[imax]->GetXaxis()->SetTitle(xaxis);
   hist[imax]->GetYaxis()->CenterTitle();
   hist[imax]->GetYaxis()->SetTitleFont(132);
