@@ -602,7 +602,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJets(){
     if(mass < 0.)
       mass = 0.;
     jet.SetPtEtaPhiM( JET.Pt(), JET.Eta(), JET.Phi(), mass );
-    jet.SetBtag(Jet_CvsB[i]);
+    jet.SetBtag(Jet_btagCSVV2[i]);
 
     if(jet.Btag() > 0.9535)
       jet.SetParticleID(kTight);

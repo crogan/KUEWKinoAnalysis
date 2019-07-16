@@ -135,7 +135,6 @@ int main(int argc, char* argv[]) {
   }
 
   ReducedNtuple<StopNtupleTree>* ntuple = new ReducedNtuple<StopNtupleTree>(chain);
-  
   ntuple->AddLabels(string(DataSet),string(FileTag));
   ntuple->AddEventCountFile(string(EventCount));
 
