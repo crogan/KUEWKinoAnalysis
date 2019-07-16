@@ -299,6 +299,7 @@ void Plot_1D_stack(){
   can->Draw();
   can->cd();
   hist[imax]->Draw("hist");
+  hist[imax]->SetTitle("");
   hist[imax]->GetXaxis()->CenterTitle();
   hist[imax]->GetXaxis()->SetTitleFont(132);
   hist[imax]->GetXaxis()->SetTitleSize(0.06);
@@ -367,17 +368,17 @@ void Plot_1D_stack(){
   l.SetNDC();
   l.SetTextSize(0.05);
   l.SetTextFont(132);
-  l.DrawLatex(0.65,0.943,g_PlotTitle.c_str());
-  l.SetTextSize(0.04);
+  l.DrawLatex(0.42,0.94,g_PlotTitle.c_str());
+  l.SetTextSize(0.03);
   l.SetTextFont(42);
-  l.DrawLatex(0.15,0.943,"#bf{#it{CMS}} Internal 13 TeV Simulation");
+  l.DrawLatex(0.145,0.92,"#bf{#it{CMS}} Internal 13 TeV Simulation");
   l.SetTextSize(0.05);
   l.SetTextFont(132);
   string s_lumi = "#scale[0.6]{#int} #it{L dt} = "+to_string(int(g_Lumi))+" fb^{-1}";
   l.DrawLatex(0.43,0.79,s_lumi.c_str());	
 
   
-  TString file_name = "output/1D_stacked_plots"+g_Xname+"stacked_plot.root";
+  TString file_name = "output/1D_stacked_plots/"+g_Xname+"stacked_plot.root";
   TFile* file = new TFile(file_name,"RECREATE");
   file->cd();
   can->Write();
