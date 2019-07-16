@@ -148,15 +148,15 @@ void Plot_1D_stack(){
   int Nsample = g_Samples.size();
   cout << "Nsample: " << Nsample << endl;
 
-  g_PlotTitle = "Njets_ISR, Cat. 3";
+  g_PlotTitle = "pT_lep, Cat. 2";
   g_Lumi = 100;
 
-  g_Xname = "Njets_ISR, Cat. 3";
+  g_Xname = "pT_lep, Cat. 2";
   g_Xmin = 0.0;
 
   //Njets_X
   g_Xmin = 0.0;
-  g_Xmax = 15.;
+  g_Xmax = 1000.;
   units_per_bin = 1.;
 
   //Eta
