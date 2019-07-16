@@ -429,12 +429,12 @@ SampleSet DYjets;
 	}
 
 
-	TOTAL += base->weight;
+	double TOTAL += base->weight;
 	//if(Njet_V == 2){
 	if(base->Njet_S->at(1) == 2){
-	  CORRECT += base->weight;
+	  double CORRECT += base->weight;
 	  if(Njet_Vb == 2 && Nlep_Va == 2 && Njet_Va == 0)
-	    CORRECT2 += base->weight;
+	    double CORRECT2 += base->weight;
 	}
 
 	// TOTAL += base->weight;
