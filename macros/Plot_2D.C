@@ -59,14 +59,14 @@ void Plot_2D(){
 //   ttX.SetSkip(10);
 //   g_Samples.push_back(&ttX);
 
-// SampleSet DYjets;
-//   DYjets.SetBkg(true);
-//   DYjets.SetTitle("DY + jets");
-//   DYjets.SetColor(kGreen-7);
-//   DYjets.AddFile(StopNtuplePath+"All_Bkg_2017/DYJetsToLL_M-5to50_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
-//   DYjets.AddFile(StopNtuplePath+"All_Bkg_2017/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17.root");
-//   DYjets.SetSkip(BKG_SKIP);
-//   g_Samples.push_back(&DYjets);
+SampleSet DYjets;
+  DYjets.SetBkg(true);
+  DYjets.SetTitle("DY + jets");
+  DYjets.SetColor(kGreen-7);
+  DYjets.AddFile(StopNtuplePath+"All_Bkg_2017/DYJetsToLL_M-5to50_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  DYjets.AddFile(StopNtuplePath+"All_Bkg_2017/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17.root");
+  DYjets.SetSkip(BKG_SKIP);
+  g_Samples.push_back(&DYjets);
 
 //   SampleSet Wjets;
 //   Wjets.SetBkg(true);
@@ -120,14 +120,14 @@ void Plot_2D(){
   // SIG1.SetSkip(1);
   // g_Samples.push_back(&SIG1);
 
-  SampleSet SIG2;
-  SIG2.SetBkg(false);
-  SIG2.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 197");
-  SIG2.SetTreeName("SMS_200_197");
-  SIG2.SetColor(kBlue-7);
-  SIG2.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
-  SIG2.SetSkip(1);
-  g_Samples.push_back(&SIG2);
+  // SampleSet SIG2;
+  // SIG2.SetBkg(false);
+  // SIG2.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 197");
+  // SIG2.SetTreeName("SMS_200_197");
+  // SIG2.SetColor(kBlue-7);
+  // SIG2.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
+  // SIG2.SetSkip(1);
+  // g_Samples.push_back(&SIG2);
 
 
   // SampleSet SIG3;
@@ -141,7 +141,7 @@ void Plot_2D(){
 
   int Nsample = g_Samples.size();
   //string g_Label = "No selection";
-  string g_Label = "RISR vs. pT_lep, Cat. 3 (sig: 200-197)";
+  string g_Label = "RISR vs. energy, Cat. 2 (bkg:DY+Jets)";
 
 
   g_Yname = "pT_lep (GeV)";
@@ -168,14 +168,14 @@ void Plot_2D(){
   // units_per_bin_y = 1.0;
   // g_NY = (int)(g_Ymax - g_Ymin)/units_per_bin_y;
 
-  g_Xname = "N_{lep}^{S}";
-  g_Xmin = 0.4;
-  g_Xmax = 1.1; 
-  g_NX = 32;
-  g_Yname = "N_{jet}^{S}";
-  g_Ymin = 0.;
-  g_Ymax = 180.;
-  g_NY = 32;
+  // g_Xname = "N_{lep}^{S}";
+  // g_Xmin = 0.4;
+  // g_Xmax = 1.1; 
+  // g_NX = 32;
+  // g_Yname = "N_{jet}^{S}";
+  // g_Ymin = 0.;
+  // g_Ymax = 180.;
+  // g_NY = 32;
 
   int TREE = 2;
 
@@ -308,19 +308,16 @@ void Plot_2D(){
 	if((e/SKIP)%(std::max(1, int(Nentry/SKIP/10))) == 0)
 	  cout << "      event " << e << " | " << Nentry << endl;
 
-	if(base->Nlep != 2)
+	if(base->Nlep != 1) //single lepton final states
 	  continue;
 
-	if(base->Njet < 3)
-	  continue;
+	// if(base->Njet < 3)
+	//   continue;
 
-	if(base->ID_lep->at(0) < 3 || base->ID_lep->at(1) < 3)
-	  continue;
+	// if(base->ID_lep->at(0) < 3)
+	//   continue;
 
-	if(base->MiniIso_lep->at(0) > 0 || base->MiniIso_lep->at(1) > 0)
-	  continue;
-	
-	// if(base->ID_lep->at(0) < 3 || base->ID_lep->at(1) < 3 || base->ID_lep->at(2) < 3)
+	// if(base->MiniIso_lep->at(0) > 0)
 	//   continue;
 
 	// if(base->Njet_S->at(1) > 0)
@@ -360,10 +357,8 @@ void Plot_2D(){
 	//   continue;
 
 	// OSSF
-	if(base->PDGID_lep->at(0)+base->PDGID_lep->at(1) != 0)
-	  continue;
-
-
+	// if(base->PDGID_lep->at(0)+base->PDGID_lep->at(1) != 0)
+	//   continue;
 
 	// analyze event
 	LAB.ClearEvent();                                 // clear the reco tree
@@ -407,9 +402,9 @@ void Plot_2D(){
 	LAB.AnalyzeEvent();
 
 	int Njet_Va = 0;
-	int Njet_Vb   = 0;
+	int Njet_Vb = 0;
 	int Nlep_Va = 0;
-	int Nlep_Vb   = 0;
+	int Nlep_Vb = 0;
 	int Njet_ISR = 0;
 	int Njet_V  = 0;
 
@@ -490,8 +485,8 @@ void Plot_2D(){
 	double PTISR = vP_ISR.Mag();
 
 
-	if(base->Nbjet > 0)
-	  continue;
+	// if(base->Nbjet > 0)
+	//   continue;
 	
 	//cout << base->Nbjet << endl;
 

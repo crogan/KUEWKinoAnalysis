@@ -38,7 +38,7 @@ class SampleSet;
 void Plot_1D_stack(){
   RestFrames::SetStyle();
 
-  string StopNtuplePath = "/home/t3-ku/crogan/NTUPLES/StopNtuple/";
+  string StopNtuplePath = "/home/t3-ku/crogan/NTUPLES/StopNtuple_new/";
   int BKG_SKIP = 10; //takes 1 in every BKG_SKIP events
   bool logy = true;
   
@@ -210,6 +210,10 @@ void Plot_1D_stack(){
 	if(base->Nlep != 1)
     continue;
 
+  if(base->MiniIso_lep->at(0) > 0)
+    continue;
+
+
   // if(base->PDGID_lep->at(0) != 11 && base->PDGID_lep->at(0) != -11) //lepton flavor (11: e; 13: mu)
   //   continue;
 
@@ -243,7 +247,7 @@ void Plot_1D_stack(){
 	// if(base->PDGID_lep->at(0)+base->PDGID_lep->at(1) != 0)
 	//   continue;
 	
-	hist[s]->Fill(base->Njet_ISR->at(2), base->weight*g_Lumi*double(SKIP));
+	hist[s]->Fill(base->PT_lep->at(0), base->weight*g_Lumi*double(SKIP));
       }
 
       delete base;
