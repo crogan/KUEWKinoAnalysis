@@ -35,6 +35,10 @@ double g_NY;
 double units_per_bin_x;
 double units_per_bin_y;
 
+double TOTAL;
+double CORRECT;
+double CORRECT2;
+
 using namespace RestFrames;
 
 void Plot_2D(){
@@ -429,12 +433,12 @@ SampleSet DYjets;
 	}
 
 
-	double TOTAL += base->weight;
+	TOTAL += base->weight;
 	//if(Njet_V == 2){
 	if(base->Njet_S->at(1) == 2){
-	  double CORRECT += base->weight;
+	 CORRECT += base->weight;
 	  if(Njet_Vb == 2 && Nlep_Va == 2 && Njet_Va == 0)
-	    double CORRECT2 += base->weight;
+	    CORRECT2 += base->weight;
 	}
 
 	// TOTAL += base->weight;
