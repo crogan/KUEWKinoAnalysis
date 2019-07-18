@@ -1,12 +1,12 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
 // Thu Jul 18 16:33:36 2019 by ROOT version 6.10/09
-// from TTree KUAnalysis/KUAnalysis
+// from TTree ReducedBasenew/ReducedBasenew
 // found on file: /home/t3-ku/crogan/NTUPLES/StopNtuple_new/All_Bkg_2017/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17.root
 //////////////////////////////////////////////////////////
 
-#ifndef KUAnalysis_h
-#define KUAnalysis_h
+#ifndef ReducedBasenew_h
+#define ReducedBasenew_h
 
 #include <TROOT.h>
 #include <TChain.h>
@@ -17,7 +17,7 @@
 #include "vector"
 #include "vector"
 
-class ReducedBase_new {
+class ReducedBasenew {
 public :
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
    Int_t           fCurrent; //!current Tree number in a TChain
@@ -306,8 +306,8 @@ public :
    TBranch        *b_Is_3L;   //!
    TBranch        *b_Is_4L;   //!
 
-   KUAnalysis(TTree *tree=0);
-   virtual ~KUAnalysis();
+   ReducedBasenew(TTree *tree=0);
+   virtual ~ReducedBasenew();
    virtual Int_t    Cut(Long64_t entry);
    virtual Int_t    GetEntry(Long64_t entry);
    virtual Long64_t LoadTree(Long64_t entry);
@@ -320,7 +320,7 @@ public :
 #endif
 
 #ifdef KUAnalysis_cxx
-KUAnalysis::KUAnalysis(TTree *tree) : fChain(0) 
+ReducedBasenew::ReducedBasenew(TTree *tree) : fChain(0) 
 {
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
@@ -329,25 +329,25 @@ KUAnalysis::KUAnalysis(TTree *tree) : fChain(0)
       if (!f || !f->IsOpen()) {
          f = new TFile("/home/t3-ku/crogan/NTUPLES/StopNtuple_new/All_Bkg_2017/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17.root");
       }
-      f->GetObject("KUAnalysis",tree);
+      f->GetObject("ReducedBasenew",tree);
 
    }
    Init(tree);
 }
 
-KUAnalysis::~KUAnalysis()
+ReducedBasenew::~ReducedBasenew()
 {
    if (!fChain) return;
    delete fChain->GetCurrentFile();
 }
 
-Int_t KUAnalysis::GetEntry(Long64_t entry)
+Int_t ReducedBasenew::GetEntry(Long64_t entry)
 {
 // Read contents of entry.
    if (!fChain) return 0;
    return fChain->GetEntry(entry);
 }
-Long64_t KUAnalysis::LoadTree(Long64_t entry)
+Long64_t ReducedBasenew::LoadTree(Long64_t entry)
 {
 // Set the environment to read one entry
    if (!fChain) return -5;
@@ -360,7 +360,7 @@ Long64_t KUAnalysis::LoadTree(Long64_t entry)
    return centry;
 }
 
-void KUAnalysis::Init(TTree *tree)
+void ReducedBasenew::Init(TTree *tree)
 {
    // The Init() function is called when the selector needs to initialize
    // a new tree or chain. Typically here the branch addresses and branch
@@ -635,9 +635,34 @@ void KUAnalysis::Init(TTree *tree)
    fChain->SetBranchAddress("Is_3L", &Is_3L, &b_Is_3L);
    fChain->SetBranchAddress("Is_4L", &Is_4L, &b_Is_4L);
    Notify();
+
+   // Turn off/on different branches to improve processing speed
+   fChain->SetBranchStatus("*",0);
+   fChain->SetBranchStatus("weight", 1);
+   fChain->SetBranchStatus("MET", 1);
+   fChain->SetBranchStatus("MET_phi", 1);
+   fChain->SetBranchStatus("N*_ISR", 1);
+   fChain->SetBranchStatus("N*_S", 1);
+   fChain->SetBranchStatus("PTISR", 1);
+   fChain->SetBranchStatus("RISR", 1);
+   fChain->SetBranchStatus("MS", 1);
+   fChain->SetBranchStatus("MV", 1);
+   fChain->SetBranchStatus("dphiISRI", 1);
+   fChain->SetBranchStatus("dphiCMI", 1);
+   fChain->SetBranchStatus("PTCM", 1);
+   fChain->SetBranchStatus("ID_lep",1);
+   fChain->SetBranchStatus("PDGID_lep",1);
+   fChain->SetBranchStatus("*_lep",1);
+   fChain->SetBranchStatus("Nlep", 1);
+   fChain->SetBranchStatus("*_jet",1);
+   fChain->SetBranchStatus("Njet", 1);
+   fChain->SetBranchStatus("index_*_ISR", 1);
+   fChain->SetBranchStatus("index_*_S", 1);
+   fChain->SetBranchStatus("Nbjet", 1);
+  
 }
 
-Bool_t KUAnalysis::Notify()
+Bool_t ReducedBasenew::Notify()
 {
    // The Notify() function is called when a new file is opened. This
    // can be either for a new TTree in a TChain or when when a new TTree
@@ -648,14 +673,14 @@ Bool_t KUAnalysis::Notify()
    return kTRUE;
 }
 
-void KUAnalysis::Show(Long64_t entry)
+void ReducedBasenew::Show(Long64_t entry)
 {
 // Print contents of entry.
 // If entry is not specified, print current entry
    if (!fChain) return;
    fChain->Show(entry);
 }
-Int_t KUAnalysis::Cut(Long64_t entry)
+Int_t ReducedBasenew::Cut(Long64_t entry)
 {
 // This function may be called from Loop.
 // returns  1 if entry is accepted.
