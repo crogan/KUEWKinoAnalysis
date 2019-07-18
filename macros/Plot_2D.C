@@ -187,7 +187,6 @@ SampleSet DYjets;
 			g_NX,g_Xmin,g_Xmax,
 			g_NY,g_Ymin,g_Ymax);
 
-  // Set up RestFrames tree
  
 
   
