@@ -17,7 +17,7 @@
 #include "vector"
 #include "vector"
 
-class KUAnalysis {
+class ReducedBase_new {
 public :
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
    Int_t           fCurrent; //!current Tree number in a TChain
