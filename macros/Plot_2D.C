@@ -257,7 +257,7 @@ SampleSet DYjets;
   COMB_J.SetNElementsForFrame(Ja, 0);
   COMB_J.SetNElementsForFrame(Jb, 0);
   MinMassesCombJigsaw CombSplit_ISR("CombSplit_ISR", "Minimize M_{ISR} and M_{S} Jigsaw");
-  CombSplit_ISR.SetTransverse();
+ // CombSplit_ISR.SetTransverse();
   CombSplit_ISR.AddCombFrame(ISR, 0);
   CombSplit_ISR.AddCombFrame(Ja, 1);
   CombSplit_ISR.AddCombFrame(Jb, 1);
