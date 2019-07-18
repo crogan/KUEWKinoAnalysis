@@ -158,7 +158,7 @@ void Plot_1D_stack(){
   g_Xmin = -3.3;
   g_Xmax = 3.3;
   units_per_bin = 0.1;
-  g_units = " (rad)"
+  g_units = " (rad)";
 
   //dPhiCMI
   // g_Xmin = 0.0;

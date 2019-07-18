@@ -202,7 +202,7 @@ SampleSet DYjets;
       TChain* chain = new TChain(g_Samples[s]->GetTreeName().c_str());
       chain->Add(g_Samples[s]->GetFile(f).c_str());
 
-      ReducedBase* base = new ReducedBase(chain);
+      ReducedBase_new* base = new ReducedBase_new(chain);
 
       int Nentry = base->fChain->GetEntries();
 
