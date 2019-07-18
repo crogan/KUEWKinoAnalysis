@@ -145,13 +145,13 @@ SampleSet DYjets;
 
   int Nsample = g_Samples.size();
   //string g_Label = "No selection";
-  string g_Label = "RISR vs. energy, Cat. 2 (bkg:DY+Jets)";
+  string g_Label = "RISR vs. pT_lep, Cat. 2 (bkg:DY+Jets)";
 
 
   g_Yname = "pT_lep (GeV)";
   g_Ymin = 0.0;
-  g_Ymax = 20.;
-  units_per_bin_y = 0.5;
+  g_Ymax = 500.;
+  units_per_bin_y = 1.0;
   g_NY = (int)(g_Ymax - g_Ymin)/units_per_bin_y;
 
   g_Xname = "RISR";
@@ -176,6 +176,7 @@ SampleSet DYjets;
   // g_Xmin = 0.4;
   // g_Xmax = 1.1; 
   // g_NX = 32;
+
   // g_Yname = "N_{jet}^{S}";
   // g_Ymin = 0.;
   // g_Ymax = 180.;

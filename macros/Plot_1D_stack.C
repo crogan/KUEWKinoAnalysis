@@ -16,7 +16,7 @@
 #include <TH1D.h>
 #include <TStyle.h>
 
-#include "../include/ReducedBase.hh"
+#include "../include/ReducedBase_new.hh"
 #include "../include/SampleSet.hh"
 #include "RestFrames/RestFrames.hh"
 
@@ -28,6 +28,7 @@ vector<SampleSet*> g_Samples;
 double g_Lumi;
 string g_PlotTitle;
 string g_Xname;
+string g_units;
 double g_Xmin;
 double g_Xmax;
 double g_NX;
@@ -136,33 +137,28 @@ void Plot_1D_stack(){
   SIG3.SetSkip(1);
   g_Samples.push_back(&SIG3);
 
-  //  g_File.push_back("signal/TttH_1200_RH.root");
-  // g_Hist.push_back(ihist);
-  // g_Title.push_back("TttH RH M_{T'} = 1.2 TeV");
-  // g_Bkg.push_back(false);
-  // g_Color.push_back(kBlue+1);
-  // ihist++;
  
   //////////////////
 
   int Nsample = g_Samples.size();
   cout << "Nsample: " << Nsample << endl;
 
-  g_PlotTitle = "pT_lep";
+  g_PlotTitle = "#Eta_{lep}";
   g_Lumi = 100;
 
-  g_Xname = "pT_lep";
+  g_Xname = "Eta";
   g_Xmin = 0.0;
 
   //Njets_X
-  g_Xmin = 0.0;
-  g_Xmax = 300.;
-  units_per_bin = 1.;
+  // g_Xmin = 0.0;
+  // g_Xmax = 300.;
+  // units_per_bin = 1.;
 
   //Eta
-  // g_Xmin = -3.3;
-  // g_Xmax = 3.3;
-  // units_per_bin = 0.1;
+  g_Xmin = -3.3;
+  g_Xmax = 3.3;
+  units_per_bin = 0.1;
+  g_units = " (rad)"
 
   //dPhiCMI
   // g_Xmin = 0.0;
@@ -210,44 +206,8 @@ void Plot_1D_stack(){
 	if(base->Nlep != 1)
     continue;
 
-  if(base->MiniIso_lep->at(0) > 0)
-    continue;
-
-
-  // if(base->PDGID_lep->at(0) != 11 && base->PDGID_lep->at(0) != -11) //lepton flavor (11: e; 13: mu)
-  //   continue;
-
-  // if(base->Nlep != 3) //medium working point
-  //   continue;
-
-  // if(base->Nlep_ISR->at(2) > 0)
-	 //  continue;
-
-	// if(base->Njet_S->at(1) > 0)
-	//   continue;
-
-	// if(base->Nlep_S->at(2) != 2)
-	//   continue;
-
-	// if(base->PTISR->at(1) < 350)
-	//   continue;
-
-	// if(base->RISR->at(1) < 0.8)
-	//   continue;
-
-	// if(base->MV->at(1) > 30.)
-	//   continue;
-
-	// if(base->PTCM->at(1) > 100.)
-	//   continue;
-
-	// if(base->ID_lep->at(0) < 4 || base->ID_lep->at(1) < 4)
-	//   continue;
-
-	// if(base->PDGID_lep->at(0)+base->PDGID_lep->at(1) != 0)
-	//   continue;
 	
-	hist[s]->Fill(base->PT_lep->at(0), base->weight*g_Lumi*double(SKIP));
+	hist[s]->Fill(base->Eta_lep->at(0), base->weight*g_Lumi*double(SKIP));
       }
 
       delete base;
@@ -310,7 +270,7 @@ void Plot_1D_stack(){
   hist[imax]->GetXaxis()->SetTitleOffset(1.06);
   hist[imax]->GetXaxis()->SetLabelFont(132);
   hist[imax]->GetXaxis()->SetLabelSize(0.05);
-  TString xaxis = g_Xname + " (GeV)";
+  TString xaxis = g_Xname + g_units;
   hist[imax]->GetXaxis()->SetTitle(xaxis);
   hist[imax]->GetYaxis()->CenterTitle();
   hist[imax]->GetYaxis()->SetTitleFont(132);
