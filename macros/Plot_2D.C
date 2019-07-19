@@ -15,7 +15,7 @@
 #include <TStyle.h>
 
 #include "RestFrames/RestFrames.hh"
-#include "../include/ReducedBase.hh"
+#include "../include/ReducedBase_new.hh"
 #include "../include/SampleSet.hh"
 
 using namespace std;
