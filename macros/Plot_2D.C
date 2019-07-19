@@ -46,19 +46,19 @@ void Plot_2D(){
   int BKG_SKIP = 10; //takes 1 in every BKG_SKIP events
 
 
-//   SampleSet ttX;
-//   ttX.SetBkg(true);
-//   ttX.SetTitle("t#bar{t} + X");
-//   ttX.SetColor(kAzure+1);
-//   ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8_TuneCP5.root");
-//   // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
-//   // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
-//   // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_SingleLeptFromTbar_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
-//   // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/ttWJets_TuneCP5_13TeV_madgraphMLM_pythia8_Fall17.root");
-//   // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/ttZJets_TuneCP5_13TeV_madgraphMLM_pythia8_Fall17.root");
-//   // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTGJets_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8_Fall17.root");
-//   ttX.SetSkip(10);
-//   g_Samples.push_back(&ttX);
+  SampleSet ttX;
+  ttX.SetBkg(true);
+  ttX.SetTitle("t#bar{t} + X");
+  ttX.SetColor(kAzure+1);
+  ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8_TuneCP5.root");
+  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_SingleLeptFromTbar_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/ttWJets_TuneCP5_13TeV_madgraphMLM_pythia8_Fall17.root");
+  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/ttZJets_TuneCP5_13TeV_madgraphMLM_pythia8_Fall17.root");
+  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTGJets_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8_Fall17.root");
+  ttX.SetSkip(10);
+  g_Samples.push_back(&ttX);
 
 SampleSet DYjets;
   DYjets.SetBkg(true);
@@ -69,48 +69,18 @@ SampleSet DYjets;
   DYjets.SetSkip(BKG_SKIP);
   g_Samples.push_back(&DYjets);
 
-//   SampleSet Wjets;
-//   Wjets.SetBkg(true);
-//   Wjets.SetTitle("W + jets");
-//   Wjets.SetColor(kRed-7);
-//   Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
-//   Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
-//   Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
-//   Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
-//   Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
-//   Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
-//   Wjets.SetSkip(BKG_SKIP);
-//   g_Samples.push_back(&Wjets);
-
-  // SampleSet ST;
-  // ST.SetBkg(true);
-  // ST.SetTitle("single t + X");
-  // ST.SetColor(10);
-  // ST.AddFile(StopNtuplePath+"All_Bkg_2017/ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8_Fall17.root");
-  // ST.AddFile(StopNtuplePath+"All_Bkg_2017/ST_t-channel_antitop_5f_TuneCP5_PSweights_13TeV-powheg-pythia8_Fall17.root");
-  // ST.AddFile(StopNtuplePath+"All_Bkg_2017/ST_t-channel_top_5f_TuneCP5_13TeV-powheg-pythia8_Fall17.root");
-  // ST.AddFile(StopNtuplePath+"All_Bkg_2017/ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8_Fall17.root");
-  // ST.AddFile(StopNtuplePath+"All_Bkg_2017/ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8_Fall17.root");
-  // ST.AddFile(StopNtuplePath+"All_Bkg_2017/TGJets_leptonDecays_TuneCP5_PSweights_13TeV-amcatnlo-pythia8_Fall17.root");
-  // ST.SetSkip(BKG_SKIP);
-  // g_Samples.push_back(&ST);
-
-
-  // SampleSet DB;
-  // DB.SetBkg(true);
-  // DB.SetTitle("DiBoson");
-  // DB.SetColor(kOrange);
-  // DB.AddFile(StopNtuplePath+"All_Bkg_2017/WWTo2L2Nu_NNPDF31_TuneCP5_13TeV-powheg-pythia8_Fall17.root");
-  // DB.AddFile(StopNtuplePath+"All_Bkg_2017/WWTo4Q_NNPDF31_TuneCP5_13TeV-powheg-pythia8_Fall17.root");
-  // DB.AddFile(StopNtuplePath+"All_Bkg_2017/WWToLNuQQ_NNPDF31_TuneCP5_13TeV-powheg-pythia8_Fall17.root");
-  // DB.AddFile(StopNtuplePath+"All_Bkg_2017/WZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8_Fall17.root");
-  // DB.AddFile(StopNtuplePath+"All_Bkg_2017/WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17.root");
-  // DB.AddFile(StopNtuplePath+"All_Bkg_2017/ZZTo2L2Nu_13TeV_powheg_pythia8_Fall17.root");
-  // DB.AddFile(StopNtuplePath+"All_Bkg_2017/ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8_Fall17.root");
-  // DB.AddFile(StopNtuplePath+"All_Bkg_2017/ZZTo2Q2Nu_TuneCP5_13TeV_amcatnloFXFX_madspin_pythia8_Fall17.root");
-  // DB.AddFile(StopNtuplePath+"All_Bkg_2017/ZZTo4L_13TeV_powheg_pythia8_Fall17.root");
-  // DB.SetSkip(BKG_SKIP);
-  // g_Samples.push_back(&DB);
+  SampleSet Wjets;
+  Wjets.SetBkg(true);
+  Wjets.SetTitle("W + jets");
+  Wjets.SetColor(kRed-7);
+  Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  Wjets.SetSkip(BKG_SKIP);
+  g_Samples.push_back(&Wjets);
  
   // SampleSet SIG1;
   // SIG1.SetBkg(false);
@@ -142,7 +112,7 @@ SampleSet DYjets;
 
   int Nsample = g_Samples.size();
   //string g_Label = "No selection";
-  string g_Label = "RISR vs. pT_lep, Cat. 2 (bkg:DY+Jets)";
+  string g_Label = "RISR vs. pT_lep, Cat. 2 (all bkg)";
 
 
   g_Yname = "pT_lep (GeV)";
@@ -293,7 +263,7 @@ SampleSet DYjets;
 
   // SampleSet sample;
   // sample.write_plot("output/2Dplots.root",g_Label, can);
-  TString file_name = "output/2D_plots/"+g_Label+"miniIsocut.root";
+  TString file_name = "output/2D_plots/"+g_Label+".root";
   TFile* file = new TFile(file_name,"RECREATE");
   file->cd();
   can->Write();
