@@ -203,13 +203,20 @@ void Plot_1D_stack(){
 	if((e/SKIP)%(std::max(1, int(Nentry/SKIP/10))) == 0)
 	  cout << "      event " << e << " | " << Nentry << endl;
 
+
+
+
 	if(base->Nlep != 1)
     continue;
 
-  if(base->MiniIso_lep->at(0) >= 0.1)
-    continue;
+  // if(base->MiniIso_lep->at(0) >= 0.1)
+  //   continue;
 
 	
+
+
+
+  
 	hist[s]->Fill(base->Eta_lep->at(0), base->weight*g_Lumi*double(SKIP));
       }
 
