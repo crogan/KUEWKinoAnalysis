@@ -147,7 +147,7 @@ SampleSet DYjets;
 
   g_Yname = "pT_lep (GeV)";
   g_Ymin = 0.0;
-  g_Ymax = 300.;
+  g_Ymax = 200.;
   units_per_bin_y = 1.0;
   g_NY = (int)(g_Ymax - g_Ymin)/units_per_bin_y;
 
