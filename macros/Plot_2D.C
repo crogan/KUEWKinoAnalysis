@@ -183,8 +183,8 @@ void Plot_2D(){
 	if(base->Nlep != 1) //single lepton final states
 	  continue;
 
-  if(base->MiniIso_lep->at(0) > 0.1) //miniIso cut
-    continue;
+  // if(base->MiniIso_lep->at(0) > 0.1) //miniIso cut
+  //   continue;
 
 	
 	  hist->Fill(base->RISR->at(1), base->PT_lep->at(0), base->weight*double(SKIP));
@@ -263,7 +263,7 @@ void Plot_2D(){
 
   // SampleSet sample;
   // sample.write_plot("output/2Dplots.root",g_Label, can);
-  TString file_name = "output/2D_plots/"+g_Label+"miniIsocut.root";
+  TString file_name = "output/2D_plots/"+g_Label+".root";
   TFile* file = new TFile(file_name,"RECREATE");
   file->cd();
   can->Write();
