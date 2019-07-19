@@ -62,14 +62,14 @@ ReducedNtuple<Base>::ReducedNtuple(TTree* tree)
     INV[t]->AddFrame(*X1a[t]);
     INV[t]->AddFrame(*X1b[t]);
     
-    InvM[t] = new SetMassInvJigsaw(Form("InvM_%d",t), "Invisible mass Jigsaw");
+    InvM[t] = new SetMassInvJigsaw(Form("InvM_%d",t), "Set inv. system mass");
     INV[t]->AddJigsaw(*InvM[t]);
 
     InvEta[t] = new SetRapidityInvJigsaw(Form("InvEta_%d",t), "Set inv. system rapidity");
     INV[t]->AddJigsaw(*InvEta[t]);
     InvEta[t]->AddVisibleFrames(S[t]->GetListVisibleFrames());
     
-    InvSplit[t] = new MinMassesSqInvJigsaw(Form("InvSplit%d",t), "INV -> I_{a}+ I_{b} jigsaw", 2);
+    InvSplit[t] = new MinMassesSqInvJigsaw(Form("InvSplit%d",t), "INV -> #tilde{#chi_{1a}}+ #tilde{#chi_{1b}}", 2);
     INV[t]->AddJigsaw(*InvSplit[t]);
     InvSplit[t]->AddVisibleFrame(*Ja[t], 0);
     InvSplit[t]->AddVisibleFrame(*Jb[t], 1);
@@ -81,11 +81,11 @@ ReducedNtuple<Base>::ReducedNtuple(TTree* tree)
     InvSplit[t]->AddInvisibleFrame(*X1b[t], 1);
 
     COMB_J[t] =  new CombinatoricGroup(Form("COMB_J_%d",t), "Combinatoric System of Jets");
-    CombSplit_ISR[t] = new MinMassesCombJigsaw(Form("CombSplit_ISR_%d",t), "Minimize M_{ISR} and M_{S} Jigsaw");
-    CombSplit_J[t] = new MinMassesSqCombJigsaw(Form("CombSplit_J_%d",t), "Minimize M_{Ja} and M_{Jb} Jigsaw",2,2);
+    CombSplit_ISR[t] = new MinMassesCombJigsaw(Form("CombSplit_ISR_%d",t), "Minimize M_{T}^{ISR} and M_{T}^{S}");
+    CombSplit_J[t] = new MinMassesSqCombJigsaw(Form("CombSplit_J_%d",t), "Minimize M_{Va}^{2} + M_{Vb}^{2} ",2,2);
    
     COMB_L[t] =  new CombinatoricGroup(Form("COMB_L_%d",t), "Combinatoric System of Leps");
-    CombSplit_L[t] = new MinMassesSqCombJigsaw(Form("CombSplit_L_%d",t), "Minimize M_{Ja} and M_{Jb} Jigsaw",2,2);
+    CombSplit_L[t] = new MinMassesSqCombJigsaw(Form("CombSplit_L_%d",t), "Minimize M_{Va}^{2} + M_{Vb}^{2}",2,2);
    
     if(t > 0){
       COMB_J[t]->AddFrame(*ISR[t]);
@@ -125,12 +125,12 @@ ReducedNtuple<Base>::ReducedNtuple(TTree* tree)
 	cout << "Problem initializing analysis tree #" << t << endl;
   }
 
-  /*
+  
   TreePlot tree_plot("TreePlot","TreePlot");
 
   for(int t = 0; t < 2; t++){
     tree_plot.SetTree(*LAB[t]);
-    tree_plot.Draw(Form("ANA_tree_%d",t), Form("Reconstruction Tree %d",t));
+    tree_plot.Draw(Form("ANA_tree_%d",t), Form("Reconstruction Tree %d",t),1);
 
     tree_plot.SetTree(*COMB_J[t]);
     tree_plot.Draw(Form("ANA_comb_J_%d",t), Form("Combinatoric Jigsaws for jets %d",t),1);
@@ -140,10 +140,9 @@ ReducedNtuple<Base>::ReducedNtuple(TTree* tree)
 
     tree_plot.SetTree(*INV[t]);
     tree_plot.Draw(Form("ANA_inv_%d",t), Form("Invisible Jigsaws %d",t),1);
+ 
   }
-
   tree_plot.WriteOutput("trees.root");
-  */
 
    // Calculated Observables
   for(int i = 0; i < 2; i++){

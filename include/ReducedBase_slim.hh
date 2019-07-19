@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Thu Apr 11 12:53:08 2019 by ROOT version 6.14/04
+// Thu Jul 18 19:31:58 2019 by ROOT version 6.14/04
 // from TTree KUAnalysis/KUAnalysis
-// found on file: TTJets_TuneCUETP8M2T4_13TeV-amcatnloFXFX-pythia8All.root
+// found on file: /Users/christopherrogan/Dropbox/SAMPLES/EWKino/StopNtuple/StopNtuple/All_Bkg_2017/ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8_Fall17.root
 //////////////////////////////////////////////////////////
 
 #ifndef ReducedBase_h
@@ -52,6 +52,7 @@ public :
    vector<double>  *Phi_jet;
    vector<double>  *M_jet;
    vector<double>  *Btag_jet;
+   vector<double>  *Flavor_jet;
    Int_t           genNele;
    Int_t           genNmu;
    Int_t           genNlep;
@@ -61,24 +62,28 @@ public :
    vector<double>  *genM_lep;
    vector<int>     *genCharge_lep;
    vector<int>     *genPDGID_lep;
+   vector<int>     *genMomPDGID_lep;
    vector<int>     *genIndex_lep;
    Int_t           genNnu;
    vector<double>  *genPT_nu;
    vector<double>  *genEta_nu;
    vector<double>  *genPhi_nu;
    vector<int>     *genPDGID_nu;
+   vector<int>     *genMomPDGID_nu;
    Int_t           genNboson;
    vector<double>  *genPT_boson;
    vector<double>  *genEta_boson;
    vector<double>  *genPhi_boson;
    vector<double>  *genM_boson;
    vector<int>     *genPDGID_boson;
+   vector<int>     *genMomPDGID_boson;
    Int_t           genNsusy;
    vector<double>  *genPT_susy;
    vector<double>  *genEta_susy;
    vector<double>  *genPhi_susy;
    vector<double>  *genM_susy;
    vector<int>     *genPDGID_susy;
+   vector<int>     *genMomPDGID_susy;
    vector<int>     *Njet_a;
    vector<int>     *Njet_b;
    vector<int>     *Nbjet_a;
@@ -139,7 +144,6 @@ public :
    Bool_t          Is_2L_B;
    Bool_t          Is_1LB_1LB;
    Bool_t          Is_3L_B;
-  
    vector<int>     *Njet_ISR;
    vector<int>     *Njet_S;
    vector<int>     *Nbjet_ISR;
@@ -190,6 +194,7 @@ public :
    TBranch        *b_Phi_jet;   //!
    TBranch        *b_M_jet;   //!
    TBranch        *b_Btag_jet;   //!
+   TBranch        *b_Flavor_jet;   //!
    TBranch        *b_genNele;   //!
    TBranch        *b_genNmu;   //!
    TBranch        *b_genNlep;   //!
@@ -199,24 +204,28 @@ public :
    TBranch        *b_genM_lep;   //!
    TBranch        *b_genCharge_lep;   //!
    TBranch        *b_genPDGID_lep;   //!
+   TBranch        *b_genMomPDGID_lep;   //!
    TBranch        *b_genIndex_lep;   //!
    TBranch        *b_genNnu;   //!
    TBranch        *b_genPT_nu;   //!
    TBranch        *b_genEta_nu;   //!
    TBranch        *b_genPhi_nu;   //!
    TBranch        *b_genPDGID_nu;   //!
+   TBranch        *b_genMomPDGID_nu;   //!
    TBranch        *b_genNboson;   //!
    TBranch        *b_genPT_boson;   //!
    TBranch        *b_genEta_boson;   //!
    TBranch        *b_genPhi_boson;   //!
    TBranch        *b_genM_boson;   //!
    TBranch        *b_genPDGID_boson;   //!
+   TBranch        *b_genMomPDGID_boson;   //!
    TBranch        *b_genNsusy;   //!
    TBranch        *b_genPT_susy;   //!
    TBranch        *b_genEta_susy;   //!
    TBranch        *b_genPhi_susy;   //!
    TBranch        *b_genM_susy;   //!
    TBranch        *b_genPDGID_susy;   //!
+   TBranch        *b_genMomPDGID_susy;   //!
    TBranch        *b_Njet_a;   //!
    TBranch        *b_Njet_b;   //!
    TBranch        *b_Nbjet_a;   //!
@@ -312,15 +321,14 @@ public :
 
 #endif
 
-
 inline ReducedBase::ReducedBase(TTree *tree) : fChain(0) 
 {
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("TTJets_TuneCUETP8M2T4_13TeV-amcatnloFXFX-pythia8All.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/Users/christopherrogan/Dropbox/SAMPLES/EWKino/StopNtuple/StopNtuple/All_Bkg_2017/ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8_Fall17.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("TTJets_TuneCUETP8M2T4_13TeV-amcatnloFXFX-pythia8All.root");
+         f = new TFile("/Users/christopherrogan/Dropbox/SAMPLES/EWKino/StopNtuple/StopNtuple/All_Bkg_2017/ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8_Fall17.root");
       }
       f->GetObject("KUAnalysis",tree);
 
@@ -379,27 +387,32 @@ inline void ReducedBase::Init(TTree *tree)
    Phi_jet = 0;
    M_jet = 0;
    Btag_jet = 0;
+   Flavor_jet = 0;
    genPT_lep = 0;
    genEta_lep = 0;
    genPhi_lep = 0;
    genM_lep = 0;
    genCharge_lep = 0;
    genPDGID_lep = 0;
+   genMomPDGID_lep = 0;
    genIndex_lep = 0;
    genPT_nu = 0;
    genEta_nu = 0;
    genPhi_nu = 0;
    genPDGID_nu = 0;
+   genMomPDGID_nu = 0;
    genPT_boson = 0;
    genEta_boson = 0;
    genPhi_boson = 0;
    genM_boson = 0;
    genPDGID_boson = 0;
+   genMomPDGID_boson = 0;
    genPT_susy = 0;
    genEta_susy = 0;
    genPhi_susy = 0;
    genM_susy = 0;
    genPDGID_susy = 0;
+   genMomPDGID_susy = 0;
    Njet_a = 0;
    Njet_b = 0;
    Nbjet_a = 0;
@@ -505,6 +518,7 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchAddress("Phi_jet", &Phi_jet, &b_Phi_jet);
    fChain->SetBranchAddress("M_jet", &M_jet, &b_M_jet);
    fChain->SetBranchAddress("Btag_jet", &Btag_jet, &b_Btag_jet);
+   fChain->SetBranchAddress("Flavor_jet", &Flavor_jet, &b_Flavor_jet);
    fChain->SetBranchAddress("genNele", &genNele, &b_genNele);
    fChain->SetBranchAddress("genNmu", &genNmu, &b_genNmu);
    fChain->SetBranchAddress("genNlep", &genNlep, &b_genNlep);
@@ -514,24 +528,28 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchAddress("genM_lep", &genM_lep, &b_genM_lep);
    fChain->SetBranchAddress("genCharge_lep", &genCharge_lep, &b_genCharge_lep);
    fChain->SetBranchAddress("genPDGID_lep", &genPDGID_lep, &b_genPDGID_lep);
+   fChain->SetBranchAddress("genMomPDGID_lep", &genMomPDGID_lep, &b_genMomPDGID_lep);
    fChain->SetBranchAddress("genIndex_lep", &genIndex_lep, &b_genIndex_lep);
    fChain->SetBranchAddress("genNnu", &genNnu, &b_genNnu);
    fChain->SetBranchAddress("genPT_nu", &genPT_nu, &b_genPT_nu);
    fChain->SetBranchAddress("genEta_nu", &genEta_nu, &b_genEta_nu);
    fChain->SetBranchAddress("genPhi_nu", &genPhi_nu, &b_genPhi_nu);
    fChain->SetBranchAddress("genPDGID_nu", &genPDGID_nu, &b_genPDGID_nu);
+   fChain->SetBranchAddress("genMomPDGID_nu", &genMomPDGID_nu, &b_genMomPDGID_nu);
    fChain->SetBranchAddress("genNboson", &genNboson, &b_genNboson);
    fChain->SetBranchAddress("genPT_boson", &genPT_boson, &b_genPT_boson);
    fChain->SetBranchAddress("genEta_boson", &genEta_boson, &b_genEta_boson);
    fChain->SetBranchAddress("genPhi_boson", &genPhi_boson, &b_genPhi_boson);
    fChain->SetBranchAddress("genM_boson", &genM_boson, &b_genM_boson);
    fChain->SetBranchAddress("genPDGID_boson", &genPDGID_boson, &b_genPDGID_boson);
+   fChain->SetBranchAddress("genMomPDGID_boson", &genMomPDGID_boson, &b_genMomPDGID_boson);
    fChain->SetBranchAddress("genNsusy", &genNsusy, &b_genNsusy);
    fChain->SetBranchAddress("genPT_susy", &genPT_susy, &b_genPT_susy);
    fChain->SetBranchAddress("genEta_susy", &genEta_susy, &b_genEta_susy);
    fChain->SetBranchAddress("genPhi_susy", &genPhi_susy, &b_genPhi_susy);
    fChain->SetBranchAddress("genM_susy", &genM_susy, &b_genM_susy);
    fChain->SetBranchAddress("genPDGID_susy", &genPDGID_susy, &b_genPDGID_susy);
+   fChain->SetBranchAddress("genMomPDGID_susy", &genMomPDGID_susy, &b_genMomPDGID_susy);
    fChain->SetBranchAddress("Njet_a", &Njet_a, &b_Njet_a);
    fChain->SetBranchAddress("Njet_b", &Njet_b, &b_Njet_b);
    fChain->SetBranchAddress("Nbjet_a", &Nbjet_a, &b_Nbjet_a);
@@ -615,32 +633,6 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchAddress("dphiSI", &dphiSI, &b_dphiSI);
    fChain->SetBranchAddress("dphiISRI", &dphiISRI, &b_dphiISRI);
    Notify();
-   
-   // Turn off/on different branches to improve processing speed
-   fChain->SetBranchStatus("*",0);
-   fChain->SetBranchStatus("weight", 1);
-   fChain->SetBranchStatus("MET", 1);
-   fChain->SetBranchStatus("MET_phi", 1);
-   fChain->SetBranchStatus("N*_ISR", 1);
-   fChain->SetBranchStatus("N*_S", 1);
-   fChain->SetBranchStatus("PTISR", 1);
-   fChain->SetBranchStatus("RISR", 1);
-   fChain->SetBranchStatus("MS", 1);
-   fChain->SetBranchStatus("MV", 1);
-   fChain->SetBranchStatus("dphiISRI", 1);
-   fChain->SetBranchStatus("dphiCMI", 1);
-   fChain->SetBranchStatus("PTCM", 1);
-   fChain->SetBranchStatus("ID_lep",1);
-   fChain->SetBranchStatus("PDGID_lep",1);
-   fChain->SetBranchStatus("*_lep",1);
-   fChain->SetBranchStatus("Nlep", 1);
-   fChain->SetBranchStatus("*_jet",1);
-   fChain->SetBranchStatus("Njet", 1);
-   fChain->SetBranchStatus("index_*_ISR", 1);
-   fChain->SetBranchStatus("index_*_S", 1);
-   fChain->SetBranchStatus("Nbjet", 1);
-  
-   
 }
 
 inline Bool_t ReducedBase::Notify()
@@ -668,4 +660,3 @@ inline Int_t ReducedBase::Cut(Long64_t entry)
 // returns -1 otherwise.
    return 1;
 }
-
