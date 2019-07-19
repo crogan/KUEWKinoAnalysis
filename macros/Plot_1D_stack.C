@@ -143,11 +143,10 @@ void Plot_1D_stack(){
   int Nsample = g_Samples.size();
   cout << "Nsample: " << Nsample << endl;
 
-  g_PlotTitle = "#eta_{lep}";
+  g_PlotTitle = "#pT_{lep}";
   g_Lumi = 100;
 
-  g_Xname = "Eta";
-  g_Xmin = 0.0;
+  g_Xname = "pT_lep";
 
   //Njets_X
   // g_Xmin = 0.0;
@@ -155,10 +154,10 @@ void Plot_1D_stack(){
   // units_per_bin = 1.;
 
   //Eta
-  g_Xmin = -3.3;
-  g_Xmax = 3.3;
-  units_per_bin = 0.1;
-  g_units = " (rad)";
+  // g_Xmin = -3.3;
+  // g_Xmax = 3.3;
+  // units_per_bin = 0.1;
+  // g_units = " (rad)";
 
   //dPhiCMI
   // g_Xmin = 0.0;
@@ -174,6 +173,12 @@ void Plot_1D_stack(){
   // g_Xmin = 0.0;
   // g_Xmax = 1500.;
   // units_per_bin = 50.;
+
+  //pTlep
+  g_Xmin = 0.0;
+  g_Xmax = 500.;
+  units_per_bin = 5.;
+  g_units = " (GeV)";
 
 
   g_NX = (int)((g_Xmax - g_Xmin)/units_per_bin);
@@ -216,8 +221,8 @@ void Plot_1D_stack(){
 
 
 
-  
-	hist[s]->Fill(base->Eta_lep->at(0), base->weight*g_Lumi*double(SKIP));
+
+	hist[s]->Fill(base->PT_lep->at(0), base->weight*g_Lumi*double(SKIP));
       }
 
       delete base;
