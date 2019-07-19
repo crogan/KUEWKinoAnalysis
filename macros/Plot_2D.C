@@ -35,9 +35,6 @@ double g_NY;
 double units_per_bin_x;
 double units_per_bin_y;
 
-double TOTAL;
-double CORRECT;
-double CORRECT2;
 
 using namespace RestFrames;
 
@@ -150,7 +147,7 @@ SampleSet DYjets;
 
   g_Yname = "pT_lep (GeV)";
   g_Ymin = 0.0;
-  g_Ymax = 500.;
+  g_Ymax = 300.;
   units_per_bin_y = 1.0;
   g_NY = (int)(g_Ymax - g_Ymin)/units_per_bin_y;
 
@@ -228,8 +225,7 @@ SampleSet DYjets;
     }
   }
 
-  cout << "TOTAL CORRECT ASSIGNMENT = " << CORRECT/TOTAL << endl;
-  cout << "TOTAL CORRECT2 ASSIGNMENT = " << CORRECT2/CORRECT << endl;
+ 
   
   gStyle->SetOptTitle(0);
   gStyle->SetOptStat(0);
@@ -267,7 +263,7 @@ SampleSet DYjets;
   hist->GetZaxis()->SetLabelFont(42);
   hist->GetZaxis()->SetLabelSize(0.05);
   hist->GetZaxis()->SetTitle("a. u.");
-  hist->GetZaxis()->SetRangeUser(0.9*hist->GetMinimum(0.0),1.1*hist->GetMaximum()); //0.9*hist->GetMinimum(0.0)
+  hist->GetZaxis()->SetRangeUser(1E-3,1.1*hist->GetMaximum()); //0.9*hist->GetMinimum(0.0)
 
   // TLatex l;
   // l.SetTextFont(42);
