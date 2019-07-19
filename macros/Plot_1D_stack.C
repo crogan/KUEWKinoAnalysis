@@ -143,7 +143,7 @@ void Plot_1D_stack(){
   int Nsample = g_Samples.size();
   cout << "Nsample: " << Nsample << endl;
 
-  g_PlotTitle = "#pT_{lep}";
+  g_PlotTitle = "pT_{lep}";
   g_Lumi = 100;
 
   g_Xname = "pT_lep";
@@ -176,7 +176,7 @@ void Plot_1D_stack(){
 
   //pTlep
   g_Xmin = 0.0;
-  g_Xmax = 500.;
+  g_Xmax = 200.;
   units_per_bin = 5.;
   g_units = " (GeV)";
 
@@ -214,8 +214,8 @@ void Plot_1D_stack(){
 	if(base->Nlep != 1)
     continue;
 
-  // if(base->MiniIso_lep->at(0) >= 0.1)
-  //   continue;
+  if(base->MiniIso_lep->at(0) >= 0.1)
+    continue;
 
 	
 
@@ -357,7 +357,7 @@ void Plot_1D_stack(){
   l.DrawLatex(0.43,0.79,s_lumi.c_str());	
 
   
-  TString file_name = "output/1D_stacked_plots/"+g_Xname+"stacked_plot.root";
+  TString file_name = "output/1D_stacked_plots/"+g_Xname+"miniIso_stacked_plot.root";
   TFile* file = new TFile(file_name,"RECREATE");
   file->cd();
   can->Write();
