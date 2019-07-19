@@ -143,7 +143,7 @@ void Plot_1D_stack(){
   int Nsample = g_Samples.size();
   cout << "Nsample: " << Nsample << endl;
 
-  g_PlotTitle = "#Eta_{lep}";
+  g_PlotTitle = "#eta_{lep}";
   g_Lumi = 100;
 
   g_Xname = "Eta";
@@ -204,6 +204,9 @@ void Plot_1D_stack(){
 	  cout << "      event " << e << " | " << Nentry << endl;
 
 	if(base->Nlep != 1)
+    continue;
+
+  if(base->MiniIso_lep >= 0.1)
     continue;
 
 	

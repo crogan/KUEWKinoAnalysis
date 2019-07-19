@@ -15,7 +15,8 @@
 // Header file for the classes stored in the TTree if any.
 #include "vector"
 #include "vector"
-#include "vector"
+
+using std::vector;
 
 class ReducedBase {
 public :
@@ -319,8 +320,7 @@ public :
 
 #endif
 
-#ifdef KUAnalysis_cxx
-ReducedBase::ReducedBase(TTree *tree) : fChain(0) 
+inline ReducedBase::ReducedBase(TTree *tree) : fChain(0) 
 {
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
@@ -335,19 +335,19 @@ ReducedBase::ReducedBase(TTree *tree) : fChain(0)
    Init(tree);
 }
 
-ReducedBase::~ReducedBase()
+inline ReducedBase::~ReducedBase()
 {
    if (!fChain) return;
    delete fChain->GetCurrentFile();
 }
 
-Int_t ReducedBase::GetEntry(Long64_t entry)
+inline Int_t ReducedBase::GetEntry(Long64_t entry)
 {
 // Read contents of entry.
    if (!fChain) return 0;
    return fChain->GetEntry(entry);
 }
-Long64_t ReducedBase::LoadTree(Long64_t entry)
+inline Long64_t ReducedBase::LoadTree(Long64_t entry)
 {
 // Set the environment to read one entry
    if (!fChain) return -5;
@@ -360,7 +360,7 @@ Long64_t ReducedBase::LoadTree(Long64_t entry)
    return centry;
 }
 
-void ReducedBase::Init(TTree *tree)
+inline void ReducedBase::Init(TTree *tree)
 {
    // The Init() function is called when the selector needs to initialize
    // a new tree or chain. Typically here the branch addresses and branch
@@ -639,8 +639,10 @@ void ReducedBase::Init(TTree *tree)
    // Turn off/on different branches to improve processing speed
    fChain->SetBranchStatus("*",0);
    fChain->SetBranchStatus("weight", 1);
+   fChain->SetBranchStatus("Nlep", 1);
+   fChain->SetBranchStatus("M_lep",1);
+   fChain->SetBranchStatus("PT_lep", 1);
    fChain->SetBranchStatus("MET", 1);
-   fChain->SetBranchStatus("MET_phi", 1);
    fChain->SetBranchStatus("N*_ISR", 1);
    fChain->SetBranchStatus("N*_S", 1);
    fChain->SetBranchStatus("PTISR", 1);
@@ -652,17 +654,14 @@ void ReducedBase::Init(TTree *tree)
    fChain->SetBranchStatus("PTCM", 1);
    fChain->SetBranchStatus("ID_lep",1);
    fChain->SetBranchStatus("PDGID_lep",1);
-   fChain->SetBranchStatus("*_lep",1);
-   fChain->SetBranchStatus("Nlep", 1);
-   fChain->SetBranchStatus("*_jet",1);
-   fChain->SetBranchStatus("Njet", 1);
-   fChain->SetBranchStatus("index_*_ISR", 1);
-   fChain->SetBranchStatus("index_*_S", 1);
-   fChain->SetBranchStatus("Nbjet", 1);
+   fChain->SetBranchStatus("RelIso_lep", 1);
+   fChain->SetBranchStatus("MiniIso_lep", 1);
+   fChain->SetBranchStatus("ID_lep", 1);
+   fChain->SetBranchStatus("Eta_lep", 1);
   
 }
 
-Bool_t ReducedBase::Notify()
+inline Bool_t ReducedBase::Notify()
 {
    // The Notify() function is called when a new file is opened. This
    // can be either for a new TTree in a TChain or when when a new TTree
@@ -673,18 +672,17 @@ Bool_t ReducedBase::Notify()
    return kTRUE;
 }
 
-void ReducedBase::Show(Long64_t entry)
+inline void ReducedBase::Show(Long64_t entry)
 {
 // Print contents of entry.
 // If entry is not specified, print current entry
    if (!fChain) return;
    fChain->Show(entry);
 }
-Int_t ReducedBase::Cut(Long64_t entry)
+inline Int_t ReducedBase::Cut(Long64_t entry)
 {
 // This function may be called from Loop.
 // returns  1 if entry is accepted.
 // returns -1 otherwise.
    return 1;
 }
-#endif // #ifdef KUAnalysis_cxx
