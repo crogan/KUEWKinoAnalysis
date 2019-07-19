@@ -16,7 +16,7 @@
 #include <TH1D.h>
 #include <TStyle.h>
 
-#include "../include/ReducedBasenew.hh"
+#include "../include/ReducedBase_new.hh"
 #include "../include/SampleSet.hh"
 #include "RestFrames/RestFrames.hh"
 
@@ -193,7 +193,7 @@ void Plot_1D_stack(){
       TChain* chain = new TChain(g_Samples[s]->GetTreeName().c_str());
       chain->Add(g_Samples[s]->GetFile(f).c_str());
 
-      ReducedBasenew* base = new ReducedBasenew(chain);
+      ReducedBase* base = new ReducedBase(chain);
 
       int Nentry = base->fChain->GetEntries();
 

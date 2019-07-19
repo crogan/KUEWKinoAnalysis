@@ -15,7 +15,7 @@
 #include <TStyle.h>
 
 #include "RestFrames/RestFrames.hh"
-#include "../include/ReducedBasenew.hh"
+#include "../include/ReducedBase.hh"
 #include "../include/SampleSet.hh"
 
 using namespace std;
@@ -202,7 +202,7 @@ SampleSet DYjets;
       TChain* chain = new TChain(g_Samples[s]->GetTreeName().c_str());
       chain->Add(g_Samples[s]->GetFile(f).c_str());
 
-      ReducedBasenew* base = new ReducedBasenew(chain);
+      ReducedBase* base = new ReducedBase(chain);
 
       int Nentry = base->fChain->GetEntries();
 
