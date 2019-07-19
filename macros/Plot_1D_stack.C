@@ -16,7 +16,7 @@
 #include <TH1D.h>
 #include <TStyle.h>
 
-#include "../include/ReducedBase_new.hh"
+#include "../include/ReducedBase.hh"
 #include "../include/SampleSet.hh"
 #include "RestFrames/RestFrames.hh"
 
