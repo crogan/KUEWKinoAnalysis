@@ -183,8 +183,8 @@ SampleSet DYjets;
 	if(base->Nlep != 1) //single lepton final states
 	  continue;
 
-  if(base->MiniIso_lep->at(0) > 0.1) //miniIso cut
-    continue;
+  // if(base->MiniIso_lep->at(0) > 0.1) //miniIso cut
+  //   continue;
 
 	
 	  hist->Fill(base->RISR->at(1), base->PT_lep->at(0), base->weight*double(SKIP));
