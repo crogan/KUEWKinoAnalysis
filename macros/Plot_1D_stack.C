@@ -43,19 +43,19 @@ void Plot_1D_stack(){
   int BKG_SKIP = 10; //takes 1 in every BKG_SKIP events
   bool logy = true;
   
-  // SampleSet ttX;
-  // ttX.SetBkg(true);
-  // ttX.SetTitle("t#bar{t} + X");
-  // ttX.SetColor(kAzure-7);
-  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8_TuneCP5.root");
-  // // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
-  // // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
-  // // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_SingleLeptFromTbar_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
-  // // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/ttWJets_TuneCP5_13TeV_madgraphMLM_pythia8_Fall17.root");
-  // // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/ttZJets_TuneCP5_13TeV_madgraphMLM_pythia8_Fall17.root");
-  // // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTGJets_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8_Fall17.root");
-  // ttX.SetSkip(BKG_SKIP);
-  // g_Samples.push_back(&ttX);
+  SampleSet ttX;
+  ttX.SetBkg(true);
+  ttX.SetTitle("t#bar{t} + X");
+  ttX.SetColor(kAzure-7);
+  ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8_TuneCP5.root");
+  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_SingleLeptFromTbar_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/ttWJets_TuneCP5_13TeV_madgraphMLM_pythia8_Fall17.root");
+  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/ttZJets_TuneCP5_13TeV_madgraphMLM_pythia8_Fall17.root");
+  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTGJets_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8_Fall17.root");
+  ttX.SetSkip(BKG_SKIP);
+  g_Samples.push_back(&ttX);
 
   
   SampleSet DYjets;
@@ -80,34 +80,7 @@ void Plot_1D_stack(){
   Wjets.SetSkip(BKG_SKIP);
   g_Samples.push_back(&Wjets);
 
-  // SampleSet ST;
-  // ST.SetBkg(true);
-  // ST.SetTitle("single t + X");
-  // ST.SetColor(10);
-  // ST.AddFile(StopNtuplePath+"All_Bkg_2017/ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8_Fall17.root");
-  // ST.AddFile(StopNtuplePath+"All_Bkg_2017/ST_t-channel_antitop_5f_TuneCP5_PSweights_13TeV-powheg-pythia8_Fall17.root");
-  // ST.AddFile(StopNtuplePath+"All_Bkg_2017/ST_t-channel_top_5f_TuneCP5_13TeV-powheg-pythia8_Fall17.root");
-  // ST.AddFile(StopNtuplePath+"All_Bkg_2017/ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8_Fall17.root");
-  // ST.AddFile(StopNtuplePath+"All_Bkg_2017/ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8_Fall17.root");
-  // ST.AddFile(StopNtuplePath+"All_Bkg_2017/TGJets_leptonDecays_TuneCP5_PSweights_13TeV-amcatnlo-pythia8_Fall17.root");
-  // ST.SetSkip(BKG_SKIP);
-  // g_Samples.push_back(&ST);
-
-  // SampleSet DB;
-  // DB.SetBkg(true);
-  // DB.SetTitle("DiBoson");
-  // DB.SetColor(kOrange);
-  // DB.AddFile(StopNtuplePath+"All_Bkg_2017/WWTo2L2Nu_NNPDF31_TuneCP5_13TeV-powheg-pythia8_Fall17.root");
-  // DB.AddFile(StopNtuplePath+"All_Bkg_2017/WWTo4Q_NNPDF31_TuneCP5_13TeV-powheg-pythia8_Fall17.root");
-  // DB.AddFile(StopNtuplePath+"All_Bkg_2017/WWToLNuQQ_NNPDF31_TuneCP5_13TeV-powheg-pythia8_Fall17.root");
-  // DB.AddFile(StopNtuplePath+"All_Bkg_2017/WZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8_Fall17.root");
-  // DB.AddFile(StopNtuplePath+"All_Bkg_2017/WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17.root");
-  // DB.AddFile(StopNtuplePath+"All_Bkg_2017/ZZTo2L2Nu_13TeV_powheg_pythia8_Fall17.root");
-  // DB.AddFile(StopNtuplePath+"All_Bkg_2017/ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8_Fall17.root");
-  // DB.AddFile(StopNtuplePath+"All_Bkg_2017/ZZTo2Q2Nu_TuneCP5_13TeV_amcatnloFXFX_madspin_pythia8_Fall17.root");
-  // DB.AddFile(StopNtuplePath+"All_Bkg_2017/ZZTo4L_13TeV_powheg_pythia8_Fall17.root");
-  // DB.SetSkip(BKG_SKIP);
-  // g_Samples.push_back(&DB);
+  
  
   SampleSet SIG1;
   SIG1.SetBkg(false);
@@ -143,10 +116,10 @@ void Plot_1D_stack(){
   int Nsample = g_Samples.size();
   cout << "Nsample: " << Nsample << endl;
 
-  g_PlotTitle = "pT_{lep}";
+  g_PlotTitle = "#eta_{lep}";
   g_Lumi = 100;
 
-  g_Xname = "pT_lep";
+  g_Xname = "Eta";
 
   //Njets_X
   // g_Xmin = 0.0;
@@ -154,10 +127,10 @@ void Plot_1D_stack(){
   // units_per_bin = 1.;
 
   //Eta
-  // g_Xmin = -3.3;
-  // g_Xmax = 3.3;
-  // units_per_bin = 0.1;
-  // g_units = " (rad)";
+  g_Xmin = -3.3;
+  g_Xmax = 3.3;
+  units_per_bin = 0.1;
+  g_units = " (rad)";
 
   //dPhiCMI
   // g_Xmin = 0.0;
@@ -175,10 +148,10 @@ void Plot_1D_stack(){
   // units_per_bin = 50.;
 
   //pTlep
-  g_Xmin = 0.0;
-  g_Xmax = 200.;
-  units_per_bin = 5.;
-  g_units = " (GeV)";
+  // g_Xmin = 0.0;
+  // g_Xmax = 200.;
+  // units_per_bin = 5.;
+  // g_units = " (GeV)";
 
 
   g_NX = (int)((g_Xmax - g_Xmin)/units_per_bin);
@@ -214,7 +187,7 @@ void Plot_1D_stack(){
 	if(base->Nlep != 1)
     continue;
 
-  if(base->MiniIso_lep->at(0) >= 0.1)
+  if(base->MiniIso_lep->at(0) > 0.1)
     continue;
 
 	
@@ -222,7 +195,7 @@ void Plot_1D_stack(){
 
 
 
-	hist[s]->Fill(base->PT_lep->at(0), base->weight*g_Lumi*double(SKIP));
+	hist[s]->Fill(base->Eta_lep->at(0), base->weight*g_Lumi*double(SKIP));
       }
 
       delete base;
