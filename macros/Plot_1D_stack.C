@@ -65,7 +65,7 @@ void Plot_1D_stack(){
   // Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
   // Wjets.AddFile(StopNtuplePath+"All_Bkg_2017/WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
   // Wjets.SetSkip(BKG_SKIP);
-  g_Samples.push_back(&Wjets);
+  // g_Samples.push_back(&Wjets);
 
   SampleSet ttX;
   ttX.SetBkg(true);
