@@ -112,7 +112,7 @@ SampleSet DYjets;
 
   int Nsample = g_Samples.size();
   //string g_Label = "No selection";
-  string g_Label = "pT_ISR vs. pT_lep, Cat. 2 (sig:200-197)";
+  string g_Label = "pT_ISR vs. pT_lep, Cat. 2 (bkg:dy+jets)";
 
 
   g_Yname = "pT_lep (GeV)";
