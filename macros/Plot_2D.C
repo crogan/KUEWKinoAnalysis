@@ -91,28 +91,28 @@ void Plot_2D(){
   // SIG1.SetSkip(1);
   // g_Samples.push_back(&SIG1);
  
-  // SampleSet SIG2;
-  // SIG2.SetBkg(false);
-  // SIG2.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 170");
-  // SIG2.SetTreeName("SMS_200_170");
-  // SIG2.SetColor(kMagenta-7);
-  // SIG2.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
-  // SIG2.SetSkip(1);
-  // g_Samples.push_back(&SIG2);
+  SampleSet SIG2;
+  SIG2.SetBkg(false);
+  SIG2.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 170");
+  SIG2.SetTreeName("SMS_200_170");
+  SIG2.SetColor(kMagenta-7);
+  SIG2.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
+  SIG2.SetSkip(1);
+  g_Samples.push_back(&SIG2);
 
 
-  SampleSet SIG3;
-  SIG3.SetBkg(false);
-  SIG3.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 1");
-  SIG3.SetTreeName("SMS_200_1");
-  SIG3.SetColor(kViolet-7);
-  SIG3.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
-  SIG3.SetSkip(1);
-  g_Samples.push_back(&SIG3);
+  // SampleSet SIG3;
+  // SIG3.SetBkg(false);
+  // SIG3.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 1");
+  // SIG3.SetTreeName("SMS_200_1");
+  // SIG3.SetColor(kViolet-7);
+  // SIG3.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
+  // SIG3.SetSkip(1);
+  // g_Samples.push_back(&SIG3);
 
   int Nsample = g_Samples.size();
   //string g_Label = "No selection";
-  string g_Label = "pT_ISR vs. pT_lep, Cat. 2 (sig:200-1)";
+  string g_Label = "pT_ISR vs. pT_lep, Cat. 2 (sig:200-170)";
 
 
   g_Yname = "pT_lep (GeV)";
