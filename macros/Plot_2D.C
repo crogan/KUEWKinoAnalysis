@@ -112,7 +112,7 @@ SampleSet DYjets;
 
   int Nsample = g_Samples.size();
   //string g_Label = "No selection";
-  string g_Label = "pT_ISR vs. pT_lep, Cat. 2 (all bkg)";
+  string g_Label = "RISR vs. pT_lep, Cat. 2 (all bkg)";
 
 
   g_Yname = "pT_lep (GeV)";
@@ -193,7 +193,7 @@ SampleSet DYjets;
   //   continue;
 
 	
-	  hist->Fill(base->PTISR->at(1), base->PT_lep->at(0), base->weight*double(SKIP));
+	  hist->Fill(base->RISR->at(1), base->PT_lep->at(0), base->weight*double(SKIP));
       }
 
       delete base;
