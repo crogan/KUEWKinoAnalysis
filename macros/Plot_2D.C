@@ -122,18 +122,18 @@ SampleSet DYjets;
   g_NY = (int)(g_Ymax - g_Ymin)/units_per_bin_y;
 
 
-  g_Xname = "pT_ISR (GeV)";
-  g_Xmin = 0.0;
-  g_Xmax = 1500.; 
-  units_per_bin_x = 10.;
-  g_NX = (int)(g_Xmax - g_Xmin)/units_per_bin_x;
-
-
-  // g_Xname = "RISR";
+  // g_Xname = "pT_ISR (GeV)";
   // g_Xmin = 0.0;
-  // g_Xmax = 1.3; 
-  // units_per_bin_x = 0.01;
+  // g_Xmax = 1500.; 
+  // units_per_bin_x = 10.;
   // g_NX = (int)(g_Xmax - g_Xmin)/units_per_bin_x;
+
+
+  g_Xname = "RISR";
+  g_Xmin = 0.0;
+  g_Xmax = 1.3; 
+  units_per_bin_x = 0.01;
+  g_NX = (int)(g_Xmax - g_Xmin)/units_per_bin_x;
 
   // g_Xname = "Njets_S";
   // g_Xmin = 0.0;
