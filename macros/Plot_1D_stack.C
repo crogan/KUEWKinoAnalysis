@@ -42,20 +42,7 @@ void Plot_1D_stack(){
   string StopNtuplePath = "/home/t3-ku/crogan/NTUPLES/StopNtuple_new/";
   int BKG_SKIP = 10; //takes 1 in every BKG_SKIP events
   bool logy = true;
-  
-  SampleSet ttX;
-  ttX.SetBkg(true);
-  ttX.SetTitle("t#bar{t} + X");
-  ttX.SetColor(kAzure-7);
-  ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8_TuneCP5.root");
-  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
-  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
-  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_SingleLeptFromTbar_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
-  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/ttWJets_TuneCP5_13TeV_madgraphMLM_pythia8_Fall17.root");
-  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/ttZJets_TuneCP5_13TeV_madgraphMLM_pythia8_Fall17.root");
-  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTGJets_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8_Fall17.root");
-  ttX.SetSkip(BKG_SKIP);
-  g_Samples.push_back(&ttX);
+
 
   
   SampleSet DYjets;
@@ -80,7 +67,19 @@ void Plot_1D_stack(){
   Wjets.SetSkip(BKG_SKIP);
   g_Samples.push_back(&Wjets);
 
-  
+  SampleSet ttX;
+  ttX.SetBkg(true);
+  ttX.SetTitle("t#bar{t} + X");
+  ttX.SetColor(kAzure-7);
+  ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8_TuneCP5.root");
+  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_SingleLeptFromTbar_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/ttWJets_TuneCP5_13TeV_madgraphMLM_pythia8_Fall17.root");
+  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/ttZJets_TuneCP5_13TeV_madgraphMLM_pythia8_Fall17.root");
+  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTGJets_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8_Fall17.root");
+  ttX.SetSkip(BKG_SKIP);
+  g_Samples.push_back(&ttX);
  
   SampleSet SIG1;
   SIG1.SetBkg(false);
