@@ -112,7 +112,7 @@ void Plot_2D(){
 
   int Nsample = g_Samples.size();
   //string g_Label = "No selection";
-  string g_Label = "RISR vs. pT_lep, Cat. 2 (sig: 200-197)";
+  string g_Label = "RISR vs. pT_lep, Cat. 2 (all bkg)";
 
 
   g_Yname = "pT_lep (GeV)";
@@ -121,11 +121,19 @@ void Plot_2D(){
   units_per_bin_y = 1.0;
   g_NY = (int)(g_Ymax - g_Ymin)/units_per_bin_y;
 
-  g_Xname = "RISR";
+
+  g_Xname = "pT_ISR (GeV)";
   g_Xmin = 0.0;
-  g_Xmax = 1.3; 
-  units_per_bin_x = 0.01;
+  g_Xmax = 1500.; 
+  units_per_bin_x = 10.;
   g_NX = (int)(g_Xmax - g_Xmin)/units_per_bin_x;
+
+
+  // g_Xname = "RISR";
+  // g_Xmin = 0.0;
+  // g_Xmax = 1.3; 
+  // units_per_bin_x = 0.01;
+  // g_NX = (int)(g_Xmax - g_Xmin)/units_per_bin_x;
 
   // g_Xname = "Njets_S";
   // g_Xmin = 0.0;
@@ -155,9 +163,7 @@ void Plot_2D(){
 			g_NX,g_Xmin,g_Xmax,
 			g_NY,g_Ymin,g_Ymax);
 
- 
 
-  
   
   for(int s = 0; s < Nsample; s++){
     
@@ -187,7 +193,7 @@ void Plot_2D(){
   //   continue;
 
 	
-	  hist->Fill(base->RISR->at(1), base->PT_lep->at(0), base->weight*double(SKIP));
+	  hist->Fill(base->PTISR->at(1), base->PT_lep->at(0), base->weight*double(SKIP));
       }
 
       delete base;
