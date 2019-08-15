@@ -169,6 +169,8 @@ ReducedNtuple<Base>::ReducedNtuple(TTree* tree)
     m_index_jet_S.push_back(vector<int>());
     m_index_lep_ISR.push_back(vector<int>());
     m_index_lep_S.push_back(vector<int>());
+    m_dphi_lep_S.push_back(vector<double>());
+    m_cos_lep_S.push_back(vector<double>());
     
     m_index_jet_a.push_back(vector<int>());
     m_index_jet_b.push_back(vector<int>());
@@ -369,6 +371,8 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("index_jet_S", &m_index_jet_S);
   tree->Branch("index_lep_ISR", &m_index_lep_ISR);
   tree->Branch("index_lep_S", &m_index_lep_S);
+  tree->Branch("dphi_lep_S", &m_dphi_lep_S);
+  tree->Branch("cos_lep_S", &m_cos_lep_S);
   
   tree->Branch("Njet_a", &m_Njet_a);
   tree->Branch("Njet_b", &m_Njet_b);
@@ -471,6 +475,8 @@ void ReducedNtuple<Base>::ClearVariables(){
     m_index_jet_S[i].clear();
     m_index_lep_ISR[i].clear();
     m_index_lep_S[i].clear();
+    m_dphi_lep_S[i].clear();
+    m_cos_lep_S[i].clear();
     
     m_Njet_a[i] = 0;
     m_Njet_b[i] = 0;
@@ -641,6 +647,11 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
       }
       
       ISR[t]->SetLabFrameFourVector(vISR);
+
+      for(int l = 0; l < m_Nlep; l++){
+	m_Nlep_S[t]++;
+	m_index_lep_S[t].push_back(l);
+      }
       
       // 1 leptons
       if(Leptons.size() == 1){
@@ -883,8 +894,8 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
     m_MS[t] = S[t]->GetMass();
     m_PS[t] = S[t]->GetMomentum(*CM[t]);
     m_cosS[t]  = S[t]->GetCosDecayAngle();
-    m_dphiS[t] = S[t]->GetDeltaPhiDecayAngle();;
-    m_dphiSI[t]  = S[t]->GetDeltaPhiBoostVisible();;
+    m_dphiS[t] = S[t]->GetDeltaPhiDecayAngle();
+    m_dphiSI[t]  = S[t]->GetDeltaPhiBoostVisible();
     m_PTS[t] = S[t]->GetFourVector().Pt();
     m_PzS[t] = S[t]->GetFourVector().Pz();
 
@@ -966,6 +977,15 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
       m_PTISR[t] = vPTISR.Mag();
       m_MISR[t] = ISR[t]->GetMass();
       m_RISR[t] = fabs(vPTINV.Dot(vPTISR.Unit())) / vPTISR.Mag();
+
+      TVector3 isr_t = ISR[t]->GetTransverseFourVector(*S[t]).Vect();
+      TVector3 isr   = ISR[t]->GetFourVector(*S[t]).Vect();
+      for(int l = 0; l < m_Nlep_S[t]; l++){
+	TVector3 lep   = S[t]->GetFourVector(Leptons[m_index_lep_S[t][l]]).Vect();
+	TVector3 lep_t = S[t]->GetTransverseFourVector(Leptons[m_index_lep_S[t][l]]).Vect();
+	m_dphi_lep_S[t].push_back( lep_t.Angle(isr_t) );
+	m_cos_lep_S[t].push_back( lep_t.Unit().Dot(isr_t.Unit()) );
+      }
     }
   }
 

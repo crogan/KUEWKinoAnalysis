@@ -109,7 +109,9 @@ private:
   vector<vector<int> > m_index_jet_ISR;
   vector<vector<int> > m_index_jet_S;
   vector<vector<int> > m_index_lep_ISR;
-  vector<vector<int> > m_index_lep_S;
+  vector<vector<int> >    m_index_lep_S;
+  vector<vector<double> > m_dphi_lep_S;
+  vector<vector<double> > m_cos_lep_S;
   
   vector<int> m_Njet_a;
   vector<int> m_Njet_b;
