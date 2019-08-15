@@ -43,16 +43,20 @@ ReducedNtuple<Base>::ReducedNtuple(TTree* tree)
     S[t]->AddChildFrame(*X3b[t]);
     X3a[t]->AddChildFrame(*X2a[t]);
     X3b[t]->AddChildFrame(*X2b[t]);
-    X3a[t]->AddChildFrame(*saJa[t]);
-    X3b[t]->AddChildFrame(*saJb[t]);
+    // X3a[t]->AddChildFrame(*saJa[t]);
+    // X3b[t]->AddChildFrame(*saJb[t]);
+    X3a[t]->AddChildFrame(*Ja[t]);
+    X3b[t]->AddChildFrame(*Jb[t]);
     X2a[t]->AddChildFrame(*X1a[t]);
     X2b[t]->AddChildFrame(*X1b[t]);
-    X2a[t]->AddChildFrame(*saLa[t]);
-    X2b[t]->AddChildFrame(*saLb[t]);
-    saJa[t]->AddChildFrame(*Ja[t]);
-    saJb[t]->AddChildFrame(*Jb[t]);
-    saLa[t]->AddChildFrame(*La[t]);
-    saLb[t]->AddChildFrame(*Lb[t]);
+    // X2a[t]->AddChildFrame(*saLa[t]);
+    // X2b[t]->AddChildFrame(*saLb[t]);
+    X2a[t]->AddChildFrame(*La[t]);
+    X2b[t]->AddChildFrame(*Lb[t]);
+    // saJa[t]->AddChildFrame(*Ja[t]);
+    // saJb[t]->AddChildFrame(*Jb[t]);
+    // saLa[t]->AddChildFrame(*La[t]);
+    // saLb[t]->AddChildFrame(*Lb[t]);
     
     if(!LAB[t]->InitializeTree()){
       cout << "Problem initializing tree #" << t << endl;
@@ -130,7 +134,7 @@ ReducedNtuple<Base>::ReducedNtuple(TTree* tree)
 
   for(int t = 0; t < 2; t++){
     tree_plot.SetTree(*LAB[t]);
-    tree_plot.Draw(Form("ANA_tree_%d",t), Form("Reconstruction Tree %d",t),1);
+    tree_plot.Draw(Form("ANA_tree_%d",t), Form("Reconstruction Tree %d",t));
 
     tree_plot.SetTree(*COMB_J[t]);
     tree_plot.Draw(Form("ANA_comb_J_%d",t), Form("Combinatoric Jigsaws for jets %d",t),1);
