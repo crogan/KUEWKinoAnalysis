@@ -21,6 +21,8 @@ private:
 
   void ClearVariables();
 
+  bool m_event_skipped;
+  
   // common variables for output tree
   double m_weight;
   

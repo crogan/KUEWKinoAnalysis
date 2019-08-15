@@ -129,7 +129,7 @@ ReducedNtuple<Base>::ReducedNtuple(TTree* tree)
 	cout << "Problem initializing analysis tree #" << t << endl;
   }
 
-  
+  /*
   TreePlot tree_plot("TreePlot","TreePlot");
 
   for(int t = 0; t < 2; t++){
@@ -147,6 +147,7 @@ ReducedNtuple<Base>::ReducedNtuple(TTree* tree)
  
   }
   tree_plot.WriteOutput("trees.root");
+  */
 
    // Calculated Observables
   for(int i = 0; i < 2; i++){
@@ -285,6 +286,8 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   gInterpreter->GenerateDictionary("vector<vector<int>>", "vector");
   
   TTree* tree = (TTree*) new TTree(sample.c_str(), sample.c_str());
+
+  tree->Branch("event_skipped", &m_event_skipped);
 
   tree->Branch("weight", &m_weight);
   
@@ -454,6 +457,9 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
 
 template <class Base>
 void ReducedNtuple<Base>::ClearVariables(){
+
+  m_event_skipped = false;
+  
   for(int i = 0; i < 2; i++){
      m_Njet_ISR[i] = 0;
     m_Njet_S[i] = 0;
@@ -562,7 +568,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
     return;
 
   ClearVariables();
-  
+
   ParticleList Muons = AnalysisBase<Base>::GetMuons();
   Muons = Muons.ParticleIDCut(kLoose);
   Muons = Muons.PtEtaCut(3.5);
@@ -573,14 +579,19 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
   
   ParticleList Leptons = Electrons+Muons;
   Leptons.SortByPt();
-
-  m_Nele = Electrons.size();
-  m_Nmu  = Muons.size();
-  m_Nlep = Leptons.size();
-
+  
   ParticleList Jets = AnalysisBase<Base>::GetJets();
   Jets = Jets.PtEtaCut(20., 2.4);
   Jets = Jets.RemoveOverlap(Leptons, 0.2);
+
+  // skip event reconstruction for now if too many jets
+  if(Jets.size() >= 18){
+    m_event_skipped = true;
+    if(tree)
+      tree->Fill();
+    return;
+  }
+
   m_Njet = Jets.size();
   
   ParticleList BJets;
@@ -592,6 +603,10 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
     }
   }
   m_Nbjet = BJets.size();
+
+  m_Nele = Electrons.size();
+  m_Nmu  = Muons.size();
+  m_Nlep = Leptons.size();
   
   // require at least one lepton for now
   if(m_Nlep < 1)
