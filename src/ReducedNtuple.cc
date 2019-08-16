@@ -322,6 +322,7 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("Phi_jet", &m_Phi_jet);
   tree->Branch("M_jet",   &m_M_jet);
   tree->Branch("Btag_jet",   &m_Btag_jet);
+  tree->Branch("BtagID_jet",   &m_BtagID_jet);
   tree->Branch("Flavor_jet",   &m_Flavor_jet);
  
   tree->Branch("genNele", &m_genNele);
@@ -603,7 +604,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
   ParticleList BJets;
   vector<int> BJets_index;
   for(int i = 0; i < m_Njet; i++){
-    if(Jets[i].ParticleID() >= kMedium){
+    if(Jets[i].BtagID() >= kMedium){
       BJets += Jets[i];
       BJets_index.push_back(i);
     }
@@ -641,7 +642,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
       for(int i = 0; i < m_Njet; i++){
 	vISR += Jets[i]; 
 	m_Njet_ISR[t]++;
-	if(Jets[i].ParticleID() >= kMedium)
+	if(Jets[i].BtagID() >= kMedium)
 	  m_Nbjet_ISR[t]++;
 	m_index_jet_ISR[t].push_back(i);
       }
@@ -839,14 +840,14 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
       for(int i = 0; i < m_Njet; i++){
 	if(COMB_J[t]->GetFrame(jetID[i]) == *ISR[t]){
 	  m_Njet_ISR[t]++;
-	  if(Jets[i].ParticleID() >= kMedium)
+	  if(Jets[i].BtagID() >= kMedium)
 	    m_Nbjet_ISR[t]++;
 	  m_index_jet_ISR[t].push_back(i);
 	}
 	if(COMB_J[t]->GetFrame(jetID[i]) == *Ja[t]){
 	  m_Njet_S[t]++;
 	  m_Njet_a[t]++;
-	  if(Jets[i].ParticleID() >= kMedium){
+	  if(Jets[i].BtagID() >= kMedium){
 	    m_Nbjet_S[t]++;
 	    m_Nbjet_a[t]++;
 	  }
@@ -856,7 +857,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
 	if(COMB_J[t]->GetFrame(jetID[i]) == *Jb[t]){
 	  m_Njet_S[t]++;
 	  m_Njet_b[t]++;
-	  if(Jets[i].ParticleID() >= kMedium){
+	  if(Jets[i].BtagID() >= kMedium){
 	    m_Nbjet_S[t]++;
 	    m_Nbjet_b[t]++;
 	  }
@@ -1004,6 +1005,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
   m_Phi_jet.clear();
   m_M_jet.clear();
   m_Btag_jet.clear();
+  m_BtagID_jet.clear();
   m_Flavor_jet.clear();
   for(int i = 0; i < m_Njet; i++){
     m_PT_jet.push_back(Jets[i].Pt());
@@ -1011,6 +1013,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
     m_Phi_jet.push_back(Jets[i].Phi());
     m_M_jet.push_back(Jets[i].M());
     m_Btag_jet.push_back(Jets[i].Btag());
+    m_BtagID_jet.push_back(Jets[i].BtagID());
     m_Flavor_jet.push_back(Jets[i].PDGID());
   }
 

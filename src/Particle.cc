@@ -11,6 +11,7 @@ Particle::Particle() : TLorentzVector() {
   m_MiniIso = 0.;
 
   m_Btag = 0.;
+  m_BtagID = kNothing;
 }
     
 Particle::~Particle() {}
@@ -45,6 +46,14 @@ ParticleIDType Particle::ParticleID() const {
 
 void Particle::SetParticleID(ParticleIDType id){
   m_ParticleID = id;
+}
+
+double Particle::BtagID() const {
+  return m_BtagID;
+}
+
+void Particle::SetBtagID(ParticleIDType id){
+  m_BtagID = id;
 }
 
 double Particle::RelIso() const {

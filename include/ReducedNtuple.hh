@@ -56,6 +56,7 @@ private:
   vector<double> m_Phi_jet;
   vector<double> m_M_jet;
   vector<double> m_Btag_jet;
+  vector<int>    m_BtagID_jet;
   vector<double> m_Flavor_jet;
 
   int m_genNele;

@@ -33,6 +33,9 @@ public:
 
   double Btag() const;
   void SetBtag(double btag);
+
+  double BtagID() const;
+  void SetBtagID(ParticleIDType id);
     
   operator ParticleList() const;
   ParticleList operator + (const Particle& part) const; 
@@ -48,6 +51,7 @@ private:
   double m_MiniIso;
 
   double m_Btag;
+  ParticleIDType m_BtagID;
 
 };
 

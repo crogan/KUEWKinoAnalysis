@@ -585,6 +585,12 @@ TVector3 AnalysisBase<SUSYNANOBase>::GetGenMET(){
 
 template <>
 ParticleList AnalysisBase<SUSYNANOBase>::GetJets(){
+  int year = 2017;
+  if(m_FileTag.find("16") != std::string::npos)
+    year = 2016;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+
   ParticleList list;
 
   int Njet = nJet;
@@ -602,14 +608,46 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJets(){
     if(mass < 0.)
       mass = 0.;
     jet.SetPtEtaPhiM( JET.Pt(), JET.Eta(), JET.Phi(), mass );
-    jet.SetBtag(Jet_btagCSVV2[i]);
 
-    if(jet.Btag() > 0.9535)
+    if(Jet_jetId[i] >= 3)
       jet.SetParticleID(kTight);
-    else if(jet.Btag() > 0.8484) 
-      jet.SetParticleID(kMedium);
-    else if(jet.Btag() > 0.5426)
-      jet.SetParticleID(kLoose);
+    else if(Jet_jetId[i] >= 2) 
+      jet.SetBtagID(kMedium);
+    else if(Jet_jetId[i] >= 1)
+      jet.SetBtagID(kLoose);
+    
+    // DeepCSV tagger
+    jet.SetBtag(Jet_deepCSVb[i]+Jet_deepCSVbb[i]);
+
+    // https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation2016Legacy
+    if(year == 2016){
+      if(jet.Btag() > 0.8953)
+	jet.SetBtagID(kTight);
+      else if(jet.Btag() > 0.6321) 
+	jet.SetBtagID(kMedium);
+      else if(jet.Btag() > 0.2217)
+	jet.SetBtagID(kLoose);
+    }
+
+    // https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation94X
+    if(year == 2017){
+      if(jet.Btag() > 0.8001)
+	jet.SetBtagID(kTight);
+      else if(jet.Btag() > 0.4941) 
+	jet.SetBtagID(kMedium);
+      else if(jet.Btag() > 0.1522)
+	jet.SetBtagID(kLoose);
+    }
+
+    // https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation102X
+    if(year == 2018){
+      if(jet.Btag() > 0.7527)
+	jet.SetBtagID(kTight);
+      else if(jet.Btag() > 0.4184) 
+	jet.SetBtagID(kMedium);
+      else if(jet.Btag() > 0.1241)
+	jet.SetBtagID(kLoose);
+    }
 
     jet.SetPDGID( Jet_partonFlavour[i] );
       
