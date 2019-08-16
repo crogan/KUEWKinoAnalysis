@@ -79,6 +79,10 @@ void NeventTool::Initialize_SMS(const std::string& dataset, const std::string& f
 
   double Nevent = 0;
   double Nweight = 0;
+
+  double filter_eff = 1.;
+  if(m_Label2FilterEff.count(dataset) > 0)
+    filter_eff = m_Label2FilterEff[dataset];
   
   int N = m_Tree->GetEntries();
   for(int i = 0; i < N; i++){
@@ -94,8 +98,8 @@ void NeventTool::Initialize_SMS(const std::string& dataset, const std::string& f
 	m_Label2Nweight_SMS[label][masses] = 0.;
       }
       
-      m_Label2Nevent_SMS[label][masses] += m_Nevent;
-      m_Label2Nweight_SMS[label][masses] += m_Nweight;
+      m_Label2Nevent_SMS[label][masses] += m_Nevent/filter_eff;
+      m_Label2Nweight_SMS[label][masses] += m_Nweight/filter_eff;
     }
   }
 }
@@ -125,7 +129,7 @@ double NeventTool::GetNevent_SMS(const std::string& dataset, const std::string& 
 
   if(m_Label2Nevent_SMS[label].count(masses) == 0)
     return 0.;
-
+  
   return m_Label2Nevent_SMS[label][masses];
 }
 
@@ -187,7 +191,20 @@ std::map<std::pair<std::string,std::string>,std::map<std::pair<int,int>,double> 
   return Label2Nweight;
 }
 
+std::map<std::string,double> NeventTool::InitMap_FilterEff(){
+  std::map<std::string,double> Label2FilterEff;
+
+  Label2FilterEff["SMS-T2-4bd_genMET-80_mStop-500_mLSP-420_TuneCP2_13TeV-madgraphMLM-pythia8"] = 0.465;
+  Label2FilterEff["SMS-T2-4bd_genMET-80_mStop-500_mLSP-420_TuneCP5_13TeV-madgraphMLM-pythia8"] = 0.465;
+  Label2FilterEff["SMS-T2-4bd_genMET-80_mStop-500_mLSP-490_TuneCP2_13TeV-madgraphMLM-pythia8"] = 0.496;
+  Label2FilterEff["SMS-T2-4bd_genMET-80_mStop-500_mLSP-490_TuneCP5_13TeV-madgraphMLM-pythia8"] = 0.496;
+ 
+  return Label2FilterEff;
+}
+
 std::map<std::pair<std::string,std::string>,double> NeventTool::m_Label2Nevent_BKG  = NeventTool::InitMap_Nevent_BKG();
 std::map<std::pair<std::string,std::string>,double> NeventTool::m_Label2Nweight_BKG = NeventTool::InitMap_Nweight_BKG();
 std::map<std::pair<std::string,std::string>,std::map<std::pair<int,int>,double> > NeventTool::m_Label2Nevent_SMS  = NeventTool::InitMap_Nevent_SMS();
 std::map<std::pair<std::string,std::string>,std::map<std::pair<int,int>,double> > NeventTool::m_Label2Nweight_SMS = NeventTool::InitMap_Nweight_SMS();
+
+std::map<std::string,double> NeventTool::m_Label2FilterEff = NeventTool::InitMap_FilterEff();
