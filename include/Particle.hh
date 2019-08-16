@@ -31,6 +31,19 @@ public:
   void SetRelIso(double iso);
   void SetMiniIso(double iso);
 
+  double Dxy() const;
+  double DxyErr() const;
+  double Dz() const;
+  double DzErr() const;
+  double IP3D() const;
+  double SIP3D() const;
+  void SetDxy(double val);
+  void SetDxyErr(double val);
+  void SetDz(double val);
+  void SetDzErr(double val);
+  void SetIP3D(double val);
+  void SetSIP3D(double val);
+
   double Btag() const;
   void SetBtag(double btag);
 
@@ -46,13 +59,22 @@ private:
   int m_PDGID;
   int m_MomPDGID;
   ParticleIDType m_ParticleID;
-
-  double m_RelIso;
-  double m_MiniIso;
-
+  
   double m_Btag;
   ParticleIDType m_BtagID;
 
+  // lepton stuff
+  
+  double m_RelIso;
+  double m_MiniIso;
+
+  double m_Dxy;
+  double m_DxyErr;
+  double m_Dz;
+  double m_DzErr;
+  double m_IP3D;
+  double m_SIP3D;
+  
 };
 
 bool sortbypt(const Particle& p1, const Particle& p2);

@@ -312,6 +312,12 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("PDGID_lep",   &m_PDGID_lep);
   tree->Branch("RelIso_lep",  &m_RelIso_lep);
   tree->Branch("MiniIso_lep", &m_MiniIso_lep);
+  tree->Branch("Dxy_lep", &m_Dxy_lep);
+  tree->Branch("DxyErr_lep", &m_DxyErr_lep);
+  tree->Branch("Dz_lep", &m_Dz_lep);
+  tree->Branch("DzErr_lep", &m_DzErr_lep);
+  tree->Branch("IP3D_lep", &m_IP3D_lep);
+  tree->Branch("SIP3D_lep", &m_SIP3D_lep);
   tree->Branch("ID_lep",      &m_ID_lep);
   tree->Branch("Index_lep",   &m_Index_lep);
 
@@ -1035,6 +1041,12 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
   m_PDGID_lep.clear();
   m_RelIso_lep.clear();
   m_MiniIso_lep.clear();
+  m_Dxy_lep.clear();
+  m_DxyErr_lep.clear();
+  m_Dz_lep.clear();
+  m_DzErr_lep.clear();
+  m_IP3D_lep.clear();
+  m_SIP3D_lep.clear();
   m_ID_lep.clear();
   m_Index_lep.clear();
   vector<int> genmatch;
@@ -1049,6 +1061,12 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
     m_PDGID_lep.push_back(Leptons[r].PDGID());
     m_RelIso_lep.push_back(Leptons[r].RelIso());
     m_MiniIso_lep.push_back(Leptons[r].MiniIso());
+    m_Dxy_lep.push_back(Leptons[r].Dxy());
+    m_DxyErr_lep.push_back(Leptons[r].DxyErr());
+    m_Dz_lep.push_back(Leptons[r].Dz());
+    m_DzErr_lep.push_back(Leptons[r].DzErr());
+    m_IP3D_lep.push_back(Leptons[r].IP3D());
+    m_SIP3D_lep.push_back(Leptons[r].SIP3D());
     m_ID_lep.push_back(Leptons[r].ParticleID());
     int index = -1;
     for(int g = 0; g < m_genNlep; g++)

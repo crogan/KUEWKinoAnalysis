@@ -46,6 +46,13 @@ private:
   vector<int>    m_PDGID_lep;
   vector<double> m_RelIso_lep;
   vector<double> m_MiniIso_lep;
+  vector<double> m_Dxy_lep;
+  vector<double> m_DxyErr_lep;
+  vector<double> m_Dz_lep;
+  vector<double> m_DzErr_lep;
+  vector<double> m_IP3D_lep;
+  vector<double> m_SIP3D_lep;
+  
   vector<int>    m_ID_lep;
   vector<int>    m_Index_lep;
 

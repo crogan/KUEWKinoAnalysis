@@ -659,6 +659,12 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJets(){
 
 template <>
 ParticleList AnalysisBase<SUSYNANOBase>::GetElectrons(){
+  int year = 2017;
+  if(m_FileTag.find("16") != std::string::npos)
+    year = 2016;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+
   ParticleList list;
 
   int N = nElectron;
@@ -668,6 +674,13 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetElectrons(){
 		     Electron_phi[i], std::max(Electron_mass[i],float(0.)));
     lep.SetPDGID( (Electron_charge[i] < 0. ? 11 : -11) );
     lep.SetCharge( (Electron_charge[i] < 0. ? -1 : 1) );
+
+    lep.SetDxy(Electron_dxy[i]);
+    lep.SetDxyErr(Electron_dxyErr[i]);
+    lep.SetDz(Electron_dz[i]);
+    lep.SetDzErr(Electron_dzErr[i]);
+    lep.SetIP3D(Electron_ip3d[i]);
+    lep.SetSIP3D(Electron_sip3d[i]);
      
     if(Electron_mvaFall17V2Iso_WP90[i])
       lep.SetParticleID(kTight);
@@ -690,6 +703,12 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetElectrons(){
 
 template <>
 ParticleList AnalysisBase<SUSYNANOBase>::GetMuons(){
+  int year = 2017;
+  if(m_FileTag.find("16") != std::string::npos)
+    year = 2016;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+  
   ParticleList list;
 
   int N = nMuon;
@@ -699,7 +718,14 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetMuons(){
 		     Muon_phi[i], std::max(float(0.),Muon_mass[i]));
     lep.SetPDGID( (Muon_charge[i] < 0. ? 13 : -13) );
     lep.SetCharge( (Muon_charge[i] < 0. ? -1 : 1) );
-     
+
+    lep.SetDxy(Muon_dxy[i]);
+    lep.SetDxyErr(Muon_dxyErr[i]);
+    lep.SetDz(Muon_dz[i]);
+    lep.SetDzErr(Muon_dzErr[i]);
+    lep.SetIP3D(Muon_ip3d[i]);
+    lep.SetSIP3D(Muon_sip3d[i]);
+    
     if(Muon_tightId[i])
       lep.SetParticleID(kTight);
     else if(Muon_mediumId[i])
