@@ -9,6 +9,12 @@ Particle::Particle() : TLorentzVector() {
 
   m_RelIso = 0.;
   m_MiniIso = 0.;
+  m_Dxy = 0.;
+  m_DxyErr = 0.;
+  m_Dz = 0.;
+  m_DzErr = 0.;
+  m_IP3D = 0.;
+  m_SIP3D = 0.;
 
   m_Btag = 0.;
   m_BtagID = kNothing;

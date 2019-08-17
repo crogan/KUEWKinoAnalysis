@@ -681,18 +681,358 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetElectrons(){
     lep.SetDzErr(Electron_dzErr[i]);
     lep.SetIP3D(Electron_ip3d[i]);
     lep.SetSIP3D(Electron_sip3d[i]);
-     
-    if(Electron_mvaFall17V2Iso_WP90[i])
-      lep.SetParticleID(kTight);
-    else if(Electron_mvaFall17V2Iso_WP80[i])
-      lep.SetParticleID(kMedium);
-    else if(Electron_mvaFall17V2Iso_WPL[i])
-      lep.SetParticleID(kLoose);
-    else if(Electron_mvaFall17V2noIso_WPL[i])
-      lep.SetParticleID(kVeryLoose);
-     
-    lep.SetRelIso(Electron_pfRelIso03_all[i]);
-    lep.SetMiniIso(Electron_miniPFRelIso_all[i]);
+
+    
+    // FO baseline criteria
+    if(fabs(lep.Eta()) < 2.5 && lep.Pt() > 5. &&
+       fabs(lep.Dxy()) < 0.05 && fabs(lep.Dz()) < 0.1){
+
+      double mva = Electron_mvaFall17V1noIso[i];
+      if(year == 2016 || year == 2018)
+	mva = Electron_mvaFall17V2noIso[i];
+      
+      // FO VLoose
+      if(year == 2016){ // Summer16_94X legacy
+	if(fabs(lep.Eta()) < 0.8){ // eta < 0.8
+	  if(lep.Pt() < 10.){
+	    if(mva > -0.259)
+	      lep.SetParticleID(kVeryLoose);
+	  } else if(lep.Pt() < 25.) {
+	    if(mva > -0.388 + 0.109*(lep.Pt() - 25.))
+	      lep.SetParticleID(kVeryLoose);
+	  } else {
+	    if(mva > -0.388)
+	      lep.SetParticleID(kVeryLoose);
+	  }
+	} else if(fabs(lep.Eta()) < 1.479){ // eta < 1.479
+	  if(lep.Pt() < 10.){
+	    if(mva > -0.256)
+	      lep.SetParticleID(kVeryLoose);
+	  } else if(lep.Pt() < 25.) {
+	    if(mva > -0.696 + 0.106*(lep.Pt() - 25.))
+	      lep.SetParticleID(kVeryLoose);
+	  } else {
+	    if(mva > -0.696)
+	      lep.SetParticleID(kVeryLoose);
+	  }
+	} else { // eta < 2.5
+	  if(lep.Pt() < 10.){
+	    if(mva > -1.630)
+	      lep.SetParticleID(kVeryLoose);
+	  } else if(lep.Pt() < 25.) {
+	    if(mva > -1.219 + 0.148*(lep.Pt() - 25.))
+	      lep.SetParticleID(kVeryLoose);
+	  } else {
+	    if(mva > -1.219)
+	      lep.SetParticleID(kVeryLoose);
+	  }
+	}
+      }
+
+      if(year == 2017){ // Fall17_94X
+	if(fabs(lep.Eta()) < 0.8){ // eta < 0.8
+	  if(lep.Pt() < 10.){
+	    if(mva > -0.135)
+	      lep.SetParticleID(kVeryLoose);
+	  } else if(lep.Pt() < 25.) {
+	    if(mva > (-0.93 + (0.043/15.)*(lep.Pt()-10.)))
+	      lep.SetParticleID(kVeryLoose);
+	  } else {
+	    if(mva > -0.887)
+	      lep.SetParticleID(kVeryLoose);
+	  }
+	} else if(fabs(lep.Eta()) < 1.479){ // eta < 1.479
+	  if(lep.Pt() < 10.){
+	    if(mva > -0.417)
+	      lep.SetParticleID(kVeryLoose);
+	  } else if(lep.Pt() < 25.) {
+	    if(mva > (-0.93 + (0.04/15.)*(lep.Pt()-10.)))
+	      lep.SetParticleID(kVeryLoose);
+	  } else {
+	    if(mva > -0.89)
+	      lep.SetParticleID(kVeryLoose);
+	  }
+	} else { // eta < 2.5
+	  if(lep.Pt() < 10.){
+	    if(mva > -0.470)
+	      lep.SetParticleID(kVeryLoose);
+	  } else if(lep.Pt() < 25.) {
+	    if(mva > (-0.942 + (0.032/15.)*(lep.Pt()-10.)))
+	      lep.SetParticleID(kVeryLoose);
+	  } else {
+	    if(mva > -0.91)
+	      lep.SetParticleID(kVeryLoose);
+	  }
+	}
+      }
+
+      if(year == 2018){ // Autumn18_102X
+	if(fabs(lep.Eta()) < 0.8){ // eta < 0.8
+	  if(lep.Pt() < 10.){
+	    if(mva > 0.053)
+	      lep.SetParticleID(kVeryLoose);
+	  } else if(lep.Pt() < 25.) {
+	    if(mva > -0.106 + 0.062*(lep.Pt() - 25.))
+	      lep.SetParticleID(kVeryLoose);
+	  } else {
+	    if(mva > -0.106)
+	      lep.SetParticleID(kVeryLoose);
+	  }
+	} else if(fabs(lep.Eta()) < 1.479){ // eta < 1.479
+	  if(lep.Pt() < 10.){
+	    if(mva > -0.434)
+	      lep.SetParticleID(kVeryLoose);
+	  } else if(lep.Pt() < 25.) {
+	    if(mva > -0.769 + 0.038*(lep.Pt() - 25.))
+	      lep.SetParticleID(kVeryLoose);
+	  } else {
+	    if(mva > -0.769)
+	      lep.SetParticleID(kVeryLoose);
+	  }
+	} else { // eta < 2.5
+	  if(lep.Pt() < 10.){
+	    if(mva > -0.956)
+	      lep.SetParticleID(kVeryLoose);
+	  } else if(lep.Pt() < 25.) {
+	    if(mva > -1.461 + 0.042*(lep.Pt() - 25.))
+	      lep.SetParticleID(kVeryLoose);
+	  } else {
+	    if(mva > -1.461)
+	      lep.SetParticleID(kVeryLoose);
+	  }
+	}
+      }
+
+      // VLoose electron
+      if(year == 2016){ // Summer16_94X legacy
+	if(fabs(lep.Eta()) < 0.8){ // eta < 0.8
+	  if(lep.Pt() < 10.){
+	    if(mva > 1.309)
+	      lep.SetParticleID(kLoose);
+	  } else if(lep.Pt() < 25.) {
+	    if(mva > 0.887 + 0.088*(lep.Pt() - 25.))
+	      lep.SetParticleID(kLoose);
+	  } else {
+	    if(mva > 0.887)
+	      lep.SetParticleID(kLoose);
+	  }
+	} else if(fabs(lep.Eta()) < 1.479){ // eta < 1.479
+	  if(lep.Pt() < 10.){
+	    if(mva > 0.373)
+	      lep.SetParticleID(kLoose);
+	  } else if(lep.Pt() < 25.) {
+	    if(mva > 0.112 + 0.099*(lep.Pt() - 25.))
+	      lep.SetParticleID(kLoose);
+	  } else {
+	    if(mva > 0.112)
+	      lep.SetParticleID(kLoose);
+	  }
+	} else { // eta < 2.5
+	  if(lep.Pt() < 10.){
+	    if(mva > 0.071)
+	      lep.SetParticleID(kLoose);
+	  } else if(lep.Pt() < 25.) {
+	    if(mva > -0.017 + 0.137*(lep.Pt() - 25.))
+	      lep.SetParticleID(kLoose);
+	  } else {
+	    if(mva > -0.017)
+	      lep.SetParticleID(kLoose);
+	  }
+	}
+      }
+
+      if(year == 2017){ // Fall17_94X
+	if(fabs(lep.Eta()) < 0.8){ // eta < 0.8
+	  if(lep.Pt() < 10.){
+	    if(mva > 0.488)
+	      lep.SetParticleID(kLoose);
+	  } else if(lep.Pt() < 25.) {
+	    if(mva > (-0.788 + (0.148/15.)*(lep.Pt()-10.)) )
+	      lep.SetParticleID(kLoose);
+	  } else {
+	    if(mva > -0.64)
+	      lep.SetParticleID(kLoose);
+	  }
+	} else if(fabs(lep.Eta()) < 1.479){ // eta < 1.479
+	  if(lep.Pt() < 10.){
+	    if(mva > -0.045)
+	      lep.SetParticleID(kLoose);
+	  } else if(lep.Pt() < 25.) {
+	    if(mva > (-0.85 + (0.075/15.)*(lep.Pt()-10.)))
+	      lep.SetParticleID(kLoose);
+	  } else {
+	    if(mva > -0.775)
+	      lep.SetParticleID(kLoose);
+	  }
+	} else { // eta < 2.5
+	  if(lep.Pt() < 10.){
+	    if(mva > 0.176)
+	      lep.SetParticleID(kLoose);
+	  } else if(lep.Pt() < 25.) {
+	    if(mva > (-0.81 + (0.077/15.)*(lep.Pt()-10.)))
+	      lep.SetParticleID(kLoose);
+	  } else {
+	    if(mva > -0.733)
+	      lep.SetParticleID(kLoose);
+	  }
+	}
+      }
+
+      if(year == 2018){ // Autumn18_102X
+	if(fabs(lep.Eta()) < 0.8){ // eta < 0.8
+	  if(lep.Pt() < 10.){
+	    if(mva > 1.320)
+	      lep.SetParticleID(kLoose);
+	  } else if(lep.Pt() < 25.) {
+	    if(mva > 1.204 + 0.066*(lep.Pt() - 25.))
+	      lep.SetParticleID(kLoose);
+	  } else {
+	    if(mva > 1.204)
+	      lep.SetParticleID(kLoose);
+	  }
+	} else if(fabs(lep.Eta()) < 1.479){ // eta < 1.479
+	  if(lep.Pt() < 10.){
+	    if(mva > 0.192)
+	      lep.SetParticleID(kLoose);
+	  } else if(lep.Pt() < 25.) {
+	    if(mva > 0.084 + 0.033*(lep.Pt() - 25.))
+	      lep.SetParticleID(kLoose);
+	  } else {
+	    if(mva > 0.084)
+	      lep.SetParticleID(kLoose);
+	  }
+	} else { // eta < 2.5
+	  if(lep.Pt() < 10.){
+	    if(mva > 0.362)
+	      lep.SetParticleID(kLoose);
+	  } else if(lep.Pt() < 25.) {
+	    if(mva > -0.123 + 0.053*(lep.Pt() - 25.))
+	      lep.SetParticleID(kLoose);
+	  } else {
+	    if(mva > -0.123)
+	      lep.SetParticleID(kLoose);
+	  }
+	}
+      }
+	    
+      // signal lepton IDs (only Tight for now) baseline criteria
+      if(lep.IP3D() < 0.01 && lep.SIP3D() < 2.){
+	// Tight electron
+	if(year == 2016){ // Summer16_94X legacy
+	  if(fabs(lep.Eta()) < 0.8){ // eta < 0.8
+	    if(lep.Pt() < 10.){ // using VLoose ID for low pT
+	      if(mva > 1.309)
+		lep.SetParticleID(kTight);
+	    } else if(lep.Pt() < 40.) {
+	      if(mva > 3.447 + 0.063*(lep.Pt()- 25.))
+		lep.SetParticleID(kTight);
+	    } else {
+	      if(mva > 4.392)
+		lep.SetParticleID(kTight);
+	    }
+	  } else if(fabs(lep.Eta()) < 1.479){ // eta < 1.479
+	    if(lep.Pt() < 10.){ // using VLoose ID for low pT
+	      if(mva > 0.373)
+		lep.SetParticleID(kLoose);
+	    } else if(lep.Pt() < 40.) {
+	      if(mva > 2.522 + 0.058*(lep.Pt() - 25.))
+		lep.SetParticleID(kTight);
+	    } else {
+	      if(mva > 3.392)
+		lep.SetParticleID(kTight);
+	    }
+	  } else { // eta < 2.5
+	    if(lep.Pt() < 10.){ // using VLoose ID for low pT
+	      if(mva > 0.071)
+		lep.SetParticleID(kTight);
+	    } else if(lep.Pt() < 40.) {
+	      if(mva > 1.555 + 0.075*(lep.Pt() - 25.))
+		lep.SetParticleID(kTight);
+	    } else {
+	      if(mva > 2.680)
+		lep.SetParticleID(kTight);
+	    }
+	  }
+	}
+
+	if(year == 2017){ // Fall17_94X
+	  if(fabs(lep.Eta()) < 0.8){ // eta < 0.8
+	    if(lep.Pt() < 10.){ // using VLoose ID for low pT
+	      if(mva > 0.488)
+		lep.SetParticleID(kTight);
+	    } else if(lep.Pt() < 25.) {
+	      if(mva > 0.2+0.032*(lep.Pt() - 10.))
+		lep.SetParticleID(kTight);
+	    } else {
+	      if(mva > 0.68)
+		lep.SetParticleID(kTight);
+	    }
+	  } else if(fabs(lep.Eta()) < 1.479){ // eta < 1.479
+	    if(lep.Pt() < 10.){ // using VLoose ID for low pT
+	      if(mva > -0.045)
+		lep.SetParticleID(kTight);
+	    } else if(lep.Pt() < 25.) {
+	      if(mva > 0.1+0.025*(lep.Pt() - 10.))
+		lep.SetParticleID(kTight);
+	    } else {
+	      if(mva > 0.475)
+		lep.SetParticleID(kTight);
+	    }
+	  } else { // eta < 2.5
+	    if(lep.Pt() < 10.){ // using VLoose ID for low pT
+	      if(mva > 0.176)
+		lep.SetParticleID(kTight);
+	    } else if(lep.Pt() < 25.) {
+	      if(mva > -0.1+0.028*(lep.Pt() - 10.))
+		lep.SetParticleID(kTight);
+	    } else {
+	      if(mva > 0.32)
+		lep.SetParticleID(kTight);
+	    }
+	  }
+	}
+
+	if(year == 2018){ // Autumn18_102X
+	  if(fabs(lep.Eta()) < 0.8){ // eta < 0.8
+	    if(lep.Pt() < 10.){ // using VLoose ID for low pT
+	      if(mva > 1.320)
+		lep.SetParticleID(kTight);
+	    } else if(lep.Pt() < 25.) {
+	      if(mva > 4.277 + 0.112*(lep.Pt() - 25.))
+		lep.SetParticleID(kTight);
+	    } else {
+	      if(mva > 4.277)
+		lep.SetParticleID(kTight);
+	    }
+	  } else if(fabs(lep.Eta()) < 1.479){ // eta < 1.479
+	    if(lep.Pt() < 10.){ // using VLoose ID for low pT
+	      if(mva > 0.192)
+		lep.SetParticleID(kTight);
+	    } else if(lep.Pt() < 25.) {
+	      if(mva > 3.152 + 0.060*(lep.Pt() - 25.))
+		lep.SetParticleID(kTight);
+	    } else {
+	      if(mva > 3.152)
+		lep.SetParticleID(kTight);
+	    }
+	  } else { // eta < 2.5
+	    if(lep.Pt() < 10.){ // using VLoose ID for low pT
+	      if(mva > 0.362)
+		lep.SetParticleID(kTight);
+	    } else if(lep.Pt() < 25.) {
+	      if(mva > 2.359 + 0.087*(lep.Pt() - 25.))
+		lep.SetParticleID(kTight);
+	    } else {
+	      if(mva > 2.359)
+		lep.SetParticleID(kTight);
+	    }
+	  }
+	}
+	
+      }
+    } // end lepton id
+    
+ 
 
     list.push_back(lep);
   }
