@@ -609,7 +609,7 @@ TVector3 AnalysisBase<SUSYNANOBase>::GetPV(bool& good){
   good = true;
   PV.SetXYZ(PV_x,PV_y,PV_z);
   
-   return PV;
+  return PV;
 }
 
 template <>
@@ -1095,16 +1095,29 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetMuons(){
     lep.SetDzErr(Muon_dzErr[i]);
     lep.SetIP3D(Muon_ip3d[i]);
     lep.SetSIP3D(Muon_sip3d[i]);
-    
-    if(Muon_tightId[i])
-      lep.SetParticleID(kTight);
-    else if(Muon_mediumId[i])
-      lep.SetParticleID(kMedium);
-    else if(Muon_triggerIdLoose[i])
-      lep.SetParticleID(kLoose);
-     
+
     lep.SetRelIso(Muon_pfRelIso03_all[i]);
     lep.SetMiniIso(Muon_miniPFRelIso_all[i]);
+
+    // FO baseline criteria
+    if(fabs(lep.Eta()) < 2.5 && lep.Pt() > 3.5 &&
+       fabs(lep.Dxy()) < 0.05 && fabs(lep.Dz()) < 0.1){
+      if(Muon_triggerIdLoose[i])
+	lep.SetParticleID(kLoose);
+
+      // signal lep criteria
+      if(lep.IP3D() < 0.01 && lep.SIP3D() < 2.){
+	if(Muon_tightId[i])
+	  lep.SetParticleID(kTight);
+	else if(lep.Pt() < 15.){
+	  if(Muon_softId[i])
+	    lep.SetParticleID(kMedium);
+	} else {
+	  if(Muon_mediumPromptId[i])
+	    lep.SetParticleID(kMedium);
+	}
+      }
+    }
 
     list.push_back(lep);
   }
