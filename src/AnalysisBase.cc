@@ -104,6 +104,11 @@ TVector3 AnalysisBase<Base>::GetPV(bool& good){
 }
 
 template <class Base>
+ParticleList AnalysisBase<Base>::GetSVs(){
+  return ParticleList();
+}
+
+template <class Base>
 ParticleList AnalysisBase<Base>::GetJets(){
   return ParticleList();
 }
@@ -1126,6 +1131,26 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetMuons(){
 }
 
 template <>
+ParticleList AnalysisBase<SUSYNANOBase>::GetSVs(){
+  ParticleList list;
+
+  int N = nSB;
+  for(int i = 0; i < N; i++){
+    if(SB_pt[i] < 20. && SB_dlenSig[i] > 4. &&
+       SB_dxy[i] < 3. && SB_DdotP[i] > 0.98 &&
+       SB_ntracks[i] >= 3){
+      
+      Particle SV;
+      SV.SetPtEtaPhiM(SB_pt[i],SB_eta[i],SB_phi[i],SB_mass[i]);
+
+      list.push_back(SV);
+    }
+  }
+    
+  return list;
+}
+
+template <>
 ParticleList AnalysisBase<SUSYNANOBase>::GetGenElectrons(){
   ParticleList list;
   
@@ -1133,7 +1158,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetGenElectrons(){
   int PDGID;
   for(int i = 0; i < N; i++){
     PDGID = GenPart_pdgId[i];
-    if(abs(PDGID) == 11){
+    if(abs(PDGID) == 11 && GenPart_pt[i] > 3. && GenPart_status[i] == 1){
       Particle lep;
       
       lep.SetPDGID(PDGID);
@@ -1143,7 +1168,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetGenElectrons(){
       lep.SetCharge( (PDGID > 0 ? -1 : 1) );
       lep.SetPtEtaPhiM(GenPart_pt[i], GenPart_eta[i],
 		       GenPart_phi[i], max(float(0.),GenPart_mass[i]));
-
+      
       list.push_back(lep);
     }
   }
@@ -1159,7 +1184,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetGenMuons(){
   int PDGID;
   for(int i = 0; i < N; i++){
     PDGID = GenPart_pdgId[i];
-    if(abs(PDGID) == 13){
+    if(abs(PDGID) == 13 && GenPart_pt[i] > 3. && GenPart_status[i] == 1){
       Particle lep;
       
       lep.SetPDGID(PDGID);

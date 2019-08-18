@@ -52,7 +52,6 @@ private:
   vector<double> m_DzErr_lep;
   vector<double> m_IP3D_lep;
   vector<double> m_SIP3D_lep;
-  
   vector<int>    m_ID_lep;
   vector<int>    m_Index_lep;
 
@@ -65,6 +64,12 @@ private:
   vector<double> m_Btag_jet;
   vector<int>    m_BtagID_jet;
   vector<double> m_Flavor_jet;
+
+  int m_NSV;
+  vector<double> m_PT_SV;
+  vector<double> m_Eta_SV;
+  vector<double> m_Phi_SV;
+  vector<double> m_M_SV;
 
   int m_genNele;
   int m_genNmu;
@@ -114,10 +119,14 @@ private:
   vector<int> m_Nbjet_S;
   vector<int> m_Nlep_ISR;
   vector<int> m_Nlep_S;
+  vector<int> m_NSV_ISR;
+  vector<int> m_NSV_S;
   vector<vector<int> > m_index_jet_ISR;
   vector<vector<int> > m_index_jet_S;
+  vector<vector<int> > m_index_SV_ISR;
+  vector<vector<int> > m_index_SV_S;
   vector<vector<int> > m_index_lep_ISR;
-  vector<vector<int> >    m_index_lep_S;
+  vector<vector<int> > m_index_lep_S;
   vector<vector<double> > m_dphi_lep_S;
   vector<vector<double> > m_cos_lep_S;
   
@@ -127,11 +136,15 @@ private:
   vector<int> m_Nbjet_b;
   vector<int> m_Nlep_a;
   vector<int> m_Nlep_b;
+  vector<int> m_NSV_a;
+  vector<int> m_NSV_b;
  
   vector<vector<int> > m_index_jet_a;
   vector<vector<int> > m_index_jet_b;
   vector<vector<int> > m_index_lep_a;
   vector<vector<int> > m_index_lep_b;
+  vector<vector<int> > m_index_SV_a;
+  vector<vector<int> > m_index_SV_b;
   
   // Kinematic Variables
 

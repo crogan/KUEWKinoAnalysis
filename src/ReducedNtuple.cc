@@ -43,20 +43,20 @@ ReducedNtuple<Base>::ReducedNtuple(TTree* tree)
     S[t]->AddChildFrame(*X3b[t]);
     X3a[t]->AddChildFrame(*X2a[t]);
     X3b[t]->AddChildFrame(*X2b[t]);
-    // X3a[t]->AddChildFrame(*saJa[t]);
-    // X3b[t]->AddChildFrame(*saJb[t]);
-    X3a[t]->AddChildFrame(*Ja[t]);
-    X3b[t]->AddChildFrame(*Jb[t]);
+    X3a[t]->AddChildFrame(*saJa[t]);
+    X3b[t]->AddChildFrame(*saJb[t]);
+    //X3a[t]->AddChildFrame(*Ja[t]);
+    //X3b[t]->AddChildFrame(*Jb[t]);
     X2a[t]->AddChildFrame(*X1a[t]);
     X2b[t]->AddChildFrame(*X1b[t]);
-    // X2a[t]->AddChildFrame(*saLa[t]);
-    // X2b[t]->AddChildFrame(*saLb[t]);
-    X2a[t]->AddChildFrame(*La[t]);
-    X2b[t]->AddChildFrame(*Lb[t]);
-    // saJa[t]->AddChildFrame(*Ja[t]);
-    // saJb[t]->AddChildFrame(*Jb[t]);
-    // saLa[t]->AddChildFrame(*La[t]);
-    // saLb[t]->AddChildFrame(*Lb[t]);
+    X2a[t]->AddChildFrame(*saLa[t]);
+    X2b[t]->AddChildFrame(*saLb[t]);
+    //X2a[t]->AddChildFrame(*La[t]);
+    //X2b[t]->AddChildFrame(*Lb[t]);
+    saJa[t]->AddChildFrame(*Ja[t]);
+    saJb[t]->AddChildFrame(*Jb[t]);
+    saLa[t]->AddChildFrame(*La[t]);
+    saLb[t]->AddChildFrame(*Lb[t]);
     
     if(!LAB[t]->InitializeTree()){
       cout << "Problem initializing tree #" << t << endl;
@@ -157,6 +157,8 @@ ReducedNtuple<Base>::ReducedNtuple(TTree* tree)
     m_Nbjet_S.push_back(0);
     m_Nlep_ISR.push_back(0);
     m_Nlep_S.push_back(0);
+    m_NSV_ISR.push_back(0);
+    m_NSV_S.push_back(0);
 
     m_Njet_a.push_back(0);
     m_Njet_b.push_back(0);
@@ -164,9 +166,13 @@ ReducedNtuple<Base>::ReducedNtuple(TTree* tree)
     m_Nbjet_b.push_back(0);
     m_Nlep_a.push_back(0);
     m_Nlep_b.push_back(0);
+    m_NSV_a.push_back(0);
+    m_NSV_b.push_back(0);
 
     m_index_jet_ISR.push_back(vector<int>());
     m_index_jet_S.push_back(vector<int>());
+    m_index_SV_ISR.push_back(vector<int>());
+    m_index_SV_S.push_back(vector<int>());
     m_index_lep_ISR.push_back(vector<int>());
     m_index_lep_S.push_back(vector<int>());
     m_dphi_lep_S.push_back(vector<double>());
@@ -176,6 +182,8 @@ ReducedNtuple<Base>::ReducedNtuple(TTree* tree)
     m_index_jet_b.push_back(vector<int>());
     m_index_lep_a.push_back(vector<int>());
     m_index_lep_b.push_back(vector<int>());
+    m_index_SV_a.push_back(vector<int>());
+    m_index_SV_b.push_back(vector<int>());
 
     m_PTCM.push_back(0);
     m_dphiCM.push_back(0);
@@ -285,12 +293,15 @@ ReducedNtuple<Base>::~ReducedNtuple() {
 template <class Base>
 TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
 
+  // gInterpreter->GenerateDictionary("vectorr<int>", "vector");
+  // gInterpreter->GenerateDictionary("vector<double>", "vector");
   gInterpreter->GenerateDictionary("vector<vector<int>>", "vector");
-  
+  gInterpreter->GenerateDictionary("vector<vector<double>>", "vector");
+
   TTree* tree = (TTree*) new TTree(sample.c_str(), sample.c_str());
 
   tree->Branch("event_skipped", &m_event_skipped);
-
+  
   tree->Branch("weight", &m_weight);
   
   tree->Branch("MET", &m_MET);
@@ -302,16 +313,19 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
 
   tree->Branch("Nele", &m_Nele);
   tree->Branch("Nmu", &m_Nmu);
-  
+
   tree->Branch("Nlep", &m_Nlep);
   tree->Branch("PT_lep",  &m_PT_lep);
+  
   tree->Branch("Eta_lep", &m_Eta_lep);
   tree->Branch("Phi_lep", &m_Phi_lep);
   tree->Branch("M_lep",   &m_M_lep);
+  
   tree->Branch("Charge_lep",  &m_Charge_lep);
   tree->Branch("PDGID_lep",   &m_PDGID_lep);
   tree->Branch("RelIso_lep",  &m_RelIso_lep);
   tree->Branch("MiniIso_lep", &m_MiniIso_lep);
+  
   tree->Branch("Dxy_lep", &m_Dxy_lep);
   tree->Branch("DxyErr_lep", &m_DxyErr_lep);
   tree->Branch("Dz_lep", &m_Dz_lep);
@@ -320,7 +334,7 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("SIP3D_lep", &m_SIP3D_lep);
   tree->Branch("ID_lep",      &m_ID_lep);
   tree->Branch("Index_lep",   &m_Index_lep);
-
+  
   tree->Branch("Njet", &m_Njet);
   tree->Branch("Nbjet", &m_Nbjet);
   tree->Branch("PT_jet",  &m_PT_jet);
@@ -330,6 +344,12 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("Btag_jet",   &m_Btag_jet);
   tree->Branch("BtagID_jet",   &m_BtagID_jet);
   tree->Branch("Flavor_jet",   &m_Flavor_jet);
+
+  tree->Branch("NSV", &m_NSV);
+  tree->Branch("PT_SV",  &m_PT_SV);
+  tree->Branch("Eta_SV", &m_Eta_SV);
+  tree->Branch("Phi_SV", &m_Phi_SV);
+  tree->Branch("M_SV",   &m_M_SV);
  
   tree->Branch("genNele", &m_genNele);
   tree->Branch("genNmu", &m_genNmu);
@@ -367,15 +387,18 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("genPDGID_susy", &m_genPDGID_susy);
   tree->Branch("genMomPDGID_susy", &m_genMomPDGID_susy);
 
-  
   tree->Branch("Njet_ISR", &m_Njet_ISR);
   tree->Branch("Njet_S", &m_Njet_S);
   tree->Branch("Nbjet_ISR", &m_Nbjet_ISR);
   tree->Branch("Nbjet_S", &m_Nbjet_S);
   tree->Branch("Nlep_ISR", &m_Nlep_ISR);
   tree->Branch("Nlep_S", &m_Nlep_S);
+  tree->Branch("NSV_ISR", &m_NSV_ISR);
+  tree->Branch("NSV_S", &m_NSV_S);
   tree->Branch("index_jet_ISR", &m_index_jet_ISR);
   tree->Branch("index_jet_S", &m_index_jet_S);
+  tree->Branch("index_SV_ISR", &m_index_SV_ISR);
+  tree->Branch("index_SV_S", &m_index_SV_S);
   tree->Branch("index_lep_ISR", &m_index_lep_ISR);
   tree->Branch("index_lep_S", &m_index_lep_S);
   tree->Branch("dphi_lep_S", &m_dphi_lep_S);
@@ -387,11 +410,15 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("Nbjet_b", &m_Nbjet_b);
   tree->Branch("Nlep_a", &m_Nlep_a);
   tree->Branch("Nlep_b", &m_Nlep_b);
+  tree->Branch("NSV_a", &m_NSV_a);
+  tree->Branch("NSV_b", &m_NSV_b);
   
   tree->Branch("index_jet_a", &m_index_jet_a);
   tree->Branch("index_jet_b", &m_index_jet_b);
   tree->Branch("index_lep_a", &m_index_lep_a);
   tree->Branch("index_lep_b", &m_index_lep_b);
+  tree->Branch("index_SV_a", &m_index_SV_a);
+  tree->Branch("index_SV_b", &m_index_SV_b);
 
   tree->Branch("PTCM", &m_PTCM);
   tree->Branch("cosCM", &m_cosCM);
@@ -463,6 +490,7 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("Is_3L", &m_Is_3L);
   tree->Branch("Is_4L", &m_Is_4L);
   
+  
   return tree;
 }
 
@@ -472,14 +500,18 @@ void ReducedNtuple<Base>::ClearVariables(){
   m_event_skipped = false;
   
   for(int i = 0; i < 2; i++){
-     m_Njet_ISR[i] = 0;
+    m_Njet_ISR[i] = 0;
     m_Njet_S[i] = 0;
     m_Nbjet_ISR[i] = 0;
     m_Nbjet_S[i] = 0;
     m_Nlep_ISR[i] = 0;
     m_Nlep_S[i] = 0;
+    m_NSV_ISR[i] = 0;
+    m_NSV_S[i] = 0;
     m_index_jet_ISR[i].clear();
     m_index_jet_S[i].clear();
+    m_index_SV_ISR[i].clear();
+    m_index_SV_S[i].clear();
     m_index_lep_ISR[i].clear();
     m_index_lep_S[i].clear();
     m_dphi_lep_S[i].clear();
@@ -491,11 +523,15 @@ void ReducedNtuple<Base>::ClearVariables(){
     m_Nbjet_b[i] = 0;
     m_Nlep_a[i] = 0;
     m_Nlep_b[i] = 0;
+    m_NSV_a[i] = 0;
+    m_NSV_b[i] = 0;
    
     m_index_jet_a[i].clear();
     m_index_jet_b[i].clear();
     m_index_lep_a[i].clear();
     m_index_lep_b[i].clear();
+    m_index_SV_a[i].clear();
+    m_index_SV_b[i].clear();
 
     m_PTCM[i] = 0.;
     m_cosCM[i] = 0.;
@@ -589,18 +625,23 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
   ClearVariables();
 
   ParticleList Muons = AnalysisBase<Base>::GetMuons();
-  Muons = Muons.ParticleIDCut(kLoose);
+  Muons = Muons.ParticleIDCut(kVeryLoose);
   Muons = Muons.PtEtaCut(3.5);
 
   ParticleList Electrons = AnalysisBase<Base>::GetElectrons();
-  Electrons = Electrons.ParticleIDCut(kLoose);
-  Electrons = Electrons.PtEtaCut(3.5);
+  Electrons = Electrons.ParticleIDCut(kVeryLoose);
+  Electrons = Electrons.PtEtaCut(5.0);
   
   ParticleList Leptons = Electrons+Muons;
   Leptons.SortByPt();
   
   ParticleList Jets = AnalysisBase<Base>::GetJets();
   Jets = Jets.PtEtaCut(20., 2.4);
+
+  ParticleList SVs = AnalysisBase<Base>::GetSVs();
+  SVs = SVs.RemoveOverlap(Leptons, 0.4);
+  SVs = SVs.RemoveOverlap(Jets, 0.4);
+  
   Jets = Jets.RemoveOverlap(Leptons, 0.2);
 
   // skip event reconstruction for now if too many jets
@@ -626,6 +667,8 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
   m_Nele = Electrons.size();
   m_Nmu  = Muons.size();
   m_Nlep = Leptons.size();
+
+  m_NSV = SVs.size();
   
   // require at least one lepton for now
   if(m_Nlep < 1)
@@ -639,10 +682,9 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
   for(int i = 0; i < 2; i++)
     is_filled[i] = true;
   
-
   // Sparticle pair-production trees analysis
   for(int t = 0; t < 2; t++){
-
+    
     LAB[t]->ClearEvent();
 
     INV[t]->SetLabFrameThreeVector(ETMiss);
@@ -657,6 +699,11 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
 	if(Jets[i].BtagID() >= kMedium)
 	  m_Nbjet_ISR[t]++;
 	m_index_jet_ISR[t].push_back(i);
+      }
+      for(int i = 0; i < m_NSV; i++){
+	vISR += SVs[i]; 
+	m_NSV_ISR[t]++;
+	m_index_SV_ISR[t].push_back(i);
       }
       
       ISR[t]->SetLabFrameFourVector(vISR);
@@ -841,6 +888,11 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
 	jetID.push_back(COMB_J[t]->AddLabFrameFourVector(Jets[i]));
       }
 
+      std::vector<RFKey> SVID;
+      for(int i = 0; i < m_NSV; i++){
+	SVID.push_back(COMB_J[t]->AddLabFrameFourVector(SVs[i]));
+      }
+
       std::vector<RFKey> lepID;
       for(int i = 0; i < m_Nlep; i++){
 	lepID.push_back(COMB_L[t]->AddLabFrameFourVector(Leptons[i]));
@@ -849,6 +901,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
       if(!LAB[t]->AnalyzeEvent())
 	cout << "Something went wrong with tree event analysis #" << t << endl;
 
+      // jet counting in ISR/S, hemispheres
       for(int i = 0; i < m_Njet; i++){
 	if(COMB_J[t]->GetFrame(jetID[i]) == *ISR[t]){
 	  m_Njet_ISR[t]++;
@@ -877,7 +930,28 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
 	  m_index_jet_b[t].push_back(i);
 	}
       }
+      
+      // SV counting in ISR/S, hemispheres
+      for(int i = 0; i < m_NSV; i++){
+	if(COMB_J[t]->GetFrame(SVID[i]) == *ISR[t]){
+	  m_NSV_ISR[t]++;
+	  m_index_SV_ISR[t].push_back(i);
+	}
+	if(COMB_J[t]->GetFrame(SVID[i]) == *Ja[t]){
+	  m_NSV_S[t]++;
+	  m_NSV_a[t]++;
+	  m_index_SV_S[t].push_back(i);
+	  m_index_SV_a[t].push_back(i);
+	}
+	if(COMB_J[t]->GetFrame(SVID[i]) == *Jb[t]){
+	  m_NSV_S[t]++;
+	  m_NSV_b[t]++;
+	  m_index_SV_S[t].push_back(i);
+	  m_index_SV_b[t].push_back(i);
+	}
+      }
 
+      // lepton counting in ISR/S, hemispheres
       for(int i = 0; i < m_Nlep; i++){
 	m_Nlep_S[t]++;
 	m_index_lep_S[t].push_back(i);
@@ -948,10 +1022,10 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
     m_cosLa[t] = saLa[t]->GetCosDecayAngle();
     m_cosLb[t] = saLb[t]->GetCosDecayAngle();
 
-    TLorentzVector vP_Ja_S  = Ja[t]->GetFourVector(*S[t]);
-    TLorentzVector vP_Jb_S  = Jb[t]->GetFourVector(*S[t]);
-    TLorentzVector vP_La_S  = La[t]->GetFourVector(*S[t]);
-    TLorentzVector vP_Lb_S  = Lb[t]->GetFourVector(*S[t]);
+    TLorentzVector vP_Ja_S  = saJa[t]->GetFourVector(*S[t]);
+    TLorentzVector vP_Jb_S  = saJb[t]->GetFourVector(*S[t]);
+    TLorentzVector vP_La_S  = saLa[t]->GetFourVector(*S[t]);
+    TLorentzVector vP_Lb_S  = saLb[t]->GetFourVector(*S[t]);
     TLorentzVector vP_Ia_S  = X1a[t]->GetFourVector(*S[t]);
     TLorentzVector vP_Ib_S  = X1b[t]->GetFourVector(*S[t]);
     
@@ -970,10 +1044,10 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
       + Ja[t]->GetTransverseMomentum(*S[t]) + Jb[t]->GetTransverseMomentum(*S[t])
       + La[t]->GetTransverseMomentum(*S[t]) + Lb[t]->GetTransverseMomentum(*S[t]);
     
-    TLorentzVector vP_Ja_X3a  = Ja[t]->GetFourVector(*X3a[t]);
-    TLorentzVector vP_Jb_X3b  = Jb[t]->GetFourVector(*X3b[t]);
-    TLorentzVector vP_La_X3a  = La[t]->GetFourVector(*X3a[t]);
-    TLorentzVector vP_Lb_X3b  = Lb[t]->GetFourVector(*X3b[t]);
+    TLorentzVector vP_Ja_X3a  = saJa[t]->GetFourVector(*X3a[t]);
+    TLorentzVector vP_Jb_X3b  = saJb[t]->GetFourVector(*X3b[t]);
+    TLorentzVector vP_La_X3a  = saLa[t]->GetFourVector(*X3a[t]);
+    TLorentzVector vP_Lb_X3b  = saLb[t]->GetFourVector(*X3b[t]);
     TLorentzVector vP_Ia_X3a  = X1a[t]->GetFourVector(*X3a[t]);
     TLorentzVector vP_Ib_X3b  = X1b[t]->GetFourVector(*X3b[t]);
     
@@ -1001,6 +1075,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
       }
     }
   }
+  
 
   m_weight = AnalysisBase<Base>::GetEventWeight();
   
@@ -1028,7 +1103,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
     m_BtagID_jet.push_back(Jets[i].BtagID());
     m_Flavor_jet.push_back(Jets[i].PDGID());
   }
-
+  
   ParticleList GenMuons = AnalysisBase<Base>::GetGenMuons();
   ParticleList GenElectrons = AnalysisBase<Base>::GetGenElectrons();
   ParticleList GenLeptons = GenElectrons+GenMuons;
@@ -1155,11 +1230,10 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
     m_genPDGID_susy.push_back(GenSparticles[i].PDGID());
     m_genMomPDGID_susy.push_back(GenSparticles[i].MomPDGID());
   }
-
+  
   // Fill output tree
   if(tree)
     tree->Fill();
-  
 }
 
 template class ReducedNtuple<StopNtupleTree>;
