@@ -30,6 +30,7 @@ public:
   string GetEntry(int entry);
 
   // analysis functions
+  virtual TVector3 GetPV(bool& good);
   virtual TVector3 GetMET();
   virtual ParticleList GetJets();
   virtual ParticleList GetElectrons();

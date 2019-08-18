@@ -98,6 +98,12 @@ TVector3 AnalysisBase<Base>::GetMET(){
 }
 
 template <class Base>
+TVector3 AnalysisBase<Base>::GetPV(bool& good){
+  good = false;
+  return TVector3();
+}
+
+template <class Base>
 ParticleList AnalysisBase<Base>::GetJets(){
   return ParticleList();
 }
@@ -584,6 +590,29 @@ TVector3 AnalysisBase<SUSYNANOBase>::GetGenMET(){
 }
 
 template <>
+TVector3 AnalysisBase<SUSYNANOBase>::GetPV(bool& good){
+  good = false;
+  TVector3 PV(0.,0.,0.);
+  
+  if(PV_chi2 < 0.)
+    return PV;
+  
+  if(PV_ndof < 5)
+    return PV;
+  
+  if(fabs(PV_z) > 24.)
+    return PV;
+  
+  if(PV_x*PV_x + PV_y*PV_y > 4.)
+    return PV;
+  
+  good = true;
+  PV.SetXYZ(PV_x,PV_y,PV_z);
+  
+   return PV;
+}
+
+template <>
 ParticleList AnalysisBase<SUSYNANOBase>::GetJets(){
   int year = 2017;
   if(m_FileTag.find("16") != std::string::npos)
@@ -682,6 +711,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetElectrons(){
     lep.SetIP3D(Electron_ip3d[i]);
     lep.SetSIP3D(Electron_sip3d[i]);
 
+    // https://twiki.cern.ch/twiki/pub/CMS/SUSLeptonSF/Run2_SUSYwp_EleCB_MVA_8Jan19.pdf
     
     // FO baseline criteria
     if(fabs(lep.Eta()) < 2.5 && lep.Pt() > 5. &&

@@ -574,7 +574,13 @@ void ReducedNtuple<Base>::ClearVariables(){
 
 template <class Base>
 void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
-    
+
+  bool good_PV;
+  TVector3 PV = AnalysisBase<Base>::GetPV(good_PV);
+
+  if(!good_PV)
+    return;
+  
   TVector3 ETMiss = AnalysisBase<Base>::GetMET();
 
   if(ETMiss.Mag() < 100.)
