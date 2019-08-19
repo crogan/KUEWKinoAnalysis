@@ -651,7 +651,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJets(){
       jet.SetBtagID(kLoose);
     
     // DeepCSV tagger
-    jet.SetBtag(Jet_deepCSVb[i]+Jet_deepCSVbb[i]);
+    jet.SetBtag(Jet_btagDeepB[i]);
 
     // https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation2016Legacy
     if(year == 2016){
