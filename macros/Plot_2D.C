@@ -112,10 +112,10 @@ void Plot_2D(){
 
   int Nsample = g_Samples.size();
   //string g_Label = "No selection";
-  string g_Label = "Njets_a vs. Njets_b, Cat. 2 (W+jets)";
+  string g_Label = "Njets_ISR vs. Njets_S, Cat. 2 (W+jets)";
 
 
-  g_Yname = "Njets_b";
+  g_Yname = "Njets_S";
   g_Ymin = 0.0;
   g_Ymax = 7.;
   units_per_bin_y = 1.0;
@@ -129,7 +129,7 @@ void Plot_2D(){
   // g_NX = (int)(g_Xmax - g_Xmin)/units_per_bin_x;
 
 
-  g_Xname = "Njets_a";
+  g_Xname = "Njets_ISR";
   g_Xmin = 0.0;
   g_Xmax = 7.; 
   units_per_bin_x = 1.0;
@@ -183,23 +183,23 @@ void Plot_2D(){
       //for(int e = 0; e < 10; e += SKIP){
 	for(int e = 0; e < Nentry; e += SKIP){
 	base->GetEntry(e);
-	// if((e/SKIP)%(std::max(1, int(Nentry/SKIP/10))) == 0)
+	if((e/SKIP)%(std::max(1, int(Nentry/SKIP/10))) == 0)
 	  cout << "      event " << e << " | " << Nentry << endl;
 
 	if(base->Nlep != 1) //single lepton final states
 	  continue;
     cout << "single lep cut" << endl;
 
-  // if(base->MiniIso_lep->at(0) > 0.1) //miniIso cut
-  //   continue;
-  //   cout << "miniIso cut" << endl;
+  if(base->MiniIso_lep->at(0) > 0.1) //miniIso cut
+    continue;
+    cout << "miniIso cut" << endl;
 
-  // if(base->RISR->at(1) < 0.8) //RISR cut, cat. 2, remove for bkg
-  //   continue;
-  //   cout << "RISR cut" << endl;
+  if(base->RISR->at(1) < 0.8) //RISR cut, cat. 2, remove for bkg
+    continue;
+    cout << "RISR cut" << endl;
 
 	
-	  hist->Fill(base->Njet_a->at(1), base->Njet_b->at(1), base->weight*double(SKIP));
+	  hist->Fill(base->Njet_ISR->at(1), base->Njet_S->at(1), base->weight*double(SKIP));
     cout << "hist fill" << endl;
       }
 
