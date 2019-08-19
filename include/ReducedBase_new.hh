@@ -648,7 +648,7 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchStatus("RISR", 1);
    fChain->SetBranchStatus("MS", 1);
    fChain->SetBranchStatus("MV", 1);
-   fChain->SetBranchStatus("dphiISRI", 1);
+   fChain->SetBranchStatus("dphiISR", 1);
    fChain->SetBranchStatus("dphiCMI", 1);
    fChain->SetBranchStatus("PTCM", 1);
    fChain->SetBranchStatus("ID_lep",1);
