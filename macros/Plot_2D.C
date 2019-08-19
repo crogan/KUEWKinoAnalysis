@@ -204,6 +204,7 @@ void Plot_2D(){
 
 	
 	  hist->Fill(base->Njet_a->at(1), base->Njet_b->at(1), base->weight*double(SKIP));
+    cout << "hist fill" << endl;
       }
 
       delete base;
