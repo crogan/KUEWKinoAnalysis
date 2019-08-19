@@ -46,28 +46,28 @@ void Plot_2D(){
   int BKG_SKIP = 10; //takes 1 in every BKG_SKIP events
 
 
-//   SampleSet ttX;
-//   ttX.SetBkg(true);
-//   ttX.SetTitle("t#bar{t} + X");
-//   ttX.SetColor(kAzure+1);
-//   ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8_TuneCP5.root");
-//   // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
-//   // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
-//   // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_SingleLeptFromTbar_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
-//   // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/ttWJets_TuneCP5_13TeV_madgraphMLM_pythia8_Fall17.root");
-//   // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/ttZJets_TuneCP5_13TeV_madgraphMLM_pythia8_Fall17.root");
-//   // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTGJets_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8_Fall17.root");
-//   ttX.SetSkip(10);
-//   g_Samples.push_back(&ttX);
+  SampleSet ttX;
+  ttX.SetBkg(true);
+  ttX.SetTitle("t#bar{t} + X");
+  ttX.SetColor(kAzure+1);
+  ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8_TuneCP5.root");
+  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_SingleLeptFromTbar_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/ttWJets_TuneCP5_13TeV_madgraphMLM_pythia8_Fall17.root");
+  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/ttZJets_TuneCP5_13TeV_madgraphMLM_pythia8_Fall17.root");
+  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTGJets_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8_Fall17.root");
+  ttX.SetSkip(10);
+  g_Samples.push_back(&ttX);
 
-// SampleSet DYjets;
-//   DYjets.SetBkg(true);
-//   DYjets.SetTitle("DY + jets");
-//   DYjets.SetColor(kGreen-7);
-//   DYjets.AddFile(StopNtuplePath+"All_Bkg_2017/DYJetsToLL_M-5to50_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
-//   DYjets.AddFile(StopNtuplePath+"All_Bkg_2017/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17.root");
-//   DYjets.SetSkip(BKG_SKIP);
-//   g_Samples.push_back(&DYjets);
+SampleSet DYjets;
+  DYjets.SetBkg(true);
+  DYjets.SetTitle("DY + jets");
+  DYjets.SetColor(kGreen-7);
+  DYjets.AddFile(StopNtuplePath+"All_Bkg_2017/DYJetsToLL_M-5to50_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  DYjets.AddFile(StopNtuplePath+"All_Bkg_2017/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17.root");
+  DYjets.SetSkip(BKG_SKIP);
+  g_Samples.push_back(&DYjets);
 
   SampleSet Wjets;
   Wjets.SetBkg(true);
@@ -112,12 +112,12 @@ void Plot_2D(){
 
   int Nsample = g_Samples.size();
   //string g_Label = "No selection";
-  string g_Label = "Njets_ISR vs. Njets_S, Cat. 2 (W+jets)";
+  string g_Label = "Njets_ISR vs. Njets_S, Cat. 2 (all bkg)";
 
 
   g_Yname = "Njets_S";
   g_Ymin = 0.0;
-  g_Ymax = 7.;
+  g_Ymax = 10.;
   units_per_bin_y = 1.0;
   g_NY = (int)(g_Ymax - g_Ymin)/units_per_bin_y;
 
@@ -131,7 +131,7 @@ void Plot_2D(){
 
   g_Xname = "Njets_ISR";
   g_Xmin = 0.0;
-  g_Xmax = 7.; 
+  g_Xmax = 10.; 
   units_per_bin_x = 1.0;
   g_NX = (int)(g_Xmax - g_Xmin)/units_per_bin_x;
 
@@ -188,19 +188,19 @@ void Plot_2D(){
 
 	if(base->Nlep != 1) //single lepton final states
 	  continue;
-    cout << "single lep cut" << endl;
+    // cout << "single lep cut" << endl;
 
   if(base->MiniIso_lep->at(0) > 0.1) //miniIso cut
     continue;
-    cout << "miniIso cut" << endl;
+    // cout << "miniIso cut" << endl;
 
   if(base->RISR->at(1) < 0.8) //RISR cut, cat. 2, remove for bkg
     continue;
-    cout << "RISR cut" << endl;
+    // cout << "RISR cut" << endl;
 
 	
 	  hist->Fill(base->Njet_ISR->at(1), base->Njet_S->at(1), base->weight*double(SKIP));
-    cout << "hist fill" << endl;
+    // cout << "hist fill" << endl;
       }
 
       delete base;
