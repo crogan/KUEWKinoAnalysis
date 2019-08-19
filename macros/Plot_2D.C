@@ -190,7 +190,7 @@ void Plot_2D(){
 	  continue;
     cout << "single lep cut" << endl;
 
-  if(base->ID_lep->at(0) != 3 || base->MiniIso_lep->at(0) > 0.1) //medium(?) ID cut
+  if(base->ID_lep->at(0) != 3 && base->MiniIso_lep->at(0) > 0.1) //medium(?) ID cut
     continue;
     cout << "lep ID and miniIso cut" << endl;  
 
