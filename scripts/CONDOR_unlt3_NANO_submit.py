@@ -62,7 +62,7 @@ def write_sh(srcfile,ifile,ofile,lfile,dataset,filetag,evtcnt):
     fsrc.write('-eventcount='+evtcnt+" \n")
     fsrc.write('output = '+lfile+"_out.log \n")
     fsrc.write('error = '+lfile+"_err.log \n")
-    fsrc.write('log = 'lfile+"_log.log \n")
+    fsrc.write('log = '+lfile+"_log.log \n")
     fsrc.write('queue \n')
     #fsrc.write('cd '+RUN_DIR+" \n")
     #fsrc.write('source ../RestFrames/setup_RestFrames.sh \n')
