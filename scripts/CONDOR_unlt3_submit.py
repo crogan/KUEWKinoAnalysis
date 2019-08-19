@@ -45,7 +45,7 @@ def create_filelist(rootlist, dataset, filetag):
 
     return listlist
 
-def write_sh(srcfile,ifile,ofile,lfile,efile,dataset,filetag,evtcnt):
+def write_sh(srcfile,ifile,ofile,lfile,dataset,filetag,evtcnt):
     fsrc = open(srcfile,'w')
     fsrc.write('universe = vanilla \n')
     fsrc.write('executable = '+EXE+" \n")
@@ -59,9 +59,9 @@ def write_sh(srcfile,ifile,ofile,lfile,efile,dataset,filetag,evtcnt):
     fsrc.write('-dataset='+dataset+" ")
     fsrc.write('-filetag='+filetag+" ")
     fsrc.write('-eventcount='+evtcnt+" \n")
-    fsrc.write('output = '+lfile+" \n")
-    fsrc.write('error = '+efile+" \n")
-    fsrc.write('log = 'lfile+".log \n")
+    fsrc.write('output = '+lfile+"_out.log \n")
+    fsrc.write('error = '+lfile+"_err.log \n")
+    fsrc.write('log = 'lfile+"_log.log \n")
     fsrc.write('queue \n')
     #fsrc.write('cd '+RUN_DIR+" \n")
     #fsrc.write('source ../RestFrames/setup_RestFrames.sh \n')
