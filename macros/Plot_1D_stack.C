@@ -186,9 +186,12 @@ void Plot_1D_stack(){
 	if(base->Nlep != 1)
     continue;
 
-  // if(base->MiniIso_lep->at(0) > 0.1)
-  //   continue;
+  if(base->MiniIso_lep->at(0) > 0.1)
+    continue;
 
+  
+ if(base->ID_lep->at(0) != 3) //medium(?) ID selection
+    continue;
 	
 
 
