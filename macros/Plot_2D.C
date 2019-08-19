@@ -183,7 +183,7 @@ void Plot_2D(){
       //for(int e = 0; e < 10; e += SKIP){
 	for(int e = 0; e < Nentry; e += SKIP){
 	base->GetEntry(e);
-	if((e/SKIP)%(std::max(1, int(Nentry/SKIP/10))) == 0)
+	// if((e/SKIP)%(std::max(1, int(Nentry/SKIP/10))) == 0)
 	  cout << "      event " << e << " | " << Nentry << endl;
 
 	if(base->Nlep != 1) //single lepton final states
