@@ -190,19 +190,13 @@ void Plot_2D(){
 	  continue;
     cout << "single lep cut" << endl;
 
-  if(base->ID_lep->at(0) != 3 && base->MiniIso_lep->at(0) > 0.1) //medium(?) ID cut
+  if(base->MiniIso_lep->at(0) > 0.1) //miniIso cut
     continue;
-    cout << "lep ID and miniIso cut" << endl;  
+    cout << "miniIso cut" << endl;
 
-  // if(base->MiniIso_lep->at(0) > 0.1) //miniIso cut
-  //   continue;
-  //   cout << "miniIso cut" << endl;
-
-
-
-  // if(base->RISR->at(1) < 0.8) //RISR cut, cat. 2, remove for bkg
-  //   continue;
-  //   cout << "RISR cut" << endl;
+  if(base->RISR->at(1) < 0.8) //RISR cut, cat. 2, remove for bkg
+    continue;
+    cout << "RISR cut" << endl;
 
 	
 	  hist->Fill(base->Njet_a->at(1), base->Njet_b->at(1), base->weight*double(SKIP));
