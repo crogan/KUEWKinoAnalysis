@@ -194,9 +194,9 @@ void Plot_2D(){
     continue;
     cout << "miniIso cut" << endl;
 
-  if(base->ID_lep->at(0) != 3) //medium(?) ID cut
-    continue;
-    cout << "lep ID cut" << endl;
+  // if(base->ID_lep->at(0) != 3) //medium(?) ID cut
+  //   continue;
+  //   cout << "lep ID cut" << endl;
 
   if(base->RISR->at(1) < 0.8) //RISR cut, cat. 2
     continue;
