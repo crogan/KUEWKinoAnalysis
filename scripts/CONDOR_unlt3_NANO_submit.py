@@ -9,11 +9,11 @@ home = os.environ['HOME']
 #######################################
 RUN_DIR = pwd
 TEMP = pwd
-#EXE  = "MakeReducedNtuple_NANO.x"
-EXE  = "MakeEventCount_NANO.x"
+EXE  = "MakeReducedNtuple_NANO.x"
+#EXE  = "MakeEventCount_NANO.x"
 TREE = "Events"
-#OUT  = "/home/t3-ku/crogan/NTUPLES/Processing/"
-OUT = pwd
+OUT  = "/home/t3-ku/crogan/NTUPLES/Processing/"
+#OUT = pwd
 LIST = "default.list"
 QUEUE = ""
 MAXN = 20
@@ -62,6 +62,7 @@ def write_sh(srcfile,ifile,ofile,lfile,efile,dataset,filetag,evtcnt):
     fsrc.write('-eventcount='+evtcnt+" \n")
     fsrc.write('output = '+lfile+" \n")
     fsrc.write('error = '+efile+" \n")
+    fsrc.write('log = 'lfile+".log \n")
     fsrc.write('queue \n')
     #fsrc.write('cd '+RUN_DIR+" \n")
     #fsrc.write('source ../RestFrames/setup_RestFrames.sh \n')
