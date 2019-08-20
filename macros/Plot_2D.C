@@ -115,10 +115,16 @@ void Plot_2D(){
   string g_Label = "Njets_ISR vs. Njets_S, Cat. 2 (sig:200-170)";
 
 
-  g_Yname = "Njets_S";
+  // g_Yname = "Njets_S";
+  // g_Ymin = 0.0;
+  // g_Ymax = 10.;
+  // units_per_bin_y = 1.0;
+  // g_NY = (int)(g_Ymax - g_Ymin)/units_per_bin_y;
+
+  g_Yname = "pt_{lep}";
   g_Ymin = 0.0;
-  g_Ymax = 10.;
-  units_per_bin_y = 1.0;
+  g_Ymax = 500.;
+  units_per_bin_y = 10.;
   g_NY = (int)(g_Ymax - g_Ymin)/units_per_bin_y;
 
 
@@ -128,12 +134,18 @@ void Plot_2D(){
   // units_per_bin_x = 10.;
   // g_NX = (int)(g_Xmax - g_Xmin)/units_per_bin_x;
 
-
-  g_Xname = "Njets_ISR";
+  g_Xname = "RISR";
   g_Xmin = 0.0;
-  g_Xmax = 10.; 
-  units_per_bin_x = 1.0;
+  g_Xmax = 1.3; 
+  units_per_bin_x = 0.01;
   g_NX = (int)(g_Xmax - g_Xmin)/units_per_bin_x;
+
+
+  // g_Xname = "Njets_ISR";
+  // g_Xmin = 0.0;
+  // g_Xmax = 10.; 
+  // units_per_bin_x = 1.0;
+  // g_NX = (int)(g_Xmax - g_Xmin)/units_per_bin_x;
 
   // g_Xname = "Njets_S";
   // g_Xmin = 0.0;
@@ -199,7 +211,7 @@ void Plot_2D(){
     // cout << "RISR cut" << endl;
 
 	
-	  hist->Fill(base->Njet_ISR->at(1), base->Njet_S->at(1), base->weight*double(SKIP));
+	  hist->Fill(base->PT_lep->at(0), base->RISR->at(1), base->weight*double(SKIP));
     // cout << "hist fill" << endl;
       }
 
