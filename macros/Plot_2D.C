@@ -112,7 +112,7 @@ void Plot_2D(){
 
   int Nsample = g_Samples.size();
   //string g_Label = "No selection";
-  string g_Label = "Njets_ISR vs. Njets_S, Cat. 2 (sig:200-170)";
+  string g_Label = "RISR vs. pT_lep, Cat. 2 (sig:200-170)";
 
 
   // g_Yname = "Njets_S";
@@ -210,8 +210,11 @@ void Plot_2D(){
     continue;
     // cout << "RISR cut" << endl;
 
+  if(base->Njets_S->at(1) != 0)
+    continue;
+
 	
-	  hist->Fill(base->PT_lep->at(0), base->RISR->at(1), base->weight*double(SKIP));
+	  hist->Fill(base->RISR->at(0), base->PT_lep->at(1), base->weight*double(SKIP));
     // cout << "hist fill" << endl;
       }
 
@@ -288,7 +291,7 @@ void Plot_2D(){
 
   // SampleSet sample;
   // sample.write_plot("output/2Dplots.root",g_Label, can);
-  TString file_name = "output/2D_plots/"+g_Label+"miniIso.root";
+  TString file_name = "output/2D_plots/"+g_Label+".root";
   TFile* file = new TFile(file_name,"RECREATE");
   file->cd();
   can->Write();
