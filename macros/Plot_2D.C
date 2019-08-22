@@ -112,7 +112,7 @@ SampleSet DYjets;
 
   int Nsample = g_Samples.size();
   //string g_Label = "No selection";
-  string g_Label = "RISR vs. pT_lep, Cat. 2 (allbkg)";
+  string g_Label = "RISR vs. pT_lep, Cat. 2 (sig:200-170)";
 
 
   // g_Yname = "Njets_S";
@@ -210,7 +210,7 @@ SampleSet DYjets;
     continue;
     //cout << "RISR cut" << endl;
 
-  if(base->Njet_S->at(0) != 0)
+  if(base->Njet_S->at(1) != 0)
     continue;
  // cout << "Njets_S cut" << endl;
 	
