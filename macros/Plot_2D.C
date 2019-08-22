@@ -200,23 +200,23 @@ void Plot_2D(){
 
 	if(base->Nlep != 1) //single lepton final states
 	  continue;
-    // cout << "single lep cut" << endl;
+   // cout << "single lep cut" << endl;
 
   if(base->MiniIso_lep->at(0) > 0.1) //miniIso cut
     continue;
-    // cout << "miniIso cut" << endl;
+    //cout << "miniIso cut" << endl;
 
   if(base->RISR->at(1) < 0.8) //RISR cut, cat. 2, remove for bkg
     continue;
-    // cout << "RISR cut" << endl;
+    //cout << "RISR cut" << endl;
 
-  if(base->Njets_S->at(1) != 0)
+  if(base->Njet_S->at(0) != 0)
     continue;
-
+ // cout << "Njets_S cut" << endl;
 	
-	  hist->Fill(base->RISR->at(0), base->PT_lep->at(1), base->weight*double(SKIP));
-    // cout << "hist fill" << endl;
-      }
+	  hist->Fill(base->RISR->at(1), base->PT_lep->at(0), base->weight*double(SKIP));
+     cout << "hist fill" << endl;
+     }
 
       delete base;
       delete chain;
