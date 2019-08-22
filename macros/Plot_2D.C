@@ -123,8 +123,8 @@ SampleSet DYjets;
 
   g_Yname = "pt_{lep}";
   g_Ymin = 0.0;
-  g_Ymax = 100.;
-  units_per_bin_y = 5.;
+  g_Ymax = 500.;
+  units_per_bin_y = 10.;
   g_NY = (int)(g_Ymax - g_Ymin)/units_per_bin_y;
 
 
