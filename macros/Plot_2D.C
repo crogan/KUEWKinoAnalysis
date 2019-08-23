@@ -210,7 +210,7 @@ SampleSet DYjets;
     continue;
     //cout << "RISR cut" << endl;
 
-  if(base->Njet_S->at(1) != 1)
+  if(base->Njet_S->at(1) != 0)
     continue;
  // cout << "Njets_S cut" << endl;
 	
