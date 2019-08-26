@@ -67,19 +67,19 @@ void Plot_1D_stack(){
   Wjets.SetSkip(BKG_SKIP);
   g_Samples.push_back(&Wjets);
 
-  // SampleSet ttX;
-  // ttX.SetBkg(true);
-  // ttX.SetTitle("t#bar{t} + X");
-  // ttX.SetColor(kAzure-7);
-  // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8_TuneCP5.root");
-  // // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
+  SampleSet ttX;
+   ttX.SetBkg(true);
+   ttX.SetTitle("t#bar{t} + X");
+   ttX.SetColor(kAzure-7);
+   ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8_TuneCP5.root");
+   // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
   // // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
   // // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTJets_SingleLeptFromTbar_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17.root");
   // // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/ttWJets_TuneCP5_13TeV_madgraphMLM_pythia8_Fall17.root");
   // // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/ttZJets_TuneCP5_13TeV_madgraphMLM_pythia8_Fall17.root");
   // // ttX.AddFile(StopNtuplePath+"All_Bkg_2017/TTGJets_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8_Fall17.root");
-  // ttX.SetSkip(BKG_SKIP);
-  // g_Samples.push_back(&ttX);
+   ttX.SetSkip(BKG_SKIP);
+   g_Samples.push_back(&ttX);
  
   SampleSet SIG1;
   SIG1.SetBkg(false);
@@ -182,6 +182,8 @@ void Plot_1D_stack(){
 
 
 
+ if(base->ID_lep->at(0) != 3) //medium(?) ID selection
+    continue;
 
 	if(base->Nlep != 1)
     continue;
@@ -190,8 +192,6 @@ void Plot_1D_stack(){
     continue;
 
   
- if(base->ID_lep->at(0) != 3) //medium(?) ID selection
-    continue;
 	
 
 
@@ -332,7 +332,7 @@ void Plot_1D_stack(){
   l.DrawLatex(0.43,0.79,s_lumi.c_str());	
 
   
-  TString file_name = "output/1D_stacked_plots/"+g_Xname+"stacked_plot.root";
+  TString file_name = "output/1D_stacked_plots/"+g_Xname+"cuts_rev_stacked_plot.root";
   TFile* file = new TFile(file_name,"RECREATE");
   file->cd();
   can->Write();
