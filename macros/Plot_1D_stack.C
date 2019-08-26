@@ -189,7 +189,6 @@ void Plot_1D_stack(){
   if(base->MiniIso_lep->at(0) > 0.1)
     continue;
 
-  
  if(base->ID_lep->at(0) != 3) //medium(?) ID selection
     continue;
 	
@@ -332,7 +331,7 @@ void Plot_1D_stack(){
   l.DrawLatex(0.43,0.79,s_lumi.c_str());	
 
   
-  TString file_name = "output/1D_stacked_plots/"+g_Xname+"stacked_plot.root";
+  TString file_name = "output/1D_stacked_plots/"+g_Xname+"_stacked_plot.root";
   TFile* file = new TFile(file_name,"RECREATE");
   file->cd();
   can->Write();
