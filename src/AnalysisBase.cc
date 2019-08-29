@@ -582,8 +582,17 @@ double AnalysisBase<SUSYNANOBase>::GetEventWeight(){
 
 template <>
 TVector3 AnalysisBase<SUSYNANOBase>::GetMET(){
+  int year = 2016;
+  if(m_FileTag.find("17") != std::string::npos)
+    year = 2017;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+  
   TVector3 vmet;
-  vmet.SetPtEtaPhi(MET_pt,0.0,MET_phi);
+  if(year == 2017)
+    vmet.SetPtEtaPhi(METFixEE2017_pt,0.0,METFixEE2017_phi);
+  else
+    vmet.SetPtEtaPhi(MET_pt,0.0,MET_phi);
   return vmet;
 }
 
@@ -725,6 +734,14 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetElectrons(){
       double mva = Electron_mvaFall17V1noIso[i];
       if(year == 2016 || year == 2018)
 	mva = Electron_mvaFall17V2noIso[i];
+
+      // convert to raw MVA output
+      if(mva == -1)
+	mva = -999.;
+      else if(mva == 1.)
+	mva = 999.;
+      else
+	mva = -0.5*log((1.-mva)/(1.+mva));
       
       // FO VLoose
       if(year == 2016){ // Summer16_94X legacy

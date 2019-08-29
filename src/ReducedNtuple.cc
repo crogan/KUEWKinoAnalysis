@@ -1103,6 +1103,18 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
     m_BtagID_jet.push_back(Jets[i].BtagID());
     m_Flavor_jet.push_back(Jets[i].PDGID());
   }
+
+  // Fill SVs
+  m_PT_SV.clear();
+  m_Eta_SV.clear();
+  m_Phi_SV.clear();
+  m_M_SV.clear();
+  for(int i = 0; i < m_NSV; i++){
+    m_PT_SV.push_back(SVs[i].Pt());
+    m_Eta_SV.push_back(SVs[i].Eta());
+    m_Phi_SV.push_back(SVs[i].Phi());
+    m_M_SV.push_back(SVs[i].M());
+  }
   
   ParticleList GenMuons = AnalysisBase<Base>::GetGenMuons();
   ParticleList GenElectrons = AnalysisBase<Base>::GetGenElectrons();
