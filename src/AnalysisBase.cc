@@ -703,6 +703,15 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetElectrons(){
 
   int N = nElectron;
   for(int i = 0; i < N; i++){
+    // baseline lepton definition
+    if(Electron_pt[i] < 5. || fabs(Electron_eta[i]) > 2.5)
+      continue;
+    if(fabs(Electron_dxy[i]) >= 0.05 || fabs(Electron_dz[i]) >= 0.1 ||
+       Electron_ip3d[i] >= 0.0175 || Electron_sip3d[i] >= 2.5)
+      continue;
+    if(Electron_pfRelIso03_all[i]*Electron_pt[i] >= 20. + 300./Electron_pt[i])
+      continue;
+
     Particle lep;
     lep.SetPtEtaPhiM(Electron_pt[i], Electron_eta[i],
 		     Electron_phi[i], std::max(Electron_mass[i],float(0.)));
@@ -716,15 +725,24 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetElectrons(){
     lep.SetIP3D(Electron_ip3d[i]);
     lep.SetSIP3D(Electron_sip3d[i]);
 
+    lep.SetRelIso(Electron_pfRelIso03_all[i]);
+    lep.SetMiniIso(Electron_miniPFRelIso_all[i]);
+
     // https://twiki.cern.ch/twiki/pub/CMS/SUSLeptonSF/Run2_SUSYwp_EleCB_MVA_8Jan19.pdf
     
     // FO baseline criteria
-    if(fabs(lep.Eta()) < 2.5 && lep.Pt() > 5. &&
-       fabs(lep.Dxy()) < 0.05 && fabs(lep.Dz()) < 0.1){
+    if(Electron_lostHits[i] == 0 && Electron_convVeto[i]){
 
       double mva = Electron_mvaFall17V1noIso[i];
       if(year == 2016 || year == 2018)
 	mva = Electron_mvaFall17V2noIso[i];
+
+      if(mva == -1.)
+	mva = -999.;
+      else if(mva = 1.)
+	mva = 999.;
+      else
+	mva = -0.5*log((1.-mva)/(1.+mva));
       
       // FO VLoose
       if(year == 2016){ // Summer16_94X legacy
@@ -1088,6 +1106,15 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetMuons(){
 
   int N = nMuon;
   for(int i = 0; i < N; i++){
+     // baseline lepton definition
+    if(Muon_pt[i] < 3. || fabs(Muon_eta[i]) > 2.4)
+      continue;
+    if(fabs(Muon_dxy[i]) >= 0.05 || fabs(Muon_dz[i]) >= 0.1 ||
+       Muon_ip3d[i] >= 0.0175 || Muon_sip3d[i] >= 2.5)
+      continue;
+    if(Muon_pfRelIso03_all[i]*Muon_pt[i] >= 20. + 300./Muon_pt[i])
+      continue;
+    
     Particle lep;
     lep.SetPtEtaPhiM(Muon_pt[i], Muon_eta[i],
 		     Muon_phi[i], std::max(float(0.),Muon_mass[i]));
@@ -1105,16 +1132,14 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetMuons(){
     lep.SetMiniIso(Muon_miniPFRelIso_all[i]);
 
     // FO baseline criteria
-    if(fabs(lep.Eta()) < 2.5 && lep.Pt() > 3.5 &&
-       fabs(lep.Dxy()) < 0.05 && fabs(lep.Dz()) < 0.1){
-      if(Muon_triggerIdLoose[i])
-	lep.SetParticleID(kLoose);
+    if(true){
+      lep.SetParticleID(kLoose);
 
       // signal lep criteria
       if(lep.IP3D() < 0.01 && lep.SIP3D() < 2.){
 	if(Muon_tightId[i])
 	  lep.SetParticleID(kTight);
-	else if(lep.Pt() < 15.){
+	else if(lep.Pt() < 20.){
 	  if(Muon_softId[i])
 	    lep.SetParticleID(kMedium);
 	} else {
