@@ -645,12 +645,12 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
   Jets = Jets.RemoveOverlap(Leptons, 0.2);
 
   // skip event reconstruction for now if too many jets
-  if(Jets.size() >= 18){
-    m_event_skipped = true;
-    if(tree)
-      tree->Fill();
-    return;
-  }
+  // if(Jets.size() >= 18){
+  //   m_event_skipped = true;
+  //   if(tree)
+  //     tree->Fill();
+  //   return;
+  // }
 
   m_Njet = Jets.size();
   
