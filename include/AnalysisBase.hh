@@ -35,7 +35,7 @@ public:
   virtual ParticleList GetJets();
   virtual ParticleList GetElectrons();
   virtual ParticleList GetMuons();
-  virtual ParticleList GetSVs();
+  virtual ParticleList GetSVs(const TVector3& PV);
 
   virtual TVector3 GetGenMET();
   virtual ParticleList GetGenElectrons();

@@ -104,7 +104,7 @@ TVector3 AnalysisBase<Base>::GetPV(bool& good){
 }
 
 template <class Base>
-ParticleList AnalysisBase<Base>::GetSVs(){
+ParticleList AnalysisBase<Base>::GetSVs(const TVector3& PV){
   return ParticleList();
 }
 
@@ -1167,22 +1167,39 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetMuons(){
 }
 
 template <>
-ParticleList AnalysisBase<SUSYNANOBase>::GetSVs(){
+ParticleList AnalysisBase<SUSYNANOBase>::GetSVs(const TVector3& PV){
   ParticleList list;
-
-  int N = nSB;
+  
+  int N = nSV;
   for(int i = 0; i < N; i++){
-    if(SB_pt[i] < 20. && SB_dlenSig[i] > 4. &&
-       SB_dxy[i] < 3. && SB_DdotP[i] > 0.98 &&
-       SB_ntracks[i] >= 3){
-      
-      Particle SV;
-      SV.SetPtEtaPhiM(SB_pt[i],SB_eta[i],SB_phi[i],SB_mass[i]);
+    if(SV_chi2[i] < 0.)
+      continue;
+    if(SV_pt[i] >= 20.)
+      continue;
+    if(SV_dlenSig[i] <= 4.)
+      continue;
+    if(SV_ndof[i] < 1.8) // replacement for ntracks cut...
+      continue;
 
-      list.push_back(SV);
-    }
-  }
+    TVector3 xSV;
+    xSV.SetXYZ(SV_x[i],SV_y[i],SV_z[i]);
+    // dxy cut
+    if(fabs((xSV-PV).Pt()) >= 3.)
+      continue;
+
+    Particle SV;
+    SV.SetPtEtaPhiM(SV_pt[i],SV_eta[i],SV_phi[i],SV_mass[i]);
+
+    if((xSV-PV).Unit().Dot(SV.Vect().Unit()) <= 0.98)
+      continue;
     
+    // if(SB_pt[i] < 20. && SB_dlenSig[i] > 4. &&
+    //    SB_dxy[i] < 3. && SB_DdotP[i] > 0.98 &&
+    //    SB_ntracks[i] >= 3){
+    
+    list.push_back(SV);
+  }
+  
   return list;
 }
 
