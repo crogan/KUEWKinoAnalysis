@@ -655,9 +655,9 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJets(){
     if(Jet_jetId[i] >= 3)
       jet.SetParticleID(kTight);
     else if(Jet_jetId[i] >= 2) 
-      jet.SetBtagID(kMedium);
+      jet.SetParticleID(kMedium);
     else if(Jet_jetId[i] >= 1)
-      jet.SetBtagID(kLoose);
+      jet.SetParticleID(kLoose);
     
     // DeepCSV tagger
     jet.SetBtag(Jet_btagDeepB[i]);
