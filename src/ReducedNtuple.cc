@@ -11,7 +11,7 @@ template <class Base>
 ReducedNtuple<Base>::ReducedNtuple(TTree* tree)
   : NtupleBase<Base>(tree)
 {
-  // RestFrames stuff setup
+  m_library_generated = false;
 
   
   // RestFrame Decay Trees
@@ -295,8 +295,11 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
 
   // gInterpreter->GenerateDictionary("vectorr<int>", "vector");
   // gInterpreter->GenerateDictionary("vector<double>", "vector");
-  gInterpreter->GenerateDictionary("std::vector<std::vector<int> >", "vector");
-  gInterpreter->GenerateDictionary("std::vector<std::vector<double> >", "vector");
+  if(!m_library_generated){
+    gInterpreter->GenerateDictionary("std::vector<std::vector<int> >", "vector");
+    gInterpreter->GenerateDictionary("std::vector<std::vector<double> >", "vector");
+    m_library_generated = true;
+  }
 
   TTree* tree = (TTree*) new TTree(sample.c_str(), sample.c_str());
 

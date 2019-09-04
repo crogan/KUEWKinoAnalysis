@@ -16,6 +16,7 @@ public:
   virtual ~ReducedNtuple();
 
 private:
+  bool m_library_generated;
   TTree* InitOutputTree(const string& sample);
   void FillOutputTree(TTree* tree);
 
