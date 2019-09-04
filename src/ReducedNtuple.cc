@@ -295,8 +295,8 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
 
   // gInterpreter->GenerateDictionary("vectorr<int>", "vector");
   // gInterpreter->GenerateDictionary("vector<double>", "vector");
-  gInterpreter->GenerateDictionary("vector<vector<int>>", "vector");
-  gInterpreter->GenerateDictionary("vector<vector<double>>", "vector");
+  gInterpreter->GenerateDictionary("std::vector<std::vector<int> >", "vector");
+  gInterpreter->GenerateDictionary("std::vector<std::vector<double> >", "vector");
 
   TTree* tree = (TTree*) new TTree(sample.c_str(), sample.c_str());
 
