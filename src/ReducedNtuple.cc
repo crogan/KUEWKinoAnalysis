@@ -880,7 +880,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
     }
 	
     if(t == 1){ // with combinatorics
-      if(m_Njet == 0){
+      if(m_Njet < 1){
 	is_filled[t] = false;
 	continue;
       }

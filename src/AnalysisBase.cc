@@ -124,28 +124,34 @@ ParticleList AnalysisBase<Base>::GetMuons(){
 }
 
 template <class Base>
-ParticleList GetGenElectrons(){
+ParticleList AnalysisBase<Base>::GetGenElectrons(){
   return ParticleList();
 }
 
 template <class Base>
-ParticleList GetGenMuons(){
+ParticleList AnalysisBase<Base>::GetGenMuons(){
   return ParticleList();
 }
 
 template <class Base>
-ParticleList GetGenNeutrinos(){
+ParticleList AnalysisBase<Base>::GetGenNeutrinos(){
   return ParticleList();
 }
 
 template <class Base>
-ParticleList GetGenBosons(){
+ParticleList AnalysisBase<Base>::GetGenBosons(){
   return ParticleList();
 }
 
 template <class Base>
-ParticleList GetGenSparticles(){
+ParticleList AnalysisBase<Base>::GetGenSparticles(){
   return ParticleList();
+}
+
+template <class Base>
+std::pair<int,int> AnalysisBase<Base>::GetSUSYMasses(){
+
+  return std::pair<int,int>(0,0);
 }
 
 template <class Base>
@@ -527,6 +533,26 @@ ParticleList AnalysisBase<StopNtupleTree>::GetGenSparticles(){
 /////////////////////////////////////////////////
 // SUSYNANOBase specific methods
 /////////////////////////////////////////////////
+
+template <>
+std::pair<int,int> AnalysisBase<SUSYNANOBase>::GetSUSYMasses(){
+  int MP = 0;
+  int MC = 0;
+  int Ngen = nGenPart;
+  for(int i = 0; i < Ngen; i++){
+    int PDGID = abs(GenPart_pdgId[i]);
+    if(PDGID > 1000000 && PDGID < 3000000){
+      int mass = int(GenPart_mass[i]+0.5);
+      if(PDGID == 1000022)
+	MC = mass;
+      else
+	if(mass > MP)
+	  MP = mass;
+    }
+  }
+  
+  return std::pair<int,int>(MP,MC);
+}
 
 template <>
 int AnalysisBase<SUSYNANOBase>::GetSampleIndex(){
