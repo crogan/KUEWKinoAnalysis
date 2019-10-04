@@ -30,10 +30,12 @@ public:
   string GetEntry(int entry);
 
   // analysis functions
+  virtual TVector3 GetPV(bool& good);
   virtual TVector3 GetMET();
   virtual ParticleList GetJets();
   virtual ParticleList GetElectrons();
   virtual ParticleList GetMuons();
+  virtual ParticleList GetSVs(const TVector3& PV);
 
   virtual TVector3 GetGenMET();
   virtual ParticleList GetGenElectrons();
@@ -45,18 +47,24 @@ public:
   double DeltaPhiMin(const vector<TLorentzVector>& JETs, const TVector3& MET, int N = -1);
   double DeltaPhiMin(const vector<pair<TLorentzVector, bool> >& JETs, const TVector3& MET, int N = -1);
   
-  void MomTensorCalc(vector<TLorentzVector>& input, vector<double>& eigenvalues, double pow = 1., bool threeD = true); 
+  void MomTensorCalc(vector<TLorentzVector>& input, vector<double>& eigenvalues, double pow = 1., bool threeD = true);
 
+  virtual std::pair<int,int> GetSUSYMasses();
+
+  bool IsSMS(){ return m_DoSMS; }
+  string GetDataSet(){ return m_DataSet; }
+  string GetFileTag(){ return m_FileTag; }
+  
 protected:
   bool m_DoSMS;
   
   virtual double GetEventWeight();
   virtual double GetXsec();
 
-
-private:
   string m_DataSet;
   string m_FileTag;
+  
+private:
 
   NeventTool m_NeventTool;
   XsecTool   m_XsecTool;

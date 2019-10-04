@@ -175,7 +175,6 @@ void Plot_2D(){
 			g_NX,g_Xmin,g_Xmax,
 			g_NY,g_Ymin,g_Ymax);
 
-
   
   for(int s = 0; s < Nsample; s++){
     
@@ -192,16 +191,13 @@ void Plot_2D(){
       int Nentry = base->fChain->GetEntries();
 
       int SKIP = g_Samples[s]->GetSkip();
-      //for(int e = 0; e < 10; e += SKIP){
-	for(int e = 0; e < Nentry; e += SKIP){
+     
+      for(int e = 0; e < Nentry; e += SKIP){
 	base->GetEntry(e);
 	if((e/SKIP)%(std::max(1, int(Nentry/SKIP/10))) == 0)
 	  cout << "      event " << e << " | " << Nentry << endl;
 
 	if(base->Nlep != 1) //single lepton final states
-	  continue;
-   // cout << "single lep cut" << endl;
-
   if(base->MiniIso_lep->at(0) > 0.1) //miniIso cut
     continue;
     //cout << "miniIso cut" << endl;
@@ -222,8 +218,6 @@ void Plot_2D(){
       delete chain;
     }
   }
-
- 
   
   gStyle->SetOptTitle(0);
   gStyle->SetOptStat(0);

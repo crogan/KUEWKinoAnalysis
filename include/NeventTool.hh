@@ -31,6 +31,10 @@ private:
   static std::map<std::pair<std::string,std::string>,std::map<std::pair<int,int>,double> > m_Label2Nweight_SMS;
   static std::map<std::pair<std::string,std::string>,std::map<std::pair<int,int>,double> > InitMap_Nweight_SMS();
 
+  static std::map<std::string,double> InitMap_FilterEff();
+
+  static std::map<std::string, double> m_Label2FilterEff;
+
   std::string m_RootFile;
   TFile* m_File;
   TTree* m_Tree;

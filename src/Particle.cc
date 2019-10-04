@@ -9,8 +9,15 @@ Particle::Particle() : TLorentzVector() {
 
   m_RelIso = 0.;
   m_MiniIso = 0.;
+  m_Dxy = 0.;
+  m_DxyErr = 0.;
+  m_Dz = 0.;
+  m_DzErr = 0.;
+  m_IP3D = 0.;
+  m_SIP3D = 0.;
 
   m_Btag = 0.;
+  m_BtagID = kNothing;
 }
     
 Particle::~Particle() {}
@@ -47,12 +54,68 @@ void Particle::SetParticleID(ParticleIDType id){
   m_ParticleID = id;
 }
 
+double Particle::BtagID() const {
+  return m_BtagID;
+}
+
+void Particle::SetBtagID(ParticleIDType id){
+  m_BtagID = id;
+}
+
 double Particle::RelIso() const {
   return m_RelIso;
 }
 
 double Particle::MiniIso() const {
   return m_MiniIso;
+}
+
+double Particle::Dxy() const {
+  return m_Dxy;
+}
+
+double Particle::DxyErr() const {
+  return m_DxyErr;
+}
+
+double Particle::Dz() const {
+  return m_Dz;
+}
+
+double Particle::DzErr() const{
+  return m_DzErr;
+}
+
+double Particle::IP3D() const {
+  return m_IP3D;
+}
+
+double Particle::SIP3D() const {
+  return m_SIP3D;
+}
+
+void Particle::SetDxy(double val){
+  m_Dxy = val;
+}
+
+void Particle::SetDxyErr(double val){
+  m_DxyErr = val;
+}
+
+void Particle::SetDz(double val){
+  m_Dz = val;
+}
+
+void Particle::SetDzErr(double val){
+  m_DzErr = val;
+}
+
+void Particle::SetIP3D(double val){
+  m_IP3D = val;
+}
+
+void Particle::SetSIP3D(double val){
+  m_SIP3D = val;
 }
 
 void Particle::SetRelIso(double iso){

@@ -26,8 +26,11 @@ double XsecTool::GetXsec_SMS(const std::string& dataset, double MP) const {
     if((dataset.find("C1N1")!=std::string::npos)){
       label = "CN_hino";
     }
-    if((dataset.find("C1C1")!=std::string::npos)){
+    if((dataset.find("C1C1")!=std::string::npos) ||
+       (dataset.find("TChipmWW")!=std::string::npos)){
       label = "C1C1_hino";
+      if(dataset.find("WWTo2LNu")!= std::string::npos)
+	BR = (3.*0.1086)*(3.*0.1086);
     }
     if((dataset.find("TChiZZ")!=std::string::npos)){
       label = "N1N2_hino";
@@ -40,23 +43,24 @@ double XsecTool::GetXsec_SMS(const std::string& dataset, double MP) const {
        (dataset.find("TChiWG")!=std::string::npos)){
       label = "C1N2_wino";
       if(dataset.find("ZToLL")!= std::string::npos)
-	BR = 0.10099; // fixme
+	BR = 0.10099; 
     }
     if((dataset.find("TChiWH")!=std::string::npos) ||
        (dataset.find("N2C1")!=std::string::npos)){
       label = "C1N2_hino";
       if(dataset.find("HToGG")!= std::string::npos)
-	BR = 0.00227; // fixme
+	BR *= 0.00227; 
       if(dataset.find("HToBB")!= std::string::npos)
-	BR = 0.584; // fixme
+	BR *= 0.584; 
       if(dataset.find("WToLNu")!= std::string::npos)
-	BR = 0.322;
+	BR *= 0.322;
     }
     if((dataset.find("T2tt")!=std::string::npos) ||
        (dataset.find("T2cc")!=std::string::npos) ||
        (dataset.find("T2bW")!=std::string::npos) ||
        (dataset.find("mStop")!=std::string::npos) ||
-       (dataset.find("T2-4bd")!=std::string::npos)){
+       (dataset.find("T2-4bd")!=std::string::npos) ||
+       (dataset.find("T2bb")!=std::string::npos)){
       label = "StopStop";
     }
   }
@@ -86,7 +90,14 @@ double XsecTool::GetXsec_SMS(const std::string& dataset, double MP) const {
 
 std::map<std::string,double> XsecTool::InitMap_Xsec_BKG(){
   std::map<std::string,double> Label2Xsec;
+
+  Label2Xsec["GJets_DR-0p4_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8"] = 5391.;
+  Label2Xsec["GJets_DR-0p4_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8"] = 1168.;
+  Label2Xsec["GJets_DR-0p4_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8"] = 132.5;
+  Label2Xsec["GJets_DR-0p4_HT-600ToInf_TuneCP5_13TeV-madgraphMLM-pythia8"] = 44.05;
   
+  Label2Xsec["GluGluHToZZTo4L_M125_13TeV_powheg2_JHUGenV7011_pythia8"] = 28.87;
+ 
   Label2Xsec["DYJetsToLL_M-50_HT-100to200_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8"] = 147.40;
   Label2Xsec["DYJetsToLL_M-50_HT-200to400_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8"] = 40.99;
   Label2Xsec["DYJetsToLL_M-50_HT-2500toInf_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8"] = 0.003565;
@@ -182,6 +193,7 @@ std::map<std::string,double> XsecTool::InitMap_Xsec_BKG(){
   Label2Xsec["QCD_HT200to300_TuneCP5_13TeV-madgraph-pythia8"] = 1547000.0;
   Label2Xsec["QCD_HT300to500_TuneCP5_13TeV-madgraph-pythia8"] = 322600.0;
   Label2Xsec["QCD_HT700to1000_TuneCP5_13TeV-madgraph-pythia8"] = 6334.0;
+  Label2Xsec["QCD_HT500to700_TuneCP5_13TeV-madgraph-pythia8"] = 29980.0;
 
   Label2Xsec["ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-madgraph-pythia8"] = 3.36;;
   Label2Xsec["ST_t-channel_antitop_4f_InclusiveDecays_TuneCP5_13TeV-powheg-madspin-pythia8"] = 71.74;
@@ -210,6 +222,9 @@ std::map<std::string,double> XsecTool::InitMap_Xsec_BKG(){
   Label2Xsec["ST_t-channel_top_5f_TuneCP5_13TeV-powheg-pythia8"] = 119.7;
   Label2Xsec["ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M2T4"] = 35.85;
   Label2Xsec["ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M2T4"] = 35.85;
+  Label2Xsec["ST_t-channel_top_4f_InclusiveDecays_TuneCP5_13TeV-powheg-madspin-pythia8"] = 119.7;
+  Label2Xsec["ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8"] = 34.97;
+  Label2Xsec["ST_tWnunu_5f_LO_TuneCP5_PSweights_13TeV-madgraph-pythia8"] = 0.02099;
 
   Label2Xsec["WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 1345;
   Label2Xsec["WJetsToLNu_HT-1200To2500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 1.329;
@@ -260,6 +275,7 @@ std::map<std::string,double> XsecTool::InitMap_Xsec_BKG(){
   Label2Xsec["WZTo3LNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8"] = 4.42965;
   Label2Xsec["WZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8"] = 4.42965;
   Label2Xsec["WZ_TuneCUETP8M1_13TeV-pythia8"] = 47.13;
+  Label2Xsec["WZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8"] = 5.606;
 
   Label2Xsec["WWG_TuneCP5_13TeV-amcatnlo-pythia8"] = 0.2147 ;
   Label2Xsec["WWW_4F_TuneCP5_13TeV-amcatnlo-pythia8"] = 0.2086 ;
@@ -272,6 +288,7 @@ std::map<std::string,double> XsecTool::InitMap_Xsec_BKG(){
   Label2Xsec["WWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8"] = 0.2086 ;
   Label2Xsec["ZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8"] = 0.01398 ;
   Label2Xsec["ZZZ_TuneCP5_13TeV-amcatnlo-pythia8"] = 0.01398 ;
+  Label2Xsec["WZZ_TuneCP5_13TeV-amcatnlo-pythia8"] = 0.05565;
 
   Label2Xsec["TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 831.76;
   Label2Xsec["TTJets_TuneCUETP8M2T4_13TeV-amcatnloFXFX-pythia8"] = 831.76;
@@ -351,7 +368,7 @@ std::map<std::string,double> XsecTool::InitMap_Xsec_BKG(){
   Label2Xsec["ttHToNonbb_M125_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8"] = 0.5638;
   Label2Xsec["ttHTobb_M125_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8"] = 0.5638;
   
-  Label2Xsec["WJetsToQQ_HT-800toInf_qc19_3j_TuneCP5_13TeV-madgraphMLM-pythia8"] = 1; ////////////////////
+  Label2Xsec["WJetsToQQ_HT-800toInf_qc19_3j_TuneCP5_13TeV-madgraphMLM-pythia8"] = 1;
   Label2Xsec["WJetsToQQ_HT400to600_qc19_3j_TuneCP5_13TeV-madgraphMLM-pythia8"] = 1;
   Label2Xsec["WJetsToQQ_HT600to800_qc19_3j_TuneCP5_13TeV-madgraphMLM-pythia8"] = 1;
  
