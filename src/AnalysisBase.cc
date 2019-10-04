@@ -98,6 +98,17 @@ TVector3 AnalysisBase<Base>::GetMET(){
 }
 
 template <class Base>
+TVector3 AnalysisBase<Base>::GetPV(bool& good){
+  good = false;
+  return TVector3();
+}
+
+template <class Base>
+ParticleList AnalysisBase<Base>::GetSVs(const TVector3& PV){
+  return ParticleList();
+}
+
+template <class Base>
 ParticleList AnalysisBase<Base>::GetJets(){
   return ParticleList();
 }
@@ -113,28 +124,34 @@ ParticleList AnalysisBase<Base>::GetMuons(){
 }
 
 template <class Base>
-ParticleList GetGenElectrons(){
+ParticleList AnalysisBase<Base>::GetGenElectrons(){
   return ParticleList();
 }
 
 template <class Base>
-ParticleList GetGenMuons(){
+ParticleList AnalysisBase<Base>::GetGenMuons(){
   return ParticleList();
 }
 
 template <class Base>
-ParticleList GetGenNeutrinos(){
+ParticleList AnalysisBase<Base>::GetGenNeutrinos(){
   return ParticleList();
 }
 
 template <class Base>
-ParticleList GetGenBosons(){
+ParticleList AnalysisBase<Base>::GetGenBosons(){
   return ParticleList();
 }
 
 template <class Base>
-ParticleList GetGenSparticles(){
+ParticleList AnalysisBase<Base>::GetGenSparticles(){
   return ParticleList();
+}
+
+template <class Base>
+std::pair<int,int> AnalysisBase<Base>::GetSUSYMasses(){
+
+  return std::pair<int,int>(0,0);
 }
 
 template <class Base>
@@ -518,6 +535,26 @@ ParticleList AnalysisBase<StopNtupleTree>::GetGenSparticles(){
 /////////////////////////////////////////////////
 
 template <>
+std::pair<int,int> AnalysisBase<SUSYNANOBase>::GetSUSYMasses(){
+  int MP = 0;
+  int MC = 0;
+  int Ngen = nGenPart;
+  for(int i = 0; i < Ngen; i++){
+    int PDGID = abs(GenPart_pdgId[i]);
+    if(PDGID > 1000000 && PDGID < 3000000){
+      int mass = int(GenPart_mass[i]+0.5);
+      if(PDGID == 1000022)
+	MC = mass;
+      else
+	if(mass > MP)
+	  MP = mass;
+    }
+  }
+  
+  return std::pair<int,int>(MP,MC);
+}
+
+template <>
 int AnalysisBase<SUSYNANOBase>::GetSampleIndex(){
   if(!m_DoSMS){
     if(m_Nsample == 0){
@@ -571,8 +608,17 @@ double AnalysisBase<SUSYNANOBase>::GetEventWeight(){
 
 template <>
 TVector3 AnalysisBase<SUSYNANOBase>::GetMET(){
+  int year = 2016;
+  if(m_FileTag.find("17") != std::string::npos)
+    year = 2017;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+  
   TVector3 vmet;
-  vmet.SetPtEtaPhi(MET_pt,0.0,MET_phi);
+  if(year == 2017)
+    vmet.SetPtEtaPhi(METFixEE2017_pt,0.0,METFixEE2017_phi);
+  else
+    vmet.SetPtEtaPhi(MET_pt,0.0,MET_phi);
   return vmet;
 }
 
@@ -584,7 +630,36 @@ TVector3 AnalysisBase<SUSYNANOBase>::GetGenMET(){
 }
 
 template <>
+TVector3 AnalysisBase<SUSYNANOBase>::GetPV(bool& good){
+  good = false;
+  TVector3 PV(0.,0.,0.);
+  
+  if(PV_chi2 < 0.)
+    return PV;
+  
+  if(PV_ndof < 5)
+    return PV;
+  
+  if(fabs(PV_z) > 24.)
+    return PV;
+  
+  if(PV_x*PV_x + PV_y*PV_y > 4.)
+    return PV;
+  
+  good = true;
+  PV.SetXYZ(PV_x,PV_y,PV_z);
+  
+  return PV;
+}
+
+template <>
 ParticleList AnalysisBase<SUSYNANOBase>::GetJets(){
+  int year = 2017;
+  if(m_FileTag.find("16") != std::string::npos)
+    year = 2016;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+
   ParticleList list;
 
   int Njet = nJet;
@@ -602,14 +677,76 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJets(){
     if(mass < 0.)
       mass = 0.;
     jet.SetPtEtaPhiM( JET.Pt(), JET.Eta(), JET.Phi(), mass );
-    jet.SetBtag(Jet_btagCSVV2[i]);
 
-    if(jet.Btag() > 0.9535)
+    if(Jet_jetId[i] >= 3)
       jet.SetParticleID(kTight);
-    else if(jet.Btag() > 0.8484) 
+    else if(Jet_jetId[i] >= 2) 
       jet.SetParticleID(kMedium);
-    else if(jet.Btag() > 0.5426)
+    else if(Jet_jetId[i] >= 1)
       jet.SetParticleID(kLoose);
+    
+    // DeepCSV tagger
+    jet.SetBtag(Jet_btagDeepB[i]);
+
+    // DeepFlavour tagger
+    jet.SetBtag(Jet_btagDeepFlavB[i]);
+
+    // https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation2016Legacy
+    if(year == 2016){
+      // Deep CSV
+      // if(jet.Btag() > 0.8953)
+      // 	jet.SetBtagID(kTight);
+      // else if(jet.Btag() > 0.6321) 
+      // 	jet.SetBtagID(kMedium);
+      // else if(jet.Btag() > 0.2217)
+      // 	jet.SetBtagID(kLoose);
+
+      // Deep Flavor
+      if(jet.Btag() > 0.7221)
+	jet.SetBtagID(kTight);
+      else if(jet.Btag() > 0.3093) 
+	jet.SetBtagID(kMedium);
+      else if(jet.Btag() > 0.0614)
+	jet.SetBtagID(kLoose);
+    }
+
+    // https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation94X
+    if(year == 2017){
+      // DeepCSV
+      // if(jet.Btag() > 0.8001)
+      // 	jet.SetBtagID(kTight);
+      // else if(jet.Btag() > 0.4941) 
+      // 	jet.SetBtagID(kMedium);
+      // else if(jet.Btag() > 0.1522)
+      // 	jet.SetBtagID(kLoose);
+
+      // Deep Flavor
+      if(jet.Btag() > 0.7489)
+	jet.SetBtagID(kTight);
+      else if(jet.Btag() > 0.3033) 
+	jet.SetBtagID(kMedium);
+      else if(jet.Btag() > 0.0521)
+	jet.SetBtagID(kLoose);
+    }
+
+    // https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation102X
+    if(year == 2018){
+      // DeepCSV
+      // if(jet.Btag() > 0.7527)
+      // 	jet.SetBtagID(kTight);
+      // else if(jet.Btag() > 0.4184) 
+      // 	jet.SetBtagID(kMedium);
+      // else if(jet.Btag() > 0.1241)
+      // 	jet.SetBtagID(kLoose);
+
+      // DeepFlavor
+      if(jet.Btag() > 0.7264)
+	jet.SetBtagID(kTight);
+      else if(jet.Btag() > 0.2770) 
+	jet.SetBtagID(kMedium);
+      else if(jet.Btag() > 0.0494)
+	jet.SetBtagID(kLoose);
+    }
 
     jet.SetPDGID( Jet_partonFlavour[i] );
       
@@ -621,27 +758,401 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJets(){
 
 template <>
 ParticleList AnalysisBase<SUSYNANOBase>::GetElectrons(){
+  int year = 2017;
+  if(m_FileTag.find("16") != std::string::npos)
+    year = 2016;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+
   ParticleList list;
 
   int N = nElectron;
   for(int i = 0; i < N; i++){
+    // baseline lepton definition
+    if(Electron_pt[i] < 5. || fabs(Electron_eta[i]) > 2.5)
+      continue;
+    if(fabs(Electron_dxy[i]) >= 0.05 || fabs(Electron_dz[i]) >= 0.1 ||
+       Electron_ip3d[i] >= 0.0175 || Electron_sip3d[i] >= 2.5)
+      continue;
+    if(Electron_pfRelIso03_all[i]*Electron_pt[i] >= 20. + 300./Electron_pt[i])
+      continue;
+
     Particle lep;
     lep.SetPtEtaPhiM(Electron_pt[i], Electron_eta[i],
 		     Electron_phi[i], std::max(Electron_mass[i],float(0.)));
     lep.SetPDGID( (Electron_charge[i] < 0. ? 11 : -11) );
     lep.SetCharge( (Electron_charge[i] < 0. ? -1 : 1) );
-     
-    if(Electron_mvaFall17V2Iso_WP90[i])
-      lep.SetParticleID(kTight);
-    else if(Electron_mvaFall17V2Iso_WP80[i])
-      lep.SetParticleID(kMedium);
-    else if(Electron_mvaFall17V2Iso_WPL[i])
-      lep.SetParticleID(kLoose);
-    else if(Electron_mvaFall17V2noIso_WPL[i])
-      lep.SetParticleID(kVeryLoose);
-     
+
+    lep.SetDxy(Electron_dxy[i]);
+    lep.SetDxyErr(Electron_dxyErr[i]);
+    lep.SetDz(Electron_dz[i]);
+    lep.SetDzErr(Electron_dzErr[i]);
+    lep.SetIP3D(Electron_ip3d[i]);
+    lep.SetSIP3D(Electron_sip3d[i]);
+
     lep.SetRelIso(Electron_pfRelIso03_all[i]);
     lep.SetMiniIso(Electron_miniPFRelIso_all[i]);
+
+    // https://twiki.cern.ch/twiki/pub/CMS/SUSLeptonSF/Run2_SUSYwp_EleCB_MVA_8Jan19.pdf
+    
+    // FO baseline criteria
+    if(Electron_lostHits[i] == 0 && Electron_convVeto[i]){
+
+      double mva = Electron_mvaFall17V1noIso[i];
+      if(year == 2016 || year == 2018)
+	mva = Electron_mvaFall17V2noIso[i];
+
+
+      // convert to raw MVA output
+      if(mva == -1.)
+	mva = -999.;
+      else if(mva == 1.)
+	mva = 999.;
+      else
+	mva = -0.5*log((1.-mva)/(1.+mva));
+      
+      // FO VLoose
+      if(year == 2016){ // Summer16_94X legacy
+	if(fabs(lep.Eta()) < 0.8){ // eta < 0.8
+	  if(lep.Pt() < 10.){
+	    if(mva > -0.259)
+	      lep.SetParticleID(kVeryLoose);
+	  } else if(lep.Pt() < 25.) {
+	    if(mva > -0.388 + 0.109*(lep.Pt() - 25.))
+	      lep.SetParticleID(kVeryLoose);
+	  } else {
+	    if(mva > -0.388)
+	      lep.SetParticleID(kVeryLoose);
+	  }
+	} else if(fabs(lep.Eta()) < 1.479){ // eta < 1.479
+	  if(lep.Pt() < 10.){
+	    if(mva > -0.256)
+	      lep.SetParticleID(kVeryLoose);
+	  } else if(lep.Pt() < 25.) {
+	    if(mva > -0.696 + 0.106*(lep.Pt() - 25.))
+	      lep.SetParticleID(kVeryLoose);
+	  } else {
+	    if(mva > -0.696)
+	      lep.SetParticleID(kVeryLoose);
+	  }
+	} else { // eta < 2.5
+	  if(lep.Pt() < 10.){
+	    if(mva > -1.630)
+	      lep.SetParticleID(kVeryLoose);
+	  } else if(lep.Pt() < 25.) {
+	    if(mva > -1.219 + 0.148*(lep.Pt() - 25.))
+	      lep.SetParticleID(kVeryLoose);
+	  } else {
+	    if(mva > -1.219)
+	      lep.SetParticleID(kVeryLoose);
+	  }
+	}
+      }
+
+      if(year == 2017){ // Fall17_94X
+	if(fabs(lep.Eta()) < 0.8){ // eta < 0.8
+	  if(lep.Pt() < 10.){
+	    if(mva > -0.135)
+	      lep.SetParticleID(kVeryLoose);
+	  } else if(lep.Pt() < 25.) {
+	    if(mva > (-0.93 + (0.043/15.)*(lep.Pt()-10.)))
+	      lep.SetParticleID(kVeryLoose);
+	  } else {
+	    if(mva > -0.887)
+	      lep.SetParticleID(kVeryLoose);
+	  }
+	} else if(fabs(lep.Eta()) < 1.479){ // eta < 1.479
+	  if(lep.Pt() < 10.){
+	    if(mva > -0.417)
+	      lep.SetParticleID(kVeryLoose);
+	  } else if(lep.Pt() < 25.) {
+	    if(mva > (-0.93 + (0.04/15.)*(lep.Pt()-10.)))
+	      lep.SetParticleID(kVeryLoose);
+	  } else {
+	    if(mva > -0.89)
+	      lep.SetParticleID(kVeryLoose);
+	  }
+	} else { // eta < 2.5
+	  if(lep.Pt() < 10.){
+	    if(mva > -0.470)
+	      lep.SetParticleID(kVeryLoose);
+	  } else if(lep.Pt() < 25.) {
+	    if(mva > (-0.942 + (0.032/15.)*(lep.Pt()-10.)))
+	      lep.SetParticleID(kVeryLoose);
+	  } else {
+	    if(mva > -0.91)
+	      lep.SetParticleID(kVeryLoose);
+	  }
+	}
+      }
+
+      if(year == 2018){ // Autumn18_102X
+	if(fabs(lep.Eta()) < 0.8){ // eta < 0.8
+	  if(lep.Pt() < 10.){
+	    if(mva > 0.053)
+	      lep.SetParticleID(kVeryLoose);
+	  } else if(lep.Pt() < 25.) {
+	    if(mva > -0.106 + 0.062*(lep.Pt() - 25.))
+	      lep.SetParticleID(kVeryLoose);
+	  } else {
+	    if(mva > -0.106)
+	      lep.SetParticleID(kVeryLoose);
+	  }
+	} else if(fabs(lep.Eta()) < 1.479){ // eta < 1.479
+	  if(lep.Pt() < 10.){
+	    if(mva > -0.434)
+	      lep.SetParticleID(kVeryLoose);
+	  } else if(lep.Pt() < 25.) {
+	    if(mva > -0.769 + 0.038*(lep.Pt() - 25.))
+	      lep.SetParticleID(kVeryLoose);
+	  } else {
+	    if(mva > -0.769)
+	      lep.SetParticleID(kVeryLoose);
+	  }
+	} else { // eta < 2.5
+	  if(lep.Pt() < 10.){
+	    if(mva > -0.956)
+	      lep.SetParticleID(kVeryLoose);
+	  } else if(lep.Pt() < 25.) {
+	    if(mva > -1.461 + 0.042*(lep.Pt() - 25.))
+	      lep.SetParticleID(kVeryLoose);
+	  } else {
+	    if(mva > -1.461)
+	      lep.SetParticleID(kVeryLoose);
+	  }
+	}
+      }
+
+      // VLoose electron
+      if(year == 2016){ // Summer16_94X legacy
+	if(fabs(lep.Eta()) < 0.8){ // eta < 0.8
+	  if(lep.Pt() < 10.){
+	    if(mva > 1.309)
+	      lep.SetParticleID(kLoose);
+	  } else if(lep.Pt() < 25.) {
+	    if(mva > 0.887 + 0.088*(lep.Pt() - 25.))
+	      lep.SetParticleID(kLoose);
+	  } else {
+	    if(mva > 0.887)
+	      lep.SetParticleID(kLoose);
+	  }
+	} else if(fabs(lep.Eta()) < 1.479){ // eta < 1.479
+	  if(lep.Pt() < 10.){
+	    if(mva > 0.373)
+	      lep.SetParticleID(kLoose);
+	  } else if(lep.Pt() < 25.) {
+	    if(mva > 0.112 + 0.099*(lep.Pt() - 25.))
+	      lep.SetParticleID(kLoose);
+	  } else {
+	    if(mva > 0.112)
+	      lep.SetParticleID(kLoose);
+	  }
+	} else { // eta < 2.5
+	  if(lep.Pt() < 10.){
+	    if(mva > 0.071)
+	      lep.SetParticleID(kLoose);
+	  } else if(lep.Pt() < 25.) {
+	    if(mva > -0.017 + 0.137*(lep.Pt() - 25.))
+	      lep.SetParticleID(kLoose);
+	  } else {
+	    if(mva > -0.017)
+	      lep.SetParticleID(kLoose);
+	  }
+	}
+      }
+
+      if(year == 2017){ // Fall17_94X
+	if(fabs(lep.Eta()) < 0.8){ // eta < 0.8
+	  if(lep.Pt() < 10.){
+	    if(mva > 0.488)
+	      lep.SetParticleID(kLoose);
+	  } else if(lep.Pt() < 25.) {
+	    if(mva > (-0.788 + (0.148/15.)*(lep.Pt()-10.)) )
+	      lep.SetParticleID(kLoose);
+	  } else {
+	    if(mva > -0.64)
+	      lep.SetParticleID(kLoose);
+	  }
+	} else if(fabs(lep.Eta()) < 1.479){ // eta < 1.479
+	  if(lep.Pt() < 10.){
+	    if(mva > -0.045)
+	      lep.SetParticleID(kLoose);
+	  } else if(lep.Pt() < 25.) {
+	    if(mva > (-0.85 + (0.075/15.)*(lep.Pt()-10.)))
+	      lep.SetParticleID(kLoose);
+	  } else {
+	    if(mva > -0.775)
+	      lep.SetParticleID(kLoose);
+	  }
+	} else { // eta < 2.5
+	  if(lep.Pt() < 10.){
+	    if(mva > 0.176)
+	      lep.SetParticleID(kLoose);
+	  } else if(lep.Pt() < 25.) {
+	    if(mva > (-0.81 + (0.077/15.)*(lep.Pt()-10.)))
+	      lep.SetParticleID(kLoose);
+	  } else {
+	    if(mva > -0.733)
+	      lep.SetParticleID(kLoose);
+	  }
+	}
+      }
+
+      if(year == 2018){ // Autumn18_102X
+	if(fabs(lep.Eta()) < 0.8){ // eta < 0.8
+	  if(lep.Pt() < 10.){
+	    if(mva > 1.320)
+	      lep.SetParticleID(kLoose);
+	  } else if(lep.Pt() < 25.) {
+	    if(mva > 1.204 + 0.066*(lep.Pt() - 25.))
+	      lep.SetParticleID(kLoose);
+	  } else {
+	    if(mva > 1.204)
+	      lep.SetParticleID(kLoose);
+	  }
+	} else if(fabs(lep.Eta()) < 1.479){ // eta < 1.479
+	  if(lep.Pt() < 10.){
+	    if(mva > 0.192)
+	      lep.SetParticleID(kLoose);
+	  } else if(lep.Pt() < 25.) {
+	    if(mva > 0.084 + 0.033*(lep.Pt() - 25.))
+	      lep.SetParticleID(kLoose);
+	  } else {
+	    if(mva > 0.084)
+	      lep.SetParticleID(kLoose);
+	  }
+	} else { // eta < 2.5
+	  if(lep.Pt() < 10.){
+	    if(mva > 0.362)
+	      lep.SetParticleID(kLoose);
+	  } else if(lep.Pt() < 25.) {
+	    if(mva > -0.123 + 0.053*(lep.Pt() - 25.))
+	      lep.SetParticleID(kLoose);
+	  } else {
+	    if(mva > -0.123)
+	      lep.SetParticleID(kLoose);
+	  }
+	}
+      }
+	    
+      // signal lepton IDs (only Tight for now) baseline criteria
+      if(lep.IP3D() < 0.01 && lep.SIP3D() < 2.){
+	// Tight electron
+	if(year == 2016){ // Summer16_94X legacy
+	  if(fabs(lep.Eta()) < 0.8){ // eta < 0.8
+	    if(lep.Pt() < 10.){ // using VLoose ID for low pT
+	      if(mva > 1.309)
+		lep.SetParticleID(kTight);
+	    } else if(lep.Pt() < 40.) {
+	      if(mva > 3.447 + 0.063*(lep.Pt()- 25.))
+		lep.SetParticleID(kTight);
+	    } else {
+	      if(mva > 4.392)
+		lep.SetParticleID(kTight);
+	    }
+	  } else if(fabs(lep.Eta()) < 1.479){ // eta < 1.479
+	    if(lep.Pt() < 10.){ // using VLoose ID for low pT
+	      if(mva > 0.373)
+		lep.SetParticleID(kLoose);
+	    } else if(lep.Pt() < 40.) {
+	      if(mva > 2.522 + 0.058*(lep.Pt() - 25.))
+		lep.SetParticleID(kTight);
+	    } else {
+	      if(mva > 3.392)
+		lep.SetParticleID(kTight);
+	    }
+	  } else { // eta < 2.5
+	    if(lep.Pt() < 10.){ // using VLoose ID for low pT
+	      if(mva > 0.071)
+		lep.SetParticleID(kTight);
+	    } else if(lep.Pt() < 40.) {
+	      if(mva > 1.555 + 0.075*(lep.Pt() - 25.))
+		lep.SetParticleID(kTight);
+	    } else {
+	      if(mva > 2.680)
+		lep.SetParticleID(kTight);
+	    }
+	  }
+	}
+
+	if(year == 2017){ // Fall17_94X
+	  if(fabs(lep.Eta()) < 0.8){ // eta < 0.8
+	    if(lep.Pt() < 10.){ // using VLoose ID for low pT
+	      if(mva > 0.488)
+		lep.SetParticleID(kTight);
+	    } else if(lep.Pt() < 25.) {
+	      if(mva > 0.2+0.032*(lep.Pt() - 10.))
+		lep.SetParticleID(kTight);
+	    } else {
+	      if(mva > 0.68)
+		lep.SetParticleID(kTight);
+	    }
+	  } else if(fabs(lep.Eta()) < 1.479){ // eta < 1.479
+	    if(lep.Pt() < 10.){ // using VLoose ID for low pT
+	      if(mva > -0.045)
+		lep.SetParticleID(kTight);
+	    } else if(lep.Pt() < 25.) {
+	      if(mva > 0.1+0.025*(lep.Pt() - 10.))
+		lep.SetParticleID(kTight);
+	    } else {
+	      if(mva > 0.475)
+		lep.SetParticleID(kTight);
+	    }
+	  } else { // eta < 2.5
+	    if(lep.Pt() < 10.){ // using VLoose ID for low pT
+	      if(mva > 0.176)
+		lep.SetParticleID(kTight);
+	    } else if(lep.Pt() < 25.) {
+	      if(mva > -0.1+0.028*(lep.Pt() - 10.))
+		lep.SetParticleID(kTight);
+	    } else {
+	      if(mva > 0.32)
+		lep.SetParticleID(kTight);
+	    }
+	  }
+	}
+
+	if(year == 2018){ // Autumn18_102X
+	  if(fabs(lep.Eta()) < 0.8){ // eta < 0.8
+	    if(lep.Pt() < 10.){ // using VLoose ID for low pT
+	      if(mva > 1.320)
+		lep.SetParticleID(kTight);
+	    } else if(lep.Pt() < 25.) {
+	      if(mva > 4.277 + 0.112*(lep.Pt() - 25.))
+		lep.SetParticleID(kTight);
+	    } else {
+	      if(mva > 4.277)
+		lep.SetParticleID(kTight);
+	    }
+	  } else if(fabs(lep.Eta()) < 1.479){ // eta < 1.479
+	    if(lep.Pt() < 10.){ // using VLoose ID for low pT
+	      if(mva > 0.192)
+		lep.SetParticleID(kTight);
+	    } else if(lep.Pt() < 25.) {
+	      if(mva > 3.152 + 0.060*(lep.Pt() - 25.))
+		lep.SetParticleID(kTight);
+	    } else {
+	      if(mva > 3.152)
+		lep.SetParticleID(kTight);
+	    }
+	  } else { // eta < 2.5
+	    if(lep.Pt() < 10.){ // using VLoose ID for low pT
+	      if(mva > 0.362)
+		lep.SetParticleID(kTight);
+	    } else if(lep.Pt() < 25.) {
+	      if(mva > 2.359 + 0.087*(lep.Pt() - 25.))
+		lep.SetParticleID(kTight);
+	    } else {
+	      if(mva > 2.359)
+		lep.SetParticleID(kTight);
+	    }
+	  }
+	}
+	
+      }
+    } // end lepton id
+    
+ 
 
     list.push_back(lep);
   }
@@ -652,29 +1163,99 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetElectrons(){
 
 template <>
 ParticleList AnalysisBase<SUSYNANOBase>::GetMuons(){
+  int year = 2017;
+  if(m_FileTag.find("16") != std::string::npos)
+    year = 2016;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+  
   ParticleList list;
 
   int N = nMuon;
   for(int i = 0; i < N; i++){
+     // baseline lepton definition
+    if(Muon_pt[i] < 3. || fabs(Muon_eta[i]) > 2.4)
+      continue;
+    if(fabs(Muon_dxy[i]) >= 0.05 || fabs(Muon_dz[i]) >= 0.1 ||
+       Muon_ip3d[i] >= 0.0175 || Muon_sip3d[i] >= 2.5)
+      continue;
+    if(Muon_pfRelIso03_all[i]*Muon_pt[i] >= 20. + 300./Muon_pt[i])
+      continue;
+    
     Particle lep;
     lep.SetPtEtaPhiM(Muon_pt[i], Muon_eta[i],
 		     Muon_phi[i], std::max(float(0.),Muon_mass[i]));
     lep.SetPDGID( (Muon_charge[i] < 0. ? 13 : -13) );
     lep.SetCharge( (Muon_charge[i] < 0. ? -1 : 1) );
-     
-    if(Muon_tightId[i])
-      lep.SetParticleID(kTight);
-    else if(Muon_mediumId[i])
-      lep.SetParticleID(kMedium);
-    else if(Muon_triggerIdLoose[i])
-      lep.SetParticleID(kLoose);
-     
+
+    lep.SetDxy(Muon_dxy[i]);
+    lep.SetDxyErr(Muon_dxyErr[i]);
+    lep.SetDz(Muon_dz[i]);
+    lep.SetDzErr(Muon_dzErr[i]);
+    lep.SetIP3D(Muon_ip3d[i]);
+    lep.SetSIP3D(Muon_sip3d[i]);
+
     lep.SetRelIso(Muon_pfRelIso03_all[i]);
     lep.SetMiniIso(Muon_miniPFRelIso_all[i]);
+
+    // FO baseline criteria
+    if(true){
+      lep.SetParticleID(kLoose);
+
+      // signal lep criteria
+      if(lep.IP3D() < 0.01 && lep.SIP3D() < 2.){
+	if(Muon_tightId[i])
+	  lep.SetParticleID(kTight);
+	else if(lep.Pt() < 20.){
+	  if(Muon_softId[i])
+	    lep.SetParticleID(kMedium);
+	} else {
+	  if(Muon_mediumPromptId[i])
+	    lep.SetParticleID(kMedium);
+	}
+      }
+    }
 
     list.push_back(lep);
   }
 
+  return list;
+}
+
+template <>
+ParticleList AnalysisBase<SUSYNANOBase>::GetSVs(const TVector3& PV){
+  ParticleList list;
+  
+  int N = nSV;
+  for(int i = 0; i < N; i++){
+    if(SV_chi2[i] < 0.)
+      continue;
+    if(SV_pt[i] >= 20.)
+      continue;
+    if(SV_dlenSig[i] <= 4.)
+      continue;
+    if(SV_ndof[i] < 1.8) // replacement for ntracks cut...
+      continue;
+
+    TVector3 xSV;
+    xSV.SetXYZ(SV_x[i],SV_y[i],SV_z[i]);
+    // dxy cut
+    if(fabs((xSV-PV).Pt()) >= 3.)
+      continue;
+
+    Particle SV;
+    SV.SetPtEtaPhiM(SV_pt[i],SV_eta[i],SV_phi[i],SV_mass[i]);
+
+    if((xSV-PV).Unit().Dot(SV.Vect().Unit()) <= 0.98)
+      continue;
+    
+    // if(SB_pt[i] < 20. && SB_dlenSig[i] > 4. &&
+    //    SB_dxy[i] < 3. && SB_DdotP[i] > 0.98 &&
+    //    SB_ntracks[i] >= 3){
+    
+    list.push_back(SV);
+  }
+  
   return list;
 }
 
@@ -686,7 +1267,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetGenElectrons(){
   int PDGID;
   for(int i = 0; i < N; i++){
     PDGID = GenPart_pdgId[i];
-    if(abs(PDGID) == 11){
+    if(abs(PDGID) == 11 && GenPart_pt[i] > 3. && GenPart_status[i] == 1){
       Particle lep;
       
       lep.SetPDGID(PDGID);
@@ -696,7 +1277,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetGenElectrons(){
       lep.SetCharge( (PDGID > 0 ? -1 : 1) );
       lep.SetPtEtaPhiM(GenPart_pt[i], GenPart_eta[i],
 		       GenPart_phi[i], max(float(0.),GenPart_mass[i]));
-
+      
       list.push_back(lep);
     }
   }
@@ -712,7 +1293,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetGenMuons(){
   int PDGID;
   for(int i = 0; i < N; i++){
     PDGID = GenPart_pdgId[i];
-    if(abs(PDGID) == 13){
+    if(abs(PDGID) == 13 && GenPart_pt[i] > 3. && GenPart_status[i] == 1){
       Particle lep;
       
       lep.SetPDGID(PDGID);

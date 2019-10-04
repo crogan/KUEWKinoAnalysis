@@ -12,6 +12,7 @@ CXXFLAGS       += $(filter-out -stdlib=libc++ -pthread , $(RFCFLAGS))
 
 GLIBS          = $(filter-out -stdlib=libc++ -pthread , $(ROOTGLIBS))
 GLIBS         += $(filter-out -stdlib=libc++ -pthread , $(RFGLIBS))
+GLIBS         += -lRooFit -lRooFitCore
 
 
 INCLUDEDIR       = ./include/

@@ -1,0 +1,14 @@
+samples/NANO/Fall17_94X/TTJets_HT-1200to2500_TuneCP5_13TeV-madgraphMLM-pythia8.txt
+samples/NANO/Fall17_94X/TTJets_HT-2500toInf_TuneCP5_13TeV-madgraphMLM-pythia8.txt
+samples/NANO/Fall17_94X/TTJets_HT-600to800_TuneCP5_13TeV-madgraphMLM-pythia8.txt
+samples/NANO/Fall17_94X/TTJets_HT-800to1200_TuneCP5_13TeV-madgraphMLM-pythia8.txt
+samples/NANO/Fall17_94X/TTTT_TuneCP5_13TeV-amcatnlo-pythia8.txt
+samples/NANO/Fall17_94X/TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8.txt
+samples/NANO/Fall17_94X/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8.txt
+samples/NANO/Fall17_94X/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8.txt
+samples/NANO/Fall17_94X/TTJets_SingleLeptFromTbar_TuneCP5_13TeV-madgraphMLM-pythia8.txt
+samples/NANO/Fall17_94X/DYJetsToLL_M-50_HT-800to1200_TuneCP5_13TeV-madgraphMLM-pythia8.txt
+samples/NANO/Fall17_94X/ST_tW_top_5f_inclusiveDecays_TuneCP5_PSweights_13TeV-powheg-pythia8.txt
+samples/NANO/Fall17_94X/WWTo2L2Nu_NNPDF31_TuneCP5_PSweights_13TeV-powheg-pythia8.txt
+samples/NANO/Fall17_94X/QCD_HT100to200_TuneCP5_13TeV-madgraph-pythia8.txt
+samples/NANO/Fall17_94X/QCD_HT700to1000_TuneCP5_13TeV-madgraph-pythia8.txt

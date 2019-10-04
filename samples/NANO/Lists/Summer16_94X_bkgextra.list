@@ -1,0 +1,5 @@
+samples/NANO/Summer16_94X/TTJets_HT-1200to2500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
+samples/NANO/Summer16_94X/TTJets_HT-2500toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
+samples/NANO/Summer16_94X/TTJets_HT-600to800_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
+samples/NANO/Summer16_94X/TTJets_HT-800to1200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
+samples/NANO/Summer16_94X/TTTT_TuneCUETP8M1_13TeV-amcatnlo-pythia8.txt

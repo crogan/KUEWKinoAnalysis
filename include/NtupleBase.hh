@@ -20,6 +20,10 @@ protected:
 private:
   virtual TTree* InitOutputTree(const std::string& sample) = 0;
   virtual void FillOutputTree(TTree* tree) = 0;
+
+  // for event count bookkeeping
+  std::vector<std::pair<int,int> > m_masses;
+  std::map<std::pair<int,int>,double > m_mapNevent;
   
   
 
