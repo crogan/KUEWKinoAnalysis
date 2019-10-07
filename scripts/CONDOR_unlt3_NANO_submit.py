@@ -64,7 +64,7 @@ def write_sh(srcfile,ifile,ofile,lfile,dataset,filetag,evtcnt):
     fsrc.write('error = '+lfile+"_err.log \n")
     fsrc.write('log = '+lfile+"_log.log \n")
     fsrc.write('Requirements = (Machine != "red-node000.unl.edu")\n')
-    #fsrc.write('request_memory = 4 GB \n')
+    #fsrc.write('request_memory = 8 GB \n')
     fsrc.write('queue \n')
     #fsrc.write('cd '+RUN_DIR+" \n")
     #fsrc.write('source ../RestFrames/setup_RestFrames.sh \n')
