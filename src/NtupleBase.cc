@@ -25,6 +25,8 @@ void NtupleBase<Base>::WriteNtuple(const string& filename){
   outfile->cd();
 
   string sample;
+
+  std::pair<int,int> masses(0,0);
   
   Long64_t N = Base::fChain->GetEntries();
   for(Long64_t i = 0; i < N; i++){
@@ -44,6 +46,16 @@ void NtupleBase<Base>::WriteNtuple(const string& filename){
    
     outfile->cd();
     FillOutputTree(m_Label2Tree[sample]);
+
+    // event count bookkeeping
+    if(AnalysisBase<Base>::IsSMS())
+      masses = AnalysisBase<Base>::GetSUSYMasses();
+    if(m_mapNevent.count(masses) == 0){
+      m_masses.push_back(masses);
+      m_mapNevent[masses] = 1.;
+    } else {
+      m_mapNevent[masses] += 1.;
+    }
   }
 
   int Ntree = m_Trees.size();
@@ -54,6 +66,32 @@ void NtupleBase<Base>::WriteNtuple(const string& filename){
     delete m_Trees[i];
     m_Trees[i] = nullptr;
   }
+
+  // event count tree
+  outfile->cd();
+  TTree* tout = (TTree*) new TTree("EventCount", "EventCount");
+  
+  string dataset = string(AnalysisBase<Base>::GetDataSet());
+  string filetag = string(AnalysisBase<Base>::GetFileTag());
+  double Nevent;
+  double Nweight = 0.;
+  int MP;
+  int MC;
+  tout->Branch("Nevent", &Nevent);
+  tout->Branch("Nweight", &Nweight);
+  tout->Branch("filetag", &filetag);
+  tout->Branch("dataset", &dataset);
+  tout->Branch("MP", &MP);
+  tout->Branch("MC", &MC);
+  int Nmass = m_masses.size();
+  for(int i = 0; i < Nmass; i++){
+    Nevent = m_mapNevent[m_masses[i]];
+    MP = m_masses[i].first;
+    MC = m_masses[i].second;
+    tout->Fill();
+  }
+  tout->Write("",TObject::kOverwrite);
+  delete tout;
   
   outfile->Close();
   delete outfile;

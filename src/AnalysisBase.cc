@@ -124,28 +124,34 @@ ParticleList AnalysisBase<Base>::GetMuons(){
 }
 
 template <class Base>
-ParticleList GetGenElectrons(){
+ParticleList AnalysisBase<Base>::GetGenElectrons(){
   return ParticleList();
 }
 
 template <class Base>
-ParticleList GetGenMuons(){
+ParticleList AnalysisBase<Base>::GetGenMuons(){
   return ParticleList();
 }
 
 template <class Base>
-ParticleList GetGenNeutrinos(){
+ParticleList AnalysisBase<Base>::GetGenNeutrinos(){
   return ParticleList();
 }
 
 template <class Base>
-ParticleList GetGenBosons(){
+ParticleList AnalysisBase<Base>::GetGenBosons(){
   return ParticleList();
 }
 
 template <class Base>
-ParticleList GetGenSparticles(){
+ParticleList AnalysisBase<Base>::GetGenSparticles(){
   return ParticleList();
+}
+
+template <class Base>
+std::pair<int,int> AnalysisBase<Base>::GetSUSYMasses(){
+
+  return std::pair<int,int>(0,0);
 }
 
 template <class Base>
@@ -529,6 +535,26 @@ ParticleList AnalysisBase<StopNtupleTree>::GetGenSparticles(){
 /////////////////////////////////////////////////
 
 template <>
+std::pair<int,int> AnalysisBase<SUSYNANOBase>::GetSUSYMasses(){
+  int MP = 0;
+  int MC = 0;
+  int Ngen = nGenPart;
+  for(int i = 0; i < Ngen; i++){
+    int PDGID = abs(GenPart_pdgId[i]);
+    if(PDGID > 1000000 && PDGID < 3000000){
+      int mass = int(GenPart_mass[i]+0.5);
+      if(PDGID == 1000022)
+	MC = mass;
+      else
+	if(mass > MP)
+	  MP = mass;
+    }
+  }
+  
+  return std::pair<int,int>(MP,MC);
+}
+
+template <>
 int AnalysisBase<SUSYNANOBase>::GetSampleIndex(){
   if(!m_DoSMS){
     if(m_Nsample == 0){
@@ -662,33 +688,63 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJets(){
     // DeepCSV tagger
     jet.SetBtag(Jet_btagDeepB[i]);
 
+    // DeepFlavour tagger
+    jet.SetBtag(Jet_btagDeepFlavB[i]);
+
     // https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation2016Legacy
     if(year == 2016){
-      if(jet.Btag() > 0.8953)
+      // Deep CSV
+      // if(jet.Btag() > 0.8953)
+      // 	jet.SetBtagID(kTight);
+      // else if(jet.Btag() > 0.6321) 
+      // 	jet.SetBtagID(kMedium);
+      // else if(jet.Btag() > 0.2217)
+      // 	jet.SetBtagID(kLoose);
+
+      // Deep Flavor
+      if(jet.Btag() > 0.7221)
 	jet.SetBtagID(kTight);
-      else if(jet.Btag() > 0.6321) 
+      else if(jet.Btag() > 0.3093) 
 	jet.SetBtagID(kMedium);
-      else if(jet.Btag() > 0.2217)
+      else if(jet.Btag() > 0.0614)
 	jet.SetBtagID(kLoose);
     }
 
     // https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation94X
     if(year == 2017){
-      if(jet.Btag() > 0.8001)
+      // DeepCSV
+      // if(jet.Btag() > 0.8001)
+      // 	jet.SetBtagID(kTight);
+      // else if(jet.Btag() > 0.4941) 
+      // 	jet.SetBtagID(kMedium);
+      // else if(jet.Btag() > 0.1522)
+      // 	jet.SetBtagID(kLoose);
+
+      // Deep Flavor
+      if(jet.Btag() > 0.7489)
 	jet.SetBtagID(kTight);
-      else if(jet.Btag() > 0.4941) 
+      else if(jet.Btag() > 0.3033) 
 	jet.SetBtagID(kMedium);
-      else if(jet.Btag() > 0.1522)
+      else if(jet.Btag() > 0.0521)
 	jet.SetBtagID(kLoose);
     }
 
     // https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation102X
     if(year == 2018){
-      if(jet.Btag() > 0.7527)
+      // DeepCSV
+      // if(jet.Btag() > 0.7527)
+      // 	jet.SetBtagID(kTight);
+      // else if(jet.Btag() > 0.4184) 
+      // 	jet.SetBtagID(kMedium);
+      // else if(jet.Btag() > 0.1241)
+      // 	jet.SetBtagID(kLoose);
+
+      // DeepFlavor
+      if(jet.Btag() > 0.7264)
 	jet.SetBtagID(kTight);
-      else if(jet.Btag() > 0.4184) 
+      else if(jet.Btag() > 0.2770) 
 	jet.SetBtagID(kMedium);
-      else if(jet.Btag() > 0.1241)
+      else if(jet.Btag() > 0.0494)
 	jet.SetBtagID(kLoose);
     }
 

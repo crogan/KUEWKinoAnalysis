@@ -45,3 +45,7 @@ samples/NANO/Fall17_94X_SMS/SMS-T2tt_dM-10to80_genHT-160_genMET-80_mWMin-0p1_Tun
 samples/NANO/Fall17_94X_SMS/SMS-T2tt_mStop-1200to2000_TuneCP2_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Fall17_94X_SMS/SMS-T1bbbb_mGluino-1000_mLSP-900_TuneCP2_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Fall17_94X_SMS/SMS-T1bbbb_mGluino-1500_mLSP-100_TuneCP2_13TeV-madgraphMLM-pythia8.txt
+samples/NANO/Fall17_94X_SMS/SMS-TChiWZ_ZToLL_dM-90to100_TuneCP2_13TeV-madgraphMLM-pythia8.txt
+samples/NANO/Fall17_94X_SMS/SMS-TChiZZ_ZToLL_ZToLL_TuneCP2_13TeV-madgraphMLM-pythia8.txt
+samples/NANO/Fall17_94X_SMS/SMS-TChiZZ_ZToLL_TuneCP2_13TeV-madgraphMLM-pythia8.txt
+samples/NANO/Fall17_94X_SMS/SMS-TChipmWW_WWTo2LNu_TuneCP2_13TeV-madgraphMLM-pythia8.txt
