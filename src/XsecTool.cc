@@ -26,8 +26,11 @@ double XsecTool::GetXsec_SMS(const std::string& dataset, double MP) const {
     if((dataset.find("C1N1")!=std::string::npos)){
       label = "CN_hino";
     }
-    if((dataset.find("C1C1")!=std::string::npos)){
+    if((dataset.find("C1C1")!=std::string::npos) ||
+       (dataset.find("TChipmWW")!=std::string::npos)){
       label = "C1C1_hino";
+      if(dataset.find("WWTo2LNu")!= std::string::npos)
+	BR = (3.*0.1086)*(3.*0.1086);
     }
     if((dataset.find("TChiZZ")!=std::string::npos)){
       label = "N1N2_hino";
@@ -40,23 +43,24 @@ double XsecTool::GetXsec_SMS(const std::string& dataset, double MP) const {
        (dataset.find("TChiWG")!=std::string::npos)){
       label = "C1N2_wino";
       if(dataset.find("ZToLL")!= std::string::npos)
-	BR = 0.10099; // fixme
+	BR = 0.10099; 
     }
     if((dataset.find("TChiWH")!=std::string::npos) ||
        (dataset.find("N2C1")!=std::string::npos)){
       label = "C1N2_hino";
       if(dataset.find("HToGG")!= std::string::npos)
-	BR = 0.00227; // fixme
+	BR *= 0.00227; 
       if(dataset.find("HToBB")!= std::string::npos)
-	BR = 0.584; // fixme
+	BR *= 0.584; 
       if(dataset.find("WToLNu")!= std::string::npos)
-	BR = 0.322;
+	BR *= 0.322;
     }
     if((dataset.find("T2tt")!=std::string::npos) ||
        (dataset.find("T2cc")!=std::string::npos) ||
        (dataset.find("T2bW")!=std::string::npos) ||
        (dataset.find("mStop")!=std::string::npos) ||
-       (dataset.find("T2-4bd")!=std::string::npos)){
+       (dataset.find("T2-4bd")!=std::string::npos) ||
+       (dataset.find("T2bb")!=std::string::npos)){
       label = "StopStop";
     }
   }

@@ -340,13 +340,18 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   
   tree->Branch("Njet", &m_Njet);
   tree->Branch("Nbjet", &m_Nbjet);
-  tree->Branch("PT_jet",  &m_PT_jet);
-  tree->Branch("Eta_jet", &m_Eta_jet);
-  tree->Branch("Phi_jet", &m_Phi_jet);
-  tree->Branch("M_jet",   &m_M_jet);
-  tree->Branch("Btag_jet",   &m_Btag_jet);
-  tree->Branch("BtagID_jet",   &m_BtagID_jet);
-  tree->Branch("Flavor_jet",   &m_Flavor_jet);
+  
+  // tree->Branch("PT_jet",  &m_PT_jet);
+  // tree->Branch("Eta_jet", &m_Eta_jet);
+  // tree->Branch("Phi_jet", &m_Phi_jet);
+  // tree->Branch("M_jet",   &m_M_jet);
+  // tree->Branch("Btag_jet",   &m_Btag_jet);
+  // tree->Branch("BtagID_jet",   &m_BtagID_jet);
+  // tree->Branch("Flavor_jet",   &m_Flavor_jet);
+  // tree->Branch("index_jet_a", &m_index_jet_a);
+  // tree->Branch("index_jet_b", &m_index_jet_b);
+  // tree->Branch("index_jet_ISR", &m_index_jet_ISR);
+  // tree->Branch("index_jet_S", &m_index_jet_S);
 
   tree->Branch("NSV", &m_NSV);
   tree->Branch("PT_SV",  &m_PT_SV);
@@ -398,8 +403,6 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("Nlep_S", &m_Nlep_S);
   tree->Branch("NSV_ISR", &m_NSV_ISR);
   tree->Branch("NSV_S", &m_NSV_S);
-  tree->Branch("index_jet_ISR", &m_index_jet_ISR);
-  tree->Branch("index_jet_S", &m_index_jet_S);
   tree->Branch("index_SV_ISR", &m_index_SV_ISR);
   tree->Branch("index_SV_S", &m_index_SV_S);
   tree->Branch("index_lep_ISR", &m_index_lep_ISR);
@@ -416,8 +419,6 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("NSV_a", &m_NSV_a);
   tree->Branch("NSV_b", &m_NSV_b);
   
-  tree->Branch("index_jet_a", &m_index_jet_a);
-  tree->Branch("index_jet_b", &m_index_jet_b);
   tree->Branch("index_lep_a", &m_index_lep_a);
   tree->Branch("index_lep_b", &m_index_lep_b);
   tree->Branch("index_SV_a", &m_index_SV_a);
@@ -879,7 +880,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
     }
 	
     if(t == 1){ // with combinatorics
-      if(m_Njet == 0){
+      if(m_Njet < 1){
 	is_filled[t] = false;
 	continue;
       }
