@@ -493,7 +493,6 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("Is_3L", &m_Is_3L);
   tree->Branch("Is_4L", &m_Is_4L);
   
-  
   return tree;
 }
 
@@ -957,7 +956,6 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
       // lepton counting in ISR/S, hemispheres
       for(int i = 0; i < m_Nlep; i++){
 	m_Nlep_S[t]++;
-	m_index_lep_S[t].push_back(i);
 	if(COMB_L[t]->GetFrame(lepID[i]) == *La[t]){
 	  m_Nlep_a[t]++;
 	  m_index_lep_S[t].push_back(i);
@@ -1074,7 +1072,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
 	TVector3 lep   = S[t]->GetFourVector(Leptons[m_index_lep_S[t][l]]).Vect();
 	TVector3 lep_t = S[t]->GetTransverseFourVector(Leptons[m_index_lep_S[t][l]]).Vect();
 	m_dphi_lep_S[t].push_back( lep_t.Angle(isr_t) );
-	m_cos_lep_S[t].push_back( lep_t.Unit().Dot(isr_t.Unit()) );
+	m_cos_lep_S[t].push_back( lep.Unit().Dot(isr.Unit()) );
       }
     }
   }
