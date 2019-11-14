@@ -49,7 +49,7 @@ public:
 
   double BtagID() const;
   void SetBtagID(ParticleIDType id);
-    
+  
   operator ParticleList() const;
   ParticleList operator + (const Particle& part) const; 
   ParticleList operator + (const ParticleList& parts) const; 
