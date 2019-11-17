@@ -16,7 +16,7 @@ TREE = "Events"
 OUT = pwd
 LIST = "default.list"
 QUEUE = ""
-MAXN = 20
+MAXN = 10
 
 def new_listfile(rootlist, listfile):
     mylist = open(listfile,'w')
