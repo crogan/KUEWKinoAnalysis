@@ -141,7 +141,7 @@ if __name__ == "__main__":
 
     datasetlist = []
 
-    knowntags = ["Fall17_94X","Autumn18_102X","Summer16_94X"]
+    knowntags = ["Fall17_94X","Autumn18_102X","Summer16_94X","Fall17_102X","Summer16_102X"]
     
     with open(listfile,'r') as mylist:
         inputlist = mylist.readlines()
