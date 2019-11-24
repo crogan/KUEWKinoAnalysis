@@ -207,6 +207,6 @@ if __name__ == "__main__":
             for i in range(SPLIT):
                 namei = name + "_%d" % i
                 write_sh(srcdir+namei+".sh",f,ROOT+dataset+"_"+filetag+"/"+namei+".root",logdir+namei,dataset,filetag,evtcnt,i,SPLIT)
-                os.system('echo condor_submit '+srcdir+namei+".sh")
+                os.system('condor_submit '+srcdir+namei+".sh")
             
     
