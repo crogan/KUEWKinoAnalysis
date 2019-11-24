@@ -635,6 +635,13 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchAddress("Is_3L", &Is_3L, &b_Is_3L);
    fChain->SetBranchAddress("Is_4L", &Is_4L, &b_Is_4L);
    Notify();
+
+   fChain->SetBranchStatus("*",0);
+   fChain->SetBranchStatus("weight",1);
+   fChain->SetBranchStatus("MET",1);
+   fChain->SetBranchStatus("RISR",1);
+   fChain->SetBranchStatus("PTISR",1);
+   fChain->SetBranchStatus("*lep",1);
 }
 
 inline Bool_t ReducedBase::Notify()

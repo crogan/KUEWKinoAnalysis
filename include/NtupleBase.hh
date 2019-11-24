@@ -10,7 +10,7 @@ public:
   NtupleBase(TTree* tree = 0);
   virtual ~NtupleBase();
 
-  void WriteNtuple(const std::string& filename);
+  void WriteNtuple(const std::string& filename, int ichunk = 1, int nchunch = 1);
 
 protected:
   std::vector<TTree*>     m_Trees;
