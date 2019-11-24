@@ -43,7 +43,10 @@ int main(int argc, char* argv[]) {
   bool DO_FOLDER = false;
   bool DO_TREE = false;
   bool DO_SMS = false;
-
+  
+  int ICHUNK = 1;
+  int NCHUNK = 1;
+  
   if ( argc < 2 ){
     cout << "Error at Input: please specify an input file name, a list of input ROOT files and/or a folder path"; 
     cout << " and an output filename:" << endl; 
@@ -75,6 +78,10 @@ int main(int argc, char* argv[]) {
     if (strncmp(argv[i],"-filetag",8)==0)   sscanf(argv[i],"-filetag=%s", FileTag);
     if (strncmp(argv[i],"-eventcount",11)==0)   sscanf(argv[i],"-eventcount=%s", EventCount);
     if (strncmp(argv[i],"--sms",5)==0)  DO_SMS = true;
+
+    if(strncmp(argv[i],"-split",6)==0){
+      sscanf(argv[i],"-split=%d,%d", &ICHUNK, &NCHUNK);
+    }
   }
 
   gROOT->ProcessLine("#include <vector>");
@@ -138,7 +145,7 @@ int main(int argc, char* argv[]) {
   if(DO_SMS)
     ntuple->DoSMS();
 
-  ntuple->WriteNtuple(string(outputFileName));
+  ntuple->WriteNtuple(string(outputFileName), ICHUNK, NCHUNK);
 
   delete ntuple;
  

@@ -17,6 +17,7 @@ OUT = pwd
 LIST = "default.list"
 QUEUE = ""
 MAXN = 10
+SPLIT = 1
 
 def new_listfile(rootlist, listfile):
     mylist = open(listfile,'w')
@@ -45,7 +46,7 @@ def create_filelist(rootlist, dataset, filetag):
 
     return listlist
 
-def write_sh(srcfile,ifile,ofile,lfile,dataset,filetag,evtcnt):
+def write_sh(srcfile,ifile,ofile,lfile,dataset,filetag,evtcnt,i,n):
     fsrc = open(srcfile,'w')
     fsrc.write('universe = vanilla \n')
     fsrc.write('executable = '+EXE+" \n")
@@ -59,7 +60,9 @@ def write_sh(srcfile,ifile,ofile,lfile,dataset,filetag,evtcnt):
         fsrc.write('--sms ')
     fsrc.write('-dataset='+dataset+" ")
     fsrc.write('-filetag='+filetag+" ")
-    fsrc.write('-eventcount='+evtcnt+" \n")
+    fsrc.write('-eventcount='+evtcnt+" ")
+    splitstring = '-split=%d,%d \n' % (i+1,n)
+    fsrc.write(splitstring)
     fsrc.write('output = '+lfile+"_out.log \n")
     fsrc.write('error = '+lfile+"_err.log \n")
     fsrc.write('log = '+lfile+"_log.log \n")
@@ -95,12 +98,21 @@ if __name__ == "__main__":
         p = sys.argv.index('-maxN')
         MAXN = int(sys.argv[p+1])
         argv_pos += 2
+    if '-split' in sys.argv:
+        p = sys.argv.index('-split')
+        SPLIT = int(sys.argv[p+1])
+        argv_pos += 2
     if '--sms' in sys.argv:
         DO_SMS = 1
         argv_pos += 1
-
+        
     print "maxN is %d" % MAXN
 
+    if SPLIT <= 1:
+        SPLIT = 1
+    else:
+        MAXN = 1
+        
     # input sample list
     listfile = LIST
     listname = listfile.split("/")
@@ -192,7 +204,9 @@ if __name__ == "__main__":
             filename = f.split("/")
             filename = filename[-1]
             name = filename.replace(".list",'')
-            write_sh(srcdir+name+".sh",f,ROOT+dataset+"_"+filetag+"/"+name+".root",logdir+name,dataset,filetag,evtcnt)
-            os.system('condor_submit '+srcdir+name+".sh")
+            for i in range(SPLIT):
+                namei = name + "_%d" % i
+                write_sh(srcdir+namei+".sh",f,ROOT+dataset+"_"+filetag+"/"+namei+".root",logdir+namei,dataset,filetag,evtcnt,i,SPLIT)
+                os.system('echo condor_submit '+srcdir+namei+".sh")
             
     

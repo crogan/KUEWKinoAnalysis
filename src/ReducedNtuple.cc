@@ -642,7 +642,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
   Jets = Jets.PtEtaCut(20., 2.4);
 
   ParticleList SVs = AnalysisBase<Base>::GetSVs(PV);
-  SVs = SVs.RemoveOverlap(Leptons, 0.4);
+  SVs = SVs.RemoveOverlap(Leptons, 0.2);
   SVs = SVs.RemoveOverlap(Jets, 0.4);
   
   Jets = Jets.RemoveOverlap(Leptons, 0.2);

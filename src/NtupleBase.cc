@@ -20,21 +20,38 @@ NtupleBase<Base>::~NtupleBase(){
 }
 
 template <class Base>
-void NtupleBase<Base>::WriteNtuple(const string& filename){
+void NtupleBase<Base>::WriteNtuple(const string& filename, int ichunk, int nchunk){
   TFile* outfile = new TFile(filename.c_str(),"UPDATE");
   outfile->cd();
 
   string sample;
 
   std::pair<int,int> masses(0,0);
+
+  if(nchunk < 1 || ichunk < 1 || ichunk > nchunk){
+    ichunk = 1;
+    nchunk = 1;
+  }
+
+  Long64_t NTOT = Base::fChain->GetEntries();
+  Long64_t N1, N0;
+  if(nchunk >= NTOT){
+    N1 = ichunk;
+    N0 = ichunk-1;
+  } else {
+    N1 = Base::fChain->GetEntries()/nchunk;
+    if(NTOT%nchunk > 0)
+      N1++;
+    Long64_t N0 = (ichunk-1)*N1;
+    N1 = N0 + N1;
+  }
   
-  Long64_t N = Base::fChain->GetEntries();
-  for(Long64_t i = 0; i < N; i++){
-    int mymod = N/10;
+  for(Long64_t i = N0; i < N1 && i < NTOT; i++){
+    int mymod = (N1-N0)/10;
     if(mymod < 1)
       mymod = 1;
     if(i%mymod == 0)
-      cout << " event = " << i << " : " << N << endl;
+      cout << " event = " << i << " : [" << N0 << " , " << N1 << "]" << endl;
 
     sample = AnalysisBase<Base>::GetEntry(i);
         
