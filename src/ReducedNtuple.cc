@@ -341,17 +341,17 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("Njet", &m_Njet);
   tree->Branch("Nbjet", &m_Nbjet);
   
-  // tree->Branch("PT_jet",  &m_PT_jet);
-  // tree->Branch("Eta_jet", &m_Eta_jet);
-  // tree->Branch("Phi_jet", &m_Phi_jet);
-  // tree->Branch("M_jet",   &m_M_jet);
-  // tree->Branch("Btag_jet",   &m_Btag_jet);
-  // tree->Branch("BtagID_jet",   &m_BtagID_jet);
-  // tree->Branch("Flavor_jet",   &m_Flavor_jet);
-  // tree->Branch("index_jet_a", &m_index_jet_a);
-  // tree->Branch("index_jet_b", &m_index_jet_b);
-  // tree->Branch("index_jet_ISR", &m_index_jet_ISR);
-  // tree->Branch("index_jet_S", &m_index_jet_S);
+  tree->Branch("PT_jet",  &m_PT_jet);
+  tree->Branch("Eta_jet", &m_Eta_jet);
+  tree->Branch("Phi_jet", &m_Phi_jet);
+  tree->Branch("M_jet",   &m_M_jet);
+  tree->Branch("Btag_jet",   &m_Btag_jet);
+  tree->Branch("BtagID_jet",   &m_BtagID_jet);
+  tree->Branch("Flavor_jet",   &m_Flavor_jet);
+  tree->Branch("index_jet_a", &m_index_jet_a);
+  tree->Branch("index_jet_b", &m_index_jet_b);
+  tree->Branch("index_jet_ISR", &m_index_jet_ISR);
+  tree->Branch("index_jet_S", &m_index_jet_S);
 
   tree->Branch("NSV", &m_NSV);
   tree->Branch("PT_SV",  &m_PT_SV);
@@ -648,12 +648,12 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
   Jets = Jets.RemoveOverlap(Leptons, 0.2);
 
   // skip event reconstruction for now if too many jets
-  // if(Jets.size() >= 18){
-  //   m_event_skipped = true;
-  //   if(tree)
-  //     tree->Fill();
-  //   return;
-  // }
+  if(Jets.size() >= 16){
+    m_event_skipped = true;
+    if(tree)
+      tree->Fill();
+    return;
+  }
 
   m_Njet = Jets.size();
   

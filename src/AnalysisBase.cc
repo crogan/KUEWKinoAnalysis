@@ -771,8 +771,10 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetElectrons(){
     // baseline lepton definition
     if(Electron_pt[i] < 5. || fabs(Electron_eta[i]) > 2.5)
       continue;
+    // if(fabs(Electron_dxy[i]) >= 0.05 || fabs(Electron_dz[i]) >= 0.1 ||
+    //    Electron_ip3d[i] >= 0.0175 || Electron_sip3d[i] >= 2.5)
     if(fabs(Electron_dxy[i]) >= 0.05 || fabs(Electron_dz[i]) >= 0.1 ||
-       Electron_ip3d[i] >= 0.0175 || Electron_sip3d[i] >= 2.5)
+       Electron_sip3d[i] >= 8)
       continue;
     if(Electron_pfRelIso03_all[i]*Electron_pt[i] >= 20. + 300./Electron_pt[i])
       continue;
@@ -1036,7 +1038,8 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetElectrons(){
       }
 	    
       // signal lepton IDs (only Tight for now) baseline criteria
-      if(lep.IP3D() < 0.01 && lep.SIP3D() < 2.){
+      // if(lep.IP3D() < 0.01 && lep.SIP3D() < 2.){
+      if(true){
 	// Tight electron
 	if(year == 2016){ // Summer16_94X legacy
 	  if(fabs(lep.Eta()) < 0.8){ // eta < 0.8
@@ -1176,8 +1179,9 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetMuons(){
      // baseline lepton definition
     if(Muon_pt[i] < 3. || fabs(Muon_eta[i]) > 2.4)
       continue;
-    if(fabs(Muon_dxy[i]) >= 0.05 || fabs(Muon_dz[i]) >= 0.1 ||
-       Muon_ip3d[i] >= 0.0175 || Muon_sip3d[i] >= 2.5)
+    // if(fabs(Muon_dxy[i]) >= 0.05 || fabs(Muon_dz[i]) >= 0.1 ||
+    //    Muon_ip3d[i] >= 0.0175 || Muon_sip3d[i] >= 2.5)
+    if(fabs(Muon_dxy[i]) >= 0.05 || fabs(Muon_dz[i]) >= 0.1 || Muon_sip3d[i] >= 8.)
       continue;
     if(Muon_pfRelIso03_all[i]*Muon_pt[i] >= 20. + 300./Muon_pt[i])
       continue;
@@ -1203,14 +1207,15 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetMuons(){
       lep.SetParticleID(kLoose);
 
       // signal lep criteria
-      if(lep.IP3D() < 0.01 && lep.SIP3D() < 2.){
+      //if(lep.IP3D() < 0.01 && lep.SIP3D() < 2.){
+      if(true){
 	if(Muon_tightId[i])
 	  lep.SetParticleID(kTight);
-	else if(lep.Pt() < 20.){
+	else if(lep.Pt() < 0.){
 	  if(Muon_softId[i])
 	    lep.SetParticleID(kMedium);
 	} else {
-	  if(Muon_mediumPromptId[i])
+	  if(Muon_mediumId[i])
 	    lep.SetParticleID(kMedium);
 	}
       }

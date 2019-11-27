@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Thu Jul 18 21:46:49 2019 by ROOT version 6.14/04
+// Sun Nov 24 11:57:21 2019 by ROOT version 6.14/04
 // from TTree KUAnalysis/KUAnalysis
-// found on file: /Users/christopherrogan/Dropbox/SAMPLES/EWKino/StopNtuple_new/All_Bkg_2017/WZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8_Fall17.root
+// found on file: /Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/Fall17_94X/TTJets_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_94X.root
 //////////////////////////////////////////////////////////
 
 #ifndef ReducedBase_h
@@ -13,6 +13,7 @@
 #include <TFile.h>
 
 // Header file for the classes stored in the TTree if any.
+#include "vector"
 #include "vector"
 #include "vector"
 
@@ -26,6 +27,7 @@ public :
 // Fixed size dimensions of array or collections stored in the TTree if any.
 
    // Declaration of leaf types
+   Bool_t          event_skipped;
    Double_t        weight;
    Double_t        MET;
    Double_t        MET_phi;
@@ -43,16 +45,21 @@ public :
    vector<int>     *PDGID_lep;
    vector<double>  *RelIso_lep;
    vector<double>  *MiniIso_lep;
+   vector<double>  *Dxy_lep;
+   vector<double>  *DxyErr_lep;
+   vector<double>  *Dz_lep;
+   vector<double>  *DzErr_lep;
+   vector<double>  *IP3D_lep;
+   vector<double>  *SIP3D_lep;
    vector<int>     *ID_lep;
    vector<int>     *Index_lep;
    Int_t           Njet;
    Int_t           Nbjet;
-   vector<double>  *PT_jet;
-   vector<double>  *Eta_jet;
-   vector<double>  *Phi_jet;
-   vector<double>  *M_jet;
-   vector<double>  *Btag_jet;
-   vector<double>  *Flavor_jet;
+   Int_t           NSV;
+   vector<double>  *PT_SV;
+   vector<double>  *Eta_SV;
+   vector<double>  *Phi_SV;
+   vector<double>  *M_SV;
    Int_t           genNele;
    Int_t           genNmu;
    Int_t           genNlep;
@@ -90,20 +97,26 @@ public :
    vector<int>     *Nbjet_S;
    vector<int>     *Nlep_ISR;
    vector<int>     *Nlep_S;
-   vector<vector<int> > *index_jet_ISR;
-   vector<vector<int> > *index_jet_S;
+   vector<int>     *NSV_ISR;
+   vector<int>     *NSV_S;
+   vector<vector<int> > *index_SV_ISR;
+   vector<vector<int> > *index_SV_S;
    vector<vector<int> > *index_lep_ISR;
    vector<vector<int> > *index_lep_S;
+   vector<vector<double> > *dphi_lep_S;
+   vector<vector<double> > *cos_lep_S;
    vector<int>     *Njet_a;
    vector<int>     *Njet_b;
    vector<int>     *Nbjet_a;
    vector<int>     *Nbjet_b;
    vector<int>     *Nlep_a;
    vector<int>     *Nlep_b;
-   vector<vector<int> > *index_jet_a;
-   vector<vector<int> > *index_jet_b;
+   vector<int>     *NSV_a;
+   vector<int>     *NSV_b;
    vector<vector<int> > *index_lep_a;
    vector<vector<int> > *index_lep_b;
+   vector<vector<int> > *index_SV_a;
+   vector<vector<int> > *index_SV_b;
    vector<double>  *PTCM;
    vector<double>  *cosCM;
    vector<double>  *dphiCM;
@@ -167,6 +180,7 @@ public :
    Bool_t          Is_4L;
 
    // List of branches
+   TBranch        *b_event_skipped;   //!
    TBranch        *b_weight;   //!
    TBranch        *b_MET;   //!
    TBranch        *b_MET_phi;   //!
@@ -184,16 +198,21 @@ public :
    TBranch        *b_PDGID_lep;   //!
    TBranch        *b_RelIso_lep;   //!
    TBranch        *b_MiniIso_lep;   //!
+   TBranch        *b_Dxy_lep;   //!
+   TBranch        *b_DxyErr_lep;   //!
+   TBranch        *b_Dz_lep;   //!
+   TBranch        *b_DzErr_lep;   //!
+   TBranch        *b_IP3D_lep;   //!
+   TBranch        *b_SIP3D_lep;   //!
    TBranch        *b_ID_lep;   //!
    TBranch        *b_Index_lep;   //!
    TBranch        *b_Njet;   //!
    TBranch        *b_Nbjet;   //!
-   TBranch        *b_PT_jet;   //!
-   TBranch        *b_Eta_jet;   //!
-   TBranch        *b_Phi_jet;   //!
-   TBranch        *b_M_jet;   //!
-   TBranch        *b_Btag_jet;   //!
-   TBranch        *b_Flavor_jet;   //!
+   TBranch        *b_NSV;   //!
+   TBranch        *b_PT_SV;   //!
+   TBranch        *b_Eta_SV;   //!
+   TBranch        *b_Phi_SV;   //!
+   TBranch        *b_M_SV;   //!
    TBranch        *b_genNele;   //!
    TBranch        *b_genNmu;   //!
    TBranch        *b_genNlep;   //!
@@ -231,20 +250,26 @@ public :
    TBranch        *b_Nbjet_S;   //!
    TBranch        *b_Nlep_ISR;   //!
    TBranch        *b_Nlep_S;   //!
-   TBranch        *b_index_jet_ISR;   //!
-   TBranch        *b_index_jet_S;   //!
+   TBranch        *b_NSV_ISR;   //!
+   TBranch        *b_NSV_S;   //!
+   TBranch        *b_index_SV_ISR;   //!
+   TBranch        *b_index_SV_S;   //!
    TBranch        *b_index_lep_ISR;   //!
    TBranch        *b_index_lep_S;   //!
+   TBranch        *b_dphi_lep_S;   //!
+   TBranch        *b_cos_lep_S;   //!
    TBranch        *b_Njet_a;   //!
    TBranch        *b_Njet_b;   //!
    TBranch        *b_Nbjet_a;   //!
    TBranch        *b_Nbjet_b;   //!
    TBranch        *b_Nlep_a;   //!
    TBranch        *b_Nlep_b;   //!
-   TBranch        *b_index_jet_a;   //!
-   TBranch        *b_index_jet_b;   //!
+   TBranch        *b_NSV_a;   //!
+   TBranch        *b_NSV_b;   //!
    TBranch        *b_index_lep_a;   //!
    TBranch        *b_index_lep_b;   //!
+   TBranch        *b_index_SV_a;   //!
+   TBranch        *b_index_SV_b;   //!
    TBranch        *b_PTCM;   //!
    TBranch        *b_cosCM;   //!
    TBranch        *b_dphiCM;   //!
@@ -325,9 +350,9 @@ inline ReducedBase::ReducedBase(TTree *tree) : fChain(0)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/Users/christopherrogan/Dropbox/SAMPLES/EWKino/StopNtuple_new/All_Bkg_2017/WZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8_Fall17.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/Fall17_94X/TTJets_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_94X.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("/Users/christopherrogan/Dropbox/SAMPLES/EWKino/StopNtuple_new/All_Bkg_2017/WZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8_Fall17.root");
+         f = new TFile("/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/Fall17_94X/TTJets_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_94X.root");
       }
       f->GetObject("KUAnalysis",tree);
 
@@ -379,14 +404,18 @@ inline void ReducedBase::Init(TTree *tree)
    PDGID_lep = 0;
    RelIso_lep = 0;
    MiniIso_lep = 0;
+   Dxy_lep = 0;
+   DxyErr_lep = 0;
+   Dz_lep = 0;
+   DzErr_lep = 0;
+   IP3D_lep = 0;
+   SIP3D_lep = 0;
    ID_lep = 0;
    Index_lep = 0;
-   PT_jet = 0;
-   Eta_jet = 0;
-   Phi_jet = 0;
-   M_jet = 0;
-   Btag_jet = 0;
-   Flavor_jet = 0;
+   PT_SV = 0;
+   Eta_SV = 0;
+   Phi_SV = 0;
+   M_SV = 0;
    genPT_lep = 0;
    genEta_lep = 0;
    genPhi_lep = 0;
@@ -418,20 +447,26 @@ inline void ReducedBase::Init(TTree *tree)
    Nbjet_S = 0;
    Nlep_ISR = 0;
    Nlep_S = 0;
-   index_jet_ISR = 0;
-   index_jet_S = 0;
+   NSV_ISR = 0;
+   NSV_S = 0;
+   index_SV_ISR = 0;
+   index_SV_S = 0;
    index_lep_ISR = 0;
    index_lep_S = 0;
+   dphi_lep_S = 0;
+   cos_lep_S = 0;
    Njet_a = 0;
    Njet_b = 0;
    Nbjet_a = 0;
    Nbjet_b = 0;
    Nlep_a = 0;
    Nlep_b = 0;
-   index_jet_a = 0;
-   index_jet_b = 0;
+   NSV_a = 0;
+   NSV_b = 0;
    index_lep_a = 0;
    index_lep_b = 0;
+   index_SV_a = 0;
+   index_SV_b = 0;
    PTCM = 0;
    cosCM = 0;
    dphiCM = 0;
@@ -495,6 +530,7 @@ inline void ReducedBase::Init(TTree *tree)
    fCurrent = -1;
    fChain->SetMakeClass(1);
 
+   fChain->SetBranchAddress("event_skipped", &event_skipped, &b_event_skipped);
    fChain->SetBranchAddress("weight", &weight, &b_weight);
    fChain->SetBranchAddress("MET", &MET, &b_MET);
    fChain->SetBranchAddress("MET_phi", &MET_phi, &b_MET_phi);
@@ -512,16 +548,21 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchAddress("PDGID_lep", &PDGID_lep, &b_PDGID_lep);
    fChain->SetBranchAddress("RelIso_lep", &RelIso_lep, &b_RelIso_lep);
    fChain->SetBranchAddress("MiniIso_lep", &MiniIso_lep, &b_MiniIso_lep);
+   fChain->SetBranchAddress("Dxy_lep", &Dxy_lep, &b_Dxy_lep);
+   fChain->SetBranchAddress("DxyErr_lep", &DxyErr_lep, &b_DxyErr_lep);
+   fChain->SetBranchAddress("Dz_lep", &Dz_lep, &b_Dz_lep);
+   fChain->SetBranchAddress("DzErr_lep", &DzErr_lep, &b_DzErr_lep);
+   fChain->SetBranchAddress("IP3D_lep", &IP3D_lep, &b_IP3D_lep);
+   fChain->SetBranchAddress("SIP3D_lep", &SIP3D_lep, &b_SIP3D_lep);
    fChain->SetBranchAddress("ID_lep", &ID_lep, &b_ID_lep);
    fChain->SetBranchAddress("Index_lep", &Index_lep, &b_Index_lep);
    fChain->SetBranchAddress("Njet", &Njet, &b_Njet);
    fChain->SetBranchAddress("Nbjet", &Nbjet, &b_Nbjet);
-   fChain->SetBranchAddress("PT_jet", &PT_jet, &b_PT_jet);
-   fChain->SetBranchAddress("Eta_jet", &Eta_jet, &b_Eta_jet);
-   fChain->SetBranchAddress("Phi_jet", &Phi_jet, &b_Phi_jet);
-   fChain->SetBranchAddress("M_jet", &M_jet, &b_M_jet);
-   fChain->SetBranchAddress("Btag_jet", &Btag_jet, &b_Btag_jet);
-   fChain->SetBranchAddress("Flavor_jet", &Flavor_jet, &b_Flavor_jet);
+   fChain->SetBranchAddress("NSV", &NSV, &b_NSV);
+   fChain->SetBranchAddress("PT_SV", &PT_SV, &b_PT_SV);
+   fChain->SetBranchAddress("Eta_SV", &Eta_SV, &b_Eta_SV);
+   fChain->SetBranchAddress("Phi_SV", &Phi_SV, &b_Phi_SV);
+   fChain->SetBranchAddress("M_SV", &M_SV, &b_M_SV);
    fChain->SetBranchAddress("genNele", &genNele, &b_genNele);
    fChain->SetBranchAddress("genNmu", &genNmu, &b_genNmu);
    fChain->SetBranchAddress("genNlep", &genNlep, &b_genNlep);
@@ -559,20 +600,26 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchAddress("Nbjet_S", &Nbjet_S, &b_Nbjet_S);
    fChain->SetBranchAddress("Nlep_ISR", &Nlep_ISR, &b_Nlep_ISR);
    fChain->SetBranchAddress("Nlep_S", &Nlep_S, &b_Nlep_S);
-   fChain->SetBranchAddress("index_jet_ISR", &index_jet_ISR, &b_index_jet_ISR);
-   fChain->SetBranchAddress("index_jet_S", &index_jet_S, &b_index_jet_S);
+   fChain->SetBranchAddress("NSV_ISR", &NSV_ISR, &b_NSV_ISR);
+   fChain->SetBranchAddress("NSV_S", &NSV_S, &b_NSV_S);
+   fChain->SetBranchAddress("index_SV_ISR", &index_SV_ISR, &b_index_SV_ISR);
+   fChain->SetBranchAddress("index_SV_S", &index_SV_S, &b_index_SV_S);
    fChain->SetBranchAddress("index_lep_ISR", &index_lep_ISR, &b_index_lep_ISR);
    fChain->SetBranchAddress("index_lep_S", &index_lep_S, &b_index_lep_S);
+   fChain->SetBranchAddress("dphi_lep_S", &dphi_lep_S, &b_dphi_lep_S);
+   fChain->SetBranchAddress("cos_lep_S", &cos_lep_S, &b_cos_lep_S);
    fChain->SetBranchAddress("Njet_a", &Njet_a, &b_Njet_a);
    fChain->SetBranchAddress("Njet_b", &Njet_b, &b_Njet_b);
    fChain->SetBranchAddress("Nbjet_a", &Nbjet_a, &b_Nbjet_a);
    fChain->SetBranchAddress("Nbjet_b", &Nbjet_b, &b_Nbjet_b);
    fChain->SetBranchAddress("Nlep_a", &Nlep_a, &b_Nlep_a);
    fChain->SetBranchAddress("Nlep_b", &Nlep_b, &b_Nlep_b);
-   fChain->SetBranchAddress("index_jet_a", &index_jet_a, &b_index_jet_a);
-   fChain->SetBranchAddress("index_jet_b", &index_jet_b, &b_index_jet_b);
+   fChain->SetBranchAddress("NSV_a", &NSV_a, &b_NSV_a);
+   fChain->SetBranchAddress("NSV_b", &NSV_b, &b_NSV_b);
    fChain->SetBranchAddress("index_lep_a", &index_lep_a, &b_index_lep_a);
    fChain->SetBranchAddress("index_lep_b", &index_lep_b, &b_index_lep_b);
+   fChain->SetBranchAddress("index_SV_a", &index_SV_a, &b_index_SV_a);
+   fChain->SetBranchAddress("index_SV_b", &index_SV_b, &b_index_SV_b);
    fChain->SetBranchAddress("PTCM", &PTCM, &b_PTCM);
    fChain->SetBranchAddress("cosCM", &cosCM, &b_cosCM);
    fChain->SetBranchAddress("dphiCM", &dphiCM, &b_dphiCM);
@@ -642,6 +689,9 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchStatus("RISR",1);
    fChain->SetBranchStatus("PTISR",1);
    fChain->SetBranchStatus("*lep",1);
+   fChain->SetBranchStatus("NSV*",1);
+   fChain->SetBranchStatus("Nbjet*",1);
+   
 }
 
 inline Bool_t ReducedBase::Notify()
