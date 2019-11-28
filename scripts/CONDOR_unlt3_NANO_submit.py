@@ -9,11 +9,11 @@ home = os.environ['HOME']
 #######################################
 RUN_DIR = pwd
 TEMP = pwd
-#EXE  = "MakeReducedNtuple_NANO.x"
-EXE  = "MakeEventCount_NANO.x"
+EXE  = "MakeReducedNtuple_NANO.x"
+#EXE  = "MakeEventCount_NANO.x"
 TREE = "Events"
-#OUT  = "/home/t3-ku/crogan/NTUPLES/Processing/"
-OUT = pwd
+OUT  = "/home/t3-ku/crogan/NTUPLES/Processing/"
+#OUT = pwd
 LIST = "default.list"
 QUEUE = ""
 MAXN = 10
@@ -106,13 +106,15 @@ if __name__ == "__main__":
         DO_SMS = 1
         argv_pos += 1
         
-    print "maxN is %d" % MAXN
-
+    
     if SPLIT <= 1:
         SPLIT = 1
     else:
         MAXN = 1
-        
+    
+    print "maxN is %d" % MAXN
+    print "split is %d" % SPLIT
+
     # input sample list
     listfile = LIST
     listname = listfile.split("/")

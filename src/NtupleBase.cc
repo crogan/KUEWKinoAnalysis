@@ -34,18 +34,20 @@ void NtupleBase<Base>::WriteNtuple(const string& filename, int ichunk, int nchun
   }
 
   Long64_t NTOT = Base::fChain->GetEntries();
+  cout << NTOT << endl;
   Long64_t N1, N0;
   if(nchunk >= NTOT){
     N1 = ichunk;
     N0 = ichunk-1;
   } else {
-    N1 = Base::fChain->GetEntries()/nchunk;
+    N1 = NTOT/nchunk;
     if(NTOT%nchunk > 0)
       N1++;
-    Long64_t N0 = (ichunk-1)*N1;
+    N0 = (ichunk-1)*N1;
     N1 = N0 + N1;
   }
   
+  cout << "looping between " << N0 << " " << N1 << endl;
   for(Long64_t i = N0; i < N1 && i < NTOT; i++){
     int mymod = (N1-N0)/10;
     if(mymod < 1)
