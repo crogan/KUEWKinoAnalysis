@@ -145,6 +145,7 @@ int main(int argc, char* argv[]) {
   if(DO_SMS)
     ntuple->DoSMS();
 
+  cout << "writing output with ichunk=" << ICHUNK << " nchunk=" << NCHUNK << endl;
   ntuple->WriteNtuple(string(outputFileName), ICHUNK, NCHUNK);
 
   delete ntuple;
