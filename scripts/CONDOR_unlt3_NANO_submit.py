@@ -46,7 +46,7 @@ def create_filelist(rootlist, dataset, filetag):
 
     return listlist
 
-def write_sh(srcfile,ifile,ofile,lfile,dataset,filetag,evtcnt,i,n):
+def write_sh(srcfile,ifile,ofile,lfile,dataset,filetag,evtcnt,filtereff,i,n):
     fsrc = open(srcfile,'w')
     fsrc.write('universe = vanilla \n')
     fsrc.write('executable = '+EXE+" \n")
@@ -61,6 +61,7 @@ def write_sh(srcfile,ifile,ofile,lfile,dataset,filetag,evtcnt,i,n):
     fsrc.write('-dataset='+dataset+" ")
     fsrc.write('-filetag='+filetag+" ")
     fsrc.write('-eventcount='+evtcnt+" ")
+    fsrc.write('-filtereff='+filtereff+" ")
     splitstring = '-split=%d,%d \n' % (i+1,n)
     fsrc.write(splitstring)
     fsrc.write('output = '+lfile+"_out.log \n")
@@ -143,6 +144,10 @@ if __name__ == "__main__":
     os.system("mkdir -p "+evtcntdir)
     os.system("hadd "+evtcntdir+"EventCount.root root/EventCount/*.root")
     evtcnt = evtcntdir+"EventCount.root"
+
+    # make FilterEff file 
+    os.system("hadd "+evtcntdir+"FilterEff.root root/FilterEff/*.root")
+    FilterEff = evtcntdir+"FilterEff.root"
     
     # output root files
     ROOT = OUT+"/"+NAME+"/"
@@ -208,7 +213,7 @@ if __name__ == "__main__":
             name = filename.replace(".list",'')
             for i in range(SPLIT):
                 namei = name + "_%d" % i
-                write_sh(srcdir+namei+".sh",f,ROOT+dataset+"_"+filetag+"/"+namei+".root",logdir+namei,dataset,filetag,evtcnt,i,SPLIT)
+                write_sh(srcdir+namei+".sh",f,ROOT+dataset+"_"+filetag+"/"+namei+".root",logdir+namei,dataset,filetag,evtcnt,filtereff,i,SPLIT)
                 os.system('condor_submit '+srcdir+namei+".sh")
             
     
