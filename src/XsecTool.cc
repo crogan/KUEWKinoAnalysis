@@ -63,6 +63,8 @@ double XsecTool::GetXsec_SMS(const std::string& dataset, double MP) const {
        (dataset.find("T2bb")!=std::string::npos)){
       label = "StopStop";
     }
+    if(dataset.find("TSlepSlep")!=std::string::npos)
+      label = "SlepSlep_left";
   }
 
   if(m_N_SMS.count(label) == 0)
@@ -122,10 +124,18 @@ std::map<std::string,double> XsecTool::InitMap_Xsec_BKG(){
   Label2Xsec["DYJetsToLL_M-50_HT-600to800_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 1.367;
   Label2Xsec["DYJetsToLL_M-50_HT-70to100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 169.9;
   Label2Xsec["DYJetsToLL_M-50_HT-800to1200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 0.6304;
+
+  Label2Xsec["DYJetsToLL_M-4to50_HT-100to200_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8"] = 224.2;
+  Label2Xsec["DYJetsToLL_M-4to50_HT-200to400_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8"] = 37.2;
+  Label2Xsec["DYJetsToLL_M-4to50_HT-400to600_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8"] = 3.581;
+  Label2Xsec["DYJetsToLL_M-4to50_HT-600toInf_TuneCP5_PSWeights_13TeV-madgraphMLM-pythia8"] = 1.124;
+  Label2Xsec["DYJetsToLL_M-4to50_HT-70to100_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8"] = 145.5;
+  
   Label2Xsec["DYJetsToLL_M-4to50_HT-100to200_TuneCP5_13TeV-madgraphMLM-pythia8"] = 224.2;
   Label2Xsec["DYJetsToLL_M-4to50_HT-200to400_TuneCP5_13TeV-madgraphMLM-pythia8"] = 37.2;
   Label2Xsec["DYJetsToLL_M-4to50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8"] = 3.581;
   Label2Xsec["DYJetsToLL_M-4to50_HT-600toInf_TuneCP5_13TeV-madgraphMLM-pythia8"] = 1.124;
+  
   Label2Xsec["DYJetsToLL_M-5to50_HT-100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 147.40;
   Label2Xsec["DYJetsToLL_M-5to50_HT-200to400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 37.2;
   Label2Xsec["DYJetsToLL_M-5to50_HT-400to600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 3.581;

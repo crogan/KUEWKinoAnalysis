@@ -57,7 +57,7 @@ void CheckEventCount(string filename){
    N = datasets.size();
    for(int i = 0; i < N; i++){
      double xsec = XS.GetXsec_BKG(datasets[i]);
-     if(xsec <= 0. && datasets[i].find("SMS") == string::npos)
+     if((xsec <= 0. && datasets[i].find("SMS") == string::npos))
        cout << datasets[i] << endl;
      //cout << XS.GetXsec_SMS(*dataset, 500) << endl;
    }

@@ -66,6 +66,11 @@ void AnalysisBase<Base>::AddEventCountFile(const string& rootfile){
 }
 
 template <class Base>
+void AnalysisBase<Base>::AddFilterEffFile(const string& rootfile){
+  m_NeventTool.BuildFilterEffMap(rootfile);
+}
+
+template <class Base>
 double AnalysisBase<Base>::DeltaPhiMin(const vector<TLorentzVector>& JETs, const TVector3& MET, int N){
   double dphimin = acos(-1);
   int Njet = JETs.size();
@@ -600,9 +605,12 @@ int AnalysisBase<SUSYNANOBase>::GetSampleIndex(){
 
 template <>
 double AnalysisBase<SUSYNANOBase>::GetEventWeight(){
-  if(m_IndexToNweight[m_SampleIndex] > 0.)
-    return genWeight*m_IndexToXsec[m_SampleIndex]/m_IndexToNweight[m_SampleIndex];
-  else
+  if(m_IndexToNweight[m_SampleIndex] > 0.){
+    if(!m_DoSMS)
+      return genWeight*m_IndexToXsec[m_SampleIndex]/m_IndexToNweight[m_SampleIndex];
+
+    return genWeight*m_IndexToXsec[m_SampleIndex]/m_IndexToNweight[m_SampleIndex]*m_NeventTool.GetFilterEff(m_DataSet,m_FileTag,luminosityBlock);
+  } else
     return 0.;
 }
 

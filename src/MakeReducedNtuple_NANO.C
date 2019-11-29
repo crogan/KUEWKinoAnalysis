@@ -37,6 +37,7 @@ int main(int argc, char* argv[]) {
   char DataSet[400];
   char FileTag[400];
   char EventCount[400];
+  char FilterEff[400];
 
   bool DO_FILE = false;
   bool DO_LIST = false;
@@ -77,6 +78,7 @@ int main(int argc, char* argv[]) {
     if (strncmp(argv[i],"-dataset",8)==0)   sscanf(argv[i],"-dataset=%s", DataSet);
     if (strncmp(argv[i],"-filetag",8)==0)   sscanf(argv[i],"-filetag=%s", FileTag);
     if (strncmp(argv[i],"-eventcount",11)==0)   sscanf(argv[i],"-eventcount=%s", EventCount);
+    if (strncmp(argv[i],"-filtereff",11)==0)   sscanf(argv[i],"-filtereff=%s", FilterEff);
     if (strncmp(argv[i],"--sms",5)==0)  DO_SMS = true;
 
     if(strncmp(argv[i],"-split",6)==0){
@@ -141,6 +143,7 @@ int main(int argc, char* argv[]) {
 
   ntuple->AddLabels(string(DataSet),string(FileTag));
   ntuple->AddEventCountFile(string(EventCount));
+  ntuple->AddFilterEffFile(string(FilterEff));
 
   if(DO_SMS)
     ntuple->DoSMS();
