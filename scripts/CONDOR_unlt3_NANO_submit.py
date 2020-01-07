@@ -68,7 +68,7 @@ def write_sh(srcfile,ifile,ofile,lfile,dataset,filetag,evtcnt,filtereff,i,n):
     fsrc.write('error = '+lfile+"_err.log \n")
     fsrc.write('log = '+lfile+"_log.log \n")
     fsrc.write('Requirements = (Machine != "red-node000.unl.edu")\n')
-    #fsrc.write('request_memory = 8 GB \n')
+    #fsrc.write('request_memory = 2 GB \n')
     fsrc.write('queue \n')
     #fsrc.write('cd '+RUN_DIR+" \n")
     #fsrc.write('source ../RestFrames/setup_RestFrames.sh \n')
@@ -147,7 +147,7 @@ if __name__ == "__main__":
 
     # make FilterEff file 
     os.system("hadd "+evtcntdir+"FilterEff.root root/FilterEff/*.root")
-    FilterEff = evtcntdir+"FilterEff.root"
+    filtereff = evtcntdir+"FilterEff.root"
     
     # output root files
     ROOT = OUT+"/"+NAME+"/"
