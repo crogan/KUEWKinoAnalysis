@@ -691,6 +691,24 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchStatus("*lep",1);
    fChain->SetBranchStatus("NSV*",1);
    fChain->SetBranchStatus("Nbjet*",1);
+   fChain->SetBranchStatus("Njet*",1);
+   fChain->SetBranchStatus("dphi_lep_S",1);
+   fChain->SetBranchStatus("cos_lep_S",1);
+   fChain->SetBranchStatus("MV",1);
+   fChain->SetBranchStatus("PV",1);
+   fChain->SetBranchStatus("MS",1);
+   fChain->SetBranchStatus("PVa",1);
+   fChain->SetBranchStatus("PzS",1);
+   fChain->SetBranchStatus("H11S",1);
+   fChain->SetBranchStatus("dphiSI",1);
+   fChain->SetBranchStatus("MX3a",1);
+   fChain->SetBranchStatus("MX3b",1);
+   fChain->SetBranchStatus("MVa",1);
+   fChain->SetBranchStatus("MVb",1);
+   fChain->SetBranchStatus("EVa",1);
+   fChain->SetBranchStatus("EVb",1);
+   fChain->SetBranchStatus("cosX3a",1);
+   fChain->SetBranchStatus("cosX3b",1);
    
 }
 
