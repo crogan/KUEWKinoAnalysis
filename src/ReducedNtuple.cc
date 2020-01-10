@@ -233,6 +233,30 @@ ReducedNtuple<Base>::ReducedNtuple(TTree* tree)
     m_cosJb.push_back(0);
     m_cosLa.push_back(0);
     m_cosLb.push_back(0);
+
+    m_MJ.push_back(0);
+    m_ML.push_back(0);
+    m_EJ.push_back(0);
+    m_EL.push_back(0);
+    m_PJ.push_back(0);
+    m_PL.push_back(0);
+  
+    m_PX3.push_back(0);
+    m_PX3_BoostT.push_back(0);
+    m_MX3a_BoostT.push_back(0);
+    m_MX3b_BoostT.push_back(0);
+
+    m_PV_BoostT.push_back(0);
+  
+    m_EVa_BoostT.push_back(0);
+    m_EVb_BoostT.push_back(0);
+    m_PVa_BoostT.push_back(0);
+    m_PVb_BoostT.push_back(0);
+
+    m_EJ_BoostT.push_back(0);
+    m_EL_BoostT.push_back(0);
+    m_PJ_BoostT.push_back(0);
+    m_PL_BoostT.push_back(0);
     
     m_H11S.push_back(0);
     m_H21S.push_back(0);
@@ -472,6 +496,30 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("cosJb", &m_cosJb);
   tree->Branch("cosLa", &m_cosLa);
   tree->Branch("cosLb", &m_cosLb);
+
+  tree->Branch("MJ", &m_MJ);
+  tree->Branch("ML", &m_ML);
+  tree->Branch("EJ", &m_EJ);
+  tree->Branch("EL", &m_EL);
+  tree->Branch("PJ", &m_PJ);
+  tree->Branch("PL", &m_PL);
+  
+  tree->Branch("PX3", &m_PX3);
+  tree->Branch("PX3_BoostT", &m_PX3_BoostT);
+  tree->Branch("MX3a_BoostT", &m_MX3a_BoostT);
+  tree->Branch("MX3b_BoostT", &m_MX3b_BoostT);
+
+  tree->Branch("PV_BoostT", &m_PV_BoostT);
+  
+  tree->Branch("EVa_BoostT", &m_EVa_BoostT);
+  tree->Branch("EVb_BoostT", &m_EVb_BoostT);
+  tree->Branch("PVa_BoostT", &m_PVa_BoostT);
+  tree->Branch("PVb_BoostT", &m_PVb_BoostT);
+
+  tree->Branch("EJ_BoostT", &m_EJ_BoostT);
+  tree->Branch("EL_BoostT", &m_EL_BoostT);
+  tree->Branch("PJ_BoostT", &m_PJ_BoostT);
+  tree->Branch("PL_BoostT", &m_PL_BoostT);
   
   tree->Branch("H11S", &m_H11S);
   tree->Branch("H21S", &m_H21S);
@@ -584,6 +632,30 @@ void ReducedNtuple<Base>::ClearVariables(){
     m_cosJb[i] = 0.;
     m_cosLa[i] = 0.;
     m_cosLb[i] = 0.;
+
+    m_MJ[i] = 0.;
+    m_ML[i] = 0.;
+    m_EJ[i] = 0.;
+    m_EL[i] = 0.;
+    m_PJ[i] = 0.;
+    m_PL[i] = 0.;
+  
+    m_PX3[i] = 0.;
+    m_PX3_BoostT[i] = 0.;
+    m_MX3a_BoostT[i] = 0.;
+    m_MX3b_BoostT[i] = 0.;
+
+    m_PV_BoostT[i] = 0.;
+  
+    m_EVa_BoostT[i] = 0.;
+    m_EVb_BoostT[i] = 0.;
+    m_PVa_BoostT[i] = 0.;
+    m_PVb_BoostT[i] = 0.;
+
+    m_EJ_BoostT[i] = 0.;
+    m_EL_BoostT[i] = 0.;
+    m_PJ_BoostT[i] = 0.;
+    m_PL_BoostT[i] = 0.;
 
     m_H11S[i] = 0.;
     m_H21S[i] = 0.;
@@ -1011,7 +1083,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
     m_PLb[t] = saLb[t]->GetFourVector(*X2b[t]).P();
 
     m_MV[t] = S[t]->GetListVisibleFrames().GetMass();
-    m_PV[t] = S[t]->GetListVisibleFrames().GetFourVector().P();
+    m_PV[t] = S[t]->GetListVisibleFrames().GetFourVector(*S[t]).P();
     m_MVa[t] = X3a[t]->GetListVisibleFrames().GetMass();
     m_MVb[t] = X3b[t]->GetListVisibleFrames().GetMass();
 
@@ -1024,12 +1096,22 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
     m_cosLa[t] = saLa[t]->GetCosDecayAngle();
     m_cosLb[t] = saLb[t]->GetCosDecayAngle();
 
+    TLorentzVector vP_S_CM  = S[t]->GetFourVector(*CM[t]);
     TLorentzVector vP_Ja_S  = saJa[t]->GetFourVector(*S[t]);
     TLorentzVector vP_Jb_S  = saJb[t]->GetFourVector(*S[t]);
     TLorentzVector vP_La_S  = saLa[t]->GetFourVector(*S[t]);
     TLorentzVector vP_Lb_S  = saLb[t]->GetFourVector(*S[t]);
     TLorentzVector vP_Ia_S  = X1a[t]->GetFourVector(*S[t]);
     TLorentzVector vP_Ib_S  = X1b[t]->GetFourVector(*S[t]);
+
+    m_MJ[t] = (vP_Ja_S+vP_Jb_S).M();
+    m_ML[t] = (vP_La_S+vP_Lb_S).M();
+    m_EJ[t] = (vP_Ja_S+vP_Jb_S).E();
+    m_EL[t] = (vP_La_S+vP_Lb_S).E();
+    m_PJ[t] = (vP_Ja_S+vP_Jb_S).P();
+    m_PL[t] = (vP_La_S+vP_Lb_S).P();
+  
+    m_PX3[t] = (vP_Ja_S+vP_La_S+vP_Ia_S).P();
     
     m_H11S[t] = 2.*(vP_Ia_S+vP_Ib_S).P();
     m_H21S[t] = (vP_Ja_S+vP_La_S).P() +
@@ -1057,7 +1139,38 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
     m_H11X3b[t] = 2.*vP_Ib_X3b.P();
     m_H21X3a[t] = vP_Ja_X3a.P() + vP_La_X3a.P() + vP_Ia_X3a.P();
     m_H21X3b[t] = vP_Jb_X3b.P() + vP_Lb_X3b.P() + vP_Ib_X3b.P();
+
+    // removing momentum components parallel to CM->S boost
+    TVector3 boostVis = (vP_Ja_S+vP_La_S+vP_Jb_S+vP_Lb_S).BoostVector();
+    TVector3 boostInv = (vP_Ia_S+vP_Ib_S).BoostVector();
+    TVector3 daBoost = vP_S_CM.Vect().Unit();
+
+    boostVis = (boostVis.Dot(daBoost))*daBoost;
+    boostInv = (boostInv.Dot(daBoost))*daBoost;
+
+    vP_Ja_S.Boost(-boostVis);
+    vP_Jb_S.Boost(-boostVis);
+    vP_La_S.Boost(-boostVis);
+    vP_Lb_S.Boost(-boostVis);
+    vP_Ia_S.Boost(-boostInv);
+    vP_Ib_S.Boost(-boostInv);
     
+    m_PX3_BoostT[t] = (vP_Ja_S+vP_La_S+vP_Ia_S).P();
+    m_MX3a_BoostT[t] = (vP_Ja_S+vP_La_S+vP_Ia_S).M();
+    m_MX3b_BoostT[t] = (vP_Jb_S+vP_Lb_S+vP_Ib_S).M();
+
+    m_PV_BoostT[t] = (vP_Ja_S+vP_La_S+vP_Jb_S+vP_Lb_S).P();
+  
+    m_EVa_BoostT[t] = (vP_Ja_S+vP_La_S).E();
+    m_EVb_BoostT[t] = (vP_Jb_S+vP_Lb_S).E();
+    m_PVa_BoostT[t] = (vP_Ja_S+vP_La_S).P();
+    m_PVb_BoostT[t] = (vP_Jb_S+vP_Lb_S).P();
+
+    m_EJ_BoostT[t] = (vP_Ja_S+vP_Jb_S).E();
+    m_EL_BoostT[t] = (vP_La_S+vP_Lb_S).E();
+    m_PJ_BoostT[t] = (vP_Ja_S+vP_Jb_S).P();
+    m_PL_BoostT[t] = (vP_La_S+vP_Lb_S).P();
+
     // ISR related variables
     if(m_Njet_ISR[t] > 0){
       TVector3 vPTISR = S[t]->GetTransverseFourVector(*CM[t]).Vect();
