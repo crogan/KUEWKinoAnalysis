@@ -330,6 +330,10 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("event_skipped", &m_event_skipped);
   
   tree->Branch("weight", &m_weight);
+
+  tree->Branch("runnum", &m_runnum);
+  tree->Branch("luminum", &m_runnum);
+  tree->Branch("eventnum", &m_eventnum);
   
   tree->Branch("MET", &m_MET);
   tree->Branch("MET_phi", &m_MET_phi);
@@ -686,6 +690,10 @@ void ReducedNtuple<Base>::ClearVariables(){
 template <class Base>
 void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
 
+  if(AnalysisBase<Base>::IsData())
+    if(!AnalysisBase<Base>::IsGoodEvent())
+      return;
+  
   bool good_PV;
   TVector3 PV = AnalysisBase<Base>::GetPV(good_PV);
 
@@ -1193,6 +1201,10 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
   
 
   m_weight = AnalysisBase<Base>::GetEventWeight();
+
+  m_runnum   = AnalysisBase<Base>::GetRunNum();
+  m_luminum  = AnalysisBase<Base>::GetLumiNum();
+  m_eventnum = AnalysisBase<Base>::GetEventNum();
   
   m_MET     = ETMiss.Pt();
   m_MET_phi = ETMiss.Phi();
