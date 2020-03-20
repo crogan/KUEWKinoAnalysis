@@ -77,6 +77,11 @@ void AnalysisBase<Base>::AddJSONFile(const string& jsonfile){
 }
 
 template <class Base>
+void AnalysisBase<Base>::AddPUFolder(const string& pufold){
+  m_PUTool.BuildMap(pufold);
+}
+
+template <class Base>
 double AnalysisBase<Base>::DeltaPhiMin(const vector<TLorentzVector>& JETs, const TVector3& MET, int N){
   double dphimin = acos(-1);
   int Njet = JETs.size();
@@ -115,6 +120,21 @@ long AnalysisBase<Base>::GetEventNum(){
 
 template <class Base>
 double AnalysisBase<Base>::GetEventWeight(){
+  return 0;
+}
+
+template <class Base>
+double AnalysisBase<Base>::GetPUWeight(int updown){
+  return 0;
+}
+
+template <class Base>
+int AnalysisBase<Base>::GetNPV(){
+  return 0;
+}
+
+template <class Base>
+int AnalysisBase<Base>::GetNPUtrue(){
   return 0;
 }
 
@@ -581,6 +601,16 @@ long AnalysisBase<SUSYNANOBase>::GetEventNum(){
 }
 
 template <>
+int AnalysisBase<SUSYNANOBase>::GetNPV(){
+  return nOtherPV+1;
+}
+
+template <>
+int AnalysisBase<SUSYNANOBase>::GetNPUtrue(){
+  return Pileup_nPU;
+}
+
+template <>
 std::pair<int,int> AnalysisBase<SUSYNANOBase>::GetSUSYMasses(){
   int MP = 0;
   int MC = 0;
@@ -656,6 +686,20 @@ double AnalysisBase<SUSYNANOBase>::GetEventWeight(){
     return genWeight*m_IndexToXsec[m_SampleIndex]/m_IndexToNweight[m_SampleIndex]*m_NeventTool.GetFilterEff(m_DataSet,m_FileTag,luminosityBlock);
   } else
     return 0.;
+}
+
+template <>
+double AnalysisBase<SUSYNANOBase>::GetPUWeight(int updown){
+  if(IsData())
+    return 1.;
+
+  int year = 2016;
+  if(m_FileTag.find("17") != std::string::npos)
+    year = 2017;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+
+  return m_PUTool.GetWeight(Pileup_nPU, year, updown);
 }
 
 template <>
