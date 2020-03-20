@@ -26,10 +26,16 @@ private:
   
   // common variables for output tree
   double m_weight;
+  double m_PUweight;
+  double m_PUweight_up;
+  double m_PUweight_down;
 
   int m_runnum;
   int m_luminum;
   long m_eventnum;
+
+  int m_NPV;
+  int m_NPU;
   
   double m_MET;
   double m_MET_phi;

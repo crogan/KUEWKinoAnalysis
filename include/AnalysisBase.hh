@@ -12,6 +12,7 @@
 #include "NeventTool.hh"
 #include "XsecTool.hh"
 #include "JSONTool.hh"
+#include "PUTool.hh"
 
 using namespace std;
 
@@ -28,6 +29,7 @@ public:
   void AddEventCountFile(const string& rootfile);
   void AddFilterEffFile(const string& rootfile);
   void AddJSONFile(const string& jsonfile);
+  void AddPUFolder(const string& pufold);
   void DoSMS(){ m_DoSMS = true; }
   void DoData(){ m_IsData = true; }
 
@@ -39,6 +41,9 @@ public:
   virtual long GetEventNum();
   
   // analysis functions
+  virtual int GetNPV();
+  virtual int GetNPUtrue();
+  
   virtual TVector3 GetPV(bool& good);
   virtual TVector3 GetMET();
   virtual ParticleList GetJets();
@@ -70,6 +75,7 @@ protected:
   bool m_IsData;
   
   virtual double GetEventWeight();
+  virtual double GetPUWeight(int updown = 1);
   virtual double GetXsec();
   virtual bool   IsGoodEvent();
 
@@ -81,6 +87,7 @@ private:
   NeventTool m_NeventTool;
   XsecTool   m_XsecTool;
   JSONTool   m_JSONTool;
+  PUTool     m_PUTool;
 
   int m_SampleIndex;
   virtual int GetSampleIndex();

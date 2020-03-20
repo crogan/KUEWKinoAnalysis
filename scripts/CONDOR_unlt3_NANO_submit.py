@@ -46,7 +46,7 @@ def create_filelist(rootlist, dataset, filetag):
 
     return listlist
 
-def write_sh(srcfile,ifile,ofile,lfile,dataset,filetag,evtcnt,filtereff,json,i,n):
+def write_sh(srcfile,ifile,ofile,lfile,dataset,filetag,i,n):
     fsrc = open(srcfile,'w')
     fsrc.write('universe = vanilla \n')
     fsrc.write('executable = '+EXE+" \n")
@@ -62,15 +62,17 @@ def write_sh(srcfile,ifile,ofile,lfile,dataset,filetag,evtcnt,filtereff,json,i,n
         fsrc.write('--data ')
     fsrc.write('-dataset='+dataset+" ")
     fsrc.write('-filetag='+filetag+" ")
-    fsrc.write('-eventcount='+evtcnt+" ")
-    fsrc.write('-filtereff='+filtereff+" ")
+    fsrc.write('-eventcount='+EVTCNT+" ")
+    fsrc.write('-filtereff='+FILTEREFF+" ")
+    fsrc.write('-json='+JSON+" ")
+    fsrc.write('-pu='+PUFOLD+" ")
     splitstring = '-split=%d,%d \n' % (i+1,n)
     fsrc.write(splitstring)
     fsrc.write('output = '+lfile+"_out.log \n")
     fsrc.write('error = '+lfile+"_err.log \n")
     fsrc.write('log = '+lfile+"_log.log \n")
     fsrc.write('Requirements = (Machine != "red-node000.unl.edu")\n')
-    #fsrc.write('request_memory = 2 GB \n')
+    fsrc.write('request_memory = 4 GB \n')
     fsrc.write('queue \n')
     #fsrc.write('cd '+RUN_DIR+" \n")
     #fsrc.write('source ../RestFrames/setup_RestFrames.sh \n')
@@ -84,6 +86,7 @@ if __name__ == "__main__":
 
     argv_pos = 1
     DO_SMS = 0
+    DO_DATA = 0
   
     if '-q' in sys.argv:
         p = sys.argv.index('-q')
@@ -150,19 +153,25 @@ if __name__ == "__main__":
     os.system("mkdir -p "+logdir)
     os.system("mkdir -p "+srcdir)
 
-    # make EventCount file and folder
-    evtcntdir  = TARGET+"evtcnt/"
-    os.system("mkdir -p "+evtcntdir)
-    os.system("hadd "+evtcntdir+"EventCount.root root/EventCount/*.root")
-    evtcnt = evtcntdir+"EventCount.root"
+    # make config directory
+    config = TARGET+"config/"
+    os.system("mkdir -p "+config)
+
+    # make EventCount file
+    os.system("hadd "+config+"EventCount.root root/EventCount/*.root")
+    EVTCNT = config+"EventCount.root"
 
     # make FilterEff file 
-    os.system("hadd "+evtcntdir+"FilterEff.root root/FilterEff/*.root")
-    filtereff = evtcntdir+"FilterEff.root"
+    os.system("hadd "+config+"FilterEff.root root/FilterEff/*.root")
+    FILTEREFF = config+"FilterEff.root"
 
     # make json file
-    os.system("cat JSON/* > "+evtcntdir+"JSON.txt")
-    json = evtcntdir+"JSON.txt"
+    os.system("cat JSON/* > "+config+"JSON.txt")
+    JSON = config+"JSON.txt"
+
+    # copy PU root files
+    os.system("cp -r root/PU "+config+".")
+    PUFOLD = config+"PU/"
     
     # output root files
     ROOT = OUT+"/"+NAME+"/"
@@ -228,7 +237,7 @@ if __name__ == "__main__":
             name = filename.replace(".list",'')
             for i in range(SPLIT):
                 namei = name + "_%d" % i
-                write_sh(srcdir+namei+".sh",f,ROOT+dataset+"_"+filetag+"/"+namei+".root",logdir+namei,dataset,filetag,evtcnt,filtereff,json,i,SPLIT)
-                os.system('condor_submit '+srcdir+namei+".sh")
+                write_sh(srcdir+namei+".sh",f,ROOT+dataset+"_"+filetag+"/"+namei+".root",logdir+namei,dataset,filetag,i,SPLIT)
+                os.system('echo condor_submit '+srcdir+namei+".sh")
             
     

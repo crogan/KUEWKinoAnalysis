@@ -331,9 +331,16 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   
   tree->Branch("weight", &m_weight);
 
+  tree->Branch("PUweight", &m_PUweight);
+  tree->Branch("PUweight_up", &m_PUweight_up);
+  tree->Branch("PUweight_down", &m_PUweight_down);
+
   tree->Branch("runnum", &m_runnum);
   tree->Branch("luminum", &m_runnum);
   tree->Branch("eventnum", &m_eventnum);
+
+  tree->Branch("NPV", &m_NPV);
+  tree->Branch("NPU", &m_NPU);
   
   tree->Branch("MET", &m_MET);
   tree->Branch("MET_phi", &m_MET_phi);
@@ -1202,9 +1209,16 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
 
   m_weight = AnalysisBase<Base>::GetEventWeight();
 
+  m_PUweight = AnalysisBase<Base>::GetPUWeight();
+  m_PUweight_up = AnalysisBase<Base>::GetPUWeight(1);
+  m_PUweight_down = AnalysisBase<Base>::GetPUWeight(-1);
+  
   m_runnum   = AnalysisBase<Base>::GetRunNum();
   m_luminum  = AnalysisBase<Base>::GetLumiNum();
   m_eventnum = AnalysisBase<Base>::GetEventNum();
+
+  m_NPV = AnalysisBase<Base>::GetNPV();
+  m_NPU = AnalysisBase<Base>::GetNPUtrue();
   
   m_MET     = ETMiss.Pt();
   m_MET_phi = ETMiss.Phi();
