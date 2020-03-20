@@ -1245,7 +1245,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetSVs(const TVector3& PV){
       continue;
     if(SV_pt[i] >= 20.)
       continue;
-    if(fabs(SV_eta[i]) >= 2.)
+    if(fabs(SV_eta[i]) >= 2.4)
       continue;
     if(SV_dlenSig[i] <= 4.)
       continue;
