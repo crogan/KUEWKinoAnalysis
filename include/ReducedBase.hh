@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Sun Nov 24 11:57:21 2019 by ROOT version 6.14/04
-// from TTree KUAnalysis/KUAnalysis
-// found on file: /Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/Fall17_94X/TTJets_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_94X.root
+// Sat Jan 11 16:05:49 2020 by ROOT version 6.14/04
+// from TTree SMS_500_420/SMS_500_420
+// found on file: /Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_10_01_20/SMS-T2-4bd_genMET-80_mStop-500_mLSP-420_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root
 //////////////////////////////////////////////////////////
 
 #ifndef ReducedBase_h
@@ -55,6 +55,17 @@ public :
    vector<int>     *Index_lep;
    Int_t           Njet;
    Int_t           Nbjet;
+   vector<double>  *PT_jet;
+   vector<double>  *Eta_jet;
+   vector<double>  *Phi_jet;
+   vector<double>  *M_jet;
+   vector<double>  *Btag_jet;
+   vector<int>     *BtagID_jet;
+   vector<double>  *Flavor_jet;
+   vector<vector<int> > *index_jet_a;
+   vector<vector<int> > *index_jet_b;
+   vector<vector<int> > *index_jet_ISR;
+   vector<vector<int> > *index_jet_S;
    Int_t           NSV;
    vector<double>  *PT_SV;
    vector<double>  *Eta_SV;
@@ -160,6 +171,25 @@ public :
    vector<double>  *cosJb;
    vector<double>  *cosLa;
    vector<double>  *cosLb;
+   vector<double>  *MJ;
+   vector<double>  *ML;
+   vector<double>  *EJ;
+   vector<double>  *EL;
+   vector<double>  *PJ;
+   vector<double>  *PL;
+   vector<double>  *PX3;
+   vector<double>  *PX3_BoostT;
+   vector<double>  *MX3a_BoostT;
+   vector<double>  *MX3b_BoostT;
+   vector<double>  *PV_BoostT;
+   vector<double>  *EVa_BoostT;
+   vector<double>  *EVb_BoostT;
+   vector<double>  *PVa_BoostT;
+   vector<double>  *PVb_BoostT;
+   vector<double>  *EJ_BoostT;
+   vector<double>  *EL_BoostT;
+   vector<double>  *PJ_BoostT;
+   vector<double>  *PL_BoostT;
    vector<double>  *H11S;
    vector<double>  *H21S;
    vector<double>  *HT21S;
@@ -208,6 +238,17 @@ public :
    TBranch        *b_Index_lep;   //!
    TBranch        *b_Njet;   //!
    TBranch        *b_Nbjet;   //!
+   TBranch        *b_PT_jet;   //!
+   TBranch        *b_Eta_jet;   //!
+   TBranch        *b_Phi_jet;   //!
+   TBranch        *b_M_jet;   //!
+   TBranch        *b_Btag_jet;   //!
+   TBranch        *b_BtagID_jet;   //!
+   TBranch        *b_Flavor_jet;   //!
+   TBranch        *b_index_jet_a;   //!
+   TBranch        *b_index_jet_b;   //!
+   TBranch        *b_index_jet_ISR;   //!
+   TBranch        *b_index_jet_S;   //!
    TBranch        *b_NSV;   //!
    TBranch        *b_PT_SV;   //!
    TBranch        *b_Eta_SV;   //!
@@ -313,6 +354,25 @@ public :
    TBranch        *b_cosJb;   //!
    TBranch        *b_cosLa;   //!
    TBranch        *b_cosLb;   //!
+   TBranch        *b_MJ;   //!
+   TBranch        *b_ML;   //!
+   TBranch        *b_EJ;   //!
+   TBranch        *b_EL;   //!
+   TBranch        *b_PJ;   //!
+   TBranch        *b_PL;   //!
+   TBranch        *b_PX3;   //!
+   TBranch        *b_PX3_BoostT;   //!
+   TBranch        *b_MX3a_BoostT;   //!
+   TBranch        *b_MX3b_BoostT;   //!
+   TBranch        *b_PV_BoostT;   //!
+   TBranch        *b_EVa_BoostT;   //!
+   TBranch        *b_EVb_BoostT;   //!
+   TBranch        *b_PVa_BoostT;   //!
+   TBranch        *b_PVb_BoostT;   //!
+   TBranch        *b_EJ_BoostT;   //!
+   TBranch        *b_EL_BoostT;   //!
+   TBranch        *b_PJ_BoostT;   //!
+   TBranch        *b_PL_BoostT;   //!
    TBranch        *b_H11S;   //!
    TBranch        *b_H21S;   //!
    TBranch        *b_HT21S;   //!
@@ -344,17 +404,16 @@ public :
 
 #endif
 
-
 inline ReducedBase::ReducedBase(TTree *tree) : fChain(0) 
 {
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/Fall17_94X/TTJets_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_94X.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_10_01_20/SMS-T2-4bd_genMET-80_mStop-500_mLSP-420_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/Fall17_94X/TTJets_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_94X.root");
+         f = new TFile("/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_10_01_20/SMS-T2-4bd_genMET-80_mStop-500_mLSP-420_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
       }
-      f->GetObject("KUAnalysis",tree);
+      f->GetObject("SMS_500_420",tree);
 
    }
    Init(tree);
@@ -412,6 +471,17 @@ inline void ReducedBase::Init(TTree *tree)
    SIP3D_lep = 0;
    ID_lep = 0;
    Index_lep = 0;
+   PT_jet = 0;
+   Eta_jet = 0;
+   Phi_jet = 0;
+   M_jet = 0;
+   Btag_jet = 0;
+   BtagID_jet = 0;
+   Flavor_jet = 0;
+   index_jet_a = 0;
+   index_jet_b = 0;
+   index_jet_ISR = 0;
+   index_jet_S = 0;
    PT_SV = 0;
    Eta_SV = 0;
    Phi_SV = 0;
@@ -510,6 +580,25 @@ inline void ReducedBase::Init(TTree *tree)
    cosJb = 0;
    cosLa = 0;
    cosLb = 0;
+   MJ = 0;
+   ML = 0;
+   EJ = 0;
+   EL = 0;
+   PJ = 0;
+   PL = 0;
+   PX3 = 0;
+   PX3_BoostT = 0;
+   MX3a_BoostT = 0;
+   MX3b_BoostT = 0;
+   PV_BoostT = 0;
+   EVa_BoostT = 0;
+   EVb_BoostT = 0;
+   PVa_BoostT = 0;
+   PVb_BoostT = 0;
+   EJ_BoostT = 0;
+   EL_BoostT = 0;
+   PJ_BoostT = 0;
+   PL_BoostT = 0;
    H11S = 0;
    H21S = 0;
    HT21S = 0;
@@ -558,6 +647,17 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchAddress("Index_lep", &Index_lep, &b_Index_lep);
    fChain->SetBranchAddress("Njet", &Njet, &b_Njet);
    fChain->SetBranchAddress("Nbjet", &Nbjet, &b_Nbjet);
+   fChain->SetBranchAddress("PT_jet", &PT_jet, &b_PT_jet);
+   fChain->SetBranchAddress("Eta_jet", &Eta_jet, &b_Eta_jet);
+   fChain->SetBranchAddress("Phi_jet", &Phi_jet, &b_Phi_jet);
+   fChain->SetBranchAddress("M_jet", &M_jet, &b_M_jet);
+   fChain->SetBranchAddress("Btag_jet", &Btag_jet, &b_Btag_jet);
+   fChain->SetBranchAddress("BtagID_jet", &BtagID_jet, &b_BtagID_jet);
+   fChain->SetBranchAddress("Flavor_jet", &Flavor_jet, &b_Flavor_jet);
+   fChain->SetBranchAddress("index_jet_a", &index_jet_a, &b_index_jet_a);
+   fChain->SetBranchAddress("index_jet_b", &index_jet_b, &b_index_jet_b);
+   fChain->SetBranchAddress("index_jet_ISR", &index_jet_ISR, &b_index_jet_ISR);
+   fChain->SetBranchAddress("index_jet_S", &index_jet_S, &b_index_jet_S);
    fChain->SetBranchAddress("NSV", &NSV, &b_NSV);
    fChain->SetBranchAddress("PT_SV", &PT_SV, &b_PT_SV);
    fChain->SetBranchAddress("Eta_SV", &Eta_SV, &b_Eta_SV);
@@ -663,6 +763,25 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchAddress("cosJb", &cosJb, &b_cosJb);
    fChain->SetBranchAddress("cosLa", &cosLa, &b_cosLa);
    fChain->SetBranchAddress("cosLb", &cosLb, &b_cosLb);
+   fChain->SetBranchAddress("MJ", &MJ, &b_MJ);
+   fChain->SetBranchAddress("ML", &ML, &b_ML);
+   fChain->SetBranchAddress("EJ", &EJ, &b_EJ);
+   fChain->SetBranchAddress("EL", &EL, &b_EL);
+   fChain->SetBranchAddress("PJ", &PJ, &b_PJ);
+   fChain->SetBranchAddress("PL", &PL, &b_PL);
+   fChain->SetBranchAddress("PX3", &PX3, &b_PX3);
+   fChain->SetBranchAddress("PX3_BoostT", &PX3_BoostT, &b_PX3_BoostT);
+   fChain->SetBranchAddress("MX3a_BoostT", &MX3a_BoostT, &b_MX3a_BoostT);
+   fChain->SetBranchAddress("MX3b_BoostT", &MX3b_BoostT, &b_MX3b_BoostT);
+   fChain->SetBranchAddress("PV_BoostT", &PV_BoostT, &b_PV_BoostT);
+   fChain->SetBranchAddress("EVa_BoostT", &EVa_BoostT, &b_EVa_BoostT);
+   fChain->SetBranchAddress("EVb_BoostT", &EVb_BoostT, &b_EVb_BoostT);
+   fChain->SetBranchAddress("PVa_BoostT", &PVa_BoostT, &b_PVa_BoostT);
+   fChain->SetBranchAddress("PVb_BoostT", &PVb_BoostT, &b_PVb_BoostT);
+   fChain->SetBranchAddress("EJ_BoostT", &EJ_BoostT, &b_EJ_BoostT);
+   fChain->SetBranchAddress("EL_BoostT", &EL_BoostT, &b_EL_BoostT);
+   fChain->SetBranchAddress("PJ_BoostT", &PJ_BoostT, &b_PJ_BoostT);
+   fChain->SetBranchAddress("PL_BoostT", &PL_BoostT, &b_PL_BoostT);
    fChain->SetBranchAddress("H11S", &H11S, &b_H11S);
    fChain->SetBranchAddress("H21S", &H21S, &b_H21S);
    fChain->SetBranchAddress("HT21S", &HT21S, &b_HT21S);
