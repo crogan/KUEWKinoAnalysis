@@ -26,6 +26,10 @@ private:
   
   // common variables for output tree
   double m_weight;
+
+  int m_runnum;
+  int m_luminum;
+  long m_eventnum;
   
   double m_MET;
   double m_MET_phi;

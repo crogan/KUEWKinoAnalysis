@@ -46,7 +46,7 @@ def create_filelist(rootlist, dataset, filetag):
 
     return listlist
 
-def write_sh(srcfile,ifile,ofile,lfile,dataset,filetag,evtcnt,filtereff,i,n):
+def write_sh(srcfile,ifile,ofile,lfile,dataset,filetag,evtcnt,filtereff,json,i,n):
     fsrc = open(srcfile,'w')
     fsrc.write('universe = vanilla \n')
     fsrc.write('executable = '+EXE+" \n")
@@ -58,6 +58,8 @@ def write_sh(srcfile,ifile,ofile,lfile,dataset,filetag,evtcnt,filtereff,i,n):
     fsrc.write('-tree='+TREE+" ")
     if DO_SMS == 1:
         fsrc.write('--sms ')
+    if DO_DATA == 1:
+        fsrc.write('--data ')
     fsrc.write('-dataset='+dataset+" ")
     fsrc.write('-filetag='+filetag+" ")
     fsrc.write('-eventcount='+evtcnt+" ")
@@ -106,6 +108,9 @@ if __name__ == "__main__":
     if '--sms' in sys.argv:
         DO_SMS = 1
         argv_pos += 1
+    if '--data' in sys.argv:
+        DO_DATA = 1
+        argv_pos += 1
         
     
     if SPLIT <= 1:
@@ -115,6 +120,12 @@ if __name__ == "__main__":
     
     print "maxN is %d" % MAXN
     print "split is %d" % SPLIT
+
+    if DO_DATA:
+        print "Processing Data"
+
+    if DO_SMS:
+        print "Processing as SMS"
 
     # input sample list
     listfile = LIST
@@ -148,6 +159,10 @@ if __name__ == "__main__":
     # make FilterEff file 
     os.system("hadd "+evtcntdir+"FilterEff.root root/FilterEff/*.root")
     filtereff = evtcntdir+"FilterEff.root"
+
+    # make json file
+    os.system("cat JSON/* > "+evtcntdir+"JSON.txt")
+    json = evtcntdir+"JSON.txt"
     
     # output root files
     ROOT = OUT+"/"+NAME+"/"
@@ -213,7 +228,7 @@ if __name__ == "__main__":
             name = filename.replace(".list",'')
             for i in range(SPLIT):
                 namei = name + "_%d" % i
-                write_sh(srcdir+namei+".sh",f,ROOT+dataset+"_"+filetag+"/"+namei+".root",logdir+namei,dataset,filetag,evtcnt,filtereff,i,SPLIT)
+                write_sh(srcdir+namei+".sh",f,ROOT+dataset+"_"+filetag+"/"+namei+".root",logdir+namei,dataset,filetag,evtcnt,filtereff,json,i,SPLIT)
                 os.system('condor_submit '+srcdir+namei+".sh")
             
     

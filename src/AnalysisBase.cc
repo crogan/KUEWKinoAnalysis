@@ -18,6 +18,7 @@ AnalysisBase<Base>::AnalysisBase(TTree* tree)
   m_Nsample = 0;
   m_SampleIndex = 0;
   m_DoSMS = false;
+  m_IsData = false;
 }
 
 template <class Base>
@@ -71,6 +72,11 @@ void AnalysisBase<Base>::AddFilterEffFile(const string& rootfile){
 }
 
 template <class Base>
+void AnalysisBase<Base>::AddJSONFile(const string& jsonfile){
+  m_JSONTool.BuildMap(jsonfile);
+}
+
+template <class Base>
 double AnalysisBase<Base>::DeltaPhiMin(const vector<TLorentzVector>& JETs, const TVector3& MET, int N){
   double dphimin = acos(-1);
   int Njet = JETs.size();
@@ -93,8 +99,28 @@ double AnalysisBase<Base>::DeltaPhiMin(const vector<pair<TLorentzVector, bool> >
 }
 
 template <class Base>
+int AnalysisBase<Base>::GetRunNum(){
+  return 0;
+}
+
+template <class Base>
+int AnalysisBase<Base>::GetLumiNum(){
+  return 0;
+}
+
+template <class Base>
+long AnalysisBase<Base>::GetEventNum(){
+  return 0;
+}
+
+template <class Base>
 double AnalysisBase<Base>::GetEventWeight(){
   return 0;
+}
+
+template <class Base>
+bool AnalysisBase<Base>::IsGoodEvent(){
+  return false;
 }
 
 template <class Base>
@@ -540,6 +566,21 @@ ParticleList AnalysisBase<StopNtupleTree>::GetGenSparticles(){
 /////////////////////////////////////////////////
 
 template <>
+int AnalysisBase<SUSYNANOBase>::GetRunNum(){
+  return run;
+}
+
+template <>
+int AnalysisBase<SUSYNANOBase>::GetLumiNum(){
+  return luminosityBlock;
+}
+
+template <>
+long AnalysisBase<SUSYNANOBase>::GetEventNum(){
+  return event;
+}
+
+template <>
 std::pair<int,int> AnalysisBase<SUSYNANOBase>::GetSUSYMasses(){
   int MP = 0;
   int MC = 0;
@@ -605,6 +646,9 @@ int AnalysisBase<SUSYNANOBase>::GetSampleIndex(){
 
 template <>
 double AnalysisBase<SUSYNANOBase>::GetEventWeight(){
+  if(IsData())
+    return 1.;
+
   if(m_IndexToNweight[m_SampleIndex] > 0.){
     if(!m_DoSMS)
       return genWeight*m_IndexToXsec[m_SampleIndex]/m_IndexToNweight[m_SampleIndex];
@@ -612,6 +656,11 @@ double AnalysisBase<SUSYNANOBase>::GetEventWeight(){
     return genWeight*m_IndexToXsec[m_SampleIndex]/m_IndexToNweight[m_SampleIndex]*m_NeventTool.GetFilterEff(m_DataSet,m_FileTag,luminosityBlock);
   } else
     return 0.;
+}
+
+template <>
+bool AnalysisBase<SUSYNANOBase>::IsGoodEvent(){
+  return m_JSONTool.IsGood(run, luminosityBlock);
 }
 
 template <>

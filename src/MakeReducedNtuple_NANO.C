@@ -38,12 +38,15 @@ int main(int argc, char* argv[]) {
   char FileTag[400];
   char EventCount[400];
   char FilterEff[400];
+  char JSONFile[400];
 
   bool DO_FILE = false;
   bool DO_LIST = false;
   bool DO_FOLDER = false;
   bool DO_TREE = false;
   bool DO_SMS = false;
+  bool DO_JSON = false;
+  bool IS_DATA = false;
   
   int ICHUNK = 1;
   int NCHUNK = 1;
@@ -74,12 +77,17 @@ int main(int argc, char* argv[]) {
       sscanf(argv[i],"-tree=%s",  TreeName);
       DO_TREE = true;
     }
+    if (strncmp(argv[i],"-json",5)==0){
+      sscanf(argv[i],"-json=%s",  JSONFile);
+      DO_JSON = true;
+    }
     if (strncmp(argv[i],"-ofile",6)==0) sscanf(argv[i],"-ofile=%s", outputFileName);
     if (strncmp(argv[i],"-dataset",8)==0)   sscanf(argv[i],"-dataset=%s", DataSet);
     if (strncmp(argv[i],"-filetag",8)==0)   sscanf(argv[i],"-filetag=%s", FileTag);
     if (strncmp(argv[i],"-eventcount",11)==0)   sscanf(argv[i],"-eventcount=%s", EventCount);
     if (strncmp(argv[i],"-filtereff",11)==0)   sscanf(argv[i],"-filtereff=%s", FilterEff);
     if (strncmp(argv[i],"--sms",5)==0)  DO_SMS = true;
+    if (strncmp(argv[i],"--data",6)==0)  IS_DATA = true;
 
     if(strncmp(argv[i],"-split",6)==0){
       sscanf(argv[i],"-split=%d,%d", &ICHUNK, &NCHUNK);
@@ -144,9 +152,14 @@ int main(int argc, char* argv[]) {
   ntuple->AddLabels(string(DataSet),string(FileTag));
   ntuple->AddEventCountFile(string(EventCount));
   ntuple->AddFilterEffFile(string(FilterEff));
+  if(DO_JSON)
+    ntuple->AddJSONFile(string(JSONFile));
 
   if(DO_SMS)
     ntuple->DoSMS();
+
+  if(IS_DATA)
+    ntuple->DoData();
 
   cout << "writing output with ichunk=" << ICHUNK << " nchunk=" << NCHUNK << endl;
   ntuple->WriteNtuple(string(outputFileName), ICHUNK, NCHUNK);

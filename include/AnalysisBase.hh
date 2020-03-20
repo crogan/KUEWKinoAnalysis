@@ -11,6 +11,7 @@
 
 #include "NeventTool.hh"
 #include "XsecTool.hh"
+#include "JSONTool.hh"
 
 using namespace std;
 
@@ -26,10 +27,17 @@ public:
   void AddLabels(const string& dataset, const string& filetag);
   void AddEventCountFile(const string& rootfile);
   void AddFilterEffFile(const string& rootfile);
+  void AddJSONFile(const string& jsonfile);
   void DoSMS(){ m_DoSMS = true; }
+  void DoData(){ m_IsData = true; }
 
   string GetEntry(int entry);
 
+  // event functions
+  virtual int GetRunNum();
+  virtual int GetLumiNum();
+  virtual long GetEventNum();
+  
   // analysis functions
   virtual TVector3 GetPV(bool& good);
   virtual TVector3 GetMET();
@@ -53,14 +61,17 @@ public:
   virtual std::pair<int,int> GetSUSYMasses();
 
   bool IsSMS(){ return m_DoSMS; }
+  bool IsData(){ return m_IsData; }
   string GetDataSet(){ return m_DataSet; }
   string GetFileTag(){ return m_FileTag; }
   
 protected:
   bool m_DoSMS;
+  bool m_IsData;
   
   virtual double GetEventWeight();
   virtual double GetXsec();
+  virtual bool   IsGoodEvent();
 
   string m_DataSet;
   string m_FileTag;
@@ -69,6 +80,7 @@ private:
 
   NeventTool m_NeventTool;
   XsecTool   m_XsecTool;
+  JSONTool   m_JSONTool;
 
   int m_SampleIndex;
   virtual int GetSampleIndex();
