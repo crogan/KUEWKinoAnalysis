@@ -37,6 +37,9 @@ public:
   void DoSMS(){ m_DoSMS = true; }
   void DoData(){ m_IsData = true; }
 
+  void InitializeHistograms(vector<TH1D*>& histos);
+  void BookHistograms(vector<TH1D*>& histos);
+
   string GetEntry(int entry);
 
   // event functions
