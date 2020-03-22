@@ -87,6 +87,12 @@ void AnalysisBase<Base>::AddBtagFolder(const string& btagfold){
 }
 
 template <class Base>
+void AnalysisBase<Base>::InitializeHistograms(vector<TH1D*>& histos){}
+
+template <class Base>
+void AnalysisBase<Base>::BookHistograms(vector<TH1D*>& histos){}
+
+template <class Base>
 double AnalysisBase<Base>::DeltaPhiMin(const vector<TLorentzVector>& JETs, const TVector3& MET, int N){
   double dphimin = acos(-1);
   int Njet = JETs.size();
@@ -805,6 +811,89 @@ TVector3 AnalysisBase<SUSYNANOBase>::GetPV(bool& good){
   PV.SetXYZ(PV_x,PV_y,PV_z);
   
   return PV;
+}
+
+template <>
+void AnalysisBase<SUSYNANOBase>::InitializeHistograms(vector<TH1D*>& histos){
+  // nPU
+  TH1D* h_nPU = new TH1D("hist_NPU", "hist_NPU", 75, 0., 75.);
+  histos.push_back(h_nPU);
+
+  // Btag efficiencies
+  vector<double> bin_edges;
+  bin_edges.push_back(20.);
+  bin_edges.push_back(30.);
+  bin_edges.push_back(40.);
+  bin_edges.push_back(50.);
+  bin_edges.push_back(60.);
+  bin_edges.push_back(70.);
+  bin_edges.push_back(85.);
+  bin_edges.push_back(100.);
+  bin_edges.push_back(120.);
+  bin_edges.push_back(140.);
+  bin_edges.push_back(170.);
+  bin_edges.push_back(200.);
+  bin_edges.push_back(250.);
+  bin_edges.push_back(300.);
+  bin_edges.push_back(400.);
+  bin_edges.push_back(600.);
+  bin_edges.push_back(800.);
+  bin_edges.push_back(1000.);
+
+  TH1D* h_btag[3][2]; // [flavor][den/num]
+  for(int i = 0; i < 3; i++){
+    for(int j = 0; j < 2; j++){
+      h_btag[i][j] = (TH1D*) new TH1D(Form("hist_btag_flavor%d_%s", i, (j == 0 ? "den" : "num")),
+				      Form("hist_btag_flavor%d_%s", i, (j == 0 ? "den" : "num")),
+				      17, &bin_edges[0]);
+      histos.push_back(h_btag[i][j]);
+    }
+  }
+}
+
+template <>
+void AnalysisBase<SUSYNANOBase>::BookHistograms(vector<TH1D*>& histos){
+  int year = 2017;
+  if(m_FileTag.find("16") != std::string::npos)
+    year = 2016;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+
+  int ihist = 0;
+
+  // nPU
+  histos[ihist]->Fill(GetNPUtrue());
+
+  ihist++;
+
+  // Btag efficiencies
+  int Njet = nJet;
+  for(int i = 0; i < Njet; i++){
+    if(Jet_pt[i] < 20. || fabs(Jet_eta[i] > 2.4))
+      continue;
+
+    bool btag = false;
+    if(year == 2016)
+      if(Jet_btagDeepFlavB[i] > 0.3093)
+	btag = true;
+    if(year == 2017)
+      if(Jet_btagDeepFlavB[i] > 0.3033)
+	btag = true;
+    if(year == 2018)
+      if(Jet_btagDeepFlavB[i] > 0.2770)
+	btag = true;
+
+    int flavor;
+    if(abs(Jet_partonFlavour[i]) == 5)
+      flavor = 0;
+    else if(abs(Jet_partonFlavour[i]) == 4)
+      flavor = 1;
+    else
+      flavor = 2;
+
+    histos[ihist+2*flavor]->Fill(Jet_pt[i]);
+    if(btag) histos[ihist+2*flavor+1]->Fill(Jet_pt[i]);
+  }
 }
 
 template <>

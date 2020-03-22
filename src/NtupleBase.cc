@@ -46,6 +46,10 @@ void NtupleBase<Base>::WriteNtuple(const string& filename, int ichunk, int nchun
     N0 = (ichunk-1)*N1;
     N1 = N0 + N1;
   }
+
+  // Initialize Histogram Booking
+  vector<TH1D*> histos;
+  AnalysisBase<Base>::InitializeHistograms(histos);
   
   cout << "looping between " << N0 << " " << N1 << endl;
   for(Long64_t i = N0; i < N1 && i < NTOT; i++){
@@ -65,6 +69,8 @@ void NtupleBase<Base>::WriteNtuple(const string& filename, int ichunk, int nchun
    
     outfile->cd();
     FillOutputTree(m_Label2Tree[sample]);
+
+    AnalysisBase<Base>::BookHistograms(histos);
 
     // event count bookkeeping
     if(AnalysisBase<Base>::IsSMS())
@@ -111,12 +117,20 @@ void NtupleBase<Base>::WriteNtuple(const string& filename, int ichunk, int nchun
   }
   tout->Write("",TObject::kOverwrite);
   delete tout;
+
+  outfile->mkdir("Histograms");
+  outfile->cd("Histograms");
+  int Nhisto = histos.size();
+  for(int i = 0; i < Nhisto; i++)
+    histos[i]->Write("", TObject::kOverwrite);
   
   outfile->Close();
   delete outfile;
 
   m_Trees.clear();
   m_Label2Tree.clear();
+
+  
 }
 
 template class NtupleBase<StopNtupleTree>;
