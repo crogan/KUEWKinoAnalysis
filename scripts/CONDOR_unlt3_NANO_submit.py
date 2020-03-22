@@ -66,6 +66,7 @@ def write_sh(srcfile,ifile,ofile,lfile,dataset,filetag,i,n):
     fsrc.write('-filtereff='+FILTEREFF+" ")
     fsrc.write('-json='+JSON+" ")
     fsrc.write('-pu='+PUFOLD+" ")
+    fsrc.write('-btag='+BTAGFOLD+" ")
     splitstring = '-split=%d,%d \n' % (i+1,n)
     fsrc.write(splitstring)
     fsrc.write('output = '+lfile+"_out.log \n")
@@ -172,6 +173,11 @@ if __name__ == "__main__":
     # copy PU root files
     os.system("cp -r root/PU "+config+".")
     PUFOLD = config+"PU/"
+
+    # copy BTAG SF files
+    os.system("cp -r root/BtagSF "+config+".")
+    os.system("cp -r csv/BtagSF/* "+config+"BtagSF/.")
+    BTAGFOLD = config+"BtagSF/"
     
     # output root files
     ROOT = OUT+"/"+NAME+"/"

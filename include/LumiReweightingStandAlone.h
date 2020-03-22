@@ -124,6 +124,7 @@ namespace reweight {
           dataFileName_(dataFile),
           GenHistName_(GenHistName),
           DataHistName_(DataHistName) {
+	    
       generatedFile_ = new TFile(generatedFileName_.c_str());  //MC distribution
       dataFile_ = new TFile(dataFileName_.c_str());            //Data distribution
 
@@ -135,9 +136,8 @@ namespace reweight {
       Data_distr_->Scale(1.0 / Data_distr_->Integral());
       MC_distr_->Scale(1.0 / MC_distr_->Integral());
 
-      weights_ = new TH1F(*(Data_distr_));
-
       // MC * data/MC = data, so the weights are data/MC:
+      weights_ = new TH1F(*(Data_distr_));
 
       weights_->SetName("lumiWeights");
 
@@ -145,20 +145,20 @@ namespace reweight {
 
       weights_->Divide(den);  // so now the average weight should be 1.0
 
-      std::cout << " Lumi/Pileup Reweighting: Computed Weights per In-Time Nint " << std::endl;
+      //std::cout << " Lumi/Pileup Reweighting: Computed Weights per In-Time Nint " << std::endl;
 
       int NBins = weights_->GetNbinsX();
 
       for (int ibin = 1; ibin < NBins + 1; ++ibin) {
-        std::cout << "   " << ibin - 1 << " " << weights_->GetBinContent(ibin) << std::endl;
+        //std::cout << "   " << ibin - 1 << " " << weights_->GetBinContent(ibin) << std::endl;
       }
 
       weightOOT_init();
 
       FirstWarning_ = true;
 
-      generatedFile_->Close();
-      dataFile_->Close();
+      /* generatedFile_->Close(); */
+      /* dataFile_->Close(); */
     }
 
     LumiReWeighting(const std::vector<float>& MC_distr, const std::vector<float>& Lumi_distr) {
@@ -203,10 +203,10 @@ namespace reweight {
 
       weights_->Divide(den);  // so now the average weight should be 1.0
 
-      std::cout << " Lumi/Pileup Reweighting: Computed Weights per In-Time Nint " << std::endl;
+      //std::cout << " Lumi/Pileup Reweighting: Computed Weights per In-Time Nint " << std::endl;
 
       for (int ibin = 1; ibin < NBins + 1; ++ibin) {
-        std::cout << "   " << ibin - 1 << " " << weights_->GetBinContent(ibin) << std::endl;
+        //std::cout << "   " << ibin - 1 << " " << weights_->GetBinContent(ibin) << std::endl;
       }
 
       weightOOT_init();
@@ -224,8 +224,8 @@ namespace reweight {
       using std::min;
 
       if (MC_distr_->GetEntries() == 0) {
-        std::cout << " MC and Data distributions are not initialized! You must call the LumiReWeighting constructor. "
-                  << std::endl;
+        //std::cout << " MC and Data distributions are not initialized! You must call the LumiReWeighting constructor. "
+        //          << std::endl;
       }
 
       // arrays for storing number of interactions
@@ -274,9 +274,9 @@ namespace reweight {
         mean = double(xi);
 
         if (mean < 0.) {
-          std::cout << "LumiReweighting:BadInputValue"
-                    << " Your histogram generates MC luminosity values less than zero!"
-                    << " Please Check.  Terminating." << std::endl;
+          //std::cout << "LumiReweighting:BadInputValue"
+          //          << " Your histogram generates MC luminosity values less than zero!"
+          //          << " Please Check.  Terminating." << std::endl;
         }
 
         if (mean == 0.) {

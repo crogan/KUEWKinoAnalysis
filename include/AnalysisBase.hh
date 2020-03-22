@@ -13,6 +13,9 @@
 #include "XsecTool.hh"
 #include "JSONTool.hh"
 #include "PUTool.hh"
+#include "BtagSFTool.hh"
+
+#include "Particle.hh"
 
 using namespace std;
 
@@ -30,6 +33,7 @@ public:
   void AddFilterEffFile(const string& rootfile);
   void AddJSONFile(const string& jsonfile);
   void AddPUFolder(const string& pufold);
+  void AddBtagFolder(const string& btagfold);
   void DoSMS(){ m_DoSMS = true; }
   void DoData(){ m_IsData = true; }
 
@@ -75,7 +79,8 @@ protected:
   bool m_IsData;
   
   virtual double GetEventWeight();
-  virtual double GetPUWeight(int updown = 1);
+  virtual double GetPUWeight(int updown = 0);
+  virtual double GetBtagSFWeight(const ParticleList& jets, int updown = 0, ParticleIDType tag = kMedium);
   virtual double GetXsec();
   virtual bool   IsGoodEvent();
 
@@ -88,6 +93,7 @@ private:
   XsecTool   m_XsecTool;
   JSONTool   m_JSONTool;
   PUTool     m_PUTool;
+  BtagSFTool m_BtagSFTool;
 
   int m_SampleIndex;
   virtual int GetSampleIndex();

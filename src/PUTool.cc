@@ -1,10 +1,6 @@
 #include "PUTool.hh"
 
 void PUTool::BuildMap(const std::string& pufolder){
-  LumiReWeighting* m_PU2016[3];
-  LumiReWeighting* m_PU2017[3];
-  LumiReWeighting* m_PU2018[3];
-
   for(int i = 0; i < 3; i++){
     if(m_PU2016[i] != nullptr)
       delete m_PU2016[i];
@@ -50,12 +46,12 @@ double PUTool::GetWeight(int NPV, int year, int updown){
     if(m_PU2016[updown+1] != nullptr)
       return m_PU2016[updown+1]->weight(NPV);
   if(year == 2017)
-    if(m_PU2016[updown+1] != nullptr)
+    if(m_PU2017[updown+1] != nullptr)
       return m_PU2017[updown+1]->weight(NPV);
   if(year == 2018)
-    if(m_PU2016[updown+1] != nullptr)
+    if(m_PU2018[updown+1] != nullptr)
       return m_PU2018[updown+1]->weight(NPV);
-
+   
   return 1.;
 }
 
