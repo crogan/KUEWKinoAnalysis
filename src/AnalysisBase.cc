@@ -82,6 +82,11 @@ void AnalysisBase<Base>::AddPUFolder(const string& pufold){
 }
 
 template <class Base>
+void AnalysisBase<Base>::AddBtagFolder(const string& btagfold){
+  m_BtagSFTool.BuildMap(btagfold);
+}
+
+template <class Base>
 double AnalysisBase<Base>::DeltaPhiMin(const vector<TLorentzVector>& JETs, const TVector3& MET, int N){
   double dphimin = acos(-1);
   int Njet = JETs.size();
@@ -125,6 +130,11 @@ double AnalysisBase<Base>::GetEventWeight(){
 
 template <class Base>
 double AnalysisBase<Base>::GetPUWeight(int updown){
+  return 0;
+}
+
+template <class Base>
+double AnalysisBase<Base>::GetBtagSFWeight(const ParticleList& jets, int updown, ParticleIDType tag){
   return 0;
 }
 
@@ -700,6 +710,50 @@ double AnalysisBase<SUSYNANOBase>::GetPUWeight(int updown){
     year = 2018;
 
   return m_PUTool.GetWeight(Pileup_nPU, year, updown);
+}
+
+template <>
+double AnalysisBase<SUSYNANOBase>::GetBtagSFWeight(const ParticleList& jets, int updown, ParticleIDType tag){
+  if(IsData())
+    return 1.;
+
+  int year = 2016;
+  if(m_FileTag.find("17") != std::string::npos)
+    year = 2017;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+
+  int Njet = jets.size();
+  int iflavor;
+  double EFF, SF;
+
+  double probMC   = 1.;
+  double probDATA = 1.;
+  
+  for(int i = 0; i < Njet; i++){
+    if(abs(jets[i].PDGID()) == 5)
+      iflavor = 0;
+    else if(abs(jets[i].PDGID()) == 4)
+      iflavor = 1;
+    else
+      iflavor = 2;
+
+    EFF = m_BtagSFTool.EFF(jets[i].Pt(), year, iflavor);
+    SF  = m_BtagSFTool.SF(jets[i].Pt(), year, iflavor, updown);
+
+    if(jets[i].BtagID() >= tag){
+      probMC   *= EFF;
+      probDATA *= SF*EFF;
+    } else {
+      probMC   *= (1.-EFF);
+      probDATA *= (1.-SF*EFF);
+    }
+  }
+
+  if(probMC <= 0. || probDATA <= 0.)
+    return 1.;
+
+  return probDATA/probMC;
 }
 
 template <>

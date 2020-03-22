@@ -335,6 +335,10 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("PUweight_up", &m_PUweight_up);
   tree->Branch("PUweight_down", &m_PUweight_down);
 
+  tree->Branch("m_BtagSFweight", &m_BtagSFweight);
+  tree->Branch("m_BtagSFweight_up", &m_BtagSFweight_up);
+  tree->Branch("m_BtagSFweight_down", &m_BtagSFweight_down);
+
   tree->Branch("runnum", &m_runnum);
   tree->Branch("luminum", &m_runnum);
   tree->Branch("eventnum", &m_eventnum);
@@ -696,7 +700,6 @@ void ReducedNtuple<Base>::ClearVariables(){
 
 template <class Base>
 void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
-
   if(AnalysisBase<Base>::IsData())
     if(!AnalysisBase<Base>::IsGoodEvent())
       return;
@@ -711,7 +714,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
 
   if(ETMiss.Mag() < 100.)
     return;
-
+ 
   ClearVariables();
 
   ParticleList Muons = AnalysisBase<Base>::GetMuons();
@@ -741,7 +744,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
       tree->Fill();
     return;
   }
-
+  
   m_Njet = Jets.size();
   
   ParticleList BJets;
@@ -1209,9 +1212,13 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
 
   m_weight = AnalysisBase<Base>::GetEventWeight();
 
-  m_PUweight = AnalysisBase<Base>::GetPUWeight();
+  m_PUweight = AnalysisBase<Base>::GetPUWeight(0);
   m_PUweight_up = AnalysisBase<Base>::GetPUWeight(1);
   m_PUweight_down = AnalysisBase<Base>::GetPUWeight(-1);
+
+  m_BtagSFweight = AnalysisBase<Base>::GetBtagSFWeight(Jets, 0, kMedium);
+  m_BtagSFweight_up = AnalysisBase<Base>::GetBtagSFWeight(Jets, 1, kMedium);
+  m_BtagSFweight_down = AnalysisBase<Base>::GetBtagSFWeight(Jets, -1, kMedium);
   
   m_runnum   = AnalysisBase<Base>::GetRunNum();
   m_luminum  = AnalysisBase<Base>::GetLumiNum();

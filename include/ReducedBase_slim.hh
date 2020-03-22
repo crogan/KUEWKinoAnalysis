@@ -835,9 +835,10 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchStatus("cosX*",1);
    // fChain->SetBranchStatus("index*",1);
    // fChain->SetBranchStatus("*jet",1);
-   fChain->SetBranchStatus("Eta_SV",1);
-   fChain->SetBranchStatus("Phi_SV",1);
-   fChain->SetBranchStatus("index_SV_b",1);
+   // fChain->SetBranchStatus("Eta_SV",1);
+   // fChain->SetBranchStatus("Phi_SV",1);
+   // fChain->SetBranchStatus("index_SV_b",1);
+    fChain->SetBranchStatus("*jet",1);
    
 }
 
