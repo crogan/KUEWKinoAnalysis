@@ -1149,12 +1149,8 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET){
      if(Jet_pt[i] < 15.)
        continue;
      if(Jet_jetId[i] < 3){
-       if(Jet_chEmEF[i] > 0.8 || Jet_muEF[i] > 0.8)
-	 continue;
-       else {
-	 passID = false;
-	 break;
-       }
+       passID = false;
+       break;
      }
 
      Particle jet;
