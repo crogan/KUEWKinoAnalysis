@@ -145,6 +145,10 @@ void Plot_1D_stack(){
   // g_Xmin = 0.0;
   // g_Xmax = 1500.;
   // units_per_bin = 50.;
+  g_Xname = "MET";
+  g_Xmin = 0;
+  g_Xmax = 4.;
+  g_NX = 5;
 
   //pTlep
   // g_Xmin = 0.0;

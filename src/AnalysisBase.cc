@@ -13,20 +13,80 @@ using namespace std;
 
 template <class Base>
 AnalysisBase<Base>::AnalysisBase(TTree* tree)
-  : Base(tree)
+  : Base(tree), m_Systematics(true)
 {
   m_Nsample = 0;
   m_SampleIndex = 0;
   m_DoSMS = false;
+  m_IsData = false;
+  m_IsFastSim = false;
+
+  InitializeSystematics();
+  m_CurSys = &Systematic::Default();
 }
 
 template <class Base>
 AnalysisBase<Base>::~AnalysisBase() {}
 
 template <class Base>
+void AnalysisBase<Base>::SetSystematic(const Systematic& sys){
+  m_CurSys = &sys;
+}
+
+template <class Base>
+const Systematic& AnalysisBase<Base>::CurrentSystematic() const {
+  return *m_CurSys;
+}
+
+template <class Base>
+void AnalysisBase<Base>::AddSystematics(){
+  m_Systematics.Add(m_DefaultSys);
+}
+
+template <class Base>
+void AnalysisBase<Base>::AddJESSystematics(){
+  m_Systematics.Add(m_JESSys);
+}
+
+template <class Base>
+void AnalysisBase<Base>::AddMETSystematics(){
+  m_Systematics.Add(m_METSys);
+}
+
+template <class Base>
+void AnalysisBase<Base>::AddEESSystematics(){
+  m_Systematics.Add(m_EESSys);
+}
+
+template <class Base>
+void AnalysisBase<Base>::AddMMSSystematics(){
+  m_Systematics.Add(m_MMSSys);
+}
+
+template <class Base>
+void AnalysisBase<Base>::DoSMS(){
+  m_DoSMS = true;
+  m_IsData = false;
+}
+
+template <class Base>
+void AnalysisBase<Base>::DoData(){
+  m_IsData = true;
+  m_IsFastSim = false;
+  m_DoSMS = false;
+}
+
+template <class Base>
+void AnalysisBase<Base>::DoFastSim(){
+  m_IsFastSim = true;
+  m_IsData = false;
+}
+
+template <class Base>
 string AnalysisBase<Base>::GetEntry(int entry){
   if (!Base::fChain) return 0;
-  
+
+  Base::ClearEvent();
   Base::fChain->GetEntry(entry);
   m_SampleIndex = GetSampleIndex();
 
@@ -66,6 +126,45 @@ void AnalysisBase<Base>::AddEventCountFile(const string& rootfile){
 }
 
 template <class Base>
+void AnalysisBase<Base>::AddFilterEffFile(const string& rootfile){
+  m_NeventTool.BuildFilterEffMap(rootfile);
+}
+
+template <class Base>
+void AnalysisBase<Base>::AddJSONFile(const string& jsonfile){
+  m_JSONTool.BuildMap(jsonfile);
+}
+
+template <class Base>
+void AnalysisBase<Base>::AddPUFolder(const string& pufold){
+  m_PUTool.BuildMap(pufold);
+}
+
+template <class Base>
+void AnalysisBase<Base>::AddBtagFolder(const string& btagfold){
+  m_BtagSFTool.BuildMap(btagfold);
+}
+
+template <class Base>
+void AnalysisBase<Base>::AddJMEFolder(const string& jmefold){
+  m_JMETool.BuildMap(jmefold);
+}
+
+template <class Base>
+void AnalysisBase<Base>::AddSVDiscrFile(const string& svfile){
+  m_SVDiscrTool.CreateNN(svfile);
+}
+
+template <class Base>
+void AnalysisBase<Base>::InitializeHistograms(vector<TH1D*>& histos){}
+
+template <class Base>
+void AnalysisBase<Base>::BookHistograms(vector<TH1D*>& histos){}
+
+template <class Base>
+void AnalysisBase<Base>::InitializeSystematics(){}
+
+template <class Base>
 double AnalysisBase<Base>::DeltaPhiMin(const vector<TLorentzVector>& JETs, const TVector3& MET, int N){
   double dphimin = acos(-1);
   int Njet = JETs.size();
@@ -88,8 +187,48 @@ double AnalysisBase<Base>::DeltaPhiMin(const vector<pair<TLorentzVector, bool> >
 }
 
 template <class Base>
+int AnalysisBase<Base>::GetRunNum(){
+  return 0;
+}
+
+template <class Base>
+int AnalysisBase<Base>::GetLumiNum(){
+  return 0;
+}
+
+template <class Base>
+long AnalysisBase<Base>::GetEventNum(){
+  return 0;
+}
+
+template <class Base>
 double AnalysisBase<Base>::GetEventWeight(){
   return 0;
+}
+
+template <class Base>
+double AnalysisBase<Base>::GetPUWeight(int updown){
+  return 0;
+}
+
+template <class Base>
+double AnalysisBase<Base>::GetBtagSFWeight(const ParticleList& jets, int updown, ParticleIDType tag){
+  return 0;
+}
+
+template <class Base>
+int AnalysisBase<Base>::GetNPV(){
+  return 0;
+}
+
+template <class Base>
+int AnalysisBase<Base>::GetNPUtrue(){
+  return 0;
+}
+
+template <class Base>
+bool AnalysisBase<Base>::IsGoodEvent(){
+  return false;
 }
 
 template <class Base>
@@ -104,7 +243,27 @@ TVector3 AnalysisBase<Base>::GetPV(bool& good){
 }
 
 template <class Base>
+bool AnalysisBase<Base>::GetMETtrigger(){
+  return false;
+}
+
+template <class Base>
+bool AnalysisBase<Base>::GetMETHTtrigger(){
+  return false;
+}
+
+template <class Base>
+bool AnalysisBase<Base>::GetMETORtrigger(){
+  return false;
+}
+
+template <class Base>
 ParticleList AnalysisBase<Base>::GetSVs(const TVector3& PV){
+  return ParticleList();
+}
+
+template <class Base>
+ParticleList AnalysisBase<Base>::GetJetsMET(TVector3& MET){
   return ParticleList();
 }
 
@@ -535,6 +694,109 @@ ParticleList AnalysisBase<StopNtupleTree>::GetGenSparticles(){
 /////////////////////////////////////////////////
 
 template <>
+int AnalysisBase<SUSYNANOBase>::GetRunNum(){
+  return run;
+}
+
+template <>
+int AnalysisBase<SUSYNANOBase>::GetLumiNum(){
+  return luminosityBlock;
+}
+
+template <>
+long AnalysisBase<SUSYNANOBase>::GetEventNum(){
+  return event;
+}
+
+template <>
+int AnalysisBase<SUSYNANOBase>::GetNPV(){
+  return nOtherPV+1;
+}
+
+template <>
+int AnalysisBase<SUSYNANOBase>::GetNPUtrue(){
+  return Pileup_nPU;
+}
+
+template <>
+bool AnalysisBase<SUSYNANOBase>::GetMETtrigger(){
+  int year = 2016;
+  if(m_FileTag.find("17") != std::string::npos)
+    year = 2017;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+
+  if(year == 2016)
+    return (HLT_PFMET120_PFMHT120_IDTight ||
+	    HLT_PFMETNoMu120_PFMHTNoMu120_IDTight);
+  if(year == 2017 ||
+     year == 2018)
+    return (HLT_PFMET120_PFMHT120_IDTight ||
+	    HLT_PFMETNoMu120_PFMHTNoMu120_IDTight ||
+	    HLT_PFMET120_PFMHT120_IDTight_PFHT60 ||
+	    HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60);
+
+  return 0;
+}
+  
+template <>
+bool AnalysisBase<SUSYNANOBase>::GetMETHTtrigger(){
+  int year = 2016;
+  if(m_FileTag.find("17") != std::string::npos)
+    year = 2017;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+
+  if(year == 2016)
+    return (HLT_PFHT300_PFMET100 ||
+	    HLT_PFHT300_PFMET110);
+  if(year == 2017 ||
+     year == 2018)
+    return (HLT_PFHT500_PFMET100_PFMHT100_IDTight ||
+	    HLT_PFHT500_PFMET110_PFMHT110_IDTight ||
+	    HLT_PFHT700_PFMET85_PFMHT85_IDTight ||
+	    HLT_PFHT700_PFMET95_PFMHT95_IDTight ||
+	    HLT_PFHT800_PFMET75_PFMHT75_IDTight ||
+	    HLT_PFHT800_PFMET85_PFMHT85_IDTight);
+
+  return 0;
+}
+
+template <>
+bool AnalysisBase<SUSYNANOBase>::GetMETORtrigger(){
+   int year = 2016;
+  if(m_FileTag.find("17") != std::string::npos)
+    year = 2017;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+
+  if(year == 2016)
+    return (HLT_PFMETNoMu90_PFMHTNoMu90_IDTight ||
+	    HLT_PFMETNoMu100_PFMHTNoMu100_IDTight ||
+	    HLT_PFMETNoMu110_PFMHTNoMu110_IDTight ||
+	    HLT_PFMETNoMu120_PFMHTNoMu120_IDTight ||
+	    HLT_PFMET90_PFMHT90_IDTight ||
+	    HLT_PFMET100_PFMHT100_IDTight ||
+	    HLT_PFMET100_PFMHT100_IDTight_BeamHaloCleaned ||
+	    HLT_PFMET110_PFMHT110_IDTight ||
+	    HLT_PFMET120_PFMHT120_IDTight);
+  if(year == 2017 ||
+     year == 2018)
+    return (HLT_PFMET110_PFMHT110_IDTight ||
+	    HLT_PFMET120_PFMHT120_IDTight ||
+	    HLT_PFMET130_PFMHT130_IDTight ||
+	    HLT_PFMET140_PFMHT140_IDTight ||
+	    HLT_PFMETNoMu110_PFMHTNoMu110_IDTight ||
+	    HLT_PFMETNoMu120_PFMHTNoMu120_IDTight ||
+	    HLT_PFMETNoMu130_PFMHTNoMu130_IDTight ||
+	    HLT_PFMETNoMu140_PFMHTNoMu140_IDTight ||
+	    HLT_PFMET120_PFMHT120_IDTight_PFHT60 ||
+	    HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60);
+
+  return 0;
+}
+
+template <>
 std::pair<int,int> AnalysisBase<SUSYNANOBase>::GetSUSYMasses(){
   int MP = 0;
   int MC = 0;
@@ -600,26 +862,79 @@ int AnalysisBase<SUSYNANOBase>::GetSampleIndex(){
 
 template <>
 double AnalysisBase<SUSYNANOBase>::GetEventWeight(){
-  if(m_IndexToNweight[m_SampleIndex] > 0.)
-    return genWeight*m_IndexToXsec[m_SampleIndex]/m_IndexToNweight[m_SampleIndex];
-  else
+  if(IsData())
+    return 1.;
+
+  if(m_IndexToNweight[m_SampleIndex] > 0.){
+    if(!m_DoSMS)
+      return genWeight*m_IndexToXsec[m_SampleIndex]/m_IndexToNweight[m_SampleIndex];
+
+    return genWeight*m_IndexToXsec[m_SampleIndex]/m_IndexToNweight[m_SampleIndex]*m_NeventTool.GetFilterEff(m_DataSet,m_FileTag,luminosityBlock);
+  } else
     return 0.;
 }
 
 template <>
-TVector3 AnalysisBase<SUSYNANOBase>::GetMET(){
+double AnalysisBase<SUSYNANOBase>::GetPUWeight(int updown){
+  if(IsData())
+    return 1.;
+
   int year = 2016;
   if(m_FileTag.find("17") != std::string::npos)
     year = 2017;
   if(m_FileTag.find("18") != std::string::npos)
     year = 2018;
+
+  return m_PUTool.GetWeight(Pileup_nPU, year, updown);
+}
+
+template <>
+double AnalysisBase<SUSYNANOBase>::GetBtagSFWeight(const ParticleList& jets, int updown, ParticleIDType tag){
+  if(IsData())
+    return 1.;
+
+  int year = 2016;
+  if(m_FileTag.find("17") != std::string::npos)
+    year = 2017;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+
+  int Njet = jets.size();
+  int iflavor;
+  double EFF, SF;
+
+  double probMC   = 1.;
+  double probDATA = 1.;
   
-  TVector3 vmet;
-  if(year == 2017)
-    vmet.SetPtEtaPhi(METFixEE2017_pt,0.0,METFixEE2017_phi);
-  else
-    vmet.SetPtEtaPhi(MET_pt,0.0,MET_phi);
-  return vmet;
+  for(int i = 0; i < Njet; i++){
+    if(abs(jets[i].PDGID()) == 5)
+      iflavor = 0;
+    else if(abs(jets[i].PDGID()) == 4)
+      iflavor = 1;
+    else
+      iflavor = 2;
+
+    EFF = m_BtagSFTool.EFF(jets[i].Pt(), year, iflavor);
+    SF  = m_BtagSFTool.SF(jets[i].Pt(), year, iflavor, updown);
+
+    if(jets[i].BtagID() >= tag){
+      probMC   *= EFF;
+      probDATA *= SF*EFF;
+    } else {
+      probMC   *= (1.-EFF);
+      probDATA *= (1.-SF*EFF);
+    }
+  }
+
+  if(probMC <= 0. || probDATA <= 0.)
+    return 1.;
+
+  return probDATA/probMC;
+}
+
+template <>
+bool AnalysisBase<SUSYNANOBase>::IsGoodEvent(){
+  return m_JSONTool.IsGood(run, luminosityBlock);
 }
 
 template <>
@@ -653,30 +968,226 @@ TVector3 AnalysisBase<SUSYNANOBase>::GetPV(bool& good){
 }
 
 template <>
-ParticleList AnalysisBase<SUSYNANOBase>::GetJets(){
+void AnalysisBase<SUSYNANOBase>::InitializeHistograms(vector<TH1D*>& histos){
+  // nPU
+  TH1D* h_nPU = new TH1D("hist_NPU", "hist_NPU", 75, 0., 75.);
+  histos.push_back(h_nPU);
+
+  // Btag efficiencies
+  vector<double> bin_edges;
+  bin_edges.push_back(20.);
+  bin_edges.push_back(30.);
+  bin_edges.push_back(40.);
+  bin_edges.push_back(50.);
+  bin_edges.push_back(60.);
+  bin_edges.push_back(70.);
+  bin_edges.push_back(85.);
+  bin_edges.push_back(100.);
+  bin_edges.push_back(120.);
+  bin_edges.push_back(140.);
+  bin_edges.push_back(170.);
+  bin_edges.push_back(200.);
+  bin_edges.push_back(250.);
+  bin_edges.push_back(300.);
+  bin_edges.push_back(400.);
+  bin_edges.push_back(600.);
+  bin_edges.push_back(800.);
+  bin_edges.push_back(1000.);
+
+  TH1D* h_btag[3][2]; // [flavor][den/num]
+  for(int i = 0; i < 3; i++){
+    for(int j = 0; j < 2; j++){
+      h_btag[i][j] = (TH1D*) new TH1D(Form("hist_btag_flavor%d_%s", i, (j == 0 ? "den" : "num")),
+				      Form("hist_btag_flavor%d_%s", i, (j == 0 ? "den" : "num")),
+				      17, &bin_edges[0]);
+      histos.push_back(h_btag[i][j]);
+    }
+  }
+}
+
+template <>
+void AnalysisBase<SUSYNANOBase>::BookHistograms(vector<TH1D*>& histos){
   int year = 2017;
   if(m_FileTag.find("16") != std::string::npos)
     year = 2016;
   if(m_FileTag.find("18") != std::string::npos)
     year = 2018;
 
-  ParticleList list;
+  int ihist = 0;
 
+  // nPU
+  histos[ihist]->Fill(GetNPUtrue());
+
+  ihist++;
+
+  // Btag efficiencies
   int Njet = nJet;
   for(int i = 0; i < Njet; i++){
-    TLorentzVector JET;
+    if(Jet_pt[i] < 20. || fabs(Jet_eta[i] > 2.4))
+      continue;
 
-    JET.SetPtEtaPhiM(Jet_pt[i],Jet_eta[i],Jet_phi[i],Jet_mass[i]);
-    
-    Particle jet;
-    float mass = JET.M();
-    if(std::isnan(mass))
-      mass = 0;
-    if(std::isinf(mass))
-      mass = 0;
-    if(mass < 0.)
-      mass = 0.;
-    jet.SetPtEtaPhiM( JET.Pt(), JET.Eta(), JET.Phi(), mass );
+    bool btag = false;
+    if(year == 2016)
+      if(Jet_btagDeepFlavB[i] > 0.3093)
+	btag = true;
+    if(year == 2017)
+      if(Jet_btagDeepFlavB[i] > 0.3033)
+	btag = true;
+    if(year == 2018)
+      if(Jet_btagDeepFlavB[i] > 0.2770)
+	btag = true;
+
+    int flavor;
+    if(abs(Jet_partonFlavour[i]) == 5)
+      flavor = 0;
+    else if(abs(Jet_partonFlavour[i]) == 4)
+      flavor = 1;
+    else
+      flavor = 2;
+
+    histos[ihist+2*flavor]->Fill(Jet_pt[i]);
+    if(btag) histos[ihist+2*flavor+1]->Fill(Jet_pt[i]);
+  }
+}
+
+template <>
+void AnalysisBase<SUSYNANOBase>::InitializeSystematics(){
+
+  m_DefaultSys += "JESUncer_Total";
+  // m_DefaultSys += "JESUncer_CorrelationGroupMPFInSitu";
+  // m_DefaultSys += "JESUncer_CorrelationGroupIntercalibration";
+  // m_DefaultSys += "JESUncer_CorrelationGroupbJES";
+  // m_DefaultSys += "JESUncer_CorrelationGroupFlavor";
+  // m_DefaultSys += "JESUncer_CorrelationGroupUncorrelated";
+  // m_DefaultSys += "MMSUncer_Total";
+  // m_DefaultSys += "EESUncer_Total";
+  m_DefaultSys += "METUncer_UnClust"; 
+  
+  m_JESSys += "JESUncer_Total";
+  m_JESSys += "JESUncer_AbsoluteStat";
+  m_JESSys += "JESUncer_AbsoluteScale";
+  m_JESSys += "JESUncer_AbsoluteFlavMap";
+  m_JESSys += "JESUncer_AbsoluteMPFBias";
+  m_JESSys += "JESUncer_Fragmentation";
+  m_JESSys += "JESUncer_SinglePionECAL";
+  m_JESSys += "JESUncer_SinglePionHCAL";
+  m_JESSys += "JESUncer_FlavorQCD";
+  m_JESSys += "JESUncer_TimePtEta";
+  m_JESSys += "JESUncer_RelativeJEREC1";
+  m_JESSys += "JESUncer_RelativeJEREC2";
+  m_JESSys += "JESUncer_RelativeJERHF";
+  m_JESSys += "JESUncer_RelativePtBB";
+  m_JESSys += "JESUncer_RelativePtEC1";
+  m_JESSys += "JESUncer_RelativePtEC2";
+  m_JESSys += "JESUncer_RelativePtHF";
+  m_JESSys += "JESUncer_RelativeBal";
+  m_JESSys += "JESUncer_RelativeSample";
+  m_JESSys += "JESUncer_RelativeFSR";
+  m_JESSys += "JESUncer_RelativeStatFSR";
+  m_JESSys += "JESUncer_RelativeStatEC";
+  m_JESSys += "JESUncer_RelativeStatHF";
+  m_JESSys += "JESUncer_PileUpDataMC";
+  m_JESSys += "JESUncer_PileUpPtRef";
+  m_JESSys += "JESUncer_PileUpPtBB";
+  m_JESSys += "JESUncer_PileUpPtEC1";
+  m_JESSys += "JESUncer_PileUpPtEC2";
+  m_JESSys += "JESUncer_PileUpPtHF";
+  m_JESSys += "JESUncer_PileUpMuZero";
+  m_JESSys += "JESUncer_PileUpEnvelope";
+  m_JESSys += "JESUncer_SubTotalPileUp";
+  m_JESSys += "JESUncer_SubTotalRelative";
+  m_JESSys += "JESUncer_SubTotalPt";
+  m_JESSys += "JESUncer_SubTotalScale";
+  m_JESSys += "JESUncer_SubTotalAbsolute";
+  m_JESSys += "JESUncer_SubTotalMC";
+  m_JESSys += "JESUncer_TotalNoFlavor";
+  m_JESSys += "JESUncer_TotalNoTime";
+  m_JESSys += "JESUncer_TotalNoFlavorNoTime";
+  m_JESSys += "JESUncer_FlavorZJet";
+  m_JESSys += "JESUncer_FlavorPhotonJet";
+  m_JESSys += "JESUncer_FlavorPureGluon";
+  m_JESSys += "JESUncer_FlavorPureQuark";
+  m_JESSys += "JESUncer_FlavorPureCharm";
+  m_JESSys += "JESUncer_FlavorPureBottom";
+  m_JESSys += "JESUncer_TimeRunBCD";
+  m_JESSys += "JESUncer_TimeRunEF";
+  m_JESSys += "JESUncer_TimeRunGH";
+  m_JESSys += "JESUncer_CorrelationGroupMPFInSitu";
+  m_JESSys += "JESUncer_CorrelationGroupIntercalibration";
+  m_JESSys += "JESUncer_CorrelationGroupbJES";
+  m_JESSys += "JESUncer_CorrelationGroupFlavor";
+  m_JESSys += "JESUncer_CorrelationGroupUncorrelated";
+
+  m_MMSSys += "MMSUncer_Total";
+  
+  m_EESSys += "EESUncer_Total";
+  
+  m_METSys += "METUncer_UnClust";
+  m_METSys.Add(m_JESSys);
+}
+
+template <>
+ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET){
+  int year = 2017;
+  if(m_FileTag.find("16") != std::string::npos)
+    year = 2016;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+  
+  ParticleList list;
+  bool passID = true;
+  int Njet = nJet;
+
+  double delta  = (CurrentSystematic().IsUp() ? 1. : -1.);
+  TVector3 deltaMET(0.,0.,0.);
+  bool DO_JES = false;
+  if(m_JESSys == CurrentSystematic())
+    DO_JES = true;
+  
+  for(int i = 0; i < Njet; i++){
+     bool failID = false;
+     if(Jet_pt[i] < 15.)
+       continue;
+     if(Jet_jetId[i] < 3){
+       if(Jet_chEmEF[i] > 0.8 || Jet_muEF[i] > 0.8)
+	 continue;
+       else {
+	 passID = false;
+	 break;
+       }
+     }
+
+     Particle jet;
+     float mass = Jet_mass[i];
+     if(std::isnan(mass))
+       mass = 0;
+     if(std::isinf(mass))
+       mass = 0;
+     if(mass < 0.)
+       mass = 0.;
+     jet.SetPtEtaPhiM(Jet_pt[i], Jet_eta[i],
+		      Jet_phi[i], mass);
+     
+     if(DO_JES){
+       double uncer = m_JMETool.GetFactor(year, CurrentSystematic().Label(),
+					  Jet_pt[i], Jet_eta[i]);
+       
+       deltaMET -= delta*uncer*jet.Vect();
+       jet.SetPtEtaPhiM((1.+delta*uncer)*jet.Pt(),
+			jet.Eta(), jet.Phi(),
+			(1.+delta*uncer)*jet.M());
+     }
+     
+     // recalibrate jets
+     // double raw = 1. - Jet_rawFactor[i];
+     // double L1 = m_JMETool.GetFactor(year, "L1FastJet",
+     // 				     raw*Jet_pt[i], Jet_eta[i],
+     // 				     Jet_area[i], fixedGridRhoFastjetAll);
+     // double L2 = m_JMETool.GetFactor(year, "L2Relative",
+     // 				     raw*L1*Jet_pt[i], Jet_eta[i],
+     // 				     Jet_area[i], fixedGridRhoFastjetAll);
+
+     // cout << raw << " " << L1 << " " << L2 << " " << raw*L1*L2 << endl;
 
     if(Jet_jetId[i] >= 3)
       jet.SetParticleID(kTight);
@@ -686,7 +1197,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJets(){
       jet.SetParticleID(kLoose);
     
     // DeepCSV tagger
-    jet.SetBtag(Jet_btagDeepB[i]);
+    // jet.SetBtag(Jet_btagDeepB[i]);
 
     // DeepFlavour tagger
     jet.SetBtag(Jet_btagDeepFlavB[i]);
@@ -753,7 +1264,43 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJets(){
     list.push_back(jet);
   }
 
+  // If one jet fails jet ID, 
+  if(!passID)
+    return ParticleList();
+  
+  if(year == 2017)
+    MET.SetPtEtaPhi(METFixEE2017_pt,0.0,METFixEE2017_phi);
+  else
+    MET.SetPtEtaPhi(MET_pt,0.0,MET_phi);
+
+  deltaMET.SetZ(0.);
+  MET += deltaMET;
+
+  if(CurrentSystematic() == Systematic("METUncer_UnClust")){
+    if(year == 2017)
+      deltaMET.SetXYZ(delta*METFixEE2017_MetUnclustEnUpDeltaX,
+		      delta*METFixEE2017_MetUnclustEnUpDeltaY, 0.);
+    else
+      deltaMET.SetXYZ(delta*MET_MetUnclustEnUpDeltaX,
+		      delta*MET_MetUnclustEnUpDeltaY, 0.);
+    MET += deltaMET;
+  }
+  
   return list;
+}
+
+template <>
+TVector3 AnalysisBase<SUSYNANOBase>::GetMET(){
+  TVector3 MET;
+  GetJetsMET(MET);
+
+  return MET;
+}
+
+template <>
+ParticleList AnalysisBase<SUSYNANOBase>::GetJets(){
+  TVector3 dum;
+  return GetJetsMET(dum);
 }
 
 template <>
@@ -771,8 +1318,10 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetElectrons(){
     // baseline lepton definition
     if(Electron_pt[i] < 5. || fabs(Electron_eta[i]) > 2.5)
       continue;
+    // if(fabs(Electron_dxy[i]) >= 0.05 || fabs(Electron_dz[i]) >= 0.1 ||
+    //    Electron_ip3d[i] >= 0.0175 || Electron_sip3d[i] >= 2.5)
     if(fabs(Electron_dxy[i]) >= 0.05 || fabs(Electron_dz[i]) >= 0.1 ||
-       Electron_ip3d[i] >= 0.0175 || Electron_sip3d[i] >= 2.5)
+       Electron_sip3d[i] >= 8)
       continue;
     if(Electron_pfRelIso03_all[i]*Electron_pt[i] >= 20. + 300./Electron_pt[i])
       continue;
@@ -1036,7 +1585,8 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetElectrons(){
       }
 	    
       // signal lepton IDs (only Tight for now) baseline criteria
-      if(lep.IP3D() < 0.01 && lep.SIP3D() < 2.){
+      // if(lep.IP3D() < 0.01 && lep.SIP3D() < 2.){
+      if(true){
 	// Tight electron
 	if(year == 2016){ // Summer16_94X legacy
 	  if(fabs(lep.Eta()) < 0.8){ // eta < 0.8
@@ -1053,7 +1603,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetElectrons(){
 	  } else if(fabs(lep.Eta()) < 1.479){ // eta < 1.479
 	    if(lep.Pt() < 10.){ // using VLoose ID for low pT
 	      if(mva > 0.373)
-		lep.SetParticleID(kLoose);
+		lep.SetParticleID(kTight); // just changed me
 	    } else if(lep.Pt() < 40.) {
 	      if(mva > 2.522 + 0.058*(lep.Pt() - 25.))
 		lep.SetParticleID(kTight);
@@ -1176,8 +1726,9 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetMuons(){
      // baseline lepton definition
     if(Muon_pt[i] < 3. || fabs(Muon_eta[i]) > 2.4)
       continue;
-    if(fabs(Muon_dxy[i]) >= 0.05 || fabs(Muon_dz[i]) >= 0.1 ||
-       Muon_ip3d[i] >= 0.0175 || Muon_sip3d[i] >= 2.5)
+    // if(fabs(Muon_dxy[i]) >= 0.05 || fabs(Muon_dz[i]) >= 0.1 ||
+    //    Muon_ip3d[i] >= 0.0175 || Muon_sip3d[i] >= 2.5)
+    if(fabs(Muon_dxy[i]) >= 0.05 || fabs(Muon_dz[i]) >= 0.1 || Muon_sip3d[i] >= 8.)
       continue;
     if(Muon_pfRelIso03_all[i]*Muon_pt[i] >= 20. + 300./Muon_pt[i])
       continue;
@@ -1203,14 +1754,15 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetMuons(){
       lep.SetParticleID(kLoose);
 
       // signal lep criteria
-      if(lep.IP3D() < 0.01 && lep.SIP3D() < 2.){
+      //if(lep.IP3D() < 0.01 && lep.SIP3D() < 2.){
+      if(true){
 	if(Muon_tightId[i])
 	  lep.SetParticleID(kTight);
-	else if(lep.Pt() < 20.){
+	else if(lep.Pt() < 0.){
 	  if(Muon_softId[i])
 	    lep.SetParticleID(kMedium);
 	} else {
-	  if(Muon_mediumPromptId[i])
+	  if(Muon_mediumId[i])
 	    lep.SetParticleID(kMedium);
 	}
       }
@@ -1232,28 +1784,44 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetSVs(const TVector3& PV){
       continue;
     if(SV_pt[i] >= 20.)
       continue;
-    if(SV_dlenSig[i] <= 4.)
-      continue;
-    if(SV_ndof[i] < 1.8) // replacement for ntracks cut...
+    if(fabs(SV_eta[i]) >= 2.4)
       continue;
 
     TVector3 xSV;
     xSV.SetXYZ(SV_x[i],SV_y[i],SV_z[i]);
-    // dxy cut
-    if(fabs((xSV-PV).Pt()) >= 3.)
-      continue;
 
     Particle SV;
     SV.SetPtEtaPhiM(SV_pt[i],SV_eta[i],SV_phi[i],SV_mass[i]);
 
-    if((xSV-PV).Unit().Dot(SV.Vect().Unit()) <= 0.98)
-      continue;
+    SV.SetDxy(fabs((xSV-PV).Pt()));
+    SV.SetD3d(SV_dlen[i]);
+    SV.SetD3dSig(fabs(SV_dlenSig[i]));
+    SV.SetCosTheta((xSV-PV).Unit().Dot(SV.Vect().Unit()));
+    SV.SetNdof(SV_ndof[i]);
+
+    std::map<std::string, double> probs = m_SVDiscrTool.PROB(SV);
+
+    SV.SetProbB(probs["prob_isB"]); 
+    SV.SetProbC(probs["prob_isC"]); 
+
+    // if((xSV-PV).Unit().Dot(SV.Vect().Unit()) <= 0.98)
+    //   continue;
     
     // if(SB_pt[i] < 20. && SB_dlenSig[i] > 4. &&
     //    SB_dxy[i] < 3. && SB_DdotP[i] > 0.98 &&
     //    SB_ntracks[i] >= 3){
-    
-    list.push_back(SV);
+
+    // dxy cut
+    // if(fabs((xSV-PV).Pt()) >= 3.)
+    //   continue;
+
+     // if(SV_dlenSig[i] <= 4.)
+    //   continue;
+    // if(SV_ndof[i] < 1.8) // replacement for ntracks cut...
+    //   continue;
+
+    if(probs["prob_isB"] > 0.35)
+      list.push_back(SV);
   }
   
   return list;

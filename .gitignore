@@ -4,4 +4,6 @@
 .DS_Store
 *.d
 *.so
+*.root
 *.pcm
+AutoDict*

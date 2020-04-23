@@ -114,7 +114,7 @@ ReducedNtuple<Base>::ReducedNtuple(TTree* tree)
       CombSplit_J[t]->AddObjectFrames(X3b[t]->GetListVisibleFrames(), 1);
 
       COMB_L[t]->AddFrame(*La[t]);
-      COMB_L[t]->SetNElementsForFrame(*La[t], 1);
+      COMB_L[t]->SetNElementsForFrame(*La[t], 0);
       COMB_L[t]->AddFrame(*Lb[t]);
       COMB_L[t]->SetNElementsForFrame(*Lb[t], 0);
 
@@ -233,6 +233,30 @@ ReducedNtuple<Base>::ReducedNtuple(TTree* tree)
     m_cosJb.push_back(0);
     m_cosLa.push_back(0);
     m_cosLb.push_back(0);
+
+    m_MJ.push_back(0);
+    m_ML.push_back(0);
+    m_EJ.push_back(0);
+    m_EL.push_back(0);
+    m_PJ.push_back(0);
+    m_PL.push_back(0);
+  
+    m_PX3.push_back(0);
+    m_PX3_BoostT.push_back(0);
+    m_MX3a_BoostT.push_back(0);
+    m_MX3b_BoostT.push_back(0);
+
+    m_PV_BoostT.push_back(0);
+  
+    m_EVa_BoostT.push_back(0);
+    m_EVb_BoostT.push_back(0);
+    m_PVa_BoostT.push_back(0);
+    m_PVb_BoostT.push_back(0);
+
+    m_EJ_BoostT.push_back(0);
+    m_EL_BoostT.push_back(0);
+    m_PJ_BoostT.push_back(0);
+    m_PL_BoostT.push_back(0);
     
     m_H11S.push_back(0);
     m_H21S.push_back(0);
@@ -306,6 +330,25 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("event_skipped", &m_event_skipped);
   
   tree->Branch("weight", &m_weight);
+
+  tree->Branch("PUweight", &m_PUweight);
+  tree->Branch("PUweight_up", &m_PUweight_up);
+  tree->Branch("PUweight_down", &m_PUweight_down);
+
+  tree->Branch("m_BtagSFweight", &m_BtagSFweight);
+  tree->Branch("m_BtagSFweight_up", &m_BtagSFweight_up);
+  tree->Branch("m_BtagSFweight_down", &m_BtagSFweight_down);
+
+  tree->Branch("runnum", &m_runnum);
+  tree->Branch("luminum", &m_runnum);
+  tree->Branch("eventnum", &m_eventnum);
+
+  tree->Branch("NPV", &m_NPV);
+  tree->Branch("NPU", &m_NPU);
+
+  tree->Branch("METtrigger", &m_METtrigger);
+  tree->Branch("METHTtrigger", &m_METHTtrigger);
+  tree->Branch("METORtrigger", &m_METORtrigger);
   
   tree->Branch("MET", &m_MET);
   tree->Branch("MET_phi", &m_MET_phi);
@@ -341,23 +384,25 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("Njet", &m_Njet);
   tree->Branch("Nbjet", &m_Nbjet);
   
-  // tree->Branch("PT_jet",  &m_PT_jet);
-  // tree->Branch("Eta_jet", &m_Eta_jet);
-  // tree->Branch("Phi_jet", &m_Phi_jet);
-  // tree->Branch("M_jet",   &m_M_jet);
-  // tree->Branch("Btag_jet",   &m_Btag_jet);
-  // tree->Branch("BtagID_jet",   &m_BtagID_jet);
-  // tree->Branch("Flavor_jet",   &m_Flavor_jet);
-  // tree->Branch("index_jet_a", &m_index_jet_a);
-  // tree->Branch("index_jet_b", &m_index_jet_b);
-  // tree->Branch("index_jet_ISR", &m_index_jet_ISR);
-  // tree->Branch("index_jet_S", &m_index_jet_S);
+  tree->Branch("PT_jet",  &m_PT_jet);
+  tree->Branch("Eta_jet", &m_Eta_jet);
+  tree->Branch("Phi_jet", &m_Phi_jet);
+  tree->Branch("M_jet",   &m_M_jet);
+  tree->Branch("Btag_jet",   &m_Btag_jet);
+  tree->Branch("BtagID_jet",   &m_BtagID_jet);
+  tree->Branch("Flavor_jet",   &m_Flavor_jet);
+  tree->Branch("index_jet_a", &m_index_jet_a);
+  tree->Branch("index_jet_b", &m_index_jet_b);
+  tree->Branch("index_jet_ISR", &m_index_jet_ISR);
+  tree->Branch("index_jet_S", &m_index_jet_S);
 
   tree->Branch("NSV", &m_NSV);
   tree->Branch("PT_SV",  &m_PT_SV);
   tree->Branch("Eta_SV", &m_Eta_SV);
   tree->Branch("Phi_SV", &m_Phi_SV);
   tree->Branch("M_SV",   &m_M_SV);
+  tree->Branch("ProbB_SV",   &m_ProbB_SV);
+  tree->Branch("ProbC_SV",   &m_ProbC_SV);
  
   tree->Branch("genNele", &m_genNele);
   tree->Branch("genNmu", &m_genNmu);
@@ -472,6 +517,30 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("cosJb", &m_cosJb);
   tree->Branch("cosLa", &m_cosLa);
   tree->Branch("cosLb", &m_cosLb);
+
+  tree->Branch("MJ", &m_MJ);
+  tree->Branch("ML", &m_ML);
+  tree->Branch("EJ", &m_EJ);
+  tree->Branch("EL", &m_EL);
+  tree->Branch("PJ", &m_PJ);
+  tree->Branch("PL", &m_PL);
+  
+  tree->Branch("PX3", &m_PX3);
+  tree->Branch("PX3_BoostT", &m_PX3_BoostT);
+  tree->Branch("MX3a_BoostT", &m_MX3a_BoostT);
+  tree->Branch("MX3b_BoostT", &m_MX3b_BoostT);
+
+  tree->Branch("PV_BoostT", &m_PV_BoostT);
+  
+  tree->Branch("EVa_BoostT", &m_EVa_BoostT);
+  tree->Branch("EVb_BoostT", &m_EVb_BoostT);
+  tree->Branch("PVa_BoostT", &m_PVa_BoostT);
+  tree->Branch("PVb_BoostT", &m_PVb_BoostT);
+
+  tree->Branch("EJ_BoostT", &m_EJ_BoostT);
+  tree->Branch("EL_BoostT", &m_EL_BoostT);
+  tree->Branch("PJ_BoostT", &m_PJ_BoostT);
+  tree->Branch("PL_BoostT", &m_PL_BoostT);
   
   tree->Branch("H11S", &m_H11S);
   tree->Branch("H21S", &m_H21S);
@@ -493,7 +562,6 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("Is_2L", &m_Is_2L);
   tree->Branch("Is_3L", &m_Is_3L);
   tree->Branch("Is_4L", &m_Is_4L);
-  
   
   return tree;
 }
@@ -586,6 +654,30 @@ void ReducedNtuple<Base>::ClearVariables(){
     m_cosLa[i] = 0.;
     m_cosLb[i] = 0.;
 
+    m_MJ[i] = 0.;
+    m_ML[i] = 0.;
+    m_EJ[i] = 0.;
+    m_EL[i] = 0.;
+    m_PJ[i] = 0.;
+    m_PL[i] = 0.;
+  
+    m_PX3[i] = 0.;
+    m_PX3_BoostT[i] = 0.;
+    m_MX3a_BoostT[i] = 0.;
+    m_MX3b_BoostT[i] = 0.;
+
+    m_PV_BoostT[i] = 0.;
+  
+    m_EVa_BoostT[i] = 0.;
+    m_EVb_BoostT[i] = 0.;
+    m_PVa_BoostT[i] = 0.;
+    m_PVb_BoostT[i] = 0.;
+
+    m_EJ_BoostT[i] = 0.;
+    m_EL_BoostT[i] = 0.;
+    m_PJ_BoostT[i] = 0.;
+    m_PL_BoostT[i] = 0.;
+
     m_H11S[i] = 0.;
     m_H21S[i] = 0.;
     m_HT21S[i] = 0.;
@@ -613,19 +705,26 @@ void ReducedNtuple<Base>::ClearVariables(){
 }
 
 template <class Base>
-void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
-
+void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
+  AnalysisBase<Base>::SetSystematic(sys);
+  
+  if(AnalysisBase<Base>::IsData())
+    if(!AnalysisBase<Base>::IsGoodEvent())
+      return;
+  
   bool good_PV;
   TVector3 PV = AnalysisBase<Base>::GetPV(good_PV);
 
   if(!good_PV)
     return;
   
-  TVector3 ETMiss = AnalysisBase<Base>::GetMET();
+  TVector3 ETMiss;
+  ParticleList Jets = AnalysisBase<Base>::GetJetsMET(ETMiss);
+  Jets = Jets.PtEtaCut(20., 2.4);
 
-  if(ETMiss.Mag() < 100.)
+  if(ETMiss.Mag() < 175.)
     return;
-
+  
   ClearVariables();
 
   ParticleList Muons = AnalysisBase<Base>::GetMuons();
@@ -638,24 +737,21 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
   
   ParticleList Leptons = Electrons+Muons;
   Leptons.SortByPt();
-  
-  ParticleList Jets = AnalysisBase<Base>::GetJets();
-  Jets = Jets.PtEtaCut(20., 2.4);
 
   ParticleList SVs = AnalysisBase<Base>::GetSVs(PV);
-  SVs = SVs.RemoveOverlap(Leptons, 0.4);
+  SVs = SVs.RemoveOverlap(Leptons, 0.2);
   SVs = SVs.RemoveOverlap(Jets, 0.4);
   
   Jets = Jets.RemoveOverlap(Leptons, 0.2);
 
   // skip event reconstruction for now if too many jets
-  // if(Jets.size() >= 18){
-  //   m_event_skipped = true;
-  //   if(tree)
-  //     tree->Fill();
-  //   return;
-  // }
-
+  if(Jets.size() >= 16){
+    m_event_skipped = true;
+    if(tree)
+      tree->Fill();
+    return;
+  }
+  
   m_Njet = Jets.size();
   
   ParticleList BJets;
@@ -675,8 +771,8 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
   m_NSV = SVs.size();
   
   // require at least one lepton for now
-  if(m_Nlep < 1)
-    return;
+  // if(m_Nlep < 1)
+  //   return;
   
   // not enough stuff
   if(m_Nlep + m_Njet < 2)
@@ -958,7 +1054,6 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
       // lepton counting in ISR/S, hemispheres
       for(int i = 0; i < m_Nlep; i++){
 	m_Nlep_S[t]++;
-	m_index_lep_S[t].push_back(i);
 	if(COMB_L[t]->GetFrame(lepID[i]) == *La[t]){
 	  m_Nlep_a[t]++;
 	  m_index_lep_S[t].push_back(i);
@@ -1013,7 +1108,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
     m_PLb[t] = saLb[t]->GetFourVector(*X2b[t]).P();
 
     m_MV[t] = S[t]->GetListVisibleFrames().GetMass();
-    m_PV[t] = S[t]->GetListVisibleFrames().GetFourVector().P();
+    m_PV[t] = S[t]->GetListVisibleFrames().GetFourVector(*S[t]).P();
     m_MVa[t] = X3a[t]->GetListVisibleFrames().GetMass();
     m_MVb[t] = X3b[t]->GetListVisibleFrames().GetMass();
 
@@ -1026,12 +1121,22 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
     m_cosLa[t] = saLa[t]->GetCosDecayAngle();
     m_cosLb[t] = saLb[t]->GetCosDecayAngle();
 
+    TLorentzVector vP_S_CM  = S[t]->GetFourVector(*CM[t]);
     TLorentzVector vP_Ja_S  = saJa[t]->GetFourVector(*S[t]);
     TLorentzVector vP_Jb_S  = saJb[t]->GetFourVector(*S[t]);
     TLorentzVector vP_La_S  = saLa[t]->GetFourVector(*S[t]);
     TLorentzVector vP_Lb_S  = saLb[t]->GetFourVector(*S[t]);
     TLorentzVector vP_Ia_S  = X1a[t]->GetFourVector(*S[t]);
     TLorentzVector vP_Ib_S  = X1b[t]->GetFourVector(*S[t]);
+
+    m_MJ[t] = (vP_Ja_S+vP_Jb_S).M();
+    m_ML[t] = (vP_La_S+vP_Lb_S).M();
+    m_EJ[t] = (vP_Ja_S+vP_Jb_S).E();
+    m_EL[t] = (vP_La_S+vP_Lb_S).E();
+    m_PJ[t] = (vP_Ja_S+vP_Jb_S).P();
+    m_PL[t] = (vP_La_S+vP_Lb_S).P();
+  
+    m_PX3[t] = (vP_Ja_S+vP_La_S+vP_Ia_S).P();
     
     m_H11S[t] = 2.*(vP_Ia_S+vP_Ib_S).P();
     m_H21S[t] = (vP_Ja_S+vP_La_S).P() +
@@ -1059,7 +1164,38 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
     m_H11X3b[t] = 2.*vP_Ib_X3b.P();
     m_H21X3a[t] = vP_Ja_X3a.P() + vP_La_X3a.P() + vP_Ia_X3a.P();
     m_H21X3b[t] = vP_Jb_X3b.P() + vP_Lb_X3b.P() + vP_Ib_X3b.P();
+
+    // removing momentum components parallel to CM->S boost
+    TVector3 boostVis = (vP_Ja_S+vP_La_S+vP_Jb_S+vP_Lb_S).BoostVector();
+    TVector3 boostInv = (vP_Ia_S+vP_Ib_S).BoostVector();
+    TVector3 daBoost = vP_S_CM.Vect().Unit();
+
+    boostVis = (boostVis.Dot(daBoost))*daBoost;
+    boostInv = (boostInv.Dot(daBoost))*daBoost;
+
+    vP_Ja_S.Boost(-boostVis);
+    vP_Jb_S.Boost(-boostVis);
+    vP_La_S.Boost(-boostVis);
+    vP_Lb_S.Boost(-boostVis);
+    vP_Ia_S.Boost(-boostInv);
+    vP_Ib_S.Boost(-boostInv);
     
+    m_PX3_BoostT[t] = (vP_Ja_S+vP_La_S+vP_Ia_S).P();
+    m_MX3a_BoostT[t] = (vP_Ja_S+vP_La_S+vP_Ia_S).M();
+    m_MX3b_BoostT[t] = (vP_Jb_S+vP_Lb_S+vP_Ib_S).M();
+
+    m_PV_BoostT[t] = (vP_Ja_S+vP_La_S+vP_Jb_S+vP_Lb_S).P();
+  
+    m_EVa_BoostT[t] = (vP_Ja_S+vP_La_S).E();
+    m_EVb_BoostT[t] = (vP_Jb_S+vP_Lb_S).E();
+    m_PVa_BoostT[t] = (vP_Ja_S+vP_La_S).P();
+    m_PVb_BoostT[t] = (vP_Jb_S+vP_Lb_S).P();
+
+    m_EJ_BoostT[t] = (vP_Ja_S+vP_Jb_S).E();
+    m_EL_BoostT[t] = (vP_La_S+vP_Lb_S).E();
+    m_PJ_BoostT[t] = (vP_Ja_S+vP_Jb_S).P();
+    m_PL_BoostT[t] = (vP_La_S+vP_Lb_S).P();
+
     // ISR related variables
     if(m_Njet_ISR[t] > 0){
       TVector3 vPTISR = S[t]->GetTransverseFourVector(*CM[t]).Vect();
@@ -1075,13 +1211,31 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
 	TVector3 lep   = S[t]->GetFourVector(Leptons[m_index_lep_S[t][l]]).Vect();
 	TVector3 lep_t = S[t]->GetTransverseFourVector(Leptons[m_index_lep_S[t][l]]).Vect();
 	m_dphi_lep_S[t].push_back( lep_t.Angle(isr_t) );
-	m_cos_lep_S[t].push_back( lep_t.Unit().Dot(isr_t.Unit()) );
+	m_cos_lep_S[t].push_back( lep.Unit().Dot(isr.Unit()) );
       }
     }
   }
   
-
   m_weight = AnalysisBase<Base>::GetEventWeight();
+
+  m_PUweight = AnalysisBase<Base>::GetPUWeight(0);
+  m_PUweight_up = AnalysisBase<Base>::GetPUWeight(1);
+  m_PUweight_down = AnalysisBase<Base>::GetPUWeight(-1);
+
+  m_BtagSFweight = AnalysisBase<Base>::GetBtagSFWeight(Jets, 0, kMedium);
+  m_BtagSFweight_up = AnalysisBase<Base>::GetBtagSFWeight(Jets, 1, kMedium);
+  m_BtagSFweight_down = AnalysisBase<Base>::GetBtagSFWeight(Jets, -1, kMedium);
+  
+  m_runnum   = AnalysisBase<Base>::GetRunNum();
+  m_luminum  = AnalysisBase<Base>::GetLumiNum();
+  m_eventnum = AnalysisBase<Base>::GetEventNum();
+
+  m_NPV = AnalysisBase<Base>::GetNPV();
+  m_NPU = AnalysisBase<Base>::GetNPUtrue();
+  
+  m_METtrigger   = AnalysisBase<Base>::GetMETtrigger();
+  m_METHTtrigger = AnalysisBase<Base>::GetMETHTtrigger();
+  m_METORtrigger = AnalysisBase<Base>::GetMETORtrigger();
   
   m_MET     = ETMiss.Pt();
   m_MET_phi = ETMiss.Phi();
@@ -1113,11 +1267,15 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
   m_Eta_SV.clear();
   m_Phi_SV.clear();
   m_M_SV.clear();
+  m_ProbB_SV.clear();
+  m_ProbC_SV.clear();
   for(int i = 0; i < m_NSV; i++){
     m_PT_SV.push_back(SVs[i].Pt());
     m_Eta_SV.push_back(SVs[i].Eta());
     m_Phi_SV.push_back(SVs[i].Phi());
     m_M_SV.push_back(SVs[i].M());
+    m_ProbB_SV.push_back(SVs[i].ProbB());
+    m_ProbC_SV.push_back(SVs[i].ProbC());
   }
   
   ParticleList GenMuons = AnalysisBase<Base>::GetGenMuons();
@@ -1250,6 +1408,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
   // Fill output tree
   if(tree)
     tree->Fill();
+  
 }
 
 template class ReducedNtuple<StopNtupleTree>;

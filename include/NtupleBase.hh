@@ -10,16 +10,16 @@ public:
   NtupleBase(TTree* tree = 0);
   virtual ~NtupleBase();
 
-  void WriteNtuple(const std::string& filename);
+  void WriteNtuple(const std::string& filename, int ichunk = 1, int nchunch = 1);
 
 protected:
   std::vector<TTree*>     m_Trees;
-  std::map<string,TTree*> m_Label2Tree;
+  std::map<string,vector<TTree*>> m_Label2Tree;
  
 
 private:
   virtual TTree* InitOutputTree(const std::string& sample) = 0;
-  virtual void FillOutputTree(TTree* tree) = 0;
+  virtual void FillOutputTree(TTree* tree, const Systematic& sys = Systematic::Default()) = 0;
 
   // for event count bookkeeping
   std::vector<std::pair<int,int> > m_masses;

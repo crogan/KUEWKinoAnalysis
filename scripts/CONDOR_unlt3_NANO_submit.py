@@ -16,7 +16,8 @@ OUT  = "/home/t3-ku/crogan/NTUPLES/Processing/"
 #OUT = pwd
 LIST = "default.list"
 QUEUE = ""
-MAXN = 20
+MAXN = 10
+SPLIT = 1
 
 def new_listfile(rootlist, listfile):
     mylist = open(listfile,'w')
@@ -45,7 +46,7 @@ def create_filelist(rootlist, dataset, filetag):
 
     return listlist
 
-def write_sh(srcfile,ifile,ofile,lfile,dataset,filetag,evtcnt):
+def write_sh(srcfile,ifile,ofile,lfile,dataset,filetag,i,n):
     fsrc = open(srcfile,'w')
     fsrc.write('universe = vanilla \n')
     fsrc.write('executable = '+EXE+" \n")
@@ -57,14 +58,24 @@ def write_sh(srcfile,ifile,ofile,lfile,dataset,filetag,evtcnt):
     fsrc.write('-tree='+TREE+" ")
     if DO_SMS == 1:
         fsrc.write('--sms ')
+    if DO_DATA == 1:
+        fsrc.write('--data ')
     fsrc.write('-dataset='+dataset+" ")
     fsrc.write('-filetag='+filetag+" ")
-    fsrc.write('-eventcount='+evtcnt+" \n")
+    fsrc.write('-eventcount='+EVTCNT+" ")
+    fsrc.write('-filtereff='+FILTEREFF+" ")
+    fsrc.write('-json='+JSON+" ")
+    fsrc.write('-pu='+PUFOLD+" ")
+    fsrc.write('-btag='+BTAGFOLD+" ")
+    fsrc.write('-jme='+JMEFOLD+" ")
+    fsrc.write('-svfile='+SVFILE+" ")
+    splitstring = '-split=%d,%d \n' % (i+1,n)
+    fsrc.write(splitstring)
     fsrc.write('output = '+lfile+"_out.log \n")
     fsrc.write('error = '+lfile+"_err.log \n")
     fsrc.write('log = '+lfile+"_log.log \n")
     fsrc.write('Requirements = (Machine != "red-node000.unl.edu")\n')
-    #fsrc.write('request_memory = 4 GB \n')
+    fsrc.write('request_memory = 4 GB \n')
     fsrc.write('queue \n')
     #fsrc.write('cd '+RUN_DIR+" \n")
     #fsrc.write('source ../RestFrames/setup_RestFrames.sh \n')
@@ -78,6 +89,7 @@ if __name__ == "__main__":
 
     argv_pos = 1
     DO_SMS = 0
+    DO_DATA = 0
   
     if '-q' in sys.argv:
         p = sys.argv.index('-q')
@@ -95,11 +107,31 @@ if __name__ == "__main__":
         p = sys.argv.index('-maxN')
         MAXN = int(sys.argv[p+1])
         argv_pos += 2
+    if '-split' in sys.argv:
+        p = sys.argv.index('-split')
+        SPLIT = int(sys.argv[p+1])
+        argv_pos += 2
     if '--sms' in sys.argv:
         DO_SMS = 1
         argv_pos += 1
-
+    if '--data' in sys.argv:
+        DO_DATA = 1
+        argv_pos += 1
+        
+    
+    if SPLIT <= 1:
+        SPLIT = 1
+    else:
+        MAXN = 1
+    
     print "maxN is %d" % MAXN
+    print "split is %d" % SPLIT
+
+    if DO_DATA:
+        print "Processing Data"
+
+    if DO_SMS:
+        print "Processing as SMS"
 
     # input sample list
     listfile = LIST
@@ -124,11 +156,38 @@ if __name__ == "__main__":
     os.system("mkdir -p "+logdir)
     os.system("mkdir -p "+srcdir)
 
-    # make EventCount file and folder
-    evtcntdir  = TARGET+"evtcnt/"
-    os.system("mkdir -p "+evtcntdir)
-    os.system("hadd "+evtcntdir+"EventCount.root root/EventCount/*.root")
-    evtcnt = evtcntdir+"EventCount.root"
+    # make config directory
+    config = TARGET+"config/"
+    os.system("mkdir -p "+config)
+
+    # make EventCount file
+    os.system("hadd "+config+"EventCount.root root/EventCount/*.root")
+    EVTCNT = config+"EventCount.root"
+
+    # make FilterEff file 
+    os.system("hadd "+config+"FilterEff.root root/FilterEff/*.root")
+    FILTEREFF = config+"FilterEff.root"
+
+    # make json file
+    os.system("cat JSON/GoodRunList/* > "+config+"GRL_JSON.txt")
+    JSON = config+"GRL_JSON.txt"
+
+    # copy PU root files
+    os.system("cp -r root/PU "+config+".")
+    PUFOLD = config+"PU/"
+
+    # copy BTAG SF files
+    os.system("cp -r root/BtagSF "+config+".")
+    os.system("cp -r csv/BtagSF/* "+config+"BtagSF/.")
+    BTAGFOLD = config+"BtagSF/"
+
+    # copy JME files
+    os.system("cp -r data/JME "+config+".")
+    JMEFOLD = config+"JME/"
+
+    # copy SV NN model
+    os.system("cat json/lwtnn/nano_train_model.json > "+config+"NNmodel.json")
+    SVFILE = config+"NNmodel.json"
     
     # output root files
     ROOT = OUT+"/"+NAME+"/"
@@ -141,7 +200,7 @@ if __name__ == "__main__":
 
     datasetlist = []
 
-    knowntags = ["Fall17_94X","Autumn18_102X","Summer16_94X"]
+    knowntags = ["Fall17_94X","Autumn18_102X","Summer16_94X","Fall17_102X","Summer16_102X"]
     
     with open(listfile,'r') as mylist:
         inputlist = mylist.readlines()
@@ -192,7 +251,9 @@ if __name__ == "__main__":
             filename = f.split("/")
             filename = filename[-1]
             name = filename.replace(".list",'')
-            write_sh(srcdir+name+".sh",f,ROOT+dataset+"_"+filetag+"/"+name+".root",logdir+name,dataset,filetag,evtcnt)
-            os.system('condor_submit '+srcdir+name+".sh")
+            for i in range(SPLIT):
+                namei = name + "_%d" % i
+                write_sh(srcdir+namei+".sh",f,ROOT+dataset+"_"+filetag+"/"+namei+".root",logdir+namei,dataset,filetag,i,SPLIT)
+                os.system('condor_submit '+srcdir+namei+".sh")
             
     
