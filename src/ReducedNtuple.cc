@@ -707,7 +707,8 @@ void ReducedNtuple<Base>::ClearVariables(){
 template <class Base>
 void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   AnalysisBase<Base>::SetSystematic(sys);
-  
+ 
+
   if(AnalysisBase<Base>::IsData())
     if(!AnalysisBase<Base>::IsGoodEvent())
       return;
@@ -717,7 +718,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
 
   if(!good_PV)
     return;
-  
+
   TVector3 ETMiss;
   ParticleList Jets = AnalysisBase<Base>::GetJetsMET(ETMiss);
   Jets = Jets.PtEtaCut(20., 2.4);
@@ -778,6 +779,8 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   if(m_Nlep + m_Njet < 2)
     return;
   
+  cout << "calculating stuff" << endl;
+
   bool is_filled[2];
   for(int i = 0; i < 2; i++)
     is_filled[i] = true;
