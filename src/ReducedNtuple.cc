@@ -345,6 +345,10 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
 
   tree->Branch("NPV", &m_NPV);
   tree->Branch("NPU", &m_NPU);
+
+  tree->Branch("METtrigger", &m_METtrigger);
+  tree->Branch("METHTtrigger", &m_METHTtrigger);
+  tree->Branch("METORtrigger", &m_METORtrigger);
   
   tree->Branch("MET", &m_MET);
   tree->Branch("MET_phi", &m_MET_phi);
@@ -397,6 +401,8 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("Eta_SV", &m_Eta_SV);
   tree->Branch("Phi_SV", &m_Phi_SV);
   tree->Branch("M_SV",   &m_M_SV);
+  tree->Branch("ProbB_SV",   &m_ProbB_SV);
+  tree->Branch("ProbC_SV",   &m_ProbC_SV);
  
   tree->Branch("genNele", &m_genNele);
   tree->Branch("genNmu", &m_genNmu);
@@ -699,7 +705,9 @@ void ReducedNtuple<Base>::ClearVariables(){
 }
 
 template <class Base>
-void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
+void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
+  AnalysisBase<Base>::SetSystematic(sys);
+  
   if(AnalysisBase<Base>::IsData())
     if(!AnalysisBase<Base>::IsGoodEvent())
       return;
@@ -710,11 +718,13 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
   if(!good_PV)
     return;
   
-  TVector3 ETMiss = AnalysisBase<Base>::GetMET();
+  TVector3 ETMiss;
+  ParticleList Jets = AnalysisBase<Base>::GetJetsMET(ETMiss);
+  Jets = Jets.PtEtaCut(20., 2.4);
 
-  if(ETMiss.Mag() < 100.)
-    return;
- 
+  // if(ETMiss.Mag() < 100.)
+  //   return;
+  
   ClearVariables();
 
   ParticleList Muons = AnalysisBase<Base>::GetMuons();
@@ -727,9 +737,6 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
   
   ParticleList Leptons = Electrons+Muons;
   Leptons.SortByPt();
-  
-  ParticleList Jets = AnalysisBase<Base>::GetJets();
-  Jets = Jets.PtEtaCut(20., 2.4);
 
   ParticleList SVs = AnalysisBase<Base>::GetSVs(PV);
   SVs = SVs.RemoveOverlap(Leptons, 0.2);
@@ -1209,7 +1216,6 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
     }
   }
   
-
   m_weight = AnalysisBase<Base>::GetEventWeight();
 
   m_PUweight = AnalysisBase<Base>::GetPUWeight(0);
@@ -1226,6 +1232,10 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
 
   m_NPV = AnalysisBase<Base>::GetNPV();
   m_NPU = AnalysisBase<Base>::GetNPUtrue();
+  
+  m_METtrigger   = AnalysisBase<Base>::GetMETtrigger();
+  m_METHTtrigger = AnalysisBase<Base>::GetMETHTtrigger();
+  m_METORtrigger = AnalysisBase<Base>::GetMETORtrigger();
   
   m_MET     = ETMiss.Pt();
   m_MET_phi = ETMiss.Phi();
@@ -1257,11 +1267,15 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
   m_Eta_SV.clear();
   m_Phi_SV.clear();
   m_M_SV.clear();
+  m_ProbB_SV.clear();
+  m_ProbC_SV.clear();
   for(int i = 0; i < m_NSV; i++){
     m_PT_SV.push_back(SVs[i].Pt());
     m_Eta_SV.push_back(SVs[i].Eta());
     m_Phi_SV.push_back(SVs[i].Phi());
     m_M_SV.push_back(SVs[i].M());
+    m_ProbB_SV.push_back(SVs[i].ProbB());
+    m_ProbC_SV.push_back(SVs[i].ProbC());
   }
   
   ParticleList GenMuons = AnalysisBase<Base>::GetGenMuons();
@@ -1394,6 +1408,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree){
   // Fill output tree
   if(tree)
     tree->Fill();
+  
 }
 
 template class ReducedNtuple<StopNtupleTree>;

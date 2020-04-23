@@ -14,8 +14,11 @@
 #include "JSONTool.hh"
 #include "PUTool.hh"
 #include "BtagSFTool.hh"
+#include "JMETool.hh"
+#include "SVDiscrTool.hh"
 
 #include "Particle.hh"
+#include "Systematics.hh"
 
 using namespace std;
 
@@ -34,11 +37,21 @@ public:
   void AddJSONFile(const string& jsonfile);
   void AddPUFolder(const string& pufold);
   void AddBtagFolder(const string& btagfold);
-  void DoSMS(){ m_DoSMS = true; }
-  void DoData(){ m_IsData = true; }
-
+  void AddJMEFolder(const string& jmefold);
+  void AddSVDiscrFile(const string& svfile);
+  void DoSMS();
+  void DoData();
+  void DoFastSim();
+  void AddSystematics();
+  void AddJESSystematics();
+  void AddMETSystematics();
+  void AddEESSystematics();
+  void AddMMSSystematics();
+  
   void InitializeHistograms(vector<TH1D*>& histos);
   void BookHistograms(vector<TH1D*>& histos);
+
+  void InitializeSystematics();
 
   string GetEntry(int entry);
 
@@ -50,10 +63,15 @@ public:
   // analysis functions
   virtual int GetNPV();
   virtual int GetNPUtrue();
+
+  virtual bool GetMETtrigger();
+  virtual bool GetMETHTtrigger();
+  virtual bool GetMETORtrigger();
   
   virtual TVector3 GetPV(bool& good);
   virtual TVector3 GetMET();
   virtual ParticleList GetJets();
+  virtual ParticleList GetJetsMET(TVector3& MET);
   virtual ParticleList GetElectrons();
   virtual ParticleList GetMuons();
   virtual ParticleList GetSVs(const TVector3& PV);
@@ -74,12 +92,15 @@ public:
 
   bool IsSMS(){ return m_DoSMS; }
   bool IsData(){ return m_IsData; }
+  bool IsFastSim(){ return m_IsFastSim; }
+  
   string GetDataSet(){ return m_DataSet; }
   string GetFileTag(){ return m_FileTag; }
   
 protected:
   bool m_DoSMS;
   bool m_IsData;
+  bool m_IsFastSim;
   
   virtual double GetEventWeight();
   virtual double GetPUWeight(int updown = 0);
@@ -87,16 +108,22 @@ protected:
   virtual double GetXsec();
   virtual bool   IsGoodEvent();
 
+  void SetSystematic(const Systematic& sys);
+
   string m_DataSet;
   string m_FileTag;
+
+  Systematics m_Systematics;
   
 private:
 
-  NeventTool m_NeventTool;
-  XsecTool   m_XsecTool;
-  JSONTool   m_JSONTool;
-  PUTool     m_PUTool;
-  BtagSFTool m_BtagSFTool;
+  NeventTool  m_NeventTool;
+  XsecTool    m_XsecTool;
+  JSONTool    m_JSONTool;
+  PUTool      m_PUTool;
+  BtagSFTool  m_BtagSFTool;
+  JMETool     m_JMETool;
+  SVDiscrTool m_SVDiscrTool;
 
   int m_SampleIndex;
   virtual int GetSampleIndex();
@@ -106,6 +133,15 @@ private:
   std::map<int,double>      m_IndexToXsec;
   std::map<int,double>      m_IndexToNevent;
   std::map<int,double>      m_IndexToNweight;
+
+  const Systematic* m_CurSys;
+  const Systematic& CurrentSystematic() const;
+
+  Systematics m_DefaultSys;
+  Systematics m_JESSys; // jet energy scale systematics
+  Systematics m_MMSSys; // muon momentum scale
+  Systematics m_EESSys; // electron energy scale
+  Systematics m_METSys; // MET systematics
   
 };
 

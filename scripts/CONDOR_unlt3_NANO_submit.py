@@ -67,6 +67,8 @@ def write_sh(srcfile,ifile,ofile,lfile,dataset,filetag,i,n):
     fsrc.write('-json='+JSON+" ")
     fsrc.write('-pu='+PUFOLD+" ")
     fsrc.write('-btag='+BTAGFOLD+" ")
+    fsrc.write('-jme='+JMEFOLD+" ")
+    fsrc.write('-svfile='+SVFILE+" ")
     splitstring = '-split=%d,%d \n' % (i+1,n)
     fsrc.write(splitstring)
     fsrc.write('output = '+lfile+"_out.log \n")
@@ -167,8 +169,8 @@ if __name__ == "__main__":
     FILTEREFF = config+"FilterEff.root"
 
     # make json file
-    os.system("cat JSON/* > "+config+"JSON.txt")
-    JSON = config+"JSON.txt"
+    os.system("cat JSON/GoodRunList/* > "+config+"GRL_JSON.txt")
+    JSON = config+"GRL_JSON.txt"
 
     # copy PU root files
     os.system("cp -r root/PU "+config+".")
@@ -178,6 +180,14 @@ if __name__ == "__main__":
     os.system("cp -r root/BtagSF "+config+".")
     os.system("cp -r csv/BtagSF/* "+config+"BtagSF/.")
     BTAGFOLD = config+"BtagSF/"
+
+    # copy JME files
+    os.system("cp -r data/JME "+config+".")
+    JMEFOLD = config+"JME/"
+
+    # copy SV NN model
+    os.system("cat json/lwtnn/nano_train_model.json > "+config+"NNmodel.json")
+    SVFILE = config+"NNmodel.json"
     
     # output root files
     ROOT = OUT+"/"+NAME+"/"
@@ -244,6 +254,6 @@ if __name__ == "__main__":
             for i in range(SPLIT):
                 namei = name + "_%d" % i
                 write_sh(srcdir+namei+".sh",f,ROOT+dataset+"_"+filetag+"/"+namei+".root",logdir+namei,dataset,filetag,i,SPLIT)
-                os.system('echo condor_submit '+srcdir+namei+".sh")
+                os.system('condor_submit '+srcdir+namei+".sh")
             
     

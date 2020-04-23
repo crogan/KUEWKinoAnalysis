@@ -1,6 +1,4 @@
 #include "JSONTool.hh"
-#include <vector>
-
 
 block::block(int run, int lumi_beg, int lumi_end){
   m_run = run;
@@ -105,7 +103,8 @@ void JSONTool::BuildMap(const std::string& jsonfile){
   
   while(getline(ifile,line)){
     //remove whitespace
-    line.erase(remove(line.begin(), line.end(), ' '), line.end());
+    //line.erase(remove(line.begin(), line.end(), ' '), line.end());
+    line.erase(remove_if(line.begin(), line.end(), ::isspace), line.end());
 
     while(line.find("\"") != string::npos){
       // parse run number
