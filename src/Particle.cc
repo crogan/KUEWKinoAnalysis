@@ -16,6 +16,10 @@ Particle::Particle() : TLorentzVector() {
   m_IP3D = 0.;
   m_SIP3D = 0.;
 
+  m_D3d = 0.;
+  m_D3dSig = 0.;
+  m_CosTheta = 0.;
+  m_Ndof = 0.;
   m_Btag = 0.;
   m_BtagID = kNothing;
 }
@@ -94,6 +98,30 @@ double Particle::SIP3D() const {
   return m_SIP3D;
 }
 
+double Particle::D3d() const {
+  return m_D3d;
+}
+
+double Particle::D3dSig() const {
+  return m_D3dSig;
+}
+
+double Particle::CosTheta() const {
+  return m_CosTheta;
+}
+
+double Particle::Ndof() const {
+  return m_Ndof;
+}
+
+double Particle::ProbB() const {
+  return m_ProbB;
+}
+
+double Particle::ProbC() const {
+  return m_ProbC;
+}
+
 void Particle::SetDxy(double val){
   m_Dxy = val;
 }
@@ -116,6 +144,30 @@ void Particle::SetIP3D(double val){
 
 void Particle::SetSIP3D(double val){
   m_SIP3D = val;
+}
+
+void Particle::SetD3d(double val){
+  m_D3d = val;
+}
+
+void Particle::SetD3dSig(double val){
+  m_D3dSig = val;
+}
+
+void Particle::SetCosTheta(double val){
+  m_CosTheta = val;
+}
+
+void Particle::SetNdof(double val){
+  m_Ndof = val;
+}
+
+void Particle::SetProbB(double val){
+  m_ProbB = val;
+}
+
+void Particle::SetProbC(double val){
+  m_ProbC = val;
 }
 
 void Particle::SetRelIso(double iso){

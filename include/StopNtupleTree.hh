@@ -468,6 +468,7 @@ public :
    virtual void     Init(TTree *tree);
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
+  virtual void ClearEvent(){}
 };
 
 #endif

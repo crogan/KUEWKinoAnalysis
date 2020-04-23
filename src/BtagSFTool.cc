@@ -3,43 +3,11 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <algorithm>
 
 #include <TFile.h>
-#include <RooArgList.h>
 
 using std::string;
-
-double FormulaBins::SF(double pT){
-  for(int i = 0; i < m_Nbins; i++){
-    if(pT < m_Bins[i]->Max())
-      return m_Bins[i]->SF(pT);
-  }
-
-  return 1;
-}
-
-void FormulaBins::AddBin(double min, double max, const std::string& formula){
-  FormulaBin* bin = new FormulaBin(min,max,formula);
-
-  if(m_Nbins == 0){
-    m_Bins.push_back(bin);
-    m_Nbins++;
-    return;
-  }
-
-  FormulaBin* next = bin;
-  for(int b = 0; b < m_Nbins; b++){
-    if(bin->Min() < m_Bins[b]->Min()){
-      next = m_Bins[b];
-      m_Bins[b] = bin;
-      bin = next;
-    }
-  }
-  m_Bins.push_back(next);
-  m_Nbins++;
-
-  return;
-}
 
 double BtagSFTool::EFF(double pT, int year, int flavor){
   if(flavor < 0 || flavor > 2)
@@ -138,7 +106,8 @@ void BtagSFTool::ParseCSV(const std::string& csvfile, int iyear){
   getline(ifile,line);
   while(getline(ifile,line)){
     //remove whitespace
-    line.erase(remove(line.begin(), line.end(), ' '), line.end());
+    //line.erase(remove(line.begin(), line.end(), ' '), line.end());
+    line.erase(remove_if(line.begin(), line.end(), ::isspace), line.end());
 
     // first digit is WP - keeoing only medium (1) working point for now
     if(stoi(line.substr(0,1)) != 1)
@@ -218,21 +187,21 @@ std::string BtagSFTool::popcomma(std::string& line){
   return ret;
 }
 
-double BtagSFTool::GetWeight(int Njet, double* PT_jet, double* flavor_jet, bool* Btag_jet, int year, int updown){
-  if(abs(updown) > 1) return 1.;
+// double BtagSFTool::GetWeight(int Njet, double* PT_jet, double* flavor_jet, bool* Btag_jet, int year, int updown){
+//   if(abs(updown) > 1) return 1.;
   
-  // if(year == 2016)
-  //   if(m_PU2016[updown+1] != nullptr)
-  //     return m_PU2016[updown+1]->weight(NPV);
-  // if(year == 2017)
-  //   if(m_PU2017[updown+1] != nullptr)
-  //     return m_PU2017[updown+1]->weight(NPV);
-  // if(year == 2018)
-  //   if(m_PU2018[updown+1] != nullptr)
-  //     return m_PU2018[updown+1]->weight(NPV);
+//   // if(year == 2016)
+//   //   if(m_PU2016[updown+1] != nullptr)
+//   //     return m_PU2016[updown+1]->weight(NPV);
+//   // if(year == 2017)
+//   //   if(m_PU2017[updown+1] != nullptr)
+//   //     return m_PU2017[updown+1]->weight(NPV);
+//   // if(year == 2018)
+//   //   if(m_PU2018[updown+1] != nullptr)
+//   //     return m_PU2018[updown+1]->weight(NPV);
 
-  return 1.;
-}
+//   return 1.;
+// }
 
 
 

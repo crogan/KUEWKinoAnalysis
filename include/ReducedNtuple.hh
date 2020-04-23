@@ -18,7 +18,7 @@ public:
 private:
   bool m_library_generated;
   TTree* InitOutputTree(const string& sample);
-  void FillOutputTree(TTree* tree);
+  void FillOutputTree(TTree* tree, const Systematic& sys = Systematic::Default());
 
   void ClearVariables();
 
@@ -48,6 +48,10 @@ private:
 
   double m_HT;
 
+  bool m_METtrigger;
+  bool m_METHTtrigger;
+  bool m_METORtrigger;
+  
   int m_Nele;
   int m_Nmu;
   
@@ -78,6 +82,8 @@ private:
   vector<double> m_Btag_jet;
   vector<int>    m_BtagID_jet;
   vector<double> m_Flavor_jet;
+  vector<double> m_ProbB_SV;
+  vector<double> m_ProbC_SV;
 
   int m_NSV;
   vector<double> m_PT_SV;

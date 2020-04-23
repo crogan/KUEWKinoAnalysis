@@ -750,8 +750,6 @@ public :
   Bool_t          HLT_Mu38NoFiltersNoVtxDisplaced_DisplacedJet60_Loose;
   Bool_t          HLT_Mu38NoFiltersNoVtx_DisplacedJet60_Loose;
   Bool_t          HLT_Mu28NoFiltersNoVtx_CentralCaloJet40;
-  Bool_t          HLT_PFHT300_PFMET100;
-  Bool_t          HLT_PFHT300_PFMET110;
   Bool_t          HLT_PFHT550_4JetPt50;
   Bool_t          HLT_PFHT650_4JetPt50;
   Bool_t          HLT_PFHT750_4JetPt50;
@@ -845,11 +843,6 @@ public :
   Bool_t          HLT_PFMET170_BeamHaloCleaned;
   Bool_t          HLT_PFMET170_HBHE_BeamHaloCleaned;
   Bool_t          HLT_PFMETTypeOne190_HBHE_BeamHaloCleaned;
-  Bool_t          HLT_PFMET90_PFMHT90_IDTight;
-  Bool_t          HLT_PFMET100_PFMHT100_IDTight;
-  Bool_t          HLT_PFMET100_PFMHT100_IDTight_BeamHaloCleaned;
-  Bool_t          HLT_PFMET110_PFMHT110_IDTight;
-  Bool_t          HLT_PFMET120_PFMHT120_IDTight;
   Bool_t          HLT_CaloMHTNoPU90_PFMET90_PFMHT90_IDTight_BTagCSV_p067;
   Bool_t          HLT_CaloMHTNoPU90_PFMET90_PFMHT90_IDTight;
   Bool_t          HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq200;
@@ -1003,10 +996,6 @@ public :
   Bool_t          HLT_VBF_DisplacedJet40_VVTightID_Hadronic;
   Bool_t          HLT_VBF_DisplacedJet40_VTightID_DisplacedTrack;
   Bool_t          HLT_VBF_DisplacedJet40_VVTightID_DisplacedTrack;
-  Bool_t          HLT_PFMETNoMu90_PFMHTNoMu90_IDTight;
-  Bool_t          HLT_PFMETNoMu100_PFMHTNoMu100_IDTight;
-  Bool_t          HLT_PFMETNoMu110_PFMHTNoMu110_IDTight;
-  Bool_t          HLT_PFMETNoMu120_PFMHTNoMu120_IDTight;
   Bool_t          HLT_MonoCentralPFJet80_PFMETNoMu90_PFMHTNoMu90_IDTight;
   Bool_t          HLT_MonoCentralPFJet80_PFMETNoMu100_PFMHTNoMu100_IDTight;
   Bool_t          HLT_MonoCentralPFJet80_PFMETNoMu110_PFMHTNoMu110_IDTight;
@@ -1167,6 +1156,40 @@ public :
   Bool_t          Flag_trkPOG_toomanystripclus53X;
   Bool_t          Flag_trkPOG_logErrorTooManyClusters;
   Bool_t          Flag_METFilters;
+  
+  // MET triggers
+
+  // 2016
+  Bool_t          HLT_PFMETNoMu90_PFMHTNoMu90_IDTight;
+  Bool_t          HLT_PFMETNoMu100_PFMHTNoMu100_IDTight;
+  Bool_t          HLT_PFMETNoMu110_PFMHTNoMu110_IDTight;
+  Bool_t          HLT_PFMETNoMu120_PFMHTNoMu120_IDTight;
+  Bool_t          HLT_PFMET90_PFMHT90_IDTight; 
+  Bool_t          HLT_PFMET100_PFMHT100_IDTight;
+  Bool_t          HLT_PFMET100_PFMHT100_IDTight_BeamHaloCleaned;
+  Bool_t          HLT_PFMET110_PFMHT110_IDTight;
+  Bool_t          HLT_PFMET120_PFMHT120_IDTight;
+
+  Bool_t          HLT_PFHT300_PFMET100;
+  Bool_t          HLT_PFHT300_PFMET110;
+
+
+  // 2017/2018
+  Bool_t          HLT_PFHT500_PFMET100_PFMHT100_IDTight;
+  Bool_t          HLT_PFHT500_PFMET110_PFMHT110_IDTight;
+  Bool_t          HLT_PFHT700_PFMET85_PFMHT85_IDTight;
+  Bool_t          HLT_PFHT700_PFMET95_PFMHT95_IDTight;
+  Bool_t          HLT_PFHT800_PFMET75_PFMHT75_IDTight;
+  Bool_t          HLT_PFHT800_PFMET85_PFMHT85_IDTight;
+  
+  Bool_t          HLT_PFMET130_PFMHT130_IDTight;
+  Bool_t          HLT_PFMET140_PFMHT140_IDTight;
+  Bool_t          HLT_PFMETNoMu130_PFMHTNoMu130_IDTight;
+  Bool_t          HLT_PFMETNoMu140_PFMHTNoMu140_IDTight;
+
+  Bool_t          HLT_PFMET120_PFMHT120_IDTight_PFHT60;
+  Bool_t          HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60;
+ 
 
   // List of branches
   TBranch        *b_run;   //!
@@ -1895,8 +1918,6 @@ public :
   TBranch        *b_HLT_Mu38NoFiltersNoVtxDisplaced_DisplacedJet60_Loose;   //!
   TBranch        *b_HLT_Mu38NoFiltersNoVtx_DisplacedJet60_Loose;   //!
   TBranch        *b_HLT_Mu28NoFiltersNoVtx_CentralCaloJet40;   //!
-  TBranch        *b_HLT_PFHT300_PFMET100;   //!
-  TBranch        *b_HLT_PFHT300_PFMET110;   //!
   TBranch        *b_HLT_PFHT550_4JetPt50;   //!
   TBranch        *b_HLT_PFHT650_4JetPt50;   //!
   TBranch        *b_HLT_PFHT750_4JetPt50;   //!
@@ -1990,11 +2011,6 @@ public :
   TBranch        *b_HLT_PFMET170_BeamHaloCleaned;   //!
   TBranch        *b_HLT_PFMET170_HBHE_BeamHaloCleaned;   //!
   TBranch        *b_HLT_PFMETTypeOne190_HBHE_BeamHaloCleaned;   //!
-  TBranch        *b_HLT_PFMET90_PFMHT90_IDTight;   //!
-  TBranch        *b_HLT_PFMET100_PFMHT100_IDTight;   //!
-  TBranch        *b_HLT_PFMET100_PFMHT100_IDTight_BeamHaloCleaned;   //!
-  TBranch        *b_HLT_PFMET110_PFMHT110_IDTight;   //!
-  TBranch        *b_HLT_PFMET120_PFMHT120_IDTight;   //!
   TBranch        *b_HLT_CaloMHTNoPU90_PFMET90_PFMHT90_IDTight_BTagCSV_p067;   //!
   TBranch        *b_HLT_CaloMHTNoPU90_PFMET90_PFMHT90_IDTight;   //!
   TBranch        *b_HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq200;   //!
@@ -2148,10 +2164,6 @@ public :
   TBranch        *b_HLT_VBF_DisplacedJet40_VVTightID_Hadronic;   //!
   TBranch        *b_HLT_VBF_DisplacedJet40_VTightID_DisplacedTrack;   //!
   TBranch        *b_HLT_VBF_DisplacedJet40_VVTightID_DisplacedTrack;   //!
-  TBranch        *b_HLT_PFMETNoMu90_PFMHTNoMu90_IDTight;   //!
-  TBranch        *b_HLT_PFMETNoMu100_PFMHTNoMu100_IDTight;   //!
-  TBranch        *b_HLT_PFMETNoMu110_PFMHTNoMu110_IDTight;   //!
-  TBranch        *b_HLT_PFMETNoMu120_PFMHTNoMu120_IDTight;   //!
   TBranch        *b_HLT_MonoCentralPFJet80_PFMETNoMu90_PFMHTNoMu90_IDTight;   //!
   TBranch        *b_HLT_MonoCentralPFJet80_PFMETNoMu100_PFMHTNoMu100_IDTight;   //!
   TBranch        *b_HLT_MonoCentralPFJet80_PFMETNoMu110_PFMHTNoMu110_IDTight;   //!
@@ -2313,6 +2325,35 @@ public :
   TBranch        *b_Flag_trkPOG_logErrorTooManyClusters;   //!
   TBranch        *b_Flag_METFilters;   //!
 
+  // MET triggers
+  TBranch        *b_HLT_PFMETNoMu90_PFMHTNoMu90_IDTight;   //!
+  TBranch        *b_HLT_PFMETNoMu100_PFMHTNoMu100_IDTight;   //!
+  TBranch        *b_HLT_PFMETNoMu110_PFMHTNoMu110_IDTight;   //!
+  TBranch        *b_HLT_PFMETNoMu120_PFMHTNoMu120_IDTight;   //!
+  TBranch        *b_HLT_PFMET90_PFMHT90_IDTight;   //!
+  TBranch        *b_HLT_PFMET100_PFMHT100_IDTight;   //!
+  TBranch        *b_HLT_PFMET100_PFMHT100_IDTight_BeamHaloCleaned;   //!
+  TBranch        *b_HLT_PFMET110_PFMHT110_IDTight;   //!
+  TBranch        *b_HLT_PFMET120_PFMHT120_IDTight;   //!
+  TBranch        *b_HLT_PFHT300_PFMET100;   //!
+  TBranch        *b_HLT_PFHT300_PFMET110;   //!
+
+  TBranch        *b_HLT_PFHT500_PFMET100_PFMHT100_IDTight;   //!
+  TBranch        *b_HLT_PFHT500_PFMET110_PFMHT110_IDTight;   //!
+  TBranch        *b_HLT_PFHT700_PFMET85_PFMHT85_IDTight;   //!
+  TBranch        *b_HLT_PFHT700_PFMET95_PFMHT95_IDTight;   //!
+  TBranch        *b_HLT_PFHT800_PFMET75_PFMHT75_IDTight;   //!
+  TBranch        *b_HLT_PFHT800_PFMET85_PFMHT85_IDTight;   //!
+
+  TBranch        *b_HLT_PFMET130_PFMHT130_IDTight;   //!
+  TBranch        *b_HLT_PFMET140_PFMHT140_IDTight;   //!
+
+  TBranch        *b_HLT_PFMET120_PFMHT120_IDTight_PFHT60;   //!
+  TBranch        *b_HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60;   //!
+  
+  TBranch        *b_HLT_PFMETNoMu130_PFMHTNoMu130_IDTight;   //!
+  TBranch        *b_HLT_PFMETNoMu140_PFMHTNoMu140_IDTight;   //!
+
   SUSYNANOBase(TTree *tree=0);
   virtual ~SUSYNANOBase();
   virtual Int_t    Cut(Long64_t entry);
@@ -2321,6 +2362,7 @@ public :
   virtual void     Init(TTree *tree);
   virtual Bool_t   Notify();
   virtual void     Show(Long64_t entry = -1);
+  virtual void ClearEvent();
 };
 
 #endif
@@ -3107,8 +3149,6 @@ inline void SUSYNANOBase::Init(TTree *tree)
   fChain->SetBranchAddress("HLT_Mu38NoFiltersNoVtxDisplaced_DisplacedJet60_Loose", &HLT_Mu38NoFiltersNoVtxDisplaced_DisplacedJet60_Loose, &b_HLT_Mu38NoFiltersNoVtxDisplaced_DisplacedJet60_Loose);
   fChain->SetBranchAddress("HLT_Mu38NoFiltersNoVtx_DisplacedJet60_Loose", &HLT_Mu38NoFiltersNoVtx_DisplacedJet60_Loose, &b_HLT_Mu38NoFiltersNoVtx_DisplacedJet60_Loose);
   fChain->SetBranchAddress("HLT_Mu28NoFiltersNoVtx_CentralCaloJet40", &HLT_Mu28NoFiltersNoVtx_CentralCaloJet40, &b_HLT_Mu28NoFiltersNoVtx_CentralCaloJet40);
-  fChain->SetBranchAddress("HLT_PFHT300_PFMET100", &HLT_PFHT300_PFMET100, &b_HLT_PFHT300_PFMET100);
-  fChain->SetBranchAddress("HLT_PFHT300_PFMET110", &HLT_PFHT300_PFMET110, &b_HLT_PFHT300_PFMET110);
   fChain->SetBranchAddress("HLT_PFHT550_4JetPt50", &HLT_PFHT550_4JetPt50, &b_HLT_PFHT550_4JetPt50);
   fChain->SetBranchAddress("HLT_PFHT650_4JetPt50", &HLT_PFHT650_4JetPt50, &b_HLT_PFHT650_4JetPt50);
   fChain->SetBranchAddress("HLT_PFHT750_4JetPt50", &HLT_PFHT750_4JetPt50, &b_HLT_PFHT750_4JetPt50);
@@ -3202,11 +3242,6 @@ inline void SUSYNANOBase::Init(TTree *tree)
   fChain->SetBranchAddress("HLT_PFMET170_BeamHaloCleaned", &HLT_PFMET170_BeamHaloCleaned, &b_HLT_PFMET170_BeamHaloCleaned);
   fChain->SetBranchAddress("HLT_PFMET170_HBHE_BeamHaloCleaned", &HLT_PFMET170_HBHE_BeamHaloCleaned, &b_HLT_PFMET170_HBHE_BeamHaloCleaned);
   fChain->SetBranchAddress("HLT_PFMETTypeOne190_HBHE_BeamHaloCleaned", &HLT_PFMETTypeOne190_HBHE_BeamHaloCleaned, &b_HLT_PFMETTypeOne190_HBHE_BeamHaloCleaned);
-  fChain->SetBranchAddress("HLT_PFMET90_PFMHT90_IDTight", &HLT_PFMET90_PFMHT90_IDTight, &b_HLT_PFMET90_PFMHT90_IDTight);
-  fChain->SetBranchAddress("HLT_PFMET100_PFMHT100_IDTight", &HLT_PFMET100_PFMHT100_IDTight, &b_HLT_PFMET100_PFMHT100_IDTight);
-  fChain->SetBranchAddress("HLT_PFMET100_PFMHT100_IDTight_BeamHaloCleaned", &HLT_PFMET100_PFMHT100_IDTight_BeamHaloCleaned, &b_HLT_PFMET100_PFMHT100_IDTight_BeamHaloCleaned);
-  fChain->SetBranchAddress("HLT_PFMET110_PFMHT110_IDTight", &HLT_PFMET110_PFMHT110_IDTight, &b_HLT_PFMET110_PFMHT110_IDTight);
-  fChain->SetBranchAddress("HLT_PFMET120_PFMHT120_IDTight", &HLT_PFMET120_PFMHT120_IDTight, &b_HLT_PFMET120_PFMHT120_IDTight);
   fChain->SetBranchAddress("HLT_CaloMHTNoPU90_PFMET90_PFMHT90_IDTight_BTagCSV_p067", &HLT_CaloMHTNoPU90_PFMET90_PFMHT90_IDTight_BTagCSV_p067, &b_HLT_CaloMHTNoPU90_PFMET90_PFMHT90_IDTight_BTagCSV_p067);
   fChain->SetBranchAddress("HLT_CaloMHTNoPU90_PFMET90_PFMHT90_IDTight", &HLT_CaloMHTNoPU90_PFMET90_PFMHT90_IDTight, &b_HLT_CaloMHTNoPU90_PFMET90_PFMHT90_IDTight);
   fChain->SetBranchAddress("HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq200", &HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq200, &b_HLT_QuadPFJet_BTagCSV_p016_p11_VBF_Mqq200);
@@ -3360,10 +3395,6 @@ inline void SUSYNANOBase::Init(TTree *tree)
   fChain->SetBranchAddress("HLT_VBF_DisplacedJet40_VVTightID_Hadronic", &HLT_VBF_DisplacedJet40_VVTightID_Hadronic, &b_HLT_VBF_DisplacedJet40_VVTightID_Hadronic);
   fChain->SetBranchAddress("HLT_VBF_DisplacedJet40_VTightID_DisplacedTrack", &HLT_VBF_DisplacedJet40_VTightID_DisplacedTrack, &b_HLT_VBF_DisplacedJet40_VTightID_DisplacedTrack);
   fChain->SetBranchAddress("HLT_VBF_DisplacedJet40_VVTightID_DisplacedTrack", &HLT_VBF_DisplacedJet40_VVTightID_DisplacedTrack, &b_HLT_VBF_DisplacedJet40_VVTightID_DisplacedTrack);
-  fChain->SetBranchAddress("HLT_PFMETNoMu90_PFMHTNoMu90_IDTight", &HLT_PFMETNoMu90_PFMHTNoMu90_IDTight, &b_HLT_PFMETNoMu90_PFMHTNoMu90_IDTight);
-  fChain->SetBranchAddress("HLT_PFMETNoMu100_PFMHTNoMu100_IDTight", &HLT_PFMETNoMu100_PFMHTNoMu100_IDTight, &b_HLT_PFMETNoMu100_PFMHTNoMu100_IDTight);
-  fChain->SetBranchAddress("HLT_PFMETNoMu110_PFMHTNoMu110_IDTight", &HLT_PFMETNoMu110_PFMHTNoMu110_IDTight, &b_HLT_PFMETNoMu110_PFMHTNoMu110_IDTight);
-  fChain->SetBranchAddress("HLT_PFMETNoMu120_PFMHTNoMu120_IDTight", &HLT_PFMETNoMu120_PFMHTNoMu120_IDTight, &b_HLT_PFMETNoMu120_PFMHTNoMu120_IDTight);
   fChain->SetBranchAddress("HLT_MonoCentralPFJet80_PFMETNoMu90_PFMHTNoMu90_IDTight", &HLT_MonoCentralPFJet80_PFMETNoMu90_PFMHTNoMu90_IDTight, &b_HLT_MonoCentralPFJet80_PFMETNoMu90_PFMHTNoMu90_IDTight);
   fChain->SetBranchAddress("HLT_MonoCentralPFJet80_PFMETNoMu100_PFMHTNoMu100_IDTight", &HLT_MonoCentralPFJet80_PFMETNoMu100_PFMHTNoMu100_IDTight, &b_HLT_MonoCentralPFJet80_PFMETNoMu100_PFMHTNoMu100_IDTight);
   fChain->SetBranchAddress("HLT_MonoCentralPFJet80_PFMETNoMu110_PFMHTNoMu110_IDTight", &HLT_MonoCentralPFJet80_PFMETNoMu110_PFMHTNoMu110_IDTight, &b_HLT_MonoCentralPFJet80_PFMETNoMu110_PFMHTNoMu110_IDTight);
@@ -3524,7 +3555,71 @@ inline void SUSYNANOBase::Init(TTree *tree)
   fChain->SetBranchAddress("Flag_trkPOG_toomanystripclus53X", &Flag_trkPOG_toomanystripclus53X, &b_Flag_trkPOG_toomanystripclus53X);
   fChain->SetBranchAddress("Flag_trkPOG_logErrorTooManyClusters", &Flag_trkPOG_logErrorTooManyClusters, &b_Flag_trkPOG_logErrorTooManyClusters);
   fChain->SetBranchAddress("Flag_METFilters", &Flag_METFilters, &b_Flag_METFilters);
+
+  // MET triggers
+  fChain->SetBranchAddress("HLT_PFMETNoMu90_PFMHTNoMu90_IDTight", &HLT_PFMETNoMu90_PFMHTNoMu90_IDTight, &b_HLT_PFMETNoMu90_PFMHTNoMu90_IDTight);
+  fChain->SetBranchAddress("HLT_PFMETNoMu100_PFMHTNoMu100_IDTight", &HLT_PFMETNoMu100_PFMHTNoMu100_IDTight, &b_HLT_PFMETNoMu100_PFMHTNoMu100_IDTight);
+  fChain->SetBranchAddress("HLT_PFMETNoMu110_PFMHTNoMu110_IDTight", &HLT_PFMETNoMu110_PFMHTNoMu110_IDTight, &b_HLT_PFMETNoMu110_PFMHTNoMu110_IDTight);
+  fChain->SetBranchAddress("HLT_PFMETNoMu120_PFMHTNoMu120_IDTight", &HLT_PFMETNoMu120_PFMHTNoMu120_IDTight, &b_HLT_PFMETNoMu120_PFMHTNoMu120_IDTight);
+  fChain->SetBranchAddress("HLT_PFMET90_PFMHT90_IDTight", &HLT_PFMET90_PFMHT90_IDTight, &b_HLT_PFMET90_PFMHT90_IDTight);
+  fChain->SetBranchAddress("HLT_PFMET100_PFMHT100_IDTight", &HLT_PFMET100_PFMHT100_IDTight, &b_HLT_PFMET100_PFMHT100_IDTight);
+  fChain->SetBranchAddress("HLT_PFMET100_PFMHT100_IDTight_BeamHaloCleaned", &HLT_PFMET100_PFMHT100_IDTight_BeamHaloCleaned, &b_HLT_PFMET100_PFMHT100_IDTight_BeamHaloCleaned);
+  fChain->SetBranchAddress("HLT_PFMET110_PFMHT110_IDTight", &HLT_PFMET110_PFMHT110_IDTight, &b_HLT_PFMET110_PFMHT110_IDTight);
+  fChain->SetBranchAddress("HLT_PFMET120_PFMHT120_IDTight", &HLT_PFMET120_PFMHT120_IDTight, &b_HLT_PFMET120_PFMHT120_IDTight);
+  fChain->SetBranchAddress("HLT_PFHT300_PFMET100", &HLT_PFHT300_PFMET100, &b_HLT_PFHT300_PFMET100);
+  fChain->SetBranchAddress("HLT_PFHT300_PFMET110", &HLT_PFHT300_PFMET110, &b_HLT_PFHT300_PFMET110);
+
+  fChain->SetBranchAddress("HLT_PFHT500_PFMET100_PFMHT100_IDTight", &HLT_PFHT500_PFMET100_PFMHT100_IDTight, &b_HLT_PFHT500_PFMET100_PFMHT100_IDTight);
+   fChain->SetBranchAddress("HLT_PFHT500_PFMET110_PFMHT110_IDTight", &HLT_PFHT500_PFMET110_PFMHT110_IDTight, &b_HLT_PFHT500_PFMET110_PFMHT110_IDTight);
+   fChain->SetBranchAddress("HLT_PFHT700_PFMET85_PFMHT85_IDTight", &HLT_PFHT700_PFMET85_PFMHT85_IDTight, &b_HLT_PFHT700_PFMET85_PFMHT85_IDTight);
+   fChain->SetBranchAddress("HLT_PFHT700_PFMET95_PFMHT95_IDTight", &HLT_PFHT700_PFMET95_PFMHT95_IDTight, &b_HLT_PFHT700_PFMET95_PFMHT95_IDTight);
+   fChain->SetBranchAddress("HLT_PFHT800_PFMET75_PFMHT75_IDTight", &HLT_PFHT800_PFMET75_PFMHT75_IDTight, &b_HLT_PFHT800_PFMET75_PFMHT75_IDTight);
+   fChain->SetBranchAddress("HLT_PFHT800_PFMET85_PFMHT85_IDTight", &HLT_PFHT800_PFMET85_PFMHT85_IDTight, &b_HLT_PFHT800_PFMET85_PFMHT85_IDTight);
+   fChain->SetBranchAddress("HLT_PFMET130_PFMHT130_IDTight", &HLT_PFMET130_PFMHT130_IDTight, &b_HLT_PFMET130_PFMHT130_IDTight);
+   fChain->SetBranchAddress("HLT_PFMET140_PFMHT140_IDTight", &HLT_PFMET140_PFMHT140_IDTight, &b_HLT_PFMET140_PFMHT140_IDTight);
+   fChain->SetBranchAddress("HLT_PFMET120_PFMHT120_IDTight_PFHT60", &HLT_PFMET120_PFMHT120_IDTight_PFHT60, &b_HLT_PFMET120_PFMHT120_IDTight_PFHT60);
+   fChain->SetBranchAddress("HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60", &HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60, &b_HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60);
+   fChain->SetBranchAddress("HLT_PFMETNoMu130_PFMHTNoMu130_IDTight", &HLT_PFMETNoMu130_PFMHTNoMu130_IDTight, &b_HLT_PFMETNoMu130_PFMHTNoMu130_IDTight);
+   fChain->SetBranchAddress("HLT_PFMETNoMu140_PFMHTNoMu140_IDTight", &HLT_PFMETNoMu140_PFMHTNoMu140_IDTight, &b_HLT_PFMETNoMu140_PFMHTNoMu140_IDTight);
+
+  
   Notify();
+}
+
+inline void SUSYNANOBase::ClearEvent(){
+  // 2016
+  HLT_PFMETNoMu90_PFMHTNoMu90_IDTight = false;
+  HLT_PFMETNoMu100_PFMHTNoMu100_IDTight = false;
+  HLT_PFMETNoMu110_PFMHTNoMu110_IDTight = false;
+  HLT_PFMETNoMu120_PFMHTNoMu120_IDTight = false;
+  HLT_PFMET90_PFMHT90_IDTight = false; 
+  HLT_PFMET100_PFMHT100_IDTight = false;
+  HLT_PFMET100_PFMHT100_IDTight_BeamHaloCleaned = false;
+  HLT_PFMET110_PFMHT110_IDTight = false;
+  HLT_PFMET120_PFMHT120_IDTight = false;
+
+  HLT_PFHT300_PFMET100 = false;
+  HLT_PFHT300_PFMET110 = false;
+
+  // 2017/2018
+  HLT_PFHT500_PFMET100_PFMHT100_IDTight = false;
+  HLT_PFHT500_PFMET110_PFMHT110_IDTight = false;
+  HLT_PFHT700_PFMET85_PFMHT85_IDTight = false;
+  HLT_PFHT700_PFMET95_PFMHT95_IDTight = false;
+  HLT_PFHT800_PFMET75_PFMHT75_IDTight = false;
+  HLT_PFHT800_PFMET85_PFMHT85_IDTight = false;
+  
+  HLT_PFMET110_PFMHT110_IDTight = false;
+  HLT_PFMET120_PFMHT120_IDTight = false;
+  HLT_PFMET130_PFMHT130_IDTight = false;
+  HLT_PFMET140_PFMHT140_IDTight = false;
+  HLT_PFMETNoMu110_PFMHTNoMu110_IDTight = false;
+  HLT_PFMETNoMu120_PFMHTNoMu120_IDTight = false;
+  HLT_PFMETNoMu130_PFMHTNoMu130_IDTight = false;
+  HLT_PFMETNoMu140_PFMHTNoMu140_IDTight = false;
+
+  HLT_PFMET120_PFMHT120_IDTight_PFHT60 = false;
+  HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60 = false;
 }
 
 inline Bool_t SUSYNANOBase::Notify()
