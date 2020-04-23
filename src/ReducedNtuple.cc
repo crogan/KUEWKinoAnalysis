@@ -114,7 +114,7 @@ ReducedNtuple<Base>::ReducedNtuple(TTree* tree)
       CombSplit_J[t]->AddObjectFrames(X3b[t]->GetListVisibleFrames(), 1);
 
       COMB_L[t]->AddFrame(*La[t]);
-      COMB_L[t]->SetNElementsForFrame(*La[t], 1);
+      COMB_L[t]->SetNElementsForFrame(*La[t], 0);
       COMB_L[t]->AddFrame(*Lb[t]);
       COMB_L[t]->SetNElementsForFrame(*Lb[t], 0);
 
@@ -722,8 +722,8 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   ParticleList Jets = AnalysisBase<Base>::GetJetsMET(ETMiss);
   Jets = Jets.PtEtaCut(20., 2.4);
 
-  // if(ETMiss.Mag() < 100.)
-  //   return;
+  if(ETMiss.Mag() < 175.)
+    return;
   
   ClearVariables();
 
@@ -771,8 +771,8 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   m_NSV = SVs.size();
   
   // require at least one lepton for now
-  if(m_Nlep < 1)
-    return;
+  // if(m_Nlep < 1)
+  //   return;
   
   // not enough stuff
   if(m_Nlep + m_Njet < 2)
