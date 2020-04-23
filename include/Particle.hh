@@ -44,12 +44,25 @@ public:
   void SetIP3D(double val);
   void SetSIP3D(double val);
 
+  double D3d() const;
+  double D3dSig() const;
+  double CosTheta() const;
+  double Ndof() const;
+  double ProbB() const;
+  double ProbC() const;
+  void SetD3d(double val);
+  void SetD3dSig(double val);
+  void SetCosTheta(double val);
+  void SetNdof(double val);  
+  void SetProbB(double val);
+  void SetProbC(double val);
+
   double Btag() const;
   void SetBtag(double btag);
 
   double BtagID() const;
   void SetBtagID(ParticleIDType id);
-    
+  
   operator ParticleList() const;
   ParticleList operator + (const Particle& part) const; 
   ParticleList operator + (const ParticleList& parts) const; 
@@ -74,6 +87,13 @@ private:
   double m_DzErr;
   double m_IP3D;
   double m_SIP3D;
+
+  double m_D3d;
+  double m_D3dSig;
+  double m_CosTheta;
+  double m_Ndof;
+  double m_ProbB; 
+  double m_ProbC;
   
 };
 

@@ -37,9 +37,12 @@ void Parse_EventCount_SMS(string filename){
    map<string,vector<pair<int,int> > >    mapMasses;
    map<string,map<pair<int,int>,double> > mapNevent;
    map<string,map<pair<int,int>,double> > mapNweight;
+
+   cout << N << " entries " << endl;
    
    for(int i = 0; i < N; i++){
      tree->GetEntry(i);
+     cout << *dataset << endl;
      pair<int,int> masses(MP,MC);
      if(mapMasses.count(*dataset) == 0){
        datasets.push_back(*dataset);

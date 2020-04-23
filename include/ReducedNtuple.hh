@@ -18,7 +18,7 @@ public:
 private:
   bool m_library_generated;
   TTree* InitOutputTree(const string& sample);
-  void FillOutputTree(TTree* tree);
+  void FillOutputTree(TTree* tree, const Systematic& sys = Systematic::Default());
 
   void ClearVariables();
 
@@ -26,6 +26,19 @@ private:
   
   // common variables for output tree
   double m_weight;
+  double m_PUweight;
+  double m_PUweight_up;
+  double m_PUweight_down;
+  double m_BtagSFweight;
+  double m_BtagSFweight_up;
+  double m_BtagSFweight_down;
+
+  int m_runnum;
+  int m_luminum;
+  Long64_t m_eventnum;
+
+  int m_NPV;
+  int m_NPU;
   
   double m_MET;
   double m_MET_phi;
@@ -35,6 +48,10 @@ private:
 
   double m_HT;
 
+  bool m_METtrigger;
+  bool m_METHTtrigger;
+  bool m_METORtrigger;
+  
   int m_Nele;
   int m_Nmu;
   
@@ -65,6 +82,8 @@ private:
   vector<double> m_Btag_jet;
   vector<int>    m_BtagID_jet;
   vector<double> m_Flavor_jet;
+  vector<double> m_ProbB_SV;
+  vector<double> m_ProbC_SV;
 
   int m_NSV;
   vector<double> m_PT_SV;
@@ -189,6 +208,30 @@ private:
   vector<double> m_MVa;
   vector<double> m_MVb;
 
+  vector<double> m_MJ;
+  vector<double> m_ML;
+  vector<double> m_EJ;
+  vector<double> m_EL;
+  vector<double> m_PJ;
+  vector<double> m_PL;
+  
+  vector<double> m_PX3;
+  vector<double> m_PX3_BoostT;
+  vector<double> m_MX3a_BoostT;
+  vector<double> m_MX3b_BoostT;
+
+  vector<double> m_PV_BoostT;
+  
+  vector<double> m_EVa_BoostT;
+  vector<double> m_EVb_BoostT;
+  vector<double> m_PVa_BoostT;
+  vector<double> m_PVb_BoostT;
+
+  vector<double> m_EJ_BoostT;
+  vector<double> m_EL_BoostT;
+  vector<double> m_PJ_BoostT;
+  vector<double> m_PL_BoostT;
+  
   vector<double> m_MJa;
   vector<double> m_MJb;
   vector<double> m_MLa;

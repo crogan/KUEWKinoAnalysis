@@ -20,32 +20,77 @@ NtupleBase<Base>::~NtupleBase(){
 }
 
 template <class Base>
-void NtupleBase<Base>::WriteNtuple(const string& filename){
-  TFile* outfile = new TFile(filename.c_str(),"UPDATE");
+void NtupleBase<Base>::WriteNtuple(const string& filename, int ichunk, int nchunk){
+  TFile* outfile = new TFile(filename.c_str(),"RECREATE");
   outfile->cd();
 
   string sample;
 
   std::pair<int,int> masses(0,0);
+
+  if(nchunk < 1 || ichunk < 1 || ichunk > nchunk){
+    ichunk = 1;
+    nchunk = 1;
+  }
+
+  Long64_t NTOT = Base::fChain->GetEntries();
+  cout << NTOT << endl;
+  Long64_t N1, N0;
+  if(nchunk >= NTOT){
+    N1 = ichunk;
+    N0 = ichunk-1;
+  } else {
+    N1 = NTOT/nchunk;
+    if(NTOT%nchunk > 0)
+      N1++;
+    N0 = (ichunk-1)*N1;
+    N1 = N0 + N1;
+  }
+
+  // Initialize Histogram Booking
+  vector<TH1D*> histos;
+  AnalysisBase<Base>::InitializeHistograms(histos);
+
+  int Nsys = AnalysisBase<Base>::m_Systematics.GetN();
   
-  Long64_t N = Base::fChain->GetEntries();
-  for(Long64_t i = 0; i < N; i++){
-    int mymod = N/10;
+  cout << "looping between " << N0 << " " << N1 << endl;
+  for(Long64_t i = N0; i < N1 && i < NTOT; i++){
+    int mymod = (N1-N0)/10;
     if(mymod < 1)
       mymod = 1;
     if(i%mymod == 0)
-      cout << " event = " << i << " : " << N << endl;
+      cout << " event = " << i << " : [" << N0 << " , " << N1 << "]" << endl;
 
     sample = AnalysisBase<Base>::GetEntry(i);
+    
         
     if(m_Label2Tree.count(sample) == 0){
-      TTree* tree = InitOutputTree(sample);
-      m_Trees.push_back(tree);
-      m_Label2Tree[sample] = tree;
+      m_Label2Tree[sample] = std::vector<TTree*>();
+
+      for(int s = 0; s < Nsys; s++){
+	TTree* tree = InitOutputTree(AnalysisBase<Base>::m_Systematics[s].Up().TreeName(sample));
+	m_Label2Tree[sample].push_back(tree);
+	m_Trees.push_back(tree);
+	if(!(!AnalysisBase<Base>::m_Systematics[s])){
+	  tree = InitOutputTree(AnalysisBase<Base>::m_Systematics[s].Down().TreeName(sample));
+	  m_Label2Tree[sample].push_back(tree);
+	  m_Trees.push_back(tree);
+	}
+      }
     }
-   
+    
     outfile->cd();
-    FillOutputTree(m_Label2Tree[sample]);
+    int isys = 0;
+    for(int s = 0; s < Nsys; s++){
+      FillOutputTree(m_Label2Tree[sample][isys], AnalysisBase<Base>::m_Systematics[s].Up());
+      isys++;
+      if(!(!AnalysisBase<Base>::m_Systematics[s])){
+	FillOutputTree(m_Label2Tree[sample][isys], AnalysisBase<Base>::m_Systematics[s].Down());
+	isys++;
+      }
+    }
+
+    AnalysisBase<Base>::BookHistograms(histos);
 
     // event count bookkeeping
     if(AnalysisBase<Base>::IsSMS())
@@ -92,12 +137,20 @@ void NtupleBase<Base>::WriteNtuple(const string& filename){
   }
   tout->Write("",TObject::kOverwrite);
   delete tout;
+
+  outfile->mkdir("Histograms");
+  outfile->cd("Histograms");
+  int Nhisto = histos.size();
+  for(int i = 0; i < Nhisto; i++)
+    histos[i]->Write("", TObject::kOverwrite);
   
   outfile->Close();
   delete outfile;
 
   m_Trees.clear();
   m_Label2Tree.clear();
+
+  
 }
 
 template class NtupleBase<StopNtupleTree>;
