@@ -142,14 +142,14 @@ void Plot_2D(){
   // SIG1.SetSkip(1);
   // g_Samples.push_back(&SIG1);
   
-  // SampleSet SIG1;
-  // SIG1.SetBkg(false);
-  // SIG1.SetTitle("#tilde{#chi}^{0}_{2} #tilde{#chi}^{#pm}_{1} #rightarrow Z #tilde{#chi}^{0}_{1} W #tilde{#chi}^{0}_{1}; m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 300, m_{#chi^{0}_{1}} = 290 GeV");
-  // SIG1.SetTreeName("SMS_300_290");
-  // SIG1.SetColor(kMagenta);
-  // SIG1.AddFile(NtuplePath+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-  // SIG1.SetSkip(1);
-  // g_Samples.push_back(&SIG1);
+  SampleSet SIG1;
+  SIG1.SetBkg(false);
+  SIG1.SetTitle("#tilde{#chi}^{0}_{2} #tilde{#chi}^{#pm}_{1} #rightarrow Z #tilde{#chi}^{0}_{1} W #tilde{#chi}^{0}_{1}; m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 300, m_{#chi^{0}_{1}} = 290 GeV");
+  SIG1.SetTreeName("SMS_300_220");
+  SIG1.SetColor(kMagenta);
+  SIG1.AddFile(NtuplePath+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+  SIG1.SetSkip(1);
+  g_Samples.push_back(&SIG1);
 
   // SampleSet SIG1;
   // SIG1.SetBkg(false);
@@ -170,14 +170,14 @@ void Plot_2D(){
   // SIG1.SetSkip(1);
   // g_Samples.push_back(&SIG1);
 
-  SampleSet SIG1;
-  SIG1.SetBkg(false);
-  SIG1.SetTitle("#scale[0.8]{#tilde{t} #tilde{t} #rightarrow b #tilde{#chi}^{#pm}_{1}(f #bar{f} #tilde{#chi}^{0}_{1}) b #tilde{#chi}^{#pm}_{1}(f #bar{f} #tilde{#chi}^{0}_{1})}; m_{t} = 700, m_{#chi^{0}_{1}} = 680 GeV");
-  SIG1.SetTreeName("SMS_700_680");
-  SIG1.SetColor(kMagenta);
-  SIG1.AddFile(NtuplePath+"Fall17_102X_SMS/SMS-T2bW_X05_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-  SIG1.SetSkip(1);
-  g_Samples.push_back(&SIG1);
+  // SampleSet SIG1;
+  // SIG1.SetBkg(false);
+  // SIG1.SetTitle("#scale[0.8]{#tilde{t} #tilde{t} #rightarrow b #tilde{#chi}^{#pm}_{1}(f #bar{f} #tilde{#chi}^{0}_{1}) b #tilde{#chi}^{#pm}_{1}(f #bar{f} #tilde{#chi}^{0}_{1})}; m_{t} = 700, m_{#chi^{0}_{1}} = 680 GeV");
+  // SIG1.SetTreeName("SMS_700_680");
+  // SIG1.SetColor(kMagenta);
+  // SIG1.AddFile(NtuplePath+"Fall17_102X_SMS/SMS-T2bW_X05_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+  // SIG1.SetSkip(1);
+  // g_Samples.push_back(&SIG1);
 
   int Nsample = g_Samples.size();
   g_PlotTitle = g_Samples[0]->GetTitle();
@@ -264,23 +264,23 @@ void Plot_2D(){
 	/////////////////
 	
 	///////////// 2 lepton
-	if(base->Nlep != 2)
-	  continue;
+	// if(base->Nlep != 2)
+	//   continue;
 
-	if(base->ID_lep->at(0) < 3 ||
-	   base->ID_lep->at(1) < 3)
-	  continue;
+	// if(base->ID_lep->at(0) < 3 ||
+	//    base->ID_lep->at(1) < 3)
+	//   continue;
 
-	if(base->MiniIso_lep->at(0)*base->PT_lep->at(0) > 6. ||
-	   base->MiniIso_lep->at(1)*base->PT_lep->at(1) > 6.)
-	  continue;
+	// if(base->MiniIso_lep->at(0)*base->PT_lep->at(0) > 6. ||
+	//    base->MiniIso_lep->at(1)*base->PT_lep->at(1) > 6.)
+	//   continue;
 
-	if(base->SIP3D_lep->at(0) > 4 ||
-	   base->SIP3D_lep->at(1) > 4)
-	  continue;
+	// if(base->SIP3D_lep->at(0) > 4 ||
+	//    base->SIP3D_lep->at(1) > 4)
+	//   continue;
 
-	if(base->Charge_lep->at(0)+base->Charge_lep->at(1) != 0)
-	  continue;
+	// if(base->Charge_lep->at(0)+base->Charge_lep->at(1) != 0)
+	//   continue;
 
 	// TVector3 ETMiss;
 	// ETMiss.SetPtEtaPhi(base->MET, 0., base->MET_phi);
@@ -288,6 +288,44 @@ void Plot_2D(){
 	// TVector3 lep;
 	// lep.SetPtEtaPhi(base->PT_lep->at(0),base->Eta_lep->at(0),base->Phi_lep->at(0));
 	// double dphiML = fabs(lep.DeltaPhi(ETMiss));
+
+		/////////////// 3 lepton
+	if(base->Nlep != 3)
+	  continue;
+
+	if(base->ID_lep->at(0) < 3 ||
+	   base->ID_lep->at(1) < 3 ||
+	   base->ID_lep->at(2) < 3)
+	  continue;
+
+	if(base->MiniIso_lep->at(0)*base->PT_lep->at(0) > 6. ||
+	   base->MiniIso_lep->at(1)*base->PT_lep->at(1) > 6. ||
+	   base->MiniIso_lep->at(2)*base->PT_lep->at(2) > 6.)
+	  continue;
+
+	if(base->SIP3D_lep->at(0) > 4 ||
+	   base->SIP3D_lep->at(1) > 4 ||
+	   base->SIP3D_lep->at(2) > 4)
+	  continue;
+	//////////////////////////
+
+	if(base->Njet_S->at(1) != 0)
+	  continue;
+	if(base->NSV_S->at(1) != 0)
+	  continue;
+	vector<int> flavor_a;
+	for(int i = 0; i < base->Nlep_a->at(1); i++){
+	  flavor_a.push_back(base->PDGID_lep->at(base->index_lep_a->at(1)[i]));
+	  cout << "a " << base->PDGID_lep->at(base->index_lep_a->at(1)[i]) << endl;;
+	}
+	cout << endl;
+	vector<int> flavor_b;
+	for(int i = 0; i < base->Nlep_b->at(1); i++){
+	  flavor_b.push_back(base->PDGID_lep->at(base->index_lep_b->at(1)[i]));
+	  cout << "b " << base->PDGID_lep->at(base->index_lep_b->at(1)[i]) << endl;;
+	}
+	cout << endl << endl;
+       
 	
 	TLorentzVector lep1, lep2;
 	TVector3 MET;
