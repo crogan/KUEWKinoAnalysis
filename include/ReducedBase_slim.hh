@@ -833,12 +833,14 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchStatus("ML",1);
    fChain->SetBranchStatus("EL",1);
    fChain->SetBranchStatus("cosX*",1);
-   // fChain->SetBranchStatus("index*",1);
+   fChain->SetBranchStatus("index*",1);
    // fChain->SetBranchStatus("*jet",1);
    // fChain->SetBranchStatus("Eta_SV",1);
    // fChain->SetBranchStatus("Phi_SV",1);
    // fChain->SetBranchStatus("index_SV_b",1);
-    fChain->SetBranchStatus("*jet",1);
+   //fChain->SetBranchStatus("*jet",1);
+   fChain->SetBranchStatus("genPDGID_lep", 1);
+   fChain->SetBranchStatus("genMomPDGID_lep", 1);
    
 }
 
@@ -862,6 +864,7 @@ inline void ReducedBase::Show(Long64_t entry)
 }
 inline Int_t ReducedBase::Cut(Long64_t entry)
 {
+  entry++; entry--;
 // This function may be called from Loop.
 // returns  1 if entry is accepted.
 // returns -1 otherwise.
