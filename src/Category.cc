@@ -1135,7 +1135,7 @@ CategoryList& CategoryList::operator += (const CategoryList& cat){
 
 void CategoryList::Print() const {
   for(int i = 0; i < m_N; i++)
-    cout << m_Cat[i]->GetLabel() << endl;
+    std::cout << m_Cat[i]->GetLabel() << std::endl;
 }
 
 CategoryList CategoryList::CreateFitBinRegions(const FitBin& bin) const {

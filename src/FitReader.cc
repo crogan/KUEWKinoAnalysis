@@ -9,6 +9,9 @@
 #include "../include/FitReader.hh"
 #include "RestFrames/RestFrames.hh"
 
+using std::cout;
+using std::endl;
+
 ///////////////////////////////////////////
 ////////// FitReader class
 ///////////////////////////////////////////

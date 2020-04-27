@@ -3,10 +3,12 @@
 
 #include <TH1D.h>
 #include <TH2D.h>
+#include <TFile.h>
 #include <iostream>
 #include <vector>
 
 using std::vector;
+using std::string;
 
 enum LepFlavor { kElectron, kMuon };
 enum LepCharge { kPos, kNeg };
