@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Sat Jan 11 16:05:49 2020 by ROOT version 6.14/04
-// from TTree SMS_500_420/SMS_500_420
-// found on file: /Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_10_01_20/SMS-T2-4bd_genMET-80_mStop-500_mLSP-420_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root
+// Mon Apr 27 02:59:26 2020 by ROOT version 6.20/04
+// from TTree KUAnalysis/KUAnalysis
+// found on file: /Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_26_04_20/Fall17_10X/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root
 //////////////////////////////////////////////////////////
 
 #ifndef ReducedBase_h
@@ -29,6 +29,20 @@ public :
    // Declaration of leaf types
    Bool_t          event_skipped;
    Double_t        weight;
+   Double_t        PUweight;
+   Double_t        PUweight_up;
+   Double_t        PUweight_down;
+   Double_t        m_BtagSFweight;
+   Double_t        m_BtagSFweight_up;
+   Double_t        m_BtagSFweight_down;
+   Int_t           runnum;
+   Int_t           luminum;
+   Long64_t        eventnum;
+   Int_t           NPV;
+   Int_t           NPU;
+   Bool_t          METtrigger;
+   Bool_t          METHTtrigger;
+   Bool_t          METORtrigger;
    Double_t        MET;
    Double_t        MET_phi;
    Double_t        genMET;
@@ -71,6 +85,8 @@ public :
    vector<double>  *Eta_SV;
    vector<double>  *Phi_SV;
    vector<double>  *M_SV;
+   vector<double>  *ProbB_SV;
+   vector<double>  *ProbC_SV;
    Int_t           genNele;
    Int_t           genNmu;
    Int_t           genNlep;
@@ -212,6 +228,20 @@ public :
    // List of branches
    TBranch        *b_event_skipped;   //!
    TBranch        *b_weight;   //!
+   TBranch        *b_PUweight;   //!
+   TBranch        *b_PUweight_up;   //!
+   TBranch        *b_PUweight_down;   //!
+   TBranch        *b_m_BtagSFweight;   //!
+   TBranch        *b_m_BtagSFweight_up;   //!
+   TBranch        *b_m_BtagSFweight_down;   //!
+   TBranch        *b_runnum;   //!
+   TBranch        *b_luminum;   //!
+   TBranch        *b_eventnum;   //!
+   TBranch        *b_NPV;   //!
+   TBranch        *b_NPU;   //!
+   TBranch        *b_METtrigger;   //!
+   TBranch        *b_METHTtrigger;   //!
+   TBranch        *b_METORtrigger;   //!
    TBranch        *b_MET;   //!
    TBranch        *b_MET_phi;   //!
    TBranch        *b_genMET;   //!
@@ -254,6 +284,8 @@ public :
    TBranch        *b_Eta_SV;   //!
    TBranch        *b_Phi_SV;   //!
    TBranch        *b_M_SV;   //!
+   TBranch        *b_ProbB_SV;   //!
+   TBranch        *b_ProbC_SV;   //!
    TBranch        *b_genNele;   //!
    TBranch        *b_genNmu;   //!
    TBranch        *b_genNlep;   //!
@@ -409,11 +441,11 @@ inline ReducedBase::ReducedBase(TTree *tree) : fChain(0)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_10_01_20/SMS-T2-4bd_genMET-80_mStop-500_mLSP-420_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_26_04_20/Fall17_10X/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_10_01_20/SMS-T2-4bd_genMET-80_mStop-500_mLSP-420_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+         f = new TFile("/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_26_04_20/Fall17_10X/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
       }
-      f->GetObject("SMS_500_420",tree);
+      f->GetObject("KUAnalysis",tree);
 
    }
    Init(tree);
@@ -486,6 +518,8 @@ inline void ReducedBase::Init(TTree *tree)
    Eta_SV = 0;
    Phi_SV = 0;
    M_SV = 0;
+   ProbB_SV = 0;
+   ProbC_SV = 0;
    genPT_lep = 0;
    genEta_lep = 0;
    genPhi_lep = 0;
@@ -621,6 +655,20 @@ inline void ReducedBase::Init(TTree *tree)
 
    fChain->SetBranchAddress("event_skipped", &event_skipped, &b_event_skipped);
    fChain->SetBranchAddress("weight", &weight, &b_weight);
+   fChain->SetBranchAddress("PUweight", &PUweight, &b_PUweight);
+   fChain->SetBranchAddress("PUweight_up", &PUweight_up, &b_PUweight_up);
+   fChain->SetBranchAddress("PUweight_down", &PUweight_down, &b_PUweight_down);
+   fChain->SetBranchAddress("m_BtagSFweight", &m_BtagSFweight, &b_m_BtagSFweight);
+   fChain->SetBranchAddress("m_BtagSFweight_up", &m_BtagSFweight_up, &b_m_BtagSFweight_up);
+   fChain->SetBranchAddress("m_BtagSFweight_down", &m_BtagSFweight_down, &b_m_BtagSFweight_down);
+   fChain->SetBranchAddress("runnum", &runnum, &b_runnum);
+   fChain->SetBranchAddress("luminum", &luminum, &b_luminum);
+   fChain->SetBranchAddress("eventnum", &eventnum, &b_eventnum);
+   fChain->SetBranchAddress("NPV", &NPV, &b_NPV);
+   fChain->SetBranchAddress("NPU", &NPU, &b_NPU);
+   fChain->SetBranchAddress("METtrigger", &METtrigger, &b_METtrigger);
+   fChain->SetBranchAddress("METHTtrigger", &METHTtrigger, &b_METHTtrigger);
+   fChain->SetBranchAddress("METORtrigger", &METORtrigger, &b_METORtrigger);
    fChain->SetBranchAddress("MET", &MET, &b_MET);
    fChain->SetBranchAddress("MET_phi", &MET_phi, &b_MET_phi);
    fChain->SetBranchAddress("genMET", &genMET, &b_genMET);
@@ -663,6 +711,8 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchAddress("Eta_SV", &Eta_SV, &b_Eta_SV);
    fChain->SetBranchAddress("Phi_SV", &Phi_SV, &b_Phi_SV);
    fChain->SetBranchAddress("M_SV", &M_SV, &b_M_SV);
+   fChain->SetBranchAddress("ProbB_SV", &ProbB_SV, &b_ProbB_SV);
+   fChain->SetBranchAddress("ProbC_SV", &ProbC_SV, &b_ProbC_SV);
    fChain->SetBranchAddress("genNele", &genNele, &b_genNele);
    fChain->SetBranchAddress("genNmu", &genNmu, &b_genNmu);
    fChain->SetBranchAddress("genNlep", &genNlep, &b_genNlep);
@@ -802,7 +852,7 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchAddress("Is_4L", &Is_4L, &b_Is_4L);
    Notify();
 
-   fChain->SetBranchStatus("*",0);
+    fChain->SetBranchStatus("*",0);
    fChain->SetBranchStatus("weight",1);
    fChain->SetBranchStatus("MET",1);
    fChain->SetBranchStatus("MET_phi",1);
@@ -841,7 +891,6 @@ inline void ReducedBase::Init(TTree *tree)
    //fChain->SetBranchStatus("*jet",1);
    fChain->SetBranchStatus("genPDGID_lep", 1);
    fChain->SetBranchStatus("genMomPDGID_lep", 1);
-   
 }
 
 inline Bool_t ReducedBase::Notify()
@@ -864,7 +913,6 @@ inline void ReducedBase::Show(Long64_t entry)
 }
 inline Int_t ReducedBase::Cut(Long64_t entry)
 {
-  entry++; entry--;
 // This function may be called from Loop.
 // returns  1 if entry is accepted.
 // returns -1 otherwise.
