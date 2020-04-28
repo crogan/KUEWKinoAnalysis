@@ -202,6 +202,11 @@ long AnalysisBase<Base>::GetEventNum(){
 }
 
 template <class Base>
+bool AnalysisBase<Base>::PassEventFilter(){
+  return true;
+}
+
+template <class Base>
 double AnalysisBase<Base>::GetEventWeight(){
   return 0;
 }
@@ -709,13 +714,52 @@ long AnalysisBase<SUSYNANOBase>::GetEventNum(){
 }
 
 template <>
+bool AnalysisBase<SUSYNANOBase>::PassEventFilter(){
+  int year = 2016;
+  if(m_FileTag.find("17") != std::string::npos)
+    year = 2017;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+
+  if(year == 2016){
+    return Flag_goodVertices &&
+      (IsFastSim() ? true : Flag_globalSuperTightHalo2016Filter) &&
+      Flag_HBHENoiseFilter &&
+      Flag_HBHENoiseIsoFilter &&
+      Flag_EcalDeadCellTriggerPrimitiveFilter &&
+      Flag_BadPFMuonFilter;
+  }
+  if(year == 2017){
+    return Flag_goodVertices &&
+      (IsFastSim() ? true : Flag_globalSuperTightHalo2016Filter) &&
+      Flag_HBHENoiseFilter &&
+      Flag_HBHENoiseIsoFilter &&
+      Flag_EcalDeadCellTriggerPrimitiveFilter &&
+      Flag_BadPFMuonFilter;
+  }
+  if(year == 2018){
+    return Flag_goodVertices &&
+      (IsFastSim() ? true : Flag_globalSuperTightHalo2016Filter) &&
+      Flag_HBHENoiseFilter &&
+      Flag_HBHENoiseIsoFilter &&
+      Flag_EcalDeadCellTriggerPrimitiveFilter &&
+      Flag_BadPFMuonFilter;
+  }
+  
+  return true;
+}
+
+template <>
 int AnalysisBase<SUSYNANOBase>::GetNPV(){
   return nOtherPV+1;
 }
 
 template <>
 int AnalysisBase<SUSYNANOBase>::GetNPUtrue(){
-  return Pileup_nPU;
+  if(!IsData())
+    return Pileup_nPU;
+  
+  return 0;
 }
 
 template <>
@@ -798,22 +842,26 @@ bool AnalysisBase<SUSYNANOBase>::GetMETORtrigger(){
 
 template <>
 std::pair<int,int> AnalysisBase<SUSYNANOBase>::GetSUSYMasses(){
-  int MP = 0;
-  int MC = 0;
-  int Ngen = nGenPart;
-  for(int i = 0; i < Ngen; i++){
-    int PDGID = abs(GenPart_pdgId[i]);
-    if(PDGID > 1000000 && PDGID < 3000000){
-      int mass = int(GenPart_mass[i]+0.5);
-      if(PDGID == 1000022)
-	MC = mass;
-      else
-	if(mass > MP)
-	  MP = mass;
+  if(!IsData()){
+    int MP = 0;
+    int MC = 0;
+    int Ngen = nGenPart;
+    for(int i = 0; i < Ngen; i++){
+      int PDGID = abs(GenPart_pdgId[i]);
+      if(PDGID > 1000000 && PDGID < 3000000){
+	int mass = int(GenPart_mass[i]+0.5);
+	if(PDGID == 1000022)
+	  MC = mass;
+	else
+	  if(mass > MP)
+	    MP = mass;
+      }
     }
-  }
   
-  return std::pair<int,int>(MP,MC);
+    return std::pair<int,int>(MP,MC);
+  } else {
+    return std::pair<int,int>(0,0);
+  }
 }
 
 template <>
@@ -939,6 +987,9 @@ bool AnalysisBase<SUSYNANOBase>::IsGoodEvent(){
 
 template <>
 TVector3 AnalysisBase<SUSYNANOBase>::GetGenMET(){
+  if(IsData())
+    return TVector3();
+  
   TVector3 vmet;
   vmet.SetPtEtaPhi(GenMET_pt,0.0,GenMET_phi);
   return vmet;
@@ -1826,6 +1877,9 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetSVs(const TVector3& PV){
 template <>
 ParticleList AnalysisBase<SUSYNANOBase>::GetGenElectrons(){
   ParticleList list;
+
+  if(IsData())
+    return list;
   
   int N = nGenPart;
   int PDGID;
@@ -1852,6 +1906,9 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetGenElectrons(){
 template <>
 ParticleList AnalysisBase<SUSYNANOBase>::GetGenMuons(){
   ParticleList list;
+
+  if(IsData())
+    return list;
   
   int N = nGenPart;
   int PDGID;
@@ -1878,6 +1935,9 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetGenMuons(){
 template <>
 ParticleList AnalysisBase<SUSYNANOBase>::GetGenNeutrinos(){
   ParticleList list;
+
+  if(IsData())
+    return list;
   
   int N = nGenPart;
   int PDGID;
@@ -1904,6 +1964,9 @@ template <>
 ParticleList AnalysisBase<SUSYNANOBase>::GetGenBosons(){
   ParticleList list;
 
+  if(IsData())
+    return list;
+  
   int N = nGenPart;
   int PDGID;
   for(int i = 0; i < N; i++){
@@ -1929,6 +1992,9 @@ template <>
 ParticleList AnalysisBase<SUSYNANOBase>::GetGenSparticles(){
   ParticleList list;
 
+  if(IsData())
+    return list;
+  
   int N = nGenPart;
   int PDGID;
   for(int i = 0; i < N; i++){

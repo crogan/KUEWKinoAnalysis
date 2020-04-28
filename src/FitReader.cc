@@ -570,98 +570,98 @@ void FitReader::InitializeRecipes(){
   m_Strings["1L"] = SL().a("1L_elp-el0").a("1L_elm-el0").a("1L_mup-mu0").a("1L_mum-mu0");
   
   m_Title["1Lel"] = "single e";
-  m_Strings["1Lel"] = SL().a("1L_el0p").a("1L_el0m");
+  m_Strings["1Lel"] = SL().a("1L_elp-el0").a("1L_elm-el0");
 
   m_Title["1Lmu"] = "single #mu";
-  m_Strings["1Lmu"] = SL().a("1L_mu0p").a("1L_mu0m");
+  m_Strings["1Lmu"] = SL().a("1L_mup-mu0").a("1L_mum-m0");
 
   m_Title["1Lelp"] = "single e^{+}";
-  m_Strings["1Lelp"] = SL().a("1L_el0p");
+  m_Strings["1Lelp"] = SL().a("1L_elp-el0");
 
   m_Title["1Lelm"] = "single e^{-}";
-  m_Strings["1Lelm"] = SL().a("1L_el0m");
+  m_Strings["1Lelm"] = SL().a("1L_elm-el0");
 
   m_Title["1Lmup"] = "single #mu^{+}";
-  m_Strings["1Lmup"] = SL().a("1L_el0p");
+  m_Strings["1Lmup"] = SL().a("1L_mup-mu0");
 
   m_Title["1Lmum"] = "single #mu^{-}";
-  m_Strings["1Lmum"] = SL().a("1L_mu0m");
+  m_Strings["1Lmum"] = SL().a("1L_mum-mu0");
 
   m_Title["1Lp"] = "single #it{l}^{+}";
-  m_Strings["1Lp"] = SL().a("1L_el0p").a("1L_mu0p");
+  m_Strings["1Lp"] = SL().a("1L_elp-el0").a("1L_mup-mu0");
 
   m_Title["1Lm"] = "single #it{l}^{-}";
-  m_Strings["1Lm"] = SL().a("1L_el0m").a("1L_mu0m");
+  m_Strings["1Lm"] = SL().a("1L_elm-el0").a("1L_mum-mu0");
 
   m_Title["1Lsilver"] = "single silver #it{l}";
-  m_Strings["1Lsilver"] = SL().a("1L_el1p").a("1L_el1m").a("1L_mu1p").a("1L_mu1m");
+  m_Strings["1Lsilver"] = SL().a("1L_elp-el1").a("1L_elm-el1").a("1L_mup-mu1").a("1L_mum-mu1");
   
   m_Title["1Lelsilver"] = "single silver e";
-  m_Strings["1Lelsilver"] = SL().a("1L_el1p").a("1L_el1m");
+  m_Strings["1Lelsilver"] = SL().a("1L_elp-el1").a("1L_elm-el1");
   
   m_Title["1Lmusilver"] = "single silver #mu";
-  m_Strings["1Lmusilver"] = SL().a("1L_mu1p").a("1L_mu1m");
+  m_Strings["1Lmusilver"] = SL().a("1L_mup-mu1").a("1L_mum-mu1");
 
   m_Title["1Lbronze"] = "single bronze #it{l}";
-  m_Strings["1Lbronze"] = SL().a("1L_el2p").a("1L_el2m").a("1L_mu2p").a("1L_mu2m");
+  m_Strings["1Lbronze"] = SL().a("1L_elp-el2").a("1L_elm-el2").a("1L_mup-mu2").a("1L_mum-mu2");
   
   m_Title["1Lelbronze"] = "single bronze e";
-  m_Strings["1Lelbronze"] = SL().a("1L_el2p").a("1L_el2m");
+  m_Strings["1Lelbronze"] = SL().a("1L_elp-el2").a("1L_elm-el2");
   
   m_Title["1Lmubronze"] = "single bronze #mu";
-  m_Strings["1Lmubonze"] = SL().a("1L_mu2p").a("1L_mu2m");
+  m_Strings["1Lmubonze"] = SL().a("1L_mup-mu2").a("1L_mum-mu2");
 
   m_Title["2LOSSF"] = "e^{#pm} e^{#mp} or #mu^{#pm} #mu^{#mp}";
-  m_Strings["2LOSSF"] = SL().a("OS-el^el-el0el0").a("OS-mu^mu-mu0mu0").a("OS-elel^0-el0el0").a("OS-mumu^0-mu0mu0");
+  m_Strings["2LOSSF"] = SL().a("2LOS_el^el-el0el0").a("2LOS_mu^mu-mu0mu0").a("2LOS_elel^0-el0el0").a("2LOS_mumu^0-mu0mu0");
   
   m_Title["2LOSOF"] = "e^{#pm} #mu^{#mp}";
-  m_Strings["2LOSOF"] = SL().a("OS-el^mu-el0mu0").a("OS-elmu^0-el0mu0");
+  m_Strings["2LOSOF"] = SL().a("2LOS_el^mu-el0mu0").a("2LOS_elmu^0-el0mu0");
 
   m_Title["2LSSSF"] = "e^{#pm} e^{#pm} or #mu^{#pm} #mu^{#pm}";
-  m_Strings["2LSSSF"] = SL().a("SS-el^el-el0el0").a("SS-mu^mu-mu0mu0").a("SS-elel^0-el0el0").a("SS-mumu^0-mu0mu0");
+  m_Strings["2LSSSF"] = SL().a("2LOS_el^el-el0el0").a("2LOS_mu^mu-mu0mu0").a("2LOS_elel^0-el0el0").a("2LOS_mumu^0-mu0mu0");
   
   m_Title["2LSSOF"] = "e^{#pm} #mu^{#pm}";
-  m_Strings["2LSSOF"] = SL().a("SS-el^mu-el0mu0").a("SS-elmu^0-el0mu0");
+  m_Strings["2LSSOF"] = SL().a("2LSS_el^mu-el0mu0").a("2LSS_elmu^0-el0mu0");
 
   m_Title["2LOSSFsilver"] = "e^{#pm} e^{#mp} or #mu^{#pm} #mu^{#mp}, #geq 1 silver #it{l}";
-  m_Strings["2LOSSFsilver"] = SL().a("OS-el^el-el0el1").a("OS-mu^mu-mu0mu1").a("OS-elel^0-el0el1").a("OS-mumu^0-mu0mu1")
-                                  .a("OS-el^el-el1el1").a("OS-mu^mu-mu1mu1").a("OS-elel^0-el1el1").a("OS-mumu^0-mu1mu1")
-                                  .a("OS-el^el-el1el2").a("OS-mu^mu-mu1mu2").a("OS-elel^0-el1el2").a("OS-mumu^0-mu1mu2");
+  m_Strings["2LOSSFsilver"] = SL().a("2LOS_el^el-el0el1").a("2LOS_mu^mu-mu0mu1").a("2LOS_elel^0-el0el1").a("2LOS_mumu^0-mu0mu1")
+                                  .a("2LOS_el^el-el1el1").a("2LOS_mu^mu-mu1mu1").a("2LOS_elel^0-el1el1").a("2LOS_mumu^0-mu1mu1")
+                                  .a("2LOS_el^el-el1el2").a("2LOS_mu^mu-mu1mu2").a("2LOS_elel^0-el1el2").a("2LOS_mumu^0-mu1mu2");
   
   m_Title["2LOSOFsilver"] = "e^{#pm} #mu^{#mp}, #geq 1 silver #it{l}";
-  m_Strings["2LOSOFsilver"] = SL().a("OS-el^mu-el0mu1").a("OS-elmu^0-el0mu1").a("OS-el^mu-mu0el1").a("OS-elmu^0-mu0el1")
-                                  .a("OS-el^mu-el1mu1").a("OS-elmu^0-el1mu1").a("OS-el^mu-mu1el2").a("OS-elmu^0-mu1el2")
-                                  .a("OS-el^mu-el1mu2").a("OS-elmu^1-el1mu2");
+  m_Strings["2LOSOFsilver"] = SL().a("2LOS_el^mu-el0mu1").a("2LOS_elmu^0-el0mu1").a("2LOS_el^mu-mu0el1").a("2LOS_elmu^0-mu0el1")
+                                  .a("2LOS_el^mu-el1mu1").a("2LOS_elmu^0-el1mu1").a("2LOS_el^mu-mu1el2").a("2LOS_elmu^0-mu1el2")
+                                  .a("2LOS_el^mu-el1mu2").a("2LOS_elmu^1-el1mu2");
 
   m_Title["2LSSSFsilver"] = "e^{#pm} e^{#pm} or #mu^{#pm} #mu^{#pm}, #geq 1 silver #it{l}";
-  m_Strings["2LSSSFsilver"] = SL().a("SS-el^el-el0el1").a("SS-mu^mu-mu0mu1").a("SS-elel^0-el0el1").a("SS-mumu^0-mu0mu1")
-                                  .a("SS-el^el-el1el1").a("SS-mu^mu-mu1mu1").a("SS-elel^0-el1el1").a("SS-mumu^0-mu1mu1")
-                                  .a("SS-el^el-el1el2").a("SS-mu^mu-mu1mu2").a("SS-elel^0-el1el2").a("SS-mumu^0-mu1mu2");
+  m_Strings["2LSSSFsilver"] = SL().a("2LSS_el^el-el0el1").a("2LSS_mu^mu-mu0mu1").a("2LSS_elel^0-el0el1").a("2LSS_mumu^0-mu0mu1")
+                                  .a("2LSS_el^el-el1el1").a("2LSS_mu^mu-mu1mu1").a("2LSS_elel^0-el1el1").a("2LSS_mumu^0-mu1mu1")
+                                  .a("2LSS_el^el-el1el2").a("2LSS_mu^mu-mu1mu2").a("2LSS_elel^0-el1el2").a("2LSS_mumu^0-mu1mu2");
   
   m_Title["2LSSOFsilver"] = "e^{#pm} #mu^{#pm}, #geq 1 silver #it{l}";
-  m_Strings["2LSSOFsilver"] = SL().a("SS-el^mu-el0mu1").a("SS-elmu^0-el0mu1").a("SS-el^mu-mu0el1").a("SS-elmu^0-mu0el1")
-                                  .a("SS-el^mu-el1mu1").a("SS-elmu^0-el1mu1").a("SS-el^mu-mu1el2").a("SS-elmu^0-mu1el2")
-                                  .a("SS-el^mu-el1mu2").a("SS-elmu^1-el1mu2");
+  m_Strings["2LSSOFsilver"] = SL().a("2LSS_el^mu-el0mu1").a("2LSS_elmu^0-el0mu1").a("2LSS_el^mu-mu0el1").a("2LSS_elmu^0-mu0el1")
+                                  .a("2LSS_el^mu-el1mu1").a("2LSS_elmu^0-el1mu1").a("2LSS_el^mu-mu1el2").a("2LSS_elmu^0-mu1el2")
+                                  .a("2LSS_el^mu-el1mu2").a("2LSS_elmu^1-el1mu2");
 
   m_Title["2LOSSFbronze"] = "e^{#pm} e^{#mp} or #mu^{#pm} #mu^{#mp}, #geq 1 bronze #it{l}";
-  m_Strings["2LOSSFbronze"] = SL().a("OS-el^el-el0el2").a("OS-mu^mu-mu0mu2").a("OS-elel^0-el0el2").a("OS-mumu^0-mu0mu2")
-                                  .a("OS-el^el-el1el2").a("OS-mu^mu-mu1mu2").a("OS-elel^0-el1el2").a("OS-mumu^0-mu1mu2")
-                                  .a("OS-el^el-el2el2").a("OS-mu^mu-mu2mu2").a("OS-elel^0-el2el2").a("OS-mumu^0-mu2mu2");
+  m_Strings["2LOSSFbronze"] = SL().a("2LOS_el^el-el0el2").a("2LOS_mu^mu-mu0mu2").a("2LOS_elel^0-el0el2").a("2LOS_mumu^0-mu0mu2")
+                                  .a("2LOS_el^el-el1el2").a("2LOS_mu^mu-mu1mu2").a("2LOS_elel^0-el1el2").a("2LOS_mumu^0-mu1mu2")
+                                  .a("2LOS_el^el-el2el2").a("2LOS_mu^mu-mu2mu2").a("2LOS_elel^0-el2el2").a("2LOS_mumu^0-mu2mu2");
   
   m_Title["2LOSOFbronze"] = "e^{#pm} #mu^{#mp}, #geq 1 bronze #it{l}";
-  m_Strings["2LOSOFbronze"] = SL().a("OS-el^mu-el0mu2").a("OS-elmu^0-el0mu2").a("OS-el^mu-mu0el2").a("OS-elmu^0-mu0el2")
-                                  .a("OS-el^mu-el1mu2").a("OS-elmu^0-el1mu2").a("OS-el^mu-mu1el2").a("OS-elmu^0-mu1el2")
-                                  .a("OS-el^mu-el2mu2").a("OS-elmu^1-el2mu2");
+  m_Strings["2LOSOFbronze"] = SL().a("2LOS_el^mu-el0mu2").a("2LOS_elmu^0-el0mu2").a("2LOS_el^mu-mu0el2").a("2LOS_elmu^0-mu0el2")
+                                  .a("2LOS_el^mu-el1mu2").a("2LOS_elmu^0-el1mu2").a("2LOS_el^mu-mu1el2").a("2LOS_elmu^0-mu1el2")
+                                  .a("2LOS_el^mu-el2mu2").a("2LOS_elmu^1-el2mu2");
 
   m_Title["2LSSSFbronze"] = "e^{#pm} e^{#pm} or #mu^{#pm} #mu^{#pm}, #geq 1 bronze #it{l}";
-  m_Strings["2LSSSFbronze"] = SL().a("SS-el^el-el0el2").a("SS-mu^mu-mu0mu2").a("SS-elel^0-el0el2").a("SS-mumu^0-mu0mu2")
-                                  .a("SS-el^el-el1el2").a("SS-mu^mu-mu1mu2").a("SS-elel^0-el1el2").a("SS-mumu^0-mu1mu2")
-                                  .a("SS-el^el-el2el2").a("SS-mu^mu-mu2mu2").a("SS-elel^0-el2el2").a("SS-mumu^0-mu2mu2");
+  m_Strings["2LSSSFbronze"] = SL().a("2LSS_el^el-el0el2").a("2LSS_mu^mu-mu0mu2").a("2LSS_elel^0-el0el2").a("2LSS_mumu^0-mu0mu2")
+                                  .a("2LSS_el^el-el1el2").a("2LSS_mu^mu-mu1mu2").a("2LSS_elel^0-el1el2").a("2LSS_mumu^0-mu1mu2")
+                                  .a("2LSS_el^el-el2el2").a("2LSS_mu^mu-mu2mu2").a("2LSS_elel^0-el2el2").a("2LSS_mumu^0-mu2mu2");
   
   m_Title["2LSSOFbronze"] = "e^{#pm} #mu^{#pm}, #geq 1 bronze #it{l}";
-  m_Strings["2LSSOFbronze"] = SL().a("SS-el^mu-el0mu2").a("SS-elmu^0-el0mu2").a("SS-el^mu-mu0el2").a("SS-elmu^0-mu0el2")
-                                  .a("SS-el^mu-el1mu2").a("SS-elmu^0-el1mu2").a("SS-el^mu-mu1el2").a("SS-elmu^0-mu1el2")
-                                  .a("SS-el^mu-el2mu2").a("SS-elmu^1-el2mu2");
+  m_Strings["2LSSOFbronze"] = SL().a("2LSS_el^mu-el0mu2").a("2LSS_elmu^0-el0mu2").a("2LSS_el^mu-mu0el2").a("2LSS_elmu^0-mu0el2")
+                                  .a("2LSS_el^mu-el1mu2").a("2LSS_elmu^0-el1mu2").a("2LSS_el^mu-mu1el2").a("2LSS_elmu^0-mu1el2")
+                                  .a("2LSS_el^mu-el2mu2").a("2LSS_elmu^1-el2mu2");
 
   // hadronic categories
   m_Title["0jsvS"] = "#splitline{0 jets}{0 SV-tags} #scale[1.2]{#in S}";

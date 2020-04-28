@@ -59,6 +59,8 @@ public:
   virtual int GetRunNum();
   virtual int GetLumiNum();
   virtual long GetEventNum();
+
+  virtual bool PassEventFilter();
   
   // analysis functions
   virtual int GetNPV();
