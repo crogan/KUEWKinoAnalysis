@@ -23,22 +23,26 @@ public:
 
   virtual ~FitBuilder();
 
-  void AddEvent(const string& process, const Category& cat,
-		double weight = 1., double Mperp = 0., double RISR = 0.);
-
+  void AddEvent(double weight, double Mperp, double RISR,
+		const Category& cat, const string& process, bool is_signal = false);
+  
   void WriteFit(const string& outputroot);
   
 private:
-  map<string,map<string,FitBin*> > m_Proc;
+  map<string,map<string,FitBin*> > m_Proc[2];
   map<string,Category*> m_Cat;
+
+  
 
   mutable TFile* m_OutFile;
   mutable TTree* m_ProcTree;
   mutable string m_sProc;
+  mutable bool m_ProcIsSig;
   mutable vector<string> m_ProcCat;
-  void FillProc(const string& proc);
+  void FillProc(const string& proc, bool is_signal = false);
   mutable TTree* m_CatTree;
   mutable string m_sCat;
+  mutable string m_sBin;
   mutable vector<double> m_BinX;
   mutable vector<double> m_BinY;
   void FillCat(const Category& cat);

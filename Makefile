@@ -33,7 +33,7 @@ all: alltargets
 
 local: alltargets
 
-alltargets: MakeReducedNtuple.x MakeEventCount.x MakeReducedNtuple_NANO.x MakeEventCount_NANO.x
+alltargets: MakeReducedNtuple_NANO.x MakeEventCount_NANO.x BuildFit.x
 
 MakeReducedNtuple.x:  $(SRCDIR)MakeReducedNtuple.C $(OBJ_FILES) $(HH_FILES)
 	$(CXX) $(CXXFLAGS) -o MakeReducedNtuple.x $(OUTOBJ)/*.o $(GLIBS) $ $<
@@ -50,6 +50,10 @@ MakeReducedNtuple_NANO.x:  $(SRCDIR)MakeReducedNtuple_NANO.C $(OBJ_FILES) $(HH_F
 MakeEventCount_NANO.x:  $(SRCDIR)MakeEventCount_NANO.C $(OBJ_FILES) $(HH_FILES)
 	$(CXX) $(CXXFLAGS) -o MakeEventCount_NANO.x $(OUTOBJ)/*.o $(GLIBS) $ $<
 	touch MakeEventCount_NANO.x
+
+BuildFit.x:  $(SRCDIR)BuildFit.C $(OBJ_FILES) $(HH_FILES)
+	$(CXX) $(CXXFLAGS) -o BuildFit.x $(OUTOBJ)/*.o $(GLIBS) $ $<
+	touch BuildFit.x
 
 $(OUTOBJ)%.o: src/%.cc include/%.hh
 	$(CXX) $(CXXFLAGS) -c $< -o $@

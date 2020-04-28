@@ -14,14 +14,16 @@ FitBuilder::FitBuilder(){
 }
 
 FitBuilder::~FitBuilder(){
-  map<string,map<string,FitBin*> >::iterator p = m_Proc.begin();
-  while(p != m_Proc.end()){
-    map<string,FitBin*>::iterator b = p->second.begin();
-    while(b != p->second.end()){
-      delete b->second;
-      b++;
+  for(int i = 0; i < 2; i++){
+    map<string,map<string,FitBin*> >::iterator p = m_Proc[i].begin();
+    while(p != m_Proc[i].end()){
+      map<string,FitBin*>::iterator b = p->second.begin();
+      while(b != p->second.end()){
+	delete b->second;
+	b++;
+      }
+      p++;
     }
-    p++;
   }
   map<string,Category*>::iterator c = m_Cat.begin();
   while(c != m_Cat.end()){
@@ -35,21 +37,21 @@ FitBuilder::~FitBuilder(){
     delete m_CatTree;
 }
 
-void FitBuilder::AddEvent(const string& process, const Category& cat,
-			  double weight, double Mperp, double RISR){
-  string label = cat.GetLabel();
+void FitBuilder::AddEvent(double weight, double Mperp, double RISR,
+			  const Category& cat, const string& process, bool is_signal){
+  string label = cat.Label()+"_"+cat.GetLabel();
 
-  if(m_Proc.count(process) == 0){
-    m_Proc[process] = map<string,FitBin*>();
+  if(m_Proc[is_signal].count(process) == 0){
+    m_Proc[is_signal][process] = map<string,FitBin*>();
   }
 
   if(m_Cat.count(label) == 0)
     m_Cat[label] = new Category(cat);
 
-  if(m_Proc[process].count(label) == 0)
-    m_Proc[process][label] = cat.GetNewFitBin(process+"_"+label);
+  if(m_Proc[is_signal][process].count(label) == 0)
+    m_Proc[is_signal][process][label] = cat.GetNewFitBin(process+"_"+label);
 
-  m_Proc[process][label]->Fill(weight, Mperp, RISR);
+  m_Proc[is_signal][process][label]->Fill(weight, Mperp, RISR);
 }
 
 void FitBuilder::WriteFit(const string& outputroot){
@@ -66,12 +68,15 @@ void FitBuilder::WriteFit(const string& outputroot){
   m_ProcTree = new TTree("Process", "Process");
   m_ProcTree->Branch("process", &m_sProc);
   m_ProcTree->Branch("cat", &m_ProcCat);
- 
-  // Process loop
-  map<string,map<string,FitBin*> >::iterator p = m_Proc.begin();
-  while(p != m_Proc.end()){
-    FillProc(p->first);
-    p++;
+  m_ProcTree->Branch("sig", &m_ProcIsSig);
+
+  for(int i = 0; i < 2; i++){
+    // Process loop
+    map<string,map<string,FitBin*> >::iterator p = m_Proc[i].begin();
+    while(p != m_Proc[i].end()){
+      FillProc(p->first, i);
+      p++;
+    }
   }
 
   m_OutFile->cd();
@@ -82,6 +87,7 @@ void FitBuilder::WriteFit(const string& outputroot){
   
   m_CatTree = new TTree("Category", "Category");
   m_CatTree->Branch("cat", &m_sCat);
+  m_CatTree->Branch("bin", &m_sBin);
   m_CatTree->Branch("bin_edge_x", &m_BinX);
   m_CatTree->Branch("bin_edge_y", &m_BinY);
   
@@ -103,15 +109,16 @@ void FitBuilder::WriteFit(const string& outputroot){
   m_OutFile = nullptr;
 }
 
-void FitBuilder::FillProc(const string& proc){
+void FitBuilder::FillProc(const string& proc, bool is_signal){
   m_sProc = proc;
+  m_ProcIsSig = is_signal;
   m_OutFile->cd();
   m_OutFile->mkdir(proc.c_str());
   m_OutFile->mkdir(("hist2D/"+proc).c_str());
   
-  map<string,FitBin*>::iterator b = m_Proc[proc].begin();
+  map<string,FitBin*>::iterator b = m_Proc[is_signal][proc].begin();
   m_ProcCat.clear();
-  while(b != m_Proc[proc].end()){
+  while(b != m_Proc[is_signal][proc].end()){
     m_ProcCat.push_back(b->first);
     b->second->WriteHistogram(proc+"_"+b->first, proc, *m_OutFile);
     b++;
@@ -120,7 +127,8 @@ void FitBuilder::FillProc(const string& proc){
 }
 
 void FitBuilder::FillCat(const Category& cat){
-  m_sCat = cat.GetLabel();
+  m_sCat = cat.Label();
+  m_sBin = cat.GetLabel();
   m_BinX = cat.GetFitBin().GetBinEdgesX();
   m_BinY = cat.GetFitBin().GetBinEdgesY();
 
