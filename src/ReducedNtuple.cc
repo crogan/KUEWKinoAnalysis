@@ -126,13 +126,13 @@ ReducedNtuple<Base>::ReducedNtuple(TTree* tree)
     }
 
     if(!LAB[t]->InitializeAnalysis())
-	cout << "Problem initializing analysis tree #" << t << endl;
+      cout << "Problem initializing analysis tree #" << t << endl;
   }
 
   /*
-  TreePlot tree_plot("TreePlot","TreePlot");
+    TreePlot tree_plot("TreePlot","TreePlot");
 
-  for(int t = 0; t < 2; t++){
+    for(int t = 0; t < 2; t++){
     tree_plot.SetTree(*LAB[t]);
     tree_plot.Draw(Form("ANA_tree_%d",t), Form("Reconstruction Tree %d",t));
 
@@ -145,11 +145,11 @@ ReducedNtuple<Base>::ReducedNtuple(TTree* tree)
     tree_plot.SetTree(*INV[t]);
     tree_plot.Draw(Form("ANA_inv_%d",t), Form("Invisible Jigsaws %d",t),1);
  
-  }
-  tree_plot.WriteOutput("trees.root");
+    }
+    tree_plot.WriteOutput("trees.root");
   */
 
-   // Calculated Observables
+  // Calculated Observables
   for(int i = 0; i < 2; i++){
     m_Njet_ISR.push_back(0);
     m_Njet_S.push_back(0);
@@ -344,7 +344,6 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("eventnum", &m_eventnum);
 
   tree->Branch("NPV", &m_NPV);
-  tree->Branch("NPU", &m_NPU);
 
   tree->Branch("METtrigger", &m_METtrigger);
   tree->Branch("METHTtrigger", &m_METHTtrigger);
@@ -352,8 +351,6 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   
   tree->Branch("MET", &m_MET);
   tree->Branch("MET_phi", &m_MET_phi);
-  tree->Branch("genMET", &m_genMET);
-  tree->Branch("genMET_phi", &m_genMET_phi);
   
   tree->Branch("HT", &m_HT);
 
@@ -403,42 +400,6 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("M_SV",   &m_M_SV);
   tree->Branch("ProbB_SV",   &m_ProbB_SV);
   tree->Branch("ProbC_SV",   &m_ProbC_SV);
- 
-  tree->Branch("genNele", &m_genNele);
-  tree->Branch("genNmu", &m_genNmu);
-
-  tree->Branch("genNlep", &m_genNlep);
-  tree->Branch("genPT_lep",  &m_genPT_lep);
-  tree->Branch("genEta_lep", &m_genEta_lep);
-  tree->Branch("genPhi_lep", &m_genPhi_lep);
-  tree->Branch("genM_lep",   &m_genM_lep);
-  tree->Branch("genCharge_lep",  &m_genCharge_lep);
-  tree->Branch("genPDGID_lep",   &m_genPDGID_lep);
-  tree->Branch("genMomPDGID_lep",   &m_genMomPDGID_lep);
-  tree->Branch("genIndex_lep",   &m_genIndex_lep);
-
-  tree->Branch("genNnu", &m_genNnu);
-  tree->Branch("genPT_nu",  &m_genPT_nu);
-  tree->Branch("genEta_nu", &m_genEta_nu);
-  tree->Branch("genPhi_nu", &m_genPhi_nu);
-  tree->Branch("genPDGID_nu",   &m_genPDGID_nu);
-  tree->Branch("genMomPDGID_nu",   &m_genMomPDGID_nu);
-
-  tree->Branch("genNboson", &m_genNboson);
-  tree->Branch("genPT_boson",  &m_genPT_boson);
-  tree->Branch("genEta_boson", &m_genEta_boson);
-  tree->Branch("genPhi_boson", &m_genPhi_boson);
-  tree->Branch("genM_boson",   &m_genM_boson);
-  tree->Branch("genPDGID_boson",   &m_genPDGID_boson);
-  tree->Branch("genMomPDGID_boson",   &m_genMomPDGID_boson);
-
-  tree->Branch("genNsusy", &m_genNsusy);
-  tree->Branch("genPT_susy",  &m_genPT_susy);
-  tree->Branch("genEta_susy", &m_genEta_susy);
-  tree->Branch("genPhi_susy", &m_genPhi_susy);
-  tree->Branch("genM_susy",   &m_genM_susy);
-  tree->Branch("genPDGID_susy", &m_genPDGID_susy);
-  tree->Branch("genMomPDGID_susy", &m_genMomPDGID_susy);
 
   tree->Branch("Njet_ISR", &m_Njet_ISR);
   tree->Branch("Njet_S", &m_Njet_S);
@@ -557,12 +518,54 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("PTISR", &m_PTISR);
   tree->Branch("RISR", &m_RISR);
   tree->Branch("MISR", &m_MISR);
-  
+
   tree->Branch("Is_1L", &m_Is_1L);
   tree->Branch("Is_2L", &m_Is_2L);
   tree->Branch("Is_3L", &m_Is_3L);
   tree->Branch("Is_4L", &m_Is_4L);
-  
+
+  if(!AnalysisBase<Base>::IsData()){
+    tree->Branch("NPU", &m_NPU);
+    tree->Branch("genMET", &m_genMET);
+    tree->Branch("genMET_phi", &m_genMET_phi);
+    
+    tree->Branch("genNele", &m_genNele);
+    tree->Branch("genNmu", &m_genNmu);
+    
+    tree->Branch("genNlep", &m_genNlep);
+    tree->Branch("genPT_lep",  &m_genPT_lep);
+    tree->Branch("genEta_lep", &m_genEta_lep);
+    tree->Branch("genPhi_lep", &m_genPhi_lep);
+    tree->Branch("genM_lep",   &m_genM_lep);
+    tree->Branch("genCharge_lep",  &m_genCharge_lep);
+    tree->Branch("genPDGID_lep",   &m_genPDGID_lep);
+    tree->Branch("genMomPDGID_lep",   &m_genMomPDGID_lep);
+    tree->Branch("genIndex_lep",   &m_genIndex_lep);
+    
+    tree->Branch("genNnu", &m_genNnu);
+    tree->Branch("genPT_nu",  &m_genPT_nu);
+    tree->Branch("genEta_nu", &m_genEta_nu);
+    tree->Branch("genPhi_nu", &m_genPhi_nu);
+    tree->Branch("genPDGID_nu",   &m_genPDGID_nu);
+    tree->Branch("genMomPDGID_nu",   &m_genMomPDGID_nu);
+    
+    tree->Branch("genNboson", &m_genNboson);
+    tree->Branch("genPT_boson",  &m_genPT_boson);
+    tree->Branch("genEta_boson", &m_genEta_boson);
+    tree->Branch("genPhi_boson", &m_genPhi_boson);
+    tree->Branch("genM_boson",   &m_genM_boson);
+    tree->Branch("genPDGID_boson",   &m_genPDGID_boson);
+    tree->Branch("genMomPDGID_boson",   &m_genMomPDGID_boson);
+    
+    tree->Branch("genNsusy", &m_genNsusy);
+    tree->Branch("genPT_susy",  &m_genPT_susy);
+    tree->Branch("genEta_susy", &m_genEta_susy);
+    tree->Branch("genPhi_susy", &m_genPhi_susy);
+    tree->Branch("genM_susy",   &m_genM_susy);
+    tree->Branch("genPDGID_susy", &m_genPDGID_susy);
+    tree->Branch("genMomPDGID_susy", &m_genMomPDGID_susy);
+  }
+    
   return tree;
 }
 
@@ -708,7 +711,9 @@ template <class Base>
 void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   AnalysisBase<Base>::SetSystematic(sys);
  
-
+  if(!AnalysisBase<Base>::PassEventFilter())
+    return;
+  
   if(AnalysisBase<Base>::IsData())
     if(!AnalysisBase<Base>::IsGoodEvent())
       return;
@@ -976,7 +981,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
       }
     
       if(!LAB[t]->AnalyzeEvent())
-	  cout << "Something went wrong with tree event analysis #" << t << endl;
+	cout << "Something went wrong with tree event analysis #" << t << endl;
     }
 	
     if(t == 1){ // with combinatorics
@@ -1218,23 +1223,39 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
       }
     }
   }
-  
-  m_weight = AnalysisBase<Base>::GetEventWeight();
 
-  m_PUweight = AnalysisBase<Base>::GetPUWeight(0);
-  m_PUweight_up = AnalysisBase<Base>::GetPUWeight(1);
-  m_PUweight_down = AnalysisBase<Base>::GetPUWeight(-1);
+  if(!AnalysisBase<Base>::IsData()){
+    m_weight = AnalysisBase<Base>::GetEventWeight();
+    
+    m_PUweight = AnalysisBase<Base>::GetPUWeight(0);
+    m_PUweight_up = AnalysisBase<Base>::GetPUWeight(1);
+    m_PUweight_down = AnalysisBase<Base>::GetPUWeight(-1);
+    
+    m_BtagSFweight = AnalysisBase<Base>::GetBtagSFWeight(Jets, 0, kMedium);
+    m_BtagSFweight_up = AnalysisBase<Base>::GetBtagSFWeight(Jets, 1, kMedium);
+    m_BtagSFweight_down = AnalysisBase<Base>::GetBtagSFWeight(Jets, -1, kMedium);
 
-  m_BtagSFweight = AnalysisBase<Base>::GetBtagSFWeight(Jets, 0, kMedium);
-  m_BtagSFweight_up = AnalysisBase<Base>::GetBtagSFWeight(Jets, 1, kMedium);
-  m_BtagSFweight_down = AnalysisBase<Base>::GetBtagSFWeight(Jets, -1, kMedium);
+    m_NPU = AnalysisBase<Base>::GetNPUtrue();
+
+    TVector3 genETMiss = AnalysisBase<Base>::GetGenMET();
+    m_genMET     = genETMiss.Pt();
+    m_genMET_phi = genETMiss.Phi();
+  } else {
+    m_weight = 1;
+    m_PUweight = 1;
+    m_PUweight_up = 1;
+    m_PUweight_down = 1;
+    m_BtagSFweight = 1;
+    m_BtagSFweight_up = 1;
+    m_BtagSFweight_down = 1;
+  }
   
   m_runnum   = AnalysisBase<Base>::GetRunNum();
   m_luminum  = AnalysisBase<Base>::GetLumiNum();
   m_eventnum = AnalysisBase<Base>::GetEventNum();
 
   m_NPV = AnalysisBase<Base>::GetNPV();
-  m_NPU = AnalysisBase<Base>::GetNPUtrue();
+
   
   m_METtrigger   = AnalysisBase<Base>::GetMETtrigger();
   m_METHTtrigger = AnalysisBase<Base>::GetMETHTtrigger();
@@ -1242,10 +1263,6 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   
   m_MET     = ETMiss.Pt();
   m_MET_phi = ETMiss.Phi();
-
-  TVector3 genETMiss = AnalysisBase<Base>::GetGenMET();
-  m_genMET     = genETMiss.Pt();
-  m_genMET_phi = genETMiss.Phi();
 
   // Fill Jets
   m_PT_jet.clear();
@@ -1285,7 +1302,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   ParticleList GenElectrons = AnalysisBase<Base>::GetGenElectrons();
   ParticleList GenLeptons = GenElectrons+GenMuons;
   GenLeptons.SortByPt();
-
+  
   m_genNele = GenElectrons.size();
   m_genNmu  = GenMuons.size();
   m_genNlep = GenLeptons.size();
@@ -1335,77 +1352,79 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
       }
     m_Index_lep.push_back(index);
   }
-  
-  // Fill gen lepton branches
-  m_genPT_lep.clear();
-  m_genEta_lep.clear();
-  m_genPhi_lep.clear();
-  m_genM_lep.clear();
-  m_genCharge_lep.clear();
-  m_genPDGID_lep.clear();
-  m_genMomPDGID_lep.clear();
-  m_genIndex_lep.clear();
-  for(int g = 0; g < m_genNlep; g++){
-    m_genPT_lep.push_back(GenLeptons[g].Pt());
-    m_genEta_lep.push_back(GenLeptons[g].Eta());
-    m_genPhi_lep.push_back(GenLeptons[g].Phi());
-    m_genM_lep.push_back(GenLeptons[g].M());
-    m_genCharge_lep.push_back(GenLeptons[g].Charge());
-    m_genPDGID_lep.push_back(GenLeptons[g].PDGID());
-    m_genMomPDGID_lep.push_back(GenLeptons[g].MomPDGID());
-    m_genIndex_lep.push_back(genmatch[g]);
-  }
-  
-  // Fill gen neutrino branches
-  ParticleList GenNus = AnalysisBase<Base>::GetGenNeutrinos();
-  m_genNnu = GenNus.size();
-  m_genPT_nu.clear();
-  m_genEta_nu.clear();
-  m_genPhi_nu.clear();
-  m_genPDGID_nu.clear();
-  m_genMomPDGID_nu.clear();
-  for(int i = 0; i < m_genNnu; i++){
-    m_genPT_nu.push_back(GenNus[i].Pt());
-    m_genEta_nu.push_back(GenNus[i].Eta());
-    m_genPhi_nu.push_back(GenNus[i].Phi());
-    m_genPDGID_nu.push_back(GenNus[i].PDGID());
-    m_genMomPDGID_nu.push_back(GenNus[i].MomPDGID());
-  }
-  
-  // Fill gen boson branches
-  ParticleList GenBosons = AnalysisBase<Base>::GetGenBosons();
-  m_genNboson = GenBosons.size();
-  m_genPT_boson.clear();
-  m_genEta_boson.clear();
-  m_genPhi_boson.clear();
-  m_genM_boson.clear();
-  m_genPDGID_boson.clear();
-  m_genMomPDGID_boson.clear();
-  for(int i = 0; i < m_genNboson; i++){
-    m_genPT_boson.push_back(GenBosons[i].Pt());
-    m_genEta_boson.push_back(GenBosons[i].Eta());
-    m_genPhi_boson.push_back(GenBosons[i].Phi());
-    m_genM_boson.push_back(GenBosons[i].Phi());
-    m_genPDGID_boson.push_back(GenBosons[i].PDGID());
-    m_genMomPDGID_boson.push_back(GenBosons[i].MomPDGID());
-  }
 
-  // Fill gen sparticle branches
-  ParticleList GenSparticles = AnalysisBase<Base>::GetGenSparticles();
-  m_genNsusy = GenSparticles.size();
-  m_genPT_susy.clear();
-  m_genEta_susy.clear();
-  m_genPhi_susy.clear();
-  m_genM_susy.clear();
-  m_genPDGID_susy.clear();
-  m_genMomPDGID_susy.clear();
-  for(int i = 0; i < m_genNsusy; i++){
-    m_genPT_susy.push_back(GenSparticles[i].Pt());
-    m_genEta_susy.push_back(GenSparticles[i].Eta());
-    m_genPhi_susy.push_back(GenSparticles[i].Phi());
-    m_genM_susy.push_back(GenSparticles[i].Phi());
-    m_genPDGID_susy.push_back(GenSparticles[i].PDGID());
-    m_genMomPDGID_susy.push_back(GenSparticles[i].MomPDGID());
+  if(!AnalysisBase<Base>::IsData()){
+    // Fill gen lepton branches
+    m_genPT_lep.clear();
+    m_genEta_lep.clear();
+    m_genPhi_lep.clear();
+    m_genM_lep.clear();
+    m_genCharge_lep.clear();
+    m_genPDGID_lep.clear();
+    m_genMomPDGID_lep.clear();
+    m_genIndex_lep.clear();
+    for(int g = 0; g < m_genNlep; g++){
+      m_genPT_lep.push_back(GenLeptons[g].Pt());
+      m_genEta_lep.push_back(GenLeptons[g].Eta());
+      m_genPhi_lep.push_back(GenLeptons[g].Phi());
+      m_genM_lep.push_back(GenLeptons[g].M());
+      m_genCharge_lep.push_back(GenLeptons[g].Charge());
+      m_genPDGID_lep.push_back(GenLeptons[g].PDGID());
+      m_genMomPDGID_lep.push_back(GenLeptons[g].MomPDGID());
+      m_genIndex_lep.push_back(genmatch[g]);
+    }
+  
+    // Fill gen neutrino branches
+    ParticleList GenNus = AnalysisBase<Base>::GetGenNeutrinos();
+    m_genNnu = GenNus.size();
+    m_genPT_nu.clear();
+    m_genEta_nu.clear();
+    m_genPhi_nu.clear();
+    m_genPDGID_nu.clear();
+    m_genMomPDGID_nu.clear();
+    for(int i = 0; i < m_genNnu; i++){
+      m_genPT_nu.push_back(GenNus[i].Pt());
+      m_genEta_nu.push_back(GenNus[i].Eta());
+      m_genPhi_nu.push_back(GenNus[i].Phi());
+      m_genPDGID_nu.push_back(GenNus[i].PDGID());
+      m_genMomPDGID_nu.push_back(GenNus[i].MomPDGID());
+    }
+  
+    // Fill gen boson branches
+    ParticleList GenBosons = AnalysisBase<Base>::GetGenBosons();
+    m_genNboson = GenBosons.size();
+    m_genPT_boson.clear();
+    m_genEta_boson.clear();
+    m_genPhi_boson.clear();
+    m_genM_boson.clear();
+    m_genPDGID_boson.clear();
+    m_genMomPDGID_boson.clear();
+    for(int i = 0; i < m_genNboson; i++){
+      m_genPT_boson.push_back(GenBosons[i].Pt());
+      m_genEta_boson.push_back(GenBosons[i].Eta());
+      m_genPhi_boson.push_back(GenBosons[i].Phi());
+      m_genM_boson.push_back(GenBosons[i].Phi());
+      m_genPDGID_boson.push_back(GenBosons[i].PDGID());
+      m_genMomPDGID_boson.push_back(GenBosons[i].MomPDGID());
+    }
+
+    // Fill gen sparticle branches
+    ParticleList GenSparticles = AnalysisBase<Base>::GetGenSparticles();
+    m_genNsusy = GenSparticles.size();
+    m_genPT_susy.clear();
+    m_genEta_susy.clear();
+    m_genPhi_susy.clear();
+    m_genM_susy.clear();
+    m_genPDGID_susy.clear();
+    m_genMomPDGID_susy.clear();
+    for(int i = 0; i < m_genNsusy; i++){
+      m_genPT_susy.push_back(GenSparticles[i].Pt());
+      m_genEta_susy.push_back(GenSparticles[i].Eta());
+      m_genPhi_susy.push_back(GenSparticles[i].Phi());
+      m_genM_susy.push_back(GenSparticles[i].Phi());
+      m_genPDGID_susy.push_back(GenSparticles[i].PDGID());
+      m_genMomPDGID_susy.push_back(GenSparticles[i].MomPDGID());
+    }
   }
   
   // Fill output tree
