@@ -49,7 +49,8 @@ void NtupleBase<Base>::WriteNtuple(const string& filename, int ichunk, int nchun
 
   // Initialize Histogram Booking
   vector<TH1D*> histos;
-  AnalysisBase<Base>::InitializeHistograms(histos);
+  if(!AnalysisBase<Base>::IsData())
+    AnalysisBase<Base>::InitializeHistograms(histos);
 
   int Nsys = AnalysisBase<Base>::m_Systematics.GetN();
   
@@ -90,7 +91,8 @@ void NtupleBase<Base>::WriteNtuple(const string& filename, int ichunk, int nchun
       }
     }
 
-    AnalysisBase<Base>::BookHistograms(histos);
+    if(!AnalysisBase<Base>::IsData())
+      AnalysisBase<Base>::BookHistograms(histos);
 
     // event count bookkeeping
     if(AnalysisBase<Base>::IsSMS())
@@ -138,11 +140,13 @@ void NtupleBase<Base>::WriteNtuple(const string& filename, int ichunk, int nchun
   tout->Write("",TObject::kOverwrite);
   delete tout;
 
-  outfile->mkdir("Histograms");
-  outfile->cd("Histograms");
-  int Nhisto = histos.size();
-  for(int i = 0; i < Nhisto; i++)
-    histos[i]->Write("", TObject::kOverwrite);
+  if(!AnalysisBase<Base>::IsData()){
+    outfile->mkdir("Histograms");
+    outfile->cd("Histograms");
+    int Nhisto = histos.size();
+    for(int i = 0; i < Nhisto; i++)
+      histos[i]->Write("", TObject::kOverwrite);
+  }
   
   outfile->Close();
   delete outfile;

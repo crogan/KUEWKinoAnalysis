@@ -26,11 +26,14 @@ FitReader::FitReader(const string& inputfile)
 
   string* process = 0;
   vector<string>* vcat = 0;
+  bool sig;
   TBranch* b_process;
   TBranch* b_vcat;
+  TBranch* b_sig;
   tree_proc->SetMakeClass(1);
   tree_proc->SetBranchAddress("process", &process, &b_process);
   tree_proc->SetBranchAddress("cat", &vcat, &b_vcat);
+  tree_proc->SetBranchAddress("sig", &sig, &b_sig);
 
   for(int i = 0; i < m_Nproc; i++){
     tree_proc->GetEntry(i);
@@ -46,18 +49,23 @@ FitReader::FitReader(const string& inputfile)
   m_Ncat = tree_cat->GetEntries();
   
   string* cat = 0;
+  string* bin = 0;
   vector<double>* bin_edge_x = 0;
   vector<double>* bin_edge_y = 0;
   TBranch* b_cat;
+  TBranch* b_bin;
   TBranch* b_bin_edge_x;
   TBranch* b_bin_edge_y;
   tree_cat->SetMakeClass(1);
   tree_cat->SetBranchAddress("cat", &cat, &b_cat);
+  tree_cat->SetBranchAddress("bin", &bin, &b_bin);
   tree_cat->SetBranchAddress("bin_edge_x", &bin_edge_x, &b_bin_edge_x);
   tree_cat->SetBranchAddress("bin_edge_y", &bin_edge_y, &b_bin_edge_y);
 
   for(int i = 0; i < m_Ncat; i++){
     tree_cat->GetEntry(i);
+    *cat += "_"+*bin;
+    cout << *cat << endl;
     m_Cat[*cat] = pair<vector<double>,vector<double> >((*bin_edge_x),(*bin_edge_y));
   }
   
@@ -170,7 +178,6 @@ TCanvas* FitReader::Plot1Dstack(const vector<string>& proc,
   vector<pair<int,int> > smass;
   
   for(int i = 0; i < Nproc; i++){
-    
     bool is_signal = false;
     for(int s = 0; s < int(m_Sig.size()); s++){
       if(proc[i].find(m_Sig[s]) != std::string::npos){
@@ -560,49 +567,49 @@ void FitReader::InitializeRecipes(){
   
   // leptonic categories
   m_Title["1L"] = "single #it{l}";
-  m_Strings["1L"] = SL().a("1L-elp-el0").a("1L-elm-el0").a("1L-mup-mu0").a("1L-mum-mu0");
-
+  m_Strings["1L"] = SL().a("1L_elp-el0").a("1L_elm-el0").a("1L_mup-mu0").a("1L_mum-mu0");
+  
   m_Title["1Lel"] = "single e";
-  m_Strings["1Lel"] = SL().a("1L-elp-el0").a("1L-elm-el0");
+  m_Strings["1Lel"] = SL().a("1L_el0p").a("1L_el0m");
 
   m_Title["1Lmu"] = "single #mu";
-  m_Strings["1Lmu"] = SL().a("1L-mup-mu0").a("1L-mum-mu0");
+  m_Strings["1Lmu"] = SL().a("1L_mu0p").a("1L_mu0m");
 
   m_Title["1Lelp"] = "single e^{+}";
-  m_Strings["1Lelp"] = SL().a("1L-elp-el0");
+  m_Strings["1Lelp"] = SL().a("1L_el0p");
 
   m_Title["1Lelm"] = "single e^{-}";
-  m_Strings["1Lelm"] = SL().a("1L-elm-el0");
+  m_Strings["1Lelm"] = SL().a("1L_el0m");
 
   m_Title["1Lmup"] = "single #mu^{+}";
-  m_Strings["1Lmup"] = SL().a("1L-mup-mu0");
+  m_Strings["1Lmup"] = SL().a("1L_el0p");
 
   m_Title["1Lmum"] = "single #mu^{-}";
-  m_Strings["1Lmum"] = SL().a("1L-mum-mu0");
+  m_Strings["1Lmum"] = SL().a("1L_mu0m");
 
   m_Title["1Lp"] = "single #it{l}^{+}";
-  m_Strings["1Lp"] = SL().a("1L-elp-el0").a("1L-mup-mu0");
+  m_Strings["1Lp"] = SL().a("1L_el0p").a("1L_mu0p");
 
   m_Title["1Lm"] = "single #it{l}^{-}";
-  m_Strings["1Lm"] = SL().a("1L-elm-el0").a("1L-mum-mu0");
+  m_Strings["1Lm"] = SL().a("1L_el0m").a("1L_mu0m");
 
   m_Title["1Lsilver"] = "single silver #it{l}";
-  m_Strings["1Lsilver"] = SL().a("1L-elp-el1").a("1L-elm-el1").a("1L-mup-mu1").a("1L-mum-mu1");
+  m_Strings["1Lsilver"] = SL().a("1L_el1p").a("1L_el1m").a("1L_mu1p").a("1L_mu1m");
   
   m_Title["1Lelsilver"] = "single silver e";
-  m_Strings["1Lelsilver"] = SL().a("1L-elp-el1").a("1L-elm-el1");
+  m_Strings["1Lelsilver"] = SL().a("1L_el1p").a("1L_el1m");
   
   m_Title["1Lmusilver"] = "single silver #mu";
-  m_Strings["1Lmusilver"] = SL().a("1L-mup-mu1").a("1L-mum-mu1");
+  m_Strings["1Lmusilver"] = SL().a("1L_mu1p").a("1L_mu1m");
 
   m_Title["1Lbronze"] = "single bronze #it{l}";
-  m_Strings["1Lbronze"] = SL().a("1L-elp-el2").a("1L-elm-el2").a("1L-mup-mu2").a("1L-mum-mu2");
+  m_Strings["1Lbronze"] = SL().a("1L_el2p").a("1L_el2m").a("1L_mu2p").a("1L_mu2m");
   
   m_Title["1Lelbronze"] = "single bronze e";
-  m_Strings["1Lelbronze"] = SL().a("1L-elp-el2").a("1L-elm-el2");
+  m_Strings["1Lelbronze"] = SL().a("1L_el2p").a("1L_el2m");
   
   m_Title["1Lmubronze"] = "single bronze #mu";
-  m_Strings["1Lmubonze"] = SL().a("1L-mup-mu2").a("1L-mum-mu2");
+  m_Strings["1Lmubonze"] = SL().a("1L_mu2p").a("1L_mu2m");
 
   m_Title["2LOSSF"] = "e^{#pm} e^{#mp} or #mu^{#pm} #mu^{#mp}";
   m_Strings["2LOSSF"] = SL().a("OS-el^el-el0el0").a("OS-mu^mu-mu0mu0").a("OS-elel^0-el0el0").a("OS-mumu^0-mu0mu0");
