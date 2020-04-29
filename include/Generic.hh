@@ -83,6 +83,7 @@ private:
   
   TH1D* m_hist1D;
   TH2D* m_hist2D;
+  TH2D* m_hist2Dfine;
 
   double m_LastBinCenterX;
 };

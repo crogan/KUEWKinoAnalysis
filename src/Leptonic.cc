@@ -104,11 +104,8 @@ std::string Lep::IDLabel() const {
 }
 
 LepSource GetLepSource(int PDGID, int genPDGID, int momPDGID){
-  if(abs(genPDGID) != 11 && abs(genPDGID) != 13)
-    return kLF;
-
-  if(PDGID*genPDGID < 0){
-    return kQFlip;
+  if(abs(genPDGID) != 11 && abs(genPDGID) != 13){
+    return kFake;
   } else if((abs(momPDGID) == abs(PDGID)) ||
 	    (abs(momPDGID) == 22) ||
 	    (abs(momPDGID) == 23) ||
@@ -148,7 +145,6 @@ LepList::~LepList(){
 }
 
 void LepList::Clear(){
-  
   for(int i = 0; i < m_N; i++)
     delete m_Lep[i];
     

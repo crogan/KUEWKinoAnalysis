@@ -15,7 +15,7 @@ using std::string;
 enum LepFlavor { kElectron, kMuon };
 enum LepCharge { kPos, kNeg };
 enum LepID { kGold, kSilver, kBronze };
-enum LepSource { kSignal, kTau, kQFlip, kHF, kLF };
+enum LepSource { kSignal, kTau, kHF, kLF, kFake };
 
 ///////////////////////////////////////////
 ////////// Lep class

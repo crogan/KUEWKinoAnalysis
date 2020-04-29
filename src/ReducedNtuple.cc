@@ -783,8 +783,6 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   // not enough stuff
   if(m_Nlep + m_Njet < 2)
     return;
-  
-  cout << "calculating stuff" << endl;
 
   bool is_filled[2];
   for(int i = 0; i < 2; i++)
@@ -1005,10 +1003,10 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
       for(int i = 0; i < m_Nlep; i++){
 	lepID.push_back(COMB_L[t]->AddLabFrameFourVector(Leptons[i]));
       }
-    
+
       if(!LAB[t]->AnalyzeEvent())
 	cout << "Something went wrong with tree event analysis #" << t << endl;
-
+      
       // jet counting in ISR/S, hemispheres
       for(int i = 0; i < m_Njet; i++){
 	if(COMB_J[t]->GetFrame(jetID[i]) == *ISR[t]){

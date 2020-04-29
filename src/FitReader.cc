@@ -227,12 +227,14 @@ TCanvas* FitReader::Plot1Dstack(const vector<string>& proc,
 	    if(shists[int(shists.size())-1] == nullptr){
 	      shists[int(shists.size())-1] =
 		(TH1D*)((TH1D*)m_File.Get(hist.c_str()))->Clone(Form("shist_p%d_%s", i, name.c_str()));
+	      shists[int(shists.size())-1]->Sumw2();
 	    } else {
 	      shists[int(shists.size())-1]->Add((TH1D*)m_File.Get(hist.c_str()));
 	    }
 	  } else {
 	    if(hists[i] == nullptr){
 	      hists[i] = (TH1D*)((TH1D*)m_File.Get(hist.c_str()))->Clone(Form("hist_p%d_%s", i, name.c_str()));
+	      hists[i]->Sumw2();
 	    } else {
 	      hists[i]->Add((TH1D*)m_File.Get(hist.c_str()));
 	    }
@@ -545,17 +547,17 @@ void FitReader::InitializeRecipes(){
   m_Color["Fakes"] = 7021;
   m_Strings["Fakes"] = SL().a("Fakes_elf0").a("Fakes_elf1").a("Fakes_elf2").a("Fakes_muf0").a("Fakes_muf1").a("Fakes_muf2");
   
-  m_Title["QFlip"] = "q-flip";
-  m_Color["QFlip"] = 7020;
-  m_Strings["QFlip"] = SL().a("Fakes_elf0").a("Fakes_muf0");
+  m_Title["Fake"] = "fake";
+  m_Color["Fake"] = 7020;
+  m_Strings["Fake"] = SL().a("Fakes_elf2").a("Fakes_muf2");
 
-  m_Title["HF"] = "heavy flavor fakes";
+  m_Title["HF"] = "heavy flavor";
   m_Color["HF"] = 7022;
-  m_Strings["HF"] = SL().a("Fakes_elf1").a("Fakes_muf1");
+  m_Strings["HF"] = SL().a("Fakes_elf0").a("Fakes_muf0");
 
-  m_Title["LF"] = "light flavor fakes";
+  m_Title["LF"] = "light flavor";
   m_Color["LF"] = 7021;
-  m_Strings["LF"] = SL().a("Fakes_elf2").a("Fakes_muf2");
+  m_Strings["LF"] = SL().a("Fakes_elf1").a("Fakes_muf1");
 
   m_Title["Total"] = "total background";
   m_Color["Total"] = 7000;

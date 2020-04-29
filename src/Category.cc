@@ -5,6 +5,9 @@
 #include "Leptonic.hh"
 #include "Hadronic.hh"
 
+using std::cout;
+using std::endl;
+
 ///////////////////////////////////////////
 ////////// Category class
 ///////////////////////////////////////////
@@ -14,18 +17,20 @@ Category::Category(const Leptonic& lep,
 		   const Hadronic& ISR_had,
 		   const string& name)
   : Criteria(name){
+  
   m_Criteria += lep;
   m_Criteria += S_had;
   m_Criteria += ISR_had;
+ 
 }
 
 Category::Category(const Category& cat)
   : Criteria(cat){
   int N = cat.GetN();
 
-  for(int i = 0; i < N; i++)
+  for(int i = 0; i < N; i++){
     m_Criteria += cat[i];
-
+  }
   m_Template = cat.GetFitBin();
 }
 
@@ -387,7 +392,6 @@ const Category& CategoryList::operator [] (int i) const {
 CategoryList& CategoryList::Add(const Category& cat){
   m_Cat.push_back(new Category(cat));
   m_N++;
-
   return *this;
 }
 
