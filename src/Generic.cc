@@ -109,6 +109,7 @@ FitBin::FitBin(const vector<double>& bin_edges_x,
 FitBin::FitBin(const FitBin& bin){
   m_hist1D = nullptr;
   m_hist2D = nullptr;
+  m_hist2Dfine = nullptr;
   
   m_Edges_X = bin.GetBinEdgesX();
   m_Edges_Y = bin.GetBinEdgesY();
@@ -151,16 +152,29 @@ FitBin& FitBin::InitializeHistogram(const std::string& label){
 			       string("h2D_"+label).c_str(),
 			       m_NX, &m_Edges_X[0],
 			       m_NY, &m_Edges_Y[0]);
+   m_hist2D->Sumw2();
+   
+   m_hist2Dfine = (TH2D*) new TH2D(string("h2Dfine_"+label).c_str(),
+				   string("h2Dfine_"+label).c_str(),
+				   32, m_Edges_X[0], m_Edges_X[m_NX],
+				   32, m_Edges_Y[0], m_Edges_Y[m_NY]);
+   m_hist2Dfine->Sumw2();
+   
    m_hist1D = (TH1D*) new TH1D(string("h1D_"+label).c_str(),
 			       string("h1D_"+label).c_str(),
 			       m_NX*m_NY, -0.5, m_NX*m_NY-0.5);
+   m_hist1D->Sumw2();
+   
    return *this;
 }
 
 void FitBin::Fill(double weight, double X, double Y){
   if(m_hist1D == nullptr ||
-     m_hist2D == nullptr)
+     m_hist2D == nullptr ||
+     m_hist2Dfine == nullptr)
     return;
+
+  m_hist2Dfine->Fill(X, Y, weight);
   
   int iX = m_hist2D->GetXaxis()->FindBin(X);
   int iY = m_hist2D->GetYaxis()->FindBin(Y);
@@ -196,6 +210,7 @@ void FitBin::WriteHistogram(const std::string& name,
   file.cd();
   file.cd(("hist2D/"+fold).c_str());
   m_hist2D->Write(("2D_"+name).c_str(), TObject::kOverwrite);
+  m_hist2D->Write(("2Dfine_"+name).c_str(), TObject::kOverwrite);
   file.cd();
 }
 

@@ -91,7 +91,7 @@ CriteriaList& CriteriaList::Add(const Criteria& criteria){
     m_Criteria.push_back(new GenericVal(dynamic_cast<const GenericVal&>(criteria)));
     m_N++;
   }
-
+ 
   return *this;
 }
 
