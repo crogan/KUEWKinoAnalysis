@@ -179,6 +179,7 @@ TCanvas* FitReader::Plot1Dstack(const vector<string>& proc,
   
   for(int i = 0; i < Nproc; i++){
     bool is_signal = false;
+    bool is_data = proc[i].find("Data") != std::string::npos;
     for(int s = 0; s < int(m_Sig.size()); s++){
       if(proc[i].find(m_Sig[s]) != std::string::npos){
 	is_signal = true;
@@ -189,6 +190,7 @@ TCanvas* FitReader::Plot1Dstack(const vector<string>& proc,
 	break;
       }
     }
+    
     if(!is_signal){
       if(m_Title.count(proc[i]) != 0)
 	labels.push_back(m_Title[proc[i]]);
@@ -227,16 +229,14 @@ TCanvas* FitReader::Plot1Dstack(const vector<string>& proc,
 	    if(shists[int(shists.size())-1] == nullptr){
 	      shists[int(shists.size())-1] =
 		(TH1D*)((TH1D*)m_File.Get(hist.c_str()))->Clone(Form("shist_p%d_%s", i, name.c_str()));
-	      shists[int(shists.size())-1]->Sumw2();
 	    } else {
 	      shists[int(shists.size())-1]->Add((TH1D*)m_File.Get(hist.c_str()));
 	    }
 	  } else {
-	    if(hists[i] == nullptr){
-	      hists[i] = (TH1D*)((TH1D*)m_File.Get(hist.c_str()))->Clone(Form("hist_p%d_%s", i, name.c_str()));
-	      hists[i]->Sumw2();
+	    if(hists[int(hists.size())-1] == nullptr){
+	      hists[int(hists.size())-1] = (TH1D*)((TH1D*)m_File.Get(hist.c_str()))->Clone(Form("hist_p%d_%s", i, name.c_str()));
 	    } else {
-	      hists[i]->Add((TH1D*)m_File.Get(hist.c_str()));
+	      hists[int(hists.size())-1]->Add((TH1D*)m_File.Get(hist.c_str()));
 	    }
 	  }
 	}
@@ -255,7 +255,19 @@ TCanvas* FitReader::Plot1Dstack(const vector<string>& proc,
   int    itemp;
   TH1D*  htemp;
   int miss = 0;
+
+  bool  bdata = false;
+  TH1D* hdata = nullptr;
+  
   for(int i = 0; i < Nbkg+miss; i++){
+    cout << labels[i] << " " << hists[i] << endl;
+    if(labels[i].find("Data") != std::string::npos){
+      bdata = true;
+      hdata = hists[i];
+      Nbkg--;
+      miss++;
+      continue;
+    }
     if(hists[i] == nullptr){
       Nbkg--;
       miss++;
@@ -413,12 +425,24 @@ TCanvas* FitReader::Plot1Dstack(const vector<string>& proc,
     shists[i]->Draw("SAME HIST");
   }
 
+  if(bdata){
+    hdata->SetLineColor(kBlack);
+    hdata->SetFillColor(kWhite);
+    hdata->SetMarkerStyle(8);
+    hdata->SetMarkerSize(1.);
+    hdata->SetLineWidth(2);
+    hdata->Draw("SAME ep");
+  }
+
   TLegend* leg = new TLegend(1.-hhi+0.01, 1.- (Nbkg+Nsig+1)*(1.-0.49)/9., 0.98, 1.-hto-0.005);
   leg->SetTextFont(42);
   leg->SetTextSize(0.035);
   leg->SetFillColor(kWhite);
   leg->SetLineColor(kWhite);
   leg->SetShadowColor(kWhite);
+
+  if(bdata)
+    leg->AddEntry(hdata, "data");
   leg->AddEntry(gr, "total uncertainty","F");
   for(int i = 0; i < Nbkg; i++)
     leg->AddEntry(hists[i], labels[i].c_str(), "F");
@@ -480,33 +504,16 @@ TCanvas* FitReader::Plot1Dstack(const vector<string>& proc,
   l.DrawLatex(hlo+eps*4, 1.-hto+0.02,"#bf{#it{CMS}} #it{Simulation}");
   l.SetTextSize(0.05);
 
-  l.SetTextColor(7014);
-  l.SetTextAlign(22);
-  l.SetTextSize(0.038);
-  l.SetTextFont(42);
-  l.DrawLatex(1-hhi/2., hbo+0.11, lep_labels[0].c_str());
-
-  l.SetTextAlign(22);
-  l.SetTextSize(0.035);
-  l.SetTextFont(42);
+  string plotlabel = "#color[7014]{"+lep_labels[0]+"} + ";
+  plotlabel += "#color[7004]{"+hadS_labels[0]+"} + ";
+  plotlabel += "#color[7024]{"+hadI_labels[0]+"} + ";
+  plotlabel += "p_{T}^{ISR} > 200 GeV";
+  
   l.SetTextColor(kBlack);
-  l.DrawLatex(1-hhi/2., hbo+0.06, "+");
-  l.DrawLatex(1-hhi/2., hbo-0.06, "+");
-  l.DrawLatex(1-hhi/2., hbo-0.18, "+");
-  l.SetTextColor(7004);
-  l.DrawLatex(1-hhi/2., hbo+0.01, hadS_labels[0].c_str());
- 
-  l.SetTextColor(7024);
-  l.SetTextAlign(22);
+  l.SetTextAlign(13);
   l.SetTextSize(0.035);
   l.SetTextFont(42);
-  l.DrawLatex(1-hhi/2., hbo-0.11, hadI_labels[0].c_str());
-
-  l.SetTextColor(kBlack);
-  l.SetTextAlign(22);
-  l.SetTextSize(0.035);
-  l.SetTextFont(42);
-  l.DrawLatex(1-hhi/2., hbo-0.24, "p_{T}^{ISR} > 200 GeV");
+  l.DrawLatex(hlo+0.02, 1-hto-0.012, plotlabel.c_str());
 
   return can;
 }
@@ -522,6 +529,9 @@ bool FitReader::Match(const string& target, const vector<string>& test){
 
 void FitReader::InitializeRecipes(){
   // Processes
+  m_Title["ttbar"] = "Data";
+  m_Color["ttbar"] = kBlack;
+  
   m_Title["ttbar"] = "t #bar{t} + jets";
   m_Color["ttbar"] = 7011;
 
@@ -541,7 +551,9 @@ void FitReader::InitializeRecipes(){
   m_Color["Wjets"] = 7001;
 
   m_Title["QCD"] = "QCD multi-jets";
-  m_Color["QCD"] = 7033;
+  m_Color["QCD"] = 7023;
+  m_Strings["QCD"] = SL().a("QCD").a("QCD_Fakes_elf0").a("QCD_Fakes_elf1").a("QCD_Fakes_elf2")
+    .a("QCD_Fakes_muf0").a("QCD_Fakes_muf1").a("QCD_Fakes_muf2");
 
   m_Title["Fakes"] = "fake leptons";
   m_Color["Fakes"] = 7021;
@@ -666,7 +678,7 @@ void FitReader::InitializeRecipes(){
                                   .a("2LSS_el^mu-el2mu2").a("2LSS_elmu^1-el2mu2");
 
   // hadronic categories
-  m_Title["0jsvS"] = "#splitline{0 jets}{0 SV-tags} #scale[1.2]{#in S}";
+  m_Title["0j0svS"] = "#splitline{0 jets}{0 SV-tags} #scale[1.2]{#in S}";
 
   m_Title["0j1svS"] = "#splitline{0 jets}{1 SV-tag} #scale[1.2]{#in S}";
 

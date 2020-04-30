@@ -16,6 +16,8 @@
 #include <TList.h>
 #include <TLeafElement.h>
 #include <TLorentzVector.h>
+//#include <TIter.h>
+#include <TKey.h>
 
 #include "ReducedBase_slim.hh"
 #include "FitBuilder.hh"
@@ -25,24 +27,26 @@
 
 using namespace std;
 
-int g_iYear;
+int g_iyear;
+double g_lumi[3];
 map<string, SampleSet*> g_Samples[3];  // [year]
 string g_NtuplePath;
 int    g_BKG_SKIP;
 void InitializeSamples();
+vector<SampleSet*> ParseSMS(const string& filename, const string& prefix);
 vector<string> GetAllSamples();
 
 CategoryList g_Categories;
 void InitializeCategories();
 
 int main(int argc, char* argv[]) {
-  g_iYear = 1;
+  g_iyear = 1;
   g_BKG_SKIP = 1;
   g_NtuplePath = "/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_26_04_20/";
   InitializeSamples();
 
   vector<string> samples = GetAllSamples();
-
+  
   InitializeCategories();
 
   FitBuilder FITBuilder;
@@ -51,52 +55,55 @@ int main(int argc, char* argv[]) {
   int Nsample = samples.size();
   for(int s = 0; s < Nsample; s++){
     
-    int Nfile = g_Samples[g_iYear][samples[s]]->GetNFile();
-    cout << "Processing " << Nfile << " files for sample " << g_Samples[g_iYear][samples[s]]->GetTitle() << endl;
+    int Nfile = g_Samples[g_iyear][samples[s]]->GetNFile();
+    cout << "Processing " << Nfile << " files for sample " << g_Samples[g_iyear][samples[s]]->GetTitle() << endl;
     for(int f = 0; f < Nfile; f++){
-      cout << "   Processing file " << g_Samples[g_iYear][samples[s]]->GetFile(f) << " w/ tree ";
-      cout << g_Samples[g_iYear][samples[s]]->GetTreeName() << endl;
+      cout << "   Processing file " << g_Samples[g_iyear][samples[s]]->GetFile(f) << " w/ tree ";
+      cout << g_Samples[g_iyear][samples[s]]->GetTreeName() << endl;
     
-      TChain* chain = new TChain(g_Samples[g_iYear][samples[s]]->GetTreeName().c_str());
-      chain->Add(g_Samples[g_iYear][samples[s]]->GetFile(f).c_str());
+      TChain* chain = new TChain(g_Samples[g_iyear][samples[s]]->GetTreeName().c_str());
+      chain->Add(g_Samples[g_iyear][samples[s]]->GetFile(f).c_str());
 
       ReducedBase* base = new ReducedBase(chain);
 
       int Nentry = base->fChain->GetEntries();
 
-      int SKIP = g_Samples[g_iYear][samples[s]]->GetSkip();
+      int SKIP = g_Samples[g_iyear][samples[s]]->GetSkip();
 
-      //for(int e = 0; e < Nentry; e += SKIP){
       for(int e = 0; e < Nentry; e += SKIP){
 	base->GetEntry(e);
 	if((e/SKIP)%(std::max(1, int(Nentry/SKIP/10))) == 0)
 	  cout << "      event " << e << " | " << Nentry << endl;
 
-	
-	
+	if(!base->METORtrigger &&
+	   (g_Samples[g_iyear][samples[s]]->GetData() ||
+	    g_Samples[g_iyear][samples[s]]->GetBkg()))
+	  continue;
+		
 	if(base->MET < 200)
 	  continue;
 	
 	if(base->PTISR->at(1) < 200.)
 	  continue;
 
-	if(base->RISR->at(1) < 0.5)
+	if(base->PTCM->at(1)/base->PTISR->at(1) > 0.2)
 	  continue;
 
+	if(base->RISR->at(1) < 0.5)
+	  continue;
+	
 	int Nlep     = base->Nlep;
 	int NjetS    = base->Njet_S->at(1);
 	int NbjetS   = base->Nbjet_S->at(1);
 	int NjetISR  = base->Njet_ISR->at(1);
 	int NbjetISR = base->Nbjet_ISR->at(1);
 	int NSV      = base->NSV_S->at(1);
-
-	if(Nlep == 0) cout << base->Njet << " " << NjetISR << " " << NSV << endl;
 	   
 	LepList list_a;
 	LepList list_b;
 	
 	int index;
-	
+
 	if(base->index_lep_a->size() < 2 ||
 	   base->index_lep_b->size() < 2)
 	  continue;
@@ -105,13 +112,10 @@ int main(int argc, char* argv[]) {
 	  index = base->index_lep_a->at(1)[i];
 
 	  int PDGID  = base->PDGID_lep->at(index);
-	  int gindex = base->Index_lep->at(index);
-	  int genPDGID;
-	  int momPDGID;
-	  if(gindex < 0){
-	    genPDGID = 0;
-	    momPDGID = 0;
-	  } else {
+	  int gindex = g_Samples[g_iyear][samples[s]]->GetData() ? -1 :  base->Index_lep->at(index);
+	  int genPDGID = 0;
+	  int momPDGID = 0;
+	  if(gindex >= 0){
 	    genPDGID = base->genPDGID_lep->at(gindex);
 	    momPDGID = base->genMomPDGID_lep->at(gindex);
 	  }
@@ -138,7 +142,7 @@ int main(int argc, char* argv[]) {
 	  index = base->index_lep_b->at(1)[i];
 
 	  int PDGID  = base->PDGID_lep->at(index);
-	  int gindex = base->Index_lep->at(index);
+	  int gindex = g_Samples[g_iyear][samples[s]]->GetData() ? -1 :  base->Index_lep->at(index);
 	  int genPDGID = 0;
 	  int momPDGID = 0;
 	  if(gindex >= 0){
@@ -164,7 +168,7 @@ int main(int argc, char* argv[]) {
 	  
 	  list_b += Lep(flavor, charge, id, source);
 	}
-	
+
 	Category Event(Leptonic(list_a, list_b),
 		       Hadronic(NjetS, NbjetS, NSV),
 		       Hadronic(NjetISR, NbjetISR, 0));
@@ -173,7 +177,7 @@ int main(int argc, char* argv[]) {
 	int eindex = g_Categories.Find(Event);
 	if(eindex < 0)
 	  continue;
-
+	
 	LepList Fakes  = list_a.GetFakes(kHF);
 	Fakes         += list_b.GetFakes(kHF);
 
@@ -186,21 +190,24 @@ int main(int argc, char* argv[]) {
 	  Mperp = base->EJ_BoostT->at(1);
 	double RISR  = base->RISR->at(1);
 	
-	if(Fakes.GetN() > 0 && g_Samples[g_iYear][samples[s]]->GetBkg()){
+	if(Fakes.GetN() > 0 && g_Samples[g_iyear][samples[s]]->GetBkg()){
 	  vector<string> flabels = Fakes.GetFakeLabels(kHF);
 	  int Nf = flabels.size();
 	  for(int fl = 0; fl < Nf; fl++){
-	    FITBuilder.AddEvent(137.*base->weight/double(Nf), Mperp, RISR,
-				g_Categories[eindex], flabels[fl]);
-	    FITBuilder.AddEvent(137.*base->weight/double(Nf), Mperp, RISR,
+	    if(samples[s] != "QCD")
+	      FITBuilder.AddEvent(g_lumi[g_iyear]*base->weight/double(Nf), Mperp, RISR,
+				  g_Categories[eindex], flabels[fl]);
+	    FITBuilder.AddEvent(g_lumi[g_iyear]*base->weight/double(Nf), Mperp, RISR,
 				g_Categories[eindex], samples[s]+"_"+flabels[fl]);
 	  }
 	} else {
-	  FITBuilder.AddEvent(137.*base->weight, Mperp, RISR,
+	  FITBuilder.AddEvent((g_Samples[g_iyear][samples[s]]->GetData() ? 1. : g_lumi[g_iyear])*base->weight, Mperp, RISR,
 			      g_Categories[eindex],
-			      samples[s], !g_Samples[g_iYear][samples[s]]->GetBkg());
+			      samples[s], !g_Samples[g_iyear][samples[s]]->GetBkg());
 	}
       }
+      delete base;
+      delete chain;
     }
   }
 
@@ -209,8 +216,12 @@ int main(int argc, char* argv[]) {
 }
 
 void InitializeSamples(){
-  // 2017 samples
+  g_lumi[0] = 35.922; // 2016 lumi
+  g_lumi[1] = 41.529; // 2017 lumi
+  g_lumi[2] = 59.74;  // 2018 lumi
   
+  // 2017 samples
+
   SampleSet* ttX = new SampleSet();
   g_Samples[1]["ttbar"] = ttX;
   ttX->SetBkg(true);
@@ -320,33 +331,84 @@ void InitializeSamples(){
   QCD->AddFile(g_NtuplePath+"Fall17_102X/QCD_HT500to700_TuneCP5_13TeV-madgraph-pythia8_Fall17_102X.root");
   QCD->AddFile(g_NtuplePath+"Fall17_102X/QCD_HT700to1000_TuneCP5_13TeV-madgraph-pythia8_Fall17_102X.root");
 
-  vector<SampleSet*> SMS_T2bW;
-  int is = 0;
-  for(int i = 0; i < 3; i++){
-    for(int j = 0; j < 5; j++){
-      int M0 = 500 + 100*i;
-      int M1 = M0-10*(j+1);
-      SMS_T2bW.push_back(new SampleSet());
-      is++;
-      SMS_T2bW[is-1]->SetBkg(false);
-      SMS_T2bW[is-1]->SetTitle(Form("T2bW_%d", 100000*M0+M1));
-      SMS_T2bW[is-1]->SetTreeName(Form("SMS_%d_%d", M0, M1));
-      SMS_T2bW[is-1]->AddFile(g_NtuplePath+"Fall17_102X_SMS/SMS-T2bW_X05_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-      g_Samples[1][Form("T2bW_%d", 100000*M0+M1)] = SMS_T2bW[is-1];
-    }
-  }
+  vector<SampleSet*> SMS_T2bW =
+    ParseSMS(g_NtuplePath+"Fall17_102X_SMS/SMS-T2bW_X05_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", "T2bW");
+  for(int i = 0; i < int(SMS_T2bW.size()); i++)
+    g_Samples[1][SMS_T2bW[i]->GetTitle()] = SMS_T2bW[i];
+  
+  vector<SampleSet*> SMS_T2tt =
+    ParseSMS(g_NtuplePath+"Fall17_102X_SMS/SMS-T2tt_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", "T2tt");
+  for(int i = 0; i < int(SMS_T2tt.size()); i++)
+    g_Samples[1][SMS_T2tt[i]->GetTitle()] = SMS_T2tt[i];
 
+  vector<SampleSet*> SMS_TChiWZ =
+    ParseSMS(g_NtuplePath+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", "TChiWZ");
+  for(int i = 0; i < int(SMS_TChiWZ.size()); i++)
+    g_Samples[1][SMS_TChiWZ[i]->GetTitle()] = SMS_TChiWZ[i];
+
+  vector<SampleSet*> SMS_TChipmWW =
+    ParseSMS(g_NtuplePath+"Fall17_102X_SMS/SMS-TChipmWW_WWTo2LNu_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", "TChipmWW");
+  for(int i = 0; i < int(SMS_TChipmWW.size()); i++)
+    g_Samples[1][SMS_TChipmWW[i]->GetTitle()] = SMS_TChipmWW[i];
+
+  vector<SampleSet*> SMS_TSlepSlep =
+    ParseSMS(g_NtuplePath+"Fall17_102X_SMS/SMS-TChipmWW_WWTo2LNu_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", "TSlepSlep");
+  for(int i = 0; i < int(SMS_TSlepSlep.size()); i++)
+    g_Samples[1][SMS_TSlepSlep[i]->GetTitle()] = SMS_TSlepSlep[i];
+
+  
+  SampleSet* Data = new SampleSet();
+  g_Samples[1]["Data"] = Data;
+  Data->SetData(true);
+  Data->AddFile(g_NtuplePath+"Fall17_102X_Data/MET_Run2017B-Nano25Oct2019-v1_2017_Fall17_102X.root");
+  Data->AddFile(g_NtuplePath+"Fall17_102X_Data/MET_Run2017C-Nano25Oct2019-v1_2017_Fall17_102X.root");
+  Data->AddFile(g_NtuplePath+"Fall17_102X_Data/MET_Run2017D-Nano25Oct2019-v1_2017_Fall17_102X.root");
+  Data->AddFile(g_NtuplePath+"Fall17_102X_Data/MET_Run2017E-Nano25Oct2019-v1_2017_Fall17_102X.root");
+  Data->AddFile(g_NtuplePath+"Fall17_102X_Data/MET_Run2017F-Nano25Oct2019-v1_2017_Fall17_102X.root");
+  
 }
 
 vector<string> GetAllSamples(){
   vector<string> list;
-  map<string, SampleSet*>::iterator s = g_Samples[g_iYear].begin();
-  while(s != g_Samples[g_iYear].end()){
-    list.push_back(s->first);
+  map<string, SampleSet*>::iterator s = g_Samples[g_iyear].begin();
+  while(s != g_Samples[g_iyear].end()){
+    //if(s->first.find("T2bW") != std::string::npos)
+      list.push_back(s->first);
     s++;
   }
 
   return list;
+}
+
+vector<SampleSet*> ParseSMS(const string& filename, const string& prefix){
+  vector<SampleSet*> sslist;
+
+  TFile file(filename.c_str(), "READ");
+  if(!file.IsOpen()){
+    cout << "can't open " << filename << endl;
+    return sslist;
+  }
+  TIter list(file.GetListOfKeys());
+  TKey* key;
+  int M0, M1;
+  string name;
+  while((key = (TKey*)list.Next())){
+    name = string(key->GetName());
+    if(name.find("SMS") == std::string::npos)
+      continue;
+    sscanf(name.c_str(), "SMS_%d_%d", &M0, &M1);
+    
+    SampleSet* ss = new SampleSet();
+    ss->SetBkg(false);
+    ss->SetTreeName(name);
+    ss->AddFile(filename);
+    ss->SetTitle(Form("%s_%d", prefix.c_str(), 10000*M0+M1));
+    
+    sslist.push_back(ss);
+  }
+  file.Close();
+
+  return sslist;
 }
 
 void InitializeCategories(){

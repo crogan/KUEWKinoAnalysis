@@ -1314,6 +1314,8 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET){
   // If one jet fails jet ID, 
   if(!passID)
     return ParticleList();
+
+  year = 2016;
   
   if(year == 2017)
     MET.SetPtEtaPhi(METFixEE2017_pt,0.0,METFixEE2017_phi);
@@ -1914,7 +1916,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetGenMuons(){
   int PDGID;
   for(int i = 0; i < N; i++){
     PDGID = GenPart_pdgId[i];
-    if(abs(PDGID) == 13 && GenPart_pt[i] > 3. && GenPart_status[i] == 1){
+    if(abs(PDGID) == 13 && GenPart_pt[i] > 2. && GenPart_status[i] == 1){
       Particle lep;
       
       lep.SetPDGID(PDGID);

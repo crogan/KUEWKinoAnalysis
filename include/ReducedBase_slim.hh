@@ -858,6 +858,7 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchStatus("MET_phi",1);
    fChain->SetBranchStatus("RISR",1);
    fChain->SetBranchStatus("PTISR",1);
+   fChain->SetBranchStatus("PTCM",1);
    fChain->SetBranchStatus("*lep",1);
    fChain->SetBranchStatus("Nlep*",1);
    fChain->SetBranchStatus("NSV*",1);
@@ -889,6 +890,8 @@ inline void ReducedBase::Init(TTree *tree)
    //fChain->SetBranchStatus("*jet",1);
    fChain->SetBranchStatus("genPDGID_lep", 1);
    fChain->SetBranchStatus("genMomPDGID_lep", 1);
+   fChain->SetBranchStatus("MET*trigger", 1);
+
 }
 
 inline Bool_t ReducedBase::Notify()
