@@ -70,8 +70,6 @@ void FitBuilder::WriteFit(const string& outputroot){
     m_OutFile = nullptr;
     return;
   }
-  m_OutFile->cd();
-  m_OutFile->mkdir("hist2D");
 
   std::cout << "writing Processes to ouput" << std::endl;
   WriteProc();

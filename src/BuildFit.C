@@ -275,7 +275,7 @@ void InitializeSamples(){
   g_lumi[2] = 59.74;  // 2018 lumi
   
   // 2017 samples
-  
+  /*
     SampleSet* ttX = new SampleSet();
     g_Samples[1]["ttbar"] = ttX;
     ttX->SetBkg(true);
@@ -384,41 +384,42 @@ void InitializeSamples(){
     QCD->AddFile(g_NtuplePath+"Fall17_102X/QCD_HT300to500_TuneCP5_13TeV-madgraph-pythia8_Fall17_102X.root");
     QCD->AddFile(g_NtuplePath+"Fall17_102X/QCD_HT500to700_TuneCP5_13TeV-madgraph-pythia8_Fall17_102X.root");
     QCD->AddFile(g_NtuplePath+"Fall17_102X/QCD_HT700to1000_TuneCP5_13TeV-madgraph-pythia8_Fall17_102X.root");
+    */
   
-  vector<SampleSet*> SMS_T2bW =
-    ParseSMS(g_NtuplePath+"Fall17_102X_SMS/SMS-T2bW_X05_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", "T2bW");
-  for(int i = 0; i < int(SMS_T2bW.size()); i++)
-    g_Samples[1][SMS_T2bW[i]->GetTitle()] = SMS_T2bW[i];
+  // vector<SampleSet*> SMS_T2bW =
+  //   ParseSMS(g_NtuplePath+"Fall17_102X_SMS/SMS-T2bW_X05_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", "T2bW");
+  // for(int i = 0; i < int(SMS_T2bW.size()); i++)
+  //   g_Samples[1][SMS_T2bW[i]->GetTitle()] = SMS_T2bW[i];
   
     vector<SampleSet*> SMS_T2tt =
     ParseSMS(g_NtuplePath+"Fall17_102X_SMS/SMS-T2tt_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", "T2tt");
     for(int i = 0; i < int(SMS_T2tt.size()); i++)
     g_Samples[1][SMS_T2tt[i]->GetTitle()] = SMS_T2tt[i];
 
-    vector<SampleSet*> SMS_TChiWZ =
-    ParseSMS(g_NtuplePath+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", "TChiWZ");
-    for(int i = 0; i < int(SMS_TChiWZ.size()); i++)
-    g_Samples[1][SMS_TChiWZ[i]->GetTitle()] = SMS_TChiWZ[i];
+    // vector<SampleSet*> SMS_TChiWZ =
+    // ParseSMS(g_NtuplePath+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", "TChiWZ");
+    // for(int i = 0; i < int(SMS_TChiWZ.size()); i++)
+    // g_Samples[1][SMS_TChiWZ[i]->GetTitle()] = SMS_TChiWZ[i];
 
-    vector<SampleSet*> SMS_TChipmWW =
-    ParseSMS(g_NtuplePath+"Fall17_102X_SMS/SMS-TChipmWW_WWTo2LNu_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", "TChipmWW");
-    for(int i = 0; i < int(SMS_TChipmWW.size()); i++)
-    g_Samples[1][SMS_TChipmWW[i]->GetTitle()] = SMS_TChipmWW[i];
+    // vector<SampleSet*> SMS_TChipmWW =
+    // ParseSMS(g_NtuplePath+"Fall17_102X_SMS/SMS-TChipmWW_WWTo2LNu_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", "TChipmWW");
+    // for(int i = 0; i < int(SMS_TChipmWW.size()); i++)
+    // g_Samples[1][SMS_TChipmWW[i]->GetTitle()] = SMS_TChipmWW[i];
 
-    vector<SampleSet*> SMS_TSlepSlep =
-    ParseSMS(g_NtuplePath+"Fall17_102X_SMS/SMS-TChipmWW_WWTo2LNu_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", "TSlepSlep");
-    for(int i = 0; i < int(SMS_TSlepSlep.size()); i++)
-    g_Samples[1][SMS_TSlepSlep[i]->GetTitle()] = SMS_TSlepSlep[i];
+    // vector<SampleSet*> SMS_TSlepSlep =
+    // ParseSMS(g_NtuplePath+"Fall17_102X_SMS/SMS-TChipmWW_WWTo2LNu_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", "TSlepSlep");
+    // for(int i = 0; i < int(SMS_TSlepSlep.size()); i++)
+    // g_Samples[1][SMS_TSlepSlep[i]->GetTitle()] = SMS_TSlepSlep[i];
 
   
-    SampleSet* Data = new SampleSet();
-    g_Samples[1]["Data"] = Data;
-    Data->SetData(true);
-    Data->AddFile(g_NtuplePath+"Fall17_102X_Data/MET_Run2017B-Nano25Oct2019-v1_2017_Fall17_102X.root");
-    Data->AddFile(g_NtuplePath+"Fall17_102X_Data/MET_Run2017C-Nano25Oct2019-v1_2017_Fall17_102X.root");
-    Data->AddFile(g_NtuplePath+"Fall17_102X_Data/MET_Run2017D-Nano25Oct2019-v1_2017_Fall17_102X.root");
-    Data->AddFile(g_NtuplePath+"Fall17_102X_Data/MET_Run2017E-Nano25Oct2019-v1_2017_Fall17_102X.root");
-    Data->AddFile(g_NtuplePath+"Fall17_102X_Data/MET_Run2017F-Nano25Oct2019-v1_2017_Fall17_102X.root");
+    // SampleSet* Data = new SampleSet();
+    // g_Samples[1]["Data"] = Data;
+    // Data->SetData(true);
+    // Data->AddFile(g_NtuplePath+"Fall17_102X_Data/MET_Run2017B-Nano25Oct2019-v1_2017_Fall17_102X.root");
+    // Data->AddFile(g_NtuplePath+"Fall17_102X_Data/MET_Run2017C-Nano25Oct2019-v1_2017_Fall17_102X.root");
+    // Data->AddFile(g_NtuplePath+"Fall17_102X_Data/MET_Run2017D-Nano25Oct2019-v1_2017_Fall17_102X.root");
+    // Data->AddFile(g_NtuplePath+"Fall17_102X_Data/MET_Run2017E-Nano25Oct2019-v1_2017_Fall17_102X.root");
+    // Data->AddFile(g_NtuplePath+"Fall17_102X_Data/MET_Run2017F-Nano25Oct2019-v1_2017_Fall17_102X.root");
   
 }
 
