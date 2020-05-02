@@ -7,8 +7,8 @@
 #include <iostream>
 #include <vector>
 
-#include "Criteria.hh"
 #include "Generic.hh"
+#include "FitBin.hh"
 
 class Leptonic;
 class Hadronic;
@@ -94,6 +94,30 @@ private:
   int m_N;
   vector<Category*> m_Cat;
 
+};
+
+///////////////////////////////////////////
+////////// CategoryBranch class
+///////////////////////////////////////////
+
+class CategoryBranch {
+public:
+  CategoryBranch();
+
+  virtual ~CategoryBranch();
+
+  void Init(TTree* tree);
+  
+  void FillCategory(Category& cat);
+
+private:
+  TTree* m_Tree;
+  
+  string m_Cat;
+  string m_Bin;
+
+  FitBinBranch m_FitBinBranch;
+  
 };
 
 #endif

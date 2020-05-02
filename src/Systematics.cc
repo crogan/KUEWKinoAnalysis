@@ -56,7 +56,7 @@ std::string Systematic::TreeName(const std::string& name) const {
   if(this->IsDefault())
     return name;
   else
-    return name+"_"+m_Label+(IsUp() ? "_up" : "_down");
+    return name+"_"+m_Label+(IsUp() ? "Up" : "Down");
 }
 
 Systematic& Systematic::Default(){
