@@ -58,6 +58,14 @@ void FitBuilder::AddEvent(double weight, double Mperp, double RISR,
 			  
 }
 
+const Process& FitBuilder::FakeProcess(const string& label){
+  if(m_Proc.count(label) == 0){
+    m_Proc[label] = new Process(label, kBkg);
+  }
+
+  return *m_Proc[label];
+}
+
 void FitBuilder::WriteFit(const string& outputroot){
   if(m_OutFile){
     if(m_OutFile->IsOpen())
@@ -71,11 +79,13 @@ void FitBuilder::WriteFit(const string& outputroot){
     return;
   }
 
-  std::cout << "writing Processes to ouput" << std::endl;
+  std::cout << "writing Processes to ouput..." << std::endl;
   WriteProc();
+  std::cout << "...done" << std::endl;
 
   std::cout << "writing Categories to ouput" << std::endl;
   WriteCat();
+  std::cout << "...done" << std::endl;
 
   m_OutFile->Close();
   delete m_OutFile;
