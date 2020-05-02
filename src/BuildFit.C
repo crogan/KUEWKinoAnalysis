@@ -275,7 +275,7 @@ void InitializeSamples(){
   g_lumi[2] = 59.74;  // 2018 lumi
   
   // 2017 samples
-  /*
+  
     SampleSet* ttX = new SampleSet();
     g_Samples[1]["ttbar"] = ttX;
     ttX->SetBkg(true);
@@ -384,12 +384,12 @@ void InitializeSamples(){
     QCD->AddFile(g_NtuplePath+"Fall17_102X/QCD_HT300to500_TuneCP5_13TeV-madgraph-pythia8_Fall17_102X.root");
     QCD->AddFile(g_NtuplePath+"Fall17_102X/QCD_HT500to700_TuneCP5_13TeV-madgraph-pythia8_Fall17_102X.root");
     QCD->AddFile(g_NtuplePath+"Fall17_102X/QCD_HT700to1000_TuneCP5_13TeV-madgraph-pythia8_Fall17_102X.root");
-  */
+  
   vector<SampleSet*> SMS_T2bW =
     ParseSMS(g_NtuplePath+"Fall17_102X_SMS/SMS-T2bW_X05_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", "T2bW");
   for(int i = 0; i < int(SMS_T2bW.size()); i++)
     g_Samples[1][SMS_T2bW[i]->GetTitle()] = SMS_T2bW[i];
-  /*
+  
     vector<SampleSet*> SMS_T2tt =
     ParseSMS(g_NtuplePath+"Fall17_102X_SMS/SMS-T2tt_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", "T2tt");
     for(int i = 0; i < int(SMS_T2tt.size()); i++)
@@ -419,7 +419,7 @@ void InitializeSamples(){
     Data->AddFile(g_NtuplePath+"Fall17_102X_Data/MET_Run2017D-Nano25Oct2019-v1_2017_Fall17_102X.root");
     Data->AddFile(g_NtuplePath+"Fall17_102X_Data/MET_Run2017E-Nano25Oct2019-v1_2017_Fall17_102X.root");
     Data->AddFile(g_NtuplePath+"Fall17_102X_Data/MET_Run2017F-Nano25Oct2019-v1_2017_Fall17_102X.root");
-  */
+  
 }
 
 vector<string> GetAllSamples(){
@@ -459,7 +459,6 @@ vector<SampleSet*> ParseSMS(const string& filename, const string& prefix){
     ss->SetTitle(Form("%s_%d", prefix.c_str(), 10000*M0+M1));
     
     sslist.push_back(ss);
-    break;
   }
   file.Close();
 
