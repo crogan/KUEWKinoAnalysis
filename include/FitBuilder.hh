@@ -28,6 +28,8 @@ public:
 		const Category& cat,
 		const Process& proc,
 		const Systematic& sys = Systematic::Default());
+
+  const Process& FakeProcess(const string& label);
   
   void WriteFit(const string& outputroot);
   
