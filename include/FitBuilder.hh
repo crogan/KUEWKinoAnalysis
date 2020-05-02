@@ -8,10 +8,11 @@
 #include <iostream>
 #include <vector>
 
-#include "Category.hh"
+#include "Process.hh"
 
 using std::map;
 using std::string;
+
 
 ///////////////////////////////////////////
 ////////// FitBuilder class
@@ -21,31 +22,28 @@ class FitBuilder {
 public:
   FitBuilder();
 
-  virtual ~FitBuilder();
-
+  virtual ~FitBuilder(); 
+  
   void AddEvent(double weight, double Mperp, double RISR,
-		const Category& cat, const string& process, bool is_signal = false);
+		const Category& cat,
+		const Process& proc,
+		const Systematic& sys = Systematic::Default());
   
   void WriteFit(const string& outputroot);
   
 private:
-  map<string,map<string,FitBin*> > m_Proc[2];
-  map<string,Category*> m_Cat;
-
+  map<string,Process*>  m_Proc;
+  map<string,Category*> m_Cat;  
   
+  TFile* m_OutFile;
 
-  mutable TFile* m_OutFile;
-  mutable TTree* m_ProcTree;
-  mutable string m_sProc;
-  mutable bool m_ProcIsSig;
-  mutable vector<string> m_ProcCat;
-  void FillProc(const string& proc, bool is_signal = false);
-  mutable TTree* m_CatTree;
-  mutable string m_sCat;
-  mutable string m_sBin;
-  mutable vector<double> m_BinX;
-  mutable vector<double> m_BinY;
-  void FillCat(const Category& cat);
+  TTree* m_ProcTree;
+  ProcessBranch m_ProcBranch;
+  void WriteProc();
+  
+  TTree* m_CatTree;
+  CategoryBranch m_CatBranch;
+  void WriteCat();
   
 };
 

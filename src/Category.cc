@@ -90,7 +90,7 @@ bool Category::operator == (const Criteria& cat) const {
 
 Category& Category::SetFitBin(const FitBin& bin){
   m_Template = bin;
-
+  
   return *this;
 }
 
@@ -100,7 +100,8 @@ const FitBin& Category::GetFitBin() const {
 
 FitBin* Category::GetNewFitBin(const std::string& process) const {
   FitBin* bin = new FitBin(m_Template);
-  bin->InitializeHistogram(process+"_"+GetLabel());
+ 
+  bin->InitializeHistogram(process+"_"+Label()+"_"+GetLabel());
 
   return bin;
 }
@@ -275,7 +276,7 @@ CategoryList Category::CreateGenericRegions(const string& label, const vector<do
       icat.AddGenericBin(dynamic_cast<const GenericBin&>(m_Criteria[i]));
     icat.AddGenericBin(*Bins[i]);
     icat.SetFitBin(m_Template);
-
+    
     list += icat;
   }
   
@@ -450,4 +451,38 @@ CategoryList CategoryList::CreateHadronicISRRegions(const vector<const Hadronic*
     list += m_Cat[i]->CreateHadronicISRRegions(had);
 
   return list;
+}
+
+///////////////////////////////////////////
+////////// CategoryBranch class
+///////////////////////////////////////////
+
+CategoryBranch::CategoryBranch(){
+  m_Tree = nullptr;
+}
+
+CategoryBranch::~CategoryBranch() {}
+
+void CategoryBranch::Init(TTree* tree){
+  if(!tree)
+    return;
+
+  tree->Branch("cat", &m_Cat);
+  tree->Branch("bin", &m_Bin);
+
+  m_FitBinBranch.Init(tree);
+
+  m_Tree = tree;
+}
+  
+void CategoryBranch::FillCategory(Category& cat){
+  m_Cat = cat.Label();
+  m_Bin = cat.GetLabel();
+
+  m_FitBinBranch.FillFitBin(cat.GetFitBin());
+
+  m_Tree->Fill();
+
+  if(m_Tree)
+    m_Tree->Fill();
 }
