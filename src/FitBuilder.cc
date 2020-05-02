@@ -98,7 +98,6 @@ void FitBuilder::WriteProc(){
     p++;
   }
 
-
   if(m_OutFile){
     m_OutFile->cd();
     m_ProcTree->Write("", TObject::kOverwrite);
@@ -122,6 +121,11 @@ void FitBuilder::WriteCat(){
     m_CatBranch.FillCategory(*c->second);
     
     c++;
+  }
+
+  if(m_OutFile){
+    m_OutFile->cd();
+    m_CatTree->Write("", TObject::kOverwrite);
   }
 
   if(m_CatTree)
