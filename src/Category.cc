@@ -13,6 +13,14 @@ using std::endl;
 ///////////////////////////////////////////
 
 Category::Category(const Leptonic& lep,
+		   const string& name)
+  : Criteria(name){
+  m_Criteria += lep;
+  m_Criteria += Hadronic();
+  m_Criteria += Hadronic();
+}
+
+Category::Category(const Leptonic& lep,
 		   const Hadronic& S_had,
 		   const Hadronic& ISR_had,
 		   const string& name)
