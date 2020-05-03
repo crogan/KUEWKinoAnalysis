@@ -25,6 +25,8 @@ class CategoryList;
 class Category : public Criteria {
 public:
   Category(const Leptonic& lep,
+	   const string& name = "none");
+  Category(const Leptonic& lep,
 	   const Hadronic& S_had,
 	   const Hadronic& ISR_had,
 	   const string& name = "none");
