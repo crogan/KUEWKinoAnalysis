@@ -197,6 +197,27 @@ VS ProcessList::GetProcesses() const {
   return list;
 }
 
+VSM ProcessList::GetSignalMasses() const {
+  VSM signals;
+
+  string name;
+  for(int p = 0; p < m_N; p++){
+    if(m_Proc[p].Type() != kSig)
+      continue;
+
+    name = m_Proc[p].Name();
+    size_t l = name.rfind("_");
+    if(l == std::string::npos)
+      continue;
+
+    SM sm(name.substr(0, l));
+    sm += name.substr(l+1,name.length()-l);
+    signals += sm;
+  }
+
+  return signals;
+}
+
 ///////////////////////////////////////////
 ////////// ProcessBranch class
 ///////////////////////////////////////////

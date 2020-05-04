@@ -103,5 +103,49 @@ private:
   
 };
 
+class SM : public pair<string,VS> {
+public:
+  SM(const string& prefix){
+    this->first = prefix;
+  }
+
+  virtual ~SM() {}
+
+  SM& operator += (const string& mass){
+    this->second += mass;
+
+    return *this;
+  }
+
+  SM& operator += (const VS& masses){
+    this->second += masses;
+
+    return *this;
+  }
+};
+
+// signal masses
+class VSM : public vector<SM> {
+public:
+  VSM(){}
+
+  virtual ~VSM() {}
+
+  VSM& operator += (const SM& sm){
+    if(m_SM.count(sm.first) == 0){
+      this->push_back(sm);
+      m_SM[sm.first] = this->size()-1;
+    } else {
+      (*this)[m_SM[sm.first]] += sm.second;
+    }
+
+    return *this;
+  }
+  
+private:
+  std::map<string,int> m_SM;
+
+};
+
 #endif
 

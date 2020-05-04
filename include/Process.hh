@@ -80,11 +80,12 @@ public:
   int GetN() const;
   Process operator [] (int i) const;
 
-  VS GetProcesses() const;
+  VS  GetProcesses() const;
+  VSM GetSignalMasses() const;
 
 private:
   int m_N;
-  vector<Process> m_Proc;
+  vector<Process>   m_Proc;
   map<Process,bool> m_ProcMap;
   
 };
