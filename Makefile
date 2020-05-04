@@ -7,7 +7,7 @@ RFGLIBS     = $(shell restframes-config --libs)
 CXX            = g++
 
 #CXXFLAGS       = -fPIC -Wall -O3 -g
-CXXFLAGS       = $(filter-out -stdlib=libc++ -pthread , $(ROOTCFLAGS))
+CXXFLAGS       = -fPIC $(filter-out -stdlib=libc++ -pthread , $(ROOTCFLAGS))
 CXXFLAGS       += $(filter-out -stdlib=libc++ -pthread , $(RFCFLAGS))
 
 GLIBS          = $(filter-out -stdlib=libc++ -pthread , $(ROOTGLIBS))
@@ -34,7 +34,7 @@ local : CXX += -I/Users/christopherrogan/GitHub/lwtnn/include
 locallib : GLIBS += -L/Users/christopherrogan/GitHub/lwtnn/lib -llwtnn
 locallib : CXX += -I/Users/christopherrogan/GitHub/lwtnn/include
 
-all: alltargets lib
+all: alltargets lib 
 
 local: alltargets lib
 
