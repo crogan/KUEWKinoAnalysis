@@ -80,6 +80,8 @@ public:
   int GetN() const;
   Process operator [] (int i) const;
 
+  VS GetProcesses() const;
+
 private:
   int m_N;
   vector<Process> m_Proc;

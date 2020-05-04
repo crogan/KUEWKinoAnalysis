@@ -6,6 +6,7 @@
 
 using std::vector;
 using std::string;
+using std::pair;
 
 ///////////////////////////////////////////
 ////////// Criteria class
@@ -80,6 +81,26 @@ public:
   
     return *this;
   }
+};
+
+class VC : public vector<pair<int,string> > {
+public:
+  VC(){
+    m_N = 0;
+  }
+
+  virtual ~VC() {}
+
+  VC& operator += (const string& label){
+    this->push_back({m_N, label});
+    m_N++;
+
+    return *this;
+  }
+  
+private:
+  int m_N;
+  
 };
 
 #endif

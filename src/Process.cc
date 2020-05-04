@@ -188,6 +188,15 @@ int ProcessList::Find(const string& label) const {
   return -1;
 }
 
+VS ProcessList::GetProcesses() const {
+  VS list;
+
+  for(int i = 0; i < m_N; i++)
+    list += m_Proc[i].Name();
+
+  return list;
+}
+
 ///////////////////////////////////////////
 ////////// ProcessBranch class
 ///////////////////////////////////////////

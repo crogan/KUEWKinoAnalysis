@@ -110,6 +110,8 @@ public:
   CategoryList CreateHadronicSRegions(const vector<const Hadronic*>& had) const;
   CategoryList CreateHadronicISRRegions(const vector<const Hadronic*>& had) const;
 
+  VC GetCategories() const; 
+
 private:
   int m_N;
   vector<Category*> m_Cat;

@@ -555,6 +555,15 @@ CategoryList CategoryList::CreateHadronicISRRegions(const vector<const Hadronic*
   return list;
 }
 
+VC CategoryList::GetCategories() const {
+  VC list;
+
+  for(int i = 0; i < m_N; i++)
+    list += m_Cat[i]->GetLabel();
+
+  return list;
+}
+
 ///////////////////////////////////////////
 ////////// CategoryBranch class
 ///////////////////////////////////////////
