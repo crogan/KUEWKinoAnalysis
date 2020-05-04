@@ -91,6 +91,8 @@ Systematic& Systematic::Default(){
   return Systematic::m_Default;
 }
 
+Systematic Systematic::m_Default;
+
 ///////////////////////////////////////////
 ////////// Systematics class
 ///////////////////////////////////////////
@@ -215,7 +217,23 @@ bool Systematics::operator != (const Systematic& sys) const {
   return !Contains(sys);
 }
 
-Systematic Systematic::m_Default;
+Systematics Systematics::Filter(const std::string& label) const {
+  Systematics list;
+  for(auto s : m_Sys)
+    if(s->Label().find(label) != std::string::npos)
+      list += *s;
+
+  return list;
+}
+
+Systematics Systematics::Remove(const std::string& label) const {
+  Systematics list;
+  for(auto s : m_Sys)
+    if(s->Label().find(label) == std::string::npos)
+      list += *s;
+
+  return list;
+}
 
 ///////////////////////////////////////////
 ////////// SystematicsTool class

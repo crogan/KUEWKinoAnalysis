@@ -81,6 +81,9 @@ public:
   bool operator == (const Systematic& sys) const;
   bool operator != (const std::string& label) const;
   bool operator != (const Systematic& sys) const;
+
+  Systematics Filter(const std::string& label) const;
+  Systematics Remove(const std::string& label) const;
     
 private:
   int m_N;
