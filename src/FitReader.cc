@@ -80,6 +80,8 @@ void FitReader::ReadProcesses(){
     }
     if(sys.GetN() > 0)
       m_ProcSys[m_Proc[p]] = sys;
+
+    m_Sys += sys;
   }
 }
 
@@ -96,7 +98,11 @@ void FitReader::ReadCategories(){
   int N = tree->GetEntries();
   for(int i = 0; i < N; i++){
     tree->GetEntry(i);
-    m_Cat += m_CatBranch.GetCategory();
+    Category cat = m_CatBranch.GetCategory();
+    m_Cat += cat;
+    if(m_Chan.count(cat.Label()) == 0)
+      m_Chan[cat.Label()] = CategoryList();
+    m_Chan[cat.Label()] += cat;
   }
 
   delete tree;
@@ -179,8 +185,23 @@ const ProcessList&  FitReader::GetProcesses() const {
   return m_Proc;
 }
 
-const CategoryList& FitReader::GetCategories() const {
+const CategoryList& FitReader::GetCategories(const string& channel) const {
+  if(m_Chan.count(channel) > 0)
+    return m_Chan[channel];
+  
   return m_Cat;
+}
+
+vector<string> FitReader::GetChannels() const {
+  VS list;
+  for(auto c : m_Chan)
+    list += c.first;
+  
+  return list;
+}
+
+const Systematics& FitReader::GetSystematics() const {
+  return m_Sys;
 }
 
 string FitReader::GetSignalTitle(const string& label){
