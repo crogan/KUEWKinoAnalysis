@@ -68,6 +68,12 @@ public:
 class VS : public vector<string> {
 public:
   VS() {}
+
+  VS(const vector<string>& vs){
+    for(auto s : vs)
+      *this += s;
+  }
+  
   virtual ~VS() {}
 
   VS& operator += (const string& entry){
