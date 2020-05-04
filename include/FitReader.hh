@@ -37,6 +37,10 @@ public:
 			   const Process&    proc,
 			   const Systematic& sys = Systematic::Default()) const;
 
+  double Integral(const Category&   cat,
+		  const Process&    proc,
+		  const Systematic& sys = Systematic::Default()) const;
+
   TCanvas* Plot1Dstack(const vector<string>& proc,
 		       const vector<string>& lep_cat,
 		       const vector<string>& hadS_cat,

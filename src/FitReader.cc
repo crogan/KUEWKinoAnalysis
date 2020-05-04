@@ -108,6 +108,16 @@ void FitReader::ReadCategories(){
   delete tree;
 }
 
+double FitReader::Integral(const Category&   cat,
+			   const Process&    proc,
+			   const Systematic& sys) const {
+  const TH1D* hist = GetHistogram(cat, proc, sys);
+  if(!hist)
+    return 0.;
+
+  return hist->Integral();
+}
+
 const TH1D* FitReader::GetHistogram(const Category&   cat,
 				    const Process&    proc,
 				    const Systematic& sys) const {

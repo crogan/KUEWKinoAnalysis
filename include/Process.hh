@@ -43,6 +43,8 @@ public:
   bool operator >  (const Process&) const;
   bool operator == (const Process&) const;
 
+  SM GetSM() const;
+
 private:
   string m_Title;
   ProcessType m_Type;

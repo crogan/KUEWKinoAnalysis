@@ -82,6 +82,20 @@ bool Process::operator == (const Process& proc) const {
   return Name() == proc.Name();
 }
 
+SM Process::GetSM() const {
+  if(Type() != kSig)
+    return SM(Name());
+  
+  size_t l = Name().rfind("_");
+  if(l == std::string::npos)
+    return SM(Name());
+
+  SM sm(Name().substr(0, l));
+  sm += Name().substr(l+1,Name().length()-l);
+
+  return sm;
+}
+
 ///////////////////////////////////////////
 ////////// ProcessList class
 ///////////////////////////////////////////
