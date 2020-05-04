@@ -1,5 +1,5 @@
-#ifndef FitBuilder_HH
-#define FitBuilder_HH
+#ifndef FitInputBuilder_HH
+#define FitInputBuilder_HH
 
 #include <TH1D.h>
 #include <TH2D.h>
@@ -15,14 +15,14 @@ using std::string;
 
 
 ///////////////////////////////////////////
-////////// FitBuilder class
+////////// FitInputBuilder class
 ///////////////////////////////////////////
 
-class FitBuilder {
+class FitInputBuilder {
 public:
-  FitBuilder();
+  FitInputBuilder();
 
-  virtual ~FitBuilder(); 
+  virtual ~FitInputBuilder(); 
   
   void AddEvent(double weight, double Mperp, double RISR,
 		const Category& cat,

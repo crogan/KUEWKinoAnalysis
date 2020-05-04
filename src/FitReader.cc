@@ -7,10 +7,12 @@
 #include <TLine.h>
 
 #include "../include/FitReader.hh"
+
 #include "RestFrames/RestFrames.hh"
 
 using std::cout;
 using std::endl;
+using std::pair;
 
 ///////////////////////////////////////////
 ////////// FitReader class
@@ -21,79 +23,174 @@ FitReader::FitReader(const string& inputfile)
 
   InitializeRecipes();
   
-  TTree* tree_proc = (TTree*) m_File.Get("Process");
-  m_Nproc = tree_proc->GetEntries();
-
-  string* process = 0;
-  vector<string>* vcat = 0;
-  bool sig;
-  TBranch* b_process;
-  TBranch* b_vcat;
-  TBranch* b_sig;
-  tree_proc->SetMakeClass(1);
-  tree_proc->SetBranchAddress("process", &process, &b_process);
-  tree_proc->SetBranchAddress("cat", &vcat, &b_vcat);
-  tree_proc->SetBranchAddress("sig", &sig, &b_sig);
-
-  for(int i = 0; i < m_Nproc; i++){
-    tree_proc->GetEntry(i);
-    m_Proc[*process] = map<string,int>();
-    int Ncat = vcat->size();
-    for(int j = 0; j < Ncat; j++)
-      m_Proc[*process][(*vcat)[j]] = 1;
-  }
-
-  delete tree_proc;
-
-  TTree* tree_cat = (TTree*) m_File.Get("Category");
-  m_Ncat = tree_cat->GetEntries();
+  ReadProcesses();
   
-  string* cat = 0;
-  string* bin = 0;
-  vector<double>* bin_edge_x = 0;
-  vector<double>* bin_edge_y = 0;
-  TBranch* b_cat;
-  TBranch* b_bin;
-  TBranch* b_bin_edge_x;
-  TBranch* b_bin_edge_y;
-  tree_cat->SetMakeClass(1);
-  tree_cat->SetBranchAddress("cat", &cat, &b_cat);
-  tree_cat->SetBranchAddress("bin", &bin, &b_bin);
-  tree_cat->SetBranchAddress("bin_edge_x", &bin_edge_x, &b_bin_edge_x);
-  tree_cat->SetBranchAddress("bin_edge_y", &bin_edge_y, &b_bin_edge_y);
+  ReadCategories();
 
-  for(int i = 0; i < m_Ncat; i++){
-    tree_cat->GetEntry(i);
-    *cat += "_"+*bin;
-    cout << *cat << endl;
-    m_Cat[*cat] = pair<vector<double>,vector<double> >((*bin_edge_x),(*bin_edge_y));
-  }
-  
-  delete tree_cat;
 }
 
 FitReader::~FitReader(){
   m_File.Close();
 }
 
-void FitReader::PrintCategories(){
-  map<string,pair<vector<double>,vector<double> > >::iterator c = m_Cat.begin();
-  cout << "*** Fit Categories ***" << endl;
-  while(c != m_Cat.end()){
-    cout << c->first << endl;
-    c++;
+void FitReader::ReadProcesses(){
+  if(!m_File.IsOpen())
+    return;
+  
+  TTree* tree = (TTree*)m_File.Get("Process");
+  if(!tree)
+    return;
+
+  m_ProcBranch.InitGet(tree);
+
+  ProcessList ProcSys;
+
+  int N = tree->GetEntries();
+  for(int i = 0; i < N; i++){
+    tree->GetEntry(i);
+    
+    Process p = m_ProcBranch.GetProcess();
+    if((p.Name().find("Up") != std::string::npos) ||
+       (p.Name().find("Down") != std::string::npos))
+      ProcSys += p;
+    else
+      m_Proc += p;
+  }
+
+  delete tree;
+
+  int Nproc = m_Proc.GetN();
+  int Nsys  = ProcSys.GetN();
+  for(int p = 0; p < Nproc; p++){
+    Systematics sys;
+    string proc = m_Proc[p].Name();
+    for(int s = 0; s < Nsys; s++){
+      string label = ProcSys[s].Name();
+      if((proc.find("Fakes") == std::string::npos) &&
+	 (label.find("Fakes") != std::string::npos))
+	continue;
+      if(label.find(proc) == 0){
+	label.replace(0,proc.length()+1,"");
+	if(label.find("Up") != std::string::npos)
+	  label.replace(label.find("Up"),2,"");
+	if(label.find("Down") != std::string::npos)
+	  label.replace(label.find("Down"),4,"");
+	sys += Systematic(label);
+      }
+    }
+    if(sys.GetN() > 0)
+      m_ProcSys[m_Proc[p]] = sys;
+  }
+}
+
+void FitReader::ReadCategories(){
+   if(!m_File.IsOpen())
+    return;
+  
+  TTree* tree = (TTree*)m_File.Get("Category");
+  if(!tree)
+    return;
+  
+  m_CatBranch.InitGet(tree);
+
+  int N = tree->GetEntries();
+  for(int i = 0; i < N; i++){
+    tree->GetEntry(i);
+    m_Cat += m_CatBranch.GetCategory();
+  }
+
+  delete tree;
+}
+
+const TH1D* FitReader::GetHistogram(const Category&   cat,
+				    const Process&    proc,
+				    const Systematic& sys) const {
+  if(!IsFilled(cat, proc, sys))
+    return nullptr;
+
+  if(!sys){
+    return m_ProcHist[proc][cat];
+  } else {
+    return (sys.IsUp() ? m_ProcHistSys[proc][sys][cat].first :
+	                 m_ProcHistSys[proc][sys][cat].second);
+  }
+}
+
+bool FitReader::IsFilled(const Category&   cat,
+			 const Process&    proc,
+			 const Systematic& sys) const {
+  if(!sys){
+    if(m_ProcHist.count(proc) == 0)
+      m_ProcHist[proc] = map<Category,TH1D*>();
+    if(m_ProcHist[proc].count(cat) == 0){
+      string shist = proc.Name()+"/"+proc.Name()+"_";
+      shist += cat.Label()+"_"+cat.GetLabel();
+      m_ProcHist[proc][cat] = (TH1D*) m_File.Get(shist.c_str());
+    }
+    
+    return m_ProcHist[proc][cat];
+    
+  } else {
+     if(m_ProcHistSys.count(proc) == 0)
+       m_ProcHistSys[proc] = map<Systematic,map<Category,pair<TH1D*,TH1D*> > >();
+     if(m_ProcHistSys[proc].count(sys) == 0)
+       m_ProcHistSys[proc][sys] = map<Category,pair<TH1D*,TH1D*> >();
+     if(m_ProcHistSys[proc][sys].count(cat) == 0){
+       m_ProcHistSys[proc][sys][cat] = pair<TH1D*,TH1D*>(nullptr,nullptr);
+       
+       string shistUp   = proc.Name()+"/"+proc.Name()+"_"+sys.Label()+"Up_";
+       string shistDown = proc.Name()+"/"+proc.Name()+"_"+sys.Label()+"Down_";
+       shistUp   += cat.Label()+"_"+cat.GetLabel();
+       shistDown += cat.Label()+"_"+cat.GetLabel();
+
+       m_ProcHistSys[proc][sys][cat].first  = (TH1D*) m_File.Get(shistUp.c_str());
+       m_ProcHistSys[proc][sys][cat].second = (TH1D*) m_File.Get(shistDown.c_str());
+     }
+     
+     return (sys.IsUp() ? m_ProcHistSys[proc][sys][cat].first :
+	                  m_ProcHistSys[proc][sys][cat].second);
+  }
+}
+
+void FitReader::PrintCategories(bool verbose){
+   cout << "*** Fit Categories ***" << endl;
+  int N = m_Cat.GetN();
+  for(int i = 0; i < N; i++)
+    cout << m_Cat[i].Label()+"_"+m_Cat[i].GetLabel() << endl;
+  cout << endl;
+}
+
+void FitReader::PrintProcesses(bool verbose){
+  cout << "*** Fit Processes ***" << endl;
+  int N = m_Proc.GetN();
+  for(int i = 0; i < N; i++){
+    cout << m_Proc[i].Name() << endl;
+    if(m_ProcSys.count(m_Proc[i]) == 0 || !verbose)
+      continue;
+    cout << "  Sys:  " << m_ProcSys[m_Proc[i]][0].Label() << endl;
+    int Nsys = m_ProcSys[m_Proc[i]].GetN();
+    for(int s = 1; s < Nsys; s++)
+      cout << "        " << m_ProcSys[m_Proc[i]][s].Label() << endl;
   }
   cout << endl;
 }
 
-void FitReader::PrintProcesses(){
-  map<string,map<string,int> >::iterator p = m_Proc.begin();
-  cout << "*** Fit Processes ***" << endl;
-  while(p != m_Proc.end()){
-    cout << p->first << endl;
-    p++;
-  }
-  cout << endl;
+const ProcessList&  FitReader::GetProcesses() const {
+  return m_Proc;
+}
+
+const CategoryList& FitReader::GetCategories() const {
+  return m_Cat;
+}
+
+string FitReader::GetSignalTitle(const string& label){
+  size_t p = label.rfind("_");
+  if(p == std::string::npos)
+    return label;
+
+  string title = label.substr(0, p);
+  int    mass  = stoi(label.substr(p+1,label.length()-p));
+  return title+" "+std::to_string(mass/100000)+" "+std::to_string(mass%100000);
 }
 
 TCanvas* FitReader::Plot1Dstack(const vector<string>& proc,
@@ -103,6 +200,7 @@ TCanvas* FitReader::Plot1Dstack(const vector<string>& proc,
 				const string& name){
   RestFrames::SetStyle();
 
+  
   int Nproc = proc.size();
   int Nlep  = lep_cat.size();
   int NhadS = hadS_cat.size();
@@ -113,6 +211,8 @@ TCanvas* FitReader::Plot1Dstack(const vector<string>& proc,
      NhadI == 0)
     return nullptr;
 
+  CategoryList cat = GetCategories();
+  
   // Leptonic
   vector<string> lep_labels;
   vector<string> vlep;
@@ -130,6 +230,8 @@ TCanvas* FitReader::Plot1Dstack(const vector<string>& proc,
       vlep.push_back(lep_cat[i]);
     }
   }
+
+  cat = cat.FilterOR(vlep);
 
   // Hadronic S
   vector<string> hadS_labels;
@@ -149,6 +251,8 @@ TCanvas* FitReader::Plot1Dstack(const vector<string>& proc,
     }
   }
 
+  cat = cat.FilterOR(vhadS);
+
   // Hadronic ISR
   vector<string> hadI_labels;
   vector<string> vhadI;
@@ -167,31 +271,71 @@ TCanvas* FitReader::Plot1Dstack(const vector<string>& proc,
     }
   }
 
-  string dum_cat = "";
+  cat = cat.FilterOR(vhadI);
 
+  int Ncat = cat.GetN();
+  
+  if(Ncat < 1)
+    return nullptr;
+  
   // Processes
   vector<string> labels;
   vector<int>    colors;
   vector<TH1D*>  hists;
-  vector<string> slabels;
-  vector<TH1D*>  shists;
-  vector<pair<int,int> > smass;
+  
+  vector<string> labels_sig;
+  vector<TH1D*>  hists_sig;
+
+  TH1D* hist_data = nullptr;
   
   for(int i = 0; i < Nproc; i++){
-    bool is_signal = false;
-    bool is_data = proc[i].find("Data") != std::string::npos;
-    for(int s = 0; s < int(m_Sig.size()); s++){
-      if(proc[i].find(m_Sig[s]) != std::string::npos){
-	is_signal = true;
-	slabels.push_back(m_SignalTitle[m_Sig[s]]);
-	int mass;
-	sscanf(proc[i].c_str(), (m_Sig[s]+"_%d").c_str(), &mass);
-	smass.push_back(pair<int,int>(mass/100000, mass%10000));
-	break;
+    vector<string> vproc;
+    if(m_Strings.count(proc[i]) != 0)
+      vproc = m_Strings[proc[i]];
+    else
+      vproc.push_back(proc[i]);
+
+    ProcessType type = kBkg;
+    TH1D*       hist = nullptr;
+    for(int p = 0; p < int(vproc.size()); p++){
+      
+      int index = GetProcesses().Find(vproc[p]);
+      if(index < 0)
+	continue;
+      
+      Process pp = GetProcesses()[index];
+
+      if(pp.Type() == kSig)
+	type = kSig;
+      if(pp.Type() == kData)
+	type = kData;
+      
+      for(int c = 0; c < Ncat; c++){
+	if(!IsFilled(cat[c], pp))
+	  continue;
+
+	if(!hist){
+	  hist = (TH1D*) GetHistogram(cat[c], pp)->Clone(Form("plothist_%d_%s", i, name.c_str()));
+	} else {
+	  hist->Add(GetHistogram(cat[c], pp));
+	}
       }
     }
+
+    if(hist == nullptr)
+      continue;
     
-    if(!is_signal){
+    if(type == kData){
+      hist_data = hist;
+    }
+
+    if(type == kSig){
+      labels_sig.push_back(GetSignalTitle(proc[i]));
+      
+      hists_sig.push_back(hist);
+    }
+
+    if(type == kBkg){
       if(m_Title.count(proc[i]) != 0)
 	labels.push_back(m_Title[proc[i]]);
       else
@@ -201,52 +345,14 @@ TCanvas* FitReader::Plot1Dstack(const vector<string>& proc,
 	colors.push_back(m_Color[proc[i]]);
       else
 	colors.push_back(m_ColorDefault[i]);
-    }
-    
-    vector<string> vproc;
-    if(m_Strings.count(proc[i]) != 0)
-      vproc = m_Strings[proc[i]];
-    else
-      vproc.push_back(proc[i]);
-
-    if(is_signal)
-      shists.push_back(nullptr);
-    else
-      hists.push_back(nullptr);
-
-    for(int p = 0; p < int(vproc.size()); p++){
-      string proc = vproc[p];
-      if(m_Proc.count(proc) == 0)
-	continue;
-      map<string,int>::iterator c = m_Proc[proc].begin();
-      while(c != m_Proc[proc].end()){
-	string cat = c->first;
-	if(Match(cat, vlep) && Match(cat, vhadS) && Match(cat, vhadI)){
-	  if(dum_cat == "")
-	    dum_cat = cat;
-	  string hist = proc+"/"+proc+"_"+cat;
-	  if(is_signal){
-	    if(shists[int(shists.size())-1] == nullptr){
-	      shists[int(shists.size())-1] =
-		(TH1D*)((TH1D*)m_File.Get(hist.c_str()))->Clone(Form("shist_p%d_%s", i, name.c_str()));
-	    } else {
-	      shists[int(shists.size())-1]->Add((TH1D*)m_File.Get(hist.c_str()));
-	    }
-	  } else {
-	    if(hists[int(hists.size())-1] == nullptr){
-	      hists[int(hists.size())-1] = (TH1D*)((TH1D*)m_File.Get(hist.c_str()))->Clone(Form("hist_p%d_%s", i, name.c_str()));
-	    } else {
-	      hists[int(hists.size())-1]->Add((TH1D*)m_File.Get(hist.c_str()));
-	    }
-	  }
-	}
-	
-	c++;
-      }
-    }
+      
+      hists.push_back(hist);
+    } 
   }
+
+  int Nsig = hists_sig.size();
   
-  // sort the histograms by integral (N^2 brute force)
+  // sort the histograms by integral (N^2/2 brute force)
   int Nbkg = hists.size();
   vector<string> vlabels;
   vector<int>    vcolors;
@@ -254,25 +360,8 @@ TCanvas* FitReader::Plot1Dstack(const vector<string>& proc,
   string stemp;
   int    itemp;
   TH1D*  htemp;
-  int miss = 0;
-
-  bool  bdata = false;
-  TH1D* hdata = nullptr;
   
-  for(int i = 0; i < Nbkg+miss; i++){
-    cout << labels[i] << " " << hists[i] << endl;
-    if(labels[i].find("Data") != std::string::npos){
-      bdata = true;
-      hdata = hists[i];
-      Nbkg--;
-      miss++;
-      continue;
-    }
-    if(hists[i] == nullptr){
-      Nbkg--;
-      miss++;
-      continue;
-    }
+  for(int i = 0; i < Nbkg; i++){
     vlabels.push_back(labels[i]);
     vcolors.push_back(colors[i]);
     vhists.push_back(hists[i]);
@@ -292,22 +381,6 @@ TCanvas* FitReader::Plot1Dstack(const vector<string>& proc,
       }
     }
   }
-
-  vector<string> vslabels;
-  vector<TH1D*>  vshists;
-  vector<pair<int,int> > vsmass;
-  int Nsig = slabels.size();
-  miss = 0;
-  for(int s = 0; s < Nsig+miss; s++){
-    if(shists[s] == nullptr){
-      Nsig--;
-      miss++;
-      continue;
-    }
-    vslabels.push_back(slabels[s]);
-    vshists.push_back(shists[s]);
-    vsmass.push_back(smass[s]);
-  }
   
   // "stack" the histograms by adding
   for(int i = Nbkg-2; i >= 0; i--)
@@ -317,45 +390,40 @@ TCanvas* FitReader::Plot1Dstack(const vector<string>& proc,
   labels = vlabels;
   colors = vcolors;
 
-  shists  = vshists;
-  slabels = vslabels;
+  const FitBin& bin = cat[0].GetFitBin();
+
+  int NR = bin.NRBins();
+  int NB = bin.NBins();
+  VS blabels;
+  for(int r = 0; r < NR; r++)
+    blabels += bin[r].GetMBinLabels();
+
+  int lmax = 0;
+  for(int b = 0; b < NB; b++){
+    int len = blabels[b].length();
+    if(blabels[b].find("#infty") != std::string::npos)
+      len -= 5;
+    if(len > lmax)
+      lmax = len;
+  }
+  string space = "";
+  for(int l = 0; l < 1.6*lmax; l++)
+    space += " ";
   
-  vector<string> x_edges;
-  vector<string> y_edges;
-  int Nx = m_Cat[dum_cat].first.size()  - 1;
-  int Ny = m_Cat[dum_cat].second.size() - 1;
-  int max_len = 0;
-  for(int i = 0; i < Nx+1; i++){
-    x_edges.push_back(std::to_string(int(m_Cat[dum_cat].first[i])));
-    if(x_edges[i].size() > double(max_len))
-      max_len = x_edges[i].size();
+  for(int b = 0; b < NB; b++){
+    if(b%2 == 1)
+      hists[0]->GetXaxis()->SetBinLabel(b+1, (blabels[b]+space).c_str());
+    else
+      hists[0]->GetXaxis()->SetBinLabel(b+1, blabels[b].c_str());
   }
-  for(int i = 0; i < Ny+1; i++){
-    y_edges.push_back(std::to_string(m_Cat[dum_cat].second[i]));
-    y_edges[i].erase(y_edges[i].find_last_not_of('0') + 1, std::string::npos);
-  }
+  
+  blabels.clear();
 
-  string blank = " ";
-  for(int i = 0; i < 4*max_len+3; i++)
-    blank += " ";
-
-  int Nb = hists[0]->GetNbinsX();
-
-  vector<string> y_labels;
-  for(int y = 0; y < Ny; y++){
-    y_labels.push_back("["+y_edges[y]+","+y_edges[y+1]+"]");
-    for(int x = 0; x < Nx; x++){
-      if(x == Nx-1)
-	hists[0]->GetXaxis()->
-	  SetBinLabel(x+1+Nx*y, ("["+x_edges[x]+",#infty]"+(x%2 == 0 ? "" : blank)).c_str());
-      else
-	hists[0]->GetXaxis()->
-	  SetBinLabel(x+1+Nx*y, ("["+x_edges[x]+","+x_edges[x+1]+"]"+(x%2 == 0 ? "" : blank)).c_str());
-    }
-  }
+  for(int r = 0; r < NR; r++)
+    blabels += bin[r].GetRBinLabel();
   
   hists[0]->LabelsOption("v","X");
-
+  
   gStyle->SetOptTitle(0);
   gStyle->SetOptStat(0);
   gStyle->SetOptFit(11111111);
@@ -370,10 +438,11 @@ TCanvas* FitReader::Plot1Dstack(const vector<string>& proc,
   can->SetRightMargin(hhi);
   can->SetBottomMargin(hbo);
   can->SetTopMargin(hto);
-  //can->SetGridx();
   can->SetGridy();
   can->Draw();
   can->cd();
+
+  double hmax = hists[0]->GetMaximum();
   
   hists[0]->Draw("hist");
   hists[0]->GetXaxis()->CenterTitle();
@@ -387,10 +456,10 @@ TCanvas* FitReader::Plot1Dstack(const vector<string>& proc,
   hists[0]->GetYaxis()->CenterTitle();
   hists[0]->GetYaxis()->SetTitleFont(42);
   hists[0]->GetYaxis()->SetTitleSize(0.04);
-  hists[0]->GetYaxis()->SetTitleOffset(0.8);
+  hists[0]->GetYaxis()->SetTitleOffset(0.85);
   hists[0]->GetYaxis()->SetLabelFont(42);
   hists[0]->GetYaxis()->SetLabelSize(0.035);
-  hists[0]->GetYaxis()->SetTitle("number of events / 137 fb^{-1}");
+  hists[0]->GetYaxis()->SetTitle("number of events");
    
   for(int i = 0; i < Nbkg; i++){
     hists[i]->SetLineColor(kBlack);
@@ -404,14 +473,14 @@ TCanvas* FitReader::Plot1Dstack(const vector<string>& proc,
   vector<double> Xerr;
   vector<double> Y;
   vector<double> Yerr;
-  for(int i = 0; i < Nb; i++){
+  for(int i = 0; i < NB; i++){
     X.push_back(hists[0]->GetXaxis()->GetBinCenter(i+1));
     Xerr.push_back(0.5);
     Y.push_back(hists[0]->GetBinContent(i+1));
     Yerr.push_back(hists[0]->GetBinError(i+1));
   }
 
-  TGraphErrors* gr = new TGraphErrors(Nb, &X[0], &Y[0],  &Xerr[0], &Yerr[0]);
+  TGraphErrors* gr = new TGraphErrors(NB, &X[0], &Y[0],  &Xerr[0], &Yerr[0]);
   gr->SetMarkerSize(0);
   gr->SetLineColor(kBlack);
   gr->SetFillColor(kBlack);
@@ -419,20 +488,26 @@ TCanvas* FitReader::Plot1Dstack(const vector<string>& proc,
   gr->Draw("same p2");
 
   for(int i = 0; i < Nsig; i++){
-    shists[i]->SetLineColor(7030+i*10);
-    shists[i]->SetLineWidth(5);
-    shists[i]->SetFillColor(kWhite);
-    shists[i]->Draw("SAME HIST");
+    hists_sig[i]->SetLineColor(7030+i*10);
+    hists_sig[i]->SetLineWidth(5);
+    hists_sig[i]->SetFillColor(kWhite);
+    hists_sig[i]->Draw("SAME HIST");
+    if(hists_sig[i]->GetMaximum() > hmax)
+      hmax = hists_sig[i]->GetMaximum();
   }
 
-  if(bdata){
-    hdata->SetLineColor(kBlack);
-    hdata->SetFillColor(kWhite);
-    hdata->SetMarkerStyle(8);
-    hdata->SetMarkerSize(1.);
-    hdata->SetLineWidth(2);
-    hdata->Draw("SAME ep");
+  if(hist_data){
+    hist_data->SetLineColor(kBlack);
+    hist_data->SetFillColor(kWhite);
+    hist_data->SetMarkerStyle(8);
+    hist_data->SetMarkerSize(1.);
+    hist_data->SetLineWidth(2);
+    hist_data->Draw("SAME ep");
+    if(hist_data->GetMaximum() > hmax)
+      hmax = hist_data->GetMaximum();
   }
+
+  hists[0]->GetYaxis()->SetRangeUser(0.05, 1.1*hmax);
 
   TLegend* leg = new TLegend(1.-hhi+0.01, 1.- (Nbkg+Nsig+1)*(1.-0.49)/9., 0.98, 1.-hto-0.005);
   leg->SetTextFont(42);
@@ -441,15 +516,17 @@ TCanvas* FitReader::Plot1Dstack(const vector<string>& proc,
   leg->SetLineColor(kWhite);
   leg->SetShadowColor(kWhite);
 
-  if(bdata)
-    leg->AddEntry(hdata, "data");
+  if(hist_data)
+    leg->AddEntry(hist_data, "data");
   leg->AddEntry(gr, "total uncertainty","F");
   for(int i = 0; i < Nbkg; i++)
     leg->AddEntry(hists[i], labels[i].c_str(), "F");
   for(int i = 0; i < Nsig; i++)
-    leg->AddEntry(shists[i], (slabels[i]+" "+std::to_string(smass[i].first)+" "+std::to_string(smass[i].second)).c_str(), "L");
+    leg->AddEntry(hists_sig[i], labels_sig[i].c_str(), "L");
   leg->Draw("SAME");
 
+  double eps = 0.0015;
+  
   TLatex l;
   l.SetTextFont(42);
   l.SetNDC();
@@ -458,50 +535,55 @@ TCanvas* FitReader::Plot1Dstack(const vector<string>& proc,
   line->SetLineWidth(2);
   line->SetLineColor(kBlack);
 
-  double eps = 0.0015;
+  // line->DrawLineNDC(hlo, hbo-0.024*lmax, 1-hhi, hbo-0.0235*lmax);
+ 
   l.SetTextSize(0.025);
   l.SetTextFont(42);
-  l.SetTextAlign(20);
+  l.SetTextAlign(23);
   line->SetLineWidth(1);
-  for(int y = 0; y < Ny; y++){
-    line->SetLineStyle(1);
-    line->DrawLineNDC(hlo + eps + (1.-hhi-hlo)/Ny*y, hbo-(2.2*max_len+3.5)*0.021,
-		      hlo + eps + (1.-hhi-hlo)/Ny*y, hbo-(2.2*max_len+3.5)*0.021 + 6*eps);
-    line->DrawLineNDC(hlo - eps + (1.-hhi-hlo)/Ny*(y+1), hbo-(2.2*max_len+3.5)*0.021,
-		      hlo - eps + (1.-hhi-hlo)/Ny*(y+1), hbo-(2.2*max_len+3.5)*0.021 + 6*eps);
-    line->DrawLineNDC(hlo + eps + (1.-hhi-hlo)/Ny*y,     hbo-(2.2*max_len+3.5)*0.021,
-		      hlo - eps + (1.-hhi-hlo)/Ny*(y+1), hbo-(2.2*max_len+3.5)*0.021);
-    line->SetLineStyle(5);
-    line->DrawLineNDC(hlo + (1.-hhi-hlo)/Ny*(y+1), hbo,
-		      hlo + (1.-hhi-hlo)/Ny*(y+1), 1.-hto);
-    line->SetLineStyle(3);
-    for(int x = 1; x < Nx; x++)
-      if(x%2 == 1)
-	line->DrawLineNDC(hlo + (1.-hhi-hlo)/Ny*y + (1.-hhi-hlo)/Ny/Nx*(x+0.5), hbo,
-			  hlo + (1.-hhi-hlo)/Ny*y + (1.-hhi-hlo)/Ny/Nx*(x+0.5),
-			  hbo-(2.2*max_len+3.5)*0.021/2.-0.005);
+  double lo = hlo;
+  double hi = hlo;
+  double yline = hbo-0.024*lmax;
+  for(int r = 0; r < NR; r++){
+    int NM = bin[r].NBins();
+    lo = hi;
+    hi = double(NM)/double(NB)*(1.-hhi-hlo) + lo;
     
-    l.DrawLatex(hlo + (1.-hhi-hlo)*(0.5+y)/double(Ny),
-		hbo-(2.2*max_len+3.5)*0.021-0.03, y_labels[y].c_str());
-
+    line->SetLineStyle(1);
+    line->DrawLineNDC(lo + eps, yline,
+  		      lo + eps, yline + 6*eps);
+    line->DrawLineNDC(hi - eps, yline,
+  		      hi - eps, yline + 6*eps);
+    line->DrawLineNDC(lo + eps, yline,
+  		      hi - eps, yline);
+    line->SetLineStyle(5);
+    line->DrawLineNDC(hi, hbo, hi, 1.-hto);
+    line->SetLineStyle(3);
+    for(int b = 1; b < NM; b++)
+      if(b%2 == 1)
+  	line->DrawLineNDC(lo + (hi-lo)*(b+0.5)/double(NM), hbo,
+  			  lo + (hi-lo)*(b+0.5)/double(NM), (hbo+yline)/2.+eps);
+    
+    l.DrawLatex((hi+lo)/2., yline - 8*eps, blabels[r].c_str());
   }
-  l.SetTextAlign(30);
+       
+  l.SetTextAlign(32);
   l.SetTextSize(0.03);
   l.SetTextFont(42);
-  l.DrawLatex(hlo, hbo-(2.2*max_len+3.5)*0.021/2.-0.015, "M_{#perp}   [GeV] #in");
+  l.DrawLatex(hlo, (hbo+yline)/2.+eps, "M_{#perp}   [GeV] #in");
 
   l.SetTextSize(0.03);
   l.SetTextFont(42);
-  l.DrawLatex(hlo, hbo-(2.2*max_len+3.5)*0.021-0.036, "#scale[1.15]{R_{ISR}} #in");
-
-  l.SetTextAlign(30);
+  l.DrawLatex(hlo, yline - 15*eps, "#scale[1.15]{R_{ISR}} #in");
+ 
+  l.SetTextAlign(31);
   l.SetTextSize(0.04);
   l.SetTextFont(42);
   l.DrawLatex(1.-hhi-eps*4, 1.-hto+0.02, "2017 MC KUEWKino");
-  l.SetTextAlign(10);
+  l.SetTextAlign(11);
   l.SetTextSize(0.04);
   l.SetTextFont(42);
-  l.DrawLatex(hlo+eps*4, 1.-hto+0.02,"#bf{#it{CMS}} #it{Simulation}");
+  l.DrawLatex(hlo+eps*4, 1.-hto+0.02,"#bf{#it{CMS}} work-in-progress");
   l.SetTextSize(0.05);
 
   string plotlabel = "#color[7014]{"+lep_labels[0]+"} + ";
@@ -514,17 +596,9 @@ TCanvas* FitReader::Plot1Dstack(const vector<string>& proc,
   l.SetTextSize(0.035);
   l.SetTextFont(42);
   l.DrawLatex(hlo+0.02, 1-hto-0.012, plotlabel.c_str());
-
+  
   return can;
-}
-
-
-bool FitReader::Match(const string& target, const vector<string>& test){
-  int N = test.size();
-  for(int i = 0; i < N; i++)
-    if(target.find(test[i]) != std::string::npos)
-      return true;
-  return false;
+  
 }
 
 void FitReader::InitializeRecipes(){
@@ -575,104 +649,101 @@ void FitReader::InitializeRecipes(){
   m_Color["Total"] = 7000;
   m_Strings["Total"] = SL().a("ttbar").a("ST").a("DB").a("ZDY").a("Wjets").a("Fakes_elf0").a("Fakes_elf1").
                                        a("Fakes_elf2").a("Fakes_muf0").a("Fakes_muf1").a("Fakes_muf2");
-
-  m_Sig.push_back("T2bW");
-  m_SignalTitle["T2bW"] = "T2bW";
   
   // leptonic categories
-  m_Title["1L"] = "single #it{l}";
+  m_Title["1L"] = "#scale[1.2]{single #it{l}}";
   m_Strings["1L"] = SL().a("1L_elp-el0").a("1L_elm-el0").a("1L_mup-mu0").a("1L_mum-mu0");
   
-  m_Title["1Lel"] = "single e";
+  m_Title["1Lel"] = "#scale[1.2]{single e}";
   m_Strings["1Lel"] = SL().a("1L_elp-el0").a("1L_elm-el0");
 
-  m_Title["1Lmu"] = "single #mu";
+  m_Title["1Lmu"] = "#scale[1.2]{single #mu}";
   m_Strings["1Lmu"] = SL().a("1L_mup-mu0").a("1L_mum-m0");
 
-  m_Title["1Lelp"] = "single e^{+}";
+  m_Title["1Lelp"] = "#scale[1.2]{single e^{+}}";
   m_Strings["1Lelp"] = SL().a("1L_elp-el0");
 
-  m_Title["1Lelm"] = "single e^{-}";
+  m_Title["1Lelm"] = "#scale[1.2]{single e^{-}}";
   m_Strings["1Lelm"] = SL().a("1L_elm-el0");
 
-  m_Title["1Lmup"] = "single #mu^{+}";
+  m_Title["1Lmup"] = "#scale[1.2]{single #mu^{+}}";
   m_Strings["1Lmup"] = SL().a("1L_mup-mu0");
 
-  m_Title["1Lmum"] = "single #mu^{-}";
+  m_Title["1Lmum"] = "#scale[1.2]{single #mu^{-}}";
   m_Strings["1Lmum"] = SL().a("1L_mum-mu0");
 
-  m_Title["1Lp"] = "single #it{l}^{+}";
+  m_Title["1Lp"] = "#scale[1.2]{single #it{l}^{+}}";
   m_Strings["1Lp"] = SL().a("1L_elp-el0").a("1L_mup-mu0");
 
-  m_Title["1Lm"] = "single #it{l}^{-}";
+  m_Title["1Lm"] = "#scale[1.2]{single #it{l}^{-}}";
   m_Strings["1Lm"] = SL().a("1L_elm-el0").a("1L_mum-mu0");
 
-  m_Title["1Lsilver"] = "single silver #it{l}";
+  m_Title["1Lsilver"] = "#scale[1.2]{single silver #it{l}}";
   m_Strings["1Lsilver"] = SL().a("1L_elp-el1").a("1L_elm-el1").a("1L_mup-mu1").a("1L_mum-mu1");
   
-  m_Title["1Lelsilver"] = "single silver e";
+  m_Title["1Lelsilver"] = "#scale[1.2]{single silver e}";
   m_Strings["1Lelsilver"] = SL().a("1L_elp-el1").a("1L_elm-el1");
   
-  m_Title["1Lmusilver"] = "single silver #mu";
+  m_Title["1Lmusilver"] = "#scale[1.2]{single silver #mu}";
   m_Strings["1Lmusilver"] = SL().a("1L_mup-mu1").a("1L_mum-mu1");
 
-  m_Title["1Lbronze"] = "single bronze #it{l}";
+  m_Title["1Lbronze"] = "#scale[1.2]{single bronze #it{l}}";
   m_Strings["1Lbronze"] = SL().a("1L_elp-el2").a("1L_elm-el2").a("1L_mup-mu2").a("1L_mum-mu2");
   
-  m_Title["1Lelbronze"] = "single bronze e";
+  m_Title["1Lelbronze"] = "#scale[1.2]{single bronze e}";
   m_Strings["1Lelbronze"] = SL().a("1L_elp-el2").a("1L_elm-el2");
   
-  m_Title["1Lmubronze"] = "single bronze #mu";
+  m_Title["1Lmubronze"] = "#scale[1.2]{single bronze #mu}";
   m_Strings["1Lmubonze"] = SL().a("1L_mup-mu2").a("1L_mum-mu2");
 
-  m_Title["2LOSSF"] = "e^{#pm} e^{#mp} or #mu^{#pm} #mu^{#mp}";
+  m_Title["2LOSSF"] = "#scale[1.2]{e^{#pm} e^{#mp} or #mu^{#pm} #mu^{#mp}}";
   m_Strings["2LOSSF"] = SL().a("2LOS_el^el-el0el0").a("2LOS_mu^mu-mu0mu0").a("2LOS_elel^0-el0el0").a("2LOS_mumu^0-mu0mu0");
   
-  m_Title["2LOSOF"] = "e^{#pm} #mu^{#mp}";
+  m_Title["2LOSOF"] = "#scale[1.2]{e^{#pm} #mu^{#mp}}";
   m_Strings["2LOSOF"] = SL().a("2LOS_el^mu-el0mu0").a("2LOS_elmu^0-el0mu0");
 
-  m_Title["2LSSSF"] = "e^{#pm} e^{#pm} or #mu^{#pm} #mu^{#pm}";
+  m_Title["2LSSSF"] = "#scale[1.2]{e^{#pm} e^{#pm} or #mu^{#pm} #mu^{#pm}}";
   m_Strings["2LSSSF"] = SL().a("2LOS_el^el-el0el0").a("2LOS_mu^mu-mu0mu0").a("2LOS_elel^0-el0el0").a("2LOS_mumu^0-mu0mu0");
   
-  m_Title["2LSSOF"] = "e^{#pm} #mu^{#pm}";
+  m_Title["2LSSOF"] = "#scale[1.2]{e^{#pm} #mu^{#pm}}";
   m_Strings["2LSSOF"] = SL().a("2LSS_el^mu-el0mu0").a("2LSS_elmu^0-el0mu0");
 
-  m_Title["2LOSSFsilver"] = "e^{#pm} e^{#mp} or #mu^{#pm} #mu^{#mp}, #geq 1 silver #it{l}";
+  m_Title["2LOSSFsilver"] = "#scale[1.2]{e^{#pm} e^{#mp} or #mu^{#pm} #mu^{#mp}, #geq 1 silver #it{l}}";
   m_Strings["2LOSSFsilver"] = SL().a("2LOS_el^el-el0el1").a("2LOS_mu^mu-mu0mu1").a("2LOS_elel^0-el0el1").a("2LOS_mumu^0-mu0mu1")
                                   .a("2LOS_el^el-el1el1").a("2LOS_mu^mu-mu1mu1").a("2LOS_elel^0-el1el1").a("2LOS_mumu^0-mu1mu1")
                                   .a("2LOS_el^el-el1el2").a("2LOS_mu^mu-mu1mu2").a("2LOS_elel^0-el1el2").a("2LOS_mumu^0-mu1mu2");
   
-  m_Title["2LOSOFsilver"] = "e^{#pm} #mu^{#mp}, #geq 1 silver #it{l}";
+  m_Title["2LOSOFsilver"] = "#scale[1.2]{e^{#pm} #mu^{#mp}, #geq 1 silver #it{l}}";
   m_Strings["2LOSOFsilver"] = SL().a("2LOS_el^mu-el0mu1").a("2LOS_elmu^0-el0mu1").a("2LOS_el^mu-mu0el1").a("2LOS_elmu^0-mu0el1")
                                   .a("2LOS_el^mu-el1mu1").a("2LOS_elmu^0-el1mu1").a("2LOS_el^mu-mu1el2").a("2LOS_elmu^0-mu1el2")
                                   .a("2LOS_el^mu-el1mu2").a("2LOS_elmu^1-el1mu2");
 
-  m_Title["2LSSSFsilver"] = "e^{#pm} e^{#pm} or #mu^{#pm} #mu^{#pm}, #geq 1 silver #it{l}";
+  m_Title["2LSSSFsilver"] = "#scale[1.2]{e^{#pm} e^{#pm} or #mu^{#pm} #mu^{#pm}, #geq 1 silver #it{l}}";
   m_Strings["2LSSSFsilver"] = SL().a("2LSS_el^el-el0el1").a("2LSS_mu^mu-mu0mu1").a("2LSS_elel^0-el0el1").a("2LSS_mumu^0-mu0mu1")
                                   .a("2LSS_el^el-el1el1").a("2LSS_mu^mu-mu1mu1").a("2LSS_elel^0-el1el1").a("2LSS_mumu^0-mu1mu1")
                                   .a("2LSS_el^el-el1el2").a("2LSS_mu^mu-mu1mu2").a("2LSS_elel^0-el1el2").a("2LSS_mumu^0-mu1mu2");
   
-  m_Title["2LSSOFsilver"] = "e^{#pm} #mu^{#pm}, #geq 1 silver #it{l}";
+  m_Title["2LSSOFsilver"] = "#scale[1.2]{e^{#pm} #mu^{#pm}, #geq 1 silver #it{l}}";
   m_Strings["2LSSOFsilver"] = SL().a("2LSS_el^mu-el0mu1").a("2LSS_elmu^0-el0mu1").a("2LSS_el^mu-mu0el1").a("2LSS_elmu^0-mu0el1")
                                   .a("2LSS_el^mu-el1mu1").a("2LSS_elmu^0-el1mu1").a("2LSS_el^mu-mu1el2").a("2LSS_elmu^0-mu1el2")
                                   .a("2LSS_el^mu-el1mu2").a("2LSS_elmu^1-el1mu2");
 
-  m_Title["2LOSSFbronze"] = "e^{#pm} e^{#mp} or #mu^{#pm} #mu^{#mp}, #geq 1 bronze #it{l}";
+  m_Title["2LOSSFbronze"] = "#scale[1.2]{e^{#pm} e^{#mp} or #mu^{#pm} #mu^{#mp}, #geq 1 bronze #it{l}}";
   m_Strings["2LOSSFbronze"] = SL().a("2LOS_el^el-el0el2").a("2LOS_mu^mu-mu0mu2").a("2LOS_elel^0-el0el2").a("2LOS_mumu^0-mu0mu2")
                                   .a("2LOS_el^el-el1el2").a("2LOS_mu^mu-mu1mu2").a("2LOS_elel^0-el1el2").a("2LOS_mumu^0-mu1mu2")
                                   .a("2LOS_el^el-el2el2").a("2LOS_mu^mu-mu2mu2").a("2LOS_elel^0-el2el2").a("2LOS_mumu^0-mu2mu2");
   
-  m_Title["2LOSOFbronze"] = "e^{#pm} #mu^{#mp}, #geq 1 bronze #it{l}";
+  m_Title["2LOSOFbronze"] = "#scale[1.2]{e^{#pm} #mu^{#mp}, #geq 1 bronze #it{l}}";
   m_Strings["2LOSOFbronze"] = SL().a("2LOS_el^mu-el0mu2").a("2LOS_elmu^0-el0mu2").a("2LOS_el^mu-mu0el2").a("2LOS_elmu^0-mu0el2")
                                   .a("2LOS_el^mu-el1mu2").a("2LOS_elmu^0-el1mu2").a("2LOS_el^mu-mu1el2").a("2LOS_elmu^0-mu1el2")
                                   .a("2LOS_el^mu-el2mu2").a("2LOS_elmu^1-el2mu2");
 
-  m_Title["2LSSSFbronze"] = "e^{#pm} e^{#pm} or #mu^{#pm} #mu^{#pm}, #geq 1 bronze #it{l}";
+  m_Title["2LSSSFbronze"] = "#scale[1.2]{e^{#pm} e^{#pm} or #mu^{#pm} #mu^{#pm}, #geq 1 bronze #it{l}}";
   m_Strings["2LSSSFbronze"] = SL().a("2LSS_el^el-el0el2").a("2LSS_mu^mu-mu0mu2").a("2LSS_elel^0-el0el2").a("2LSS_mumu^0-mu0mu2")
                                   .a("2LSS_el^el-el1el2").a("2LSS_mu^mu-mu1mu2").a("2LSS_elel^0-el1el2").a("2LSS_mumu^0-mu1mu2")
                                   .a("2LSS_el^el-el2el2").a("2LSS_mu^mu-mu2mu2").a("2LSS_elel^0-el2el2").a("2LSS_mumu^0-mu2mu2");
   
-  m_Title["2LSSOFbronze"] = "e^{#pm} #mu^{#pm}, #geq 1 bronze #it{l}";
+  m_Title["2LSSOFbronze"] = "#scale[1.2]{e^{#pm} #mu^{#pm}, #geq 1 bronze #it{l}}";
   m_Strings["2LSSOFbronze"] = SL().a("2LSS_el^mu-el0mu2").a("2LSS_elmu^0-el0mu2").a("2LSS_el^mu-mu0el2").a("2LSS_elmu^0-mu0el2")
                                   .a("2LSS_el^mu-el1mu2").a("2LSS_elmu^0-el1mu2").a("2LSS_el^mu-mu1el2").a("2LSS_elmu^0-mu1el2")
                                   .a("2LSS_el^mu-el2mu2").a("2LSS_elmu^1-el2mu2");
@@ -694,14 +765,12 @@ void FitReader::InitializeRecipes(){
 
   m_Title["ge2bjetS"] = "#splitline{#geq 1 jet}{#geq 2 b-tags} #scale[1.2]{#in S}";
 
-
-  m_ColorDefault.push_back(kBlue+2);
-  m_ColorDefault.push_back(kGreen+3);
-  m_ColorDefault.push_back(kRed+1);
-  m_ColorDefault.push_back(kYellow+2);
-  m_ColorDefault.push_back(kMagenta+1);
-  m_ColorDefault.push_back(kMagenta+2);
-  m_ColorDefault.push_back(kCyan+2);
-  m_ColorDefault.push_back(kCyan+3);
+  m_ColorDefault.clear();
+  for(int i = 0; i < 8; i++)
+    m_ColorDefault.push_back(7002+i*10);
+  for(int i = 0; i < 8; i++)
+    m_ColorDefault.push_back(7000+i*10);
+  for(int i = 0; i < 8; i++)
+    m_ColorDefault.push_back(7004+i*10);
   
 }

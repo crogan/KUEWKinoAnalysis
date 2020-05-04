@@ -20,8 +20,7 @@
 #include <TKey.h>
 
 #include "ReducedBase_slim.hh"
-#include "FitBuilder.hh"
-
+#include "FitInputBuilder.hh"
 #include "Systematics.hh"
 #include "SampleTool.hh"
 #include "CategoryTool.hh"
@@ -32,7 +31,7 @@ using namespace std;
 
 int main(int argc, char* argv[]) {
   string NtuplePath = "/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_26_04_20/";
-  string OutFile    = "BuildFit_output.root";
+  string OutFile    = "BuildFitInput_output.root";
 
   bool bprint = false;
   int  year   = 2017;
@@ -111,10 +110,6 @@ int main(int argc, char* argv[]) {
   SampleTool ST(NtuplePath, year);
 
   ProcessList samples;
-  for(int p = 0; p < int(proc_to_add.size()); p++){
-    cout << "Adding processes that match \"" << proc_to_add[p] << "\"" << endl;
-    samples += ST.Get(proc_to_add[p]);
-  }
   if(addBkg){
     cout << "Adding all background processes" << endl;
     samples += ST.Get(kBkg);
@@ -127,6 +122,10 @@ int main(int argc, char* argv[]) {
     cout << "Adding all data for year " << year << endl;
     samples += ST.Get(kData);
   }
+  for(int p = 0; p < int(proc_to_add.size()); p++){
+    cout << "Adding processes that match \"" << proc_to_add[p] << "\"" << endl;
+    samples += ST.Get(proc_to_add[p]);
+  }
 
   CategoryTool CT;
 
@@ -137,7 +136,7 @@ int main(int argc, char* argv[]) {
   Systematics systematics(1);
   systematics += SYS.GetWeightSystematics();
 
-  FitBuilder FITBuilder;
+  FitInputBuilder FITBuilder;
 
   // sample (process) loop
   int Nsample = samples.GetN();
@@ -272,7 +271,7 @@ int main(int argc, char* argv[]) {
 		       Hadronic(NjetS, NbjetS, NSV),
 		       Hadronic(NjetISR, NbjetISR, 0));
 	Event.AddGenericVal(GenericVal(base->PTISR->at(1)));
-	  
+	
 	int eindex = Categories.Find(Event);
 	if(eindex < 0)
 	  continue;

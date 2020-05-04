@@ -47,12 +47,36 @@ bool Systematic::IsSame(const Systematic& sys) const {
   return IsSame(sys.Label());
 }
 
+bool Systematic::operator == (const std::string& label) const {
+  return IsSame(label);
+}
+
+bool Systematic::operator == (const Systematic& sys) const {
+  return IsSame(sys);
+}
+
+bool Systematic::operator != (const std::string& label) const {
+  return !IsSame(label);
+}
+
+bool Systematic::operator != (const Systematic& sys) const { return
+    !IsSame(sys);
+}
+
 bool Systematic::operator == (const Systematics& sys) const {
   return sys == *this;
 }
 
 bool Systematic::operator != (const Systematics& sys) const {
   return sys != *this;
+}
+
+bool Systematic::operator < (const Systematic& sys) const {
+  return (Label() < sys.Label());
+}
+
+bool Systematic::operator > (const Systematic& sys) const {
+  return (Label() > sys.Label());
 }
 
 std::string Systematic::TreeName(const std::string& name) const {
@@ -77,10 +101,34 @@ Systematics::Systematics(bool include_default){
   if(include_default)
     Add(Systematic::Default());
 }
+
+Systematics::Systematics(const Systematics& sys){
+  m_N = 0;
+  int N = sys.GetN();
+  for(int i = 0; i < N; i++)
+    *this += sys[i];
+}
+
     
 Systematics::~Systematics(){
+  Clear();
+}
+
+void Systematics::Clear(){
   for(int i = 0; i < m_N; i++)
     delete m_Sys[i];
+  m_Sys.clear();
+  m_N = 0;
+}
+
+Systematics& Systematics::operator = (const Systematics& sys){
+  Clear();
+  
+  int N = sys.GetN();
+  for(int i = 0; i < N; i++)
+    *this += sys[i];
+
+  return *this;
 }
 
 Systematic& Systematics::operator [] (int i) const {

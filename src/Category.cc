@@ -1,9 +1,9 @@
 #include <iostream>
 #include <map>
 
-#include "Category.hh"
-#include "Leptonic.hh"
-#include "Hadronic.hh"
+#include "../include/Category.hh"
+#include "../include/Leptonic.hh"
+#include "../include/Hadronic.hh"
 
 using std::cout;
 using std::endl;
@@ -42,10 +42,21 @@ Category::Category(const Category& cat)
   m_Template = cat.GetFitBin();
 }
 
+
+Category::Category(const string& label,
+		   const FitBin& bin,
+		   const string& name)
+  : Criteria(name){
+  
+  m_Criteria += GenericVal(0., label);
+  m_Template = bin;
+}
+
 Category::~Category(){ }
 
 std::string Category::GetLabel() const {
   int N = m_Criteria.GetN();
+
   string label = "";
   for(int i = 0; i < N; i++){
     label += m_Criteria[i].Label();
@@ -53,7 +64,7 @@ std::string Category::GetLabel() const {
       label += "S";
     if(i == 2)
       label += "ISR";
-    if(i < N-1)
+    if(i < N-1 && N > 1)
       label += "-";
   }
 
@@ -96,6 +107,14 @@ bool Category::operator == (const Criteria& cat) const {
   return true;
 }
 
+bool Category:: operator < (const Category& cat) const {
+  return ((Label()+"_"+GetLabel()) < (cat.Label()+"_"+cat.GetLabel()));
+}
+
+bool Category::operator > (const Category& cat) const {
+  return ((Label()+"_"+GetLabel()) > (cat.Label()+"_"+cat.GetLabel()));
+}
+
 Category& Category::SetFitBin(const FitBin& bin){
   m_Template = bin;
   
@@ -116,6 +135,9 @@ FitBin* Category::GetNewFitBin(const std::string& process) const {
 
 CategoryList Category::CreateLeptonIDRegions(int NID, int Nfakemax){
   CategoryList list;
+
+  if(m_Criteria.GetN() < 3)
+    return list;
   
   if(NID <= 1 || Nfakemax <= 0){
     list += *this;
@@ -261,6 +283,10 @@ CategoryList Category::CreateLeptonIDRegions(int NID, int Nfakemax){
 
 CategoryList Category::CreateGenericRegions(const string& label, const vector<double>& bin_edges){
   CategoryList list;
+
+  if(m_Criteria.GetN() < 3)
+    return list;
+  
   int Nbin = bin_edges.size();
 
   if(Nbin == 0){
@@ -296,6 +322,10 @@ CategoryList Category::CreateGenericRegions(const string& label, const vector<do
 
 CategoryList Category::CreateHadronicSRegions(const vector<const Hadronic*>& had) const {
   CategoryList list;
+
+  if(m_Criteria.GetN() < 3)
+    return list;
+  
   int Nhad = had.size();
 
   if(Nhad == 0){
@@ -322,6 +352,10 @@ CategoryList Category::CreateHadronicSRegions(const vector<const Hadronic*>& had
 
 CategoryList Category::CreateHadronicISRRegions(const vector<const Hadronic*>& had) const {
   CategoryList list;
+
+  if(m_Criteria.GetN() < 3)
+    return list;
+  
   int Nhad = had.size();
   
   if(Nhad == 0){
@@ -399,6 +433,13 @@ const Category& CategoryList::operator [] (int i) const {
 }
 
 CategoryList& CategoryList::Add(const Category& cat){
+  // string label = cat.Label()+"_"+cat.GetLabel();
+ 
+  // if(m_CatMap.count(label) != 0)
+  //   return *this;
+
+  // m_CatMap[label] = true;
+  
   m_Cat.push_back(new Category(cat));
   m_N++;
   return *this;
@@ -414,6 +455,59 @@ CategoryList& CategoryList::operator += (const CategoryList& cat){
     *this += cat[i];
   
   return *this;
+}
+
+CategoryList CategoryList::Filter(const string& label) const {
+  CategoryList list;
+
+ for(int i = 0; i < m_N; i++)
+   if((m_Cat[i]->Label()+"_"+m_Cat[i]->GetLabel()).find(label) != std::string::npos)
+      list += *m_Cat[i];
+
+  return list;
+}
+
+CategoryList CategoryList::Remove(const string& label) const {
+  CategoryList list;
+
+ for(int i = 0; i < m_N; i++)
+   if((m_Cat[i]->Label()+"_"+m_Cat[i]->GetLabel()).find(label) == std::string::npos)
+      list += *m_Cat[i];
+
+  return list;
+}
+
+CategoryList CategoryList::FilterOR(vector<string>& labels) const {
+  CategoryList list;
+  int Nl = labels.size();
+  for(int i = 0; i < m_N; i++){
+    for(int l = 0; l < Nl; l++){
+      if((m_Cat[i]->Label()+"_"+m_Cat[i]->GetLabel()).find(labels[l]) != std::string::npos){
+	list += *m_Cat[i];
+	break;
+      }
+    }
+  }
+
+  return list;
+}
+
+CategoryList CategoryList::FilterAND(vector<string>& labels) const {
+  CategoryList list;
+  int Nl = labels.size();
+  for(int i = 0; i < m_N; i++){
+    bool match = true;
+    for(int l = 0; l < Nl; l++){
+      if((m_Cat[i]->Label()+"_"+m_Cat[i]->GetLabel()).find(labels[l]) == std::string::npos){
+	match = false;
+	break;
+      }
+    }
+    if(match)
+      list += *m_Cat[i];
+  }
+
+  return list;
 }
 
 void CategoryList::Print() const {
@@ -471,14 +565,14 @@ CategoryBranch::CategoryBranch(){
 
 CategoryBranch::~CategoryBranch() {}
 
-void CategoryBranch::Init(TTree* tree){
+void CategoryBranch::InitFill(TTree* tree){
   if(!tree)
     return;
 
   tree->Branch("cat", &m_Cat);
   tree->Branch("bin", &m_Bin);
 
-  m_FitBinBranch.Init(tree);
+  m_FitBinBranch.InitFill(tree);
 
   m_Tree = tree;
 }
@@ -493,4 +587,28 @@ void CategoryBranch::FillCategory(Category& cat){
 
   if(m_Tree)
     m_Tree->Fill();
+}
+
+void CategoryBranch::InitGet(TTree* tree){
+  if(!tree)
+    return;
+
+  m_CatPtr = 0;
+  m_BinPtr = 0;
+  tree->SetBranchAddress("cat", &m_CatPtr, &m_b_Cat);
+  tree->SetBranchAddress("bin", &m_BinPtr, &m_b_Bin);
+
+  m_FitBinBranch.InitGet(tree);
+
+}
+
+Category CategoryBranch::GetCategory(){
+  if(!m_CatPtr || !m_BinPtr)
+    return Category(m_Bin,
+		    m_FitBinBranch.GetFitBin(),
+		    m_Cat);
+  else
+    return Category(*m_BinPtr,
+		    m_FitBinBranch.GetFitBin(),
+		    *m_CatPtr);
 }

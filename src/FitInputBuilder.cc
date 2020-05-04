@@ -1,22 +1,22 @@
 #include <iostream>
 #include <map>
 
-#include "../include/FitBuilder.hh"
+#include "../include/FitInputBuilder.hh"
 
 using std::cout;
 using std::endl;
 
 ///////////////////////////////////////////
-////////// FitBuilder class
+////////// FitInputBuilder class
 ///////////////////////////////////////////
 
-FitBuilder::FitBuilder(){
+FitInputBuilder::FitInputBuilder(){
   m_OutFile  = nullptr;
   m_ProcTree = nullptr;
   m_CatTree  = nullptr;
 }
 
-FitBuilder::~FitBuilder(){
+FitInputBuilder::~FitInputBuilder(){
   map<string,Process*>  m_Proc;
   map<string,Category*> m_Cat;  
 
@@ -39,7 +39,7 @@ FitBuilder::~FitBuilder(){
     delete m_CatTree;
 }
 
-void FitBuilder::AddEvent(double weight, double Mperp, double RISR,
+void FitInputBuilder::AddEvent(double weight, double Mperp, double RISR,
 			  const Category&   cat,
 			  const Process&    proc,
 			  const Systematic& sys){
@@ -53,12 +53,12 @@ void FitBuilder::AddEvent(double weight, double Mperp, double RISR,
   if(m_Proc.count(sproc) == 0){
     m_Proc[sproc] = new Process(proc);
   }
-
+  
   m_Proc[sproc]->AddEvent(weight, Mperp, RISR, cat, sys);
 			  
 }
 
-const Process& FitBuilder::FakeProcess(const string& label){
+const Process& FitInputBuilder::FakeProcess(const string& label){
   if(m_Proc.count(label) == 0){
     m_Proc[label] = new Process(label, kBkg);
   }
@@ -66,7 +66,7 @@ const Process& FitBuilder::FakeProcess(const string& label){
   return *m_Proc[label];
 }
 
-void FitBuilder::WriteFit(const string& outputroot){
+void FitInputBuilder::WriteFit(const string& outputroot){
   if(m_OutFile){
     if(m_OutFile->IsOpen())
       m_OutFile->Close();
@@ -92,12 +92,12 @@ void FitBuilder::WriteFit(const string& outputroot){
   m_OutFile = nullptr;
 }
 
-void FitBuilder::WriteProc(){
+void FitInputBuilder::WriteProc(){
   if(m_ProcTree)
     delete m_ProcTree;
 
   m_ProcTree = new TTree("Process", "Process");
-  m_ProcBranch.Init(m_ProcTree);
+  m_ProcBranch.InitFill(m_ProcTree);
   
   auto p = m_Proc.begin();
   while(p != m_Proc.end()){
@@ -117,12 +117,12 @@ void FitBuilder::WriteProc(){
   m_ProcTree = nullptr;
 }
 
-void FitBuilder::WriteCat(){
+void FitInputBuilder::WriteCat(){
   if(m_CatTree)
     delete m_CatTree;
 
   m_CatTree = new TTree("Category", "Category");
-  m_CatBranch.Init(m_CatTree);
+  m_CatBranch.InitFill(m_CatTree);
   
   auto c = m_Cat.begin();
   while(c != m_Cat.end()){
