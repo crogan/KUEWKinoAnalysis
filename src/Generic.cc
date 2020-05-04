@@ -1,7 +1,7 @@
 #include <iostream>
 #include <map>
 
-#include "Generic.hh"
+#include "../include/Generic.hh"
 
 ///////////////////////////////////////////
 ////////// GenericBin class

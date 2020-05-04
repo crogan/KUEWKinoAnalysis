@@ -28,13 +28,17 @@ public:
 
   bool IsSame(const std::string& label) const;
   bool IsSame(const Systematic& sys) const;
-  bool operator == (const std::string& label) const { return IsSame(label); }
-  bool operator == (const Systematic& sys) const { return IsSame(sys); }
-  bool operator != (const std::string& label) const { return !IsSame(label); }
-  bool operator != (const Systematic& sys) const { return !IsSame(sys); }
+  bool operator == (const std::string& label) const;
+  bool operator == (const Systematic& sys) const;
+  bool operator != (const std::string& label) const;
+  bool operator != (const Systematic& sys) const;
 
+  // is/isnot this contained in sys
   bool operator == (const Systematics& sys) const;
   bool operator != (const Systematics& sys) const;
+
+  bool operator < (const Systematic& sys) const;
+  bool operator > (const Systematic& sys) const;
 
   std::string TreeName(const std::string& name) const;
 
@@ -54,8 +58,11 @@ private:
 class Systematics {
 public:
   explicit Systematics(bool include_default = false);
+  Systematics(const Systematics&);
     
   virtual ~Systematics();
+  
+  Systematics& operator = (const Systematics&);
 
   Systematic& operator [] (int i) const;
 
@@ -78,6 +85,8 @@ public:
 private:
   int m_N;
   std::vector<Systematic*> m_Sys;
+
+  void Clear();
 
 };
 

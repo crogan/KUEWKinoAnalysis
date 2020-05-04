@@ -23,17 +23,26 @@ CC_FILES := $(wildcard src/*.cc)
 HH_FILES := $(wildcard include/*.hh)
 OBJ_FILES := $(addprefix $(OUTOBJ),$(notdir $(CC_FILES:.cc=.o)))
 
+SOBJ_FILES = $(filter-out AnalysisBase.o SVDiscrTool.o ReducedNtuple.o NtupleBase.o, $(OBJ_FILES))
+
 all : GLIBS += -L/cvmfs/cms.cern.ch/slc7_amd64_gcc700/external/lwtnn/2.4-gnimlf3/lib -llwtnn
 all : CXX += -I/cvmfs/cms.cern.ch/slc7_amd64_gcc700/external/lwtnn/2.4-gnimlf3/include/
 
 local : GLIBS += -L/Users/christopherrogan/GitHub/lwtnn/lib -llwtnn
 local : CXX += -I/Users/christopherrogan/GitHub/lwtnn/include
 
-all: alltargets
+locallib : GLIBS += -L/Users/christopherrogan/GitHub/lwtnn/lib -llwtnn
+locallib : CXX += -I/Users/christopherrogan/GitHub/lwtnn/include
 
-local: alltargets
+all: alltargets lib
 
-alltargets: MakeReducedNtuple_NANO.x MakeEventCount_NANO.x BuildFit.x
+local: alltargets lib
+
+locallib: lib
+
+lib: lib/libKUEWKino.so
+
+alltargets: MakeReducedNtuple_NANO.x MakeEventCount_NANO.x BuildFitInput.x
 
 MakeReducedNtuple.x:  $(SRCDIR)MakeReducedNtuple.C $(OBJ_FILES) $(HH_FILES)
 	$(CXX) $(CXXFLAGS) -o MakeReducedNtuple.x $(OUTOBJ)/*.o $(GLIBS) $ $<
@@ -51,9 +60,14 @@ MakeEventCount_NANO.x:  $(SRCDIR)MakeEventCount_NANO.C $(OBJ_FILES) $(HH_FILES)
 	$(CXX) $(CXXFLAGS) -o MakeEventCount_NANO.x $(OUTOBJ)/*.o $(GLIBS) $ $<
 	touch MakeEventCount_NANO.x
 
-BuildFit.x:  $(SRCDIR)BuildFit.C $(OBJ_FILES) $(HH_FILES)
-	$(CXX) $(CXXFLAGS) -o BuildFit.x $(OUTOBJ)/*.o $(GLIBS) $ $<
-	touch BuildFit.x
+BuildFitInput.x:  $(SRCDIR)BuildFitInput.C $(OBJ_FILES) $(HH_FILES)
+	$(CXX) $(CXXFLAGS) -o BuildFitInput.x $(OUTOBJ)/*.o $(GLIBS) $ $<
+	touch BuildFitInput.x
+
+lib/libKUEWKino.so: $(SOBJ_FILES)
+	mkdir -p lib
+	$(CXX) -shared -o lib/libKUEWKino.so $(OUTOBJ)/*.o $(GLIBS)
+	touch lib/libKUEWKino.so
 
 $(OUTOBJ)%.o: src/%.cc include/%.hh
 	$(CXX) $(CXXFLAGS) -c $< -o $@
@@ -62,3 +76,4 @@ clean:
 	rm -f $(OUTOBJ)*.o 
 	rm -f *.x
 	rm -f AutoDict*
+	rm -f lib/libKUEWKino.so

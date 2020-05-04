@@ -64,5 +64,23 @@ public:
   }
 };
 
+class VS : public vector<string> {
+public:
+  VS() {}
+  virtual ~VS() {}
+
+  VS& operator += (const string& entry){
+    this->push_back(entry);
+    return *this;
+  }
+
+  VS& operator += (const vector<string>& list){
+    for(int i = 0; i < int(list.size()); i++)
+      this->push_back(list[i]);
+  
+    return *this;
+  }
+};
+
 #endif
 
