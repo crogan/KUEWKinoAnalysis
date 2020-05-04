@@ -49,44 +49,7 @@ private:
  
 };
 
-///////////////////////////////////////////
-////////// FitBin class
-///////////////////////////////////////////
 
-class FitBin {
-public:
-  // default is to include overflow in last bin for x, but not y
-  FitBin(const vector<double>& bin_edges_x = vector<double>(),
-	 const vector<double>& bin_edges_y = vector<double>());
-  FitBin(const FitBin&);
-  
-  virtual ~FitBin();
-
-  FitBin& operator = (const FitBin& bin);
-  
-  FitBin& InitializeHistogram(const std::string& label);
-  void Fill(double weight = 1., double X = 0., double Y = 0.);
-  
-  const vector<double>& GetBinEdgesX() const;
-  const vector<double>& GetBinEdgesY() const;
-
-  void WriteHistogram(const std::string& name,
-		      const std::string& fold,
-		      TFile& file) const;
-
-private:
-  int m_NX;
-  int m_NY;
-
-  vector<double> m_Edges_X;
-  vector<double> m_Edges_Y;
-  
-  TH1D* m_hist1D;
-  TH2D* m_hist2D;
-  TH2D* m_hist2Dfine;
-
-  double m_LastBinCenterX;
-};
 
 #endif
 

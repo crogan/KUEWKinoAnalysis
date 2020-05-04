@@ -7,14 +7,15 @@
 #include <iostream>
 #include <vector>
 
-#include "Criteria.hh"
 #include "Generic.hh"
+#include "FitBin.hh"
 
 class Leptonic;
 class Hadronic;
 
 using std::vector;
 using std::string;
+using std::map;
 
 ///////////////////////////////////////////
 ////////// Category class
@@ -24,10 +25,21 @@ class CategoryList;
 
 class Category : public Criteria {
 public:
+  // constructor for ~empty category for lists in Combine interface
+  Category(const string& label,
+	   const FitBin& bin,
+	   const string& name = "none");
+
+  // constructor for only lepton-specified criteria
+  Category(const Leptonic& lep,
+	   const string& name = "none");
+
+  // nominal constructor for functioning Category
   Category(const Leptonic& lep,
 	   const Hadronic& S_had,
 	   const Hadronic& ISR_had,
 	   const string& name = "none");
+  
   Category(const Category& cat);
 
   virtual ~Category();
@@ -41,6 +53,9 @@ public:
   Category& AddGenericVal(const GenericVal& val);
 
   bool operator == (const Criteria& cat) const;
+
+  bool operator < (const Category&) const;
+  bool operator > (const Category&) const;
 
   CategoryList CreateLeptonIDRegions(int NID = 3, int Nfakemax = 2);
   CategoryList CreateGenericRegions(const string& label, const vector<double>& bin_edges);
@@ -82,6 +97,11 @@ public:
   CategoryList& operator += (const Category& cat);
   CategoryList& operator += (const CategoryList& cat);
 
+  CategoryList Filter(const string& label) const;
+  CategoryList Remove(const string& label) const;
+  CategoryList FilterOR(vector<string>& labels) const;
+  CategoryList FilterAND(vector<string>& labels) const;
+
   void Print() const;
 
   CategoryList CreateFitBinRegions(const FitBin& bin) const;
@@ -90,10 +110,44 @@ public:
   CategoryList CreateHadronicSRegions(const vector<const Hadronic*>& had) const;
   CategoryList CreateHadronicISRRegions(const vector<const Hadronic*>& had) const;
 
+  VC GetCategories() const; 
+
 private:
   int m_N;
   vector<Category*> m_Cat;
+  map<string,bool> m_CatMap;
 
+};
+
+///////////////////////////////////////////
+////////// CategoryBranch class
+///////////////////////////////////////////
+
+class CategoryBranch {
+public:
+  CategoryBranch();
+
+  virtual ~CategoryBranch();
+
+  void InitFill(TTree* tree);
+  void FillCategory(Category& cat);
+  
+  void InitGet(TTree* tree);
+  Category GetCategory();
+
+private:
+  TTree* m_Tree;
+  
+  string m_Cat;
+  string m_Bin;
+
+  string* m_CatPtr;
+  string* m_BinPtr;
+  TBranch* m_b_Cat;
+  TBranch* m_b_Bin;
+
+  FitBinBranch m_FitBinBranch;
+  
 };
 
 #endif

@@ -71,6 +71,7 @@ inline SampleSet::~SampleSet() {}
 
 inline void SampleSet::SetBkg(bool is_bkg){
   m_IsBkg = is_bkg;
+  m_IsData = false;
 }
 
 inline bool SampleSet::GetBkg() const {
@@ -79,6 +80,8 @@ inline bool SampleSet::GetBkg() const {
 
 inline void SampleSet::SetData(bool is_data){
   m_IsData = is_data;
+  if(m_IsData)
+    m_IsBkg = false;
 }
 
 inline bool SampleSet::GetData() const {

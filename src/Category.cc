@@ -1,9 +1,9 @@
 #include <iostream>
 #include <map>
 
-#include "Category.hh"
-#include "Leptonic.hh"
-#include "Hadronic.hh"
+#include "../include/Category.hh"
+#include "../include/Leptonic.hh"
+#include "../include/Hadronic.hh"
 
 using std::cout;
 using std::endl;
@@ -11,6 +11,14 @@ using std::endl;
 ///////////////////////////////////////////
 ////////// Category class
 ///////////////////////////////////////////
+
+Category::Category(const Leptonic& lep,
+		   const string& name)
+  : Criteria(name){
+  m_Criteria += lep;
+  m_Criteria += Hadronic();
+  m_Criteria += Hadronic();
+}
 
 Category::Category(const Leptonic& lep,
 		   const Hadronic& S_had,
@@ -34,10 +42,21 @@ Category::Category(const Category& cat)
   m_Template = cat.GetFitBin();
 }
 
+
+Category::Category(const string& label,
+		   const FitBin& bin,
+		   const string& name)
+  : Criteria(name){
+  
+  m_Criteria += GenericVal(0., label);
+  m_Template = bin;
+}
+
 Category::~Category(){ }
 
 std::string Category::GetLabel() const {
   int N = m_Criteria.GetN();
+
   string label = "";
   for(int i = 0; i < N; i++){
     label += m_Criteria[i].Label();
@@ -45,7 +64,7 @@ std::string Category::GetLabel() const {
       label += "S";
     if(i == 2)
       label += "ISR";
-    if(i < N-1)
+    if(i < N-1 && N > 1)
       label += "-";
   }
 
@@ -88,9 +107,17 @@ bool Category::operator == (const Criteria& cat) const {
   return true;
 }
 
+bool Category:: operator < (const Category& cat) const {
+  return ((Label()+"_"+GetLabel()) < (cat.Label()+"_"+cat.GetLabel()));
+}
+
+bool Category::operator > (const Category& cat) const {
+  return ((Label()+"_"+GetLabel()) > (cat.Label()+"_"+cat.GetLabel()));
+}
+
 Category& Category::SetFitBin(const FitBin& bin){
   m_Template = bin;
-
+  
   return *this;
 }
 
@@ -100,13 +127,17 @@ const FitBin& Category::GetFitBin() const {
 
 FitBin* Category::GetNewFitBin(const std::string& process) const {
   FitBin* bin = new FitBin(m_Template);
-  bin->InitializeHistogram(process+"_"+GetLabel());
+ 
+  bin->InitializeHistogram(process+"_"+Label()+"_"+GetLabel());
 
   return bin;
 }
 
 CategoryList Category::CreateLeptonIDRegions(int NID, int Nfakemax){
   CategoryList list;
+
+  if(m_Criteria.GetN() < 3)
+    return list;
   
   if(NID <= 1 || Nfakemax <= 0){
     list += *this;
@@ -252,6 +283,10 @@ CategoryList Category::CreateLeptonIDRegions(int NID, int Nfakemax){
 
 CategoryList Category::CreateGenericRegions(const string& label, const vector<double>& bin_edges){
   CategoryList list;
+
+  if(m_Criteria.GetN() < 3)
+    return list;
+  
   int Nbin = bin_edges.size();
 
   if(Nbin == 0){
@@ -275,7 +310,7 @@ CategoryList Category::CreateGenericRegions(const string& label, const vector<do
       icat.AddGenericBin(dynamic_cast<const GenericBin&>(m_Criteria[i]));
     icat.AddGenericBin(*Bins[i]);
     icat.SetFitBin(m_Template);
-
+    
     list += icat;
   }
   
@@ -287,6 +322,10 @@ CategoryList Category::CreateGenericRegions(const string& label, const vector<do
 
 CategoryList Category::CreateHadronicSRegions(const vector<const Hadronic*>& had) const {
   CategoryList list;
+
+  if(m_Criteria.GetN() < 3)
+    return list;
+  
   int Nhad = had.size();
 
   if(Nhad == 0){
@@ -313,6 +352,10 @@ CategoryList Category::CreateHadronicSRegions(const vector<const Hadronic*>& had
 
 CategoryList Category::CreateHadronicISRRegions(const vector<const Hadronic*>& had) const {
   CategoryList list;
+
+  if(m_Criteria.GetN() < 3)
+    return list;
+  
   int Nhad = had.size();
   
   if(Nhad == 0){
@@ -390,6 +433,13 @@ const Category& CategoryList::operator [] (int i) const {
 }
 
 CategoryList& CategoryList::Add(const Category& cat){
+  // string label = cat.Label()+"_"+cat.GetLabel();
+ 
+  // if(m_CatMap.count(label) != 0)
+  //   return *this;
+
+  // m_CatMap[label] = true;
+  
   m_Cat.push_back(new Category(cat));
   m_N++;
   return *this;
@@ -405,6 +455,59 @@ CategoryList& CategoryList::operator += (const CategoryList& cat){
     *this += cat[i];
   
   return *this;
+}
+
+CategoryList CategoryList::Filter(const string& label) const {
+  CategoryList list;
+
+ for(int i = 0; i < m_N; i++)
+   if((m_Cat[i]->Label()+"_"+m_Cat[i]->GetLabel()).find(label) != std::string::npos)
+      list += *m_Cat[i];
+
+  return list;
+}
+
+CategoryList CategoryList::Remove(const string& label) const {
+  CategoryList list;
+
+ for(int i = 0; i < m_N; i++)
+   if((m_Cat[i]->Label()+"_"+m_Cat[i]->GetLabel()).find(label) == std::string::npos)
+      list += *m_Cat[i];
+
+  return list;
+}
+
+CategoryList CategoryList::FilterOR(vector<string>& labels) const {
+  CategoryList list;
+  int Nl = labels.size();
+  for(int i = 0; i < m_N; i++){
+    for(int l = 0; l < Nl; l++){
+      if((m_Cat[i]->Label()+"_"+m_Cat[i]->GetLabel()).find(labels[l]) != std::string::npos){
+	list += *m_Cat[i];
+	break;
+      }
+    }
+  }
+
+  return list;
+}
+
+CategoryList CategoryList::FilterAND(vector<string>& labels) const {
+  CategoryList list;
+  int Nl = labels.size();
+  for(int i = 0; i < m_N; i++){
+    bool match = true;
+    for(int l = 0; l < Nl; l++){
+      if((m_Cat[i]->Label()+"_"+m_Cat[i]->GetLabel()).find(labels[l]) == std::string::npos){
+	match = false;
+	break;
+      }
+    }
+    if(match)
+      list += *m_Cat[i];
+  }
+
+  return list;
 }
 
 void CategoryList::Print() const {
@@ -450,4 +553,71 @@ CategoryList CategoryList::CreateHadronicISRRegions(const vector<const Hadronic*
     list += m_Cat[i]->CreateHadronicISRRegions(had);
 
   return list;
+}
+
+VC CategoryList::GetCategories() const {
+  VC list;
+
+  for(int i = 0; i < m_N; i++)
+    list += m_Cat[i]->GetLabel();
+
+  return list;
+}
+
+///////////////////////////////////////////
+////////// CategoryBranch class
+///////////////////////////////////////////
+
+CategoryBranch::CategoryBranch(){
+  m_Tree = nullptr;
+}
+
+CategoryBranch::~CategoryBranch() {}
+
+void CategoryBranch::InitFill(TTree* tree){
+  if(!tree)
+    return;
+
+  tree->Branch("cat", &m_Cat);
+  tree->Branch("bin", &m_Bin);
+
+  m_FitBinBranch.InitFill(tree);
+
+  m_Tree = tree;
+}
+  
+void CategoryBranch::FillCategory(Category& cat){
+  m_Cat = cat.Label();
+  m_Bin = cat.GetLabel();
+
+  m_FitBinBranch.FillFitBin(cat.GetFitBin());
+
+  m_Tree->Fill();
+
+  if(m_Tree)
+    m_Tree->Fill();
+}
+
+void CategoryBranch::InitGet(TTree* tree){
+  if(!tree)
+    return;
+
+  m_CatPtr = 0;
+  m_BinPtr = 0;
+  tree->SetBranchAddress("cat", &m_CatPtr, &m_b_Cat);
+  tree->SetBranchAddress("bin", &m_BinPtr, &m_b_Bin);
+
+  m_FitBinBranch.InitGet(tree);
+
+}
+
+Category CategoryBranch::GetCategory(){
+  if(!m_CatPtr || !m_BinPtr)
+    return Category(m_Bin,
+		    m_FitBinBranch.GetFitBin(),
+		    m_Cat);
+  else
+    return Category(*m_BinPtr,
+		    m_FitBinBranch.GetFitBin(),
+		    *m_CatPtr);
 }

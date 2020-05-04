@@ -1,7 +1,7 @@
 #include <iostream>
 #include <map>
 
-#include "Leptonic.hh"
+#include "../include/Leptonic.hh"
 
 ///////////////////////////////////////////
 ////////// Lep class

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <map>
 
-#include "Hadronic.hh"
+#include "../include/Hadronic.hh"
 
 ///////////////////////////////////////////
 ////////// Had class

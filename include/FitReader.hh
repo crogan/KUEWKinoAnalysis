@@ -10,6 +10,7 @@
 #include <vector>
 
 #include "Category.hh"
+#include "Process.hh"
 
 using std::map;
 using std::string;
@@ -25,25 +26,49 @@ public:
 
   virtual ~FitReader();
 
-  void PrintCategories();
-  void PrintProcesses();
+  void PrintCategories(bool verbose = false);
+  void PrintProcesses(bool verbose = false);
+
+  bool IsFilled(const Category&   cat,
+		const Process&    proc,
+		const Systematic& sys = Systematic::Default()) const;
+
+  const TH1D* GetHistogram(const Category&   cat,
+			   const Process&    proc,
+			   const Systematic& sys = Systematic::Default()) const;
+
+  double Integral(const Category&   cat,
+		  const Process&    proc,
+		  const Systematic& sys = Systematic::Default()) const;
 
   TCanvas* Plot1Dstack(const vector<string>& proc,
 		       const vector<string>& lep_cat,
 		       const vector<string>& hadS_cat,
 		       const vector<string>& hadI_cat,
-		       const string& name);
+		       const string& canvas);
+  
+  const ProcessList&    GetProcesses() const;
+  const CategoryList&   GetCategories(const string& channel = "") const;
+  vector<string>        GetChannels() const;           
+  const Systematics&    GetSystematics() const;
   
 private:
-  TFile m_File;
+  mutable TFile m_File;
 
-  int m_Nproc;
-  int m_Ncat;
+  mutable map<Process,Systematics> m_ProcSys;
+  mutable map<Process,map<Category,TH1D*> > m_ProcHist;
+  mutable map<Process,map<Systematic,map<Category,pair<TH1D*,TH1D*> > > >m_ProcHistSys;
+
+  ProcessList                      m_Proc;
+  mutable map<string,CategoryList> m_Chan;
+  CategoryList                     m_Cat;
+  Systematics                      m_Sys;
   
-  map<string,map<string,int> > m_Proc;
-  map<string,pair<vector<double>,vector<double> > > m_Cat;
-
-  bool Match(const string& target, const vector<string>& test);
+  ProcessBranch m_ProcBranch;
+  void ReadProcesses();
+  
+  CategoryBranch m_CatBranch;
+  void ReadCategories();
 
   map<string,string>          m_Title;
   map<string,int>             m_Color;
@@ -52,6 +77,7 @@ private:
   vector<string>              m_Sig;
   map<string,string>          m_SignalTitle;
   void InitializeRecipes();
+  string GetSignalTitle(const string& label);
   
 };
 

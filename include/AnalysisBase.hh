@@ -51,8 +51,6 @@ public:
   void InitializeHistograms(vector<TH1D*>& histos);
   void BookHistograms(vector<TH1D*>& histos);
 
-  void InitializeSystematics();
-
   string GetEntry(int entry);
 
   // event functions
@@ -119,13 +117,14 @@ protected:
   
 private:
 
-  NeventTool  m_NeventTool;
-  XsecTool    m_XsecTool;
-  JSONTool    m_JSONTool;
-  PUTool      m_PUTool;
-  BtagSFTool  m_BtagSFTool;
-  JMETool     m_JMETool;
-  SVDiscrTool m_SVDiscrTool;
+  NeventTool      m_NeventTool;
+  XsecTool        m_XsecTool;
+  JSONTool        m_JSONTool;
+  PUTool          m_PUTool;
+  BtagSFTool      m_BtagSFTool;
+  JMETool         m_JMETool;
+  SVDiscrTool     m_SVDiscrTool;
+  SystematicsTool m_SysTool;
 
   int m_SampleIndex;
   virtual int GetSampleIndex();
@@ -138,12 +137,6 @@ private:
 
   const Systematic* m_CurSys;
   const Systematic& CurrentSystematic() const;
-
-  Systematics m_DefaultSys;
-  Systematics m_JESSys; // jet energy scale systematics
-  Systematics m_MMSSys; // muon momentum scale
-  Systematics m_EESSys; // electron energy scale
-  Systematics m_METSys; // MET systematics
   
 };
 

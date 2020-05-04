@@ -21,7 +21,6 @@ AnalysisBase<Base>::AnalysisBase(TTree* tree)
   m_IsData = false;
   m_IsFastSim = false;
 
-  InitializeSystematics();
   m_CurSys = &Systematic::Default();
 }
 
@@ -40,27 +39,27 @@ const Systematic& AnalysisBase<Base>::CurrentSystematic() const {
 
 template <class Base>
 void AnalysisBase<Base>::AddSystematics(){
-  m_Systematics.Add(m_DefaultSys);
+  m_Systematics.Add(m_SysTool.GetTreeSystematics());
 }
 
 template <class Base>
 void AnalysisBase<Base>::AddJESSystematics(){
-  m_Systematics.Add(m_JESSys);
+  m_Systematics.Add(m_SysTool.JESSystematics());
 }
 
 template <class Base>
 void AnalysisBase<Base>::AddMETSystematics(){
-  m_Systematics.Add(m_METSys);
+  m_Systematics.Add(m_SysTool.METSystematics());
 }
 
 template <class Base>
 void AnalysisBase<Base>::AddEESSystematics(){
-  m_Systematics.Add(m_EESSys);
+  m_Systematics.Add(m_SysTool.EESSystematics());
 }
 
 template <class Base>
 void AnalysisBase<Base>::AddMMSSystematics(){
-  m_Systematics.Add(m_MMSSys);
+  m_Systematics.Add(m_SysTool.MMSSystematics());
 }
 
 template <class Base>
@@ -160,9 +159,6 @@ void AnalysisBase<Base>::InitializeHistograms(vector<TH1D*>& histos){}
 
 template <class Base>
 void AnalysisBase<Base>::BookHistograms(vector<TH1D*>& histos){}
-
-template <class Base>
-void AnalysisBase<Base>::InitializeSystematics(){}
 
 template <class Base>
 double AnalysisBase<Base>::DeltaPhiMin(const vector<TLorentzVector>& JETs, const TVector3& MET, int N){
@@ -1102,82 +1098,6 @@ void AnalysisBase<SUSYNANOBase>::BookHistograms(vector<TH1D*>& histos){
 }
 
 template <>
-void AnalysisBase<SUSYNANOBase>::InitializeSystematics(){
-
-  m_DefaultSys += "JESUncer_Total";
-  // m_DefaultSys += "JESUncer_CorrelationGroupMPFInSitu";
-  // m_DefaultSys += "JESUncer_CorrelationGroupIntercalibration";
-  // m_DefaultSys += "JESUncer_CorrelationGroupbJES";
-  // m_DefaultSys += "JESUncer_CorrelationGroupFlavor";
-  // m_DefaultSys += "JESUncer_CorrelationGroupUncorrelated";
-  // m_DefaultSys += "MMSUncer_Total";
-  // m_DefaultSys += "EESUncer_Total";
-  m_DefaultSys += "METUncer_UnClust"; 
-  
-  m_JESSys += "JESUncer_Total";
-  m_JESSys += "JESUncer_AbsoluteStat";
-  m_JESSys += "JESUncer_AbsoluteScale";
-  m_JESSys += "JESUncer_AbsoluteFlavMap";
-  m_JESSys += "JESUncer_AbsoluteMPFBias";
-  m_JESSys += "JESUncer_Fragmentation";
-  m_JESSys += "JESUncer_SinglePionECAL";
-  m_JESSys += "JESUncer_SinglePionHCAL";
-  m_JESSys += "JESUncer_FlavorQCD";
-  m_JESSys += "JESUncer_TimePtEta";
-  m_JESSys += "JESUncer_RelativeJEREC1";
-  m_JESSys += "JESUncer_RelativeJEREC2";
-  m_JESSys += "JESUncer_RelativeJERHF";
-  m_JESSys += "JESUncer_RelativePtBB";
-  m_JESSys += "JESUncer_RelativePtEC1";
-  m_JESSys += "JESUncer_RelativePtEC2";
-  m_JESSys += "JESUncer_RelativePtHF";
-  m_JESSys += "JESUncer_RelativeBal";
-  m_JESSys += "JESUncer_RelativeSample";
-  m_JESSys += "JESUncer_RelativeFSR";
-  m_JESSys += "JESUncer_RelativeStatFSR";
-  m_JESSys += "JESUncer_RelativeStatEC";
-  m_JESSys += "JESUncer_RelativeStatHF";
-  m_JESSys += "JESUncer_PileUpDataMC";
-  m_JESSys += "JESUncer_PileUpPtRef";
-  m_JESSys += "JESUncer_PileUpPtBB";
-  m_JESSys += "JESUncer_PileUpPtEC1";
-  m_JESSys += "JESUncer_PileUpPtEC2";
-  m_JESSys += "JESUncer_PileUpPtHF";
-  m_JESSys += "JESUncer_PileUpMuZero";
-  m_JESSys += "JESUncer_PileUpEnvelope";
-  m_JESSys += "JESUncer_SubTotalPileUp";
-  m_JESSys += "JESUncer_SubTotalRelative";
-  m_JESSys += "JESUncer_SubTotalPt";
-  m_JESSys += "JESUncer_SubTotalScale";
-  m_JESSys += "JESUncer_SubTotalAbsolute";
-  m_JESSys += "JESUncer_SubTotalMC";
-  m_JESSys += "JESUncer_TotalNoFlavor";
-  m_JESSys += "JESUncer_TotalNoTime";
-  m_JESSys += "JESUncer_TotalNoFlavorNoTime";
-  m_JESSys += "JESUncer_FlavorZJet";
-  m_JESSys += "JESUncer_FlavorPhotonJet";
-  m_JESSys += "JESUncer_FlavorPureGluon";
-  m_JESSys += "JESUncer_FlavorPureQuark";
-  m_JESSys += "JESUncer_FlavorPureCharm";
-  m_JESSys += "JESUncer_FlavorPureBottom";
-  m_JESSys += "JESUncer_TimeRunBCD";
-  m_JESSys += "JESUncer_TimeRunEF";
-  m_JESSys += "JESUncer_TimeRunGH";
-  m_JESSys += "JESUncer_CorrelationGroupMPFInSitu";
-  m_JESSys += "JESUncer_CorrelationGroupIntercalibration";
-  m_JESSys += "JESUncer_CorrelationGroupbJES";
-  m_JESSys += "JESUncer_CorrelationGroupFlavor";
-  m_JESSys += "JESUncer_CorrelationGroupUncorrelated";
-
-  m_MMSSys += "MMSUncer_Total";
-  
-  m_EESSys += "EESUncer_Total";
-  
-  m_METSys += "METUncer_UnClust";
-  m_METSys.Add(m_JESSys);
-}
-
-template <>
 ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET){
   int year = 2017;
   if(m_FileTag.find("16") != std::string::npos)
@@ -1192,7 +1112,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET){
   double delta  = (CurrentSystematic().IsUp() ? 1. : -1.);
   TVector3 deltaMET(0.,0.,0.);
   bool DO_JES = false;
-  if(m_JESSys == CurrentSystematic())
+  if(m_SysTool.JESSystematics() == CurrentSystematic())
     DO_JES = true;
   
   for(int i = 0; i < Njet; i++){
@@ -1314,6 +1234,8 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET){
   // If one jet fails jet ID, 
   if(!passID)
     return ParticleList();
+
+  year = 2016;
   
   if(year == 2017)
     MET.SetPtEtaPhi(METFixEE2017_pt,0.0,METFixEE2017_phi);
@@ -1914,7 +1836,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetGenMuons(){
   int PDGID;
   for(int i = 0; i < N; i++){
     PDGID = GenPart_pdgId[i];
-    if(abs(PDGID) == 13 && GenPart_pt[i] > 3. && GenPart_status[i] == 1){
+    if(abs(PDGID) == 13 && GenPart_pt[i] > 2. && GenPart_status[i] == 1){
       Particle lep;
       
       lep.SetPDGID(PDGID);

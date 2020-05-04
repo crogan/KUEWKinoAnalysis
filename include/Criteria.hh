@@ -6,6 +6,7 @@
 
 using std::vector;
 using std::string;
+using std::pair;
 
 ///////////////////////////////////////////
 ////////// Criteria class
@@ -62,6 +63,88 @@ public:
     (*this).push_back(s);
     return *this;
   }
+};
+
+class VS : public vector<string> {
+public:
+  VS() {}
+  virtual ~VS() {}
+
+  VS& operator += (const string& entry){
+    this->push_back(entry);
+    return *this;
+  }
+
+  VS& operator += (const vector<string>& list){
+    for(int i = 0; i < int(list.size()); i++)
+      this->push_back(list[i]);
+  
+    return *this;
+  }
+};
+
+class VC : public vector<pair<int,string> > {
+public:
+  VC(){
+    m_N = 0;
+  }
+
+  virtual ~VC() {}
+
+  VC& operator += (const string& label){
+    this->push_back({m_N, label});
+    m_N++;
+
+    return *this;
+  }
+  
+private:
+  int m_N;
+  
+};
+
+class SM : public pair<string,VS> {
+public:
+  SM(const string& prefix){
+    this->first = prefix;
+  }
+
+  virtual ~SM() {}
+
+  SM& operator += (const string& mass){
+    this->second += mass;
+
+    return *this;
+  }
+
+  SM& operator += (const VS& masses){
+    this->second += masses;
+
+    return *this;
+  }
+};
+
+// signal masses
+class VSM : public vector<SM> {
+public:
+  VSM(){}
+
+  virtual ~VSM() {}
+
+  VSM& operator += (const SM& sm){
+    if(m_SM.count(sm.first) == 0){
+      this->push_back(sm);
+      m_SM[sm.first] = this->size()-1;
+    } else {
+      (*this)[m_SM[sm.first]] += sm.second;
+    }
+
+    return *this;
+  }
+  
+private:
+  std::map<string,int> m_SM;
+
 };
 
 #endif

@@ -81,7 +81,7 @@ private:
 class Hadronic : public Criteria {
 public:
   Hadronic(const HadList& Hem_a, const HadList& Hem_b, const std::string& label = "none");
-  Hadronic(int Njet, int Nbjet, int NSV, const std::string& label = "none");
+  Hadronic(int Njet = 0, int Nbjet = 0, int NSV = 0, const std::string& label = "none");
   Hadronic(const Hadronic&);
 
   virtual ~Hadronic();
