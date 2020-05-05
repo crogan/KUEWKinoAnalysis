@@ -86,31 +86,24 @@ public:
 
 class VS : public vector<string> {
 public:
-  VS() {}
-
-  VS(const vector<string>& vs){
-    for(auto s : vs)
-      *this += s;
-  }
+  VS();
+  VS(const vector<string>& vs);
   
-  virtual ~VS() {}
+  virtual ~VS();
 
-  VS& a(const string& s){
-    (*this).push_back(s);
-    return *this;
-  }
+  VS& a(const string& s);
 
-  VS& operator += (const string& entry){
-    this->push_back(entry);
-    return *this;
-  }
+  VS& operator += (const string& entry);
 
-  VS& operator += (const vector<string>& list){
-    for(int i = 0; i < int(list.size()); i++)
-      this->push_back(list[i]);
+  VS& operator += (const vector<string>& list);
+
+  VS Filter(const string& label) const;
+  VS Remove(const string& label) const;
+  VS FilterOR(VS& labels) const;
+  VS FilterAND(VS& labels) const;
+  VS RemoveOR(VS& labels) const;
+  VS RemoveAND(VS& labels) const;
   
-    return *this;
-  }
 };
 
 class VC : public vector<pair<int,string> > {
