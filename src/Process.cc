@@ -111,10 +111,11 @@ ProcessList::ProcessList(const ProcessList& list){
 
 ProcessList::~ProcessList() {}
 
-ProcessList& ProcessList::operator =  (const ProcessList& list){
+ProcessList& ProcessList::operator = (const ProcessList& list){
+  ProcessList pl(list);
   m_Proc.clear();
   m_N = 0;
-  return *this += list;
+  return *this += pl;
 }
 
 ProcessList& ProcessList::operator += (const ProcessList& list){
