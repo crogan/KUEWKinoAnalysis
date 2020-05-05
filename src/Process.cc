@@ -113,6 +113,7 @@ ProcessList::~ProcessList() {}
 
 ProcessList& ProcessList::operator = (const ProcessList& list){
   ProcessList pl(list);
+  m_ProcMap.clear();
   m_Proc.clear();
   m_N = 0;
   return *this += pl;
@@ -177,10 +178,10 @@ ProcessList ProcessList::Remove(ProcessType type) const {
 ProcessList ProcessList::Remove(const string& label) const {
    ProcessList list;
 
-  for(int i = 0; i < m_N; i++)
-    if(m_Proc[i].Name().find(label) == std::string::npos)
-      list += m_Proc[i];
-
+   for(int i = 0; i < m_N; i++)
+     if(m_Proc[i].Name().find(label) == std::string::npos)
+       list += m_Proc[i];
+   
   return list;
 }
   
