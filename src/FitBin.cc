@@ -1,10 +1,7 @@
 #include <iostream>
 #include <map>
 
-#include "../include/FitBin.hh"
-
-using std::cout;
-using std::endl;
+#include "FitBin.hh"
 
 ///////////////////////////////////////////
 ////////// MBins class
@@ -13,7 +10,7 @@ using std::endl;
 
 MBins::MBins(){
   m_N = 1;
-  m_BinEdges.push_back(-3.);
+  m_BinEdges.push_back(-1.);
   m_BinEdges.push_back( 1.);
 }
 
@@ -38,10 +35,10 @@ MBins::MBins(int Nedge,...){
 
 }
 
-MBins::MBins(const vector<double>& bin_edges){
+MBins::MBins(const VD& bin_edges){
   if(bin_edges.size() < 2){
     m_N = 1;
-    m_BinEdges.push_back(-2.);
+    m_BinEdges.push_back(-1.);
     m_BinEdges.push_back( 1.);
   } else {
     m_BinEdges = bin_edges;
@@ -65,7 +62,7 @@ int MBins::NBins() const {
   return m_N;
 }
 
-const vector<double>& MBins::BinEdges() const {
+const VD& MBins::BinEdges() const {
   return m_BinEdges;
 }
 
@@ -80,10 +77,10 @@ int MBins::GetBin(double M) const {
   return 0;
 }
 
-vector<string> MBins::GetBinLabels() const {
-  vector<string> labels;
+VS MBins::GetBinLabels() const {
+  VS labels;
   for(int i = 0; i < m_N; i++){
-    labels.push_back("["+std::to_string(int(m_BinEdges[i]))+",");
+    labels += "["+std::to_string(int(m_BinEdges[i]))+",";
     if(i == m_N-1)
       labels[i] += "#infty]";
     else
@@ -133,7 +130,7 @@ int RBin::NBins() const {
   return m_Bins.NBins();
 }
 
-const vector<double>& RBin::BinEdges() const {
+const VD& RBin::BinEdges() const {
   return m_Bins.BinEdges();
 }
 
@@ -153,7 +150,7 @@ string RBin::GetRBinLabel() const {
   return label;
 }
 
-vector<string> RBin::GetMBinLabels() const {
+VS RBin::GetMBinLabels() const {
   return m_Bins.GetBinLabels();
 }
 
@@ -217,20 +214,20 @@ FitBin::FitBin(const vector<RBin>& RBins){
   }
 }
 
-FitBin::FitBin(const vector<double>& Rbin_edges,
-	       const vector<double>& Mbin_edges){
+FitBin::FitBin(const VD& Rbin_edges,
+	       const VD& Mbin_edges){
   m_hist1D = nullptr;
   
   int NR = Rbin_edges.size();
-  vector<double> Medges = Mbin_edges;
+  VD Medges = Mbin_edges;
   
   int NM = Medges.size();
   if(NM < 2){
     if(NM == 0){
-      Medges.push_back(-1.);
-      Medges.push_back( 1.);
+      Medges += -1.;
+      Medges +=  1.;
     } else {
-      Medges.push_back(Medges[0] + 1.);
+      Medges += Medges[0] + 1.;
     }
   }
 
@@ -330,7 +327,7 @@ int FitBin::GetBin(double R, double M) const {
 }
 
 /////////////////////////////////////////////
-FitBin& FitBin::InitializeHistogram(const std::string& label){
+FitBin& FitBin::InitializeHistogram(const string& label){
   m_hist1D = (TH1D*) new TH1D(string("h1D_"+label).c_str(),
 			      string("h1D_"+label).c_str(),
 			      m_N, -0.5, m_N - 0.5);
@@ -346,8 +343,8 @@ void FitBin::Fill(double weight, double M, double R){
   m_hist1D->Fill(GetBin(R, M), weight);
 }
 
-void FitBin::WriteHistogram(const std::string& name,
-			    const std::string& fold,
+void FitBin::WriteHistogram(const string& name,
+			    const string& fold,
 			    TFile& file) const {
   if(m_hist1D == nullptr)
     return;

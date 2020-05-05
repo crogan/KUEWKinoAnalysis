@@ -1,9 +1,9 @@
 #include <iostream>
 #include <map>
 
-#include "../include/Category.hh"
-#include "../include/Leptonic.hh"
-#include "../include/Hadronic.hh"
+#include "Category.hh"
+#include "Leptonic.hh"
+#include "Hadronic.hh"
 
 using std::cout;
 using std::endl;
@@ -281,7 +281,7 @@ CategoryList Category::CreateLeptonIDRegions(int NID, int Nfakemax){
   
 }
 
-CategoryList Category::CreateGenericRegions(const string& label, const vector<double>& bin_edges){
+CategoryList Category::CreateGenericRegions(const string& label, const VD& bin_edges){
   CategoryList list;
 
   if(m_Criteria.GetN() < 3)
@@ -477,7 +477,7 @@ CategoryList CategoryList::Remove(const string& label) const {
   return list;
 }
 
-CategoryList CategoryList::FilterOR(vector<string>& labels) const {
+CategoryList CategoryList::FilterOR(VS& labels) const {
   CategoryList list;
   int Nl = labels.size();
   for(int i = 0; i < m_N; i++){
@@ -492,7 +492,7 @@ CategoryList CategoryList::FilterOR(vector<string>& labels) const {
   return list;
 }
 
-CategoryList CategoryList::FilterAND(vector<string>& labels) const {
+CategoryList CategoryList::FilterAND(VS& labels) const {
   CategoryList list;
   int Nl = labels.size();
   for(int i = 0; i < m_N; i++){
@@ -505,6 +505,39 @@ CategoryList CategoryList::FilterAND(vector<string>& labels) const {
     }
     if(match)
       list += *m_Cat[i];
+  }
+
+  return list;
+}
+
+CategoryList CategoryList::RemoveOR(VS& labels) const {
+  CategoryList list;
+  int Nl = labels.size();
+  for(int i = 0; i < m_N; i++){
+    bool match = false;
+    for(int l = 0; l < Nl; l++){
+      if((m_Cat[i]->Label()+"_"+m_Cat[i]->GetLabel()).find(labels[l]) != std::string::npos){
+	match = true;
+	break;
+      }
+    }
+    if(!match)
+      list += *m_Cat[i];
+  }
+  
+  return list;
+}
+
+CategoryList CategoryList::RemoveAND(VS& labels) const {
+  CategoryList list;
+  int Nl = labels.size();
+  for(int i = 0; i < m_N; i++){
+    for(int l = 0; l < Nl; l++){
+      if((m_Cat[i]->Label()+"_"+m_Cat[i]->GetLabel()).find(labels[l]) == std::string::npos){
+	list += *m_Cat[i];
+	break;
+      }
+    }
   }
 
   return list;
@@ -531,7 +564,7 @@ CategoryList CategoryList::CreateLeptonIDRegions(int NID, int Nfakemax) const {
   return list;
 }
 
-CategoryList CategoryList::CreateGenericRegions(const string& label, const vector<double>& bin_edges) const {
+CategoryList CategoryList::CreateGenericRegions(const string& label, const VD& bin_edges) const {
   CategoryList list;
   for(int i = 0; i < m_N; i++)
     list += m_Cat[i]->CreateGenericRegions(label, bin_edges);

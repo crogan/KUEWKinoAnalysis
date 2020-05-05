@@ -6,13 +6,9 @@
 #include <TGraphErrors.h>
 #include <TLine.h>
 
-#include "../include/FitReader.hh"
+#include "FitReader.hh"
 
 #include "RestFrames/RestFrames.hh"
-
-using std::cout;
-using std::endl;
-using std::pair;
 
 ///////////////////////////////////////////
 ////////// FitReader class
@@ -209,7 +205,7 @@ const CategoryList& FitReader::GetCategories(const string& channel) const {
   return m_Cat;
 }
 
-vector<string> FitReader::GetChannels() const {
+VS FitReader::GetChannels() const {
   VS list;
   for(auto c : m_Chan)
     list += c.first;
@@ -231,10 +227,10 @@ string FitReader::GetSignalTitle(const string& label){
   return title+" "+std::to_string(mass/100000)+" "+std::to_string(mass%100000);
 }
 
-TCanvas* FitReader::Plot1Dstack(const vector<string>& proc,
-				const vector<string>& lep_cat,
-				const vector<string>& hadS_cat,
-				const vector<string>& hadI_cat,
+TCanvas* FitReader::Plot1Dstack(const VS& proc,
+				const VS& lep_cat,
+				const VS& hadS_cat,
+				const VS& hadI_cat,
 				const string& name){
   RestFrames::SetStyle();
 
@@ -252,8 +248,8 @@ TCanvas* FitReader::Plot1Dstack(const vector<string>& proc,
   CategoryList cat = GetCategories();
   
   // Leptonic
-  vector<string> lep_labels;
-  vector<string> vlep;
+  VS lep_labels;
+  VS vlep;
   for(int i = 0; i < Nlep; i++){
     if(m_Title.count(lep_cat[i]) != 0)
       lep_labels.push_back(m_Title[lep_cat[i]]);
@@ -272,8 +268,8 @@ TCanvas* FitReader::Plot1Dstack(const vector<string>& proc,
   cat = cat.FilterOR(vlep);
 
   // Hadronic S
-  vector<string> hadS_labels;
-  vector<string> vhadS;
+  VS hadS_labels;
+  VS vhadS;
   for(int i = 0; i < NhadS; i++){
     if(m_Title.count(hadS_cat[i]) != 0)
       hadS_labels.push_back(m_Title[hadS_cat[i]]);
@@ -292,8 +288,8 @@ TCanvas* FitReader::Plot1Dstack(const vector<string>& proc,
   cat = cat.FilterOR(vhadS);
 
   // Hadronic ISR
-  vector<string> hadI_labels;
-  vector<string> vhadI;
+  VS hadI_labels;
+  VS vhadI;
   for(int i = 0; i < NhadI; i++){
     if(m_Title.count(hadI_cat[i]) != 0)
       hadI_labels.push_back(m_Title[hadI_cat[i]]);
@@ -317,21 +313,21 @@ TCanvas* FitReader::Plot1Dstack(const vector<string>& proc,
     return nullptr;
   
   // Processes
-  vector<string> labels;
-  vector<int>    colors;
-  vector<TH1D*>  hists;
+  VS            labels;
+  vector<int>   colors;
+  vector<TH1D*> hists;
   
-  vector<string> labels_sig;
+  VS             labels_sig;
   vector<TH1D*>  hists_sig;
 
   TH1D* hist_data = nullptr;
   
   for(int i = 0; i < Nproc; i++){
-    vector<string> vproc;
+    VS vproc;
     if(m_Strings.count(proc[i]) != 0)
       vproc = m_Strings[proc[i]];
     else
-      vproc.push_back(proc[i]);
+      vproc += proc[i];
 
     ProcessType type = kBkg;
     TH1D*       hist = nullptr;
@@ -375,9 +371,9 @@ TCanvas* FitReader::Plot1Dstack(const vector<string>& proc,
 
     if(type == kBkg){
       if(m_Title.count(proc[i]) != 0)
-	labels.push_back(m_Title[proc[i]]);
+	labels += m_Title[proc[i]];
       else
-	labels.push_back(proc[i]);
+	labels += proc[i];
       
       if(m_Color.count(proc[i]) != 0)
 	colors.push_back(m_Color[proc[i]]);
@@ -392,7 +388,7 @@ TCanvas* FitReader::Plot1Dstack(const vector<string>& proc,
   
   // sort the histograms by integral (N^2/2 brute force)
   int Nbkg = hists.size();
-  vector<string> vlabels;
+  VS             vlabels;
   vector<int>    vcolors;
   vector<TH1D*>  vhists;
   string stemp;
@@ -664,125 +660,125 @@ void FitReader::InitializeRecipes(){
 
   m_Title["QCD"] = "QCD multi-jets";
   m_Color["QCD"] = 7023;
-  m_Strings["QCD"] = SL().a("QCD").a("QCD_Fakes_elf0").a("QCD_Fakes_elf1").a("QCD_Fakes_elf2")
+  m_Strings["QCD"] = VS().a("QCD").a("QCD_Fakes_elf0").a("QCD_Fakes_elf1").a("QCD_Fakes_elf2")
     .a("QCD_Fakes_muf0").a("QCD_Fakes_muf1").a("QCD_Fakes_muf2");
 
   m_Title["Fakes"] = "fake leptons";
   m_Color["Fakes"] = 7021;
-  m_Strings["Fakes"] = SL().a("Fakes_elf0").a("Fakes_elf1").a("Fakes_elf2").a("Fakes_muf0").a("Fakes_muf1").a("Fakes_muf2");
+  m_Strings["Fakes"] = VS().a("Fakes_elf0").a("Fakes_elf1").a("Fakes_elf2").a("Fakes_muf0").a("Fakes_muf1").a("Fakes_muf2");
   
   m_Title["Fake"] = "fake";
   m_Color["Fake"] = 7020;
-  m_Strings["Fake"] = SL().a("Fakes_elf2").a("Fakes_muf2");
+  m_Strings["Fake"] = VS().a("Fakes_elf2").a("Fakes_muf2");
 
   m_Title["HF"] = "heavy flavor";
   m_Color["HF"] = 7022;
-  m_Strings["HF"] = SL().a("Fakes_elf0").a("Fakes_muf0");
+  m_Strings["HF"] = VS().a("Fakes_elf0").a("Fakes_muf0");
 
   m_Title["LF"] = "light flavor";
   m_Color["LF"] = 7021;
-  m_Strings["LF"] = SL().a("Fakes_elf1").a("Fakes_muf1");
+  m_Strings["LF"] = VS().a("Fakes_elf1").a("Fakes_muf1");
 
   m_Title["Total"] = "total background";
   m_Color["Total"] = 7000;
-  m_Strings["Total"] = SL().a("ttbar").a("ST").a("DB").a("ZDY").a("Wjets").a("Fakes_elf0").a("Fakes_elf1").
+  m_Strings["Total"] = VS().a("ttbar").a("ST").a("DB").a("ZDY").a("Wjets").a("Fakes_elf0").a("Fakes_elf1").
                                        a("Fakes_elf2").a("Fakes_muf0").a("Fakes_muf1").a("Fakes_muf2");
   
   // leptonic categories
   m_Title["1L"] = "#scale[1.2]{single #it{l}}";
-  m_Strings["1L"] = SL().a("1L_elp-el0").a("1L_elm-el0").a("1L_mup-mu0").a("1L_mum-mu0");
+  m_Strings["1L"] = VS().a("1L_elp-el0").a("1L_elm-el0").a("1L_mup-mu0").a("1L_mum-mu0");
   
   m_Title["1Lel"] = "#scale[1.2]{single e}";
-  m_Strings["1Lel"] = SL().a("1L_elp-el0").a("1L_elm-el0");
+  m_Strings["1Lel"] = VS().a("1L_elp-el0").a("1L_elm-el0");
 
   m_Title["1Lmu"] = "#scale[1.2]{single #mu}";
-  m_Strings["1Lmu"] = SL().a("1L_mup-mu0").a("1L_mum-m0");
+  m_Strings["1Lmu"] = VS().a("1L_mup-mu0").a("1L_mum-m0");
 
   m_Title["1Lelp"] = "#scale[1.2]{single e^{+}}";
-  m_Strings["1Lelp"] = SL().a("1L_elp-el0");
+  m_Strings["1Lelp"] = VS().a("1L_elp-el0");
 
   m_Title["1Lelm"] = "#scale[1.2]{single e^{-}}";
-  m_Strings["1Lelm"] = SL().a("1L_elm-el0");
+  m_Strings["1Lelm"] = VS().a("1L_elm-el0");
 
   m_Title["1Lmup"] = "#scale[1.2]{single #mu^{+}}";
-  m_Strings["1Lmup"] = SL().a("1L_mup-mu0");
+  m_Strings["1Lmup"] = VS().a("1L_mup-mu0");
 
   m_Title["1Lmum"] = "#scale[1.2]{single #mu^{-}}";
-  m_Strings["1Lmum"] = SL().a("1L_mum-mu0");
+  m_Strings["1Lmum"] = VS().a("1L_mum-mu0");
 
   m_Title["1Lp"] = "#scale[1.2]{single #it{l}^{+}}";
-  m_Strings["1Lp"] = SL().a("1L_elp-el0").a("1L_mup-mu0");
+  m_Strings["1Lp"] = VS().a("1L_elp-el0").a("1L_mup-mu0");
 
   m_Title["1Lm"] = "#scale[1.2]{single #it{l}^{-}}";
-  m_Strings["1Lm"] = SL().a("1L_elm-el0").a("1L_mum-mu0");
+  m_Strings["1Lm"] = VS().a("1L_elm-el0").a("1L_mum-mu0");
 
   m_Title["1Lsilver"] = "#scale[1.2]{single silver #it{l}}";
-  m_Strings["1Lsilver"] = SL().a("1L_elp-el1").a("1L_elm-el1").a("1L_mup-mu1").a("1L_mum-mu1");
+  m_Strings["1Lsilver"] = VS().a("1L_elp-el1").a("1L_elm-el1").a("1L_mup-mu1").a("1L_mum-mu1");
   
   m_Title["1Lelsilver"] = "#scale[1.2]{single silver e}";
-  m_Strings["1Lelsilver"] = SL().a("1L_elp-el1").a("1L_elm-el1");
+  m_Strings["1Lelsilver"] = VS().a("1L_elp-el1").a("1L_elm-el1");
   
   m_Title["1Lmusilver"] = "#scale[1.2]{single silver #mu}";
-  m_Strings["1Lmusilver"] = SL().a("1L_mup-mu1").a("1L_mum-mu1");
+  m_Strings["1Lmusilver"] = VS().a("1L_mup-mu1").a("1L_mum-mu1");
 
   m_Title["1Lbronze"] = "#scale[1.2]{single bronze #it{l}}";
-  m_Strings["1Lbronze"] = SL().a("1L_elp-el2").a("1L_elm-el2").a("1L_mup-mu2").a("1L_mum-mu2");
+  m_Strings["1Lbronze"] = VS().a("1L_elp-el2").a("1L_elm-el2").a("1L_mup-mu2").a("1L_mum-mu2");
   
   m_Title["1Lelbronze"] = "#scale[1.2]{single bronze e}";
-  m_Strings["1Lelbronze"] = SL().a("1L_elp-el2").a("1L_elm-el2");
+  m_Strings["1Lelbronze"] = VS().a("1L_elp-el2").a("1L_elm-el2");
   
   m_Title["1Lmubronze"] = "#scale[1.2]{single bronze #mu}";
-  m_Strings["1Lmubonze"] = SL().a("1L_mup-mu2").a("1L_mum-mu2");
+  m_Strings["1Lmubonze"] = VS().a("1L_mup-mu2").a("1L_mum-mu2");
 
   m_Title["2LOSSF"] = "#scale[1.2]{e^{#pm} e^{#mp} or #mu^{#pm} #mu^{#mp}}";
-  m_Strings["2LOSSF"] = SL().a("2LOS_el^el-el0el0").a("2LOS_mu^mu-mu0mu0").a("2LOS_elel^0-el0el0").a("2LOS_mumu^0-mu0mu0");
+  m_Strings["2LOSSF"] = VS().a("2LOS_el^el-el0el0").a("2LOS_mu^mu-mu0mu0").a("2LOS_elel^0-el0el0").a("2LOS_mumu^0-mu0mu0");
   
   m_Title["2LOSOF"] = "#scale[1.2]{e^{#pm} #mu^{#mp}}";
-  m_Strings["2LOSOF"] = SL().a("2LOS_el^mu-el0mu0").a("2LOS_elmu^0-el0mu0");
+  m_Strings["2LOSOF"] = VS().a("2LOS_el^mu-el0mu0").a("2LOS_elmu^0-el0mu0");
 
   m_Title["2LSSSF"] = "#scale[1.2]{e^{#pm} e^{#pm} or #mu^{#pm} #mu^{#pm}}";
-  m_Strings["2LSSSF"] = SL().a("2LOS_el^el-el0el0").a("2LOS_mu^mu-mu0mu0").a("2LOS_elel^0-el0el0").a("2LOS_mumu^0-mu0mu0");
+  m_Strings["2LSSSF"] = VS().a("2LOS_el^el-el0el0").a("2LOS_mu^mu-mu0mu0").a("2LOS_elel^0-el0el0").a("2LOS_mumu^0-mu0mu0");
   
   m_Title["2LSSOF"] = "#scale[1.2]{e^{#pm} #mu^{#pm}}";
-  m_Strings["2LSSOF"] = SL().a("2LSS_el^mu-el0mu0").a("2LSS_elmu^0-el0mu0");
+  m_Strings["2LSSOF"] = VS().a("2LSS_el^mu-el0mu0").a("2LSS_elmu^0-el0mu0");
 
   m_Title["2LOSSFsilver"] = "#scale[1.2]{e^{#pm} e^{#mp} or #mu^{#pm} #mu^{#mp}, #geq 1 silver #it{l}}";
-  m_Strings["2LOSSFsilver"] = SL().a("2LOS_el^el-el0el1").a("2LOS_mu^mu-mu0mu1").a("2LOS_elel^0-el0el1").a("2LOS_mumu^0-mu0mu1")
+  m_Strings["2LOSSFsilver"] = VS().a("2LOS_el^el-el0el1").a("2LOS_mu^mu-mu0mu1").a("2LOS_elel^0-el0el1").a("2LOS_mumu^0-mu0mu1")
                                   .a("2LOS_el^el-el1el1").a("2LOS_mu^mu-mu1mu1").a("2LOS_elel^0-el1el1").a("2LOS_mumu^0-mu1mu1")
                                   .a("2LOS_el^el-el1el2").a("2LOS_mu^mu-mu1mu2").a("2LOS_elel^0-el1el2").a("2LOS_mumu^0-mu1mu2");
   
   m_Title["2LOSOFsilver"] = "#scale[1.2]{e^{#pm} #mu^{#mp}, #geq 1 silver #it{l}}";
-  m_Strings["2LOSOFsilver"] = SL().a("2LOS_el^mu-el0mu1").a("2LOS_elmu^0-el0mu1").a("2LOS_el^mu-mu0el1").a("2LOS_elmu^0-mu0el1")
+  m_Strings["2LOSOFsilver"] = VS().a("2LOS_el^mu-el0mu1").a("2LOS_elmu^0-el0mu1").a("2LOS_el^mu-mu0el1").a("2LOS_elmu^0-mu0el1")
                                   .a("2LOS_el^mu-el1mu1").a("2LOS_elmu^0-el1mu1").a("2LOS_el^mu-mu1el2").a("2LOS_elmu^0-mu1el2")
                                   .a("2LOS_el^mu-el1mu2").a("2LOS_elmu^1-el1mu2");
 
   m_Title["2LSSSFsilver"] = "#scale[1.2]{e^{#pm} e^{#pm} or #mu^{#pm} #mu^{#pm}, #geq 1 silver #it{l}}";
-  m_Strings["2LSSSFsilver"] = SL().a("2LSS_el^el-el0el1").a("2LSS_mu^mu-mu0mu1").a("2LSS_elel^0-el0el1").a("2LSS_mumu^0-mu0mu1")
+  m_Strings["2LSSSFsilver"] = VS().a("2LSS_el^el-el0el1").a("2LSS_mu^mu-mu0mu1").a("2LSS_elel^0-el0el1").a("2LSS_mumu^0-mu0mu1")
                                   .a("2LSS_el^el-el1el1").a("2LSS_mu^mu-mu1mu1").a("2LSS_elel^0-el1el1").a("2LSS_mumu^0-mu1mu1")
                                   .a("2LSS_el^el-el1el2").a("2LSS_mu^mu-mu1mu2").a("2LSS_elel^0-el1el2").a("2LSS_mumu^0-mu1mu2");
   
   m_Title["2LSSOFsilver"] = "#scale[1.2]{e^{#pm} #mu^{#pm}, #geq 1 silver #it{l}}";
-  m_Strings["2LSSOFsilver"] = SL().a("2LSS_el^mu-el0mu1").a("2LSS_elmu^0-el0mu1").a("2LSS_el^mu-mu0el1").a("2LSS_elmu^0-mu0el1")
+  m_Strings["2LSSOFsilver"] = VS().a("2LSS_el^mu-el0mu1").a("2LSS_elmu^0-el0mu1").a("2LSS_el^mu-mu0el1").a("2LSS_elmu^0-mu0el1")
                                   .a("2LSS_el^mu-el1mu1").a("2LSS_elmu^0-el1mu1").a("2LSS_el^mu-mu1el2").a("2LSS_elmu^0-mu1el2")
                                   .a("2LSS_el^mu-el1mu2").a("2LSS_elmu^1-el1mu2");
 
   m_Title["2LOSSFbronze"] = "#scale[1.2]{e^{#pm} e^{#mp} or #mu^{#pm} #mu^{#mp}, #geq 1 bronze #it{l}}";
-  m_Strings["2LOSSFbronze"] = SL().a("2LOS_el^el-el0el2").a("2LOS_mu^mu-mu0mu2").a("2LOS_elel^0-el0el2").a("2LOS_mumu^0-mu0mu2")
+  m_Strings["2LOSSFbronze"] = VS().a("2LOS_el^el-el0el2").a("2LOS_mu^mu-mu0mu2").a("2LOS_elel^0-el0el2").a("2LOS_mumu^0-mu0mu2")
                                   .a("2LOS_el^el-el1el2").a("2LOS_mu^mu-mu1mu2").a("2LOS_elel^0-el1el2").a("2LOS_mumu^0-mu1mu2")
                                   .a("2LOS_el^el-el2el2").a("2LOS_mu^mu-mu2mu2").a("2LOS_elel^0-el2el2").a("2LOS_mumu^0-mu2mu2");
   
   m_Title["2LOSOFbronze"] = "#scale[1.2]{e^{#pm} #mu^{#mp}, #geq 1 bronze #it{l}}";
-  m_Strings["2LOSOFbronze"] = SL().a("2LOS_el^mu-el0mu2").a("2LOS_elmu^0-el0mu2").a("2LOS_el^mu-mu0el2").a("2LOS_elmu^0-mu0el2")
+  m_Strings["2LOSOFbronze"] = VS().a("2LOS_el^mu-el0mu2").a("2LOS_elmu^0-el0mu2").a("2LOS_el^mu-mu0el2").a("2LOS_elmu^0-mu0el2")
                                   .a("2LOS_el^mu-el1mu2").a("2LOS_elmu^0-el1mu2").a("2LOS_el^mu-mu1el2").a("2LOS_elmu^0-mu1el2")
                                   .a("2LOS_el^mu-el2mu2").a("2LOS_elmu^1-el2mu2");
 
   m_Title["2LSSSFbronze"] = "#scale[1.2]{e^{#pm} e^{#pm} or #mu^{#pm} #mu^{#pm}, #geq 1 bronze #it{l}}";
-  m_Strings["2LSSSFbronze"] = SL().a("2LSS_el^el-el0el2").a("2LSS_mu^mu-mu0mu2").a("2LSS_elel^0-el0el2").a("2LSS_mumu^0-mu0mu2")
+  m_Strings["2LSSSFbronze"] = VS().a("2LSS_el^el-el0el2").a("2LSS_mu^mu-mu0mu2").a("2LSS_elel^0-el0el2").a("2LSS_mumu^0-mu0mu2")
                                   .a("2LSS_el^el-el1el2").a("2LSS_mu^mu-mu1mu2").a("2LSS_elel^0-el1el2").a("2LSS_mumu^0-mu1mu2")
                                   .a("2LSS_el^el-el2el2").a("2LSS_mu^mu-mu2mu2").a("2LSS_elel^0-el2el2").a("2LSS_mumu^0-mu2mu2");
   
   m_Title["2LSSOFbronze"] = "#scale[1.2]{e^{#pm} #mu^{#pm}, #geq 1 bronze #it{l}}";
-  m_Strings["2LSSOFbronze"] = SL().a("2LSS_el^mu-el0mu2").a("2LSS_elmu^0-el0mu2").a("2LSS_el^mu-mu0el2").a("2LSS_elmu^0-mu0el2")
+  m_Strings["2LSSOFbronze"] = VS().a("2LSS_el^mu-el0mu2").a("2LSS_elmu^0-el0mu2").a("2LSS_el^mu-mu0el2").a("2LSS_elmu^0-mu0el2")
                                   .a("2LSS_el^mu-el1mu2").a("2LSS_elmu^0-el1mu2").a("2LSS_el^mu-mu1el2").a("2LSS_elmu^0-mu1el2")
                                   .a("2LSS_el^mu-el2mu2").a("2LSS_elmu^1-el2mu2");
 

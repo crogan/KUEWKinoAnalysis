@@ -3,9 +3,13 @@
 
 #include <iostream>
 #include <vector>
+#include <map>
 
+using std::cout;
+using std::endl;
 using std::vector;
 using std::string;
+using std::map;
 using std::pair;
 
 ///////////////////////////////////////////
@@ -50,20 +54,35 @@ private:
   vector<Criteria*> m_Criteria;
 };
 
-///////////////////////////////////////////
-////////// SL (string list) class
-///////////////////////////////////////////
-
-class SL : public std::vector<std::string> {
+class VD : public vector<double> {
 public:
-  SL(){ }
-  virtual ~SL(){ }
+  VD() {}
 
-  SL& a(const std::string& s){
-    (*this).push_back(s);
+  VD(const vector<double>& vd){
+    for(auto d : vd)
+      *this += d;
+  }
+
+  VD& a(double d){
+    (*this).push_back(d);
+    return *this;
+  }
+  
+  virtual ~VD() {}
+
+  VD& operator += (double d){
+    this->push_back(d);
+    return *this;
+  }
+
+  VD& operator += (const VD& list){
+    for(int i = 0; i < int(list.size()); i++)
+      this->push_back(list[i]);
+  
     return *this;
   }
 };
+
 
 class VS : public vector<string> {
 public:
@@ -75,6 +94,11 @@ public:
   }
   
   virtual ~VS() {}
+
+  VS& a(const string& s){
+    (*this).push_back(s);
+    return *this;
+  }
 
   VS& operator += (const string& entry){
     this->push_back(entry);

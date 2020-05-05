@@ -43,16 +43,16 @@ public:
 
   bool HasSystematic(const Process& proc, const Systematic& sys) const;
   
-  TCanvas* Plot1Dstack(const vector<string>& proc,
-		       const vector<string>& lep_cat,
-		       const vector<string>& hadS_cat,
-		       const vector<string>& hadI_cat,
+  TCanvas* Plot1Dstack(const VS& proc,
+		       const VS& lep_cat,
+		       const VS& hadS_cat,
+		       const VS& hadI_cat,
 		       const string& canvas);
-  
-  const ProcessList&    GetProcesses() const;
-  const CategoryList&   GetCategories(const string& channel = "") const;
-  vector<string>        GetChannels() const;           
-  const Systematics&    GetSystematics() const;
+
+  VS GetChannels() const;  
+  const ProcessList&  GetProcesses() const;
+  const CategoryList& GetCategories(const string& channel = "") const;         
+  const Systematics&  GetSystematics() const;
   
 private:
   mutable TFile m_File;
@@ -75,9 +75,7 @@ private:
   map<string,string>          m_Title;
   map<string,int>             m_Color;
   vector<int>                 m_ColorDefault;
-  map<string,vector<string> > m_Strings;
-  vector<string>              m_Sig;
-  map<string,string>          m_SignalTitle;
+  map<string,VS> m_Strings;
   void InitializeRecipes();
   string GetSignalTitle(const string& label);
   

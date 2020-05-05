@@ -1,7 +1,7 @@
 #include <iostream>
 #include <map>
 
-#include "../include/Process.hh"
+#include "Process.hh"
 
 ///////////////////////////////////////////
 ////////// Process class
@@ -138,7 +138,7 @@ ProcessList& ProcessList::operator += (const Process& proc){
   return *this;
 }
 
-ProcessList  ProcessList::operator +  (const ProcessList& list) const {
+ProcessList  ProcessList::operator + (const ProcessList& list) const {
   ProcessList ret = *this;
   ret += list;
 
@@ -182,6 +182,66 @@ ProcessList ProcessList::Remove(const string& label) const {
      if(m_Proc[i].Name().find(label) == std::string::npos)
        list += m_Proc[i];
    
+  return list;
+}
+
+ProcessList ProcessList::FilterOR(VS& labels) const {
+  ProcessList list;
+
+  for(int i = 0; i < m_N; i++)
+    for(auto l : labels)
+      if(m_Proc[i].Name().find(l) != std::string::npos){
+	list += m_Proc[i];
+	break;
+      }
+
+  return list;
+}
+
+ProcessList ProcessList::FilterAND(VS& labels) const {
+  ProcessList list;
+
+  for(int i = 0; i < m_N; i++){
+    bool match = true;
+    for(auto l : labels)
+      if(m_Proc[i].Name().find(l) == std::string::npos){
+	match = false;
+	break;
+      }
+    if(match)
+      list += m_Proc[i];
+  }
+
+  return list;
+}
+
+ProcessList ProcessList::RemoveOR(VS& labels) const {
+  ProcessList list;
+
+  for(int i = 0; i < m_N; i++){
+    bool match = false;
+    for(auto l : labels)
+      if(m_Proc[i].Name().find(l) != std::string::npos){
+	match = true;
+	break;
+      }
+    if(!match)
+      list += m_Proc[i];
+  }
+
+  return list;  
+}
+
+ProcessList ProcessList::RemoveAND(VS& labels) const {
+  ProcessList list;
+
+  for(int i = 0; i < m_N; i++)
+    for(auto l : labels)
+      if(m_Proc[i].Name().find(l) == std::string::npos){
+	list += m_Proc[i];
+	break;
+      }
+
   return list;
 }
   
