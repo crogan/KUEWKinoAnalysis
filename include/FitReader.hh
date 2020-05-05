@@ -41,6 +41,8 @@ public:
 		  const Process&    proc,
 		  const Systematic& sys = Systematic::Default()) const;
 
+  bool HasSystematic(const Process& proc, const Systematic& sys);
+  
   TCanvas* Plot1Dstack(const vector<string>& proc,
 		       const vector<string>& lep_cat,
 		       const vector<string>& hadS_cat,

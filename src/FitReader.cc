@@ -108,6 +108,13 @@ void FitReader::ReadCategories(){
   delete tree;
 }
 
+bool FitReader::HasSystematic(const Process& proc, const Systematic& sys) const {
+  if(m_ProcSys.count(proc) == 0)
+    return false;
+
+  return m_ProcSys[proc].Contains(sys);
+}
+
 double FitReader::Integral(const Category&   cat,
 			   const Process&    proc,
 			   const Systematic& sys) const {
