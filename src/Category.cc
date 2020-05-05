@@ -592,8 +592,6 @@ void CategoryBranch::FillCategory(Category& cat){
 
   m_FitBinBranch.FillFitBin(cat.GetFitBin());
 
-  m_Tree->Fill();
-
   if(m_Tree)
     m_Tree->Fill();
 }
