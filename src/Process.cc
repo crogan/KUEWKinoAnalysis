@@ -336,7 +336,10 @@ void ProcessBranch::FillProcess(Process& proc, TFile& file){
     while(c != p->second.end()){
       // write FitBin to output file for each subprocess/category
       file.cd();
-      file.mkdir(c->first.c_str(),"",true);
+      if(!file.cd(c->first.c_str()))
+	file.mkdir(c->first.c_str());
+      file.cd();
+	 
       //c->second->WriteHistogram(m_SubProc+"_"+c->first, m_Proc, file);
       c->second->WriteHistogram(m_SubProc, c->first, file);
       // clean up this bin (assuming we won't need it after writing...)
