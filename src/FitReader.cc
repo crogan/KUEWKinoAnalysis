@@ -14,7 +14,9 @@
 ////////// FitReader class
 ///////////////////////////////////////////
 
-FitReader::FitReader(const string& inputfile)
+FitReader::FitReader(const string& inputfile,
+		     const string& otherfile,
+		     const string& otherfold)
   : m_File(inputfile.c_str(), "READ") {
 
   InitializeRecipes();
@@ -23,6 +25,14 @@ FitReader::FitReader(const string& inputfile)
   
   ReadCategories();
 
+  if(otherfile != ""){
+    m_FilePtr = new TFile(otherfile.c_str(), "READ");
+    if(!m_FilePtr || !m_FilePtr->IsOpen())
+      m_FilePtr = nullptr;
+    m_FileFold = otherfold+"/";
+  } else {
+    m_FilePtr = nullptr;
+  }
 }
 
 FitReader::~FitReader(){
@@ -135,38 +145,73 @@ const TH1D* FitReader::GetHistogram(const Category&   cat,
   }
 }
 
+TGraphErrors* FitReader::GetTotalBackground(const CategoryList& cat){
+  TH1D* hist = nullptr;
+  int Ncat = cat.GetN();
+  for(int i = 0; i < Ncat; i++){
+    string shist = m_FileFold+cat[i].Label()+"_"+cat[i].GetLabel()+"/total_background";
+    cout << shist << endl;
+    if(hist == nullptr)
+      hist = (TH1D*) m_FilePtr->Get((m_FileFold+"/"+shist).c_str())->Clone((shist+"_total").c_str());
+    else
+      hist->Add((TH1D*) m_FilePtr->Get((m_FileFold+"/"+shist).c_str()));
+  }
+
+  int NB = hist->GetNbinsX();
+  
+   vector<double> X;
+   vector<double> Xerr;
+   vector<double> Y;
+   vector<double> Yerr;
+   for(int i = 0; i < NB; i++){
+     X.push_back(0.5 + i);
+     Xerr.push_back(0.5);
+     Y.push_back(hist->GetBinContent(i+1));
+     Yerr.push_back(hist->GetBinError(i+1));
+   }
+   
+   TGraphErrors* gr = new TGraphErrors(NB, &X[0], &Y[0],  &Xerr[0], &Yerr[0]);
+
+   return gr;
+   
+}
+
 bool FitReader::IsFilled(const Category&   cat,
 			 const Process&    proc,
 			 const Systematic& sys) const {
+ 
   if(!sys){
     if(m_ProcHist.count(proc) == 0)
       m_ProcHist[proc] = map<Category,TH1D*>();
     if(m_ProcHist[proc].count(cat) == 0){
       string shist = cat.Label()+"_"+cat.GetLabel()+"/"+proc.Name();
-      m_ProcHist[proc][cat] = (TH1D*) m_File.Get(shist.c_str());
+      if(proc.Type() == kData || !m_FilePtr)
+	m_ProcHist[proc][cat] = (TH1D*) m_File.Get(shist.c_str());
+      else
+	m_ProcHist[proc][cat] = (TH1D*) m_FilePtr->Get((m_FileFold+shist).c_str());
     }
     
     return m_ProcHist[proc][cat];
     
   } else {
-     if(m_ProcHistSys.count(proc) == 0)
-       m_ProcHistSys[proc] = map<Systematic,map<Category,pair<TH1D*,TH1D*> > >();
-     if(m_ProcHistSys[proc].count(sys) == 0)
-       m_ProcHistSys[proc][sys] = map<Category,pair<TH1D*,TH1D*> >();
-     if(m_ProcHistSys[proc][sys].count(cat) == 0){
-       m_ProcHistSys[proc][sys][cat] = pair<TH1D*,TH1D*>(nullptr,nullptr);
+    if(m_ProcHistSys.count(proc) == 0)
+      m_ProcHistSys[proc] = map<Systematic,map<Category,pair<TH1D*,TH1D*> > >();
+    if(m_ProcHistSys[proc].count(sys) == 0)
+      m_ProcHistSys[proc][sys] = map<Category,pair<TH1D*,TH1D*> >();
+    if(m_ProcHistSys[proc][sys].count(cat) == 0){
+      m_ProcHistSys[proc][sys][cat] = pair<TH1D*,TH1D*>(nullptr,nullptr);
        
-       string label = cat.Label()+"_"+cat.GetLabel();
-       string shistUp   = label+"/"+proc.Name()+"_"+sys.Label()+"Up";
-       string shistDown = label+"/"+proc.Name()+"_"+sys.Label()+"Down";
+      string label = cat.Label()+"_"+cat.GetLabel();
+      string shistUp   = label+"/"+proc.Name()+"_"+sys.Label()+"Up";
+      string shistDown = label+"/"+proc.Name()+"_"+sys.Label()+"Down";
        
-       m_ProcHistSys[proc][sys][cat].first  = (TH1D*) m_File.Get(shistUp.c_str());
-       m_ProcHistSys[proc][sys][cat].second = (TH1D*) m_File.Get(shistDown.c_str());
-     }
+      m_ProcHistSys[proc][sys][cat].first  = (TH1D*) m_File.Get(shistUp.c_str());
+      m_ProcHistSys[proc][sys][cat].second = (TH1D*) m_File.Get(shistDown.c_str());
+    }
      
-     return (sys.IsUp() ? m_ProcHistSys[proc][sys][cat].first :
-	                  m_ProcHistSys[proc][sys][cat].second);
-  }
+    return (sys.IsUp() ? m_ProcHistSys[proc][sys][cat].first :
+	    m_ProcHistSys[proc][sys][cat].second);
+  }    
 }
 
 void FitReader::PrintCategories(bool verbose){
@@ -501,18 +546,25 @@ TCanvas* FitReader::Plot1Dstack(const VS& proc,
     hists[i]->Draw("SAME HIST");
   }
 
-  vector<double> X;
-  vector<double> Xerr;
-  vector<double> Y;
-  vector<double> Yerr;
-  for(int i = 0; i < NB; i++){
-    X.push_back(hists[0]->GetXaxis()->GetBinCenter(i+1));
-    Xerr.push_back(0.5);
-    Y.push_back(hists[0]->GetBinContent(i+1));
-    Yerr.push_back(hists[0]->GetBinError(i+1));
+  TGraphErrors* gr = nullptr;
+  if(!m_FilePtr){
+    vector<double> X;
+    vector<double> Xerr;
+    vector<double> Y;
+    vector<double> Yerr;
+    for(int i = 0; i < NB; i++){
+      X.push_back(hists[0]->GetXaxis()->GetBinCenter(i+1));
+      Xerr.push_back(0.5);
+      Y.push_back(hists[0]->GetBinContent(i+1));
+      Yerr.push_back(hists[0]->GetBinError(i+1));
+    }
+    gr = (TGraphErrors*) new TGraphErrors(NB, &X[0], &Y[0],  &Xerr[0], &Yerr[0]);
+  } else {
+    cout << "here " << gr << endl;
+    gr = (TGraphErrors*) GetTotalBackground(cat);
+    cout << "here " << gr << endl;
   }
-
-  TGraphErrors* gr = new TGraphErrors(NB, &X[0], &Y[0],  &Xerr[0], &Yerr[0]);
+    
   gr->SetMarkerSize(0);
   gr->SetLineColor(kBlack);
   gr->SetFillColor(kBlack);
@@ -635,8 +687,8 @@ TCanvas* FitReader::Plot1Dstack(const VS& proc,
 
 void FitReader::InitializeRecipes(){
   // Processes
-  m_Title["ttbar"] = "Data";
-  m_Color["ttbar"] = kBlack;
+
+  m_Strings["Data"] = VS().a("data_obs");
   
   m_Title["ttbar"] = "t #bar{t} + jets";
   m_Color["ttbar"] = 7011;

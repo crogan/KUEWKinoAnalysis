@@ -323,8 +323,8 @@ void ProcessBranch::FillProcess(Process& proc, TFile& file){
   m_ProcType = proc.Type();
   
   // make histogram output directories for this process
-  file.cd();
-  file.mkdir(proc.Name().c_str());
+  //file.cd();
+  //file.mkdir(proc.Name().c_str());
   
   // loop through all subprocesses (systematics)
   auto p = proc.m_ProcBins.begin();
@@ -335,7 +335,10 @@ void ProcessBranch::FillProcess(Process& proc, TFile& file){
     auto c = p->second.begin();
     while(c != p->second.end()){
       // write FitBin to output file for each subprocess/category
-      c->second->WriteHistogram(m_SubProc+"_"+c->first, m_Proc, file);
+      file.cd();
+      file.mkdir(c->first.c_str(),"",true);
+      //c->second->WriteHistogram(m_SubProc+"_"+c->first, m_Proc, file);
+      c->second->WriteHistogram(m_SubProc, c->first, file);
       // clean up this bin (assuming we won't need it after writing...)
       c->second->Clear();
       
