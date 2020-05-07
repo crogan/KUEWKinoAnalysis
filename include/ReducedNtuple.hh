@@ -48,6 +48,8 @@ private:
 
   double m_HT;
 
+  bool m_EventFilter;
+  
   bool m_METtrigger;
   bool m_METHTtrigger;
   bool m_METORtrigger;

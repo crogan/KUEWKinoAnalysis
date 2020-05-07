@@ -345,6 +345,8 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
 
   tree->Branch("NPV", &m_NPV);
 
+  tree->Branch("EventFilter", &m_EventFilter);
+  
   tree->Branch("METtrigger", &m_METtrigger);
   tree->Branch("METHTtrigger", &m_METHTtrigger);
   tree->Branch("METORtrigger", &m_METORtrigger);
@@ -710,12 +712,11 @@ void ReducedNtuple<Base>::ClearVariables(){
 template <class Base>
 void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   AnalysisBase<Base>::SetSystematic(sys);
- 
-  if(!AnalysisBase<Base>::PassEventFilter())
-    return;
+
+  m_EventFilter = AnalysisBase<Base>::PassEventFilter();
   
   if(AnalysisBase<Base>::IsData())
-    if(!AnalysisBase<Base>::IsGoodEvent())
+    if(!AnalysisBase<Base>::IsGoodEvent() || !m_EventFilter)
       return;
   
   bool good_PV;
