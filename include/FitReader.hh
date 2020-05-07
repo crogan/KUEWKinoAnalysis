@@ -8,6 +8,7 @@
 #include <TTree.h>
 #include <iostream>
 #include <vector>
+#include <TGraphErrors.h>
 
 #include "Category.hh"
 #include "Process.hh"
@@ -22,7 +23,9 @@ using std::pair;
 
 class FitReader {
 public:
-  FitReader(const string& inputfile);
+  FitReader(const string& inputfile,
+	    const string& otherfile = "",
+	    const string& otherfold = "");
 
   virtual ~FitReader();
 
@@ -55,7 +58,10 @@ public:
   const Systematics&  GetSystematics() const;
   
 private:
-  mutable TFile m_File;
+  mutable TFile  m_File;
+  
+  mutable TFile* m_FilePtr;
+  string         m_FileFold;
 
   mutable map<Process,Systematics> m_ProcSys;
   mutable map<Process,map<Category,TH1D*> > m_ProcHist;
@@ -78,6 +84,8 @@ private:
   map<string,VS> m_Strings;
   void InitializeRecipes();
   string GetSignalTitle(const string& label);
+
+  TGraphErrors* GetTotalBackground(const CategoryList& cat);
   
 };
 

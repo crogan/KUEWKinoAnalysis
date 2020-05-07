@@ -131,28 +131,27 @@ CategoryList CategoryTool::GetCategories() const {
 
   cout << "Initializing 0L" << endl;
   CategoryList Cats_1L;
-  Cats_1L += Category(L_elp_0, "1L"); 
-  Cats_1L += Category(L_elm_0, "1L");
-  Cats_1L += Category(L_mup_0, "1L");
-  Cats_1L += Category(L_mum_0, "1L");
+  Cats_1L += Category(L_elp_0, "Ch1L"); 
+  Cats_1L += Category(L_elm_0, "Ch1L");
+  Cats_1L += Category(L_mup_0, "Ch1L");
+  Cats_1L += Category(L_mum_0, "Ch1L");
 
   cout << "Initializing 1L" << endl;
   CategoryList Cats_2LOS;
-  Cats_2LOS += Category(L_OS_el_el,  "2LOS");
-  Cats_2LOS += Category(L_OS_mu_mu,  "2LOS");
-  Cats_2LOS += Category(L_OS_el_mu,  "2LOS");
-  Cats_2LOS += Category(L_OS_elel_0, "2LOS");
-  Cats_2LOS += Category(L_OS_mumu_0, "2LOS");
-  Cats_2LOS += Category(L_OS_elmu_0, "2LOS");
+  Cats_2LOS += Category(L_OS_el_el,  "Ch2LOS");
+  Cats_2LOS += Category(L_OS_el_mu,  "Ch2LOS");
+  Cats_2LOS += Category(L_OS_elel_0, "Ch2LOS");
+  Cats_2LOS += Category(L_OS_mumu_0, "Ch2LOS");
+  Cats_2LOS += Category(L_OS_elmu_0, "Ch2LOS");
 
   cout << "Initializing 2L" << endl;
   CategoryList Cats_2LSS;
-  Cats_2LSS += Category(L_SS_el_el,  "2LSS");
-  Cats_2LSS += Category(L_SS_mu_mu,  "2LSS");
-  Cats_2LSS += Category(L_SS_el_mu,  "2LSS");
-  Cats_2LSS += Category(L_SS_elel_0, "2LSS");
-  Cats_2LSS += Category(L_SS_mumu_0, "2LSS");
-  Cats_2LSS += Category(L_SS_elmu_0, "2LSS");
+  Cats_2LSS += Category(L_SS_el_el,  "Ch2LSS");
+  Cats_2LSS += Category(L_SS_mu_mu,  "Ch2LSS");
+  Cats_2LSS += Category(L_SS_el_mu,  "Ch2LSS");
+  Cats_2LSS += Category(L_SS_elel_0, "Ch2LSS");
+  Cats_2LSS += Category(L_SS_mumu_0, "Ch2LSS");
+  Cats_2LSS += Category(L_SS_elmu_0, "Ch2LSS");
 
   vector<double> BinsM_0L;
   BinsM_0L.push_back(0.);
