@@ -135,172 +135,170 @@ private:
 
   // Object Counting Variables
   
-  vector<int> m_Njet_ISR;
-  vector<int> m_Njet_S;
-  vector<int> m_Nbjet_ISR;
-  vector<int> m_Nbjet_S;
-  vector<int> m_Nlep_ISR;
-  vector<int> m_Nlep_S;
-  vector<int> m_NSV_ISR;
-  vector<int> m_NSV_S;
-  vector<vector<int> > m_index_jet_ISR;
-  vector<vector<int> > m_index_jet_S;
-  vector<vector<int> > m_index_SV_ISR;
-  vector<vector<int> > m_index_SV_S;
-  vector<vector<int> > m_index_lep_ISR;
-  vector<vector<int> > m_index_lep_S;
-  vector<vector<double> > m_dphi_lep_S;
-  vector<vector<double> > m_cos_lep_S;
+  int m_Njet_ISR;
+  int m_Njet_S;
+  int m_Nbjet_ISR;
+  int m_Nbjet_S;
+  int m_Nlep_ISR;
+  int m_Nlep_S;
+  int m_NSV_ISR;
+  int m_NSV_S;
+  vector<int> m_index_jet_ISR;
+  vector<int> m_index_jet_S;
+  vector<int> m_index_SV_ISR;
+  vector<int> m_index_SV_S;
+  vector<int> m_index_lep_ISR;
+  vector<int> m_index_lep_S;
   
-  vector<int> m_Njet_a;
-  vector<int> m_Njet_b;
-  vector<int> m_Nbjet_a;
-  vector<int> m_Nbjet_b;
-  vector<int> m_Nlep_a;
-  vector<int> m_Nlep_b;
-  vector<int> m_NSV_a;
-  vector<int> m_NSV_b;
+  vector<double> m_dphi_lep_S;
+  vector<double> m_cos_lep_S;
+  vector<double> m_dphi_SV_S;
+  vector<double> m_cos_SV_S;
+  vector<double> m_dphi_jet_S;
+  vector<double> m_cos_jet_S;
+  
+  vector<double> m_dphiMET_lep_S;
+  vector<double> m_dphiMET_SV_S; 
+  vector<double> m_dphiMET_jet_S; 
+  
+  int m_Njet_a;
+  int m_Njet_b;
+  int m_Nbjet_a;
+  int m_Nbjet_b;
+  int m_Nlep_a;
+  int m_Nlep_b;
+  int m_NSV_a;
+  int m_NSV_b;
  
-  vector<vector<int> > m_index_jet_a;
-  vector<vector<int> > m_index_jet_b;
-  vector<vector<int> > m_index_lep_a;
-  vector<vector<int> > m_index_lep_b;
-  vector<vector<int> > m_index_SV_a;
-  vector<vector<int> > m_index_SV_b;
+  vector<int> m_index_jet_a;
+  vector<int> m_index_jet_b;
+  vector<int> m_index_lep_a;
+  vector<int> m_index_lep_b;
+  vector<int> m_index_SV_a;
+  vector<int> m_index_SV_b;
   
   // Kinematic Variables
 
-  vector<double> m_PTCM;
-  vector<double> m_cosCM;
-  vector<double> m_dphiCM;
-  vector<double> m_dphiCMI;
+  double m_PTCM;
+  double m_cosCM;
+  double m_dphiCM;
+  double m_dphiCMI;
   
-  vector<double> m_MS;
-  vector<double> m_PS;
-  vector<double> m_cosS;
-  vector<double> m_dphiS;
-  vector<double> m_dphiSI;
-  vector<double> m_PTS;
-  vector<double> m_PzS;
+  double m_MS;
+  double m_PS;
+  double m_cosS;
+  double m_dphiS;
+  double m_dphiSI;
+  double m_PTS;
+  double m_PzS;
 
-  vector<double> m_MX3a;
-  vector<double> m_cosX3a;
-  vector<double> m_MX3b;
-  vector<double> m_cosX3b;
-  vector<double> m_EVa;
-  vector<double> m_EVb;
-  vector<double> m_PVa;
-  vector<double> m_PVb;
-  vector<double> m_EJa;
-  vector<double> m_EJb;
-  vector<double> m_PJa;
-  vector<double> m_PJb;
+  double m_MX3a;
+  double m_MX3b;
+  double m_EVa;
+  double m_EVb;
+  double m_PVa;
+  double m_PVb;
+  double m_EJa;
+  double m_EJb;
+  double m_PJa;
+  double m_PJb;
 
-  vector<double> m_MX2a;
-  vector<double> m_cosX2a;
-  vector<double> m_MX2b;
-  vector<double> m_cosX2b;
-  vector<double> m_ELa;
-  vector<double> m_ELb;
-  vector<double> m_PLa;
-  vector<double> m_PLb;
+  double m_MX2a;
+  double m_MX2b;
+  double m_ELa;
+  double m_ELb;
+  double m_PLa;
+  double m_PLb;
 
-  vector<double> m_MV;
-  vector<double> m_PV;
-  vector<double> m_MVa;
-  vector<double> m_MVb;
+  double m_MV;
+  double m_PV;
+  double m_MVa;
+  double m_MVb;
 
-  vector<double> m_MJ;
-  vector<double> m_ML;
-  vector<double> m_EJ;
-  vector<double> m_EL;
-  vector<double> m_PJ;
-  vector<double> m_PL;
+  double m_MJ;
+  double m_ML;
+  double m_EJ;
+  double m_EL;
+  double m_PJ;
+  double m_PL;
   
-  vector<double> m_PX3;
-  vector<double> m_PX3_BoostT;
-  vector<double> m_MX3a_BoostT;
-  vector<double> m_MX3b_BoostT;
+  double m_PX3;
+  double m_PX3_BoostT;
+  double m_MX3a_BoostT;
+  double m_MX3b_BoostT;
+  double m_Mperp; 
 
-  vector<double> m_PV_BoostT;
+  double m_PV_BoostT;
   
-  vector<double> m_EVa_BoostT;
-  vector<double> m_EVb_BoostT;
-  vector<double> m_PVa_BoostT;
-  vector<double> m_PVb_BoostT;
+  double m_EVa_BoostT;
+  double m_EVb_BoostT;
+  double m_PVa_BoostT;
+  double m_PVb_BoostT;
 
-  vector<double> m_EJ_BoostT;
-  vector<double> m_EL_BoostT;
-  vector<double> m_PJ_BoostT;
-  vector<double> m_PL_BoostT;
+  double m_EJ_BoostT;
+  double m_EL_BoostT;
+  double m_PJ_BoostT;
+  double m_PL_BoostT;
   
-  vector<double> m_MJa;
-  vector<double> m_MJb;
-  vector<double> m_MLa;
-  vector<double> m_MLb;
-  vector<double> m_cosJa;
-  vector<double> m_cosJb;
-  vector<double> m_cosLa;
-  vector<double> m_cosLb;
+  double m_MJa;
+  double m_MJb;
+  double m_MLa;
+  double m_MLb;
+  double m_cosJa;
+  double m_cosJb;
+  double m_cosLa;
+  double m_cosLb;
 
-  vector<double> m_H11S;
-  vector<double> m_H21S;
-  vector<double> m_HT21S;
-  vector<double> m_H22S;
-  vector<double> m_HT22S;
-  vector<double> m_H42S;
-  vector<double> m_HT42S;
+  double m_H11S;
+  double m_H21S;
+  double m_HT21S;
+  double m_H22S;
+  double m_HT22S;
+  double m_H42S;
+  double m_HT42S;
   
-  vector<double> m_H11X3a;
-  vector<double> m_H11X3b;
-  vector<double> m_H21X3a;
-  vector<double> m_H21X3b;
+  double m_H11X3a;
+  double m_H11X3b;
+  double m_H21X3a;
+  double m_H21X3b;
 
   // ISR related variables
-  vector<double> m_PTISR;
-  vector<double> m_MISR;
-  vector<double> m_RISR;
-
-  // which tree are we using for PAIR?
-  // vanilla - index 0
-  bool m_Is_1L;
-  bool m_Is_2L;
-  bool m_Is_3L;
-  bool m_Is_4L;
+  double m_PTISR;
+  double m_MISR;
+  double m_RISR;
  
   // RestFrames frames and friends
-  LabRecoFrame*     LAB[2];
-  DecayRecoFrame*   CM[2];
-  DecayRecoFrame*   S[2];
-  DecayRecoFrame*   X3a[2];
-  DecayRecoFrame*   X3b[2];
-  DecayRecoFrame*   X2a[2];
-  DecayRecoFrame*   X2b[2];
-  SelfAssemblingRecoFrame*   saJa[2];
-  SelfAssemblingRecoFrame*   saJb[2];
-  SelfAssemblingRecoFrame*   saLa[2];
-  SelfAssemblingRecoFrame*   saLb[2];
-  VisibleRecoFrame*   ISR[2];
-  VisibleRecoFrame*   Ja[2];
-  VisibleRecoFrame*   Jb[2];
-  VisibleRecoFrame*   La[2];
-  VisibleRecoFrame*   Lb[2];
-  InvisibleRecoFrame* X1a[2];
-  InvisibleRecoFrame* X1b[2];
+  LabRecoFrame*     LAB;
+  DecayRecoFrame*   CM;
+  DecayRecoFrame*   S;
+  DecayRecoFrame*   X3a;
+  DecayRecoFrame*   X3b;
+  DecayRecoFrame*   X2a;
+  DecayRecoFrame*   X2b;
+  SelfAssemblingRecoFrame*   saJa;
+  SelfAssemblingRecoFrame*   saJb;
+  SelfAssemblingRecoFrame*   saLa;
+  SelfAssemblingRecoFrame*   saLb;
+  VisibleRecoFrame*   ISR;
+  VisibleRecoFrame*   Ja;
+  VisibleRecoFrame*   Jb;
+  VisibleRecoFrame*   La;
+  VisibleRecoFrame*   Lb;
+  InvisibleRecoFrame* X1a;
+  InvisibleRecoFrame* X1b;
 
-  InvisibleGroup*       INV[2];
-  SetMassInvJigsaw*     InvM[2];
-  SetRapidityInvJigsaw* InvEta[2];
-  MinMassesSqInvJigsaw* InvSplit[2];
+  InvisibleGroup*       INV;
+  SetMassInvJigsaw*     InvM;
+  SetRapidityInvJigsaw* InvEta;
+  MinMassesSqInvJigsaw* InvSplit;
   
-  CombinatoricGroup*   COMB_J[2];
-  MinMassesCombJigsaw*   CombSplit_ISR[2];
-  MinMassesSqCombJigsaw* CombSplit_J[2];
+  CombinatoricGroup*   COMB_J;
+  MinMassesCombJigsaw*   CombSplit_ISR;
+  MinMassesSqCombJigsaw* CombSplit_J;
 
-  CombinatoricGroup*   COMB_L[2];
-  MinMassesSqCombJigsaw* CombSplit_L[2];
+  CombinatoricGroup*   COMB_L;
+  MinMassesSqCombJigsaw* CombSplit_L;
  
-  
 };
 
 #endif
