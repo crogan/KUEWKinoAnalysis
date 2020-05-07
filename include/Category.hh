@@ -13,10 +13,6 @@
 class Leptonic;
 class Hadronic;
 
-using std::vector;
-using std::string;
-using std::map;
-
 ///////////////////////////////////////////
 ////////// Category class
 ///////////////////////////////////////////
@@ -58,14 +54,14 @@ public:
   bool operator > (const Category&) const;
 
   CategoryList CreateLeptonIDRegions(int NID = 3, int Nfakemax = 2);
-  CategoryList CreateGenericRegions(const string& label, const vector<double>& bin_edges);
+  CategoryList CreateGenericRegions(const string& label, const VD& bin_edges);
   CategoryList CreateHadronicSRegions(const vector<const Hadronic*>& had) const;
   CategoryList CreateHadronicISRRegions(const vector<const Hadronic*>& had) const;
 
   Category& SetFitBin(const FitBin& bin);
   const FitBin& GetFitBin() const;
   
-  FitBin* GetNewFitBin(const std::string& process) const;
+  FitBin* GetNewFitBin(const string& process) const;
 
 private:
   CriteriaList m_Criteria;
@@ -99,14 +95,16 @@ public:
 
   CategoryList Filter(const string& label) const;
   CategoryList Remove(const string& label) const;
-  CategoryList FilterOR(vector<string>& labels) const;
-  CategoryList FilterAND(vector<string>& labels) const;
+  CategoryList FilterOR(VS& labels) const;
+  CategoryList FilterAND(VS& labels) const;
+  CategoryList RemoveOR(VS& labels) const;
+  CategoryList RemoveAND(VS& labels) const;
 
   void Print() const;
 
   CategoryList CreateFitBinRegions(const FitBin& bin) const;
   CategoryList CreateLeptonIDRegions(int NID = 3, int Nfakemax = 2) const;
-  CategoryList CreateGenericRegions(const string& label, const vector<double>& bin_edges) const;
+  CategoryList CreateGenericRegions(const string& label, const VD& bin_edges) const;
   CategoryList CreateHadronicSRegions(const vector<const Hadronic*>& had) const;
   CategoryList CreateHadronicISRRegions(const vector<const Hadronic*>& had) const;
 

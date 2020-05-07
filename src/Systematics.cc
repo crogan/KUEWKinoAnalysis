@@ -4,7 +4,7 @@
 ////////// Systematic class
 ///////////////////////////////////////////
 
-Systematic::Systematic(const std::string& label){
+Systematic::Systematic(const string& label){
   m_Label = label;
   m_IsUp = true;
 }
@@ -39,7 +39,7 @@ bool Systematic::IsDefault() const {
   return IsSame("Default");
 }
  
-bool Systematic::IsSame(const std::string& label) const {
+bool Systematic::IsSame(const string& label) const {
   return m_Label == label;
 }
 
@@ -47,7 +47,7 @@ bool Systematic::IsSame(const Systematic& sys) const {
   return IsSame(sys.Label());
 }
 
-bool Systematic::operator == (const std::string& label) const {
+bool Systematic::operator == (const string& label) const {
   return IsSame(label);
 }
 
@@ -55,7 +55,7 @@ bool Systematic::operator == (const Systematic& sys) const {
   return IsSame(sys);
 }
 
-bool Systematic::operator != (const std::string& label) const {
+bool Systematic::operator != (const string& label) const {
   return !IsSame(label);
 }
 
@@ -79,7 +79,7 @@ bool Systematic::operator > (const Systematic& sys) const {
   return (Label() > sys.Label());
 }
 
-std::string Systematic::TreeName(const std::string& name) const {
+std::string Systematic::TreeName(const string& name) const {
 
   if(this->IsDefault())
     return name;
@@ -144,7 +144,7 @@ int Systematics::GetN() const {
   return m_N;
 }
 
-Systematics& Systematics::Add(const std::string& label){
+Systematics& Systematics::Add(const string& label){
   if(Contains(label))
     return *this;
       
@@ -173,7 +173,7 @@ Systematics& Systematics::Add(const Systematics& sys){
   return *this;
 }
 
-Systematics& Systematics::operator += (const std::string& label){
+Systematics& Systematics::operator += (const string& label){
   return Add(label);
 }
 
@@ -185,7 +185,7 @@ Systematics& Systematics::operator += (const Systematics& sys){
   return Add(sys);
 }
 
-bool Systematics::Contains(const std::string& label) const {
+bool Systematics::Contains(const string& label) const {
   for(int i = 0; i < m_N; i++)
     if(*m_Sys[i] == label)
       return true;
@@ -201,7 +201,7 @@ bool Systematics::Contains(const Systematic& sys) const {
   return false;
 }
 
-bool Systematics::operator == (const std::string& label) const {
+bool Systematics::operator == (const string& label) const {
   return Contains(label);
 }
 
@@ -209,7 +209,7 @@ bool Systematics::operator == (const Systematic& sys) const {
   return Contains(sys);
 }
 
-bool Systematics::operator != (const std::string& label) const {
+bool Systematics::operator != (const string& label) const {
   return !Contains(label);
 }
 
@@ -217,7 +217,7 @@ bool Systematics::operator != (const Systematic& sys) const {
   return !Contains(sys);
 }
 
-Systematics Systematics::Filter(const std::string& label) const {
+Systematics Systematics::Filter(const string& label) const {
   Systematics list;
   for(auto s : m_Sys)
     if(s->Label().find(label) != std::string::npos)
@@ -226,12 +226,69 @@ Systematics Systematics::Filter(const std::string& label) const {
   return list;
 }
 
-Systematics Systematics::Remove(const std::string& label) const {
+Systematics Systematics::Remove(const string& label) const {
   Systematics list;
   for(auto s : m_Sys)
     if(s->Label().find(label) == std::string::npos)
       list += *s;
 
+  return list;
+}
+
+Systematics Systematics::FilterOR(const VS& labels) const {
+  Systematics list;
+  for(auto s : m_Sys)
+    for(auto l : labels)
+      if(s->Label().find(l) != std::string::npos){
+	list += *s;
+	break;
+      }
+  
+  return list;
+}
+
+Systematics Systematics::FilterAND(const VS& labels) const {
+  Systematics list;
+  for(auto s : m_Sys){
+    bool match = true;
+    for(auto l : labels)
+      if(s->Label().find(l) == std::string::npos){
+	match = false;
+	break;
+      }
+    if(match)
+      list += *s;
+  }
+  
+  return list;
+}
+
+Systematics Systematics::RemoveOR(const VS& labels) const {
+  Systematics list;
+  for(auto s : m_Sys){
+    bool match = false;
+    for(auto l : labels)
+      if(s->Label().find(l) != std::string::npos){
+	match = true;
+	break;
+      }
+    if(!match)
+      list += *s;
+  }
+  
+  return list;
+}
+
+
+Systematics Systematics::RemoveAND(const VS& labels) const {
+  Systematics list;
+  for(auto s : m_Sys)
+    for(auto l : labels)
+      if(s->Label().find(l) == std::string::npos){
+	list += *s;
+	break;
+      }
+  
   return list;
 }
 

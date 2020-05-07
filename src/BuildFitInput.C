@@ -68,16 +68,16 @@ int main(int argc, char* argv[]) {
       i++;
       proc_to_add.push_back(argv[i]);
     }
-    if(strncmp(argv[i],"+bkg", 4) == 0){
+    if(strncmp(argv[i],"++bkg", 5) == 0){
       addBkg = true;
     }
-    if(strncmp(argv[i],"+sig", 4) == 0){
+    if(strncmp(argv[i],"++sig", 5) == 0){
       addSig = true;
     }
-    if(strncmp(argv[i],"+data", 5) == 0){
+    if(strncmp(argv[i],"++data", 6) == 0){
       addData = true;
     }
-    if(strncmp(argv[i],"+all", 4) == 0){
+    if(strncmp(argv[i],"++all", 5) == 0){
       addBkg  = true;
       addSig  = true;
       addData = true;
@@ -98,10 +98,10 @@ int main(int argc, char* argv[]) {
     cout << "   --ouput(-o) [file]  output root file" << endl;
     cout << "   -year [year]        year to process" << endl;
     cout << "   +proc [label]       add processes matching label (can have >1 of these)" << endl;
-    cout << "   +bkg                add all background samples for year" << endl;
-    cout << "   +sig                add all signal samples" << endl;
-    cout << "   +data               add all background samples" << endl;
-    cout << "   +all                add all samples" << endl;
+    cout << "   ++bkg               add all background samples for year" << endl;
+    cout << "   ++sig               add all signal samples" << endl;
+    cout << "   ++data              add all background samples" << endl;
+    cout << "   ++all               add all samples" << endl;
 
     return 0;
   }

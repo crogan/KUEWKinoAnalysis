@@ -4,6 +4,8 @@
 #include <iostream>
 #include <vector>
 
+#include "Criteria.hh"
+
 class Systematics;
 
 ///////////////////////////////////////////
@@ -12,7 +14,7 @@ class Systematics;
 
 class Systematic {
 public:
-  explicit Systematic(const std::string& label = "Default");
+  explicit Systematic(const string& label = "Default");
     
   virtual ~Systematic();
 
@@ -26,11 +28,11 @@ public:
   bool IsDefault() const;
   bool operator !() const { return IsDefault(); }
 
-  bool IsSame(const std::string& label) const;
+  bool IsSame(const string& label) const;
   bool IsSame(const Systematic& sys) const;
-  bool operator == (const std::string& label) const;
+  bool operator == (const string& label) const;
   bool operator == (const Systematic& sys) const;
-  bool operator != (const std::string& label) const;
+  bool operator != (const string& label) const;
   bool operator != (const Systematic& sys) const;
 
   // is/isnot this contained in sys
@@ -40,7 +42,7 @@ public:
   bool operator < (const Systematic& sys) const;
   bool operator > (const Systematic& sys) const;
 
-  std::string TreeName(const std::string& name) const;
+  std::string TreeName(const string& name) const;
 
   static Systematic& Default();
     
@@ -68,22 +70,26 @@ public:
 
   int GetN() const;
 
-  Systematics& Add(const std::string& label);
+  Systematics& Add(const string& label);
   Systematics& Add(const Systematic& sys);
   Systematics& Add(const Systematics& sys);
-  Systematics& operator += (const std::string& label);
+  Systematics& operator += (const string& label);
   Systematics& operator += (const Systematic& sys);
   Systematics& operator += (const Systematics& sys);
 
-  bool Contains(const std::string& label) const;
+  bool Contains(const string& label) const;
   bool Contains(const Systematic& sys) const;
-  bool operator == (const std::string& label) const;
+  bool operator == (const string& label) const;
   bool operator == (const Systematic& sys) const;
-  bool operator != (const std::string& label) const;
+  bool operator != (const string& label) const;
   bool operator != (const Systematic& sys) const;
 
-  Systematics Filter(const std::string& label) const;
-  Systematics Remove(const std::string& label) const;
+  Systematics Filter(const string& label) const;
+  Systematics FilterOR(const VS& labels) const;
+  Systematics FilterAND(const VS& labels) const;
+  Systematics Remove(const string& label) const;
+  Systematics RemoveOR(const VS& labels) const;
+  Systematics RemoveAND(const VS& labels) const;
     
 private:
   int m_N;

@@ -106,3 +106,112 @@ CriteriaList& CriteriaList::operator += (const CriteriaList& criteria){
   
   return *this;
 }
+
+///////////////////////////////////////////
+////////// VS class
+///////////////////////////////////////////
+
+VS::VS() {}
+
+VS::VS(const vector<string>& vs){
+  for(auto s : vs)
+    *this += s;
+}
+
+VS::~VS() {}
+
+VS& VS::a(const string& s){
+  (*this).push_back(s);
+  return *this;
+}
+
+VS& VS::operator += (const string& entry){
+  this->push_back(entry);
+  return *this;
+}
+
+VS& VS::operator += (const vector<string>& list){
+  for(int i = 0; i < int(list.size()); i++)
+    this->push_back(list[i]);
+  return *this;
+}
+ 
+VS VS::Filter(const string& label) const {
+  VS list;
+
+  for(auto s : *this)
+    if(s.find(label) != std::string::npos)
+      list += s;
+  
+  return list;
+}
+
+VS VS::Remove(const string& label) const {
+  VS list;
+
+  for(auto s : *this)
+    if(s.find(label) == std::string::npos)
+      list += s;
+  
+  return list;
+}
+
+VS VS::FilterOR(VS& labels) const {
+  VS list;
+  
+  for(auto s : *this)
+    for(auto l : labels)
+      if(s.find(l) != std::string::npos){
+	list += s;
+	break;
+      }
+  
+  return list;
+}
+
+VS VS::FilterAND(VS& labels) const {
+  VS list;
+  
+  for(auto s : *this){
+    bool match = true;
+    for(auto l : labels)
+      if(s.find(l) == std::string::npos){
+	match = false;
+	break;
+      }
+    if(match)
+      list += s;
+  }
+  
+  return list;
+}
+
+VS VS::RemoveOR(VS& labels) const {
+  VS list;
+  
+  for(auto s : *this){
+    bool match = false;
+    for(auto l : labels)
+      if(s.find(l) != std::string::npos){
+	match = true;
+	break;
+      }
+    if(!match)
+      list += s;
+  }
+  
+  return list;
+}
+
+VS VS::RemoveAND(VS& labels) const {
+  VS list;
+  
+  for(auto s : *this)
+    for(auto l : labels)
+      if(s.find(l) == std::string::npos){
+	list += s;
+	break;
+      }
+  
+  return list;
+}

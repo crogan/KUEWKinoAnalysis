@@ -3,9 +3,13 @@
 
 #include <iostream>
 #include <vector>
+#include <map>
 
+using std::cout;
+using std::endl;
 using std::vector;
 using std::string;
+using std::map;
 using std::pair;
 
 ///////////////////////////////////////////
@@ -50,37 +54,56 @@ private:
   vector<Criteria*> m_Criteria;
 };
 
-///////////////////////////////////////////
-////////// SL (string list) class
-///////////////////////////////////////////
-
-class SL : public std::vector<std::string> {
+class VD : public vector<double> {
 public:
-  SL(){ }
-  virtual ~SL(){ }
+  VD() {}
 
-  SL& a(const std::string& s){
-    (*this).push_back(s);
+  VD(const vector<double>& vd){
+    for(auto d : vd)
+      *this += d;
+  }
+
+  VD& a(double d){
+    (*this).push_back(d);
     return *this;
   }
-};
+  
+  virtual ~VD() {}
 
-class VS : public vector<string> {
-public:
-  VS() {}
-  virtual ~VS() {}
-
-  VS& operator += (const string& entry){
-    this->push_back(entry);
+  VD& operator += (double d){
+    this->push_back(d);
     return *this;
   }
 
-  VS& operator += (const vector<string>& list){
+  VD& operator += (const VD& list){
     for(int i = 0; i < int(list.size()); i++)
       this->push_back(list[i]);
   
     return *this;
   }
+};
+
+
+class VS : public vector<string> {
+public:
+  VS();
+  VS(const vector<string>& vs);
+  
+  virtual ~VS();
+
+  VS& a(const string& s);
+
+  VS& operator += (const string& entry);
+
+  VS& operator += (const vector<string>& list);
+
+  VS Filter(const string& label) const;
+  VS Remove(const string& label) const;
+  VS FilterOR(VS& labels) const;
+  VS FilterAND(VS& labels) const;
+  VS RemoveOR(VS& labels) const;
+  VS RemoveAND(VS& labels) const;
+  
 };
 
 class VC : public vector<pair<int,string> > {

@@ -107,7 +107,6 @@ LepSource GetLepSource(int PDGID, int genPDGID, int momPDGID){
   if(abs(genPDGID) != 11 && abs(genPDGID) != 13){
     return kFake;
   } else if((abs(momPDGID) == abs(PDGID)) ||
-	    (abs(momPDGID) == 22) ||
 	    (abs(momPDGID) == 23) ||
 	    (abs(momPDGID) == 24) ||
 	    ((abs(momPDGID) > 1000000) &&

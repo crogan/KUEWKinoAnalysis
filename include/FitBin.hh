@@ -9,8 +9,7 @@
 #include <vector>
 #include <cstdarg>
 
-using std::vector;
-using std::string;
+#include "Criteria.hh"
 
 ///////////////////////////////////////////
 ////////// MBins class
@@ -20,7 +19,7 @@ class MBins {
 public:
   MBins();
   MBins(int Nedges,...);
-  MBins(const vector<double>& bin_edges);
+  MBins(const VD& bin_edges);
   MBins(const MBins& bins);
 
   virtual ~MBins();
@@ -28,15 +27,15 @@ public:
   void operator = (const MBins& bins);
   
   int NBins() const;
-  const vector<double>& BinEdges() const;
+  const VD& BinEdges() const;
 
   int GetBin(double M) const;
 
-  vector<string> GetBinLabels() const;
+  VS GetBinLabels() const;
   
 private:
   int m_N;
-  vector<double> m_BinEdges;
+  VD m_BinEdges;
   
 };
 
@@ -59,12 +58,12 @@ public:
   const MBins& Bins() const;
   
   int NBins() const;
-  const vector<double>& BinEdges() const;
+  const VD& BinEdges() const;
 
   int GetBin(double M) const;
 
-  string         GetRBinLabel() const;
-  vector<string> GetMBinLabels() const;
+  string GetRBinLabel() const;
+  VS     GetMBinLabels() const;
   
 private:
   MBins m_Bins;
@@ -81,8 +80,8 @@ class FitBin {
 public:
   FitBin(int NRbins,...); // variable size list of RBin pointers
   FitBin(const vector<RBin>&);
-  FitBin(const vector<double>& bin_edges_x = vector<double>(),
-	 const vector<double>& bin_edges_y = vector<double>());
+  FitBin(const VD& bin_edges_x = VD(),
+	 const VD& bin_edges_y = VD());
   FitBin(const FitBin&);
   
   virtual ~FitBin();
@@ -99,12 +98,12 @@ public:
 
   int GetBin(double R, double M) const;
   
-  FitBin& InitializeHistogram(const std::string& label);
+  FitBin& InitializeHistogram(const string& label);
   
   void Fill(double weight = 1., double M = 0., double R = 0.);
 
-  void WriteHistogram(const std::string& name,
-		      const std::string& fold,
+  void WriteHistogram(const string& name,
+		      const string& fold,
 		      TFile& file) const;
   
 private:
@@ -145,21 +144,6 @@ private:
   TBranch* m_b_RBinEdges;
   TBranch* m_b_MBinEdges;
   
-};
-
-///////////////////////////////////////////
-////////// VD class
-///////////////////////////////////////////
-
-class VD : public std::vector<double> {
-public:
-  VD(){ }
-  virtual ~VD(){ }
-
-  VD& a(double v){
-    (*this).push_back(v);
-    return *this;
-  }
 };
 
 #endif

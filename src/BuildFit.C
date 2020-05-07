@@ -12,103 +12,331 @@
 #include "CombineHarvester/CombineTools/interface/Systematics.h"
 #include "CombineHarvester/CombineTools/interface/BinByBin.h"
 
+#include "TSystem.h"
+
 #include "FitReader.hh"
 
 using namespace std;
 
-int main() {
+int main(int argc, char* argv[]) {
+  string InputFile = "test/FitInput_test.root";
+  string OutputFold = "BuildFit_output";
+
+  bool addSig = false; // all signals
+  bool addBkg = false; // all backgrounds
+  VS   proc_to_add;
+  VS   proc_to_rem;
+
+  bool addChan = false; // all channels
+  VS   chan_to_add;
+
+  bool addCat = false; // all categories
+  VS   cat_to_add;
+
+  bool addSys = false; // all available shape systematics
+  VS   sys_to_add;
+
+  bool bprint  = false;
+  bool verbose = false;
+  int  year    = 2017;
+    
+  for(int i = 0; i < argc; i++){
+    if(strncmp(argv[i],"--help", 6) == 0){
+      bprint = true;
+    }
+    if(strncmp(argv[i],"-h", 2) == 0){
+      bprint = true;
+    }
+    if(strncmp(argv[i],"--verbose", 9) == 0){
+      verbose = true;
+    }
+    if(strncmp(argv[i],"-v", 2) == 0){
+      verbose = true;
+    }
+    if(strncmp(argv[i],"-o", 2) == 0){
+      i++;
+      OutputFold = string(argv[i]);
+    }
+    if(strncmp(argv[i],"--output", 8) == 0){
+      i++;
+      OutputFold = string(argv[i]);
+    }
+    if(strncmp(argv[i],"-i", 2) == 0){
+      i++;
+      InputFile = string(argv[i]);
+    }
+    if(strncmp(argv[i],"--input", 7) == 0){
+      i++;
+      InputFile = string(argv[i]);
+    }
+    if(strncmp(argv[i],"-year", 5) == 0){
+      i++;
+      year = std::stoi(argv[i]);
+    }
+    if(strncmp(argv[i],"++bkg", 5) == 0){
+      addBkg = true;
+    }
+    if(strncmp(argv[i],"++sig", 5) == 0){
+      addSig = true;
+    }
+    if(strncmp(argv[i],"+proc", 5) == 0){
+      i++;
+      proc_to_add += string(argv[i]);
+    }
+    if(strncmp(argv[i],"-proc", 5) == 0){
+      i++;
+      proc_to_rem += string(argv[i]);
+    }
+    if(strncmp(argv[i],"++chan", 6) == 0){
+      addChan = true;
+    }
+    if(strncmp(argv[i],"+chan", 5) == 0){
+      i++;
+      chan_to_add += string(argv[i]);
+    }
+    if(strncmp(argv[i],"++cat", 5) == 0){
+      addCat = true;
+    }
+    if(strncmp(argv[i],"+cat", 4) == 0){
+      i++;
+      cat_to_add += string(argv[i]);
+    }
+    if(strncmp(argv[i],"++sys", 5) == 0){
+      addSys = true;
+    }
+    if(strncmp(argv[i],"+sys", 4) == 0){
+      i++;
+      sys_to_add += string(argv[i]);
+    }
+  }
+    
+  if(!addBkg && !addSig && (proc_to_add.size() == 0))
+    bprint = true;
+
+  if(!addChan && (chan_to_add.size() == 0))
+    bprint = true;
+
+  if(!addCat && (cat_to_add.size() == 0))
+    bprint = true;
   
-  FitReader* FITReader = new FitReader("test.root");
-  FITReader->PrintCategories();
-  FITReader->PrintProcesses();
+  if(bprint){
+    cout << "Usage: " << argv[0] << " [options]" << endl;
+    cout << "  options:" << endl;
+    cout << "   --help(-h)          print options" << endl;
+    cout << "   --verbose(-v)     increase verbosity" << endl;
+    cout << "   --input(-i) [file]  input root file" << endl;
+    cout << "   --output(-o) [fold] folder path for output" << endl;
+    cout << "   -year [year]        year of inputs" << endl;
+    cout << "   ++bkg               add all bkgs" << endl;
+    cout << "   ++sig               add all signals" << endl;
+    cout << "   +proc [label]       add processes matching label" << endl;
+    cout << "   -proc [label]       remove processes matching label" << endl;
+    cout << "   ++chan              add all channels" << endl;
+    cout << "   +chan [label]       add channels matching label" << endl;
+    cout << "   ++cat               add allcategories" << endl;
+    cout << "   +cat [label]        add categories matching label" << endl;
+    
+    return 0;
+  }
 
-  //! [part1]
-  // First define the location of the "auxiliaries" directory where we can
-  // source the input files containing the datacard shapes
-  string aux_shapes = string(getenv("CMSSW_BASE")) + "/src/auxiliaries/shapes/";
+  ////////////////////////////////////////////////////////////////////                                  
+  ////////////////////////////////////////////////////////////////////                                  
+  ////////////////////////////////////////////////////////////////////
+  
+  string Era = std::to_string(year);
+  string Ana = "KUEWKino";
 
-  // Create an empty CombineHarvester instance that will hold all of the
-  // datacard configuration and histograms etc.
+  FitReader FIT(InputFile);
+  if(verbose){
+    cout << "Input file " << InputFile << " contains:" << endl;
+    FIT.PrintCategories();
+    FIT.PrintProcesses();
+  }
+
+  ProcessList processes; 
+  for(auto p : proc_to_add)
+    processes += FIT.GetProcesses().Filter(p);
+  if(addBkg)
+    processes += FIT.GetProcesses().Filter(kBkg);
+  if(addSig)
+    processes += FIT.GetProcesses().Filter(kSig);
+  for(auto p : proc_to_rem)
+    processes = processes.Remove(p);
+
+  VS channels;
+  if(addChan)
+    channels = FIT.GetChannels();
+  else {
+    VS chs = FIT.GetChannels();
+    for(auto c : chan_to_add)
+      for(auto f : chs)
+	if(c == f){
+	  channels += c;
+	  break;
+	}
+  }
+ 
+  CategoryList categories;
+  if(addCat)
+    categories = FIT.GetCategories();
+  else
+    for(auto c : cat_to_add)
+      categories += FIT.GetCategories().Filter(c);
+
+  Systematics systematics;
+  for(auto s : sys_to_add)
+    systematics += FIT.GetSystematics().Filter(s);
+  if(addSys)
+    systematics += FIT.GetSystematics();
+
+  ////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////
+  
+  // prepare processes
+  ProcessList signals = processes.Filter(kSig);
+  VSM masses  = signals.GetSignalMasses();
+
+  ProcessList backgrounds = processes.Filter(kBkg).Remove("_Fake"); 
+
+  // prepare channels/categories
+  map<string,CategoryList> chanMap;
+  for(auto c : channels)
+    chanMap[c] = categories.Filter(c);
+  categories.Clear();
+  for(auto c : channels)
+    categories += chanMap[c];
+
   ch::CombineHarvester cb;
-  // Uncomment this next line to see a *lot* of debug information
-  // cb.SetVerbosity(3);
+  if(verbose)
+    cb.SetVerbosity(3);
 
-  // Here we will just define two categories for an 8TeV analysis. Each entry in
-  // the vector below specifies a bin name and corresponding bin_id.
-  ch::Categories cats = {
-      {1, "muTau_1jet_medium"},
-      {2, "muTau_vbf_loose"}
-    };
-  // ch::Categories is just a typedef of vector<pair<int, string>>
-  //! [part1]
+  // Add all the channels/categories to CombineHarvester as observations
+  for(auto c : channels){
+    cout << "+ channel \"" << c << "\"";
+    if(!verbose)
+      cout << endl;
+    else 
+      cout << " with categories/bins:" << endl;
+    
+    VC cats = chanMap[c].GetCategories();
+    
+    if(verbose){
+      cout << "  $BIN_ID   $BIN" << endl; 
+      for(auto p : cats)
+	cout << "     " << p.first << "      " << p.second << endl;
+      cout << endl;
+    }
 
+    cb.AddObservations({"*"}, {Ana}, {Era}, {c}, cats);
+  }
+  
+  // Add all the background processes
+  int Nbkg = backgrounds.GetN();
+  for(int b = 0; b < Nbkg; b++){
+    Process proc = backgrounds[b];
+    cout << "+ background process \"" << proc.Name() << "\"" << endl;
+    for(auto ch : channels){
+      int Ncat = chanMap[ch].GetN();
+      CategoryList filled;
+      if(verbose)
+	cout << "    + Checking channel " << ch << " :" << endl;
+      for(int c = 0; c < Ncat; c++){
+	const Category& cat = chanMap[ch][c];
+	if(FIT.Integral(cat, proc) > 0.){
+	  filled += cat;
+	  if(verbose)
+	    cout << "      + " << cat.GetLabel() << endl;
+	}
+      }
 
-  //! [part2]
-  vector<string> masses = ch::MassesFromRange("120-135:5");
-  // Or equivalently, specify the mass points explicitly:
-  //    vector<string> masses = {"120", "125", "130", "135"};
-  //! [part2]
+      if(filled.GetN() == 0)
+	continue;
 
-  //! [part3]
-  cb.AddObservations({"*"}, {"htt"}, {"8TeV"}, {"mt"}, cats);
-  //! [part3]
+      VC cats = filled.GetCategories();
+      cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
 
-  //! [part4]
-  vector<string> bkg_procs = {"ZTT", "W", "QCD", "TT"};
-  cb.AddProcesses({"*"}, {"htt"}, {"8TeV"}, {"mt"}, bkg_procs, cats, false);
+    }
+  }
 
-  vector<string> sig_procs = {"ggH", "qqH"};
-  cb.AddProcesses(masses, {"htt"}, {"8TeV"}, {"mt"}, sig_procs, cats, true);
-  //! [part4]
+  // Add all the signal processes                                                                   
+  int Nsig = signals.GetN();
+  for(int s = 0; s < Nsig; s++){
+    Process proc = signals[s];
+    cout << "  + signal process \"" << proc.Name() << "\"" << endl;
+    for(auto ch : channels){
+      int Ncat = chanMap[ch].GetN();
+      CategoryList filled;
+      if(verbose)
+        cout << "    + Checking channel " << ch << " :" << endl;
+      for(int c = 0; c < Ncat; c++){
+        const Category& cat = chanMap[ch][c];
+        if(FIT.Integral(cat, proc) > 0.){
+          filled += cat;
+          if(verbose)
+            cout << "      + " << cat.GetLabel() << endl;
+	}
+      }
 
+      if(filled.GetN() == 0)
+        continue;
 
-  //Some of the code for this is in a nested namespace, so
-  // we'll make some using declarations first to simplify things a bit.
+      VC cats = filled.GetCategories();
+      SM sig  = proc.GetSM();
+      cb.AddProcesses(sig.second, {Ana}, {Era}, {ch}, {sig.first}, cats, true);
+
+    }
+  }
+  
   using ch::syst::SystMap;
   using ch::syst::era;
   using ch::syst::bin_id;
   using ch::syst::process;
 
 
-  //! [part5]
   cb.cp().signals()
-      .AddSyst(cb, "lumi_$ERA", "lnN", SystMap<era>::init
-      ({"7TeV"}, 1.022)
-      ({"8TeV"}, 1.026));
-  //! [part5]
+    .AddSyst(cb, "lumi_$ERA", "lnN", SystMap<era>::init
+	     ({"2016"}, 1.022)
+	     ({"2017"}, 1.022)
+	     ({"2018"}, 1.022));
+  
+  cb.cp().backgrounds()
+    .AddSyst(cb, "lumi_$ERA", "lnN", SystMap<era>::init
+	     ({"2016"}, 1.022)
+	     ({"2017"}, 1.022)
+	     ({"2018"}, 1.022));
+  
+  int Nsys = systematics.GetN();
+  if(Nsys > 0){
+    cout << "+ Adding shape systematics" << endl;
+    for(int s = 0; s < Nsys; s++){
+      Systematic& sys = systematics[s];
+      ProcessList proc_sys;
 
-  //! [part6]
-  cb.cp().process({"ggH"})
-      .AddSyst(cb, "pdf_gg", "lnN", SystMap<>::init(1.097));
+      for(int p = 0; p < Nbkg; p++)
+	if(FIT.HasSystematic(backgrounds[p], sys))
+	  proc_sys += backgrounds[p];
+      for(int p = 0; p < Nsig; p++)
+	if(FIT.HasSystematic(signals[p], sys))
+	  proc_sys += signals[p];
 
-  cb.cp().process(ch::JoinStr({sig_procs, {"ZTT", "TT"}}))
-      .AddSyst(cb, "CMS_eff_m", "lnN", SystMap<>::init(1.02));
+      if(proc_sys.GetN() > 0){
+	cout << "  + " << sys.Label() << endl;
+	cb.cp().process(proc_sys.GetProcesses())
+	  .AddSyst(cb, sys.Label(), "shape", SystMap<>::init(1.00));
+      }
+    }
+  }
 
-  cb.cp()
-      .AddSyst(cb,
-        "CMS_scale_j_$ERA", "lnN", SystMap<era, bin_id, process>::init
-        ({"8TeV"}, {1},     {"ggH"},        1.04)
-        ({"8TeV"}, {1},     {"qqH"},        0.99)
-        ({"8TeV"}, {2},     {"ggH"},        1.10)
-        ({"8TeV"}, {2},     {"qqH"},        1.04)
-        ({"8TeV"}, {2},     {"TT"},         1.05));
-
-  cb.cp().process(ch::JoinStr({sig_procs, {"ZTT"}}))
-      .AddSyst(cb, "CMS_scale_t_mutau_$ERA", "shape", SystMap<>::init(1.00));
-  //! [part6]
-
-  //! [part7]
-  cb.cp().backgrounds().ExtractShapes(
-      aux_shapes + "Imperial/htt_mt.inputs-sm-8TeV-hcg.root",
-      "$BIN/$PROCESS",
-      "$BIN/$PROCESS_$SYSTEMATIC");
-  cb.cp().signals().ExtractShapes(
-      aux_shapes + "Imperial/htt_mt.inputs-sm-8TeV-hcg.root",
-      "$BIN/$PROCESS$MASS",
-      "$BIN/$PROCESS$MASS_$SYSTEMATIC");
-  //! [part7]
-
-  //! [part8]
+  
+  cb.cp().backgrounds().ExtractShapes(InputFile,
+				      "$PROCESS/$PROCESS_$BIN",
+				      "$PROCESS/$PROCESS_$SYSTEMATIC_$BIN");
+  cb.cp().signals().ExtractShapes(InputFile,
+				  "$PROCESS_$MASS/$PROCESS_$MASS_$BIN",
+				  "$PROCESS_$MASS/$PROCESS_$MASS_$SYSTEMATIC_$BIN");
+  
+  /*
   auto bbb = ch::BinByBinFactory()
     .SetAddThreshold(0.1)
     .SetFixNorm(true);
@@ -131,19 +359,30 @@ int main() {
   // We create the output root file that will contain all the shapes.
   TFile output("htt_mt.input.root", "RECREATE");
 
-  // Finally we iterate through each bin,mass combination and write a
-  // datacard.
-  for (auto b : bins) {
-    for (auto m : masses) {
-      cout << ">> Writing datacard for bin: " << b << " and mass: " << m
-           << "\n";
-      // We need to filter on both the mass and the mass hypothesis,
-      // where we must remember to include the "*" mass entry to get
-      // all the data and backgrounds.
-      cb.cp().bin({b}).mass({m, "*"}).WriteDatacard(
-          b + "_" + m + ".txt", output);
-    }
-  }
-  //! [part9]
+  */
 
+  // Loop through all signals and write a datacard, create output
+  
+  VC cats = categories.GetCategories();
+
+  gSystem->Exec(("mkdir -p "+OutputFold).c_str());
+  TFile output((OutputFold+"/FitInput_"+Era+".root").c_str(), "RECREATE"); 
+	       	       
+  for(int s = 0; s < Nsig; s++){
+    Process p = signals[s];
+    SM sm = p.GetSM();
+    string fold = OutputFold+"/"+p.Name();
+
+    gSystem->Exec(("mkdir -p "+fold).c_str());
+
+    // all categories combined datacard
+    cb.cp().process({sm.first}).mass({sm.second[0], "*"})
+      .WriteDatacard(OutputFold+"/datacard_"+Era+"_"+p.Name()+".txt", output);
+    // individual categories
+    for(auto c : cats)
+      cb.cp().bin({c.second}).process({sm.first}).mass({sm.second[0], "*"})
+        .WriteDatacard(fold+"/datacard_"+Era+"_"+p.Name()+"_"+c.second+".txt", output); 
+  }
 }
+	       
+	     
