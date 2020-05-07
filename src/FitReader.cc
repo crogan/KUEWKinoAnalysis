@@ -142,8 +142,7 @@ bool FitReader::IsFilled(const Category&   cat,
     if(m_ProcHist.count(proc) == 0)
       m_ProcHist[proc] = map<Category,TH1D*>();
     if(m_ProcHist[proc].count(cat) == 0){
-      string shist = proc.Name()+"/"+proc.Name()+"_";
-      shist += cat.Label()+"_"+cat.GetLabel();
+      string shist = cat.Label()+"_"+cat.GetLabel()+"/"+proc.Name();
       m_ProcHist[proc][cat] = (TH1D*) m_File.Get(shist.c_str());
     }
     
@@ -157,11 +156,10 @@ bool FitReader::IsFilled(const Category&   cat,
      if(m_ProcHistSys[proc][sys].count(cat) == 0){
        m_ProcHistSys[proc][sys][cat] = pair<TH1D*,TH1D*>(nullptr,nullptr);
        
-       string shistUp   = proc.Name()+"/"+proc.Name()+"_"+sys.Label()+"Up_";
-       string shistDown = proc.Name()+"/"+proc.Name()+"_"+sys.Label()+"Down_";
-       shistUp   += cat.Label()+"_"+cat.GetLabel();
-       shistDown += cat.Label()+"_"+cat.GetLabel();
-
+       string label = cat.Label()+"_"+cat.GetLabel();
+       string shistUp   = label+"/"+proc.Name()+"_"+sys.Label()+"Up";
+       string shistDown = label+"/"+proc.Name()+"_"+sys.Label()+"Down";
+       
        m_ProcHistSys[proc][sys][cat].first  = (TH1D*) m_File.Get(shistUp.c_str());
        m_ProcHistSys[proc][sys][cat].second = (TH1D*) m_File.Get(shistDown.c_str());
      }

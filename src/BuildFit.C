@@ -29,18 +29,29 @@ int main(int argc, char* argv[]) {
 
   bool addChan = false; // all channels
   VS   chan_to_add;
+  VS   chan_to_rem;
 
   bool addCat = false; // all categories
   VS   cat_to_add;
+  VS   cat_to_rem;
 
   bool addSys = false; // all available shape systematics
   VS   sys_to_add;
+  VS   sys_to_rem;
 
   bool bprint  = false;
   bool verbose = false;
   int  year    = 2017;
+
+  bool workspace = false;
     
   for(int i = 0; i < argc; i++){
+    if(strncmp(argv[i],"--workspace", 11) == 0){
+      workspace = true;
+    }
+    if(strncmp(argv[i],"-w", 2) == 0){
+      workspace = true;
+    }
     if(strncmp(argv[i],"--help", 6) == 0){
       bprint = true;
     }
@@ -94,6 +105,10 @@ int main(int argc, char* argv[]) {
       i++;
       chan_to_add += string(argv[i]);
     }
+    if(strncmp(argv[i],"-chan", 5) == 0){
+      i++;
+      chan_to_rem += string(argv[i]);
+    }
     if(strncmp(argv[i],"++cat", 5) == 0){
       addCat = true;
     }
@@ -101,12 +116,20 @@ int main(int argc, char* argv[]) {
       i++;
       cat_to_add += string(argv[i]);
     }
+    if(strncmp(argv[i],"-cat", 4) == 0){
+      i++;
+      cat_to_rem += string(argv[i]);
+    }
     if(strncmp(argv[i],"++sys", 5) == 0){
       addSys = true;
     }
     if(strncmp(argv[i],"+sys", 4) == 0){
       i++;
       sys_to_add += string(argv[i]);
+    }
+    if(strncmp(argv[i],"-sys", 4) == 0){
+      i++;
+      sys_to_rem += string(argv[i]);
     }
   }
     
@@ -133,9 +156,15 @@ int main(int argc, char* argv[]) {
     cout << "   -proc [label]       remove processes matching label" << endl;
     cout << "   ++chan              add all channels" << endl;
     cout << "   +chan [label]       add channels matching label" << endl;
-    cout << "   ++cat               add allcategories" << endl;
+    cout << "   -chan [label]       removes channels matching label" << endl;
+    cout << "   ++cat               add all categories" << endl;
     cout << "   +cat [label]        add categories matching label" << endl;
-    
+    cout << "   -cat [label]        removes categories matching label" << endl;
+    cout << "   ++sys               add all shape systematics" << endl;
+    cout << "   +sys [label]        add systematics matching label" << endl;
+    cout << "   -sys [label]        removes systematics matching label" << endl;
+    cout << "   --workspace(-w)     also build workspaces" << endl;
+
     return 0;
   }
 
@@ -153,41 +182,33 @@ int main(int argc, char* argv[]) {
     FIT.PrintProcesses();
   }
 
-  ProcessList processes; 
-  for(auto p : proc_to_add)
-    processes += FIT.GetProcesses().Filter(p);
+  ProcessList processes = FIT.GetProcesses().FilterOR(proc_to_add); 
   if(addBkg)
     processes += FIT.GetProcesses().Filter(kBkg);
   if(addSig)
     processes += FIT.GetProcesses().Filter(kSig);
-  for(auto p : proc_to_rem)
-    processes = processes.Remove(p);
+  processes = processes.RemoveOR(proc_to_rem);
 
   VS channels;
   if(addChan)
     channels = FIT.GetChannels();
-  else {
-    VS chs = FIT.GetChannels();
-    for(auto c : chan_to_add)
-      for(auto f : chs)
-	if(c == f){
-	  channels += c;
-	  break;
-	}
-  }
+  else 
+    channels = FIT.GetChannels().FilterOR(chan_to_add);
+  channels = channels.RemoveOR(chan_to_rem);
  
   CategoryList categories;
   if(addCat)
     categories = FIT.GetCategories();
   else
-    for(auto c : cat_to_add)
-      categories += FIT.GetCategories().Filter(c);
+    categories = FIT.GetCategories().FilterOR(cat_to_add);
+  categories = categories.RemoveOR(cat_to_rem);
 
   Systematics systematics;
-  for(auto s : sys_to_add)
-    systematics += FIT.GetSystematics().Filter(s);
   if(addSys)
-    systematics += FIT.GetSystematics();
+    systematics = FIT.GetSystematics();
+  else 
+    systematics = FIT.GetSystematics().FilterOR(sys_to_add);
+  systematics = systematics.RemoveOR(sys_to_rem);
 
   ////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////
@@ -195,9 +216,8 @@ int main(int argc, char* argv[]) {
   
   // prepare processes
   ProcessList signals = processes.Filter(kSig);
-  VSM masses  = signals.GetSignalMasses();
 
-  ProcessList backgrounds = processes.Filter(kBkg).Remove("_Fake"); 
+  ProcessList backgrounds = processes.Filter(kBkg); 
 
   // prepare channels/categories
   map<string,CategoryList> chanMap;
@@ -208,8 +228,8 @@ int main(int argc, char* argv[]) {
     categories += chanMap[c];
 
   ch::CombineHarvester cb;
-  if(verbose)
-    cb.SetVerbosity(3);
+  //if(verbose)
+  //  cb.SetVerbosity(3);
 
   // Add all the channels/categories to CombineHarvester as observations
   for(auto c : channels){
@@ -283,7 +303,7 @@ int main(int argc, char* argv[]) {
 
       VC cats = filled.GetCategories();
       SM sig  = proc.GetSM();
-      cb.AddProcesses(sig.second, {Ana}, {Era}, {ch}, {sig.first}, cats, true);
+      cb.AddProcesses(sig.second, {Ana}, {Era}, {ch}, {sig.first+"_"}, cats, true);
 
     }
   }
@@ -330,11 +350,11 @@ int main(int argc, char* argv[]) {
 
   
   cb.cp().backgrounds().ExtractShapes(InputFile,
-				      "$PROCESS/$PROCESS_$BIN",
-				      "$PROCESS/$PROCESS_$SYSTEMATIC_$BIN");
+				      "$BIN/$PROCESS",
+				      "$BIN/$PROCESS_$SYSTEMATIC");
   cb.cp().signals().ExtractShapes(InputFile,
-				  "$PROCESS_$MASS/$PROCESS_$MASS_$BIN",
-				  "$PROCESS_$MASS/$PROCESS_$MASS_$SYSTEMATIC_$BIN");
+				  "$BIN/$PROCESS$MASS",
+				  "$BIN/$PROCESS$MASS_$SYSTEMATIC");
   
   /*
   auto bbb = ch::BinByBinFactory()
@@ -365,24 +385,84 @@ int main(int argc, char* argv[]) {
   
   VC cats = categories.GetCategories();
 
+  cout << "* Writing ouput to " << OutputFold << endl;
   gSystem->Exec(("mkdir -p "+OutputFold).c_str());
-  TFile output((OutputFold+"/FitInput_"+Era+".root").c_str(), "RECREATE"); 
-	       	       
-  for(int s = 0; s < Nsig; s++){
-    Process p = signals[s];
-    SM sm = p.GetSM();
-    string fold = OutputFold+"/"+p.Name();
+  TFile output((OutputFold+"/FitInput_"+Ana+"_"+Era+".root").c_str(), "RECREATE"); 
 
+  cout << "  * Creating datacards" << endl;
+	       	       
+  // datacard/workspace with all categories
+  string fold = OutputFold+"/all";
+  gSystem->Exec(("mkdir -p "+fold).c_str());
+  
+  VSM masses = signals.GetSignalMasses();
+  
+  for(auto sm : masses){
+    fold = OutputFold+"/all/"+sm.first;
+    gSystem->Exec(("mkdir -p "+fold).c_str());
+    
+    for(auto m : sm.second){
+      fold = OutputFold+"/all/"+sm.first+"/"+m;
+      gSystem->Exec(("mkdir -p "+fold).c_str());
+      
+      if(verbose)
+	cout << "    * all channels " << sm.first+"_"+m << endl;
+
+      cb.cp().mass({m, "*"})
+	.WriteDatacard(fold+"/datacard.txt", output);
+    }
+  }
+
+  // datacard/workspace for each channel
+  for(auto ch : channels){
+    fold = OutputFold+"/"+ch;
     gSystem->Exec(("mkdir -p "+fold).c_str());
 
-    // all categories combined datacard
-    cb.cp().process({sm.first}).mass({sm.second[0], "*"})
-      .WriteDatacard(OutputFold+"/datacard_"+Era+"_"+p.Name()+".txt", output);
-    // individual categories
-    for(auto c : cats)
-      cb.cp().bin({c.second}).process({sm.first}).mass({sm.second[0], "*"})
-        .WriteDatacard(fold+"/datacard_"+Era+"_"+p.Name()+"_"+c.second+".txt", output); 
+    for(auto sm : masses){
+      fold = OutputFold+"/"+ch+"/"+sm.first;
+      gSystem->Exec(("mkdir -p "+fold).c_str());
+
+      for(auto m : sm.second){
+	fold = OutputFold+"/"+ch+"/"+sm.first+"/"+m;
+	gSystem->Exec(("mkdir -p "+fold).c_str());
+
+	if(verbose)
+	  cout << "    * " << ch << " " << sm.first+"_"+m<< endl;
+
+	cb.cp().channel({ch}).mass({m, "*"})
+	  .WriteDatacard(fold+"/datacard.txt", output);
+      }
+    }
+  }  
+
+  output.Close();
+
+  cout << "  * Creating workspaces" << endl;
+  
+  string cmd = "combineTool.py -M T2W -o workspace.root -i ";
+  string icmd;
+
+  /*
+  channels += "all";
+  for(auto ch : channels)
+    for(auto sm : masses)
+      for(auto m : sm.second){
+	if(verbose)
+	  cout << "    * " << ch << " " << sm.first+"_"+m<< endl;
+
+	icmd = cmd + OutputFold+"/"+ch+"/"+sm.first+"/"+m+"/datacard.txt ";
+	icmd += "-m "+m;
+	gSystem->Exec(icmd.c_str());
+      }
+  */
+  cmd = "combineTool.py -M T2W -i "+OutputFold+"/*/*/*/datacard.txt -o workspace.root --parallel 4";
+  if(workspace)
+    gSystem->Exec(cmd.c_str());
+  else {
+    cout << "To build workspaces type:" << endl;
+    cout << "    " << cmd << endl;
   }
+
 }
 	       
 	     
