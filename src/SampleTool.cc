@@ -170,7 +170,7 @@ void SampleTool::InitProcMap(){
     list += m_Path + "Fall17_102X/ST_tW_top_5f_inclusiveDecays_TuneCP5_PSweights_13TeV-powheg-pythia8_Fall17_102X.root";
     m_Proc[m_iYear][ST] = pair<vector<string>,string>(list, "KUAnalysis");
   
-    Process DYjets("DYjets", kBkg);
+    Process ZDY("ZDY", kBkg);
     list.clear();
     list += m_Path + "Fall17_102X/DYJetsToLL_M-4to50_HT-100to200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root";
     list += m_Path + "Fall17_102X/DYJetsToLL_M-4to50_HT-200to400_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root";
@@ -191,7 +191,7 @@ void SampleTool::InitProcMap(){
     list += m_Path + "Fall17_102X/ZJetsToNuNu_HT-400To600_13TeV-madgraph_Fall17_102X.root";
     list += m_Path + "Fall17_102X/ZJetsToNuNu_HT-600To800_13TeV-madgraph_Fall17_102X.root";
     list += m_Path + "Fall17_102X/ZJetsToNuNu_HT-800To1200_13TeV-madgraph_Fall17_102X.root";
-    m_Proc[m_iYear][DYjets] = pair<vector<string>,string>(list, "KUAnalysis");
+    m_Proc[m_iYear][ZDY] = pair<vector<string>,string>(list, "KUAnalysis");
 
     Process DB("DB", kBkg);
     list.clear();

@@ -10,11 +10,11 @@ void TestReader(const string& inputfile = "test/FitInput_test.root", const strin
 
   // FITReader->Plot1Dstack(SL().a("ttbar").a("ST").a("DB").a("ZDY").a("TB")
   // 			 .a("Wjets").a("Fakes").a("T2bW_50000490").a("T2bW_50000480").a("T2bW_50000470"),
-  FITReader->Plot1Dstack(VS().a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("Data")
-			     .a("Wjets").a("Fake").a("HF").a("LF").a("T2bW_50000470").a("QCD"),
-			 VS().a("1Lelbronze"),
-			 VS().a("0j1svS"),
-			 VS().a("ge1bjetISR"),
+  FITReader->Plot1Dstack(VS().a("ttbar").a("ST").a("DB").a("DYjets").a("TB").a("Data")
+			     .a("Wjets").a("Fake").a("HF").a("LF").a("T2bW_50000480").a("QCD"),
+			 VS().a("2LOSOFsilver"),
+			 VS().a("0j0svS"),
+			 VS().a("0bjetISR"),
 			 "canvas");
   
 }
