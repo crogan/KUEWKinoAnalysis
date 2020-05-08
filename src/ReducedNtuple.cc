@@ -649,7 +649,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   //   return;
   
   // not enough stuff
-  if(m_Nlep + m_Njet < 2)
+  if(m_Nlep + m_Njet < 2 || m_Njet < 1)
     return;
   
   // Sparticle pair-production trees analysis

@@ -67,9 +67,9 @@ void BtagSFTool::SetEfficiencies(const std::string& rootfile){
     return;
 
   for(int i = 0; i < 3; i++){
-    m_BtagEff2016[i] = (TEfficiency*)((TEfficiency*)input->Get(Form("BtagEff_2017_flavor%d",i)))->Clone("BEff_2016_flavor%d");
+    m_BtagEff2016[i] = (TEfficiency*)((TEfficiency*)input->Get(Form("BtagEff_2016_flavor%d",i)))->Clone("BEff_2016_flavor%d");
     m_BtagEff2017[i] = (TEfficiency*)((TEfficiency*)input->Get(Form("BtagEff_2017_flavor%d",i)))->Clone("BEff_2017_flavor%d");
-    m_BtagEff2018[i] = (TEfficiency*)((TEfficiency*)input->Get(Form("BtagEff_2017_flavor%d",i)))->Clone("BEff_2018_flavor%d");
+    m_BtagEff2018[i] = (TEfficiency*)((TEfficiency*)input->Get(Form("BtagEff_2018_flavor%d",i)))->Clone("BEff_2018_flavor%d");
   }
   
   input->Close();
