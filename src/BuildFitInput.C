@@ -131,6 +131,9 @@ int main(int argc, char* argv[]) {
 
   CategoryList Categories = CT.GetCategories();
 
+  cout << "Categories:" << endl;
+  Categories.Print();
+
   SystematicsTool SYS;
 
   Systematics systematics(1);

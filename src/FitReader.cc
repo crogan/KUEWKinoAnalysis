@@ -289,6 +289,7 @@ TCanvas* FitReader::Plot1Dstack(const VS& proc,
     return nullptr;
 
   CategoryList cat = GetCategories();
+  cat.Print();
   
   // Leptonic
   VS lep_labels;
@@ -301,8 +302,9 @@ TCanvas* FitReader::Plot1Dstack(const VS& proc,
 
     if(m_Strings.count(lep_cat[i]) != 0){
       int N = m_Strings[lep_cat[i]].size();
-      for(int j = 0; j < N; j++)
+      for(int j = 0; j < N; j++){
 	vlep.push_back(m_Strings[lep_cat[i]][j]);
+      }
     } else {
       vlep.push_back(lep_cat[i]);
     }
@@ -388,9 +390,12 @@ TCanvas* FitReader::Plot1Dstack(const VS& proc,
 	type = kData;
       
       for(int c = 0; c < Ncat; c++){
+	cout << cat[c].GetLabel() << " " << pp.Name() << endl;
 	if(!IsFilled(cat[c], pp))
 	  continue;
 
+	cout << "filled " << cat[c].GetLabel() << " " << pp.Name() << endl;
+	
 	if(!hist){
 	  hist = (TH1D*) GetHistogram(cat[c], pp)->Clone(Form("plothist_%d_%s", i, name.c_str()));
 	} else {

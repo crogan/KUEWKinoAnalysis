@@ -804,7 +804,7 @@ bool AnalysisBase<SUSYNANOBase>::GetMETHTtrigger(){
 
 template <>
 bool AnalysisBase<SUSYNANOBase>::GetMETORtrigger(){
-   int year = 2016;
+  int year = 2016;
   if(m_FileTag.find("17") != std::string::npos)
     year = 2017;
   if(m_FileTag.find("18") != std::string::npos)
@@ -1116,45 +1116,43 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET){
     DO_JES = true;
   
   for(int i = 0; i < Njet; i++){
-     bool failID = false;
-     if(Jet_pt[i] < 15.)
-       continue;
-     if(Jet_jetId[i] < 3){
-       passID = false;
-       break;
-     }
+    bool failID = false;
+    if(Jet_pt[i] < 15. || fabs(Jet_eta[i]) > 5.)
+      continue;
+    if(Jet_jetId[i] < 3)
+      continue;
+    
+    Particle jet;
+    float mass = Jet_mass[i];
+    if(std::isnan(mass))
+      mass = 0;
+    if(std::isinf(mass))
+      mass = 0;
+    if(mass < 0.)
+      mass = 0.;
+    jet.SetPtEtaPhiM(Jet_pt[i], Jet_eta[i],
+		     Jet_phi[i], mass);
+    
+    if(DO_JES){
+      double uncer = m_JMETool.GetFactor(year, CurrentSystematic().Label(),
+					 Jet_pt[i], Jet_eta[i]);
+      
+      deltaMET -= delta*uncer*jet.Vect();
+      jet.SetPtEtaPhiM((1.+delta*uncer)*jet.Pt(),
+		       jet.Eta(), jet.Phi(),
+		       (1.+delta*uncer)*jet.M());
+    }
+    
+    // recalibrate jets
+    // double raw = 1. - Jet_rawFactor[i];
+    // double L1 = m_JMETool.GetFactor(year, "L1FastJet",
+    // 				     raw*Jet_pt[i], Jet_eta[i],
+    // 				     Jet_area[i], fixedGridRhoFastjetAll);
+    // double L2 = m_JMETool.GetFactor(year, "L2Relative",
+    // 				     raw*L1*Jet_pt[i], Jet_eta[i],
+    // 				     Jet_area[i], fixedGridRhoFastjetAll);
 
-     Particle jet;
-     float mass = Jet_mass[i];
-     if(std::isnan(mass))
-       mass = 0;
-     if(std::isinf(mass))
-       mass = 0;
-     if(mass < 0.)
-       mass = 0.;
-     jet.SetPtEtaPhiM(Jet_pt[i], Jet_eta[i],
-		      Jet_phi[i], mass);
-     
-     if(DO_JES){
-       double uncer = m_JMETool.GetFactor(year, CurrentSystematic().Label(),
-					  Jet_pt[i], Jet_eta[i]);
-       
-       deltaMET -= delta*uncer*jet.Vect();
-       jet.SetPtEtaPhiM((1.+delta*uncer)*jet.Pt(),
-			jet.Eta(), jet.Phi(),
-			(1.+delta*uncer)*jet.M());
-     }
-     
-     // recalibrate jets
-     // double raw = 1. - Jet_rawFactor[i];
-     // double L1 = m_JMETool.GetFactor(year, "L1FastJet",
-     // 				     raw*Jet_pt[i], Jet_eta[i],
-     // 				     Jet_area[i], fixedGridRhoFastjetAll);
-     // double L2 = m_JMETool.GetFactor(year, "L2Relative",
-     // 				     raw*L1*Jet_pt[i], Jet_eta[i],
-     // 				     Jet_area[i], fixedGridRhoFastjetAll);
-
-     // cout << raw << " " << L1 << " " << L2 << " " << raw*L1*L2 << endl;
+    // cout << raw << " " << L1 << " " << L2 << " " << raw*L1*L2 << endl;
 
     if(Jet_jetId[i] >= 3)
       jet.SetParticleID(kTight);
@@ -1235,36 +1233,36 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET){
   if(!passID)
     return ParticleList();
 
-  year = 2016;
+    year = 2016;
   
-  if(year == 2017)
-    MET.SetPtEtaPhi(METFixEE2017_pt,0.0,METFixEE2017_phi);
-  else
-    MET.SetPtEtaPhi(MET_pt,0.0,MET_phi);
-
-  deltaMET.SetZ(0.);
-  MET += deltaMET;
-
-  if(CurrentSystematic() == Systematic("METUncer_UnClust")){
     if(year == 2017)
-      deltaMET.SetXYZ(delta*METFixEE2017_MetUnclustEnUpDeltaX,
-		      delta*METFixEE2017_MetUnclustEnUpDeltaY, 0.);
+      MET.SetPtEtaPhi(METFixEE2017_pt,0.0,METFixEE2017_phi);
     else
-      deltaMET.SetXYZ(delta*MET_MetUnclustEnUpDeltaX,
-		      delta*MET_MetUnclustEnUpDeltaY, 0.);
+      MET.SetPtEtaPhi(MET_pt,0.0,MET_phi);
+
+    deltaMET.SetZ(0.);
     MET += deltaMET;
-  }
+
+    if(CurrentSystematic() == Systematic("METUncer_UnClust")){
+      if(year == 2017)
+	deltaMET.SetXYZ(delta*METFixEE2017_MetUnclustEnUpDeltaX,
+			delta*METFixEE2017_MetUnclustEnUpDeltaY, 0.);
+      else
+	deltaMET.SetXYZ(delta*MET_MetUnclustEnUpDeltaX,
+			delta*MET_MetUnclustEnUpDeltaY, 0.);
+      MET += deltaMET;
+    }
   
-  return list;
+    return list;
 }
 
-template <>
-TVector3 AnalysisBase<SUSYNANOBase>::GetMET(){
-  TVector3 MET;
-  GetJetsMET(MET);
+  template <>
+  TVector3 AnalysisBase<SUSYNANOBase>::GetMET(){
+    TVector3 MET;
+    GetJetsMET(MET);
 
-  return MET;
-}
+    return MET;
+  }
 
 template <>
 ParticleList AnalysisBase<SUSYNANOBase>::GetJets(){
@@ -1692,7 +1690,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetMuons(){
 
   int N = nMuon;
   for(int i = 0; i < N; i++){
-     // baseline lepton definition
+    // baseline lepton definition
     if(Muon_pt[i] < 3. || fabs(Muon_eta[i]) > 2.4)
       continue;
     // if(fabs(Muon_dxy[i]) >= 0.05 || fabs(Muon_dz[i]) >= 0.1 ||
@@ -1784,7 +1782,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetSVs(const TVector3& PV){
     // if(fabs((xSV-PV).Pt()) >= 3.)
     //   continue;
 
-     // if(SV_dlenSig[i] <= 4.)
+    // if(SV_dlenSig[i] <= 4.)
     //   continue;
     // if(SV_ndof[i] < 1.8) // replacement for ntracks cut...
     //   continue;
