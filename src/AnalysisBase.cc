@@ -21,7 +21,6 @@ AnalysisBase<Base>::AnalysisBase(TTree* tree)
   m_IsData = false;
   m_IsFastSim = false;
 
-  InitializeSystematics();
   m_CurSys = &Systematic::Default();
 }
 
@@ -40,27 +39,27 @@ const Systematic& AnalysisBase<Base>::CurrentSystematic() const {
 
 template <class Base>
 void AnalysisBase<Base>::AddSystematics(){
-  m_Systematics.Add(m_DefaultSys);
+  m_Systematics.Add(m_SysTool.GetTreeSystematics());
 }
 
 template <class Base>
 void AnalysisBase<Base>::AddJESSystematics(){
-  m_Systematics.Add(m_JESSys);
+  m_Systematics.Add(m_SysTool.JESSystematics());
 }
 
 template <class Base>
 void AnalysisBase<Base>::AddMETSystematics(){
-  m_Systematics.Add(m_METSys);
+  m_Systematics.Add(m_SysTool.METSystematics());
 }
 
 template <class Base>
 void AnalysisBase<Base>::AddEESSystematics(){
-  m_Systematics.Add(m_EESSys);
+  m_Systematics.Add(m_SysTool.EESSystematics());
 }
 
 template <class Base>
 void AnalysisBase<Base>::AddMMSSystematics(){
-  m_Systematics.Add(m_MMSSys);
+  m_Systematics.Add(m_SysTool.MMSSystematics());
 }
 
 template <class Base>
@@ -162,9 +161,6 @@ template <class Base>
 void AnalysisBase<Base>::BookHistograms(vector<TH1D*>& histos){}
 
 template <class Base>
-void AnalysisBase<Base>::InitializeSystematics(){}
-
-template <class Base>
 double AnalysisBase<Base>::DeltaPhiMin(const vector<TLorentzVector>& JETs, const TVector3& MET, int N){
   double dphimin = acos(-1);
   int Njet = JETs.size();
@@ -199,6 +195,11 @@ int AnalysisBase<Base>::GetLumiNum(){
 template <class Base>
 long AnalysisBase<Base>::GetEventNum(){
   return 0;
+}
+
+template <class Base>
+bool AnalysisBase<Base>::PassEventFilter(){
+  return true;
 }
 
 template <class Base>
@@ -709,13 +710,52 @@ long AnalysisBase<SUSYNANOBase>::GetEventNum(){
 }
 
 template <>
+bool AnalysisBase<SUSYNANOBase>::PassEventFilter(){
+  int year = 2016;
+  if(m_FileTag.find("17") != std::string::npos)
+    year = 2017;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+
+  if(year == 2016){
+    return Flag_goodVertices &&
+      (IsFastSim() ? true : Flag_globalSuperTightHalo2016Filter) &&
+      Flag_HBHENoiseFilter &&
+      Flag_HBHENoiseIsoFilter &&
+      Flag_EcalDeadCellTriggerPrimitiveFilter &&
+      Flag_BadPFMuonFilter;
+  }
+  if(year == 2017){
+    return Flag_goodVertices &&
+      (IsFastSim() ? true : Flag_globalSuperTightHalo2016Filter) &&
+      Flag_HBHENoiseFilter &&
+      Flag_HBHENoiseIsoFilter &&
+      Flag_EcalDeadCellTriggerPrimitiveFilter &&
+      Flag_BadPFMuonFilter;
+  }
+  if(year == 2018){
+    return Flag_goodVertices &&
+      (IsFastSim() ? true : Flag_globalSuperTightHalo2016Filter) &&
+      Flag_HBHENoiseFilter &&
+      Flag_HBHENoiseIsoFilter &&
+      Flag_EcalDeadCellTriggerPrimitiveFilter &&
+      Flag_BadPFMuonFilter;
+  }
+  
+  return true;
+}
+
+template <>
 int AnalysisBase<SUSYNANOBase>::GetNPV(){
   return nOtherPV+1;
 }
 
 template <>
 int AnalysisBase<SUSYNANOBase>::GetNPUtrue(){
-  return Pileup_nPU;
+  if(!IsData())
+    return Pileup_nPU;
+  
+  return 0;
 }
 
 template <>
@@ -764,7 +804,7 @@ bool AnalysisBase<SUSYNANOBase>::GetMETHTtrigger(){
 
 template <>
 bool AnalysisBase<SUSYNANOBase>::GetMETORtrigger(){
-   int year = 2016;
+  int year = 2016;
   if(m_FileTag.find("17") != std::string::npos)
     year = 2017;
   if(m_FileTag.find("18") != std::string::npos)
@@ -798,22 +838,26 @@ bool AnalysisBase<SUSYNANOBase>::GetMETORtrigger(){
 
 template <>
 std::pair<int,int> AnalysisBase<SUSYNANOBase>::GetSUSYMasses(){
-  int MP = 0;
-  int MC = 0;
-  int Ngen = nGenPart;
-  for(int i = 0; i < Ngen; i++){
-    int PDGID = abs(GenPart_pdgId[i]);
-    if(PDGID > 1000000 && PDGID < 3000000){
-      int mass = int(GenPart_mass[i]+0.5);
-      if(PDGID == 1000022)
-	MC = mass;
-      else
-	if(mass > MP)
-	  MP = mass;
+  if(!IsData()){
+    int MP = 0;
+    int MC = 0;
+    int Ngen = nGenPart;
+    for(int i = 0; i < Ngen; i++){
+      int PDGID = abs(GenPart_pdgId[i]);
+      if(PDGID > 1000000 && PDGID < 3000000){
+	int mass = int(GenPart_mass[i]+0.5);
+	if(PDGID == 1000022)
+	  MC = mass;
+	else
+	  if(mass > MP)
+	    MP = mass;
+      }
     }
-  }
   
-  return std::pair<int,int>(MP,MC);
+    return std::pair<int,int>(MP,MC);
+  } else {
+    return std::pair<int,int>(0,0);
+  }
 }
 
 template <>
@@ -939,6 +983,9 @@ bool AnalysisBase<SUSYNANOBase>::IsGoodEvent(){
 
 template <>
 TVector3 AnalysisBase<SUSYNANOBase>::GetGenMET(){
+  if(IsData())
+    return TVector3();
+  
   TVector3 vmet;
   vmet.SetPtEtaPhi(GenMET_pt,0.0,GenMET_phi);
   return vmet;
@@ -1051,82 +1098,6 @@ void AnalysisBase<SUSYNANOBase>::BookHistograms(vector<TH1D*>& histos){
 }
 
 template <>
-void AnalysisBase<SUSYNANOBase>::InitializeSystematics(){
-
-  m_DefaultSys += "JESUncer_Total";
-  // m_DefaultSys += "JESUncer_CorrelationGroupMPFInSitu";
-  // m_DefaultSys += "JESUncer_CorrelationGroupIntercalibration";
-  // m_DefaultSys += "JESUncer_CorrelationGroupbJES";
-  // m_DefaultSys += "JESUncer_CorrelationGroupFlavor";
-  // m_DefaultSys += "JESUncer_CorrelationGroupUncorrelated";
-  // m_DefaultSys += "MMSUncer_Total";
-  // m_DefaultSys += "EESUncer_Total";
-  m_DefaultSys += "METUncer_UnClust"; 
-  
-  m_JESSys += "JESUncer_Total";
-  m_JESSys += "JESUncer_AbsoluteStat";
-  m_JESSys += "JESUncer_AbsoluteScale";
-  m_JESSys += "JESUncer_AbsoluteFlavMap";
-  m_JESSys += "JESUncer_AbsoluteMPFBias";
-  m_JESSys += "JESUncer_Fragmentation";
-  m_JESSys += "JESUncer_SinglePionECAL";
-  m_JESSys += "JESUncer_SinglePionHCAL";
-  m_JESSys += "JESUncer_FlavorQCD";
-  m_JESSys += "JESUncer_TimePtEta";
-  m_JESSys += "JESUncer_RelativeJEREC1";
-  m_JESSys += "JESUncer_RelativeJEREC2";
-  m_JESSys += "JESUncer_RelativeJERHF";
-  m_JESSys += "JESUncer_RelativePtBB";
-  m_JESSys += "JESUncer_RelativePtEC1";
-  m_JESSys += "JESUncer_RelativePtEC2";
-  m_JESSys += "JESUncer_RelativePtHF";
-  m_JESSys += "JESUncer_RelativeBal";
-  m_JESSys += "JESUncer_RelativeSample";
-  m_JESSys += "JESUncer_RelativeFSR";
-  m_JESSys += "JESUncer_RelativeStatFSR";
-  m_JESSys += "JESUncer_RelativeStatEC";
-  m_JESSys += "JESUncer_RelativeStatHF";
-  m_JESSys += "JESUncer_PileUpDataMC";
-  m_JESSys += "JESUncer_PileUpPtRef";
-  m_JESSys += "JESUncer_PileUpPtBB";
-  m_JESSys += "JESUncer_PileUpPtEC1";
-  m_JESSys += "JESUncer_PileUpPtEC2";
-  m_JESSys += "JESUncer_PileUpPtHF";
-  m_JESSys += "JESUncer_PileUpMuZero";
-  m_JESSys += "JESUncer_PileUpEnvelope";
-  m_JESSys += "JESUncer_SubTotalPileUp";
-  m_JESSys += "JESUncer_SubTotalRelative";
-  m_JESSys += "JESUncer_SubTotalPt";
-  m_JESSys += "JESUncer_SubTotalScale";
-  m_JESSys += "JESUncer_SubTotalAbsolute";
-  m_JESSys += "JESUncer_SubTotalMC";
-  m_JESSys += "JESUncer_TotalNoFlavor";
-  m_JESSys += "JESUncer_TotalNoTime";
-  m_JESSys += "JESUncer_TotalNoFlavorNoTime";
-  m_JESSys += "JESUncer_FlavorZJet";
-  m_JESSys += "JESUncer_FlavorPhotonJet";
-  m_JESSys += "JESUncer_FlavorPureGluon";
-  m_JESSys += "JESUncer_FlavorPureQuark";
-  m_JESSys += "JESUncer_FlavorPureCharm";
-  m_JESSys += "JESUncer_FlavorPureBottom";
-  m_JESSys += "JESUncer_TimeRunBCD";
-  m_JESSys += "JESUncer_TimeRunEF";
-  m_JESSys += "JESUncer_TimeRunGH";
-  m_JESSys += "JESUncer_CorrelationGroupMPFInSitu";
-  m_JESSys += "JESUncer_CorrelationGroupIntercalibration";
-  m_JESSys += "JESUncer_CorrelationGroupbJES";
-  m_JESSys += "JESUncer_CorrelationGroupFlavor";
-  m_JESSys += "JESUncer_CorrelationGroupUncorrelated";
-
-  m_MMSSys += "MMSUncer_Total";
-  
-  m_EESSys += "EESUncer_Total";
-  
-  m_METSys += "METUncer_UnClust";
-  m_METSys.Add(m_JESSys);
-}
-
-template <>
 ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET){
   int year = 2017;
   if(m_FileTag.find("16") != std::string::npos)
@@ -1141,53 +1112,47 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET){
   double delta  = (CurrentSystematic().IsUp() ? 1. : -1.);
   TVector3 deltaMET(0.,0.,0.);
   bool DO_JES = false;
-  if(m_JESSys == CurrentSystematic())
+  if(m_SysTool.JESSystematics() == CurrentSystematic())
     DO_JES = true;
   
   for(int i = 0; i < Njet; i++){
-     bool failID = false;
-     if(Jet_pt[i] < 15.)
-       continue;
-     if(Jet_jetId[i] < 3){
-       if(Jet_chEmEF[i] > 0.8 || Jet_muEF[i] > 0.8)
-	 continue;
-       else {
-	 passID = false;
-	 break;
-       }
-     }
+    bool failID = false;
+    if(Jet_pt[i] < 15. || fabs(Jet_eta[i]) > 5.)
+      continue;
+    if(Jet_jetId[i] < 3)
+      continue;
+    
+    Particle jet;
+    float mass = Jet_mass[i];
+    if(std::isnan(mass))
+      mass = 0;
+    if(std::isinf(mass))
+      mass = 0;
+    if(mass < 0.)
+      mass = 0.;
+    jet.SetPtEtaPhiM(Jet_pt[i], Jet_eta[i],
+		     Jet_phi[i], mass);
+    
+    if(DO_JES){
+      double uncer = m_JMETool.GetFactor(year, CurrentSystematic().Label(),
+					 Jet_pt[i], Jet_eta[i]);
+      
+      deltaMET -= delta*uncer*jet.Vect();
+      jet.SetPtEtaPhiM((1.+delta*uncer)*jet.Pt(),
+		       jet.Eta(), jet.Phi(),
+		       (1.+delta*uncer)*jet.M());
+    }
+    
+    // recalibrate jets
+    // double raw = 1. - Jet_rawFactor[i];
+    // double L1 = m_JMETool.GetFactor(year, "L1FastJet",
+    // 				     raw*Jet_pt[i], Jet_eta[i],
+    // 				     Jet_area[i], fixedGridRhoFastjetAll);
+    // double L2 = m_JMETool.GetFactor(year, "L2Relative",
+    // 				     raw*L1*Jet_pt[i], Jet_eta[i],
+    // 				     Jet_area[i], fixedGridRhoFastjetAll);
 
-     Particle jet;
-     float mass = Jet_mass[i];
-     if(std::isnan(mass))
-       mass = 0;
-     if(std::isinf(mass))
-       mass = 0;
-     if(mass < 0.)
-       mass = 0.;
-     jet.SetPtEtaPhiM(Jet_pt[i], Jet_eta[i],
-		      Jet_phi[i], mass);
-     
-     if(DO_JES){
-       double uncer = m_JMETool.GetFactor(year, CurrentSystematic().Label(),
-					  Jet_pt[i], Jet_eta[i]);
-       
-       deltaMET -= delta*uncer*jet.Vect();
-       jet.SetPtEtaPhiM((1.+delta*uncer)*jet.Pt(),
-			jet.Eta(), jet.Phi(),
-			(1.+delta*uncer)*jet.M());
-     }
-     
-     // recalibrate jets
-     // double raw = 1. - Jet_rawFactor[i];
-     // double L1 = m_JMETool.GetFactor(year, "L1FastJet",
-     // 				     raw*Jet_pt[i], Jet_eta[i],
-     // 				     Jet_area[i], fixedGridRhoFastjetAll);
-     // double L2 = m_JMETool.GetFactor(year, "L2Relative",
-     // 				     raw*L1*Jet_pt[i], Jet_eta[i],
-     // 				     Jet_area[i], fixedGridRhoFastjetAll);
-
-     // cout << raw << " " << L1 << " " << L2 << " " << raw*L1*L2 << endl;
+    // cout << raw << " " << L1 << " " << L2 << " " << raw*L1*L2 << endl;
 
     if(Jet_jetId[i] >= 3)
       jet.SetParticleID(kTight);
@@ -1267,35 +1232,37 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET){
   // If one jet fails jet ID, 
   if(!passID)
     return ParticleList();
+
+    year = 2016;
   
-  if(year == 2017)
-    MET.SetPtEtaPhi(METFixEE2017_pt,0.0,METFixEE2017_phi);
-  else
-    MET.SetPtEtaPhi(MET_pt,0.0,MET_phi);
-
-  deltaMET.SetZ(0.);
-  MET += deltaMET;
-
-  if(CurrentSystematic() == Systematic("METUncer_UnClust")){
     if(year == 2017)
-      deltaMET.SetXYZ(delta*METFixEE2017_MetUnclustEnUpDeltaX,
-		      delta*METFixEE2017_MetUnclustEnUpDeltaY, 0.);
+      MET.SetPtEtaPhi(METFixEE2017_pt,0.0,METFixEE2017_phi);
     else
-      deltaMET.SetXYZ(delta*MET_MetUnclustEnUpDeltaX,
-		      delta*MET_MetUnclustEnUpDeltaY, 0.);
+      MET.SetPtEtaPhi(MET_pt,0.0,MET_phi);
+
+    deltaMET.SetZ(0.);
     MET += deltaMET;
-  }
+
+    if(CurrentSystematic() == Systematic("METUncer_UnClust")){
+      if(year == 2017)
+	deltaMET.SetXYZ(delta*METFixEE2017_MetUnclustEnUpDeltaX,
+			delta*METFixEE2017_MetUnclustEnUpDeltaY, 0.);
+      else
+	deltaMET.SetXYZ(delta*MET_MetUnclustEnUpDeltaX,
+			delta*MET_MetUnclustEnUpDeltaY, 0.);
+      MET += deltaMET;
+    }
   
-  return list;
+    return list;
 }
 
-template <>
-TVector3 AnalysisBase<SUSYNANOBase>::GetMET(){
-  TVector3 MET;
-  GetJetsMET(MET);
+  template <>
+  TVector3 AnalysisBase<SUSYNANOBase>::GetMET(){
+    TVector3 MET;
+    GetJetsMET(MET);
 
-  return MET;
-}
+    return MET;
+  }
 
 template <>
 ParticleList AnalysisBase<SUSYNANOBase>::GetJets(){
@@ -1723,7 +1690,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetMuons(){
 
   int N = nMuon;
   for(int i = 0; i < N; i++){
-     // baseline lepton definition
+    // baseline lepton definition
     if(Muon_pt[i] < 3. || fabs(Muon_eta[i]) > 2.4)
       continue;
     // if(fabs(Muon_dxy[i]) >= 0.05 || fabs(Muon_dz[i]) >= 0.1 ||
@@ -1815,7 +1782,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetSVs(const TVector3& PV){
     // if(fabs((xSV-PV).Pt()) >= 3.)
     //   continue;
 
-     // if(SV_dlenSig[i] <= 4.)
+    // if(SV_dlenSig[i] <= 4.)
     //   continue;
     // if(SV_ndof[i] < 1.8) // replacement for ntracks cut...
     //   continue;
@@ -1830,6 +1797,9 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetSVs(const TVector3& PV){
 template <>
 ParticleList AnalysisBase<SUSYNANOBase>::GetGenElectrons(){
   ParticleList list;
+
+  if(IsData())
+    return list;
   
   int N = nGenPart;
   int PDGID;
@@ -1856,12 +1826,15 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetGenElectrons(){
 template <>
 ParticleList AnalysisBase<SUSYNANOBase>::GetGenMuons(){
   ParticleList list;
+
+  if(IsData())
+    return list;
   
   int N = nGenPart;
   int PDGID;
   for(int i = 0; i < N; i++){
     PDGID = GenPart_pdgId[i];
-    if(abs(PDGID) == 13 && GenPart_pt[i] > 3. && GenPart_status[i] == 1){
+    if(abs(PDGID) == 13 && GenPart_pt[i] > 2. && GenPart_status[i] == 1){
       Particle lep;
       
       lep.SetPDGID(PDGID);
@@ -1882,6 +1855,9 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetGenMuons(){
 template <>
 ParticleList AnalysisBase<SUSYNANOBase>::GetGenNeutrinos(){
   ParticleList list;
+
+  if(IsData())
+    return list;
   
   int N = nGenPart;
   int PDGID;
@@ -1908,6 +1884,9 @@ template <>
 ParticleList AnalysisBase<SUSYNANOBase>::GetGenBosons(){
   ParticleList list;
 
+  if(IsData())
+    return list;
+  
   int N = nGenPart;
   int PDGID;
   for(int i = 0; i < N; i++){
@@ -1933,6 +1912,9 @@ template <>
 ParticleList AnalysisBase<SUSYNANOBase>::GetGenSparticles(){
   ParticleList list;
 
+  if(IsData())
+    return list;
+  
   int N = nGenPart;
   int PDGID;
   for(int i = 0; i < N; i++){

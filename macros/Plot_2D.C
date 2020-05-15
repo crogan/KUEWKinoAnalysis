@@ -145,52 +145,24 @@ void Plot_2D(){
   // SIG1.SetSkip(1);
   // g_Samples.push_back(&SIG1);
   
-  // SampleSet SIG1;
-  // SIG1.SetBkg(false);
-  // SIG1.SetTitle("#tilde{#chi}^{0}_{2} #tilde{#chi}^{#pm}_{1} #rightarrow Z #tilde{#chi}^{0}_{1} W #tilde{#chi}^{0}_{1}; m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 300, m_{#chi^{0}_{1}} = 290 GeV");
-  // SIG1.SetTreeName("SMS_300_290");
-  // SIG1.SetColor(kMagenta);
-  // SIG1.AddFile(NtuplePath+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-  // SIG1.SetSkip(1);
-  // g_Samples.push_back(&SIG1);
+  SampleSet SIG1;
+  SIG1.SetBkg(false);
+  SIG1.SetTitle("#tilde{#chi}^{0}_{2} #tilde{#chi}^{#pm}_{1} #rightarrow Z #tilde{#chi}^{0}_{1} W #tilde{#chi}^{0}_{1}; m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 300, m_{#chi^{0}_{1}} = 290 GeV");
+  SIG1.SetTreeName("SMS_300_220");
+  SIG1.SetColor(kMagenta);
+  SIG1.AddFile(NtuplePath+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+  SIG1.SetSkip(1);
+  g_Samples.push_back(&SIG1);
 
   // SampleSet SIG1;
   // SIG1.SetBkg(false);
-<<<<<<< HEAD
-  // SIG1.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 197");
-  // SIG1.SetTreeName("SMS_200_197");
-  // SIG1.SetColor(kBlue-7);
-  // SIG1.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
-=======
   // SIG1.SetTitle("#tilde{l} #tilde{l} #rightarrow l #tilde{#chi}^{0}_{1} l #tilde{#chi}^{0}_{1}; m_{ #tilde{l}} = 300, m_{#tilde{#chi}^{0}_{1}} = 290 GeV");
   // SIG1.SetTreeName("SMS_300_290");
   // SIG1.SetColor(kMagenta);
   // SIG1.AddFile(NtuplePath+"Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
->>>>>>> a651e3965979b223582a0ab308193edb64dcf392
   // SIG1.SetSkip(1);
   // SIG1.SetScale(2.8);
   // g_Samples.push_back(&SIG1);
-<<<<<<< HEAD
- 
-  SampleSet SIG2;
-  SIG2.SetBkg(false);
-  SIG2.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 170");
-  SIG2.SetTreeName("SMS_200_170");
-  SIG2.SetColor(kMagenta-7);
-  SIG2.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
-  SIG2.SetSkip(1);
-  g_Samples.push_back(&SIG2);
-
-
-  // SampleSet SIG3;
-  // SIG3.SetBkg(false);
-  // SIG3.SetTitle("m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 200, m_{#chi^{0}_{1}} = 1");
-  // SIG3.SetTreeName("SMS_200_1");
-  // SIG3.SetColor(kViolet-7);
-  // SIG3.AddFile(StopNtuplePath+"All_Sig/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17.root");
-  // SIG3.SetSkip(1);
-  // g_Samples.push_back(&SIG3);
-=======
   
   // SampleSet SIG1;
   // SIG1.SetBkg(false);
@@ -201,24 +173,17 @@ void Plot_2D(){
   // SIG1.SetSkip(1);
   // g_Samples.push_back(&SIG1);
 
-  SampleSet SIG1;
-  SIG1.SetBkg(false);
-  SIG1.SetTitle("#scale[0.8]{#tilde{t} #tilde{t} #rightarrow b #tilde{#chi}^{#pm}_{1}(f #bar{f} #tilde{#chi}^{0}_{1}) b #tilde{#chi}^{#pm}_{1}(f #bar{f} #tilde{#chi}^{0}_{1})}; m_{t} = 700, m_{#chi^{0}_{1}} = 680 GeV");
-  SIG1.SetTreeName("SMS_700_680");
-  SIG1.SetColor(kMagenta);
-  SIG1.AddFile(NtuplePath+"Fall17_102X_SMS/SMS-T2bW_X05_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-  SIG1.SetSkip(1);
-  g_Samples.push_back(&SIG1);
->>>>>>> a651e3965979b223582a0ab308193edb64dcf392
-
+  // SampleSet SIG1;
+  // SIG1.SetBkg(false);
+  // SIG1.SetTitle("#scale[0.8]{#tilde{t} #tilde{t} #rightarrow b #tilde{#chi}^{#pm}_{1}(f #bar{f} #tilde{#chi}^{0}_{1}) b #tilde{#chi}^{#pm}_{1}(f #bar{f} #tilde{#chi}^{0}_{1})}; m_{t} = 700, m_{#chi^{0}_{1}} = 680 GeV");
+  // SIG1.SetTreeName("SMS_700_680");
+  // SIG1.SetColor(kMagenta);
+  // SIG1.AddFile(NtuplePath+"Fall17_102X_SMS/SMS-T2bW_X05_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+  // SIG1.SetSkip(1);
+  // g_Samples.push_back(&SIG1);
   int Nsample = g_Samples.size();
   //string g_Label = "No selection";
-<<<<<<< HEAD
-  string g_Label = "RISR vs. pT_lep, Cat. 2 (sig:200-170)";
-
-=======
   string g_Label = "1 lepton";
->>>>>>> a651e3965979b223582a0ab308193edb64dcf392
 
   // g_Yname = "Njets_S";
   // g_Ymin = 0.0;
@@ -226,55 +191,6 @@ void Plot_2D(){
   // units_per_bin_y = 1.0;
   // g_NY = (int)(g_Ymax - g_Ymin)/units_per_bin_y;
 
-<<<<<<< HEAD
-  g_Yname = "pt_{lep}";
-  g_Ymin = 0.0;
-  g_Ymax = 500.;
-  units_per_bin_y = 10.;
-  g_NY = (int)(g_Ymax - g_Ymin)/units_per_bin_y;
-
-
-  // g_Xname = "pT_ISR (GeV)";
-  // g_Xmin = 0.0;
-  // g_Xmax = 1500.; 
-  // units_per_bin_x = 10.;
-  // g_NX = (int)(g_Xmax - g_Xmin)/units_per_bin_x;
-
-  g_Xname = "RISR";
-  g_Xmin = 0.0;
-  g_Xmax = 1.3; 
-  units_per_bin_x = 0.01;
-  g_NX = (int)(g_Xmax - g_Xmin)/units_per_bin_x;
-
-
-  // g_Xname = "Njets_ISR";
-  // g_Xmin = 0.0;
-  // g_Xmax = 10.; 
-  // units_per_bin_x = 1.0;
-  // g_NX = (int)(g_Xmax - g_Xmin)/units_per_bin_x;
-
-  // g_Xname = "Njets_S";
-  // g_Xmin = 0.0;
-  // g_Xmax = 5.0; 
-  // units_per_bin_x = 1.0;
-  // g_NX = (int)(g_Xmax - g_Xmin)/units_per_bin_x;
-
-  // g_Yname = "Njets_ISR";
-  // g_Ymin = 0.0;
-  // g_Ymax = 5.0;
-  // units_per_bin_y = 1.0;
-  // g_NY = (int)(g_Ymax - g_Ymin)/units_per_bin_y;
-
-  // g_Xname = "N_{lep}^{S}";
-  // g_Xmin = 0.4;
-  // g_Xmax = 1.1; 
-  // g_NX = 32;
-
-  // g_Yname = "N_{jet}^{S}";
-  // g_Ymin = 0.;
-  // g_Ymax = 180.;
-  // g_NY = 32;
-=======
   //g_Xname = "E_{lep #scale[0.8]{#perp}}^{ S}  [GeV]";
   //g_Xname = "#bar{M}_{#tilde{#chi_{2}} #scale[0.8]{#perp}}  [GeV]";
   // g_Xname = "p_{T}^{lep} [GeV]";
@@ -288,7 +204,6 @@ void Plot_2D(){
   g_Ymin = 0.6;
   g_Ymax = 1.02;
   g_NY = 32;
->>>>>>> a651e3965979b223582a0ab308193edb64dcf392
 
   // g_Xname = "R_{ISR}";
   // g_Xmin = -1.;
@@ -327,25 +242,6 @@ void Plot_2D(){
 	if((e/SKIP)%(std::max(1, int(Nentry/SKIP/10))) == 0)
 	  cout << "      event " << e << " | " << Nentry << endl;
 
-<<<<<<< HEAD
-	if(base->Nlep != 1) //single lepton final states
-  if(base->MiniIso_lep->at(0) > 0.1) //miniIso cut
-    continue;
-    //cout << "miniIso cut" << endl;
-
-  if(base->RISR->at(1) < 0.8) //RISR cut, cat. 2, remove for bkg
-    continue;
-    //cout << "RISR cut" << endl;
-
-  if(base->Njet_S->at(1) != 0)
-    continue;
- // cout << "Njets_S cut" << endl;
-	
-	  hist->Fill(base->RISR->at(1), base->PT_lep->at(0), base->weight*double(SKIP));
-     //cout << "hist fill" << endl;
-     }
-
-=======
 	///////////// 1 lepton
 	// if(base->Nlep != 1)
 	//   continue;
@@ -373,23 +269,23 @@ void Plot_2D(){
 	/////////////////
 	
 	///////////// 2 lepton
-	if(base->Nlep != 2)
-	  continue;
+	// if(base->Nlep != 2)
+	//   continue;
 
-	if(base->ID_lep->at(0) < 3 ||
-	   base->ID_lep->at(1) < 3)
-	  continue;
+	// if(base->ID_lep->at(0) < 3 ||
+	//    base->ID_lep->at(1) < 3)
+	//   continue;
 
-	if(base->MiniIso_lep->at(0)*base->PT_lep->at(0) > 6. ||
-	   base->MiniIso_lep->at(1)*base->PT_lep->at(1) > 6.)
-	  continue;
+	// if(base->MiniIso_lep->at(0)*base->PT_lep->at(0) > 6. ||
+	//    base->MiniIso_lep->at(1)*base->PT_lep->at(1) > 6.)
+	//   continue;
 
-	if(base->SIP3D_lep->at(0) > 4 ||
-	   base->SIP3D_lep->at(1) > 4)
-	  continue;
+	// if(base->SIP3D_lep->at(0) > 4 ||
+	//    base->SIP3D_lep->at(1) > 4)
+	//   continue;
 
-	if(base->Charge_lep->at(0)+base->Charge_lep->at(1) != 0)
-	  continue;
+	// if(base->Charge_lep->at(0)+base->Charge_lep->at(1) != 0)
+	//   continue;
 
 	// TVector3 ETMiss;
 	// ETMiss.SetPtEtaPhi(base->MET, 0., base->MET_phi);
@@ -397,6 +293,44 @@ void Plot_2D(){
 	// TVector3 lep;
 	// lep.SetPtEtaPhi(base->PT_lep->at(0),base->Eta_lep->at(0),base->Phi_lep->at(0));
 	// double dphiML = fabs(lep.DeltaPhi(ETMiss));
+
+		/////////////// 3 lepton
+	if(base->Nlep != 3)
+	  continue;
+
+	if(base->ID_lep->at(0) < 3 ||
+	   base->ID_lep->at(1) < 3 ||
+	   base->ID_lep->at(2) < 3)
+	  continue;
+
+	if(base->MiniIso_lep->at(0)*base->PT_lep->at(0) > 6. ||
+	   base->MiniIso_lep->at(1)*base->PT_lep->at(1) > 6. ||
+	   base->MiniIso_lep->at(2)*base->PT_lep->at(2) > 6.)
+	  continue;
+
+	if(base->SIP3D_lep->at(0) > 4 ||
+	   base->SIP3D_lep->at(1) > 4 ||
+	   base->SIP3D_lep->at(2) > 4)
+	  continue;
+	//////////////////////////
+
+	if(base->Njet_S->at(1) != 0)
+	  continue;
+	if(base->NSV_S->at(1) != 0)
+	  continue;
+	vector<int> flavor_a;
+	for(int i = 0; i < base->Nlep_a->at(1); i++){
+	  flavor_a.push_back(base->PDGID_lep->at(base->index_lep_a->at(1)[i]));
+	  cout << "a " << base->PDGID_lep->at(base->index_lep_a->at(1)[i]) << endl;;
+	}
+	cout << endl;
+	vector<int> flavor_b;
+	for(int i = 0; i < base->Nlep_b->at(1); i++){
+	  flavor_b.push_back(base->PDGID_lep->at(base->index_lep_b->at(1)[i]));
+	  cout << "b " << base->PDGID_lep->at(base->index_lep_b->at(1)[i]) << endl;;
+	}
+	cout << endl << endl;
+       
 	
 	TLorentzVector lep1, lep2;
 	TVector3 MET;
@@ -518,7 +452,6 @@ void Plot_2D(){
 	hist->Fill(myMX3_BoostT,base->RISR->at(1), weight*double(SKIP)*g_Samples[s]->GetScale());
       }
       
->>>>>>> a651e3965979b223582a0ab308193edb64dcf392
       delete base;
       delete chain;
     }
@@ -563,23 +496,8 @@ void Plot_2D(){
   hist->GetZaxis()->SetTitleOffset(1.05);
   hist->GetZaxis()->SetLabelFont(42);
   hist->GetZaxis()->SetLabelSize(0.05);
-<<<<<<< HEAD
-  hist->GetZaxis()->SetTitle("a. u.");
-  hist->GetZaxis()->SetRangeUser(1E-3,1.1*hist->GetMaximum()); //0.9*hist->GetMinimum(0.0)
-
-  // TLatex l;
-  // l.SetTextFont(42);
-  // l.SetNDC();
-  // l.SetTextSize(0.035);
-  // l.SetTextFont(42);
-  // l.DrawLatex(0.41,0.943,g_Label.c_str());
-  // l.SetTextSize(0.04);
-  // l.SetTextFont(42);
-  // l.DrawLatex(0.01,0.943,"#bf{#it{CMS}} Internal 13 TeV Simulation");
-=======
   hist->GetZaxis()->SetTitle("N_{events} / 137 fb^{-1}");
   hist->GetZaxis()->SetRangeUser(0.9*hist->GetMinimum(0.0),1.1*hist->GetMaximum());
->>>>>>> a651e3965979b223582a0ab308193edb64dcf392
 
   TLatex l;
   l.SetTextFont(132);
@@ -589,16 +507,11 @@ void Plot_2D(){
   l.DrawLatex(0.42,0.94,g_Label.c_str());
   l.SetTextSize(0.03);
   l.SetTextFont(42);
-<<<<<<< HEAD
-  l.DrawLatex(0.145,0.92,"#bf{#it{CMS}} Internal 13 TeV Simulation");
-
-=======
   // l.DrawLatex(0.17,0.855,g_PlotTitle.c_str());
   l.DrawLatex(0.71,0.943,g_PlotTitle.c_str());
   l.SetTextSize(0.04);
   l.SetTextFont(42);
   l.DrawLatex(0.01,0.943,"#bf{CMS} Simulation Preliminary");
->>>>>>> a651e3965979b223582a0ab308193edb64dcf392
 
   l.SetTextSize(0.045);
   l.SetTextFont(42);
