@@ -21,6 +21,9 @@ public:
 
   void SetBkg(bool is_bkg);
   bool GetBkg() const;
+
+  void SetData(bool is_data);
+  bool GetData() const;
   
   void   AddFile(const string& filename);
   int    GetNFile() const;
@@ -45,6 +48,7 @@ public:
   
 private:
   bool m_IsBkg;
+  bool m_IsData;
   std::vector<string> m_FileNames;
   string m_TreeName;
   string m_Title;
@@ -58,6 +62,7 @@ private:
 
 inline SampleSet::SampleSet(){
   m_IsBkg = true;
+  m_IsData = false;
   m_Title = "";
   m_TreeName = "KUAnalysis";
   m_Color = kBlue;
@@ -69,10 +74,21 @@ inline SampleSet::~SampleSet() {}
 
 inline void SampleSet::SetBkg(bool is_bkg){
   m_IsBkg = is_bkg;
+  m_IsData = false;
 }
 
 inline bool SampleSet::GetBkg() const {
   return m_IsBkg;
+}
+
+inline void SampleSet::SetData(bool is_data){
+  m_IsData = is_data;
+  if(m_IsData)
+    m_IsBkg = false;
+}
+
+inline bool SampleSet::GetData() const {
+  return m_IsData;
 }
   
 inline void SampleSet::AddFile(const string& filename){
