@@ -1232,28 +1232,26 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET){
   // If one jet fails jet ID, 
   if(!passID)
     return ParticleList();
-
-    year = 2016;
   
+  if(year == 2017)
+    MET.SetPtEtaPhi(METFixEE2017_pt,0.0,METFixEE2017_phi);
+  else
+    MET.SetPtEtaPhi(MET_pt,0.0,MET_phi);
+  
+  deltaMET.SetZ(0.);
+  MET += deltaMET;
+  
+  if(CurrentSystematic() == Systematic("METUncer_UnClust")){
     if(year == 2017)
-      MET.SetPtEtaPhi(METFixEE2017_pt,0.0,METFixEE2017_phi);
+      deltaMET.SetXYZ(delta*METFixEE2017_MetUnclustEnUpDeltaX,
+		      delta*METFixEE2017_MetUnclustEnUpDeltaY, 0.);
     else
-      MET.SetPtEtaPhi(MET_pt,0.0,MET_phi);
-
-    deltaMET.SetZ(0.);
+      deltaMET.SetXYZ(delta*MET_MetUnclustEnUpDeltaX,
+		      delta*MET_MetUnclustEnUpDeltaY, 0.);
     MET += deltaMET;
-
-    if(CurrentSystematic() == Systematic("METUncer_UnClust")){
-      if(year == 2017)
-	deltaMET.SetXYZ(delta*METFixEE2017_MetUnclustEnUpDeltaX,
-			delta*METFixEE2017_MetUnclustEnUpDeltaY, 0.);
-      else
-	deltaMET.SetXYZ(delta*MET_MetUnclustEnUpDeltaX,
-			delta*MET_MetUnclustEnUpDeltaY, 0.);
-      MET += deltaMET;
-    }
+  }
   
-    return list;
+  return list;
 }
 
   template <>
