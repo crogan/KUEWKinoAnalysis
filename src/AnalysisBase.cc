@@ -439,7 +439,7 @@ int AnalysisBase<StopNtupleTree>::GetSampleIndex(){
 	  MP = mass;
     }
   }
-
+  
   int hash = 100000*MP + MC;
   if(m_HashToIndex.count(hash) == 0){
     m_HashToIndex[hash] = m_Nsample;
@@ -888,7 +888,7 @@ int AnalysisBase<SUSYNANOBase>::GetSampleIndex(){
 	  MP = mass;
     }
   }
-
+  
   int hash = 100000*MP + MC;
   if(m_HashToIndex.count(hash) == 0){
     m_HashToIndex[hash] = m_Nsample;
@@ -908,7 +908,7 @@ template <>
 double AnalysisBase<SUSYNANOBase>::GetEventWeight(){
   if(IsData())
     return 1.;
-
+  
   if(m_IndexToNweight[m_SampleIndex] > 0.){
     if(!m_DoSMS)
       return genWeight*m_IndexToXsec[m_SampleIndex]/m_IndexToNweight[m_SampleIndex];

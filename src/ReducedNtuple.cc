@@ -585,6 +585,8 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   if(AnalysisBase<Base>::IsData())
     if(!AnalysisBase<Base>::IsGoodEvent() || !m_EventFilter)
       return;
+
+  // cout << AnalysisBase<Base>::GetEventWeight() << endl;
   
   bool good_PV;
   TVector3 PV = AnalysisBase<Base>::GetPV(good_PV);
@@ -740,7 +742,10 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
       m_index_lep_b.push_back(i);
     }
   }
-    
+
+  if(m_Nlep + m_NSV_S + m_Njet_S < 1)
+    return;
+  
   // Fill Observable Branches
   
   m_PTCM = CM->GetFourVector().Pt();
@@ -830,7 +835,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   TLorentzVector vP_Lb_X3b  = saLb->GetFourVector(*X3b);
   TLorentzVector vP_Ia_X3a  = X1a->GetFourVector(*X3a);
   TLorentzVector vP_Ib_X3b  = X1b->GetFourVector(*X3b);
-    
+  
   m_H11X3a = 2.*vP_Ia_X3a.P();
   m_H11X3b = 2.*vP_Ib_X3b.P();
   m_H21X3a = vP_Ja_X3a.P() + vP_La_X3a.P() + vP_Ia_X3a.P();
@@ -841,6 +846,11 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   TVector3 boostInv = (vP_Ia_S+vP_Ib_S).BoostVector();
   TVector3 daBoost = vP_S_CM.Vect().Unit();
 
+
+  
+  if((std::isnan(boostInv.Mag()) || std::isnan(boostVis.Mag())))
+    cout << "boost NAN " << boostInv.Mag() << " " << boostVis.Mag() << " Ja=" << vP_Ja_S.P() << " Jb=" << vP_Jb_S.P() << " La=" << vP_La_S.P() << " Lb=" << vP_Lb_S.P() << " Inva=" << vP_Ia_S.P() << " Invb=" << vP_Ib_S.P() << " MET=" << ETMiss.Mag() << endl;
+  
   boostVis = (boostVis.Dot(daBoost))*daBoost;
   boostInv = (boostInv.Dot(daBoost))*daBoost;
 
@@ -870,12 +880,16 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
 
   // ISR related variables
   if(m_Njet_ISR > 0){
-    TVector3 vPTISR = S->GetTransverseFourVector(*CM).Vect();
-    TVector3 vPTINV = (X1a->GetTransverseFourVector(*CM)+X1b->GetTransverseFourVector(*CM)).Vect();
+    TVector3 vPTISR = S->GetFourVector(*CM).Vect();
+    TVector3 vPTINV = (X1a->GetFourVector(*CM)+X1b->GetFourVector(*CM)).Vect();
 
     m_PTISR = vPTISR.Mag();
     m_MISR = ISR->GetMass();
     m_RISR = fabs(vPTINV.Dot(vPTISR.Unit())) / vPTISR.Mag();
+    
+    if((std::isnan(m_RISR) || std::isnan(m_Mperp))){
+      cout << "VAR NAN " << vPTISR.Mag() << " " << vPTINV.Mag() << " NjetS=" << m_Njet_S << " Njeta=" << m_Njet_a << " Njetb=" << m_Njet_b << " Nlep=" << m_Nlep << " Nlepa=" << m_Nlep_a << " Nlepb=" << m_Nlep_b << " " << m_Mperp << endl;
+    }
 
     TVector3 isr_t = ISR->GetTransverseFourVector(*S).Vect();
     TVector3 isr   = ISR->GetFourVector(*S).Vect();

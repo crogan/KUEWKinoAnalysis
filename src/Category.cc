@@ -100,9 +100,11 @@ bool Category::operator == (const Criteria& cat) const {
   if(pcat->GetN() < N)
     return false;
 
-  for(int i = 0; i < N; i++)
-    if(!(m_Criteria[i] == (*pcat)[i]))
+  for(int i = 0; i < N; i++){
+    if(!(m_Criteria[i] == (*pcat)[i])){
       return false;
+    }
+  }
 
   return true;
 }

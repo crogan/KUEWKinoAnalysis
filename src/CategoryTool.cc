@@ -112,15 +112,13 @@ CategoryList CategoryTool::GetCategories() const {
   vector<double> PTISR_0L;
   PTISR_0L.push_back(200.);
   PTISR_0L.push_back(500.);
-  PTISR_0L.push_back(1000.);
   
   vector<double> PTISR_1L;
   PTISR_1L.push_back(200.);
-  PTISR_1L.push_back(500.);
+  PTISR_1L.push_back(300.);
 
   vector<double> PTISR_2LOS;
   PTISR_2LOS.push_back(200.);
-  PTISR_2LOS.push_back(300.);
 
   vector<double> PTISR_2LSS;
   PTISR_2LSS.push_back(200.);
@@ -139,6 +137,7 @@ CategoryList CategoryTool::GetCategories() const {
   cout << "Initializing 1L" << endl;
   CategoryList Cats_2LOS;
   Cats_2LOS += Category(L_OS_el_el,  "Ch2LOS");
+  Cats_2LOS += Category(L_OS_mu_mu,  "Ch2LOS");
   Cats_2LOS += Category(L_OS_el_mu,  "Ch2LOS");
   Cats_2LOS += Category(L_OS_elel_0, "Ch2LOS");
   Cats_2LOS += Category(L_OS_mumu_0, "Ch2LOS");
@@ -224,14 +223,14 @@ CategoryList CategoryTool::GetCategories() const {
   Cats_0L = Cats_0L.CreateFitBinRegions(Bin_0L); //
   Cats_0L = Cats_0L.CreateHadronicSRegions(H_0L);
   Cats_0L = Cats_0L.CreateHadronicISRRegions(H_ISR);
-  Cats_0L = Cats_0L.CreateGenericRegions("PTISR", PTISR_0L);
+  Cats_0L = Cats_0L.CreateGenericRegions("PTISR", PTISR_2LOS);
 
   cout << "Building 1L" << endl;
   Cats_1L = Cats_1L.CreateFitBinRegions(Bin_0L);
   Cats_1L = Cats_1L.CreateLeptonIDRegions(3, 2);
   Cats_1L = Cats_1L.CreateHadronicSRegions(H_1L);
   Cats_1L = Cats_1L.CreateHadronicISRRegions(H_ISR);
-  Cats_1L = Cats_1L.CreateGenericRegions("PTISR", PTISR_1L);
+  Cats_1L = Cats_1L.CreateGenericRegions("PTISR", PTISR_2LOS);
 
   cout << "Building 2L0L" << endl;
   Cats_2LOS = Cats_2LOS.CreateFitBinRegions(Bin_0L);
@@ -245,7 +244,7 @@ CategoryList CategoryTool::GetCategories() const {
   Cats_2LSS = Cats_2LSS.CreateLeptonIDRegions(3, 2);
   Cats_2LSS = Cats_2LSS.CreateHadronicSRegions(H_2LSS);
   Cats_2LSS = Cats_2LSS.CreateHadronicISRRegions(H_ISR);
-  Cats_2LSS = Cats_2LSS.CreateGenericRegions("PTISR", PTISR_2LSS);
+  Cats_2LSS = Cats_2LSS.CreateGenericRegions("PTISR", PTISR_2LOS);
   
   //////////////////////////////////////////////////////
 

@@ -341,6 +341,8 @@ void FitBin::Fill(double weight, double M, double R){
     return;
   
   m_hist1D->Fill(GetBin(R, M), weight);
+  // if(GetBin(R, M) < 1)
+  //   cout << R << " " << M << endl;
 }
 
 void FitBin::WriteHistogram(const string& name,

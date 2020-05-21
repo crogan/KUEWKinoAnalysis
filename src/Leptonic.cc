@@ -39,7 +39,7 @@ bool Lep::operator < (const Lep& lep) const {
   if(m_Charge < lep.Charge())
     return true;
   if(m_Charge > lep.Charge())
-    return true;
+    return false;
   
   if(m_Source < lep.Source())
     return true;
@@ -321,6 +321,7 @@ bool Leptonic::operator == (const Criteria& val) const {
       if(((*this)[i].GetHemA() == (*lep)[j].GetHemA()) &&
 	 ((*this)[i].GetHemB() == (*lep)[j].GetHemB()))
 	return true;
+  
   return false;
 }
 
