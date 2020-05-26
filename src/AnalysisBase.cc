@@ -1254,13 +1254,13 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET){
   return list;
 }
 
-  template <>
-  TVector3 AnalysisBase<SUSYNANOBase>::GetMET(){
-    TVector3 MET;
-    GetJetsMET(MET);
+template <>
+TVector3 AnalysisBase<SUSYNANOBase>::GetMET(){
+  TVector3 MET;
+  GetJetsMET(MET);
 
-    return MET;
-  }
+  return MET;
+}
 
 template <>
 ParticleList AnalysisBase<SUSYNANOBase>::GetJets(){
