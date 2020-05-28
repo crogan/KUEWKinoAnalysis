@@ -53,7 +53,7 @@ void NtupleBase<Base>::WriteNtuple(const string& filename, int ichunk, int nchun
     AnalysisBase<Base>::InitializeHistograms(histos);
 
   int Nsys = AnalysisBase<Base>::m_Systematics.GetN();
-
+  
   cout << "looping between " << N0 << " " << N1 << endl;
   for(Long64_t i = N0; i < N1 && i < NTOT; i++){
     int mymod = (N1-N0)/10;
@@ -61,11 +61,9 @@ void NtupleBase<Base>::WriteNtuple(const string& filename, int ichunk, int nchun
       mymod = 1;
     if(i%mymod == 0)
       cout << " event = " << i << " : [" << N0 << " , " << N1 << "]" << endl;
-
-
+    
     sample = AnalysisBase<Base>::GetEntry(i);
     
-        
     if(m_Label2Tree.count(sample) == 0){
       m_Label2Tree[sample] = std::vector<TTree*>();
 

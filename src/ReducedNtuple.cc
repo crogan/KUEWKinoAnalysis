@@ -646,14 +646,14 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
 
   m_NSV = SVs.size();
   
-  cout << "Njet=" << m_Njet << " NSV=" << m_NSV << " m_Nele=" << m_Nele << " Nmu=" << m_Nmu << endl;
+  // cout << "Njet=" << m_Njet << " NSV=" << m_NSV << " m_Nele=" << m_Nele << " Nmu=" << m_Nmu << endl;
 
   // require at least one lepton for now
   // if(m_Nlep < 1)
   //   return;
   
   // not enough stuff
-  if(m_Nlep + m_Njet < 2 || m_Njet < 1)
+  if(m_Nlep + m_Njet + m_NSV < 2 || m_Njet < 1)
     return;
   
   // Sparticle pair-production trees analysis
@@ -847,8 +847,6 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   TVector3 boostVis = (vP_Ja_S+vP_La_S+vP_Jb_S+vP_Lb_S).BoostVector();
   TVector3 boostInv = (vP_Ia_S+vP_Ib_S).BoostVector();
   TVector3 daBoost = vP_S_CM.Vect().Unit();
-
-
   
   if((std::isnan(boostInv.Mag()) || std::isnan(boostVis.Mag())))
     cout << "boost NAN " << boostInv.Mag() << " " << boostVis.Mag() << " Ja=" << vP_Ja_S.P() << " Jb=" << vP_Jb_S.P() << " La=" << vP_La_S.P() << " Lb=" << vP_Lb_S.P() << " Inva=" << vP_Ia_S.P() << " Invb=" << vP_Ib_S.P() << " MET=" << ETMiss.Mag() << endl;
@@ -856,12 +854,26 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   boostVis = (boostVis.Dot(daBoost))*daBoost;
   boostInv = (boostInv.Dot(daBoost))*daBoost;
 
-  vP_Ja_S.Boost(-boostVis);
-  vP_Jb_S.Boost(-boostVis);
-  vP_La_S.Boost(-boostVis);
-  vP_Lb_S.Boost(-boostVis);
-  vP_Ia_S.Boost(-boostInv);
-  vP_Ib_S.Boost(-boostInv);
+  if((!std::isnan(boostVis.Mag())) &&
+     (boostVis.Mag() < 1)){
+    vP_Ja_S.Boost(-boostVis);
+    vP_Jb_S.Boost(-boostVis);
+    vP_La_S.Boost(-boostVis);
+    vP_Lb_S.Boost(-boostVis);
+  } else {
+    vP_Ja_S.SetVectM(TVector3(0.,0.,0.),std::max(0.,vP_Ja_S.M()));
+    vP_Jb_S.SetVectM(TVector3(0.,0.,0.),std::max(0.,vP_Jb_S.M()));
+    vP_La_S.SetVectM(TVector3(0.,0.,0.),std::max(0.,vP_La_S.M()));
+    vP_Lb_S.SetVectM(TVector3(0.,0.,0.),std::max(0.,vP_Lb_S.M()));
+  }
+  if((!std::isnan(boostInv.Mag())) &&
+     (boostInv.Mag() < 1)){
+    vP_Ia_S.Boost(-boostInv);
+    vP_Ib_S.Boost(-boostInv);
+  } else {
+    vP_Ia_S.SetVectM(TVector3(0.,0.,0.),std::max(0.,vP_Ia_S.M()));
+    vP_Ib_S.SetVectM(TVector3(0.,0.,0.),std::max(0.,vP_Ib_S.M()));
+  }
     
   m_PX3_BoostT = (vP_Ja_S+vP_La_S+vP_Ia_S).P();
   m_MX3a_BoostT = (vP_Ja_S+vP_La_S+vP_Ia_S).M();
@@ -889,8 +901,9 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
     m_MISR = ISR->GetMass();
     m_RISR = fabs(vPTINV.Dot(vPTISR.Unit())) / vPTISR.Mag();
     
-    if((std::isnan(m_RISR) || std::isnan(m_Mperp)) || true){
+    if((std::isnan(m_RISR) || std::isnan(m_Mperp))){
       cout << "VAR NAN " << vPTISR.Mag() << " " << vPTINV.Mag() << " NjetS=" << m_Njet_S << " Njeta=" << m_Njet_a << " Njetb=" << m_Njet_b << " Nlep=" << m_Nlep << " Nlepa=" << m_Nlep_a << " Nlepb=" << m_Nlep_b << " " << m_Mperp << endl;
+      cout << m_RISR << endl;
     }
 
     TVector3 isr_t = ISR->GetTransverseFourVector(*S).Vect();
