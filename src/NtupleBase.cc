@@ -62,6 +62,8 @@ void NtupleBase<Base>::WriteNtuple(const string& filename, int ichunk, int nchun
     if(i%mymod == 0)
       cout << " event = " << i << " : [" << N0 << " , " << N1 << "]" << endl;
 
+    cout << " event = " << i << " : [" << N0 << " , " << N1 << "]" << endl;
+    
     sample = AnalysisBase<Base>::GetEntry(i);
     
         

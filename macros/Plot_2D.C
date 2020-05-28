@@ -40,7 +40,8 @@ using namespace RestFrames;
 void Plot_2D(){
   RestFrames::SetStyle();
 
-  string NtuplePath = "/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_10_01_20/";
+  //string NtuplePath = "/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_12_05_20/";
+  string NtuplePath = "/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_23_05_20/";
 
   int BKG_SKIP = 1;
   
@@ -142,14 +143,14 @@ void Plot_2D(){
   // SIG1.SetSkip(1);
   // g_Samples.push_back(&SIG1);
   
-  SampleSet SIG1;
-  SIG1.SetBkg(false);
-  SIG1.SetTitle("#tilde{#chi}^{0}_{2} #tilde{#chi}^{#pm}_{1} #rightarrow Z #tilde{#chi}^{0}_{1} W #tilde{#chi}^{0}_{1}; m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 300, m_{#chi^{0}_{1}} = 290 GeV");
-  SIG1.SetTreeName("SMS_300_220");
-  SIG1.SetColor(kMagenta);
-  SIG1.AddFile(NtuplePath+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-  SIG1.SetSkip(1);
-  g_Samples.push_back(&SIG1);
+  // SampleSet SIG1;
+  // SIG1.SetBkg(false);
+  // SIG1.SetTitle("#tilde{#chi}^{0}_{2} #tilde{#chi}^{#pm}_{1} #rightarrow Z #tilde{#chi}^{0}_{1} W #tilde{#chi}^{0}_{1}; m_{#chi^{#pm}_{1}/#chi^{0}_{2}} = 300, m_{#chi^{0}_{1}} = 290 GeV");
+  // SIG1.SetTreeName("SMS_300_290");
+  // SIG1.SetColor(kMagenta);
+  // SIG1.AddFile(NtuplePath+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+  // SIG1.SetSkip(1);
+  // g_Samples.push_back(&SIG1);
 
   // SampleSet SIG1;
   // SIG1.SetBkg(false);
@@ -170,14 +171,14 @@ void Plot_2D(){
   // SIG1.SetSkip(1);
   // g_Samples.push_back(&SIG1);
 
-  // SampleSet SIG1;
-  // SIG1.SetBkg(false);
-  // SIG1.SetTitle("#scale[0.8]{#tilde{t} #tilde{t} #rightarrow b #tilde{#chi}^{#pm}_{1}(f #bar{f} #tilde{#chi}^{0}_{1}) b #tilde{#chi}^{#pm}_{1}(f #bar{f} #tilde{#chi}^{0}_{1})}; m_{t} = 700, m_{#chi^{0}_{1}} = 680 GeV");
-  // SIG1.SetTreeName("SMS_700_680");
-  // SIG1.SetColor(kMagenta);
-  // SIG1.AddFile(NtuplePath+"Fall17_102X_SMS/SMS-T2bW_X05_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-  // SIG1.SetSkip(1);
-  // g_Samples.push_back(&SIG1);
+  SampleSet SIG1;
+  SIG1.SetBkg(false);
+  SIG1.SetTitle("#scale[0.8]{#tilde{t} #tilde{t} #rightarrow b #tilde{#chi}^{#pm}_{1}(f #bar{f} #tilde{#chi}^{0}_{1}) b #tilde{#chi}^{#pm}_{1}(f #bar{f} #tilde{#chi}^{0}_{1})}; m_{t} = 700, m_{#chi^{0}_{1}} = 680 GeV");
+  SIG1.SetTreeName("SMS_700_680");
+  SIG1.SetColor(kMagenta);
+  SIG1.AddFile(NtuplePath+"Fall17_102X_SMS/SMS-T2bW_X05_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+  SIG1.SetSkip(1);
+  g_Samples.push_back(&SIG1);
 
   int Nsample = g_Samples.size();
   g_PlotTitle = g_Samples[0]->GetTitle();
@@ -263,21 +264,21 @@ void Plot_2D(){
 	//   continue;
 	/////////////////
 	
-	///////////// 2 lepton
-	// if(base->Nlep != 2)
-	//   continue;
+	// 2 lepton
+	if(base->Nlep != 2)
+	  continue;
 
-	// if(base->ID_lep->at(0) < 3 ||
-	//    base->ID_lep->at(1) < 3)
-	//   continue;
+	if(base->ID_lep->at(0) < 3 ||
+	   base->ID_lep->at(1) < 3)
+	  continue;
 
-	// if(base->MiniIso_lep->at(0)*base->PT_lep->at(0) > 6. ||
-	//    base->MiniIso_lep->at(1)*base->PT_lep->at(1) > 6.)
-	//   continue;
+	if(base->MiniIso_lep->at(0)*base->PT_lep->at(0) > 5. ||
+	   base->MiniIso_lep->at(1)*base->PT_lep->at(1) > 5.)
+	  continue;
 
-	// if(base->SIP3D_lep->at(0) > 4 ||
-	//    base->SIP3D_lep->at(1) > 4)
-	//   continue;
+	if(base->SIP3D_lep->at(0) > 4 ||
+	   base->SIP3D_lep->at(1) > 4)
+	  continue;
 
 	// if(base->Charge_lep->at(0)+base->Charge_lep->at(1) != 0)
 	//   continue;
@@ -290,41 +291,24 @@ void Plot_2D(){
 	// double dphiML = fabs(lep.DeltaPhi(ETMiss));
 
 		/////////////// 3 lepton
-	if(base->Nlep != 3)
-	  continue;
+	// if(base->Nlep != 3)
+	//   continue;
 
-	if(base->ID_lep->at(0) < 3 ||
-	   base->ID_lep->at(1) < 3 ||
-	   base->ID_lep->at(2) < 3)
-	  continue;
+	// if(base->ID_lep->at(0) < 3 ||
+	//    base->ID_lep->at(1) < 3 ||
+	//    base->ID_lep->at(2) < 3)
+	//   continue;
 
-	if(base->MiniIso_lep->at(0)*base->PT_lep->at(0) > 6. ||
-	   base->MiniIso_lep->at(1)*base->PT_lep->at(1) > 6. ||
-	   base->MiniIso_lep->at(2)*base->PT_lep->at(2) > 6.)
-	  continue;
+	// if(base->MiniIso_lep->at(0)*base->PT_lep->at(0) > 6. ||
+	//    base->MiniIso_lep->at(1)*base->PT_lep->at(1) > 6. ||
+	//    base->MiniIso_lep->at(2)*base->PT_lep->at(2) > 6.)
+	//   continue;
 
-	if(base->SIP3D_lep->at(0) > 4 ||
-	   base->SIP3D_lep->at(1) > 4 ||
-	   base->SIP3D_lep->at(2) > 4)
-	  continue;
+	// if(base->SIP3D_lep->at(0) > 4 ||
+	//    base->SIP3D_lep->at(1) > 4 ||
+	//    base->SIP3D_lep->at(2) > 4)
+	//   continue;
 	//////////////////////////
-
-	if(base->Njet_S->at(1) != 0)
-	  continue;
-	if(base->NSV_S->at(1) != 0)
-	  continue;
-	vector<int> flavor_a;
-	for(int i = 0; i < base->Nlep_a->at(1); i++){
-	  flavor_a.push_back(base->PDGID_lep->at(base->index_lep_a->at(1)[i]));
-	  cout << "a " << base->PDGID_lep->at(base->index_lep_a->at(1)[i]) << endl;;
-	}
-	cout << endl;
-	vector<int> flavor_b;
-	for(int i = 0; i < base->Nlep_b->at(1); i++){
-	  flavor_b.push_back(base->PDGID_lep->at(base->index_lep_b->at(1)[i]));
-	  cout << "b " << base->PDGID_lep->at(base->index_lep_b->at(1)[i]) << endl;;
-	}
-	cout << endl << endl;
        
 	
 	TLorentzVector lep1, lep2;
@@ -339,40 +323,21 @@ void Plot_2D(){
 	// double MT2 = Calc_MT2(lep1,lep2,MET);
 
 	g_Label = "di-lepton selection";
-	if(base->Njet_S->at(1) != 0)
+	if(base->Njet_S != 0)
 	  continue;
-	if(base->NSV_S->at(1) != 0)
+	if(base->NSV_S != 0)
 	  continue;
 	/////////////////
-	
-	/////////////// 3 lepton
-	// if(base->Nlep != 3)
-	//   continue;
-
-	// if(base->ID_lep->at(0) < 3 ||
-	//    base->ID_lep->at(1) < 3 ||
-	//    base->ID_lep->at(2) < 3)
-	//   continue;
-
-	// if(base->MiniIso_lep->at(0)*base->PT_lep->at(0) > 4. ||
-	//    base->MiniIso_lep->at(1)*base->PT_lep->at(1) > 4. ||
-	//    base->MiniIso_lep->at(2)*base->PT_lep->at(2) > 4.)
-	//   continue;
-
-	// if(base->SIP3D_lep->at(0) > 3 ||
-	//    base->SIP3D_lep->at(1) > 3 ||
-	//    base->SIP3D_lep->at(2) > 3)
-	//   continue;
-	//////////////////////////
+       
 
 	 
-	if(base->MET < 200)
-	  continue;
+	// if(base->MET < 200)
+	//   continue;
 	
-	if(base->PTISR->at(1) < 200.)
+	if(base->PTISR < 200.)
 	  continue;
 
-	if(base->RISR->at(1) < 0.6)
+	if(base->RISR < 0.6)
 	  continue;
 
 	// if(base->Nbjet_ISR->at(1) > 0)
@@ -410,41 +375,14 @@ void Plot_2D(){
 
 
 
-	double myMX3 = sqrt(base->MX3a->at(1)*base->MX3a->at(1)+base->MX3b->at(1)*base->MX3b->at(1))/sqrt(2.);
-	double myMX3_BoostT = sqrt(base->MX3a_BoostT->at(1)*base->MX3a_BoostT->at(1)+base->MX3b_BoostT->at(1)*base->MX3b_BoostT->at(1))/sqrt(2.);
-	double myMS_BoostT = sqrt(base->PX3_BoostT->at(1)*base->PX3_BoostT->at(1)+
-				  base->MX3a_BoostT->at(1)*base->MX3a_BoostT->at(1))+
-	  sqrt(base->PX3_BoostT->at(1)*base->PX3_BoostT->at(1)+
-	       base->MX3b->at(1)*base->MX3b->at(1));
 
-	double MX3a = base->MX3a_BoostT->at(1) - base->MVa->at(1)*base->MVa->at(1)/base->MX3a_BoostT->at(1);
-	double MX3b = base->MX3b_BoostT->at(1) - base->MVb->at(1)*base->MVb->at(1)/base->MX3b_BoostT->at(1);
-
-	double gammaT = 2.*myMX3_BoostT/myMS_BoostT;
-	double gamma = sqrt(2.*(MX3a*MX3a+MX3a*MX3a))/(sqrt(MX3a*MX3a+base->PX3_BoostT->at(1)*base->PX3_BoostT->at(1))+
-						       sqrt(MX3b*MX3b+base->PX3_BoostT->at(1)*base->PX3_BoostT->at(1)));
-
-	double dphiSI = acos(-1.) - base->dphiSI->at(1);
-	
-	double MX3 = sqrt(base->MX3a->at(1)*base->MX3b->at(1));
-	double MX3T = sqrt(base->MX3a_BoostT->at(1)*base->MX3b_BoostT->at(1));
-		// cout << base->weight << endl;
-
-	double cos2 = base->cosX2a->at(1)*base->cosX2a->at(1)+base->cosX3b->at(1)*base->cosX3b->at(1);
-
-	double lepPT = base->PT_lep->at(0)-5.;
-	double cosLep = lepPT/(sqrt(lepPT*lepPT+base->EL_BoostT->at(1)*base->EL_BoostT->at(1)));
-	
-	// hist->Fill(base->RISR->at(1), fabs(base->PzS->at(1))/sqrt(base->PzS->at(1)*base->PzS->at(1)+base->PTS->at(1)*base->PTS->at(1)), base->weight*double(SKIP));
 	double weight = (base->weight != 0.) ? base->weight : 1.;
 
 	// if(base->RISR->at(1) < 0.975)
 	//   continue;
 
-	if(gammaT < .2)
-	  continue;
 	
-	hist->Fill(myMX3_BoostT,base->RISR->at(1), weight*double(SKIP)*g_Samples[s]->GetScale());
+	hist->Fill(base->Mperp, base->RISR, weight*double(SKIP)*g_Samples[s]->GetScale());
       }
       
       delete base;
