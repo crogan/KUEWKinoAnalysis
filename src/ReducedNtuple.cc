@@ -581,7 +581,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   AnalysisBase<Base>::SetSystematic(sys);
 
   m_EventFilter = AnalysisBase<Base>::PassEventFilter();
-  
+
   if(AnalysisBase<Base>::IsData())
     if(!AnalysisBase<Base>::IsGoodEvent() || !m_EventFilter)
       return;
@@ -621,7 +621,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   Jets = Jets.RemoveOverlap(Leptons, 0.2);
 
   // skip event reconstruction for now if too many jets
-  if(Jets.size() >= 16){
+  if((Jets.size()+SVs.size()) >= 16){
     m_event_skipped = true;
     if(tree)
       tree->Fill();
@@ -646,6 +646,8 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
 
   m_NSV = SVs.size();
   
+  cout << "Njet=" << m_Njet << " NSV=" << m_NSV << " m_Nele=" << m_Nele << " Nmu=" << m_Nmu << endl;
+
   // require at least one lepton for now
   // if(m_Nlep < 1)
   //   return;
@@ -887,7 +889,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
     m_MISR = ISR->GetMass();
     m_RISR = fabs(vPTINV.Dot(vPTISR.Unit())) / vPTISR.Mag();
     
-    if((std::isnan(m_RISR) || std::isnan(m_Mperp))){
+    if((std::isnan(m_RISR) || std::isnan(m_Mperp)) || true){
       cout << "VAR NAN " << vPTISR.Mag() << " " << vPTINV.Mag() << " NjetS=" << m_Njet_S << " Njeta=" << m_Njet_a << " Njetb=" << m_Njet_b << " Nlep=" << m_Nlep << " Nlepa=" << m_Nlep_a << " Nlepb=" << m_Nlep_b << " " << m_Mperp << endl;
     }
 
