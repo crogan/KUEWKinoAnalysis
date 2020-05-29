@@ -11,9 +11,9 @@ void TestReader(const string& inputfile = "test/FitInput_test.root", const strin
   // FITReader->Plot1Dstack(SL().a("ttbar").a("ST").a("DB").a("ZDY").a("TB")
   // 			 .a("Wjets").a("Fakes").a("T2bW_50000490").a("T2bW_50000480").a("T2bW_50000470"),
   FITReader->Plot1Dstack(VS().a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("Data")
-			 .a("Wjets").a("Fake").a("HF").a("LF").a("T2bW_50000480").a("QCD"),
-			 VS().a("1Lm"),
-			 VS().a("0j1svS"),
+			 .a("Wjets").a("Fake").a("HF").a("LF").a("T2bW_50000420").a("QCD"),
+			 VS().a("0L"),
+			 VS().a("ge2bjetS"),
 			 VS().a("0bjetISR"),
 			 "canvas");
   

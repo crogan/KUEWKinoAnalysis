@@ -391,8 +391,10 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("H21X3a", &m_H21X3a);
   tree->Branch("H21X3b", &m_H21X3b);
 
+  tree->Branch("PISR", &m_PISR);
   tree->Branch("PTISR", &m_PTISR);
   tree->Branch("RISR", &m_RISR);
+  tree->Branch("RISRT", &m_RISRT);
   tree->Branch("MISR", &m_MISR);
 
   if(!AnalysisBase<Base>::IsData()){
@@ -570,9 +572,11 @@ void ReducedNtuple<Base>::ClearVariables(){
   m_H21X3b = 0.;
 
   // ISR related variables
+  m_PISR = 0.;
   m_PTISR = 0.;
   m_MISR = 0.;
   m_RISR = 0.;
+  m_RISRT = 0.;
  
 }
 
@@ -621,7 +625,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   Jets = Jets.RemoveOverlap(Leptons, 0.2);
 
   // merge jets until total number is combinatorically manageable
-  Jets = Jets.BinaryMerge(16-SVs.size());
+  Jets = Jets.BinaryMerge(16-SVs.size()-Leptons.size());
   Jets.SortByPt();
   
   // skip event reconstruction for now if too many jets
@@ -898,12 +902,19 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
 
   // ISR related variables
   if(m_Njet_ISR > 0){
-    TVector3 vPTISR = S->GetFourVector(*CM).Vect();
-    TVector3 vPTINV = (X1a->GetFourVector(*CM)+X1b->GetFourVector(*CM)).Vect();
+    TVector3 vPISR = S->GetFourVector(*CM).Vect();
+    TVector3 vPINV = (X1a->GetFourVector(*CM)+X1b->GetFourVector(*CM)).Vect();
 
-    m_PTISR = vPTISR.Mag();
+    m_PISR = vPISR.Mag();
     m_MISR = ISR->GetMass();
-    m_RISR = fabs(vPTINV.Dot(vPTISR.Unit())) / vPTISR.Mag();
+    m_RISR = fabs(vPINV.Dot(vPISR.Unit())) / vPISR.Mag();
+
+    // transverse
+    TVector3 vPTISR = S->GetTransverseFourVector(*CM).Vect();
+    TVector3 vPTINV = (X1a->GetTransverseFourVector(*CM)+X1b->GetTransverseFourVector(*CM)).Vect();
+
+    m_PTISR  = vPTISR.Mag();
+    m_RISRT  = fabs(vPTINV.Dot(vPTISR.Unit())) / vPTISR.Mag();
     
     if((std::isnan(m_RISR) || std::isnan(m_Mperp))){
       cout << "VAR NAN " << vPTISR.Mag() << " " << vPTINV.Mag() << " NjetS=" << m_Njet_S << " Njeta=" << m_Njet_a << " Njetb=" << m_Njet_b << " Nlep=" << m_Nlep << " Nlepa=" << m_Nlep_a << " Nlepb=" << m_Nlep_b << " " << m_Mperp << endl;

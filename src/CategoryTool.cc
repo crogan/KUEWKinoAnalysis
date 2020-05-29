@@ -125,7 +125,7 @@ CategoryList CategoryTool::GetCategories() const {
 
   cout << "Initializing 0L" << endl;
   CategoryList Cats_0L;
-  Cats_0L += Category(L_0, "0L");
+  Cats_0L += Category(L_0, "Ch0L");
 
   cout << "Initializing 0L" << endl;
   CategoryList Cats_1L;

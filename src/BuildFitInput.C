@@ -30,7 +30,7 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-  string NtuplePath = "/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_12_05_20/";
+  string NtuplePath = "/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_23_05_20/";
   string OutFile    = "BuildFitInput_output.root";
 
   bool bprint = false;
@@ -190,7 +190,7 @@ int main(int argc, char* argv[]) {
 	if(base->PTCM/base->PTISR > 0.2)
 	  continue;
 	  
-	if(base->RISR < 0.5)
+	if(base->RISR < 0.5 || base->RISR > 1.05)
 	  continue;
 	
 	int Nlep     = base->Nlep;

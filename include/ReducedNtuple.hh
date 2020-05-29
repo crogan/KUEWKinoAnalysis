@@ -263,9 +263,11 @@ private:
   double m_H21X3b;
 
   // ISR related variables
+  double m_PISR;
   double m_PTISR;
   double m_MISR;
   double m_RISR;
+  double m_RISRT;
  
   // RestFrames frames and friends
   LabRecoFrame*     LAB;
