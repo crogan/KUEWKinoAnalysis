@@ -19,6 +19,8 @@ public:
   ParticleList ParticleIDCut(ParticleIDType id) const;
   ParticleList RemoveOverlap(const ParticleList& parts, double deltaR = 0.2) const;
 
+  ParticleList BinaryMerge(int Nmax) const;
+
   
   ParticleList& SortByPt();
 

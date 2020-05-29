@@ -60,8 +60,10 @@ public:
   double Btag() const;
   void SetBtag(double btag);
 
-  double BtagID() const;
+  ParticleIDType BtagID() const;
   void SetBtagID(ParticleIDType id);
+
+  Particle Merge(const Particle&) const;
   
   operator ParticleList() const;
   ParticleList operator + (const Particle& part) const; 
