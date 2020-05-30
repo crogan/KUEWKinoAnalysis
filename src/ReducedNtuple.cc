@@ -310,6 +310,7 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("index_SV_b", &m_index_SV_b);
 
   tree->Branch("PTCM", &m_PTCM);
+  tree->Branch("PzCM", &m_PzCM);
   tree->Branch("cosCM", &m_cosCM);
   tree->Branch("dphiCM", &m_dphiCM);
   tree->Branch("dphiCMI", &m_dphiCMI);
@@ -344,6 +345,8 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("PV", &m_PV);
   tree->Branch("MVa", &m_MVa);
   tree->Branch("MVb", &m_MVb);
+  tree->Branch("PV_lab", &m_PV_lab);
+  tree->Branch("dphiMET_V", &m_dphiMET_V);
 
   tree->Branch("MJa", &m_MJa);
   tree->Branch("MJb", &m_MJb);
@@ -490,6 +493,7 @@ void ReducedNtuple<Base>::ClearVariables(){
   m_index_SV_b.clear();
 
   m_PTCM = 0.;
+  m_PzCM = 0.;
   m_cosCM = 0.;
   m_dphiCM = 0.;
   m_dphiCMI = 0.;
@@ -525,6 +529,9 @@ void ReducedNtuple<Base>::ClearVariables(){
   m_MVa = 0.;
   m_MVb = 0.;
 
+  m_PV_lab = 0.;
+  m_dphiMET_V = 0.;
+  
   m_MJa = 0.;
   m_MJb = 0.;
   m_MLa = 0.;
@@ -759,6 +766,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   // Fill Observable Branches
   
   m_PTCM = CM->GetFourVector().Pt();
+  m_PzCM = CM->GetFourVector().Pz();
   m_cosCM = CM->GetCosDecayAngle();
   m_dphiCM = CM->GetDeltaPhiDecayAngle();
   m_dphiCMI = CM->GetDeltaPhiBoostVisible();
@@ -797,6 +805,9 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   m_PV = S->GetListVisibleFrames().GetFourVector(*S).P();
   m_MVa = X3a->GetListVisibleFrames().GetMass();
   m_MVb = X3b->GetListVisibleFrames().GetMass();
+
+  m_PV_lab    = S->GetListVisibleFrames().GetFourVector().P();
+  m_dphiMET_V = S->GetListVisibleFrames().GetFourVector().Vect().DeltaPhi(ETMiss);
   
   m_MJa = saJa->GetMass();
   m_MJb = saJb->GetMass();
@@ -923,6 +934,8 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
 
     TVector3 isr_t = ISR->GetTransverseFourVector(*S).Vect();
     TVector3 isr   = ISR->GetFourVector(*S).Vect();
+
+    
     
     for(int l = 0; l < m_Nlep_S; l++){
       TVector3 lep   = S->GetFourVector(Leptons[m_index_lep_S[l]]).Vect();

@@ -180,6 +180,7 @@ private:
   // Kinematic Variables
 
   double m_PTCM;
+  double m_PzCM;
   double m_cosCM;
   double m_dphiCM;
   double m_dphiCMI;
@@ -214,6 +215,9 @@ private:
   double m_PV;
   double m_MVa;
   double m_MVb;
+
+  double m_PV_lab;
+  double m_dphiMET_V;
 
   double m_MJ;
   double m_ML;
