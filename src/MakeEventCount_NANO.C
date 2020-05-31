@@ -174,11 +174,14 @@ int main(int argc, char* argv[]) {
   int NEVENT = chain->GetEntries();
   cout << "TOTAL of " << NEVENT << " entries" << endl;
   for(int e = 0; e < NEVENT; e++){
-    cout << "event " << e << " | " << NEVENT << endl;
-    chain->GetEntry(e);
+    int mymod = NEVENT/10;
+    if(mymod < 1)
+      mymod = 1;
+    if(e%mymod == 0)
+      cout << " event = " << e << " : " << NEVENT << endl;
 
-    cout << "event " << e << " | " << NEVENT << endl;
-  
+    chain->GetEntry(e);
+     
     Nevent += 1.;
     Nweight += genWeight;
 
