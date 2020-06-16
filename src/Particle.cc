@@ -9,8 +9,19 @@ Particle::Particle() : TLorentzVector() {
 
   m_RelIso = 0.;
   m_MiniIso = 0.;
+  m_Dxy = 0.;
+  m_DxyErr = 0.;
+  m_Dz = 0.;
+  m_DzErr = 0.;
+  m_IP3D = 0.;
+  m_SIP3D = 0.;
 
+  m_D3d = 0.;
+  m_D3dSig = 0.;
+  m_CosTheta = 0.;
+  m_Ndof = 0.;
   m_Btag = 0.;
+  m_BtagID = kNothing;
 }
     
 Particle::~Particle() {}
@@ -47,12 +58,116 @@ void Particle::SetParticleID(ParticleIDType id){
   m_ParticleID = id;
 }
 
+ParticleIDType Particle::BtagID() const {
+  return m_BtagID;
+}
+
+void Particle::SetBtagID(ParticleIDType id){
+  m_BtagID = id;
+}
+
 double Particle::RelIso() const {
   return m_RelIso;
 }
 
 double Particle::MiniIso() const {
   return m_MiniIso;
+}
+
+double Particle::Dxy() const {
+  return m_Dxy;
+}
+
+double Particle::DxyErr() const {
+  return m_DxyErr;
+}
+
+double Particle::Dz() const {
+  return m_Dz;
+}
+
+double Particle::DzErr() const{
+  return m_DzErr;
+}
+
+double Particle::IP3D() const {
+  return m_IP3D;
+}
+
+double Particle::SIP3D() const {
+  return m_SIP3D;
+}
+
+double Particle::D3d() const {
+  return m_D3d;
+}
+
+double Particle::D3dSig() const {
+  return m_D3dSig;
+}
+
+double Particle::CosTheta() const {
+  return m_CosTheta;
+}
+
+double Particle::Ndof() const {
+  return m_Ndof;
+}
+
+double Particle::ProbB() const {
+  return m_ProbB;
+}
+
+double Particle::ProbC() const {
+  return m_ProbC;
+}
+
+void Particle::SetDxy(double val){
+  m_Dxy = val;
+}
+
+void Particle::SetDxyErr(double val){
+  m_DxyErr = val;
+}
+
+void Particle::SetDz(double val){
+  m_Dz = val;
+}
+
+void Particle::SetDzErr(double val){
+  m_DzErr = val;
+}
+
+void Particle::SetIP3D(double val){
+  m_IP3D = val;
+}
+
+void Particle::SetSIP3D(double val){
+  m_SIP3D = val;
+}
+
+void Particle::SetD3d(double val){
+  m_D3d = val;
+}
+
+void Particle::SetD3dSig(double val){
+  m_D3dSig = val;
+}
+
+void Particle::SetCosTheta(double val){
+  m_CosTheta = val;
+}
+
+void Particle::SetNdof(double val){
+  m_Ndof = val;
+}
+
+void Particle::SetProbB(double val){
+  m_ProbB = val;
+}
+
+void Particle::SetProbC(double val){
+  m_ProbC = val;
 }
 
 void Particle::SetRelIso(double iso){
@@ -69,6 +184,18 @@ double Particle::Btag() const {
 
 void Particle::SetBtag(double btag){
   m_Btag = btag;
+}
+
+Particle Particle::Merge(const Particle& p) const {
+  Particle part = *this;
+  if(p.Btag() > part.Btag())
+    part.SetBtag(p.Btag());
+  if(p.BtagID() > part.BtagID())
+    part.SetBtagID(p.BtagID());
+  
+  part += p;
+
+  return part;
 }
 
 Particle::operator ParticleList() const {

@@ -140,8 +140,8 @@ void Plot_1D_stack(){
 
   g_Xname = "MET";
   g_Xmin = 0;
-  g_Xmax = 150.;
-  g_NX = 32;
+  g_Xmax = 4.;
+  g_NX = 5;
 
 
   TH1D* hist[Nsample];

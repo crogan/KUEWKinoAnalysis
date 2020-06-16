@@ -17,6 +17,8 @@
 #include <TLeafElement.h>
 #include <TLorentzVector.h>
 
+#include "NeventTool.hh"
+
 using namespace std;
 using std::vector;
 
@@ -33,6 +35,7 @@ int main(int argc, char* argv[]) {
   char TreeName[400];
   char DataSet[400];
   char FileTag[400];
+  char FilterEff[400];
 
   bool DO_FILE = false;
   bool DO_LIST = false;
@@ -70,6 +73,7 @@ int main(int argc, char* argv[]) {
     if (strncmp(argv[i],"-dataset",8)==0)   sscanf(argv[i],"-dataset=%s", DataSet);
     if (strncmp(argv[i],"-filetag",8)==0)   sscanf(argv[i],"-filetag=%s", FileTag);
     if (strncmp(argv[i],"--sms",5)==0)  DO_SMS = true;
+    if (strncmp(argv[i],"-filtereff",10)==0)   sscanf(argv[i],"-filtereff=%s", FilterEff);
   }
 
   gROOT->ProcessLine("#include <vector>");
@@ -125,8 +129,14 @@ int main(int argc, char* argv[]) {
     cout << "   Adding file " << filenames[i] << endl;
   }
 
+  NeventTool NevtTool;
+  NevtTool.BuildFilterEffMap(string(FilterEff));
+  
   Float_t genWeight;
+  UInt_t  luminosityBlock;
+  
   TBranch *b_genWeight;
+  TBranch *b_luminosityBlock;
 
   UInt_t  nGenPart;
   Float_t GenPart_mass[200];  
@@ -135,13 +145,18 @@ int main(int argc, char* argv[]) {
   TBranch *b_GenPart_mass;
   TBranch *b_GenPart_pdgId;
 
+  string dataset = string(DataSet);
+  string filetag = string(FileTag);
   
   chain->SetBranchAddress("genWeight", &genWeight, &b_genWeight);
+  chain->SetBranchAddress("luminosityBlock", &luminosityBlock, &b_luminosityBlock);
+  
   chain->SetBranchAddress("nGenPart", &nGenPart, &b_nGenPart);
   chain->SetBranchAddress("GenPart_mass", GenPart_mass, &b_GenPart_mass);
   chain->SetBranchAddress("GenPart_pdgId", GenPart_pdgId, &b_GenPart_pdgId);
   chain->SetBranchStatus("*",0);
   chain->SetBranchStatus("genWeight", 1);
+  chain->SetBranchStatus("luminosityBlock", 1), 
   chain->SetBranchStatus("nGenPart", 1);
   chain->SetBranchStatus("GenPart_mass", 1);
   chain->SetBranchStatus("GenPart_pdgId", 1);
@@ -159,15 +174,19 @@ int main(int argc, char* argv[]) {
   int NEVENT = chain->GetEntries();
   cout << "TOTAL of " << NEVENT << " entries" << endl;
   for(int e = 0; e < NEVENT; e++){
-    cout << "event " << e << " | " << NEVENT << endl;
-    chain->GetEntry(e);
+    int mymod = NEVENT/10;
+    if(mymod < 1)
+      mymod = 1;
+    if(e%mymod == 0)
+      cout << " event = " << e << " : " << NEVENT << endl;
 
-    cout << "event " << e << " | " << NEVENT << endl;
-  
+    chain->GetEntry(e);
+     
     Nevent += 1.;
     Nweight += genWeight;
 
     if(DO_SMS){
+      double eff = NevtTool.GetFilterEff(dataset, filetag, luminosityBlock);
       MP = 0;
       MC = 0;
       int Ngen = nGenPart;
@@ -197,8 +216,6 @@ int main(int argc, char* argv[]) {
   TFile* fout = new TFile(string(outputFileName).c_str(),"RECREATE");
   TTree* tout = (TTree*) new TTree("EventCount", "EventCount");
   
-  string dataset = string(DataSet);
-  string filetag = string(FileTag);
   tout->Branch("Nevent", &Nevent);
   tout->Branch("Nweight", &Nweight);
   tout->Branch("filetag", &filetag);
@@ -217,11 +234,9 @@ int main(int argc, char* argv[]) {
   } else {
     tout->Fill();
   }
- 
-  tout->Fill();
 
   fout->cd();
-  tout->Write();
+  tout->Write("", TObject::kOverwrite);
   fout->Close();
  
   return 0;
