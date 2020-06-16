@@ -60,6 +60,36 @@ ParticleList ParticleList::RemoveOverlap(const ParticleList& parts, double delta
   return list;
 }
 
+ParticleList ParticleList::BinaryMerge(int Nmax) const {
+  if((Nmax < 1) || (this->size() <= Nmax))
+    return *this;
+
+  int N = this->size();
+  double Rmin = 2.;
+  int imin = -1;
+  int jmin = -1;
+  for(int i = 0; i < N-1; i++){
+    for(int j = i+1; j < N; j++){
+      double M2 = TLorentzVector(this->at(i)+this->at(j)).M2();
+      double R = M2 > 0. ? (M2 - pow(this->at(i).M()+this->at(j).M(), 2.))/M2 : 0.;
+      if(R < Rmin){
+	Rmin = R;
+	imin = i;
+	jmin = j;
+      }
+    }
+  }
+
+  ParticleList list;
+  list += this->at(imin).Merge(this->at(jmin));
+  for(int i = 0; i < N; i++){
+    if(i != imin && i != jmin)
+      list += this->at(i);
+  }
+
+  return list.BinaryMerge(Nmax);
+}
+
 ParticleList& ParticleList::SortByPt(){
   sort(this->begin(),this->end(),sortbypt);
   return *this;

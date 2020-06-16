@@ -439,7 +439,7 @@ int AnalysisBase<StopNtupleTree>::GetSampleIndex(){
 	  MP = mass;
     }
   }
-
+  
   int hash = 100000*MP + MC;
   if(m_HashToIndex.count(hash) == 0){
     m_HashToIndex[hash] = m_Nsample;
@@ -888,7 +888,7 @@ int AnalysisBase<SUSYNANOBase>::GetSampleIndex(){
 	  MP = mass;
     }
   }
-
+  
   int hash = 100000*MP + MC;
   if(m_HashToIndex.count(hash) == 0){
     m_HashToIndex[hash] = m_Nsample;
@@ -908,7 +908,7 @@ template <>
 double AnalysisBase<SUSYNANOBase>::GetEventWeight(){
   if(IsData())
     return 1.;
-
+  
   if(m_IndexToNweight[m_SampleIndex] > 0.){
     if(!m_DoSMS)
       return genWeight*m_IndexToXsec[m_SampleIndex]/m_IndexToNweight[m_SampleIndex];
@@ -1232,37 +1232,35 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET){
   // If one jet fails jet ID, 
   if(!passID)
     return ParticleList();
-
-    year = 2016;
   
+  if(year == 2017)
+    MET.SetPtEtaPhi(METFixEE2017_pt,0.0,METFixEE2017_phi);
+  else
+    MET.SetPtEtaPhi(MET_pt,0.0,MET_phi);
+  
+  deltaMET.SetZ(0.);
+  MET += deltaMET;
+  
+  if(CurrentSystematic() == Systematic("METUncer_UnClust")){
     if(year == 2017)
-      MET.SetPtEtaPhi(METFixEE2017_pt,0.0,METFixEE2017_phi);
+      deltaMET.SetXYZ(delta*METFixEE2017_MetUnclustEnUpDeltaX,
+		      delta*METFixEE2017_MetUnclustEnUpDeltaY, 0.);
     else
-      MET.SetPtEtaPhi(MET_pt,0.0,MET_phi);
-
-    deltaMET.SetZ(0.);
+      deltaMET.SetXYZ(delta*MET_MetUnclustEnUpDeltaX,
+		      delta*MET_MetUnclustEnUpDeltaY, 0.);
     MET += deltaMET;
-
-    if(CurrentSystematic() == Systematic("METUncer_UnClust")){
-      if(year == 2017)
-	deltaMET.SetXYZ(delta*METFixEE2017_MetUnclustEnUpDeltaX,
-			delta*METFixEE2017_MetUnclustEnUpDeltaY, 0.);
-      else
-	deltaMET.SetXYZ(delta*MET_MetUnclustEnUpDeltaX,
-			delta*MET_MetUnclustEnUpDeltaY, 0.);
-      MET += deltaMET;
-    }
+  }
   
-    return list;
+  return list;
 }
 
-  template <>
-  TVector3 AnalysisBase<SUSYNANOBase>::GetMET(){
-    TVector3 MET;
-    GetJetsMET(MET);
+template <>
+TVector3 AnalysisBase<SUSYNANOBase>::GetMET(){
+  TVector3 MET;
+  GetJetsMET(MET);
 
-    return MET;
-  }
+  return MET;
+}
 
 template <>
 ParticleList AnalysisBase<SUSYNANOBase>::GetJets(){
