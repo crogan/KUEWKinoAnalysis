@@ -1,0 +1,26 @@
+#binned, shape analysis for T2bW
+
+imax 1 #number of channels/bins/regions
+jmax * #number of processes (sig, bkg, etc.) minus 1 
+kmax * #number of nuisance parameters
+---------------
+# shapes [process] [channel] [file] [histogram] [histogram_with_systematics]
+# add data_obs for observed in data
+# add fakes for DY
+shapes * * FitInput_test.root $CHANNEL/$PROCESS $CHANNEL/$PROCESS_$SYSTEMATIC
+
+---------------
+bin 		Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0 		
+observation -1		
+---------------
+bin 				Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0 	Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0 	
+process 			T2bW_50000490				DYjets	
+process 			0					1
+rate				-1					-1						
+---------------
+lumi 		lnN		1.023   1.023
+BTAG_SF	 	shape 	1	   1
+PU_SF		 	shape 	1	   1
+
+
+
