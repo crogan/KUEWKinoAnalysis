@@ -131,8 +131,8 @@ int main(int argc, char* argv[]) {
 
   CategoryList Categories = CT.GetCategories();
 
-  cout << "Categories:" << endl;
-  Categories.Print();
+  //cout << "Categories:" << endl;
+  //Categories.Print();
 
   SystematicsTool SYS;
 
@@ -154,17 +154,16 @@ int main(int argc, char* argv[]) {
 
     int Nsys = (is_data ? 1 : systematics.GetN());
     
-    int Nfile = ST.NTrees(proc);
+    int Nfile = 1;//ST.NTrees(proc);
 
     cout << "Processing " << Nfile << " files for process " << title << endl;
-    for(int f = 0; f < Nfile; f++){
+    for(int f = 0; f < Nfile; f++){ 
       string file = ST.FileName(proc, f);
       string tree = ST.TreeName(proc, f);
       
       cout << "   Processing file " << file << " w/ tree " << tree << endl;
     
       TChain* chain = ST.Tree(proc, f);
-
       ReducedBase* base = new ReducedBase(chain);
 
       int Nentry = base->fChain->GetEntries();
@@ -202,12 +201,10 @@ int main(int argc, char* argv[]) {
 
 	if(Nlep + NjetS + NSV < 1)
 	  continue;
-	  
 	LepList list_a;
 	LepList list_b;
 	  
 	int index;
-	  
 	for(int i = 0; i < base->Nlep_a; i++){
 	  index = (*base->index_lep_a)[i];
 	    
@@ -278,11 +275,10 @@ int main(int argc, char* argv[]) {
 	if(eindex < 0){
 	  continue;
 	}	
-	
 	// systematics loop
 	for(int is = 0; is < Nsys; is++){
 	  Systematic& sys = systematics[is];
-	  if(!(!sys)){
+	if(!(!sys)){
 	    if(sys.IsUp()){
 	      sys.Down();
 	      is--;
@@ -290,27 +286,29 @@ int main(int argc, char* argv[]) {
 	      sys.Up();
 	    }
 	  }
-	  
+	    //cout << "PU up" << base->PUweight_up << " PU down " << base->PUweight_down << " PU nom " << base->PUweight_up  << endl;
 	  double weight = 1.;
 	  if(!is_data){
 	    weight = base->weight*ST.Lumi();
 	    if(sys == Systematic("BTAG_SF"))
 	      if(sys.IsUp())
 		weight *= base->BtagSFweight_up;
-	      else
+	 else
 		weight *= base->BtagSFweight_down;
 	    else 
 	      weight *= base->BtagSFweight;
 	    if(sys == Systematic("PU_SF"))
-	      if(sys.IsUp())
+	      if(sys.IsUp()){
 		weight *= base->PUweight_up/base->PUweight;
-	      else
+	  //  	cout << "PU up " << base->PUweight_up/base->PUweight << endl;
+		 } else{
 		weight *= base->PUweight_down/base->PUweight;
-	    else
+	    //	cout << "PU down " << base->PUweight_down/base->PUweight << endl;
+		}else
 	      weight *= 1.;
 	    //weight *= base->PUweight;
 	  }
-	  
+	if(std::isnan(weight)) cout << "PU up " << base->PUweight_up << " PU down " << base->PUweight_up << " PU nom " << base->PUweight << endl;   
 	  LepList Fakes  = list_a.GetFakes(kHF);
 	  Fakes         += list_b.GetFakes(kHF);
 	  

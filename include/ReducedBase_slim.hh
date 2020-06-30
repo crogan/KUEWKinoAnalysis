@@ -770,6 +770,9 @@ inline void ReducedBase::Init(TTree *tree)
 
    fChain->SetBranchStatus("*",0);
    fChain->SetBranchStatus("*weight",1);
+   fChain->SetBranchStatus("*weight_down",1);
+   fChain->SetBranchStatus("*weight_up",1);
+   fChain->SetBranchStatus("PUweight_up",1);
    fChain->SetBranchStatus("MET",1);
    fChain->SetBranchStatus("MET_phi",1);
    fChain->SetBranchStatus("RISR",1);

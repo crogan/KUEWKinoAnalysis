@@ -330,14 +330,14 @@ void ProcessBranch::FillProcess(Process& proc, TFile& file){
   auto p = proc.m_ProcBins.begin();
   while(p != proc.m_ProcBins.end()){
     m_SubProc = p->first;
-    
-    // loop through all categories for a given subprocess
+	// loop through all categories for a given subprocess
     auto c = p->second.begin();
     while(c != p->second.end()){
       // write FitBin to output file for each subprocess/category
-      file.cd();
-      if(!file.cd(c->first.c_str()))
-	file.mkdir(c->first.c_str());
+	file.cd();
+      //if(!file.cd(c->first.c_str()))
+      if(!file.FindKey(c->first.c_str()))	
+        file.mkdir(c->first.c_str());
       file.cd();
 	 
       //c->second->WriteHistogram(m_SubProc+"_"+c->first, m_Proc, file);

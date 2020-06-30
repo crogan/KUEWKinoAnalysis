@@ -65,7 +65,7 @@ std::string Category::GetLabel() const {
     if(i == 2)
       label += "ISR";
     if(i < N-1 && N > 1)
-      label += "-";
+      label += "_";
   }
 
   return label;
@@ -435,7 +435,7 @@ const Category& CategoryList::operator [] (int i) const {
 }
 
 CategoryList& CategoryList::Add(const Category& cat){
-  // string label = cat.Label()+"_"+cat.GetLabel();
+  // string label = cat.Label()+"-"+cat.GetLabel();
  
   // if(m_CatMap.count(label) != 0)
   //   return *this;

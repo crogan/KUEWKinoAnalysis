@@ -339,7 +339,6 @@ FitBin& FitBin::InitializeHistogram(const string& label){
 void FitBin::Fill(double weight, double M, double R){
   if(m_hist1D == nullptr)
     return;
-  
   m_hist1D->Fill(GetBin(R, M), weight);
  
 }
