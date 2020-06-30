@@ -12,7 +12,7 @@ shapes * * FitInput_test.root $CHANNEL/$PROCESS $CHANNEL/$PROCESS_$SYSTEMATIC
 bin 		Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0		
 observation -1		
 ---------------
-bin 				Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0 Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0 Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0 Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0 Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0 Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0 Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0 
+bin 				Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0 Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0 
 process 			T2bW_50000$MASS		ttbar		
 process 			0					1			
 rate				-1					-1			
