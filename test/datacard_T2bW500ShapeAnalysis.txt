@@ -5,8 +5,7 @@ jmax * #number of processes (sig, bkg, etc.) minus 1
 kmax * #number of nuisance parameters
 ---------------
 # shapes [process] [channel] [file] [histogram] [histogram_with_systematics]
-# add fakes for DY
-shapes * * FitInput_test.root $CHANNEL/$PROCESS $CHANNEL/$PROCESS_$SYSTEMATIC
+shapes * * FitInput17_test.root $CHANNEL/$PROCESS $CHANNEL/$PROCESS_$SYSTEMATIC
 
 ---------------
 bin 		Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0		
