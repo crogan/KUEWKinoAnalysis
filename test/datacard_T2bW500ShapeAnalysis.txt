@@ -12,20 +12,20 @@ shapes * * FitInput_test.root $CHANNEL/$PROCESS $CHANNEL/$PROCESS_$SYSTEMATIC
 bin 		Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0		
 observation -1		
 ---------------
-bin 				Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0 Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0 
-process 			T2bW_50000$MASS		ttbar		
-process 			0					1			
-rate				-1					-1			
+bin 				Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0 Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0 Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0 Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0 Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0
+process 			T2bW_50000$MASS		ttbar		ZDY		QCD		WJetsToLNu
+process 			0					1			2		3		4		
+rate				-1					-1			-1		-1		-1		
 ---------------
-lumi 		lnN		1.023   1.023	
-BTAG_SF	 	shape 	1	    1			
-# PU_SF		shape 	1	    1			
-topxsec		lnN		-		1.061		
-# wxsec		lnN		-		-		
-JES			lnN		1.024	1.024		
-JER			lnN		1.01	1.01		
-purewt 		lnN 	1.046 	1.046 	
-pdfrewt 	lnN 	- 		1.010 	
+lumi 		lnN		1.023   1.023		1.023	1.023		1.023
+BTAG_SF	 	shape 	1	    1			1		1			1
+# PU_SF		shape 	1	    1			1		1			1
+topxsec		lnN		-		1.061		1.061	1.061		1.061
+wxsec		lnN		-		-		    -		-		    1
+JES			lnN		1.024	1.024		1.024	1.024		1.024	
+JER			lnN		1.01	1.01		1.01	1.01		1.01		
+purewt 		lnN 	1.046 	1.046 		1.046 	1.046 		1.046 		
+pdfrewt 	lnN 	- 		1.010		1.010	1.010		1.010 		
 
 
 
