@@ -154,7 +154,7 @@ int main(int argc, char* argv[]) {
 
     int Nsys = (is_data ? 1 : systematics.GetN());
     
-    int Nfile = 1;//ST.NTrees(proc);
+    int Nfile = ST.NTrees(proc);
 
     cout << "Processing " << Nfile << " files for process " << title << endl;
     for(int f = 0; f < Nfile; f++){ 
@@ -286,7 +286,6 @@ int main(int argc, char* argv[]) {
 	      sys.Up();
 	    }
 	  }
-	    //cout << "PU up" << base->PUweight_up << " PU down " << base->PUweight_down << " PU nom " << base->PUweight_up  << endl;
 	  double weight = 1.;
 	  if(!is_data){
 	    weight = base->weight*ST.Lumi();
@@ -300,15 +299,13 @@ int main(int argc, char* argv[]) {
 	    if(sys == Systematic("PU_SF"))
 	      if(sys.IsUp()){
 		weight *= base->PUweight_up/base->PUweight;
-	  //  	cout << "PU up " << base->PUweight_up/base->PUweight << endl;
 		 } else{
 		weight *= base->PUweight_down/base->PUweight;
-	    //	cout << "PU down " << base->PUweight_down/base->PUweight << endl;
 		}else
 	      weight *= 1.;
 	    //weight *= base->PUweight;
 	  }
-	if(std::isnan(weight)) cout << "PU up " << base->PUweight_up << " PU down " << base->PUweight_up << " PU nom " << base->PUweight << endl;   
+	//if(std::isnan(weight)) cout << "PU up " << base->PUweight_up << " PU down " << base->PUweight_up << " PU nom " << base->PUweight << endl;   
 	  LepList Fakes  = list_a.GetFakes(kHF);
 	  Fakes         += list_b.GetFakes(kHF);
 	  
