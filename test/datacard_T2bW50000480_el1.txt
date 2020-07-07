@@ -1,7 +1,7 @@
 #binned, shape analysis for T2bW - Ch1L_elm-el1-0bjetS-0bjetISR-PTISR0
 ---------------
 imax 1 #number of channels/bins/regions/categories
-jmax 3 #number of bkg processes 
+jmax 2 #number of bkg processes 
 kmax * #number of nuisance parameters
 ---------------
 # shapes [process] [channel] [file] [histogram] [histogram_with_systematics]

@@ -306,7 +306,7 @@ int main(int argc, char* argv[]) {
 	    //weight *= base->PUweight;
 	  }
 	if(std::isnan(weight))
-		cout << "PU up " << base->PUweight_up << " PU down " << base->PUweight_up << " PU nom " << base->PUweight << " NPU " << base->NPU endl;   
+		cout << "PU up " << base->PUweight_up << " PU down " << base->PUweight_up << " PU nom " << base->PUweight << " NPU " << base->NPU << endl;   
 	  LepList Fakes  = list_a.GetFakes(kHF);
 	  Fakes         += list_b.GetFakes(kHF);
 	  
