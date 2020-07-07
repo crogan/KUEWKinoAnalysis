@@ -297,16 +297,16 @@ int main(int argc, char* argv[]) {
 	    else 
 	      weight *= base->BtagSFweight;
 	    if(sys == Systematic("PU_SF"))
-	      if(sys.IsUp()){
-		weight *= base->PUweight_up/base->PUweight;
-		 } else{
-		weight *= base->PUweight_down/base->PUweight;
-		}else
+	 //      if(sys.IsUp()){
+		// weight *= base->PUweight_up/base->PUweight;
+		//  } else{
+		// weight *= base->PUweight_down/base->PUweight;
+		// }else
 	      weight *= 1.;
 	    //weight *= base->PUweight;
-	  }
-	if(std::isnan(weight))
-		cout << "PU up " << base->PUweight_up << " PU down " << base->PUweight_up << " PU nom " << base->PUweight << " NPU " << base->NPU endl;   
+	  // }
+	// if(std::isnan(weight))
+	// 	cout << "PU up " << base->PUweight_up << " PU down " << base->PUweight_up << " PU nom " << base->PUweight << " NPU " << base->NPU endl;   
 	  LepList Fakes  = list_a.GetFakes(kHF);
 	  Fakes         += list_b.GetFakes(kHF);
 	  
@@ -321,9 +321,7 @@ int main(int argc, char* argv[]) {
 	
 	  double RISR  = base->RISR;
 
-	  if((std::isnan(RISR) || std::isnan(Mperp)) && Nlep > 1)
-	    cout << RISR << " " << base->Mperp << " Nlepa=" << base->Nlep_a << " Nlepb=" << base->Nlep_b << " NjetS=" << base->Njet_S << " Njetb=" << base->Njet_b << endl;
-
+	  
 	  if(Fakes.GetN() > 0 && is_bkg){
 	    vector<string> flabels = Fakes.GetFakeLabels(kHF);
 	    int Nf = flabels.size();
