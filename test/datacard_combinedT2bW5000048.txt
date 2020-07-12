@@ -24,5 +24,5 @@ topxsec                 lnN       -                1.061            1.061       
 
 rateDY rateParam * ZDY 1.0 
 rateTTbar rateParam * ttbar 1.0
-rateEl0 rateParam Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0 * 1.0	
-rateEl1 rateParam Ch1L_elm-el1-0bjetS-0bjetISR-PTISR0 * 1.0          
+rateEl0 rateParam el0Reg * 1.0	
+rateEl1 rateParam el1Reg * 1.0          
