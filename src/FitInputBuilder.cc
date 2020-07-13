@@ -44,7 +44,7 @@ void FitInputBuilder::AddEvent(double weight, double Mperp, double RISR,
 			  const Process&    proc,
 			  const Systematic& sys){
   
-  string scat  = cat.Label()+"_"+cat.GetLabel();
+  string scat  = cat.Label()+"-"+cat.GetLabel();
   string sproc = proc.Name();
   
   if(m_Cat.count(scat) == 0)

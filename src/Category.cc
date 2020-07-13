@@ -65,7 +65,7 @@ std::string Category::GetLabel() const {
     if(i == 2)
       label += "ISR";
     if(i < N-1 && N > 1)
-      label += "_";
+      label += "-";
   }
 
   return label;
