@@ -141,6 +141,9 @@ int main(int argc, char* argv[]) {
 
   FitInputBuilder FITBuilder;
 
+  // dummy in case there is no data requested
+  Process data_obs("data_obs", kData);
+
   // sample (process) loop
   int Nsample = samples.GetN();
   for(int s = 0; s < Nsample; s++){
@@ -303,12 +306,11 @@ int main(int argc, char* argv[]) {
 	      weight *= base->BtagSFweight;
 	    if(sys == Systematic("PU_SF"))
 	      if(sys.IsUp())
-		weight *= base->PUweight_up/base->PUweight;
+		weight *= base->PUweight_up;
 	      else
-		weight *= base->PUweight_down/base->PUweight;
+		weight *= base->PUweight_down;
 	    else
-	      weight *= 1.;
-	    //weight *= base->PUweight;
+	      weight *= base->PUweight;
 	  }
 	  
 	  LepList Fakes  = list_a.GetFakes(kHF);
@@ -325,9 +327,6 @@ int main(int argc, char* argv[]) {
 	
 	  double RISR  = base->RISR;
 
-	  if((std::isnan(RISR) || std::isnan(Mperp)) && Nlep > 1)
-	    cout << RISR << " " << base->Mperp << " Nlepa=" << base->Nlep_a << " Nlepb=" << base->Nlep_b << " NjetS=" << base->Njet_S << " Njetb=" << base->Njet_b << endl;
-
 	  if(Fakes.GetN() > 0 && is_bkg){
 	    vector<string> flabels = Fakes.GetFakeLabels(kHF);
 	    int Nf = flabels.size();
@@ -343,6 +342,11 @@ int main(int argc, char* argv[]) {
 	    FITBuilder.AddEvent(weight, Mperp, RISR,
 				Categories[eindex], proc, sys);
 	  }
+	  
+	  // dummy data
+	  if(!addData && is_bkg)
+	    FITBuilder.AddEvent(weight, Mperp, RISR,
+				Categories[eindex], data_obs, sys);
 	}
       }
       delete base;
