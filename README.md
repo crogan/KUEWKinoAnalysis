@@ -1,7 +1,7 @@
 # KUEWKinoAnalysis
 **KUEWKinoAnalysis** code package implementing the KU EWKino Analysis
----------------------
 
+---------------------
 CMSSW-dependent build 
 ---------------------
 
@@ -21,7 +21,7 @@ in the **CMSSW** directory structure as:
 You can set up a **CMSSW** area and checkout the required packages by
 performing the terminal commands below. 
 
-##Setting up environmental variables for CMSSW**
+##Setting up environmental variables for CMSSW
 These are commands that I have in my `.bash_profile` script on the
 T3 that get called at terminal startup
 
@@ -29,20 +29,20 @@ T3 that get called at terminal startup
 	>$ source /cvmfs/cms.cern.ch/crab3/crab.sh
 	>$ export SCRAM_ARCH=slc7_amd64_gcc700
 
-**Setting up CMSSW area**
+##Setting up CMSSW area
 You will probably need CMSSW_10_2_X or later
 
 	>$ scram project CMSSW CMSSW_Z_Y_X
 	>$ cd CMSSW_Z_Y_X/src
 	>$ cmsenv
 
-**Checking out required packages**
+##Checking out required packages
 
 	>$ git clone https://github.com/cms-analysis/HiggsAnalysis-CombinedLimit.git HiggsAnalysis/CombinedLimit
 	>$ git clone https://github.com/cms-analysis/CombineHarvester.git CombineHarvester
 	>$ git clone https://github.com/crogan/KUEWKinoAnalysis.git KUEWKinoAnalysis
 
-**Build/compile  everything**
+##Build/compile  everything
 Build the CMSSW packages (*Note: We're still in the `CMSSW_Z_Y_X/src` directory*)
 
 	>$ scram b
