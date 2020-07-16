@@ -12,13 +12,33 @@ include the **KEWKinoAnalysis** package in the correct location in the
 and **HiggsAnalysis** **CMSSW** packages. These packages must be included
 in the **CMSSW** directory structure as:
 
-	- CMSSW_X_Y_Z
-	  - `src`
+	- CMSSW_Z_Y_X
+	  - src
 		- CombineHarvester
 		- HiggsAnalysis
 		- KUEWKinoAnalysis
 
-Once you have checked out a **CMSSW** 
+You can set up a **CMSSW** area and checkout the required packages by
+performing the terminal commands below.  (*Note: You will probably
+need CMSSW_10_2_X or later*)
+
+### Setting up environmental variables for CMSSW
+- These are commands that I have in my `.bash_profile` script on the
+T3 that get called at terminal startup
+
+	source /cvmfs/cms.cern.ch/cmsset_default.sh
+	source /cvmfs/cms.cern.ch/crab3/crab.sh
+	export SCRAM_ARCH=slc7_amd64_gcc700
+	
+
+Once you have checked out a **CMSSW** package with the directory
+`CMSSW_Z_Y_X` (*Note: You will probably need CMSSW_10_2_X or later*)
+you can checkout the other packages with the terminal commands:
+
+	>$ ./configure
+	>$ make
+	>$ make install
+
 
 
 Installation instructions can be found in the INSTALL file provided with the 
