@@ -39,12 +39,12 @@ You will probably need CMSSW_10_2_X or later
 	>$ git clone https://github.com/cms-analysis/CombineHarvester.git CombineHarvester
 	>$ git clone https://github.com/crogan/KUEWKinoAnalysis.git KUEWKinoAnalysis
 ### Build/compile  everything
-Build the CMSSW packages (*Note: We're still in the `CMSSW_Z_Y_X/src` directory*)
+Build the CMSSW packages (*Note: We're still in the* `CMSSW_Z_Y_X/src` *directory*)
 
 	>$ scram b
 Build **KUEWKinoAnalysis** (with the `BuildFit.x` executable). (*Note:
 at this point you will need to have set the **RestFrames**
-environmental varables set, i.e. have done* `source setup_RestFrames.sg`)
+environmental varables set, i.e. have done* `source setup_RestFrames.hg`)
 
 	>$ cd KUEWKinoAnalysis
 	>$ make CMSSW
