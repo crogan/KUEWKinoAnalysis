@@ -44,7 +44,7 @@ Build the CMSSW packages (*Note: We're still in the* `CMSSW_Z_Y_X/src` *director
 	>$ scram b
 Build **KUEWKinoAnalysis** (with the `BuildFit.x` executable). (*Note:
 at this point you will need to have set the **RestFrames**
-environmental varables set, i.e. have done* `source setup_RestFrames.hg`)
+environmental varables set, i.e. have done* `source setup_RestFrames.sh`)
 
 	>$ cd KUEWKinoAnalysis
 	>$ make CMSSW
