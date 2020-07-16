@@ -12,11 +12,11 @@ include the **KEWKinoAnalysis** package in the correct location in the
 and **HiggsAnalysis** **CMSSW** packages. These packages must be included
 in the **CMSSW** directory structure as:
 
-- `CMSSW_X_Y_Z`
-  - `src`
-	- CombineHarvester
-	- HiggsAnalysis
-	- KUEWKinoAnalysis
+	- CMSSW_X_Y_Z
+	  - `src`
+		- CombineHarvester
+		- HiggsAnalysis
+		- KUEWKinoAnalysis
 
 Once you have checked out a **CMSSW** 
 
