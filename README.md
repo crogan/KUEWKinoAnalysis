@@ -28,16 +28,19 @@ T3 that get called at terminal startup
 	>$ source /cvmfs/cms.cern.ch/cmsset_default.sh
 	>$ source /cvmfs/cms.cern.ch/crab3/crab.sh
 	>$ export SCRAM_ARCH=slc7_amd64_gcc700
+	
 ### Setting up CMSSW area
 You will probably need CMSSW_10_2_X or later
 
 	>$ scram project CMSSW CMSSW_Z_Y_X
 	>$ cd CMSSW_Z_Y_X/src
 	>$ cmsenv
+	
 ### Checking out required packages
 	>$ git clone https://github.com/cms-analysis/HiggsAnalysis-CombinedLimit.git HiggsAnalysis/CombinedLimit
 	>$ git clone https://github.com/cms-analysis/CombineHarvester.git CombineHarvester
 	>$ git clone https://github.com/crogan/KUEWKinoAnalysis.git KUEWKinoAnalysis
+	
 ### Build/compile  everything
 Build the CMSSW packages (*Note: We're still in the* `CMSSW_Z_Y_X/src` *directory*)
 
