@@ -1,7 +1,7 @@
 # KUEWKinoAnalysis
-**KUEWKinoAnalysis**
-
+**KUEWKinoAnalysis** code package implementing the KU EWKino Analysis
 ---------------------
+
 CMSSW-dependent build 
 ---------------------
 
@@ -21,7 +21,7 @@ in the **CMSSW** directory structure as:
 You can set up a **CMSSW** area and checkout the required packages by
 performing the terminal commands below. 
 
-**Setting up environmental variables for CMSSW**
+##Setting up environmental variables for CMSSW**
 These are commands that I have in my `.bash_profile` script on the
 T3 that get called at terminal startup
 
