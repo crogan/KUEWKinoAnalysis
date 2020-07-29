@@ -24,3 +24,6 @@ JES			lnN		1.024	1.024
 JER			lnN		1.01	1.01							
 purewt 		lnN 	1.046 	1.046 		 				
 pdfrewt 	lnN 	- 		1.010			
+
+
+rateTTbar rateParam * ttbar 1.0 [0,5]
