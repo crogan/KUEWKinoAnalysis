@@ -1,7 +1,7 @@
 #binned, shape analysis for T2bW - Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0
 ---------------
 imax 1 #number of channels/bins/regions/categories
-jmax 2 #number of bkg processes 
+jmax 1 #number of bkg processes 
 kmax * #number of nuisance parameters
 ---------------
 # shapes [process] [channel] [file] [histogram] [histogram_with_systematics]
@@ -11,7 +11,7 @@ shapes * * FitInput17_test.root $CHANNEL/$PROCESS $CHANNEL/$PROCESS_$SYSTEMATIC
 bin 		Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0	
 observation -1									
 ---------------
-bin 				Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0
+bin 				Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0 Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0
 process 			T2bW_50000$MASS		ttbar			
 process 			0					1	
 rate				-1					-1			
