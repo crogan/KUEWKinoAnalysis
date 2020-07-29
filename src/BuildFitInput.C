@@ -225,7 +225,7 @@ int main(int argc, char* argv[]) {
 	    
 	  LepID id;
 	  if(base->ID_lep->at(index) < 3 ||
-	     base->MiniIso_lep->at(index)*base->PT_lep->at(index) > 5.)
+	     base->MiniIso_lep->at(index)*base->PT_lep->at(index) >= 5.)
 	    id = kBronze;
 	  else if(base->SIP3D_lep->at(index) > 4)
 	    id = kSilver;
@@ -255,7 +255,7 @@ int main(int argc, char* argv[]) {
 
 	  LepID id;
 	  if(base->ID_lep->at(index) < 3 ||
-	     base->MiniIso_lep->at(index)*base->PT_lep->at(index) > 5.)
+	     base->MiniIso_lep->at(index)*base->PT_lep->at(index) >= 5.)
 	    id = kBronze;
 	  else if(base->SIP3D_lep->at(index) > 4)
 	    id = kSilver;
