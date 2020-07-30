@@ -25,7 +25,7 @@ JER			lnN		1.01	1.01
 purewt 		lnN 	1.046 	1.046 		 				
 pdfrewt 	lnN 	- 		1.010			
 
-rateTTbar rateParam * ZDY_Fakes_elf0 1.0 [0,5]
+rateFakes rateParam * ZDY_Fakes_elf0 1.0 [0,5]
 
 
 
