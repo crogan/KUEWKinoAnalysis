@@ -1,0 +1,31 @@
+#binned, shape analysis for T2bW - Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0
+---------------
+imax 1 #number of channels/bins/regions/categories
+jmax 1 #number of bkg processes 
+kmax * #number of nuisance parameters
+---------------
+# shapes [process] [channel] [file] [histogram] [histogram_with_systematics]
+shapes * * FitInput17_test.root $CHANNEL/$PROCESS $CHANNEL/$PROCESS_$SYSTEMATIC
+
+---------------
+bin 		Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0	
+observation -1									
+---------------
+bin 				Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0 Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0
+process 			T2bW_50000$MASS		ZDY_Fakes_elf0			
+process 			0					1	
+rate				-1					-1			
+---------------
+lumi 		lnN		1.023   1.023			
+BTAG_SF	 	shape 	1	    1
+topxsec		lnN		-		1.061		
+wxsec		lnN		-		-		    
+JES			lnN		1.024	1.024				
+JER			lnN		1.01	1.01							
+purewt 		lnN 	1.046 	1.046 		 				
+pdfrewt 	lnN 	- 		1.010			
+
+rateTTbar rateParam * ZDY_Fakes_elf0 1.0 [0,5]
+
+
+
