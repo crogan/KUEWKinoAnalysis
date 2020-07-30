@@ -1,28 +1,25 @@
-Combination of el1Reg=test/datacard_T2bW50000480_el1.txt  el0Reg=test/datacard_T2bW50000480_el0.txt
+Combination of el0Reg=datacard_T2bW50000480_el0.txt  el1Reg=datacard_T2bW50000480_el1.txt
 imax 2 number of bins
-jmax 2 number of processes minus 1
+jmax 1 number of processes minus 1
 kmax 7 number of nuisance parameters
 ----------------------------------------------------------------------------------------------------------------------------------
-shapes *       el0Reg  test/FitInput17_test.root Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0/$PROCESS Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0/$PROCESS_$SYSTEMATIC
-shapes *       el1Reg  test/FitInput17_test.root Ch1L_elm-el1-0bjetS-0bjetISR-PTISR0/$PROCESS Ch1L_elm-el1-0bjetS-0bjetISR-PTISR0/$PROCESS_$SYSTEMATIC
+shapes *       el0Reg  FitInput17_test.root Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0/$PROCESS Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0/$PROCESS_$SYSTEMATIC
+shapes *       el1Reg  FitInput17_test.root Ch1L_elm-el1-0bjetS-0bjetISR-PTISR0/$PROCESS Ch1L_elm-el1-0bjetS-0bjetISR-PTISR0/$PROCESS_$SYSTEMATIC
 ----------------------------------------------------------------------------------------------------------------------------------
-bin          el1Reg  el0Reg
+bin          el0Reg  el1Reg
 observation  -1      -1    
 ----------------------------------------------------------------------------------------------------------------------------------
-bin                               el1Reg           el1Reg           el1Reg           el0Reg           el0Reg           el0Reg         
-process                           T2bW_50000$MASS  ttbar            ZDY              T2bW_50000$MASS  ttbar            ZDY            
-process                           0                1                2                0                1                2              
-rate                              -1               -1               -1               -1               -1               -1             
+bin                               el0Reg           el0Reg           el1Reg           el1Reg         
+process                           T2bW_50000$MASS  ttbar            T2bW_50000$MASS  ttbar          
+process                           0                1                0                1              
+rate                              -1               -1               -1               -1             
 ----------------------------------------------------------------------------------------------------------------------------------
-BTAG_SF                 shape     1.0              1.0              1.0              1.0              1.0              1.0            
-JER                     lnN       1.01             1.01             1.01             1.01             1.01             1.01           
-JES                     lnN       1.024            1.024            1.024            1.024            1.024            1.024          
-lumi                    lnN       1.023            1.023            1.023            1.023            1.023            1.023          
-pdfrewt                 lnN       -                1.01             1.01             -                1.01             1.01           
-purewt                  lnN       1.046            1.046            1.046            1.046            1.046            1.046          
-topxsec                 lnN       -                1.061            1.061            -                1.061            1.061
-
-rateDY rateParam * ZDY 1.0 
-rateTTbar rateParam * ttbar 1.0
-rateEl0 rateParam el0Reg * 1.0	
-rateEl1 rateParam el1Reg * 1.0          
+BTAG_SF                 shape     1.0              1.0              1.0              1.0            
+JER                     lnN       1.01             1.01             1.01             1.01           
+JES                     lnN       1.024            1.024            1.024            1.024          
+lumi                    lnN       1.023            1.023            1.023            1.023          
+pdfrewt                 lnN       -                1.01             -                1.01           
+purewt                  lnN       1.046            1.046            1.046            1.046          
+topxsec                 lnN       -                1.061            -                1.061          
+rateTTbar     rateParam el0Reg ttbar 1.0 [0,5] 
+rateTTbar     rateParam el1Reg ttbar 1.0 [0,5] 
