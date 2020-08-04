@@ -20,7 +20,7 @@ void shapeAnalyzer(TString file){
 		
 
 		cout << key->GetTitle() << endl;
-		continue;
+		// continue;
 		for(int iHist = 0; iHist < fakesVec.size(); iHist++){
 			for(int iProc = 0; iProc < procVec.size(); iProc++){
 				TString histName = procVec.at(iProc)+fakesVec.at(iHist);
