@@ -17,9 +17,10 @@ void shapeAnalyzer(TString file){
 
 		TDirectory* newDir = oFile->mkdir(key->GetTitle());
 		newDir->cd();
-		newDir->Write();
+		
 
 		cout << key->GetTitle() << endl;
+		continue;
 		for(int iHist = 0; iHist < fakesVec.size(); iHist++){
 			for(int iProc = 0; iProc < procVec.size(); iProc++){
 				TString histName = procVec.at(iProc)+fakesVec.at(iHist);
@@ -79,6 +80,7 @@ void shapeAnalyzer(TString file){
 			}
 
 		}
+		newDir->Write();
 		cout << "\n" << endl;
 		iFile->Close();
 		oFile->Close();
