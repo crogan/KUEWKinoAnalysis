@@ -17,7 +17,7 @@ void shapeAnalyzer(TString file){
 		for(int iHist = 0; iHist < fakesVec.size(); iHist++){
 			for(int iProc = 0; iProc < procVec.size(); iProc++){
 				TString histName = procVec.at(iProc)+fakesVec.at(iHist);
-				TH1D* nomHist = (TH1D*)listOfHists->Get(histName);
+				TH1D* nomHist = (TH1D*)oldDir->Get(histName);
 				if(nomHist == NULL) continue;
 
 				cout << histName << endl;
