@@ -10,7 +10,7 @@ void shapeAnalyzer(TString file){
 	gStyle->SetOptStat(0);
 
 
-	for(int iKey = 0; iKey < iKey; iKey++){
+	for(int iKey = 0; iKey < nKeys; iKey++){
 		TKey* key = (TKey*)keyList->At(iKey);
 		if(key == NULL) continue;
 		TDirectory* oldDir = iFile->GetDirectory(key->GetTitle());
