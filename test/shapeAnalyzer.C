@@ -10,8 +10,9 @@ void shapeAnalyzer(TString file){
 	gStyle->SetOptStat(0);
 
 
-	for(int iKey = 0; iKey < 3; iKey++){
+	for(int iKey = 0; iKey < iKey; iKey++){
 		TKey* key = (TKey*)keyList->At(iKey);
+		if(key == NULL) continue;
 		TDirectory* oldDir = iFile->GetDirectory(key->GetTitle());
 		TList* listOfHists = oldDir->GetListOfKeys();
 
@@ -20,7 +21,6 @@ void shapeAnalyzer(TString file){
 		
 
 		cout << key->GetTitle() << endl;
-		// continue;
 		for(int iHist = 0; iHist < fakesVec.size(); iHist++){
 			for(int iProc = 0; iProc < procVec.size(); iProc++){
 				TString histName = procVec.at(iProc)+fakesVec.at(iHist);
