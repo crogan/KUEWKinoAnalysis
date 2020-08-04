@@ -10,11 +10,11 @@ void shapeAnalyzer(TString file){
 	gStyle->SetOptStat(0);
 
 
-	for(int iKey = 0; iKey < nKeys; iKey++){
+	for(int iKey = 0; iKey < nKeys-2; iKey++){
 		TKey* key = (TKey*)keyList->At(iKey); //list of dirs
 		if(key == NULL) continue;
 		cout << key->GetTitle() << endl;
-		
+
 		TDirectory* oldDir = iFile->GetDirectory(key->GetTitle());
 		TList* listOfHists = oldDir->GetListOfKeys();
 		if(!listOfHists->Contains("Fakes_elf0")) continue;
