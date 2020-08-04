@@ -34,18 +34,26 @@ void shapeAnalyzer(TString file){
 				TH1D* upHist = (TH1D*)oldDir->Get(histName+"_BTAG_SFUp");
 				TH1D* downHist = (TH1D*)oldDir->Get(histName+"_BTAG_SFDown");
 
+				float nomUp = upHist->Integral()/nomHist->Integral();
+				float nomDown = downHist->Integral()/nomHist->Integral();
+				
+
+
+
+				if(nomUp > 0.1 || nomUp-1 > 0.1) cout << "nom, up variation" << endl;
+				if(nomDown > 0.1 || nomDown-1 > 0.1) cout << "nom, down variation" << endl;
+				
+
 				upHist->SetTitle(histName+"_BTAG_SFUp");
 				downHist->SetTitle(histName+"_BTAG_SFDown");
+
 
 				nomHist->Scale(1/nomHist->Integral(),"width");
 				upHist->Scale(1/upHist->Integral(),"width");
 				downHist->Scale(1/downHist->Integral(),"width");
 
-				//add in variation detector with integral
+			
 
-				if(abs(nomHist->Integral() - upHist->Integral()) > 0.1) cout << "nom, up variation" << endl;
-				if(abs(nomHist->Integral() - downHist->Integral()) > 0.1) cout << "nom, down variation" << endl;
-				if(abs(downHist->Integral() - upHist->Integral()) > 0.1) cout << "down, up variation" << endl;
 				
 				upHist->SetLineColor(kRed);
 				upHist->SetMarkerColor(kRed);
