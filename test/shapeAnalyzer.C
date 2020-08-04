@@ -1,6 +1,6 @@
 void shapeAnalyzer(TString file){
 	TFile* iFile = TFile::Open(file);
-	TFile* oFile = new TFile("varHists");
+	TFile* oFile = new TFile("varHists.root","RECREATE");
 
 	Int_t nKeys = iFile->GetNkeys();
 	TList* keyList = iFile->GetListOfKeys();
@@ -16,6 +16,7 @@ void shapeAnalyzer(TString file){
 
 		for(int iHist = 0; iHist < fakesVec.size(); iHist++){
 			for(int iProc = 0; iProc < procVec.size(); iProc++){
+				cout << procVec.at(iProc) << " " << fakesVec.at(iHist) << endl;
 				TString histName = procVec.at(iProc)+fakesVec.at(iHist);
 				TH1D* nomHist = (TH1D*)oldDir->Get(histName);
 				if(nomHist == NULL) continue;
