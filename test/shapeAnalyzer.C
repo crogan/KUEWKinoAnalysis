@@ -82,8 +82,9 @@ void shapeAnalyzer(TString file){
 		}
 		newDir->Write();
 		cout << "\n" << endl;
-		iFile->Close();
-		oFile->Close();
+		
 		
 	}
+	iFile->Close();
+	oFile->Close();
 }
