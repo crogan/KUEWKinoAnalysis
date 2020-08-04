@@ -1,21 +1,21 @@
 void shapeAnalyzer(TString file){
-	TFile* file = TFile::Open(file);
+	TFile* iFile = TFile::Open(file);
 	TFile* oFile = new TFile("varHists");
 
-	Int nKeys = file->GetNkeys();
-	TList* keyList = file->GetListOfKeys();
+	Int nKeys = iFile->GetNkeys();
+	TList* keyList = iFile->GetListOfKeys();
 	std::vector<TString> fakesVec{"Fakes_elf0","Fakes_elf1","Fakes_elf2"};
 	std::vector<TString> procVec{"","_ttbar_","_ZDY_"};
 
 
 	for(int iKey = 0; iKey < nKey; i++){
 		TKey* key = (TKey*)keyList->At(iKey);
-		TDirectory* oldDir = file->GetDirectory(key->GetTitle());
+		TDirectory* oldDir = iFile->GetDirectory(key->GetTitle());
 		TList* listOfHists = oldDir->GetListOfKeys();
 
 
-		for(iHist = 0; iHist < fakesVec.size(); iHist++){
-			for(iProc = 0; iProc < procVec.size(); iProc++){
+		for(int iHist = 0; iHist < fakesVec.size(); iHist++){
+			for(int iProc = 0; iProc < procVec.size(); iProc++){
 				TString histName = procVec.at(iProc)+fakesVec.at(iHist);
 				TH1D* nomHist = (TH1D*)listOfHists->Get(histName);
 				if(nomHist == NULL) continue;
