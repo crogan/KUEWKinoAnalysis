@@ -2,13 +2,13 @@ void shapeAnalyzer(TString file){
 	TFile* iFile = TFile::Open(file);
 	TFile* oFile = new TFile("varHists");
 
-	Int nKeys = iFile->GetNkeys();
+	Int_t nKeys = iFile->GetNkeys();
 	TList* keyList = iFile->GetListOfKeys();
 	std::vector<TString> fakesVec{"Fakes_elf0","Fakes_elf1","Fakes_elf2"};
 	std::vector<TString> procVec{"","_ttbar_","_ZDY_"};
 
 
-	for(int iKey = 0; iKey < nKey; i++){
+	for(int iKey = 0; iKey < 3; iKey++){
 		TKey* key = (TKey*)keyList->At(iKey);
 		TDirectory* oldDir = iFile->GetDirectory(key->GetTitle());
 		TList* listOfHists = oldDir->GetListOfKeys();
@@ -22,8 +22,8 @@ void shapeAnalyzer(TString file){
 
 				cout << histName << endl;
 
-				TH1D* upHist = (TH1D*)listOfHists->Get((histName+"_BTAG_SFUp").c_str());
-				TH1D* downHist = (TH1D*)listOfHists->Get((histName+"_BTAG_SFDown").c_str());
+				TH1D* upHist = (TH1D*)oldDir->Get(histName+"_BTAG_SFUp");
+				TH1D* downHist = (TH1D*)oldDir->Get(histName+"_BTAG_SFDown");
 
 				nomHist->Scale(1/nomHist->Integral(),"width");
 				upHist->Scale(1/upHist->Integral(),"width");
