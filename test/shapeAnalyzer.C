@@ -16,7 +16,7 @@ void shapeAnalyzer(TString file){
 
 		for(int iHist = 0; iHist < fakesVec.size(); iHist++){
 			for(int iProc = 0; iProc < procVec.size(); iProc++){
-				cout << procVec.at(iProc) << " " << fakesVec.at(iHist) << endl;
+				cout << procVec.at(iProc) << fakesVec.at(iHist) << endl;
 				TString histName = procVec.at(iProc)+fakesVec.at(iHist);
 				TH1D* nomHist = (TH1D*)oldDir->Get(histName);
 				if(nomHist == NULL) continue;
@@ -32,22 +32,29 @@ void shapeAnalyzer(TString file){
 
 				upHist->SetLineColor(kRed);
 				upHist->SetMarkerColor(kRed);
-				upHist->SetMarkerStyle(kCircle);
+				upHist->SetMarkerStyle(kFullDotMedium);
 
 				downHist->SetLineColor(kBlue);
 				downHist->SetMarkerColor(kBlue);
-				downHist->SetMarkerStyle(kCircle);
+				downHist->SetMarkerStyle(kFullDotMedium);
 
-				nomHist->SetLineColor(kViolet);
-				nomHist->SetMarkerColor(kViolet);
-				nomHist->SetMarkerStyle(kCircle);
+				nomHist->SetLineColor(kGreen);
+				nomHist->SetMarkerColor(kGreen);
+				nomHist->SetMarkerStyle(kFullDotMedium);
 
 
-				TCanvas* c1 = new TCanvas("c1","c1",800,600);
+				TCanvas* c1 = new TCanvas(histName,histName,800,600);
+				TLegend* leg = new TLegend(0.65,0.7,0.9,0.9);
 
-				nomHist->Draw();
-				upHist->Draw("same");
-				downHist->Draw("same");
+				leg->AddEntry(nomHist);
+				leg->AddEntry(upHist);
+				leg->AddEntry(downHist);
+
+				nomHist->Draw("goff");
+				upHist->Draw("same goff");
+				downHist->Draw("same goff");
+
+				leg->Draw("same goff");
 
 				c1->Write();
 				c1->Close();
