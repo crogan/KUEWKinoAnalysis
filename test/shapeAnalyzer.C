@@ -13,6 +13,8 @@ void shapeAnalyzer(TString file){
 	for(int iKey = 0; iKey < nKeys; iKey++){
 		TKey* key = (TKey*)keyList->At(iKey); //list of dirs
 		if(key == NULL) continue;
+		cout << key->GetTitle() << endl;
+		
 		TDirectory* oldDir = iFile->GetDirectory(key->GetTitle());
 		TList* listOfHists = oldDir->GetListOfKeys();
 		if(!listOfHists->Contains("Fakes_elf0")) continue;
@@ -21,7 +23,7 @@ void shapeAnalyzer(TString file){
 		newDir->cd();
 		
 
-		cout << key->GetTitle() << endl;
+		
 		continue;
 		for(int iHist = 0; iHist < fakesVec.size(); iHist++){
 			for(int iProc = 0; iProc < procVec.size(); iProc++){
