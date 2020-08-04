@@ -5,7 +5,7 @@ void shapeAnalyzer(TString file){
 	Int_t nKeys = iFile->GetNkeys();
 	TList* keyList = iFile->GetListOfKeys();
 	std::vector<TString> fakesVec{"Fakes_elf0","Fakes_elf1","Fakes_elf2"};
-	std::vector<TString> procVec{"","_ttbar_","_ZDY_"};
+	std::vector<TString> procVec{"","ttbar_","ZDY_"};
 
 	gStyle->SetOptStat(0);
 
