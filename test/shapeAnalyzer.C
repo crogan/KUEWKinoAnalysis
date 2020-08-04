@@ -43,14 +43,19 @@ void shapeAnalyzer(TString file){
 				upHist->SetLineColor(kRed);
 				upHist->SetMarkerColor(kRed);
 				upHist->SetMarkerStyle(20);
+				upHist->SetStats(0);
 
 				downHist->SetLineColor(kBlue);
 				downHist->SetMarkerColor(kBlue);
 				downHist->SetMarkerStyle(20);
+				downHist->SetStats(0);
 
 				nomHist->SetLineColor(kGreen);
 				nomHist->SetMarkerColor(kGreen);
 				nomHist->SetMarkerStyle(20);
+				nomHist->SetStats(0);
+
+
 
 
 				TCanvas* c1 = new TCanvas(histName,histName,800,600);
@@ -60,9 +65,10 @@ void shapeAnalyzer(TString file){
 				leg->AddEntry(upHist);
 				leg->AddEntry(downHist);
 
-				nomHist->Draw("goff");
-				upHist->Draw("same goff");
+				
+				upHist->Draw("goff");
 				downHist->Draw("same goff");
+				nomHist->Draw("same goff");
 
 				leg->Draw("same goff");
 
@@ -74,6 +80,8 @@ void shapeAnalyzer(TString file){
 
 		}
 		cout << "\n" << endl;
+		iFile->Close();
+		oFile->Close();
 		
 	}
 }
