@@ -1,6 +1,6 @@
 void shapeAnalyzer(TString file){
 	TFile* iFile = TFile::Open(file);
-	TFile* oFile = new TFile("varHists.root","RECREATE");
+	TFile* oFile = new TFile("varHists17.root","RECREATE");
 
 	Int_t nKeys = iFile->GetNkeys();
 	TList* keyList = iFile->GetListOfKeys();
