@@ -15,10 +15,13 @@ void shapeAnalyzer(TString file){
 		TDirectory* oldDir = iFile->GetDirectory(key->GetTitle());
 		TList* listOfHists = oldDir->GetListOfKeys();
 
+		TDirectory* newDir = oFile->mkdir(key->GetTitle());
+		newDir->cd();
+		newDir->Write();
+
 		cout << key->GetTitle() << endl;
 		for(int iHist = 0; iHist < fakesVec.size(); iHist++){
 			for(int iProc = 0; iProc < procVec.size(); iProc++){
-				cout << procVec.at(iProc) << fakesVec.at(iHist) << endl;
 				TString histName = procVec.at(iProc)+fakesVec.at(iHist);
 				TH1D* nomHist = (TH1D*)oldDir->Get(histName);
 				if(nomHist == NULL) continue;
@@ -39,15 +42,15 @@ void shapeAnalyzer(TString file){
 
 				upHist->SetLineColor(kRed);
 				upHist->SetMarkerColor(kRed);
-				upHist->SetMarkerStyle(19);
+				upHist->SetMarkerStyle(20);
 
 				downHist->SetLineColor(kBlue);
 				downHist->SetMarkerColor(kBlue);
-				downHist->SetMarkerStyle(19);
+				downHist->SetMarkerStyle(20);
 
 				nomHist->SetLineColor(kGreen);
 				nomHist->SetMarkerColor(kGreen);
-				nomHist->SetMarkerStyle(19);
+				nomHist->SetMarkerStyle(20);
 
 
 				TCanvas* c1 = new TCanvas(histName,histName,800,600);
@@ -70,9 +73,7 @@ void shapeAnalyzer(TString file){
 			}
 
 		}
-
-		TDirectory* newDir = oFile->mkdir(key->GetTitle());
-		newDir->cd();
-		newDir->Write();
+		cout << "\n" << endl;
+		
 	}
 }
