@@ -7,6 +7,8 @@ void shapeAnalyzer(TString file){
 	std::vector<TString> fakesVec{"Fakes_elf0","Fakes_elf1","Fakes_elf2"};
 	std::vector<TString> procVec{"","_ttbar_","_ZDY_"};
 
+	gStyle->SetOptStat(0);
+
 
 	for(int iKey = 0; iKey < 3; iKey++){
 		TKey* key = (TKey*)keyList->At(iKey);
@@ -23,8 +25,13 @@ void shapeAnalyzer(TString file){
 
 				cout << histName << endl;
 
+				nomHist->SetTitle(histName);
+
 				TH1D* upHist = (TH1D*)oldDir->Get(histName+"_BTAG_SFUp");
 				TH1D* downHist = (TH1D*)oldDir->Get(histName+"_BTAG_SFDown");
+
+				upHist->SetTitle(histName+"_BTAG_SFUp");
+				downHist->SetTitle(histName+"_BTAG_SFDown");
 
 				nomHist->Scale(1/nomHist->Integral(),"width");
 				upHist->Scale(1/upHist->Integral(),"width");
@@ -32,15 +39,15 @@ void shapeAnalyzer(TString file){
 
 				upHist->SetLineColor(kRed);
 				upHist->SetMarkerColor(kRed);
-				upHist->SetMarkerStyle(kFullDotMedium);
+				upHist->SetMarkerStyle(10);
 
 				downHist->SetLineColor(kBlue);
 				downHist->SetMarkerColor(kBlue);
-				downHist->SetMarkerStyle(kFullDotMedium);
+				downHist->SetMarkerStyle(10);
 
 				nomHist->SetLineColor(kGreen);
 				nomHist->SetMarkerColor(kGreen);
-				nomHist->SetMarkerStyle(kFullDotMedium);
+				nomHist->SetMarkerStyle(10);
 
 
 				TCanvas* c1 = new TCanvas(histName,histName,800,600);
