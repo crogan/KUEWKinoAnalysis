@@ -41,6 +41,12 @@ void shapeAnalyzer(TString file){
 				upHist->Scale(1/upHist->Integral(),"width");
 				downHist->Scale(1/downHist->Integral(),"width");
 
+				//add in variation detector with integral
+
+				if(abs(nomHist->Integral() - upHist->Integral()) > 0.1) cout << "nom, up variation" << endl;
+				if(abs(nomHist->Integral() - downHist->Integral()) > 0.1) cout << "nom, down variation" << endl;
+				if(abs(downHist->Integral() - upHist->Integral()) > 0.1) cout << "down, up variation" << endl;
+				
 				upHist->SetLineColor(kRed);
 				upHist->SetMarkerColor(kRed);
 				upHist->SetMarkerStyle(20);
