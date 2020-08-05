@@ -43,8 +43,8 @@ void shapeAnalyzer(TString file){
 
 
 
-				if(nomUp > 0.5 || nomUp-1 > 0.5) cout << "nom, up variation" << endl;
-				if(nomDown > 0.5 || nomDown-1 > 0.5) cout << "nom, down variation" << endl;
+				//if(nomUp > 0.5 || nomUp-1 > 0.5) cout << "nom, up variation" << endl;
+				//if(nomDown > 0.5 || nomDown-1 > 0.5) cout << "nom, down variation" << endl;
 				
 
 				upHist->SetTitle(histName+"_BTAG_SFUp");
