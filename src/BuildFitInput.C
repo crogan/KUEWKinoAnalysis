@@ -274,7 +274,7 @@ int main(int argc, char* argv[]) {
 
 	Category Event(Leptonic(list_a, list_b),
 		       Hadronic(NjetS, NbjetS, NSV),
-		       Hadronic(NjetISR, NbjetISR, 0));
+		       Hadronic(NjetISR, NbjetISR, base->NSV_ISR));
 	Event.AddGenericVal(GenericVal(base->PTISR));
 	
 	int eindex = Categories.Find(Event);
