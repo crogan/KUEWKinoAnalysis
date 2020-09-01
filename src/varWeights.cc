@@ -1,5 +1,5 @@
 #include "varWeights.hh"
-
+//#include "ReducedBase_slim.hh"
 varWeights::varWeights(const string& label){
 	m_label = label;
 }
