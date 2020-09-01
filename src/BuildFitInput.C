@@ -7,7 +7,6 @@
 #include <stdio.h>
 #include <dirent.h>
 #include <vector>
-
 // ROOT includes
 #include <TROOT.h>
 #include <TFile.h>
@@ -18,8 +17,11 @@
 #include <TLorentzVector.h>
 //#include <TIter.h>
 #include <TKey.h>
+#include <ROOT/RDataFrame.hxx>
 
-#include "ReducedBase_slim.hh"
+
+
+//#include "ReducedBase_slim.hh"
 #include "FitInputBuilder.hh"
 #include "Systematics.hh"
 #include "SampleTool.hh"
@@ -28,8 +30,8 @@
 #include "Hadronic.hh"
 #include "varWeights.hh"
 
+using ROOT::RDataFrame;
 using namespace std;
-
 int main(int argc, char* argv[]) {
   string NtuplePath = "/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_23_05_20/";
   string OutFile    = "BuildFitInput_output.root";
@@ -41,7 +43,6 @@ int main(int argc, char* argv[]) {
   bool addData = false;
   vector<string> proc_to_add;
   float PTvar;
-  bool b_PTvar = false;
   
   for(int i = 0; i < argc; i++){
     if(strncmp(argv[i],"--help", 6) == 0){
@@ -128,6 +129,7 @@ int main(int argc, char* argv[]) {
     cout << "Adding processes that match \"" << proc_to_add[p] << "\"" << endl;
     samples += ST.Get(proc_to_add[p]);
   }
+
 
   CategoryTool CT;
 
@@ -224,7 +226,7 @@ int main(int argc, char* argv[]) {
 	    
 	  LepID id;
 	  if(base->ID_lep->at(index) < 3 ||
-	     base->MiniIso_lep->at(index)*base->PT_lep > 5.)
+	     base->MiniIso_lep->at(index)*base->PT_lep->at(index) > 5.)
 	    id = kBronze;
 	  else if(base->SIP3D_lep->at(index) > 4)
 	    id = kSilver;
@@ -254,7 +256,7 @@ int main(int argc, char* argv[]) {
 
 	  LepID id;
 	  if(base->ID_lep->at(index) < 3 ||
-	     base->MiniIso_lep->at(index)*base->PT_lep > 5.)
+	     base->MiniIso_lep->at(index)*base->PT_lep->at(index) > 5.)
 	    id = kBronze;
 	  else if(base->SIP3D_lep->at(index) > 4)
 	    id = kSilver;
