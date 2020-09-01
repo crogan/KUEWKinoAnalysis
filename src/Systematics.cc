@@ -309,6 +309,7 @@ Systematics SystematicsTool::GetWeightSystematics() const {
   
   list += "PU_SF";
   list += "BTAG_SF";
+  list += "lepPT_weight";
 
   return list;
 }

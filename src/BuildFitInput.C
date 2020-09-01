@@ -26,6 +26,7 @@
 #include "CategoryTool.hh"
 #include "Leptonic.hh"
 #include "Hadronic.hh"
+#include "varWeights.hh"
 
 using namespace std;
 
@@ -39,7 +40,8 @@ int main(int argc, char* argv[]) {
   bool addSig  = false;
   bool addData = false;
   vector<string> proc_to_add;
-
+  float PTvar;
+  bool b_PTvar = false;
   
   for(int i = 0; i < argc; i++){
     if(strncmp(argv[i],"--help", 6) == 0){
@@ -165,7 +167,8 @@ int main(int argc, char* argv[]) {
     
       TChain* chain = ST.Tree(proc, f);
       ReducedBase* base = new ReducedBase(chain);
-
+      ROOT::RDataFrame d(*base->fChain);
+      float ptMean = *d.Mean("PT_lep");
       int Nentry = base->fChain->GetEntries();
 
       int SKIP = 1;
@@ -191,6 +194,7 @@ int main(int argc, char* argv[]) {
 	  
 	if(base->RISR < 0.5 || base->RISR > 1.05)
 	  continue;
+
 	
 	int Nlep     = base->Nlep;
 	int NjetS    = base->Njet_S;
@@ -207,6 +211,7 @@ int main(int argc, char* argv[]) {
 	int index;
 	for(int i = 0; i < base->Nlep_a; i++){
 	  index = (*base->index_lep_a)[i];
+
 	    
 	  int PDGID  = base->PDGID_lep->at(index);
 	  int gindex = is_data ? -1 :  base->Index_lep->at(index);
@@ -219,7 +224,7 @@ int main(int argc, char* argv[]) {
 	    
 	  LepID id;
 	  if(base->ID_lep->at(index) < 3 ||
-	     base->MiniIso_lep->at(index)*(base->PT_lep->at(index)+base->PT_lep->at(index)*0.10) > 5.)
+	     base->MiniIso_lep->at(index)*base->PT_lep > 5.)
 	    id = kBronze;
 	  else if(base->SIP3D_lep->at(index) > 4)
 	    id = kSilver;
@@ -249,7 +254,7 @@ int main(int argc, char* argv[]) {
 
 	  LepID id;
 	  if(base->ID_lep->at(index) < 3 ||
-	     base->MiniIso_lep->at(index)*(base->PT_lep->at(index)+base->PT_lep->at(index)*0.10) > 5.)
+	     base->MiniIso_lep->at(index)*base->PT_lep > 5.)
 	    id = kBronze;
 	  else if(base->SIP3D_lep->at(index) > 4)
 	    id = kSilver;
@@ -276,6 +281,7 @@ int main(int argc, char* argv[]) {
 	  continue;
 	}	
 	// systematics loop
+	varWeights vw("varWeights");
 	for(int is = 0; is < Nsys; is++){
 	  Systematic& sys = systematics[is];
 	if(!(!sys)){
@@ -296,6 +302,8 @@ int main(int argc, char* argv[]) {
 		weight *= base->BtagSFweight_down;
 	    else 
 	      weight *= base->BtagSFweight;
+	  if(sys == Systematic("lepPT_weight"))
+	  	weight *= vw.lepPTweight(base,ptMean,sys);
 	    if(sys == Systematic("PU_SF"))
 	 //      if(sys.IsUp()){
 		// weight *= base->PUweight_up/base->PUweight;
@@ -305,6 +313,7 @@ int main(int argc, char* argv[]) {
 	      weight *= 1.;
 	    //weight *= base->PUweight;
 	   }
+
 	// if(std::isnan(weight))
 	// 	cout << "PU up " << base->PUweight_up << " PU down " << base->PUweight_up << " PU nom " << base->PUweight << " NPU " << base->NPU endl;   
 	  LepList Fakes  = list_a.GetFakes(kHF);
