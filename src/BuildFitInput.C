@@ -171,6 +171,9 @@ int main(int argc, char* argv[]) {
       ReducedBase* base = new ReducedBase(chain);
       ROOT::RDataFrame d(*base->fChain);
       float ptMean = *d.Mean("PT_lep");
+      float isoMean = *d.Mean("MiniIso_lep");
+      float etaMean = *d.Mean("Eta_lep");
+      float sip3dMean = *d.Mean("SIP3D_lep");
       int Nentry = base->fChain->GetEntries();
 
       int SKIP = 1;
@@ -305,7 +308,13 @@ int main(int argc, char* argv[]) {
 	    else 
 	      weight *= base->BtagSFweight;
 	  if(sys == Systematic("lepPT_weight"))
-	  	weight *= vw.lepPTweight(base,ptMean,sys);
+	  	weight *= vw.lepWeight(base,ptMean,base->PT_lep,sys);
+	  if(sys == Systematic("lepIso_weight"))
+	  	weight *= vw.lepWeight(base,isoMean,base->MiniIso_lep,sys);
+	  if(sys == Systematic("lepEta_weight"))
+	  	weight *= vw.lepWeight(base,etaMean,base->Eta_lep,sys);
+	  if(sys == Systematic("lepSIP3D_weight"))
+	  	weight *= vw.lepWeight(base,sip3dMean,base->SIP3D_lep,sys);
 	    if(sys == Systematic("PU_SF"))
 	 //      if(sys.IsUp()){
 		// weight *= base->PUweight_up/base->PUweight;
