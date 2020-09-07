@@ -37,7 +37,8 @@ int main(int argc, char* argv[]){
 	// bool fDown = false;
 	procVec.push_back("");
 	// vector<TFile*> files;
-
+	char buffer[100];
+	char charFake[] = {"Fakes_"};
 	gStyle->SetOptStat(0);
 
 
@@ -59,15 +60,28 @@ int main(int argc, char* argv[]){
 		if(strncmp(argv[i],"-i",2) == 0){
 			i++;
 			inFileName = string(argv[i]);
-			files.push_back(TFile::Open(inFileName));
+	//		files.push_back(TFile::Open(inFileName));
 		}
+	
+
+ 		if(strncmp(argv[i],"--input",7) == 0){
+                        i++;
+                        inFileName = string(argv[i]);
+        //              files.push_back(TFile::Open(inFileName));
+          	 }
+
+
 		if(strncmp(argv[i],"+fake",5) == 0){
 			i++;
-			fakesVec.push_back("Fakes_"+argv[i]);
+			strncpy(buffer,charFake,sizeof(buffer));
+			strncat(buffer,argv[i],sizeof(buffer));
+			fakesVec.push_back(buffer);
+			memset(buffer,0,sizeof(buffer));
+			//fakesVec.push_back(strncat("Fakes_",argv[i],10));
 		}
 		if(strncmp(argv[i],"++AllFakes",10) == 0){
 			i++;
-			fakesVec = {"Fakes_elf0","Fakes_elf1","Fakes_elf2"};
+			fakesVec = {"Fakes_elf0","Fakes_elf1","Fakes_elf2","Fakes_muf0","Fakes_muf1","Fakes_muf2"};
 		}
 		if(strncmp(argv[i],"+proc",5) == 0){
 			i++;
@@ -91,38 +105,40 @@ int main(int argc, char* argv[]){
 		// 	files.push_back(TFile::Open(downFile));
 		// }
 	}
-
-	if(hprint){
+	
+	if(hprint || argc < 2){
     cout << "Usage: " << argv[0] << " [options]" << endl;
     cout << "  options:" << endl;
     cout << "   --help(-h)          print options" << endl;
-    cout << "   -path [dest]        path to input ntuples" << endl;
+   // cout << "   -path [dest]        path to input ntuples" << endl;
+    cout << "   --input(-i) [file]  input file where histograms are" << endl;
     cout << "   --ouput(-o) [file]  output root file" << endl;
-    cout << "   +proc [label]       add processes matching label (can have >1 of these)" << endl;
-    cout << "   +fake [label]       add fake sources (ie. elf0, muf1, elf2)" << endl;
-    cout << "   ++sig               add all signal samples" << endl;
-    cout << "   ++data              add all background samples" << endl;
-    cout << "   ++all               add all samples" << endl;
+    cout << "   +proc [label]       add processes label (can have >1 of these)" << endl;
+    cout << "   +fake [label]       add fake sources (ie. elf0, muf1, elf2, can have >1 of these)" << endl;
+    cout << "   ++AllFakes          add all fake sources" << endl;
+    cout << "   +sys                add systematics" << endl;
+    //cout << "   ++all               add all samples" << endl;
 
     return 0;
   }
 
-	if(files.size() < 1){
-		cout << "Error: no files provided." << endl;
-		break;
-	}
+	//if(files.size() < 1){
+	//	cout << "Error: no files provided." << endl;
+	//	break;
+	//}
 
 	// if(fUp && !fDown || !fUp && fDown){
 	// 	cout << "Error: only one (up/down) file provided. Please provide both up and down files, or one input file." << endl;
 	// 	break;
 	// }
 
-	shapeAnalyzer* shape = new shapeAnalyzer(inFile, oFile);
+	TFile* iFile = TFile::Open(inFileName.c_str());
+	shapeAnalyzer* shape = new shapeAnalyzer(iFile);
 	// if(fUp) shapeAnalzyer* upShape = new shapeAnalyzer(upFile,oFile);
 	// if(fDown) shapeAnalyzer* downShape = new shapeAnalyzer(downFile,oFile);
 
-	Int_t nKeys = inFile->GetNkeys();
-	TList* keyList = iFile->GetListOfKeys();;
+	Int_t nKeys = iFile->GetNkeys();
+	TList* keyList = iFile->GetListOfKeys();
 
 	TFile* oFile = new TFile((oFileName+".root").c_str(),"RECREATE");
 
@@ -147,14 +163,14 @@ int main(int argc, char* argv[]){
 		for(int iSys = 0; iSys < sysVec.size();iSys++){
 
 			for(int iFake = 0; iFake < fakesVec.size(); iFake++){ //loop through fake sources
-				if(!listOfHists->Contains(fakesVec.at(iFake))) continue;
+				if(!listOfHists->Contains(fakesVec.at(iFake).c_str())) continue;
 				for(int iProc = 0; iProc < procVec.size(); iProc++){ //loop through processes
 					for(int iSys = 0; iSys , sysVec.size();iSys++){ //loop through systematics
-						String histName = (procVec.at(iProc)+"_"+fakesVec.at(iFake)).c_str();
+						string histName = procVec.at(iProc)+"_"+fakesVec.at(iFake);
 
 						
 
-						shape->drawHists(oldDir, iFake,iProc,histName,sys);
+						shape->drawHists(oldDir, iFake,iProc,histName,sysVec.at(iSys));
 
 						// TH1D* hist = (TH1D*)oldDir->Get(histName);
 						// if(hist == NULL) continue;

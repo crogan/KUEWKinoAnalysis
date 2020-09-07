@@ -1,7 +1,7 @@
 #include "shapeAnalyzer.hh"
 //using namespace std;
-shapeAnalyzer::shapeAnalyzer(TString ifile, TString ofile){ //for histograms within one file
-	iFile = TFile::Open(ifile);
+shapeAnalyzer::shapeAnalyzer(TFile* ifile){ //for histograms within one file
+	iFile = ifile;
 	// oFile = new TFile((ofile+".root").c_str(),"RECREATE");
 
 	// nKeys = iFile->GetNkeys();

@@ -17,7 +17,7 @@
 class shapeAnalyzer{
 	public:
 
-	explicit shapeAnalyzer(TString ifile, TString ofile); //for histograms within one file
+	explicit shapeAnalyzer(TFile* ifile); //for histograms within one file
 	// shapeAnalyzer(TString fNom, TString fUp, TString fDown); //for histograms across files (looking at ie pT variations)
 
 	virtual ~shapeAnalyzer();
