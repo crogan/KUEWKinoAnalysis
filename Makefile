@@ -77,6 +77,11 @@ BuildFitInput.x:  $(SRCDIR)BuildFitInput.C $(OBJ_FILES) $(HH_FILES)
 	$(CXX) $(CXXFLAGS) -o BuildFitInput.x $(OUTOBJ)/*.o $(GLIBS) $ $<
 	touch BuildFitInput.x
 
+
+shapeAnalyzer2.x:  $(SRCDIR)shapeAnalyzer2.C $(OBJ_FILES) $(HH_FILES)
+	$(CXX) $(CXXFLAGS) -o shapeAnalyzer2.x $(OUTOBJ)/*.o $(GLIBS) $ $<
+	touch shapeAnalyzer2.x
+
 lib/libKUEWKino.so: $(SOBJ_FILES)
 	mkdir -p lib
 	$(CXX) -shared -o lib/libKUEWKino.so $(OUTOBJ)/*.o $(GLIBS)
