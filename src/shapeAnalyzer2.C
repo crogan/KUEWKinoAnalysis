@@ -160,30 +160,31 @@ int main(int argc, char* argv[]){
 		TDirectory* newDir = oFile->mkdir(key->GetTitle());
 		newDir->cd();
 
-		for(int iSys = 0; iSys < sysVec.size();iSys++){
+		
 
-			for(int iFake = 0; iFake < fakesVec.size(); iFake++){ //loop through fake sources
-				if(!listOfHists->Contains(fakesVec.at(iFake).c_str())) continue;
-				for(int iProc = 0; iProc < procVec.size(); iProc++){ //loop through processes
-					for(int iSys = 0; iSys , sysVec.size();iSys++){ //loop through systematics
-						string histName = procVec.at(iProc)+"_"+fakesVec.at(iFake);
+		for(int iFake = 0; iFake < fakesVec.size(); iFake++){ //loop through fake sources
+			if(!listOfHists->Contains(fakesVec.at(iFake).c_str())) continue;
+			for(int iProc = 0; iProc < procVec.size(); iProc++){ //loop through processes
+				for(int iSys = 0; iSys , sysVec.size();iSys++){ //loop through systematics
+					if(iProc == 0) string histName = procVec.at(iProc)+fakesVec.at(iFake);
+					else string histName = procVec.at(iProc)+"_"+fakesVec.at(iFake);
 
-						
+					
 
-						shape->drawHists(oldDir, iFake,iProc,histName,sysVec.at(iSys));
+					shape->drawHists(oldDir, iFake,iProc,histName,sysVec.at(iSys));
 
-						// TH1D* hist = (TH1D*)oldDir->Get(histName);
-						// if(hist == NULL) continue;
+					// TH1D* hist = (TH1D*)oldDir->Get(histName);
+					// if(hist == NULL) continue;
 
-						// cout << histName << endl;
+					// cout << histName << endl;
 
-						// hist->SetTitle(histName);
-						// hist->Scale(1/hist->Integral(),"width");
-					}
-
+					// hist->SetTitle(histName);
+					// hist->Scale(1/hist->Integral(),"width");
 				}
+
 			}
 		}
+		
 	}
 
 
