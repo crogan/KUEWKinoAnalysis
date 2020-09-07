@@ -41,15 +41,15 @@ float varWeights::lepIsoweight(ReducedBase* base, float isoMean, Systematic& sys
 
 
 //for one event
-float varWeights::lepWeight(ReducedBase* base, float mean, vector<double>* var, Systematic& sys){
-	float weight = 0.;
+float varWeights::lepWeight(ReducedBase* base, double mean, vector<double>* var, Systematic& sys){
+	double weight = 0.;
 	if(base->Nlep == 0){
 		weight = 1.;
 		return weight;
 	}	
-	float avg = 0;
+	double avg = 0.;
 	for(int iLep = 0; iLep < base->Nlep; iLep++){
-			avg += abs(var->at(iLep));
+		avg += fabs(var->at(iLep));
 		}	
 		avg /= base->Nlep;
 	if(sys.IsUp())
