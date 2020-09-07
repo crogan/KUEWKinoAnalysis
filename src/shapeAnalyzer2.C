@@ -146,10 +146,10 @@ int main(int argc, char* argv[]){
 
 		for(int iSys = 0; iSys < sysVec.size();iSys++){
 
-			for(int iFake = 0; iFake < fakesVec.size(); iFake++){
+			for(int iFake = 0; iFake < fakesVec.size(); iFake++){ //loop through fake sources
 				if(!listOfHists->Contains(fakesVec.at(iFake))) continue;
-				for(int iProc = 0; iProc < procVec.size(); iProc++){
-					for(int iSys = 0; iSys , sysVec.size();iSys++){
+				for(int iProc = 0; iProc < procVec.size(); iProc++){ //loop through processes
+					for(int iSys = 0; iSys , sysVec.size();iSys++){ //loop through systematics
 						String histName = (procVec.at(iProc)+"_"+fakesVec.at(iFake)).c_str();
 
 						

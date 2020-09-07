@@ -1,11 +1,11 @@
 #include "shapeAnalyzer.hh"
 //using namespace std;
 shapeAnalyzer::shapeAnalyzer(TString ifile, TString ofile){ //for histograms within one file
-	iFile = TFile::Open(ifile);
+	TFile* iFile = TFile::Open(ifile);
 	// oFile = new TFile((ofile+".root").c_str(),"RECREATE");
 
-	nKeys = iFile->GetNkeys();
-	keyList = iFile->GetListOfKeys();
+	// nKeys = iFile->GetNkeys();
+	// keyList = iFile->GetListOfKeys();
 	// fakesVec{"Fakes_elf0","Fakes_elf1","Fakes_elf2"};
 	// procVec{"","ttbar_","ZDY_"};
 	gStyle->SetOptStat(0);
@@ -40,7 +40,7 @@ shapeAnalyzer::shapeAnalyzer(TString ifile, TString ofile){ //for histograms wit
 
 shapeAnalyzer::~shapeAnalyzer(){
 	if(iFile->IsOpen()) iFile->Close();
-	if(oFile->IsOpen()) oFile->Close();
+	// if(oFile->IsOpen()) oFile->Close();
 //	if(nomFile.IsOpen()) nomFile->Close();
 //	if(upFile.IsOpen()) upFile->Close();
 //	if(downFile.IsOpen()) downFile->Close();
