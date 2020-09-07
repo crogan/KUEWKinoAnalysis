@@ -51,7 +51,7 @@ locallib: lib
 
 lib: lib/libKUEWKino.so
 
-alltargets: MakeReducedNtuple_NANO.x MakeEventCount_NANO.x BuildFitInput.x
+alltargets: MakeReducedNtuple_NANO.x MakeEventCount_NANO.x BuildFitInput.x shapeAnalyzer2.x
 
 BuildFit.x:  $(SRCDIR)BuildFit.C $(OBJ_FILES) $(HH_FILES)
 	$(CXX) $(CXXFLAGS) -o BuildFit.x $(OUTOBJ)/*.o $(GLIBS) $ $<
