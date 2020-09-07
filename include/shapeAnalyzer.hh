@@ -33,7 +33,7 @@ class shapeAnalyzer{
 	//think about initializing process names and histogram names (Fakes_elf0, etc.) separately
 	//
 	private:
-		// TFile* iFile;
+		TFile* iFile;
 		// TFile* oFile;
 		// std::vector<TH1D*> hists;
 		// std::vector<TString> fakesVec;
