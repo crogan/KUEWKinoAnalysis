@@ -77,25 +77,32 @@ shapeAnalyzer::~shapeAnalyzer(){
 
 void shapeAnalyzer::drawHists(TDirectory* oldDir, int iHist, int iProc,std::string histName,std::string sys){
 //	vector<TH1D*> vecHists;
-
+//std::cout << "drawHists" << std::endl;
 	TH1D* nomHist = (TH1D*)oldDir->Get(histName.c_str());
 	if(nomHist == NULL){
-	std::cout << histName << " not found" << std::endl;
+	std::cout << "	" << histName << " not found" << std::endl;
 	return;}
-
-	std::cout << histName << std::endl;
+	std::cout <<"	" << histName << std::endl;
 
 	nomHist->SetTitle((histName+"_"+sys).c_str());
 	nomHist->Scale(1/nomHist->Integral(),"width");
-
+//std::cout << "a" << std::endl;
 	TH1D* upHist = (TH1D*)oldDir->Get((histName+"_"+sys+"Up").c_str());
 	TH1D* downHist = (TH1D*)oldDir->Get((histName+"_"+sys+"Down").c_str());
+	if(upHist == NULL){
+		std::cout << "	" << histName+"_"+sys+"Up" << "not found" << std::endl;
+	return;
+	} 
+	if(downHist == NULL){
+                std::cout << "	" << histName+"_"+sys+"Down" << " not found" << std::endl;
+        return;
+        }
 	upHist->Scale(1/upHist->Integral(),"width");
 	downHist->Scale(1/downHist->Integral(),"width");
-
+//std::cout << "b" << std::endl;
 	upHist->SetTitle((histName+"_"+sys+"Up").c_str());
 	downHist->SetTitle((histName+"_"+sys+"Down").c_str());
-
+//std::cout << "c" << std::endl;
 	upHist->SetLineColor(kRed);
 	upHist->SetMarkerColor(kRed);
 	upHist->SetMarkerStyle(20);

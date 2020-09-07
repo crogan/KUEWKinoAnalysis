@@ -31,6 +31,7 @@ int main(int argc, char* argv[]){
 	string oFileName;
 	string inFileName;
 	bool hprint = false;
+	bool allFakes = false;
 	// string upFile;
 	// string downFile;
 	// bool fUp = false;
@@ -77,11 +78,9 @@ int main(int argc, char* argv[]){
 			strncat(buffer,argv[i],sizeof(buffer));
 			fakesVec.push_back(buffer);
 			memset(buffer,0,sizeof(buffer));
-			//fakesVec.push_back(strncat("Fakes_",argv[i],10));
 		}
 		if(strncmp(argv[i],"++AllFakes",10) == 0){
-			i++;
-			fakesVec = {"Fakes_elf0","Fakes_elf1","Fakes_elf2","Fakes_muf0","Fakes_muf1","Fakes_muf2"};
+			allFakes = true;
 		}
 		if(strncmp(argv[i],"+proc",5) == 0){
 			i++;
@@ -105,7 +104,15 @@ int main(int argc, char* argv[]){
 		// 	files.push_back(TFile::Open(downFile));
 		// }
 	}
-	
+if(allFakes){
+	fakesVec.clear();
+	fakesVec.push_back("Fakes_elf0");
+	fakesVec.push_back("Fakes_elf1");
+	fakesVec.push_back("Fakes_elf2");
+	fakesVec.push_back("Fakes_muf0");
+	fakesVec.push_back("Fakes_muf1");
+	fakesVec.push_back("Fakes_muf2");
+}
 	if(hprint || argc < 2){
     cout << "Usage: " << argv[0] << " [options]" << endl;
     cout << "  options:" << endl;
@@ -121,7 +128,6 @@ int main(int argc, char* argv[]){
 
     return 0;
   }
-
 	//if(files.size() < 1){
 	//	cout << "Error: no files provided." << endl;
 	//	break;
@@ -131,20 +137,16 @@ int main(int argc, char* argv[]){
 	// 	cout << "Error: only one (up/down) file provided. Please provide both up and down files, or one input file." << endl;
 	// 	break;
 	// }
-
 	TFile* iFile = TFile::Open(inFileName.c_str());
 	shapeAnalyzer* shape = new shapeAnalyzer(iFile);
 	// if(fUp) shapeAnalzyer* upShape = new shapeAnalyzer(upFile,oFile);
 	// if(fDown) shapeAnalyzer* downShape = new shapeAnalyzer(downFile,oFile);
-
 	Int_t nKeys = iFile->GetNkeys();
 	TList* keyList = iFile->GetListOfKeys();
-
-	TFile* oFile = new TFile((oFileName+".root").c_str(),"RECREATE");
-
+	TFile* oFile = new TFile(oFileName.c_str(),"RECREATE");
 	// vector<vector<TH1D*>> vecHists;
 
-
+ 	//cout << nKeys << endl;
 	//one file
 	for(int iKey = 0; iKey < nKeys-2; iKey++){
 
@@ -160,20 +162,20 @@ int main(int argc, char* argv[]){
 		TDirectory* newDir = oFile->mkdir(key->GetTitle());
 		newDir->cd();
 
-		
+		//cout << fakesVec.size() << " " << procVec.size() << " " << sysVec.size() << endl;	
 
 		for(int iFake = 0; iFake < fakesVec.size(); iFake++){ //loop through fake sources
 			if(!listOfHists->Contains(fakesVec.at(iFake).c_str())) continue;
 			for(int iProc = 0; iProc < procVec.size(); iProc++){ //loop through processes
-				for(int iSys = 0; iSys , sysVec.size();iSys++){ //loop through systematics
+				for(int iSys = 0; iSys < sysVec.size();iSys++){ //loop through systematics
 					string histName;
 					if(iProc == 0) histName = procVec.at(iProc)+fakesVec.at(iFake);
 					else histName = procVec.at(iProc)+"_"+fakesVec.at(iFake);
-
-					
+				//	cout << "iKey: " << iKey << " iFake: " << iFake << " iProc " << iProc << " iSys " << iSys << endl;
+				
 
 					shape->drawHists(oldDir, iFake,iProc,histName,sysVec.at(iSys));
-
+			//		cout << "d" << endl;
 					// TH1D* hist = (TH1D*)oldDir->Get(histName);
 					// if(hist == NULL) continue;
 
