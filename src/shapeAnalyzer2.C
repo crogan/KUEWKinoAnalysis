@@ -166,8 +166,9 @@ int main(int argc, char* argv[]){
 			if(!listOfHists->Contains(fakesVec.at(iFake).c_str())) continue;
 			for(int iProc = 0; iProc < procVec.size(); iProc++){ //loop through processes
 				for(int iSys = 0; iSys , sysVec.size();iSys++){ //loop through systematics
-					if(iProc == 0) string histName = procVec.at(iProc)+fakesVec.at(iFake);
-					else string histName = procVec.at(iProc)+"_"+fakesVec.at(iFake);
+					string histName;
+					if(iProc == 0) histName = procVec.at(iProc)+fakesVec.at(iFake);
+					else histName = procVec.at(iProc)+"_"+fakesVec.at(iFake);
 
 					
 
