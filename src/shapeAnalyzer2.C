@@ -124,7 +124,7 @@ int main(int argc, char* argv[]){
 				if(!listOfHists->Contains(fakesVec.at(iHist))) continue;
 				for(int iProc = 0; iProc < procVec.size(); iProc++){
 					for(int iSys = 0; iSys , sysVec.size();iSys++){
-						TString histName = (procVec.at(iProc)+"_"+fakesVec.at(iFake)).c_str();
+						String histName = (procVec.at(iProc)+"_"+fakesVec.at(iFake)).c_str();
 
 						
 
