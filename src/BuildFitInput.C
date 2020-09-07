@@ -170,10 +170,13 @@ int main(int argc, char* argv[]) {
       TChain* chain = ST.Tree(proc, f);
       ReducedBase* base = new ReducedBase(chain);
       ROOT::RDataFrame d(*base->fChain);
-      float ptMean = *d.Mean("PT_lep");
-      float isoMean = *d.Mean("MiniIso_lep");
-      float etaMean = *d.Mean("Eta_lep");
-      float sip3dMean = *d.Mean("SIP3D_lep");
+      double absEta = 0;
+	int nLep = 0;
+	double ptMean = *d.Mean("PT_lep");
+      double isoMean = *d.Mean("MiniIso_lep");
+      d.Foreach([&absEta, &nLep](vector<double> Eta_lep) {for(int iLep = 0; iLep < Eta_lep.size(); iLep++){if(Eta_lep.at(iLep) < 0) absEta += -(Eta_lep.at(iLep)); else absEta += Eta_lep.at(iLep); ++nLep;}}, {"Eta_lep"});
+	double etaMean = absEta/nLep; //take abs value
+      double sip3dMean = *d.Mean("SIP3D_lep");
       int Nentry = base->fChain->GetEntries();
 
       int SKIP = 1;
@@ -313,7 +316,7 @@ int main(int argc, char* argv[]) {
 	  	weight *= vw.lepWeight(base,isoMean,base->MiniIso_lep,sys);
 	  if(sys == Systematic("lepEta_weight"))
 	  	weight *= vw.lepWeight(base,etaMean,base->Eta_lep,sys);
-	  if(sys == Systematic("lepSIP3D_weight"))
+	if(sys == Systematic("lepSIP3D_weight"))
 	  	weight *= vw.lepWeight(base,sip3dMean,base->SIP3D_lep,sys);
 	    if(sys == Systematic("PU_SF"))
 	 //      if(sys.IsUp()){
@@ -324,7 +327,7 @@ int main(int argc, char* argv[]) {
 	      weight *= 1.;
 	    //weight *= base->PUweight;
 	   }
-
+	
 	// if(std::isnan(weight))
 	// 	cout << "PU up " << base->PUweight_up << " PU down " << base->PUweight_up << " PU nom " << base->PUweight << " NPU " << base->NPU endl;   
 	  LepList Fakes  = list_a.GetFakes(kHF);
