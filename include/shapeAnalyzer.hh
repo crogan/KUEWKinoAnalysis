@@ -23,25 +23,25 @@ class shapeAnalyzer{
 	virtual ~shapeAnalyzer();
 
 //	void formatPlots(std::vector<TH1D*> hists);
-	void drawHists(int iHist, int iProc,std::string histName,std::string sys);
+	void drawHists(TDirectory* oldDir, int iHist, int iProc,std::string histName,std::string sys);
 //	void getHist(Int_t iHist, Int_t iProc,TString histName);
-	void getKeys(Int_t iKey);
+	// void getKeys(Int_t iKey);
 
-	void Analyze();
+	// void Analyze();
 
 	//think about a generic "init" function
 	//think about initializing process names and histogram names (Fakes_elf0, etc.) separately
 	//
 	private:
-		TFile* iFile;
-		TFile* oFile;
-		std::vector<TH1D*> hists;
-		std::vector<TString> fakesVec;
-		std::vector<TString> procVec;
-		TList* keyList;
-		Int_t nKeys;
-		TDirectory* oldDir;
-		TDirectory* newDir;
+		// TFile* iFile;
+		// TFile* oFile;
+		// std::vector<TH1D*> hists;
+		// std::vector<TString> fakesVec;
+		// std::vector<TString> procVec;
+		// TList* keyList;
+		// Int_t nKeys;
+		// TDirectory* oldDir;
+		// TDirectory* newDir;
 		// TH1D* nomHist;
 		// TH1D* upHist;
 		// TH1D* downHist;

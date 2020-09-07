@@ -30,6 +30,7 @@ int main(int argc, char* argv[]){
 	std::vector<string> sysVec;
 	string oFileName;
 	string inFileName;
+	bool hprint = false;
 	// string upFile;
 	// string downFile;
 	// bool fUp = false;
@@ -41,10 +42,20 @@ int main(int argc, char* argv[]){
 
 
 	for(int i = 0; i < argc; i++){
+		if(strncmp(argv[i],"--help", 6) == 0){
+			hprint = true;
+		}
+		if(strncmp(argv[i],"-h", 2) == 0){
+			hprint = true;
+		}
 		if(strncmp(argv[i],"-o",2) == 0){
 			i++;
 			oFileName = string(argv[i]);
 		}
+		if(strncmp(argv[i],"--output", 8) == 0){
+			i++;
+			oFileName = string(argv[i]);
+	    }
 		if(strncmp(argv[i],"-i",2) == 0){
 			i++;
 			inFileName = string(argv[i]);
@@ -52,7 +63,7 @@ int main(int argc, char* argv[]){
 		}
 		if(strncmp(argv[i],"+fake",5) == 0){
 			i++;
-			fakesVec.push_back(argv[i]);
+			fakesVec.push_back("Fakes_"+argv[i]);
 		}
 		if(strncmp(argv[i],"++AllFakes",10) == 0){
 			i++;
@@ -80,6 +91,21 @@ int main(int argc, char* argv[]){
 		// 	files.push_back(TFile::Open(downFile));
 		// }
 	}
+
+	if(hprint){
+    cout << "Usage: " << argv[0] << " [options]" << endl;
+    cout << "  options:" << endl;
+    cout << "   --help(-h)          print options" << endl;
+    cout << "   -path [dest]        path to input ntuples" << endl;
+    cout << "   --ouput(-o) [file]  output root file" << endl;
+    cout << "   +proc [label]       add processes matching label (can have >1 of these)" << endl;
+    cout << "   +fake [label]       add fake sources (ie. elf0, muf1, elf2)" << endl;
+    cout << "   ++sig               add all signal samples" << endl;
+    cout << "   ++data              add all background samples" << endl;
+    cout << "   ++all               add all samples" << endl;
+
+    return 0;
+  }
 
 	if(files.size() < 1){
 		cout << "Error: no files provided." << endl;
@@ -121,14 +147,14 @@ int main(int argc, char* argv[]){
 		for(int iSys = 0; iSys < sysVec.size();iSys++){
 
 			for(int iFake = 0; iFake < fakesVec.size(); iFake++){
-				if(!listOfHists->Contains(fakesVec.at(iHist))) continue;
+				if(!listOfHists->Contains(fakesVec.at(iFake))) continue;
 				for(int iProc = 0; iProc < procVec.size(); iProc++){
 					for(int iSys = 0; iSys , sysVec.size();iSys++){
 						String histName = (procVec.at(iProc)+"_"+fakesVec.at(iFake)).c_str();
 
 						
 
-						shape->drawHists(iFake,iProc,histName,sys);
+						shape->drawHists(oldDir, iFake,iProc,histName,sys);
 
 						// TH1D* hist = (TH1D*)oldDir->Get(histName);
 						// if(hist == NULL) continue;

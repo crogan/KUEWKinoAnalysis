@@ -46,36 +46,36 @@ shapeAnalyzer::~shapeAnalyzer(){
 //	if(downFile.IsOpen()) downFile->Close();
 }
 
-void shapeAnalyzer::Analyze(){
-	for(int iKey = 0; iKey < nKeys-2; iKey++){
-		getKeys(iKey);
-		for(int iHist = 0; iHist < fakesVec.size(); iHist++){
-			for(int iProc = 0; iProc < procVec.size(); iProc++){
-			//	drawHists(iHist,iProc);
-			//	formatPlots();
-			}
-		}
-		newDir->Write();
-		std::cout << "\n" << std::endl;
-	}
-	iFile->Close();
-	oFile->Close();
-}
+// void shapeAnalyzer::Analyze(){
+// 	for(int iKey = 0; iKey < nKeys-2; iKey++){
+// 		getKeys(iKey);
+// 		for(int iHist = 0; iHist < fakesVec.size(); iHist++){
+// 			for(int iProc = 0; iProc < procVec.size(); iProc++){
+// 			//	drawHists(iHist,iProc);
+// 			//	formatPlots();
+// 			}
+// 		}
+// 		newDir->Write();
+// 		std::cout << "\n" << std::endl;
+// 	}
+// 	iFile->Close();
+// 	oFile->Close();
+// }
 
-void shapeAnalyzer::getKeys(Int_t iKey){
-	TKey* key = (TKey*)keyList->At(iKey); //list of dirs
-	if(key == NULL) return;//continue;
-	std::cout << key->GetTitle() << std::endl;
+// void shapeAnalyzer::getKeys(Int_t iKey){
+// 	TKey* key = (TKey*)keyList->At(iKey); //list of dirs
+// 	if(key == NULL) return;//continue;
+// 	std::cout << key->GetTitle() << std::endl;
 
-	oldDir = iFile->GetDirectory(key->GetTitle());
-	TList* listOfHists = oldDir->GetListOfKeys();
-	if(!listOfHists->Contains("Fakes_elf0")) return;//continue;
+// 	oldDir = iFile->GetDirectory(key->GetTitle());
+// 	TList* listOfHists = oldDir->GetListOfKeys();
+// 	if(!listOfHists->Contains("Fakes_elf0")) return;//continue;
 
-	newDir = oFile->mkdir(key->GetTitle());
-	newDir->cd();
-}
+// 	newDir = oFile->mkdir(key->GetTitle());
+// 	newDir->cd();
+// }
 
-void shapeAnalyzer::drawHists(int iHist, int iProc,std::string histName,std::string sys){
+void shapeAnalyzer::drawHists(TDirectory* oldDir, int iHist, int iProc,std::string histName,std::string sys){
 //	vector<TH1D*> vecHists;
 
 	TH1D* nomHist = (TH1D*)oldDir->Get(histName.c_str());
