@@ -174,8 +174,8 @@ int main(int argc, char* argv[]) {
 	int nLep = 0;
 	double ptMean = *d.Mean("PT_lep");
       double isoMean = *d.Mean("MiniIso_lep");
-      d.Foreach([&absEta, &nLep](vector<double> Eta_lep) {for(int iLep = 0; iLep < Eta_lep.size(); iLep++){if(Eta_lep.at(iLep) < 0) absEta += -(Eta_lep.at(iLep)); else absEta += Eta_lep.at(iLep); ++nLep;}}, {"Eta_lep"});
-	double etaMean = absEta/nLep; //take abs value
+      d.Foreach([&absEta, &nLep](vector<double> Eta_lep) {for(int iLep = 0; iLep < Eta_lep.size(); iLep++){if(Eta_lep.at(iLep) < 0) absEta += -(Eta_lep.at(iLep)); else absEta += Eta_lep.at(iLep); nLep += Eta_lep.size();}}, {"Eta_lep"});
+	double etaMean = absEta/nLep; 
       double sip3dMean = *d.Mean("SIP3D_lep");
       int Nentry = base->fChain->GetEntries();
 
