@@ -89,6 +89,9 @@ void shapeAnalyzer::drawHists(TDirectory* oldDir, int iHist, int iProc,std::stri
 //std::cout << "a" << std::endl;
 	TH1D* upHist = (TH1D*)oldDir->Get((histName+"_"+sys+"Up").c_str());
 	TH1D* downHist = (TH1D*)oldDir->Get((histName+"_"+sys+"Down").c_str());
+	TH1D* ratioUpHist = nomHist->Clone();
+	TH1D* ratioDownHist = nomHist->Clone();
+
 	if(upHist == NULL){
 		std::cout << "	" << histName+"_"+sys+"Up" << "not found" << std::endl;
 	return;
@@ -97,6 +100,9 @@ void shapeAnalyzer::drawHists(TDirectory* oldDir, int iHist, int iProc,std::stri
                 std::cout << "	" << histName+"_"+sys+"Down" << " not found" << std::endl;
         return;
         }
+
+    ratioUpHist->Divide(upHist);
+	ratioDownHist->Divide(downHist);
 	upHist->Scale(1/upHist->Integral(),"width");
 	downHist->Scale(1/downHist->Integral(),"width");
 //std::cout << "b" << std::endl;
@@ -123,6 +129,7 @@ void shapeAnalyzer::drawHists(TDirectory* oldDir, int iHist, int iProc,std::stri
 //	vecHists.push_back(downHist);
 //
 	TCanvas* c1 = new TCanvas(histName.c_str(),histName.c_str(),800,600);
+
 	TLegend* leg = new TLegend(0.65,0.7,0.9,0.9);
 
 	leg->AddEntry(nomHist);
@@ -139,7 +146,20 @@ void shapeAnalyzer::drawHists(TDirectory* oldDir, int iHist, int iProc,std::stri
 	c1->Write();
 	c1->Close();
 
+	TCanvas* cRatio = new TCanvas((histName+"_ratio").c_str(),(histName+"_ratio").c_str(),800,600);
+	TLegend* legRatio = new TLegend(0.65,0.7,0.9,0.9);
+	legRatio->AddEntry(ratioUpHist);
+	legRatio->AddEntry(ratioDownHist);
+	
+	ratioUpHist->Draw("goff");
+	ratioDownHist->Draw("same goff");
+	legRatio->Draw("same goff");
+
+	cRatio->Write();
+	cRatio->Close();
+
 	delete c1;
+	delete cRatio;
 
 }
 
