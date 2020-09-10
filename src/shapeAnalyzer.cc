@@ -89,8 +89,8 @@ void shapeAnalyzer::drawHists(TDirectory* oldDir, int iHist, int iProc,std::stri
 //std::cout << "a" << std::endl;
 	TH1D* upHist = (TH1D*)oldDir->Get((histName+"_"+sys+"Up").c_str());
 	TH1D* downHist = (TH1D*)oldDir->Get((histName+"_"+sys+"Down").c_str());
-	TH1D* ratioUpHist = nomHist->Clone();
-	TH1D* ratioDownHist = nomHist->Clone();
+	TH1D* ratioUpHist = (TH1D*)nomHist->Clone();
+	TH1D* ratioDownHist = (TH1D*)nomHist->Clone();
 
 	if(upHist == NULL){
 		std::cout << "	" << histName+"_"+sys+"Up" << "not found" << std::endl;
