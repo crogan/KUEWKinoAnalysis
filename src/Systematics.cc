@@ -312,7 +312,7 @@ Systematics SystematicsTool::GetWeightSystematics() const {
   list += "lepPT_weight";
   list += "lepEta_weight";
   list += "lepSIP3D_weight";
-
+  list += "lepIso_weight";
   return list;
 }
 

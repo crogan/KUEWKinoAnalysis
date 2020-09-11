@@ -89,8 +89,6 @@ void shapeAnalyzer::drawHists(TDirectory* oldDir, int iHist, int iProc,std::stri
 //std::cout << "a" << std::endl;
 	TH1D* upHist = (TH1D*)oldDir->Get((histName+"_"+sys+"Up").c_str());
 	TH1D* downHist = (TH1D*)oldDir->Get((histName+"_"+sys+"Down").c_str());
-	TH1D* ratioUpHist = nomHist->Clone();
-	TH1D* ratioDownHist = nomHist->Clone();
 
 	if(upHist == NULL){
 		std::cout << "	" << histName+"_"+sys+"Up" << "not found" << std::endl;
@@ -100,16 +98,6 @@ void shapeAnalyzer::drawHists(TDirectory* oldDir, int iHist, int iProc,std::stri
                 std::cout << "	" << histName+"_"+sys+"Down" << " not found" << std::endl;
         return;
         }
-
-    ratioUpHist->Divide(upHist);
-    ratioUpHist->SetLineColor(kRed);
-    ratioUpHist->SetMarkerColor(kRed);
-    ratioUpHist->SetStats(0);
-	ratioDownHist->Divide(downHist);
-	ratioDownHist->SetLineColor(kBlue);
-	ratioDownHist->SetMarkerColor(kBlue);
-	ratioDownHist->SetStats(0);
-
 
 	upHist->Scale(1/upHist->Integral(),"width");
 	downHist->Scale(1/downHist->Integral(),"width");
@@ -132,6 +120,21 @@ void shapeAnalyzer::drawHists(TDirectory* oldDir, int iHist, int iProc,std::stri
 	nomHist->SetMarkerStyle(20);
 	nomHist->SetStats(0);
 
+	TH1D* ratioUpHist = (TH1D*)nomHist->Clone();
+	TH1D* ratioDownHist = (TH1D*)nomHist->Clone();
+    	ratioUpHist->Divide(upHist);
+	ratioDownHist->Divide(downHist);
+	ratioUpHist->SetLineColor(kRed);
+	ratioUpHist->SetMarkerColor(kRed);
+	ratioUpHist->SetMarkerStyle(20);
+	ratioUpHist->SetStats(0);
+	ratioUpHist->SetTitle((histName+"_"+sys+"Up").c_str());
+
+	ratioDownHist->SetLineColor(kBlue);
+	ratioDownHist->SetMarkerColor(kBlue);
+	ratioDownHist->SetMarkerStyle(20);
+	ratioDownHist->SetStats(0);
+	ratioDownHist->SetTitle((histName+"_"+sys+"Down").c_str());
 //	vecHists.push_back(nomHist);
 //	vecHists.push_back(upHist);
 //	vecHists.push_back(downHist);
