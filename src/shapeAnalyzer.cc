@@ -120,10 +120,10 @@ void shapeAnalyzer::drawHists(TDirectory* oldDir, int iHist, int iProc,std::stri
 	nomHist->SetMarkerStyle(20);
 	nomHist->SetStats(0);
 
-	TH1D* ratioUpHist = (TH1D*)nomHist->Clone();
-	TH1D* ratioDownHist = (TH1D*)nomHist->Clone();
-    	ratioUpHist->Divide(upHist);
-	ratioDownHist->Divide(downHist);
+	TH1D* ratioUpHist = (TH1D*)upHist->Clone();
+	TH1D* ratioDownHist = (TH1D*)downHist->Clone();
+    	ratioUpHist->Divide(nomHist);
+	ratioDownHist->Divide(nomHist);
 	ratioUpHist->SetLineColor(kRed);
 	ratioUpHist->SetMarkerColor(kRed);
 	ratioUpHist->SetMarkerStyle(20);
