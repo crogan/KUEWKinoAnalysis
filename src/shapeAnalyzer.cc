@@ -102,7 +102,15 @@ void shapeAnalyzer::drawHists(TDirectory* oldDir, int iHist, int iProc,std::stri
         }
 
     ratioUpHist->Divide(upHist);
+    ratioUpHist->SetLineColor(kRed);
+    ratioUpHist->SetMarkerColor(kRed);
+    ratioUpHist->SetStats(0);
 	ratioDownHist->Divide(downHist);
+	ratioDownHist->SetLineColor(kBlue);
+	ratioDownHist->SetMarkerColor(kBlue);
+	ratioDownHist->SetStats(0);
+
+
 	upHist->Scale(1/upHist->Integral(),"width");
 	downHist->Scale(1/downHist->Integral(),"width");
 //std::cout << "b" << std::endl;
