@@ -1,4 +1,5 @@
 #include "varWeights.hh"
+#include <cmath>
 //#include "ReducedBase_slim.hh"
 varWeights::varWeights(const string& label){
 	m_label = label;
@@ -40,8 +41,30 @@ float varWeights::lepIsoweight(ReducedBase* base, float isoMean, Systematic& sys
 }
 
 
+float varWeights::expWeight(ReducedBase* base, double mu, double minWeight, double maxWeight, vector<double>* var, Systematic& sys){
+	double weight = 0.;
+	if(base->Nlep == 0){
+		weight = 1.;
+		return weight;
+	}	
+	double x = 0.;
+	double c = exp(minWeight);
+	double b = mu/(exp(1) - c);
+	double alpha = mu/log(maxWeight);
+	for(int iLep = 0; iLep < base->Nlep; iLep++){
+		x += fabs(var->at(iLep));
+		}	
+		x /= base->Nlep;
+	if(sys.IsUp())
+		weight = log(x/b + c); //normalize by mean
+	
+	else weight = exp(-(x-mu)/alpha);
+
+	return weight;
+}
+
 //for one event
-float varWeights::lepWeight(ReducedBase* base, double mean, vector<double>* var, Systematic& sys){
+float varWeights::basicWeight(ReducedBase* base, double mean, vector<double>* var, Systematic& sys){
 	double weight = 0.;
 	if(base->Nlep == 0){
 		weight = 1.;
