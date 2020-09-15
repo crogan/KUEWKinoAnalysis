@@ -1,3 +1,4 @@
+//TODO: add in histograms from other variations: pT/eta/pileup weighting, lepton definition change, etc.
 void shapeAnalyzer(TString file){
 	TFile* iFile = TFile::Open(file);
 	TFile* oFile = new TFile("varHists17.root","RECREATE");
