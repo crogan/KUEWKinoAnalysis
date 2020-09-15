@@ -148,9 +148,9 @@ void shapeAnalyzer::drawHists(TDirectory* oldDir, int iHist, int iProc,std::stri
 	leg->AddEntry(downHist);
 
 
-	upHist->Draw("goff");
-	downHist->Draw("same goff");
-	nomHist->Draw("same goff");
+	upHist->Draw("hist P goff");
+	downHist->Draw("hist P same goff");
+	nomHist->Draw("hist P same goff");
 
 	leg->Draw("same goff");
 
@@ -162,9 +162,9 @@ void shapeAnalyzer::drawHists(TDirectory* oldDir, int iHist, int iProc,std::stri
 	legRatio->AddEntry(ratioUpHist);
 	legRatio->AddEntry(ratioDownHist);
 	
-	ratioUpHist->Draw("goff");
-	ratioDownHist->Draw("same goff");
-	legRatio->Draw("same goff");
+	ratioUpHist->Draw("hist P goff");
+	ratioDownHist->Draw("hist P same goff");
+	legRatio->Draw("hist P same goff");
 
 	cRatio->Write();
 	cRatio->Close();

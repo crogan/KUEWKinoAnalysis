@@ -1,5 +1,5 @@
 #include "varWeights.hh"
-#include <cmath>
+#include <math.h>
 //#include "ReducedBase_slim.hh"
 varWeights::varWeights(const string& label){
 	m_label = label;
@@ -71,14 +71,25 @@ float varWeights::basicWeight(ReducedBase* base, double mean, vector<double>* va
 		return weight;
 	}	
 	double avg = 0.;
+	//cout << "nLep: " << base->Nlep << endl;
 	for(int iLep = 0; iLep < base->Nlep; iLep++){
 		avg += fabs(var->at(iLep));
+		//cout << "lepton Iso avg: " <<  avg << endl;
+		//cout << "lepton Iso: " << var->at(iLep) << endl;
 		}	
 		avg /= base->Nlep;
+	if(avg == 0){
+		avg = mean;
+	}
 	if(sys.IsUp())
 		weight = avg/mean; //normalize by mean
 	
 	else weight = mean/avg;
-
-	return weight;
+	if( isinf(weight)){ 
+	std::cout << "down weight: " << weight << " avg for event: " << avg << " mean: " << mean << "NLep: " << base->Nlep << std::endl;
+	for(int i = 0; i < base->Nlep; i++){
+	cout << " iso: " << var->at(i) << endl;
+}
+}
+	return weight/10;
 }
