@@ -1748,7 +1748,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetSVs(const TVector3& PV){
   for(int i = 0; i < N; i++){
     if(SV_chi2[i] < 0.)
       continue;
-    if(SV_pt[i] >= 20.)
+    if(SV_pt[i] >= 20. || SV_pt[i] < 2.)
       continue;
     if(fabs(SV_eta[i]) >= 2.4)
       continue;
@@ -1786,7 +1786,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetSVs(const TVector3& PV){
     // if(SV_ndof[i] < 1.8) // replacement for ntracks cut...
     //   continue;
 
-    if(probs["prob_isB"] > 0.35)
+    if(probs["prob_isB"] > 0.3)
       list.push_back(SV);
   }
   
