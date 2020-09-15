@@ -28,7 +28,7 @@ double XsecTool::GetXsec_SMS(const std::string& dataset, double MP) const {
     }
     if((dataset.find("C1C1")!=std::string::npos) ||
        (dataset.find("TChipmWW")!=std::string::npos)){
-      label = "C1C1_hino";
+      label = "C1C1_wino";
       if(dataset.find("WWTo2LNu")!= std::string::npos)
 	BR = (3.*0.1086)*(3.*0.1086);
     }

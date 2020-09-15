@@ -15,7 +15,7 @@ using std::string;
 enum LepFlavor { kElectron, kMuon };
 enum LepCharge { kPos, kNeg };
 enum LepID { kGold, kSilver, kBronze };
-enum LepSource { kSignal, kTau, kHF, kLF, kFake };
+enum LepSource { kSignal, kTau, kHFB, kHFC, kLF, kFake };
 
 ///////////////////////////////////////////
 ////////// Lep class
@@ -83,9 +83,9 @@ public:
   bool operator < (const LepList& leps) const;
 
   std::string GetIDLabel() const;
-  vector<std::string> GetFakeLabels(LepSource fake) const;
+  vector<std::string> GetFakeLabels() const;
 
-  LepList GetFakes(LepSource fake) const;
+  LepList GetFakes() const;
   
 private:
   int m_N;

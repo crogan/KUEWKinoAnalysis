@@ -8,6 +8,7 @@
 
 #include "StopNtupleTree.hh"
 #include "SUSYNANOBase.hh"
+#include "Leptonic.hh"
 
 using namespace std;
 
@@ -1803,13 +1804,36 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetGenElectrons(){
   int PDGID;
   for(int i = 0; i < N; i++){
     PDGID = GenPart_pdgId[i];
-    if(abs(PDGID) == 11 && GenPart_pt[i] > 3. && GenPart_status[i] == 1){
+    if(abs(PDGID) == 11 && GenPart_pt[i] > 2. && GenPart_status[i] == 1){
       Particle lep;
       
       lep.SetPDGID(PDGID);
       int mom = GenPart_genPartIdxMother[i];
-      if(mom >= 0 && mom < N)
-	lep.SetMomPDGID(GenPart_pdgId[mom]);
+      if(mom >= 0 && mom < N){
+
+	int momID = GenPart_pdgId[mom];
+	int momStatus = GenPart_status[mom];
+
+	while(abs(momID) == 11){
+
+	  if(momStatus == 23){
+	    lep.SetMomPDGID(PDGID);
+	    lep.SetSourceID(GetLepSource(PDGID, PDGID, PDGID));
+	    break;
+	  }
+
+	  mom = GenPart_genPartIdxMother[mom];
+	  if(mom < 0 || mom >= N)
+	    continue;
+	  momID = GenPart_pdgId[mom];
+	  momStatus = GenPart_status[mom];
+
+	}
+	
+	lep.SetMomPDGID(momID);
+	lep.SetSourceID(GetLepSource(PDGID, PDGID, momID));
+      }
+     
       lep.SetCharge( (PDGID > 0 ? -1 : 1) );
       lep.SetPtEtaPhiM(GenPart_pt[i], GenPart_eta[i],
 		       GenPart_phi[i], max(float(0.),GenPart_mass[i]));
@@ -1837,18 +1861,43 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetGenMuons(){
       
       lep.SetPDGID(PDGID);
       int mom = GenPart_genPartIdxMother[i];
-      if(mom >= 0 && mom < N)
-	lep.SetMomPDGID(GenPart_pdgId[mom]);
+      if(mom >= 0 && mom < N){
+
+	int momID = GenPart_pdgId[mom];
+	int momStatus = GenPart_status[mom];
+
+	while(abs(momID) == 13){
+
+	  if(momStatus == 23){
+	    lep.SetMomPDGID(PDGID);
+	    lep.SetSourceID(GetLepSource(PDGID, PDGID, PDGID));
+	    break;
+	  }
+
+	  mom = GenPart_genPartIdxMother[mom];
+	  if(mom < 0 || mom >= N)
+	    continue;
+	  momID = GenPart_pdgId[mom];
+	  momStatus = GenPart_status[mom];
+
+	}
+	
+	lep.SetMomPDGID(momID);
+	lep.SetSourceID(GetLepSource(PDGID, PDGID, momID));
+      }
+     
       lep.SetCharge( (PDGID > 0 ? -1 : 1) );
       lep.SetPtEtaPhiM(GenPart_pt[i], GenPart_eta[i],
 		       GenPart_phi[i], max(float(0.),GenPart_mass[i]));
-
+      
       list.push_back(lep);
     }
   }
 
   return list;
 }
+
+
 
 template <>
 ParticleList AnalysisBase<SUSYNANOBase>::GetGenNeutrinos(){

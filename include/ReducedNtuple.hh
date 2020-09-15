@@ -73,6 +73,7 @@ private:
   vector<double> m_IP3D_lep;
   vector<double> m_SIP3D_lep;
   vector<int>    m_ID_lep;
+  vector<int>    m_SourceID_lep;
   vector<int>    m_Index_lep;
 
   int m_Njet;
@@ -104,6 +105,7 @@ private:
   vector<int>    m_genCharge_lep;
   vector<int>    m_genPDGID_lep;
   vector<int>    m_genMomPDGID_lep;
+  vector<int>    m_genSourceID_lep;
   vector<int>    m_genIndex_lep;
 
   int m_genNnu;

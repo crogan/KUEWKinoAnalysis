@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Wed May 13 14:53:17 2020 by ROOT version 6.20/04
+// Tue Sep 15 14:43:11 2020 by ROOT version 6.20/04
 // from TTree KUAnalysis/KUAnalysis
-// found on file: /Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_12_05_20/Fall17_102X/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root
+// found on file: /Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_31_05_20/Fall17_102X/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root
 //////////////////////////////////////////////////////////
 
 #ifndef ReducedBase_h
@@ -62,6 +62,7 @@ public :
    vector<double>  *IP3D_lep;
    vector<double>  *SIP3D_lep;
    vector<int>     *ID_lep;
+   vector<int>     *SourceID_lep;
    vector<int>     *Index_lep;
    Int_t           Njet;
    Int_t           Nbjet;
@@ -117,6 +118,7 @@ public :
    vector<int>     *index_SV_a;
    vector<int>     *index_SV_b;
    Double_t        PTCM;
+   Double_t        PzCM;
    Double_t        cosCM;
    Double_t        dphiCM;
    Double_t        dphiCMI;
@@ -147,6 +149,8 @@ public :
    Double_t        PV;
    Double_t        MVa;
    Double_t        MVb;
+   Double_t        PV_lab;
+   Double_t        dphiMET_V;
    Double_t        MJa;
    Double_t        MJb;
    Double_t        MLa;
@@ -186,8 +190,10 @@ public :
    Double_t        H11X3b;
    Double_t        H21X3a;
    Double_t        H21X3b;
+   Double_t        PISR;
    Double_t        PTISR;
    Double_t        RISR;
+   Double_t        RISRT;
    Double_t        MISR;
    Int_t           NPU;
    Double_t        genMET;
@@ -202,6 +208,7 @@ public :
    vector<int>     *genCharge_lep;
    vector<int>     *genPDGID_lep;
    vector<int>     *genMomPDGID_lep;
+   vector<int>     *genSourceID_lep;
    vector<int>     *genIndex_lep;
    Int_t           genNnu;
    vector<double>  *genPT_nu;
@@ -253,6 +260,7 @@ public :
    TBranch        *b_M_lep;   //!
    TBranch        *b_Charge_lep;   //!
    TBranch        *b_PDGID_lep;   //!
+   TBranch        *b_SourceID_lep;   //!
    TBranch        *b_RelIso_lep;   //!
    TBranch        *b_MiniIso_lep;   //!
    TBranch        *b_Dxy_lep;   //!
@@ -317,6 +325,7 @@ public :
    TBranch        *b_index_SV_a;   //!
    TBranch        *b_index_SV_b;   //!
    TBranch        *b_PTCM;   //!
+   TBranch        *b_PzCM;   //!
    TBranch        *b_cosCM;   //!
    TBranch        *b_dphiCM;   //!
    TBranch        *b_dphiCMI;   //!
@@ -347,6 +356,8 @@ public :
    TBranch        *b_PV;   //!
    TBranch        *b_MVa;   //!
    TBranch        *b_MVb;   //!
+   TBranch        *b_PV_lab;   //!
+   TBranch        *b_dphiMET_V;   //!
    TBranch        *b_MJa;   //!
    TBranch        *b_MJb;   //!
    TBranch        *b_MLa;   //!
@@ -386,8 +397,10 @@ public :
    TBranch        *b_H11X3b;   //!
    TBranch        *b_H21X3a;   //!
    TBranch        *b_H21X3b;   //!
+   TBranch        *b_PISR;   //!
    TBranch        *b_PTISR;   //!
    TBranch        *b_RISR;   //!
+   TBranch        *b_RISRT;   //!
    TBranch        *b_MISR;   //!
    TBranch        *b_NPU;   //!
    TBranch        *b_genMET;   //!
@@ -401,6 +414,7 @@ public :
    TBranch        *b_genM_lep;   //!
    TBranch        *b_genCharge_lep;   //!
    TBranch        *b_genPDGID_lep;   //!
+   TBranch        *b_genSourceID_lep;   //!
    TBranch        *b_genMomPDGID_lep;   //!
    TBranch        *b_genIndex_lep;   //!
    TBranch        *b_genNnu;   //!
@@ -441,9 +455,9 @@ inline ReducedBase::ReducedBase(TTree *tree) : fChain(0)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_12_05_20/Fall17_102X/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_31_05_20/Fall17_102X/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_12_05_20/Fall17_102X/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+         f = new TFile("/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_31_05_20/Fall17_102X/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
       }
       f->GetObject("KUAnalysis",tree);
 
@@ -605,6 +619,7 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchAddress("IP3D_lep", &IP3D_lep, &b_IP3D_lep);
    fChain->SetBranchAddress("SIP3D_lep", &SIP3D_lep, &b_SIP3D_lep);
    fChain->SetBranchAddress("ID_lep", &ID_lep, &b_ID_lep);
+   fChain->SetBranchAddress("SourceID_lep", &SourceID_lep, &b_SourceID_lep);
    fChain->SetBranchAddress("Index_lep", &Index_lep, &b_Index_lep);
    fChain->SetBranchAddress("Njet", &Njet, &b_Njet);
    fChain->SetBranchAddress("Nbjet", &Nbjet, &b_Nbjet);
@@ -660,6 +675,7 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchAddress("index_SV_a", &index_SV_a, &b_index_SV_a);
    fChain->SetBranchAddress("index_SV_b", &index_SV_b, &b_index_SV_b);
    fChain->SetBranchAddress("PTCM", &PTCM, &b_PTCM);
+   fChain->SetBranchAddress("PzCM", &PzCM, &b_PzCM);
    fChain->SetBranchAddress("cosCM", &cosCM, &b_cosCM);
    fChain->SetBranchAddress("dphiCM", &dphiCM, &b_dphiCM);
    fChain->SetBranchAddress("dphiCMI", &dphiCMI, &b_dphiCMI);
@@ -690,6 +706,8 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchAddress("PV", &PV, &b_PV);
    fChain->SetBranchAddress("MVa", &MVa, &b_MVa);
    fChain->SetBranchAddress("MVb", &MVb, &b_MVb);
+   fChain->SetBranchAddress("PV_lab", &PV_lab, &b_PV_lab);
+   fChain->SetBranchAddress("dphiMET_V", &dphiMET_V, &b_dphiMET_V);
    fChain->SetBranchAddress("MJa", &MJa, &b_MJa);
    fChain->SetBranchAddress("MJb", &MJb, &b_MJb);
    fChain->SetBranchAddress("MLa", &MLa, &b_MLa);
@@ -729,8 +747,10 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchAddress("H11X3b", &H11X3b, &b_H11X3b);
    fChain->SetBranchAddress("H21X3a", &H21X3a, &b_H21X3a);
    fChain->SetBranchAddress("H21X3b", &H21X3b, &b_H21X3b);
+   fChain->SetBranchAddress("PISR", &PISR, &b_PISR);
    fChain->SetBranchAddress("PTISR", &PTISR, &b_PTISR);
    fChain->SetBranchAddress("RISR", &RISR, &b_RISR);
+   fChain->SetBranchAddress("RISRT", &RISRT, &b_RISRT);
    fChain->SetBranchAddress("MISR", &MISR, &b_MISR);
    fChain->SetBranchAddress("NPU", &NPU, &b_NPU);
    fChain->SetBranchAddress("genMET", &genMET, &b_genMET);
@@ -745,6 +765,7 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchAddress("genCharge_lep", &genCharge_lep, &b_genCharge_lep);
    fChain->SetBranchAddress("genPDGID_lep", &genPDGID_lep, &b_genPDGID_lep);
    fChain->SetBranchAddress("genMomPDGID_lep", &genMomPDGID_lep, &b_genMomPDGID_lep);
+   fChain->SetBranchAddress("genSourceID_lep", &genSourceID_lep, &b_genSourceID_lep);
    fChain->SetBranchAddress("genIndex_lep", &genIndex_lep, &b_genIndex_lep);
    fChain->SetBranchAddress("genNnu", &genNnu, &b_genNnu);
    fChain->SetBranchAddress("genPT_nu", &genPT_nu, &b_genPT_nu);

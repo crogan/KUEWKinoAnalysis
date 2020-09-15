@@ -5,6 +5,7 @@ Particle::Particle() : TLorentzVector() {
   m_Charge = 0;
   m_PDGID = 0;
   m_MomPDGID = 0;
+  m_SourceID = 0;
   m_ParticleID = kNothing;
 
   m_RelIso = 0.;
@@ -40,6 +41,14 @@ int Particle::MomPDGID() const {
 
 void Particle::SetMomPDGID(int pdgid){
   m_MomPDGID = pdgid;
+}
+
+int Particle::SourceID() const {
+  return m_SourceID;
+}
+
+void Particle::SetSourceID(int sourceid){
+  m_SourceID = sourceid;
 }
 
 int Particle::PDGID() const {
