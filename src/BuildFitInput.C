@@ -179,7 +179,7 @@ int main(int argc, char* argv[]) {
       double sip3dMean = *d.Mean("SIP3D_lep");
       int Nentry = base->fChain->GetEntries();
 
-      int SKIP = 1;
+      int SKIP = 100;
 
       // event loop
       for(int e = 0; e < Nentry; e += SKIP){
