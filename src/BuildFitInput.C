@@ -145,6 +145,13 @@ int main(int argc, char* argv[]) {
 
   FitInputBuilder FITBuilder;
 
+  //set systematic event weight parameters
+  varWeights vw("varWeights");
+  double maxWeight = 5.;
+  double minWeight = 0.01;
+  vw.SetMinMax(minWeight,maxWeight);
+
+
   // sample (process) loop
   int Nsample = samples.GetN();
   for(int s = 0; s < Nsample; s++){
@@ -289,7 +296,7 @@ int main(int argc, char* argv[]) {
 	  continue;
 	}	
 	// systematics loop
-	varWeights vw("varWeights");
+	
 	for(int is = 0; is < Nsys; is++){
 	  Systematic& sys = systematics[is];
 	if(!(!sys)){
@@ -311,13 +318,13 @@ int main(int argc, char* argv[]) {
 	    else 
 	      weight *= base->BtagSFweight;
 	  if(sys == Systematic("lepPT_weight"))
-	  	weight *= vw.lepWeight(base,ptMean,base->PT_lep,sys);
+	  	weight *= vw.expWeight(base,ptMean,base->PT_lep,sys);
 	  if(sys == Systematic("lepIso_weight"))
-	  	weight *= vw.lepWeight(base,isoMean,base->MiniIso_lep,sys);
+	  	weight *= vw.expWeight(base,isoMean,base->MiniIso_lep,sys);
 	  if(sys == Systematic("lepEta_weight"))
-	  	weight *= vw.lepWeight(base,etaMean,base->Eta_lep,sys);
+	  	weight *= vw.expWeight(base,etaMean, base->Eta_lep,sys);
 	if(sys == Systematic("lepSIP3D_weight"))
-	  	weight *= vw.lepWeight(base,sip3dMean,base->SIP3D_lep,sys);
+	  	weight *= vw.expWeight(base,sip3dMean,base->SIP3D_lep,sys);
 	    if(sys == Systematic("PU_SF"))
 	 //      if(sys.IsUp()){
 		// weight *= base->PUweight_up/base->PUweight;
