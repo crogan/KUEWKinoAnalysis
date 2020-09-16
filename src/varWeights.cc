@@ -7,6 +7,15 @@ varWeights::varWeights(const string& label){
 
 varWeights::~varWeights(){}
 
+void varWeights::setMinMax(double minWeight, double maxWeight){
+	m_minWeight = minWeight;
+	m_maxWeight = maxWeight;
+}
+
+std::vector<double> varWeights::getMinMax(){
+	std::vector<double> v = {m_minWeight, m_maxWeight};
+	return v;
+}
 //for one event
 float varWeights::lepPTweight(ReducedBase* base, float ptMean, Systematic& sys){
 	float ptWeight = 0.;
@@ -41,16 +50,16 @@ float varWeights::lepIsoweight(ReducedBase* base, float isoMean, Systematic& sys
 }
 
 
-float varWeights::expWeight(ReducedBase* base, double mu, double minWeight, double maxWeight, vector<double>* var, Systematic& sys){
+float varWeights::expWeight(ReducedBase* base, double mu, vector<double>* var, Systematic& sys){
 	double weight = 0.;
 	if(base->Nlep == 0){
 		weight = 1.;
 		return weight;
 	}	
 	double x = 0.;
-	double c = exp(minWeight);
+	double c = exp(m_minWeight);
 	double b = mu/(exp(1) - c);
-	double alpha = mu/log(maxWeight);
+	double alpha = mu/log(m_maxWeight);
 	for(int iLep = 0; iLep < base->Nlep; iLep++){
 		x += fabs(var->at(iLep));
 		}	

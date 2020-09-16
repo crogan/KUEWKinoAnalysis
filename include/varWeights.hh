@@ -11,6 +11,10 @@ class varWeights{
 	float	lepPTweight(ReducedBase* base, float ptMean, Systematic& sys);
 	float lepIsoweight(ReducedBase* base, float isoMean, Systematic& sys);
 	float lepWeight(ReducedBase* base, double mean, vector<double>* var, Systematic& sys);
+	void setMinMax(double minWeight, double maxWeight);
+	std::vector<double> getMinMax();
+	double m_minWeight;
+	double m_maxWeight;
 
 	private:
 	std::string m_label;
