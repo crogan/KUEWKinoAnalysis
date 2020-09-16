@@ -73,7 +73,7 @@ float varWeights::expWeight(ReducedBase* base, double mu, vector<double>* var, S
 }
 
 //for one event
-float varWeights::basicWeight(ReducedBase* base, double mean, vector<double>* var, Systematic& sys){
+float varWeights::basicWeight(ReducedBase* base, double mu, vector<double>* var, Systematic& sys){
 	double weight = 0.;
 	if(base->Nlep == 0){
 		weight = 1.;
@@ -88,14 +88,14 @@ float varWeights::basicWeight(ReducedBase* base, double mean, vector<double>* va
 		}	
 		avg /= base->Nlep;
 	if(avg == 0){
-		avg = mean;
+		avg = mu;
 	}
 	if(sys.IsUp())
-		weight = avg/mean; //normalize by mean
+		weight = avg/mu; //normalize by mean
 	
-	else weight = mean/avg;
+	else weight = mu/avg;
 	if( isinf(weight)){ 
-	std::cout << "down weight: " << weight << " avg for event: " << avg << " mean: " << mean << "NLep: " << base->Nlep << std::endl;
+	std::cout << "down weight: " << weight << " avg for event: " << avg << " mean: " << mu << "NLep: " << base->Nlep << std::endl;
 	for(int i = 0; i < base->Nlep; i++){
 	cout << " iso: " << var->at(i) << endl;
 }
