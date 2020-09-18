@@ -24,6 +24,7 @@ samples/NANO/Autumn18_102X/QCD_HT200to300_TuneCP5_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Autumn18_102X/QCD_HT300to500_TuneCP5_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Autumn18_102X/QCD_HT500to700_TuneCP5_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Autumn18_102X/QCD_HT700to1000_TuneCP5_13TeV-madgraphMLM-pythia8.txt
+samples/NANO/Autumn18_102X/ST_s-channel_4f_hadronicDecays_TuneCP5_13TeV-madgraph-pythia8.txt
 samples/NANO/Autumn18_102X/ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-madgraph-pythia8.txt
 samples/NANO/Autumn18_102X/ST_t-channel_antitop_4f_InclusiveDecays_TuneCP5_13TeV-powheg-madspin-pythia8.txt
 samples/NANO/Autumn18_102X/ST_t-channel_top_4f_InclusiveDecays_TuneCP5_13TeV-powheg-madspin-pythia8.txt
