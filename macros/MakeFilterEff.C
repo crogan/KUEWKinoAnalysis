@@ -6,10 +6,24 @@
 #include "TFile.h"
 #include "TTree.h"
 
-void MakeFilterEff(string filename){
+void DO_FILE(string filename, string filetag);
+
+void MakeFilterEff(string listname, string filetag){
+  string line;
+  ifstream ifile(listname.c_str());
+
+  if(ifile.is_open()){
+    while(getline(ifile,line)){
+      DO_FILE(line, filetag);
+    }
+    ifile.close();
+  }
+  
+}
+
+void DO_FILE(string filename, string filetag){
 
   string dataset = filename;
-  string filetag = "Fall17_102X";
   int lumiblock;
   double efficiency;
 
@@ -43,6 +57,8 @@ void MakeFilterEff(string filename){
     while(getline(ifile,line)){
       sscanf(line.c_str(),"%d,%s,%d,%d,%d", &lumiblock, eff, &dum[0],&dum[1],&dum[2] );
       efficiency = std::atof(eff);
+      if(efficiency < 0.)
+	efficiency = 1.;
       // cout << line << endl;
       // cout << lumiblock << " " << efficiency << " " << dum[0] << " " << dum[1] << " " << dum[2] << endl << endl;
       tout->Fill();
