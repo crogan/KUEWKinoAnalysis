@@ -109,6 +109,11 @@ CategoryList CategoryTool::GetCategories() const {
   H_2LSS.push_back(&H_1Bjet);
   H_2LSS.push_back(&H_ge2Bjet);
 
+  // SV eta bins
+  vector<double> SVeta_0L;
+  SVeta_0L.push_back(0.);
+  SVeta_0L.push_back(1.5);  
+  
   vector<double> PTISR_0L;
   PTISR_0L.push_back(200.);
   PTISR_0L.push_back(500.);

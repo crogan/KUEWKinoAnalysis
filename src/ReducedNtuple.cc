@@ -4,6 +4,7 @@
 
 #include "StopNtupleTree.hh"
 #include "SUSYNANOBase.hh"
+#include "Leptonic.hh"
 
 using namespace RestFrames;
 
@@ -246,6 +247,7 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("IP3D_lep", &m_IP3D_lep);
   tree->Branch("SIP3D_lep", &m_SIP3D_lep);
   tree->Branch("ID_lep",      &m_ID_lep);
+  tree->Branch("SourceID_lep",      &m_SourceID_lep);
   tree->Branch("Index_lep",   &m_Index_lep);
   
   tree->Branch("Njet", &m_Njet);
@@ -416,6 +418,7 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
     tree->Branch("genCharge_lep",  &m_genCharge_lep);
     tree->Branch("genPDGID_lep",   &m_genPDGID_lep);
     tree->Branch("genMomPDGID_lep",   &m_genMomPDGID_lep);
+    tree->Branch("genSourceID_lep",   &m_genSourceID_lep);
     tree->Branch("genIndex_lep",   &m_genIndex_lep);
     
     tree->Branch("genNnu", &m_genNnu);
@@ -897,7 +900,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   m_PX3_BoostT = (vP_Ja_S+vP_La_S+vP_Ia_S).P();
   m_MX3a_BoostT = (vP_Ja_S+vP_La_S+vP_Ia_S).M();
   m_MX3b_BoostT = (vP_Jb_S+vP_Lb_S+vP_Ib_S).M();
-  m_Mperp = sqrt(m_MX3a_BoostT*m_MX3a_BoostT+m_MX3b_BoostT*m_MX3b_BoostT);
+  m_Mperp = sqrt(m_MX3a_BoostT*m_MX3a_BoostT+m_MX3b_BoostT*m_MX3b_BoostT)/sqrt(2.);
 
   m_PV_BoostT = (vP_Ja_S+vP_La_S+vP_Jb_S+vP_Lb_S).P();
   
@@ -1058,6 +1061,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   m_IP3D_lep.clear();
   m_SIP3D_lep.clear();
   m_ID_lep.clear();
+  m_SourceID_lep.clear();
   m_Index_lep.clear();
   vector<int> genmatch;
   for(int i = 0; i < m_genNlep; i++)
@@ -1079,13 +1083,21 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
     m_SIP3D_lep.push_back(Leptons[r].SIP3D());
     m_ID_lep.push_back(Leptons[r].ParticleID());
     int index = -1;
+    double minDR = 0.1;
     for(int g = 0; g < m_genNlep; g++)
-      if(Leptons[r].DeltaR(GenLeptons[g]) < 0.02){
+      if(Leptons[r].DeltaR(GenLeptons[g]) < minDR){
+	minDR = Leptons[r].DeltaR(GenLeptons[g]);
 	index = g;
 	genmatch[g] = r;
-	break;
       }
+ 
     m_Index_lep.push_back(index);
+    if(index >= 0)
+      Leptons[r].SetSourceID(GenLeptons[index].SourceID());
+    else
+      Leptons[r].SetSourceID(kFake);
+    
+    m_ID_lep.push_back(Leptons[r].SourceID());
   }
 
   if(!AnalysisBase<Base>::IsData()){
@@ -1097,6 +1109,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
     m_genCharge_lep.clear();
     m_genPDGID_lep.clear();
     m_genMomPDGID_lep.clear();
+    m_genSourceID_lep.clear();
     m_genIndex_lep.clear();
     for(int g = 0; g < m_genNlep; g++){
       m_genPT_lep.push_back(GenLeptons[g].Pt());
@@ -1106,6 +1119,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
       m_genCharge_lep.push_back(GenLeptons[g].Charge());
       m_genPDGID_lep.push_back(GenLeptons[g].PDGID());
       m_genMomPDGID_lep.push_back(GenLeptons[g].MomPDGID());
+      m_genSourceID_lep.push_back(GenLeptons[g].SourceID());
       m_genIndex_lep.push_back(genmatch[g]);
     }
   
