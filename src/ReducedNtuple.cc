@@ -632,7 +632,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   Jets = Jets.RemoveOverlap(Leptons, 0.2);
 
   // merge jets until total number is combinatorically manageable
-  Jets = Jets.BinaryMerge(16-SVs.size()-Leptons.size());
+  Jets = Jets.BinaryMerge(14-SVs.size()-Leptons.size());
   Jets.SortByPt();
   
   // skip event reconstruction for now if too many jets
