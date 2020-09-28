@@ -29,3 +29,4 @@ rateFakes rateParam * ZDY_Fakes_elf0 1.0 [0,5]
 
 
 
+./BuildFitInput.x -path /home/t3-ku/crogan/NTUPLES/NANO/NEW_31_05_20/ -year 2018 +proc T2bW_50000480 +proc WJets +proc DY +proc ttbar
