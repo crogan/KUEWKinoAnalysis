@@ -8,6 +8,7 @@
 
 #include "StopNtupleTree.hh"
 #include "SUSYNANOBase.hh"
+#include "Leptonic.hh"
 
 using namespace std;
 
@@ -439,7 +440,7 @@ int AnalysisBase<StopNtupleTree>::GetSampleIndex(){
 	  MP = mass;
     }
   }
-
+  
   int hash = 100000*MP + MC;
   if(m_HashToIndex.count(hash) == 0){
     m_HashToIndex[hash] = m_Nsample;
@@ -888,7 +889,7 @@ int AnalysisBase<SUSYNANOBase>::GetSampleIndex(){
 	  MP = mass;
     }
   }
-
+  
   int hash = 100000*MP + MC;
   if(m_HashToIndex.count(hash) == 0){
     m_HashToIndex[hash] = m_Nsample;
@@ -908,7 +909,7 @@ template <>
 double AnalysisBase<SUSYNANOBase>::GetEventWeight(){
   if(IsData())
     return 1.;
-
+  
   if(m_IndexToNweight[m_SampleIndex] > 0.){
     if(!m_DoSMS)
       return genWeight*m_IndexToXsec[m_SampleIndex]/m_IndexToNweight[m_SampleIndex];
@@ -1232,37 +1233,35 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET){
   // If one jet fails jet ID, 
   if(!passID)
     return ParticleList();
-
-    year = 2016;
   
+  if(year == 2017)
+    MET.SetPtEtaPhi(METFixEE2017_pt,0.0,METFixEE2017_phi);
+  else
+    MET.SetPtEtaPhi(MET_pt,0.0,MET_phi);
+  
+  deltaMET.SetZ(0.);
+  MET += deltaMET;
+  
+  if(CurrentSystematic() == Systematic("METUncer_UnClust")){
     if(year == 2017)
-      MET.SetPtEtaPhi(METFixEE2017_pt,0.0,METFixEE2017_phi);
+      deltaMET.SetXYZ(delta*METFixEE2017_MetUnclustEnUpDeltaX,
+		      delta*METFixEE2017_MetUnclustEnUpDeltaY, 0.);
     else
-      MET.SetPtEtaPhi(MET_pt,0.0,MET_phi);
-
-    deltaMET.SetZ(0.);
+      deltaMET.SetXYZ(delta*MET_MetUnclustEnUpDeltaX,
+		      delta*MET_MetUnclustEnUpDeltaY, 0.);
     MET += deltaMET;
-
-    if(CurrentSystematic() == Systematic("METUncer_UnClust")){
-      if(year == 2017)
-	deltaMET.SetXYZ(delta*METFixEE2017_MetUnclustEnUpDeltaX,
-			delta*METFixEE2017_MetUnclustEnUpDeltaY, 0.);
-      else
-	deltaMET.SetXYZ(delta*MET_MetUnclustEnUpDeltaX,
-			delta*MET_MetUnclustEnUpDeltaY, 0.);
-      MET += deltaMET;
-    }
+  }
   
-    return list;
+  return list;
 }
 
-  template <>
-  TVector3 AnalysisBase<SUSYNANOBase>::GetMET(){
-    TVector3 MET;
-    GetJetsMET(MET);
+template <>
+TVector3 AnalysisBase<SUSYNANOBase>::GetMET(){
+  TVector3 MET;
+  GetJetsMET(MET);
 
-    return MET;
-  }
+  return MET;
+}
 
 template <>
 ParticleList AnalysisBase<SUSYNANOBase>::GetJets(){
@@ -1749,7 +1748,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetSVs(const TVector3& PV){
   for(int i = 0; i < N; i++){
     if(SV_chi2[i] < 0.)
       continue;
-    if(SV_pt[i] >= 20.)
+    if(SV_pt[i] >= 20. || SV_pt[i] < 2.)
       continue;
     if(fabs(SV_eta[i]) >= 2.4)
       continue;
@@ -1787,7 +1786,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetSVs(const TVector3& PV){
     // if(SV_ndof[i] < 1.8) // replacement for ntracks cut...
     //   continue;
 
-    if(probs["prob_isB"] > 0.35)
+    if(probs["prob_isB"] > 0.3)
       list.push_back(SV);
   }
   
@@ -1805,13 +1804,36 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetGenElectrons(){
   int PDGID;
   for(int i = 0; i < N; i++){
     PDGID = GenPart_pdgId[i];
-    if(abs(PDGID) == 11 && GenPart_pt[i] > 3. && GenPart_status[i] == 1){
+    if(abs(PDGID) == 11 && GenPart_pt[i] > 2. && GenPart_status[i] == 1){
       Particle lep;
       
       lep.SetPDGID(PDGID);
       int mom = GenPart_genPartIdxMother[i];
-      if(mom >= 0 && mom < N)
-	lep.SetMomPDGID(GenPart_pdgId[mom]);
+      if(mom >= 0 && mom < N){
+
+	int momID = GenPart_pdgId[mom];
+	int momStatus = GenPart_status[mom];
+
+	while(abs(momID) == 11){
+
+	  if(momStatus == 23){
+	    lep.SetMomPDGID(PDGID);
+	    lep.SetSourceID(GetLepSource(PDGID, PDGID, PDGID));
+	    break;
+	  }
+
+	  mom = GenPart_genPartIdxMother[mom];
+	  if(mom < 0 || mom >= N)
+	    continue;
+	  momID = GenPart_pdgId[mom];
+	  momStatus = GenPart_status[mom];
+
+	}
+	
+	lep.SetMomPDGID(momID);
+	lep.SetSourceID(GetLepSource(PDGID, PDGID, momID));
+      }
+     
       lep.SetCharge( (PDGID > 0 ? -1 : 1) );
       lep.SetPtEtaPhiM(GenPart_pt[i], GenPart_eta[i],
 		       GenPart_phi[i], max(float(0.),GenPart_mass[i]));
@@ -1839,18 +1861,43 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetGenMuons(){
       
       lep.SetPDGID(PDGID);
       int mom = GenPart_genPartIdxMother[i];
-      if(mom >= 0 && mom < N)
-	lep.SetMomPDGID(GenPart_pdgId[mom]);
+      if(mom >= 0 && mom < N){
+
+	int momID = GenPart_pdgId[mom];
+	int momStatus = GenPart_status[mom];
+
+	while(abs(momID) == 13){
+
+	  if(momStatus == 23){
+	    lep.SetMomPDGID(PDGID);
+	    lep.SetSourceID(GetLepSource(PDGID, PDGID, PDGID));
+	    break;
+	  }
+
+	  mom = GenPart_genPartIdxMother[mom];
+	  if(mom < 0 || mom >= N)
+	    continue;
+	  momID = GenPart_pdgId[mom];
+	  momStatus = GenPart_status[mom];
+
+	}
+	
+	lep.SetMomPDGID(momID);
+	lep.SetSourceID(GetLepSource(PDGID, PDGID, momID));
+      }
+     
       lep.SetCharge( (PDGID > 0 ? -1 : 1) );
       lep.SetPtEtaPhiM(GenPart_pt[i], GenPart_eta[i],
 		       GenPart_phi[i], max(float(0.),GenPart_mass[i]));
-
+      
       list.push_back(lep);
     }
   }
 
   return list;
 }
+
+
 
 template <>
 ParticleList AnalysisBase<SUSYNANOBase>::GetGenNeutrinos(){

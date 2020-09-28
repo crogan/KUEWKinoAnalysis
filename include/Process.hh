@@ -85,6 +85,8 @@ public:
   VS  GetProcesses() const;
   VSM GetSignalMasses() const;
 
+  void Print() const;
+
 private:
   int m_N;
   vector<Process>   m_Proc;

@@ -39,7 +39,7 @@ bool Lep::operator < (const Lep& lep) const {
   if(m_Charge < lep.Charge())
     return true;
   if(m_Charge > lep.Charge())
-    return true;
+    return false;
   
   if(m_Source < lep.Source())
     return true;
@@ -104,21 +104,32 @@ std::string Lep::IDLabel() const {
 }
 
 LepSource GetLepSource(int PDGID, int genPDGID, int momPDGID){
-  if(abs(genPDGID) != 11 && abs(genPDGID) != 13){
+  if(abs(genPDGID) != abs(PDGID)){ // wrong type
     return kFake;
+    
+  } else if(genPDGID != PDGID){ // charge flip
+    return kSignal;
+    
   } else if((abs(momPDGID) == abs(PDGID)) ||
 	    (abs(momPDGID) == 23) ||
 	    (abs(momPDGID) == 24) ||
 	    ((abs(momPDGID) > 1000000) &&
-	     (abs(momPDGID) < 3000000))){
+	     (abs(momPDGID) < 3000000))){ // "signal" processes
     return kSignal;
-  } else if(abs(momPDGID) == 15){
+    
+  } else if(abs(momPDGID) == 15){ // Taus
     return kTau;
+    
   } else if((abs(momPDGID) == 4) ||
-	    (abs(momPDGID) == 5) ||
-	    ((abs(momPDGID) > 400) && (abs(momPDGID) < 600)) ||
-	    ((abs(momPDGID) > 4000) && (abs(momPDGID) < 6000))){
-    return kHF;
+	    ((abs(momPDGID) > 400) && (abs(momPDGID) < 500)) ||
+	    ((abs(momPDGID) > 4000) && (abs(momPDGID) < 5000))){
+    return kHFC;
+    
+  } else if((abs(momPDGID) == 5) ||
+	    ((abs(momPDGID) > 500) && (abs(momPDGID) < 600)) ||
+	    ((abs(momPDGID) > 5000) && (abs(momPDGID) < 6000))){
+    return kHFB;
+    
   } else {
     return kLF;
   }
@@ -243,16 +254,22 @@ std::string LepList::GetIDLabel() const {
   return label;
 }
 
-vector<std::string> LepList::GetFakeLabels(LepSource fake) const {
+vector<std::string> LepList::GetFakeLabels() const {
   std::string label0 = "Fakes_";
   std::string label;
   vector<std::string> labels;
   
   for(int i = 0; i < m_N; i++){
-    if((*this)[i].Source() >= fake){
+    LepSource source = (*this)[i].Source();
+    if(source > kTau){
       label = label0;
       label += ((*this)[i].Flavor() == kElectron ? "elf" : "muf");
-      label += Form("%d", int((*this)[i].Source()-fake));
+      if(source == kHFB || source == kHFC)
+	label += "0";
+      if(source == kLF)
+	label += "1";
+      if(source == kFake)
+	label += "2";
       labels.push_back(label);
     }
   }
@@ -260,10 +277,10 @@ vector<std::string> LepList::GetFakeLabels(LepSource fake) const {
   return labels;
 }
 
-LepList LepList::GetFakes(LepSource fake) const {
+LepList LepList::GetFakes() const {
   LepList list;
   for(int i = 0; i < m_N; i++){
-    if((*this)[i].Source() >= fake){
+    if((*this)[i].Source() > kTau){
       Lep lep = (*this)[i];
       lep.SetID(kGold);
       lep.SetCharge(kPos);
@@ -321,6 +338,7 @@ bool Leptonic::operator == (const Criteria& val) const {
       if(((*this)[i].GetHemA() == (*lep)[j].GetHemA()) &&
 	 ((*this)[i].GetHemB() == (*lep)[j].GetHemB()))
 	return true;
+  
   return false;
 }
 

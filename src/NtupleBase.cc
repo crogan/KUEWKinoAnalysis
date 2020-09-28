@@ -61,10 +61,9 @@ void NtupleBase<Base>::WriteNtuple(const string& filename, int ichunk, int nchun
       mymod = 1;
     if(i%mymod == 0)
       cout << " event = " << i << " : [" << N0 << " , " << N1 << "]" << endl;
-
+    
     sample = AnalysisBase<Base>::GetEntry(i);
     
-        
     if(m_Label2Tree.count(sample) == 0){
       m_Label2Tree[sample] = std::vector<TTree*>();
 

@@ -100,9 +100,11 @@ bool Category::operator == (const Criteria& cat) const {
   if(pcat->GetN() < N)
     return false;
 
-  for(int i = 0; i < N; i++)
-    if(!(m_Criteria[i] == (*pcat)[i]))
+  for(int i = 0; i < N; i++){
+    if(!(m_Criteria[i] == (*pcat)[i])){
       return false;
+    }
+  }
 
   return true;
 }
@@ -483,7 +485,7 @@ CategoryList CategoryList::FilterOR(VS& labels) const {
   for(int i = 0; i < m_N; i++){
     for(int l = 0; l < Nl; l++){
       if((m_Cat[i]->Label()+"_"+m_Cat[i]->GetLabel()).find(labels[l]) != std::string::npos){
-	cout << "here " << (m_Cat[i]->Label()+"_"+m_Cat[i]->GetLabel()) << " " << labels[l] << endl;
+	//cout << "here " << (m_Cat[i]->Label()+"_"+m_Cat[i]->GetLabel()) << " " << labels[l] << endl;
 	list += *m_Cat[i];
 	break;
       }

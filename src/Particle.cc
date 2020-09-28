@@ -5,6 +5,7 @@ Particle::Particle() : TLorentzVector() {
   m_Charge = 0;
   m_PDGID = 0;
   m_MomPDGID = 0;
+  m_SourceID = 0;
   m_ParticleID = kNothing;
 
   m_RelIso = 0.;
@@ -42,6 +43,14 @@ void Particle::SetMomPDGID(int pdgid){
   m_MomPDGID = pdgid;
 }
 
+int Particle::SourceID() const {
+  return m_SourceID;
+}
+
+void Particle::SetSourceID(int sourceid){
+  m_SourceID = sourceid;
+}
+
 int Particle::PDGID() const {
   return m_PDGID;
 }
@@ -58,7 +67,7 @@ void Particle::SetParticleID(ParticleIDType id){
   m_ParticleID = id;
 }
 
-double Particle::BtagID() const {
+ParticleIDType Particle::BtagID() const {
   return m_BtagID;
 }
 
@@ -184,6 +193,18 @@ double Particle::Btag() const {
 
 void Particle::SetBtag(double btag){
   m_Btag = btag;
+}
+
+Particle Particle::Merge(const Particle& p) const {
+  Particle part = *this;
+  if(p.Btag() > part.Btag())
+    part.SetBtag(p.Btag());
+  if(p.BtagID() > part.BtagID())
+    part.SetBtagID(p.BtagID());
+  
+  part += p;
+
+  return part;
 }
 
 Particle::operator ParticleList() const {

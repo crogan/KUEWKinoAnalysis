@@ -73,6 +73,7 @@ private:
   vector<double> m_IP3D_lep;
   vector<double> m_SIP3D_lep;
   vector<int>    m_ID_lep;
+  vector<int>    m_SourceID_lep;
   vector<int>    m_Index_lep;
 
   int m_Njet;
@@ -104,6 +105,7 @@ private:
   vector<int>    m_genCharge_lep;
   vector<int>    m_genPDGID_lep;
   vector<int>    m_genMomPDGID_lep;
+  vector<int>    m_genSourceID_lep;
   vector<int>    m_genIndex_lep;
 
   int m_genNnu;
@@ -180,6 +182,7 @@ private:
   // Kinematic Variables
 
   double m_PTCM;
+  double m_PzCM;
   double m_cosCM;
   double m_dphiCM;
   double m_dphiCMI;
@@ -214,6 +217,9 @@ private:
   double m_PV;
   double m_MVa;
   double m_MVb;
+
+  double m_PV_lab;
+  double m_dphiMET_V;
 
   double m_MJ;
   double m_ML;
@@ -263,9 +269,11 @@ private:
   double m_H21X3b;
 
   // ISR related variables
+  double m_PISR;
   double m_PTISR;
   double m_MISR;
   double m_RISR;
+  double m_RISRT;
  
   // RestFrames frames and friends
   LabRecoFrame*     LAB;

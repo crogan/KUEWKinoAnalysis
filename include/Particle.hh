@@ -23,6 +23,9 @@ public:
   int MomPDGID() const;
   void SetMomPDGID(int pdgid);
 
+  int SourceID() const;
+  void SetSourceID(int sourceid);
+
   ParticleIDType ParticleID() const;
   void SetParticleID(ParticleIDType id);
 
@@ -60,8 +63,10 @@ public:
   double Btag() const;
   void SetBtag(double btag);
 
-  double BtagID() const;
+  ParticleIDType BtagID() const;
   void SetBtagID(ParticleIDType id);
+
+  Particle Merge(const Particle&) const;
   
   operator ParticleList() const;
   ParticleList operator + (const Particle& part) const; 
@@ -71,6 +76,7 @@ private:
   int m_Charge;
   int m_PDGID;
   int m_MomPDGID;
+  int m_SourceID;
   ParticleIDType m_ParticleID;
   
   double m_Btag;
