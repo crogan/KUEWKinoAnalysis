@@ -151,6 +151,8 @@ int main(int argc, char* argv[]) {
   double minWeight = 0.01;
   vw.setMinMax(minWeight,maxWeight);
 
+  // dummy in case there is no data requested
+  Process data_obs("data_obs", kData);
 
   // sample (process) loop
   int Nsample = samples.GetN();
@@ -232,18 +234,11 @@ int main(int argc, char* argv[]) {
 	  index = (*base->index_lep_a)[i];
 
 	    
-	  int PDGID  = base->PDGID_lep->at(index);
-	  int gindex = is_data ? -1 :  base->Index_lep->at(index);
-	  int genPDGID = 0;
-	  int momPDGID = 0;
-	  if(gindex >= 0){
-	    genPDGID = base->genPDGID_lep->at(gindex);
-	    momPDGID = base->genMomPDGID_lep->at(gindex);
-	  }
+	  int PDGID = base->PDGID_lep->at(index);
 	    
 	  LepID id;
 	  if(base->ID_lep->at(index) < 3 ||
-	     base->MiniIso_lep->at(index)*base->PT_lep->at(index) > 5.)
+	     base->MiniIso_lep->at(index)*base->PT_lep->at(index) >= 5.)
 	    id = kBronze;
 	  else if(base->SIP3D_lep->at(index) > 4)
 	    id = kSilver;
@@ -255,25 +250,18 @@ int main(int argc, char* argv[]) {
 	  else
 	    flavor = kMuon;
 	  LepCharge charge = (base->Charge_lep->at(index) > 0 ? kPos : kNeg);
-	  LepSource source = GetLepSource(PDGID, genPDGID, momPDGID); 
+	  LepSource source = LepSource(base->SourceID_lep->at(index));
 	    
 	  list_a += Lep(flavor, charge, id, source);
 	}
 	for(int i = 0; i < base->Nlep_b; i++){
 	  index = (*base->index_lep_b)[i];
 	  
-	  int PDGID  = base->PDGID_lep->at(index);
-	  int gindex = is_data ? -1 :  base->Index_lep->at(index);
-	  int genPDGID = 0;
-	  int momPDGID = 0;
-	  if(gindex >= 0){
-	    genPDGID = base->genPDGID_lep->at(gindex);
-	    momPDGID = base->genMomPDGID_lep->at(gindex);
-	  }
+	  int PDGID = base->PDGID_lep->at(index);
 
 	  LepID id;
 	  if(base->ID_lep->at(index) < 3 ||
-	     base->MiniIso_lep->at(index)*base->PT_lep->at(index) > 5.)
+	     base->MiniIso_lep->at(index)*base->PT_lep->at(index) >= 5.)
 	    id = kBronze;
 	  else if(base->SIP3D_lep->at(index) > 4)
 	    id = kSilver;
@@ -285,14 +273,14 @@ int main(int argc, char* argv[]) {
 	  else
 	    flavor = kMuon;
 	  LepCharge charge = (base->Charge_lep->at(index) > 0 ? kPos : kNeg);
-	  LepSource source = GetLepSource(PDGID, genPDGID, momPDGID); 
+	  LepSource source = LepSource(base->SourceID_lep->at(index)); 
 	  
 	  list_b += Lep(flavor, charge, id, source);
 	}
 
 	Category Event(Leptonic(list_a, list_b),
 		       Hadronic(NjetS, NbjetS, NSV),
-		       Hadronic(NjetISR, NbjetISR, 0));
+		       Hadronic(NjetISR, NbjetISR, base->NSV_ISR));
 	Event.AddGenericVal(GenericVal(base->PTISR));
 	
 	int eindex = Categories.Find(Event);
@@ -330,19 +318,16 @@ int main(int argc, char* argv[]) {
 	if(sys == Systematic("lepSIP3D_weight"))
 	  	weight *= vw.expWeight(base,sip3dMean,base->SIP3D_lep,sys);
 	    if(sys == Systematic("PU_SF"))
-	 //      if(sys.IsUp()){
-		// weight *= base->PUweight_up/base->PUweight;
-		//  } else{
-		// weight *= base->PUweight_down/base->PUweight;
-		// }else
-	      weight *= 1.;
-	    //weight *= base->PUweight;
-	   }
-	
-	// if(std::isnan(weight))
-	// 	cout << "PU up " << base->PUweight_up << " PU down " << base->PUweight_up << " PU nom " << base->PUweight << " NPU " << base->NPU endl;   
-	  LepList Fakes  = list_a.GetFakes(kHF);
-	  Fakes         += list_b.GetFakes(kHF);
+	      if(sys.IsUp())
+		weight *= base->PUweight_up;
+	      else
+		weight *= base->PUweight_down;
+	    else
+	      weight *= base->PUweight;
+	  }
+	  
+	  LepList Fakes  = list_a.GetFakes();
+	  Fakes         += list_b.GetFakes();
 	  
 	  double Mperp = base->Mperp;
 	  
@@ -355,9 +340,8 @@ int main(int argc, char* argv[]) {
 	
 	  double RISR  = base->RISR;
 
-	  
 	  if(Fakes.GetN() > 0 && is_bkg){
-	    vector<string> flabels = Fakes.GetFakeLabels(kHF);
+	    vector<string> flabels = Fakes.GetFakeLabels();
 	    int Nf = flabels.size();
 	    for(int fl = 0; fl < Nf; fl++){
 	      if(title.find("QCD") == string::npos)
@@ -371,6 +355,11 @@ int main(int argc, char* argv[]) {
 	    FITBuilder.AddEvent(weight, Mperp, RISR,
 				Categories[eindex], proc, sys);
 	  }
+	  
+	  // dummy data
+	  if(!addData && is_bkg)
+	    FITBuilder.AddEvent(weight, Mperp, RISR,
+				Categories[eindex], data_obs, sys);
 	}
       }
       delete base;

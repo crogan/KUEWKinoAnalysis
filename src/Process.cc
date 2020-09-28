@@ -294,6 +294,11 @@ VSM ProcessList::GetSignalMasses() const {
   return signals;
 }
 
+void ProcessList::Print() const {
+   for(int p = 0; p < m_N; p++)
+     std::cout << m_Proc[p].Name() << std::endl;
+}
+
 ///////////////////////////////////////////
 ////////// ProcessBranch class
 ///////////////////////////////////////////

@@ -28,7 +28,7 @@ double XsecTool::GetXsec_SMS(const std::string& dataset, double MP) const {
     }
     if((dataset.find("C1C1")!=std::string::npos) ||
        (dataset.find("TChipmWW")!=std::string::npos)){
-      label = "C1C1_hino";
+      label = "C1C1_wino";
       if(dataset.find("WWTo2LNu")!= std::string::npos)
 	BR = (3.*0.1086)*(3.*0.1086);
     }
@@ -109,21 +109,21 @@ std::map<std::string,double> XsecTool::InitMap_Xsec_BKG(){
   // HT "stitching" factors for DYjets 2017/2018 from
   // https://indico.cern.ch/event/781231/contributions/3263952/subcontributions/274982/attachments/1795600/2926947/190213_mc_discrep_ppd.pdf
   
-  Label2Xsec["DYJetsToLL_M-50_HT-100to200_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8"] = 147.40 * 1.23 * 1.;
-  Label2Xsec["DYJetsToLL_M-50_HT-200to400_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8"] = 40.99 * 1.23 * 0.999;
-  Label2Xsec["DYJetsToLL_M-50_HT-2500toInf_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8"] = 0.003565 * 1.23 * 1.015;
-  Label2Xsec["DYJetsToLL_M-50_HT-400to600_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8"] = 5.678 * 1.23 * 0.990;
-  Label2Xsec["DYJetsToLL_M-50_HT-600to800_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8"] = 1.367 * 1.23 * 0.975;
+  Label2Xsec["DYJetsToLL_M-50_HT-100to200_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8"] = 161.1 * 1.23 * 1.;
+  Label2Xsec["DYJetsToLL_M-50_HT-200to400_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8"] = 48.66 * 1.23 * 0.999;
+  Label2Xsec["DYJetsToLL_M-50_HT-2500toInf_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8"] = 0.003468 * 1.23 * 1.015;
+  Label2Xsec["DYJetsToLL_M-50_HT-400to600_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8"] = 6.968 * 1.23 * 0.990;
+  Label2Xsec["DYJetsToLL_M-50_HT-600to800_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8"] = 1.743 * 1.23 * 0.975;
   Label2Xsec["DYJetsToLL_M-50_HT-70to100_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8"] = 169.9 * 1.23;
   Label2Xsec["DYJetsToLL_M-50_HT-800to1200_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8"] = 0.6304 * 1.23;
-  Label2Xsec["DYJetsToLL_M-50_HT-1200to2500_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8"] = 0.1514 * 1.23 * 0.833;
+  Label2Xsec["DYJetsToLL_M-50_HT-1200to2500_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8"] = 0.1933 * 1.23 * 0.833;
   
-  Label2Xsec["DYJetsToLL_M-50_HT-100to200_TuneCP5_13TeV-madgraphMLM-pythia8"] = 147.40 * 1.23 * 1.;
-  Label2Xsec["DYJetsToLL_M-50_HT-1200to2500_TuneCP5_13TeV-madgraphMLM-pythia8"] = 0.1514 * 1.23 * 0.833;
-  Label2Xsec["DYJetsToLL_M-50_HT-200to400_TuneCP5_13TeV-madgraphMLM-pythia8"] = 40.99 * 1.23 * 0.999;
-  Label2Xsec["DYJetsToLL_M-50_HT-2500toInf_TuneCP5_13TeV-madgraphMLM-pythia8"] = 0.003565 * 1.23 * 1.015;
-  Label2Xsec["DYJetsToLL_M-50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8"] = 5.678 * 1.23 * 0.990;
-  Label2Xsec["DYJetsToLL_M-50_HT-600to800_TuneCP5_13TeV-madgraphMLM-pythia8"] = 1.367 * 1.23 * 0.975;
+  Label2Xsec["DYJetsToLL_M-50_HT-100to200_TuneCP5_13TeV-madgraphMLM-pythia8"] = 161.1 * 1.23 * 1.;
+  Label2Xsec["DYJetsToLL_M-50_HT-1200to2500_TuneCP5_13TeV-madgraphMLM-pythia8"] = 0.1933 * 1.23 * 0.833;
+  Label2Xsec["DYJetsToLL_M-50_HT-200to400_TuneCP5_13TeV-madgraphMLM-pythia8"] = 48.66 * 1.23 * 0.999;
+  Label2Xsec["DYJetsToLL_M-50_HT-2500toInf_TuneCP5_13TeV-madgraphMLM-pythia8"] = 0.003468 * 1.23 * 1.015;
+  Label2Xsec["DYJetsToLL_M-50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8"] = 6.968 * 1.23 * 0.990;
+  Label2Xsec["DYJetsToLL_M-50_HT-600to800_TuneCP5_13TeV-madgraphMLM-pythia8"] = 1.743 * 1.23 * 0.975;
   Label2Xsec["DYJetsToLL_M-50_HT-70to100_TuneCP5_13TeV-madgraphMLM-pythia8"] = 169.9 * 1.23;
   Label2Xsec["DYJetsToLL_M-50_HT-800to1200_TuneCP5_13TeV-madgraphMLM-pythia8"] = 0.6304 * 1.23 * 0.907;
   
@@ -136,26 +136,26 @@ std::map<std::string,double> XsecTool::InitMap_Xsec_BKG(){
   Label2Xsec["DYJetsToLL_M-50_HT-70to100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 169.9 * 1.23;
   Label2Xsec["DYJetsToLL_M-50_HT-800to1200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 0.6304 * 1.23;
 
-  Label2Xsec["DYJetsToLL_M-4to50_HT-100to200_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8"] = 224.2;
-  Label2Xsec["DYJetsToLL_M-4to50_HT-200to400_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8"] = 37.2;
-  Label2Xsec["DYJetsToLL_M-4to50_HT-400to600_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8"] = 3.581;
-  Label2Xsec["DYJetsToLL_M-4to50_HT-600toInf_TuneCP5_PSWeights_13TeV-madgraphMLM-pythia8"] = 1.124;
+  Label2Xsec["DYJetsToLL_M-4to50_HT-100to200_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8"] = 204.;
+  Label2Xsec["DYJetsToLL_M-4to50_HT-200to400_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8"] = 54.39;
+  Label2Xsec["DYJetsToLL_M-4to50_HT-400to600_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8"] = 5.697;
+  Label2Xsec["DYJetsToLL_M-4to50_HT-600toInf_TuneCP5_PSWeights_13TeV-madgraphMLM-pythia8"] = 1.85;
   Label2Xsec["DYJetsToLL_M-4to50_HT-70to100_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8"] = 145.5;
   
-  Label2Xsec["DYJetsToLL_M-4to50_HT-100to200_TuneCP5_13TeV-madgraphMLM-pythia8"] = 224.2;
-  Label2Xsec["DYJetsToLL_M-4to50_HT-200to400_TuneCP5_13TeV-madgraphMLM-pythia8"] = 37.2;
-  Label2Xsec["DYJetsToLL_M-4to50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8"] = 3.581;
-  Label2Xsec["DYJetsToLL_M-4to50_HT-600toInf_TuneCP5_13TeV-madgraphMLM-pythia8"] = 1.124;
+  Label2Xsec["DYJetsToLL_M-4to50_HT-100to200_TuneCP5_13TeV-madgraphMLM-pythia8"] = 204.;
+  Label2Xsec["DYJetsToLL_M-4to50_HT-200to400_TuneCP5_13TeV-madgraphMLM-pythia8"] = 54.39;
+  Label2Xsec["DYJetsToLL_M-4to50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8"] = 5.697;
+  Label2Xsec["DYJetsToLL_M-4to50_HT-600toInf_TuneCP5_13TeV-madgraphMLM-pythia8"] = 1.85;
   
-  Label2Xsec["DYJetsToLL_M-5to50_HT-100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 147.40;
+  Label2Xsec["DYJetsToLL_M-5to50_HT-100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 224.2;
   Label2Xsec["DYJetsToLL_M-5to50_HT-200to400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 37.2;
   Label2Xsec["DYJetsToLL_M-5to50_HT-400to600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 3.581;
   Label2Xsec["DYJetsToLL_M-5to50_HT-600toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] =1.1241;
   Label2Xsec["DYJetsToLL_M-5to50_HT-70to100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 301.2;
   Label2Xsec["DYJetsToLL_M-5to50_TuneCP5_13TeV-madgraphMLM-pythia8"] = 71310;
-  Label2Xsec["DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 2075.14*3.;
-  Label2Xsec["DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8"] = 2075.14*3.;
-  Label2Xsec["DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8"] = 2075.14*3.;
+  Label2Xsec["DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 4963; // LO
+  Label2Xsec["DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8"] = 6435.; // NLO EWK? QCD?
+  Label2Xsec["DYJetsToLL_M-50_TuneCP5_13TeV-madgraphMLM-pythia8"] = 5343; // LO
 
   Label2Xsec["QCD_Pt_1000to1400_TuneCUETP8M1_13TeV_pythia8"] =  9.365;
   Label2Xsec["QCD_Pt_120to170_TuneCUETP8M1_13TeV_pythia8"] = 467500.0;

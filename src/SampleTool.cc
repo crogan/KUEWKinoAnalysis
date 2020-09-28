@@ -127,7 +127,7 @@ void SampleTool::InitSMS(const string& prefix, const string& filename){
       continue;
     sscanf(name.c_str(), "SMS_%d_%d", &M0, &M1);
 
-    Process proc(Form("%s_%d", prefix.c_str(), 100000*M0+M1), kSig);
+    Process proc(Form("%s_%d", prefix.c_str(), 10000*M0+M1), kSig);
     files.clear();
     files += filename;
     m_Proc[m_iYear][proc] = pair<vector<string>,string>(files, name);

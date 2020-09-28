@@ -9,8 +9,8 @@ home = os.environ['HOME']
 #######################################
 RUN_DIR = pwd
 TEMP = pwd
-EXE  = "MakeReducedNtuple_NANO.x"
-#EXE  = "MakeEventCount_NANO.x"
+#EXE  = "MakeReducedNtuple_NANO.x"
+EXE  = "MakeEventCount_NANO.x"
 TREE = "Events"
 OUT  = "/home/t3-ku/crogan/NTUPLES/Processing/"
 #OUT = pwd
