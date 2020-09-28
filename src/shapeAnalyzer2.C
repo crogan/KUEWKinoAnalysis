@@ -17,7 +17,7 @@
 #include <TLorentzVector.h>
 //#include <TIter.h>
 #include <TKey.h>
-
+#include <TSystem.h>
 
 #include "shapeAnalyzer.hh"
 
@@ -137,6 +137,10 @@ if(allFakes){
 	// 	cout << "Error: only one (up/down) file provided. Please provide both up and down files, or one input file." << endl;
 	// 	break;
 	// }
+	if(gSystem->AccessPathName(inFileName.c_str())){
+		cout << inFileName << " does not exist" << endl;
+		 return 0;
+	}
 	TFile* iFile = TFile::Open(inFileName.c_str());
 	shapeAnalyzer* shape = new shapeAnalyzer(iFile);
 	// if(fUp) shapeAnalzyer* upShape = new shapeAnalyzer(upFile,oFile);

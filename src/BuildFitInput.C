@@ -149,7 +149,7 @@ int main(int argc, char* argv[]) {
   varWeights vw("varWeights");
   double maxWeight = 5.;
   double minWeight = 0.01;
-  vw.SetMinMax(minWeight,maxWeight);
+  vw.setMinMax(minWeight,maxWeight);
 
 
   // sample (process) loop
@@ -171,7 +171,11 @@ int main(int argc, char* argv[]) {
     for(int f = 0; f < Nfile; f++){ 
       string file = ST.FileName(proc, f);
       string tree = ST.TreeName(proc, f);
-      
+
+	//skip lowest HT slices for Wjets and Znunu
+	if(strstr(file.c_str(),"WJetsToLNu_HT-70To100_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root")) continue;
+	if(strstr(file.c_str(),"WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root")) continue;      
+	if(strstr(file.c_str(),"ZJetsToNuNu_HT-100To200_13TeV-madgraph_Fall17_102X.root")) continue;      
       cout << "   Processing file " << file << " w/ tree " << tree << endl;
     
       TChain* chain = ST.Tree(proc, f);
@@ -186,7 +190,7 @@ int main(int argc, char* argv[]) {
       double sip3dMean = *d.Mean("SIP3D_lep");
       int Nentry = base->fChain->GetEntries();
 
-      int SKIP = 100;
+      int SKIP = 1;
 
       // event loop
       for(int e = 0; e < Nentry; e += SKIP){
