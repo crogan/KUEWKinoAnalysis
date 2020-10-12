@@ -175,27 +175,36 @@ int main(int argc, char* argv[]) {
       string tree = ST.TreeName(proc, f);
 
 	//skip lowest HT slices for Wjets and Znunu
-	if(strstr(file.c_str(),"WJetsToLNu_HT-70To100_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root")) continue;
-	if(strstr(file.c_str(),"WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root")) continue;      
-	if(strstr(file.c_str(),"ZJetsToNuNu_HT-100To200_13TeV-madgraph_Fall17_102X.root")) continue;      
+//	if(strstr(file.c_str(),"WJetsToLNu_HT-70To100_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root")) continue;
+//	if(strstr(file.c_str(),"WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root")) continue;      
+//	if(strstr(file.c_str(),"ZJetsToNuNu_HT-100To200_13TeV-madgraph_Fall17_102X.root")) continue;      
       cout << "   Processing file " << file << " w/ tree " << tree << endl;
     
       TChain* chain = ST.Tree(proc, f);
       ReducedBase* base = new ReducedBase(chain);
+//cout << "reducedBase" << endl;
       ROOT::RDataFrame d(*base->fChain);
+//cout << "a" << endl;
       double absEta = 0;
 	int nLep = 0;
+//cout << "b" << endl;
 	double ptMean = *d.Mean("PT_lep");
+//cout << "pt mean" << endl;
       double isoMean = *d.Mean("MiniIso_lep");
-      d.Foreach([&absEta, &nLep](vector<double> Eta_lep) {for(int iLep = 0; iLep < Eta_lep.size(); iLep++){if(Eta_lep.at(iLep) < 0) absEta += -(Eta_lep.at(iLep)); else absEta += Eta_lep.at(iLep); nLep += Eta_lep.size();}}, {"Eta_lep"});
+//cout << "iso mean" << endl;      
+d.Foreach([&absEta, &nLep](vector<double> Eta_lep) {for(int iLep = 0; iLep < Eta_lep.size(); iLep++){if(Eta_lep.at(iLep) < 0) absEta += -(Eta_lep.at(iLep)); else absEta += Eta_lep.at(iLep); nLep += Eta_lep.size();}}, {"Eta_lep"});
+//cout << "eta mean 1" << endl;
 	double etaMean = absEta/nLep; 
-      double sip3dMean = *d.Mean("SIP3D_lep");
-      int Nentry = base->fChain->GetEntries();
-
+//cout << "eta mean 2" << endl;     
+ double sip3dMean = *d.Mean("SIP3D_lep");
+//cout << "sip3d mean" << endl;     
+ int Nentry = base->fChain->GetEntries();
+//cout << "setting means" << endl;
       int SKIP = 1;
 
       // event loop
       for(int e = 0; e < Nentry; e += SKIP){
+	cout << "GetEntry" << endl;
 	base->GetEntry(e);
 	if((e/SKIP)%(std::max(1, int(Nentry/SKIP/10))) == 0)
 	  cout << "      event " << e << " | " << Nentry << endl;

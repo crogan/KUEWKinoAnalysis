@@ -1,0 +1,25 @@
+Combination of ZDYFakes=datacard_T2bW50000480_ZDY_Fakes_el0.txt  ttbarFakes=datacard_T2bW50000480_ttbar_Fakes_el0.txt
+imax 2 number of bins
+jmax 2 number of processes minus 1
+kmax 7 number of nuisance parameters
+----------------------------------------------------------------------------------------------------------------------------------
+shapes *           ZDYFakes    FitInput17_test.root Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0/$PROCESS Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0/$PROCESS_$SYSTEMATIC
+shapes *           ttbarFakes  FitInput17_test.root Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0/$PROCESS Ch1L_elm-el0-0bjetS-0bjetISR-PTISR0/$PROCESS_$SYSTEMATIC
+----------------------------------------------------------------------------------------------------------------------------------
+bin          ZDYFakes    ttbarFakes
+observation  -1          -1        
+----------------------------------------------------------------------------------------------------------------------------------
+bin                               ZDYFakes          ZDYFakes          ttbarFakes        ttbarFakes      
+process                           T2bW_50000$MASS   ZDY_Fakes_elf0    T2bW_50000$MASS   ttbar_Fakes_elf0
+process                           0                 1                 0                 2               
+rate                              -1                -1                -1                -1              
+----------------------------------------------------------------------------------------------------------------------------------
+BTAG_SF                 shape     1.0               1.0               1.0               1.0             
+JER                     lnN       1.01              1.01              1.01              1.01            
+JES                     lnN       1.024             1.024             1.024             1.024           
+lumi                    lnN       1.023             1.023             1.023             1.023           
+pdfrewt                 lnN       -                 1.01              -                 1.01            
+purewt                  lnN       1.046             1.046             1.046             1.046           
+topxsec                 lnN       -                 1.061             -                 1.061           
+rateFakes     rateParam ZDYFakes ZDY_Fakes_elf0 1.0 [0,5] 
+rateFakes     rateParam ttbarFakes ttbar_Fakes_elf0 1.0 [0,5] 
