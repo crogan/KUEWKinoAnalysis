@@ -11,7 +11,6 @@ samples/NANO/Summer16_102X/DYJetsToLL_M-5to50_HT-100to200_TuneCUETP8M1_13TeV-mad
 samples/NANO/Summer16_102X/DYJetsToLL_M-5to50_HT-200to400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Summer16_102X/DYJetsToLL_M-5to50_HT-400to600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Summer16_102X/DYJetsToLL_M-5to50_HT-600toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
-samples/NANO/Summer16_102X/DYJetsToLL_M-5to50_HT-70to100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Summer16_102X/GJets_DR-0p4_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Summer16_102X/GJets_DR-0p4_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Summer16_102X/GJets_DR-0p4_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
@@ -27,6 +26,8 @@ samples/NANO/Summer16_102X/QCD_HT300to500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
 samples/NANO/Summer16_102X/QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Summer16_102X/QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Summer16_102X/QCD_Pt-15to7000_TuneCUETP8M1_FlatP6_13TeV_pythia8.txt
+samples/NANO/Summer16_102X/ST_s-channel_4f_InclusiveDecays_13TeV-amcatnlo-pythia8.txt
+samples/NANO/Summer16_102X/ST_s-channel_4f_hadronicDecays_TuneCP5_PSweights_13TeV-amcatnlo-pythia8.txt
 samples/NANO/Summer16_102X/ST_s-channel_4f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1.txt
 samples/NANO/Summer16_102X/ST_t-channel_antitop_4f_inclusiveDecays_13TeV-powhegV2-madspin-pythia8_TuneCUETP8M1.txt
 samples/NANO/Summer16_102X/ST_t-channel_top_4f_inclusiveDecays_13TeV-powhegV2-madspin-pythia8_TuneCUETP8M1.txt
