@@ -126,13 +126,13 @@ void shapeAnalyzer::drawHists(TDirectory* oldDir, int iHist, int iProc,std::stri
 	ratioDownHist->Divide(nomHist);
 	ratioUpHist->SetLineColor(kRed);
 	ratioUpHist->SetMarkerColor(kRed);
-	ratioUpHist->SetMarkerStyle(20);
+	ratioUpHist->SetMarkerStyle(22);
 	ratioUpHist->SetStats(0);
 	ratioUpHist->SetTitle((histName+"_"+sys+"Up").c_str());
 
 	ratioDownHist->SetLineColor(kBlue);
 	ratioDownHist->SetMarkerColor(kBlue);
-	ratioDownHist->SetMarkerStyle(20);
+	ratioDownHist->SetMarkerStyle(23);
 	ratioDownHist->SetStats(0);
 	ratioDownHist->SetTitle((histName+"_"+sys+"Down").c_str());
 //	vecHists.push_back(nomHist);
@@ -141,7 +141,7 @@ void shapeAnalyzer::drawHists(TDirectory* oldDir, int iHist, int iProc,std::stri
 //
 	TCanvas* c1 = new TCanvas(histName.c_str(),histName.c_str(),800,600);
 
-	TLegend* leg = new TLegend(0.65,0.7,0.9,0.9);
+	TLegend* leg = new TLegend(0.35,0.7,0.9,0.9);
 
 	leg->AddEntry(nomHist);
 	leg->AddEntry(upHist);
@@ -158,7 +158,7 @@ void shapeAnalyzer::drawHists(TDirectory* oldDir, int iHist, int iProc,std::stri
 	c1->Close();
 
 	TCanvas* cRatio = new TCanvas((histName+"_ratio").c_str(),(histName+"_ratio").c_str(),800,600);
-	TLegend* legRatio = new TLegend(0.65,0.7,0.9,0.9);
+	TLegend* legRatio = new TLegend(0.35,0.8,0.9,0.9);
 	legRatio->AddEntry(ratioUpHist);
 	legRatio->AddEntry(ratioDownHist);
 	
