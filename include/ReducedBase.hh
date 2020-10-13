@@ -516,6 +516,8 @@ inline void ReducedBase::Init(TTree *tree)
    IP3D_lep = 0;
    SIP3D_lep = 0;
    ID_lep = 0;
+   SourceID_lep = 0;
+   genSourceID_lep = 0;
    Index_lep = 0;
    PT_jet = 0;
    Eta_jet = 0;
@@ -792,23 +794,28 @@ inline void ReducedBase::Init(TTree *tree)
    // Turn off/on different branches to improve processing speed
    fChain->SetBranchStatus("*",0);
    fChain->SetBranchStatus("weight", 1);
+   fChain->SetBranchStatus("index_lep*", 1);
    fChain->SetBranchStatus("Nlep", 1);
+   fChain->SetBranchStatus("Nlep_*", 1);
    fChain->SetBranchStatus("M_lep",1);
+   fChain->SetBranchStatus("SIP3D_lep",1);
    fChain->SetBranchStatus("PT_lep", 1);
    fChain->SetBranchStatus("MET", 1);
    fChain->SetBranchStatus("N*_ISR", 1);
    fChain->SetBranchStatus("N*_S", 1);
    fChain->SetBranchStatus("PTISR", 1);
    fChain->SetBranchStatus("RISR", 1);
+   fChain->SetBranchStatus("Mperp", 1);
    fChain->SetBranchStatus("MS", 1);
    fChain->SetBranchStatus("MV", 1);
-   fChain->SetBranchStatus("dphiISRI", 1);
+   //fChain->SetBranchStatus("dphiISRI", 1);
    fChain->SetBranchStatus("dphiCMI", 1);
    fChain->SetBranchStatus("PTCM", 1);
-   fChain->SetBranchStatus("ID_lep",1);
+   fChain->SetBranchStatus("SourceID_lep",1);
    fChain->SetBranchStatus("PDGID_lep",1);
    fChain->SetBranchStatus("RelIso_lep", 1);
    fChain->SetBranchStatus("MiniIso_lep", 1);
+   fChain->SetBranchStatus("Charge_lep", 1);
    fChain->SetBranchStatus("ID_lep", 1);
    fChain->SetBranchStatus("Eta_lep", 1);
 
