@@ -80,16 +80,18 @@ RooFormulaVar rooHistMaker::makeRooFormulaVar(int iBin){
 
 
 
-RooParametricHist* rooHistMaker::makeRooParamHist(bool isUp, string fakeProc, string cat){
+RooParametricHist rooHistMaker::makeRooParamHist(){
 	RooAbsReal x;
 	RooArglist params;
 	 
 	for(int i = 0; i < m_nomHist->GetBinsX(); i++){		
 		params.add(makeRooFormulaVars(i));
 	}
+	string name = m_nomHist->GetName()+"UP";
+	string title = m_nomHist->GetTitle()+"DOWN";
 
 
-	RooParametricHist* rPH = new RooParametricHist(m_nomHist->GetName(),m_nomHist->GetTitle(),x,params,m_nomHist);
+	RooParametricHist rPH = RooParametricHist(name,title,x,params,m_nomHist);
 	return rPH;
 
 

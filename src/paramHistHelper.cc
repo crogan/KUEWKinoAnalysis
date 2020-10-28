@@ -1,7 +1,7 @@
-#include paramHistHelper.hh
+#include "paramHistHelper.hh"
 //FOR ONE HISTOGRAM
 
-paramHistHelper::paramHistHelper(string label, string iFileName){
+paramHistHelper::paramHistHelper(std::string label, std::string iFileName){
 	mLabel = label;
 	mFileName = iFileName;
 	if(gSystem->AccessPathName(mFileName.c_str())){
@@ -20,6 +20,9 @@ paramHistHelper::paramHistHelper(TFile* file){
 	}
 
 }
+
+
+
 
 paramHistHelper::~paramHistHelper(){
 	sigVec.clear();
