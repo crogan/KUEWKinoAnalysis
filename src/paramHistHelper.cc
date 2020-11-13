@@ -5,8 +5,8 @@
 
 //FOR ONE HISTOGRAM
 
-paramHistHelper::paramHistHelper(std::string label, std::string iFileName){
-	mLabel = label;
+paramHistHelper::paramHistHelper(std::string name, std::string iFileName){
+	m_name = name;
 	mFileName = iFileName;
 	if(gSystem->AccessPathName(mFileName.c_str())){
 		std::cout << mFileName << " does not exist" << std::endl;
@@ -187,9 +187,9 @@ float paramHistHelper::normFunc(TH1D* nomHist, std::vector<float> varSigs){
 
 // }
 
-void paramHistHelper::setGlobalName(string name){
-	m_name = name;
-}
+// void paramHistHelper::setGlobalName(string name){
+// 	m_name = name;
+// }
 
 TH1D* paramHistHelper::getNormalizedHist(TDirectory* dir, bool isUp){
 	
@@ -200,28 +200,26 @@ TH1D* paramHistHelper::getNormalizedHist(TDirectory* dir, bool isUp){
 	// else
 	// 	string histName = m_Proc+"_Fakes_"+m_lepFlav+"f"+to_string(m_fakeProc)+"_"+m_sysVar;
 	// string histName = m_proc+"_Fakes_"+m_lepFlav+str(m_fakeProc);
-	string histName;
-	if(isUp)
-	histName = m_name+"_"+m_sysVar+"Up";
-	else
-	histName = m_name+"_"+m_sysVar+"Down";
-	
-	TH1D* histNom = (TH1D*)dir->Get(histName.c_str());
+string histName = m_name+"_"+m_sysVar;
+	TH1D* histNom = (TH1D*)dir->Get(m_name.c_str());
 	TH1D* varHist;
-	// TH1D* histUp = (TH1D*)dir->Get((histName+"Up").c_str());
-	// TH1D* histDown = (TH1D*)dir->Get((histName+"Down").c_str());
 
-	 // sigmaFunc(histNom,histUp,histDown, isUp); //gives sigma_vec{i} for all bins b 
-	//put in option for nominal histogram norm (no sigma vector)
-	
-		varHist = (TH1D*)dir->Get((histName).c_str());
-		//return histDown->Scale(norm);
+// TH1D* histUp = (TH1D*)dir->Get((histName+"Up").c_str());
+// 	// TH1D* histDown = (TH1D*)dir->Get((histName+"Down").c_str());
+//
+// 		 // sigmaFunc(histNom,histUp,histDown, isUp); //gives sigma_vec{i} for all bins b 
+// 		 	//put in option for nominal histogram norm (no sigma vector)
+
+if(isUp)
+		varHist = (TH1D*)dir->Get((histName+"Up").c_str());
+		return histUp->Scale(norm);
+	else
+		varHist = (TH1D*)dir->Get((histName+"Down").c_str());
+		return histDown->Scale(norm);
 
 	std::vector<float> sigs = sigmaFunc(histNom,varHist, isUp);
 	float norm = normFunc(histNom, sigs);
-	varHist->Scale(norm);
-	return varHist;
-	
+	return varHist->Scale(norm);	
 
 }
 
