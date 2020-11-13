@@ -1,8 +1,8 @@
 #include "paramHistHelper.hh"
 //FOR ONE HISTOGRAM
 
-paramHistHelper::paramHistHelper(std::string label, std::string iFileName){
-	mLabel = label;
+paramHistHelper::paramHistHelper(std::string name, std::string iFileName){
+	m_name = name;
 	mFileName = iFileName;
 	if(gSystem->AccessPathName(mFileName.c_str())){
 		cout << mFileName << " does not exist" << endl;
@@ -184,9 +184,9 @@ float paramHistHelper::normFunc(TH1D* nomHist, std::vector<float> varSigs){
 
 // }
 
-void paramHistHelper::setGlobalName(string name){
-	m_name = name;
-}
+// void paramHistHelper::setGlobalName(string name){
+// 	m_name = name;
+// }
 
 TH1D* paramHistHelper::getNormalizedHist(TDirectory dir*, bool isUp){
 	
@@ -198,8 +198,8 @@ TH1D* paramHistHelper::getNormalizedHist(TDirectory dir*, bool isUp){
 	// 	string histName = m_Proc+"_Fakes_"+m_lepFlav+"f"+to_string(m_fakeProc)+"_"+m_sysVar;
 	// string histName = m_proc+"_Fakes_"+m_lepFlav+str(m_fakeProc);
 
-	string histName = m_name+m_sysVar;
-	TH1D* histNom = (TH1D*)dir->Get(histName.c_str());
+	string histName = m_name+"_"+m_sysVar;
+	TH1D* histNom = (TH1D*)dir->Get(m_name.c_str());
 	TH1D* varHist;
 	// TH1D* histUp = (TH1D*)dir->Get((histName+"Up").c_str());
 	// TH1D* histDown = (TH1D*)dir->Get((histName+"Down").c_str());
@@ -233,7 +233,7 @@ TH1D* paramHistHelper::getNormalizedHist(TDirectory* dir){
 	// 	string histName = m_Proc+"_Fakes_"+m_lepFlav+"f"+to_string(m_fakeProc)+"_"+m_sysVar;
 	// string histName = m_proc+"_Fakes_"+m_lepFlav+str(m_fakeProc);
 
-	string histName = m_name+m_sysVar;
+	string histName = m_name;
 	TH1D* histNom = (TH1D*)dir->Get(histName.c_str());
 	// TH1D* histUp = (TH1D*)dir->Get((histName+"Up").c_str());
 	// TH1D* histDown = (TH1D*)dir->Get((histName+"Down").c_str());

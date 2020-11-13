@@ -20,7 +20,7 @@ class paramHistHelper{
 		void SetFakeProc(int fakeProc);
 		void SetCategory(std::string cat);
 		// TDirectory* getDirectory();
-		void setGlobalName(std::string name);
+		// void setGlobalName(std::string name);
 
 
 
