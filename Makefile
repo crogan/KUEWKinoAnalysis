@@ -51,7 +51,7 @@ locallib: lib
 
 lib: lib/libKUEWKino.so
 
-alltargets: MakeReducedNtuple_NANO.x MakeEventCount_NANO.x BuildFitInput.x shapeAnalyzer2.x makeWS.x
+alltargets: MakeReducedNtuple_NANO.x MakeEventCount_NANO.x BuildFitInput.x shapeAnalyzer2.x newMakeWS.x
 
 BuildFit.x:  $(SRCDIR)BuildFit.C $(OBJ_FILES) $(HH_FILES)
 	$(CXX) $(CXXFLAGS) -o BuildFit.x $(OUTOBJ)/*.o $(GLIBS) $ $<
@@ -82,9 +82,9 @@ shapeAnalyzer2.x:  $(SRCDIR)shapeAnalyzer2.C $(OBJ_FILES) $(HH_FILES)
 	$(CXX) $(CXXFLAGS) -o shapeAnalyzer2.x $(OUTOBJ)/*.o $(GLIBS) $ $<
 	touch shapeAnalyzer2.x
 
-makeWS.x:  $(SRCDIR)makeWS.C $(OBJ_FILES) $(HH_FILES)
-        $(CXX) $(CXXFLAGS) -o makeWS.x $(OUTOBJ)/*.o $(GLIBS) $ $<
-        touch makeWS.x
+newMakeWS.x:  $(SRCDIR)newMakeWS.C $(OBJ_FILES) $(HH_FILES)
+        $(CXX) $(CXXFLAGS) -o newMakeWS.x $(OUTOBJ)/*.o $(GLIBS) $ $<
+        touch newMakeWS.x
 
 lib/libKUEWKino.so: $(SOBJ_FILES)
 	mkdir -p lib
