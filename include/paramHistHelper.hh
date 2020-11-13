@@ -18,6 +18,7 @@ class paramHistHelper{
 		// void loopForNorms();
 		float getNorm(TDirectory* dir, std::string proc, std::string lepFlav, int fakeProc, std::string sysVar );
 		void SetVariation(std::string sysVar);
+		void ClearVariation();
 		void SetLepFlavor(std::string lep);
 		void SetFakeProc(int fakeProc);
 		void SetCategory(std::string cat);
