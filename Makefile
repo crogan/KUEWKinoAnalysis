@@ -83,8 +83,8 @@ shapeAnalyzer2.x:  $(SRCDIR)shapeAnalyzer2.C $(OBJ_FILES) $(HH_FILES)
 	touch shapeAnalyzer2.x
 
 makeWS.x:  $(SRCDIR)makeWS.C $(OBJ_FILES) $(HH_FILES)
-        $(CXX) $(CXXFLAGS) -o makeWS.x $(OUTOBJ)/*.o $(GLIBS) $ $<
-        touch makeWS.x
+	$(CXX) $(CXXFLAGS) -o makeWS.x $(OUTOBJ)/*.o $(GLIBS) $ $<
+	touch makeWS.x
 
 lib/libKUEWKino.so: $(SOBJ_FILES)
 	mkdir -p lib

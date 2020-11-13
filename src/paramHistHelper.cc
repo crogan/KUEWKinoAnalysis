@@ -1,22 +1,24 @@
 #include "paramHistHelper.hh"
+#include "TSystem.h"
+#include "TROOT.h"
+
+
 //FOR ONE HISTOGRAM
 
 paramHistHelper::paramHistHelper(std::string label, std::string iFileName){
 	mLabel = label;
 	mFileName = iFileName;
 	if(gSystem->AccessPathName(mFileName.c_str())){
-		cout << mFileName << " does not exist" << endl;
-		 return 0;
+		std::cout << mFileName << " does not exist" << std::endl;
 	}
-	TFile* m_file = TFile::Open(mFileName);
+	mFile = TFile::Open(mFileName.c_str());
 
 }
 
 paramHistHelper::paramHistHelper(TFile* file){
-	m_file = file;
-	if(gSystem->AccessPathName(m_file->GetName())){
-		cout << mFileName << " does not exist" << endl;
-		 return 0;
+	mFile = file;
+	if(gSystem->AccessPathName(mFile->GetName())){
+		std::cout << mFile->GetName() << " does not exist" << std::endl;
 	}
 
 }
@@ -28,7 +30,7 @@ paramHistHelper::~paramHistHelper(){
 	sigVec.clear();
 	m_lepFlav.clear();
 	m_Proc.clear();
-	m_fakeProc.clear();
+	//m_fakeProc.clear();
 	m_sysVar.clear();
 }
 
@@ -78,9 +80,9 @@ string paramHistHelper::GetCategory(){
 	return m_cat;
 }
 
-void paramHistHelper::AddFakeProc(int fakeProc){
-	m_fakeProcs.push_back(fakeProc);
-}
+//void paramHistHelper::AddFakeProc(int fakeProc){
+//	m_fakeProcs.push_back(fakeProc);
+//}
 
 int paramHistHelper::GetFakeProc(){
 	return m_fakeProc;
@@ -130,14 +132,14 @@ string paramHistHelper::GetVariation(){
 std::vector<float> paramHistHelper::sigmaFunc(TH1D* varHist, TH1D* nomHist, bool isUp){
 	std::vector<float> sigVec;
 	if(isUp){
-		for(int b = 0; b < nBins; b++){
+		for(int b = 0; b < nomHist->GetNbinsX(); b++){
 			float sig = fabs(varHist->GetBinContent(b) - nomHist->GetBinContent(b));
 			sigVec.push_back(sig);
 		}
 	}
 
 	else{
-		for(int b = 0; b < nBins; b++){
+		for(int b = 0; b < nomHist->GetNbinsX(); b++){
 			float sig = fabs(varHist->GetBinContent(b) - nomHist->GetBinContent(b));
 			sigVec.push_back(sig);
 		}
@@ -148,6 +150,7 @@ std::vector<float> paramHistHelper::sigmaFunc(TH1D* varHist, TH1D* nomHist, bool
 
 
 float paramHistHelper::normFunc(TH1D* nomHist){
+	
 	float norm = nomHist->Integral();
 	return norm;
 }
@@ -155,7 +158,7 @@ float paramHistHelper::normFunc(TH1D* nomHist){
 float paramHistHelper::normFunc(TH1D* nomHist, std::vector<float> varSigs){
 	float norm = 0;
 	if(nomHist->GetNbinsX() != varSigs.size()){
-		cout << "Error: length of variation vector doesn't match number of bins in nominal histogram" << endl;
+		std::cout << "Error: length of variation vector doesn't match number of bins in nominal histogram" << std::endl;
 		return 0;
 	}
 	for(int i = 0; i < nomHist->GetNbinsX(); i++){
@@ -188,7 +191,7 @@ void paramHistHelper::setGlobalName(string name){
 	m_name = name;
 }
 
-TH1D* paramHistHelper::getNormalizedHist(TDirectory dir*, bool isUp){
+TH1D* paramHistHelper::getNormalizedHist(TDirectory* dir, bool isUp){
 	
 	
 	// TDirectory* dir = f->GetDirectory(m_cat.c_str());
@@ -197,8 +200,12 @@ TH1D* paramHistHelper::getNormalizedHist(TDirectory dir*, bool isUp){
 	// else
 	// 	string histName = m_Proc+"_Fakes_"+m_lepFlav+"f"+to_string(m_fakeProc)+"_"+m_sysVar;
 	// string histName = m_proc+"_Fakes_"+m_lepFlav+str(m_fakeProc);
-
-	string histName = m_name+m_sysVar;
+	string histName;
+	if(isUp)
+	histName = m_name+"_"+m_sysVar+"Up";
+	else
+	histName = m_name+"_"+m_sysVar+"Down";
+	
 	TH1D* histNom = (TH1D*)dir->Get(histName.c_str());
 	TH1D* varHist;
 	// TH1D* histUp = (TH1D*)dir->Get((histName+"Up").c_str());
@@ -207,16 +214,13 @@ TH1D* paramHistHelper::getNormalizedHist(TDirectory dir*, bool isUp){
 	 // sigmaFunc(histNom,histUp,histDown, isUp); //gives sigma_vec{i} for all bins b 
 	//put in option for nominal histogram norm (no sigma vector)
 	
-	if(isUp)
-		varHist = (TH1D*)dir->Get((histName+"Up").c_str());
-		return histUp->Scale(norm);
-	else
-		varHist = (TH1D*)dir->Get((histName+"Down").c_str());
-		return histDown->Scale(norm);
+		varHist = (TH1D*)dir->Get((histName).c_str());
+		//return histDown->Scale(norm);
 
 	std::vector<float> sigs = sigmaFunc(histNom,varHist, isUp);
 	float norm = normFunc(histNom, sigs);
-	return varHist->Scale(norm);
+	varHist->Scale(norm);
+	return varHist;
 	
 
 }
@@ -233,14 +237,13 @@ TH1D* paramHistHelper::getNormalizedHist(TDirectory* dir){
 	// 	string histName = m_Proc+"_Fakes_"+m_lepFlav+"f"+to_string(m_fakeProc)+"_"+m_sysVar;
 	// string histName = m_proc+"_Fakes_"+m_lepFlav+str(m_fakeProc);
 
-	string histName = m_name+m_sysVar;
+	string histName = m_name;
 	TH1D* histNom = (TH1D*)dir->Get(histName.c_str());
 	// TH1D* histUp = (TH1D*)dir->Get((histName+"Up").c_str());
 	// TH1D* histDown = (TH1D*)dir->Get((histName+"Down").c_str());
-
-	
 	float norm = normFunc(histNom);
-	return histNom->Scale(norm);
+	histNom->Scale(norm);
+	return histNom;
 
 }
 

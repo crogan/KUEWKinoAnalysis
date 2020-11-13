@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <TFile.h>
 #include <TString.h>
+#include <TH1D.h>
+
 
 using std::string;
 class paramHistHelper{
@@ -67,7 +69,8 @@ class paramHistHelper{
 		std::string m_cat;
 		// std::vector<string> m_Procs;
 		std::string m_Proc;
-		std::string  mFile;
+		std::string  mFileName;
+		TFile* mFile;
 		std::string  m_lepFlav;
 		// std::vector<int> m_fakeProcs;
 		int m_fakeProc;
