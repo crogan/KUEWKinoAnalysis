@@ -80,6 +80,8 @@ rooParamHistMaker::rooParamHistMaker(std::vector<string> cats, std::vector<strin
 	for(int l = 0; l < m_nSysVar; l++){
 		m_alphas[l] = new RooRealVar(m_sysVars[l], m_sysVars[l],0.01,10); //common among histograms
 	}
+
+
 }
 
 
@@ -117,8 +119,9 @@ void rooParamHist::setLepFlavor(string lep){
 
 
 
-void rooParamHistMaker::makeRooParamHists(){
+void rooParamHistMaker::makeRooParamHists(TFile* oFile){
 	string histName;
+
 	
 
 	for(int i = 0; i < m_sysVars.size(); i++){
@@ -160,7 +163,7 @@ void rooParamHistMaker::makeRooParamHists(){
 	}
 
 
-	makeWorkspace();
+	makeWorkspace(oFile);
 }
 
 
@@ -196,10 +199,17 @@ void rooParamHistMaker::makeRooParamHist(TH1D* hNom, std::vector<TH1D*> sysVars)
 
 }
 
-void rooParamHist::makeWorkspace(){
+void rooParamHist::makeWorkspace(TFile* oFile){
+	oFile->cd();
+
 	for(int i = 0; i < m_rPHs.size(); i++){
-		ws.import(m_rPHs[i]->getRooParametricHist());
+		m_ws.import(m_rPHs[i]->getRooParametricHist());
 	}
+
+	m_ws.Write();
+	oFile->Close();
+
+
 }
 
 
