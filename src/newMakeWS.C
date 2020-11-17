@@ -24,7 +24,7 @@ int main(int argc, char* argv[]){
 	rooParamHistMaker fallOutBoy(cats,sysVars,inFile);
 	//by default this class will loop over all fake processes (0,1,2), but will only look at the combined associated processes histograms
 
-	fallOutBoy.addProcess("Wjets");
+//	fallOutBoy.addProcess("Wjets");
 	fallOutBoy.setLepFlavor("el"); 
 	//there is an internal check in the class to make sure the lepton flavor specified matches the given category(ies)
 

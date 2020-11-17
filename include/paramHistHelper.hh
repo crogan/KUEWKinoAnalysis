@@ -28,7 +28,7 @@ class paramHistHelper{
 
 
 
-		TH1D* getNormalizedHist(TDirectory* dir);
+		TH1D getNormalizedHist(TDirectory* dir);
 		TH1D* getNormalizedHist(TDirectory* dir, bool isUp);
 	private:
 		std::vector<float> sigmaFunc(TH1D* upHist, TH1D* downHist, TH1D* nomHist);

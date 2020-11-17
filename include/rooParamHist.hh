@@ -12,12 +12,13 @@ using std::string;
 
 
 //class RooParametricHist;
+//class RooWorkspace;
 
 class rooParamHistWrapper{
 	public:
 
 		rooParamHistWrapper();
-		rooParamHistWrapper(const char* name, const char* title, RooArgList* params, TH1D* shape);
+		rooParamHistWrapper(const char* name, const char* title, RooArgList* params, TH1D shape);
 		virtual ~rooParamHistWrapper();
 
 		RooParametricHist* m_rPH;
@@ -26,7 +27,7 @@ class rooParamHistWrapper{
 
 	private:
 		RooArgList* m_params;
-		TH1D* m_shape;
+		TH1D m_shape;
 		RooRealVar* m_var;
 		const char* m_name;
 		const char* m_title;
@@ -41,7 +42,7 @@ class rooParamHistMaker{
 		virtual ~rooParamHistMaker();
 		
 		void makeRooParamHists(TFile* oFile);
-		void makeRooParamHist(TH1D* hNom, std::vector<TH1D*> sysVars);
+		void makeRooParamHist(TH1D hNom, std::vector<TH1D*> sysVars, bool isUp);
 
 		void addSysVar(string sysVar);
 		void addProcess(string proc);
@@ -59,10 +60,11 @@ class rooParamHistMaker{
 		
 	private:
 		void makeWorkspace(TFile* oFile);
+		RooWorkspace* m_ws;	
 		TFile* m_file;
 	
-		RooWorkspace* m_ws;	
-		vector<RooRealVar*> m_alphas;
+		vector<RooRealVar*> m_alphasUp;
+		vector<RooRealVar*> m_alphasDown;
 		vector<rooParamHistWrapper*> m_rPHs;
 		std::vector<string> m_cats;
 		std::vector<int> m_fakeProcs;
