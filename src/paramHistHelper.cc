@@ -95,7 +95,9 @@ void paramHistHelper::SetVariation(string sysVar){
 // void paramHistHelper::AddVariation(string sysVar){
 // 	m_sysVars.push_back(sysVar);
 // }
-
+void paramHistHelper::ClearVariation(){
+	m_sysVar.clear();
+}
 string paramHistHelper::GetVariation(){
 	return m_sysVar;
 }
@@ -212,21 +214,19 @@ string histName = m_name+"_"+m_sysVar;
 
 if(isUp)
 		varHist = (TH1D*)dir->Get((histName+"Up").c_str());
-		return histUp->Scale(norm);
 	else
 		varHist = (TH1D*)dir->Get((histName+"Down").c_str());
-		return histDown->Scale(norm);
 
 	std::vector<float> sigs = sigmaFunc(histNom,varHist, isUp);
 	float norm = normFunc(histNom, sigs);
-	return varHist->Scale(norm);	
+	varHist->Scale(norm);
+	return varHist;	
 
 }
 
 
 //for normalized hist
-TH1D* paramHistHelper::getNormalizedHist(TDirectory* dir){
-
+TH1D paramHistHelper::getNormalizedHist(TDirectory* dir){
 
 	// TDirectory* dir = f->GetDirectory(m_cat.c_str());
 	// if(m_Proc.empty())
@@ -241,7 +241,7 @@ TH1D* paramHistHelper::getNormalizedHist(TDirectory* dir){
 	// TH1D* histDown = (TH1D*)dir->Get((histName+"Down").c_str());
 	float norm = normFunc(histNom);
 	histNom->Scale(norm);
-	return histNom;
+	return *histNom;
 
 }
 

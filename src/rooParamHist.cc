@@ -85,7 +85,7 @@ rooParamHistMaker::rooParamHistMaker(std::vector<string> cats, std::vector<strin
 	m_fakeProcs = {0};//,1,2};
 	m_procs.push_back("");
 	for(int l = 0; l < m_sysVars.size(); l++){
-		m_alphasUp.push_back(new RooRealVar((m_sysVars[l]+"Up").c_str(), m_sysVars[l].c_str(),0.01,10)); //common among histograms
+		m_alphasUp.push_back(new RooRealVar((m_sysVars[l]+"Up").c_str(), (m_sysVars[l]+"Up").c_str(),0.01,10)); //common among histograms
 		m_alphasDown.push_back(new RooRealVar((m_sysVars[l]+"Down").c_str(), m_sysVars[l].c_str(),0.01,10)); //common among histograms
 	}
 
@@ -209,7 +209,6 @@ void rooParamHistMaker::makeRooParamHist(TH1D hNom, std::vector<TH1D*> sysVars, 
 	int nBins = hNom.GetNbinsX();
 	// std::vector<rooFormulaVar*> rFVs;
 	RooArgList* rFVs = new RooArgList("params");
-	string inFormula;
 	RooArgList varList;
 	std::vector<RooRealVar*> hNomVals;
 	string histName = hNom.GetName();
@@ -225,13 +224,14 @@ void rooParamHistMaker::makeRooParamHist(TH1D hNom, std::vector<TH1D*> sysVars, 
 
 	for(int b = 0; b < nBins; b++){
 		
+		string inFormula;
 		RooFormulaVar* var;
 		std::vector<RooRealVar*> hVarVals;
 		string nomName = hNom.GetName();
 		nomName +="Nom";
 		nomName += std::to_string(b);	
 		std::replace(nomName.begin(),nomName.end(),'-','_');
-		hNomVals.push_back(new RooRealVar(nomName.c_str(),hNom.GetTitle(),hNom.GetBinContent(b)));
+		hNomVals.push_back(new RooRealVar(nomName.c_str(),nomName.c_str(),hNom.GetBinContent(b)));
 		varList.add(*hNomVals[b]);	
 			
 		for(int l = 0; l < m_sysVars.size(); l++){ //loop over systematic variation histograms
@@ -241,23 +241,23 @@ void rooParamHistMaker::makeRooParamHist(TH1D hNom, std::vector<TH1D*> sysVars, 
 			string sysVarsName = sysVars[l]->GetName();
 			std::replace(sysVarsName.begin(),sysVarsName.end(),'-','_');
 			sysVarsName += std::to_string(b);
-			hVarVals.push_back(new RooRealVar(sysVarsName.c_str(),sysVars[l]->GetTitle(),sysVars[l]->GetBinContent(b)));
+			hVarVals.push_back(new RooRealVar(sysVarsName.c_str(),sysVarsName.c_str(),sysVars[l]->GetBinContent(b)));
 			if(m_sysVars.size() > 1){
-				if(l == 0) inFormula += alphasName+"*("+sysVarsName+" - "+nomName+")/"+nomName +"+ ";
+				if(l == 0) inFormula += alphasName+"*("+sysVarsName+" - "+nomName+")/"+nomName +" + ";
 				else inFormula += " + "+alphasName+"*("+sysVarsName+" - "+nomName+")/"+nomName;
 			}
 			else inFormula += alphasName+"*("+sysVarsName+" - "+nomName+")/"+ nomName;	
 			varList.add(*hVarVals[l]);
 			
 			
-			if(b == 0){
+	//		if(b == 0){
 			std::cout << "----------------------------- \n bin #: " << b << " sysVar: " << m_sysVars[l] << std::endl;	
-			std::cout << "nomName: " << nomName << " alphasName: " << alphasName << " sysVarsName: " << sysVarsName << std::endl;
-			}
+			std::cout << "nomName: " << nomName << " alphasName: " << alphasName << " sysVarsName: " << sysVarsName << "\n" << std::endl;
+	//		}
 		}
 			//var = new RooFormulaVar((hNom->GetName()+std::to_string(b)),hNom->GetTitle(),inFormula,varList);
 			string varName = histName+std::to_string(b);
-			var = new RooFormulaVar(varName.c_str(),hNom.GetTitle(),inFormula.c_str(),varList);
+			var = new RooFormulaVar(varName.c_str(),inFormula.c_str(),varList);
 			if(b == 0){ 
 			var->Print();
 			string testNames = m_alphasUp[0]->GetName();
