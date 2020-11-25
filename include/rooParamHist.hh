@@ -42,7 +42,7 @@ class rooParamHistMaker{
 		virtual ~rooParamHistMaker();
 		
 		void makeRooParamHists(TFile* oFile);
-		void makeRooParamHist(TH1D hNom, std::vector<TH1D*> sysVars, bool isUp);
+		void makeRooParamHist(TH1D hNom, std::vector<TH1D*> sysVarsUp, std::vector<TH1D*> sysVarsDown);
 
 		void addSysVar(string sysVar);
 		void addProcess(string proc);
