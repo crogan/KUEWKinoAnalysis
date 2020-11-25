@@ -172,12 +172,12 @@ void rooParamHistMaker::makeRooParamHists(TFile* oFile){
 						histName = "Fakes_"+m_lepFlav+"f"+std::to_string(m_fakeProcs[j]);
 					else
 						histName = m_procs[k]+"_Fakes_"+m_lepFlav+"f"+std::to_string(m_fakeProcs[j]);
-				std::cout << "a" << std::endl;
+				// std::cout << "a" << std::endl;
 				paramHistHelper makeNormHists(histName,m_file->GetName());	
 				TH1D nomHist = makeNormHists.getNormalizedHist(dir);
 				std::vector<TH1D*> hSysVarsUp;
 				std::vector<TH1D*> hSysVarsDown;
-				std::cout << "b" << std::endl;
+				// std::cout << "b" << std::endl;
 				for(int l = 0; l < m_sysVars.size(); l++){
 					makeNormHists.SetVariation(m_sysVars[l]);
 					TH1D* varHistUp = makeNormHists.getNormalizedHist(dir,true); //up varHist
@@ -188,10 +188,10 @@ void rooParamHistMaker::makeRooParamHists(TFile* oFile){
 				}
 
 
-				std::cout << "c" << std::endl;
-				makeRooParamHist(nomHist, hSysVarsUp,true); //pushes back a rooParamHistWrapper to vector
+				// std::cout << "c" << std::endl;
+				makeRooParamHist(nomHist, hSysVarsUp, hSysVarsDown); //pushes back a rooParamHistWrapper to vector
 			//	makeRooParamHist(nomHist, hSysVarsDown,false);
-				std::cout << "d" << std::endl;
+				// std::cout << "d" << std::endl;
 				
 			}
 
@@ -204,7 +204,7 @@ void rooParamHistMaker::makeRooParamHists(TFile* oFile){
 
 //TODO: CHANGE HNOM TO AN OBJECT HERE AND IN THE FUNCTION ABOVE. STORE THE OBJECT IN ROOPARAMHISTWRAPPER, AND PASS ITS POINTER TO THE ROOPARAMETRICHIST CONSTRUCTOR
 //make vector of rooFormulaVars to fil rPHs - for one cat, one ass. proc., one fake proc.
-void rooParamHistMaker::makeRooParamHist(TH1D hNom, std::vector<TH1D*> sysVars, bool isUp){
+void rooParamHistMaker::makeRooParamHist(TH1D hNom, std::vector<TH1D*> sysVarsUp, std::vector<TH1D*> sysVarsDown){
 	std::cout << "makeRooParamHist" << std::endl;
 	int nBins = hNom.GetNbinsX();
 	// std::vector<rooFormulaVar*> rFVs;
@@ -212,11 +212,16 @@ void rooParamHistMaker::makeRooParamHist(TH1D hNom, std::vector<TH1D*> sysVars, 
 	RooArgList varList;
 	std::vector<RooRealVar*> hNomVals;
 	string histName = hNom.GetName();
-	if(isUp) histName +="Up";
-	else histName += "Down";
+	
+
+	if(sysVarsUp.size() != sysVarsDown.size()){
+		std::cout << "Error: uneven number of up/down systematic variation histograms given." << std::endl;
+		return;
+	}
+	
 	for(int l = 0; l < m_sysVars.size(); l++){
-		if(isUp) varList.add(*m_alphasUp[l]);
-		else varList.add(*m_alphasDown[l]);	
+		varList.add(*m_alphasUp[l]);
+		varList.add(*m_alphasDown[l]);	
 	}
 	
 
@@ -226,7 +231,8 @@ void rooParamHistMaker::makeRooParamHist(TH1D hNom, std::vector<TH1D*> sysVars, 
 		
 		string inFormula;
 		RooFormulaVar* var;
-		std::vector<RooRealVar*> hVarVals;
+		std::vector<RooRealVar*> hVarValsUp;
+		std::vector<RooRealVar*> hVarValsDown;
 		string nomName = hNom.GetName();
 		nomName +="Nom";
 		nomName += std::to_string(b);	
@@ -235,24 +241,42 @@ void rooParamHistMaker::makeRooParamHist(TH1D hNom, std::vector<TH1D*> sysVars, 
 		varList.add(*hNomVals[b]);	
 			
 		for(int l = 0; l < m_sysVars.size(); l++){ //loop over systematic variation histograms
-			string alphasName;
-			if(isUp)  alphasName = m_alphasUp[l]->GetName();
-			else  alphasName = m_alphasDown[l]->GetName();
-			string sysVarsName = sysVars[l]->GetName();
-			std::replace(sysVarsName.begin(),sysVarsName.end(),'-','_');
-			sysVarsName += std::to_string(b);
-			hVarVals.push_back(new RooRealVar(sysVarsName.c_str(),sysVarsName.c_str(),sysVars[l]->GetBinContent(b)));
-			if(m_sysVars.size() > 1){
-				if(l == 0) inFormula += alphasName+"*("+sysVarsName+" - "+nomName+")/"+nomName +" + ";
-				else inFormula += " + "+alphasName+"*("+sysVarsName+" - "+nomName+")/"+nomName;
-			}
-			else inFormula += alphasName+"*("+sysVarsName+" - "+nomName+")/"+ nomName;	
-			varList.add(*hVarVals[l]);
+			string alphasNameUp;
+			string alphasNameDown;
+			alphasNameUp = m_alphasUp[l]->GetName();
+			alphasNameDown = m_alphasDown[l]->GetName();
+			string sysVarsNameUp = sysVarsUp[l]->GetName();
+			string sysVarsNameDown = sysVarsDown[l]->GetName();
+
+
+			std::replace(sysVarsNameUp.begin(),sysVarsNameUp.end(),'-','_');
+			std::replace(sysVarsNameDown.begin(),sysVarsNameDown.end(),'-','_');
+			sysVarsNameUp += std::to_string(b);
+			sysVarsNameDown += std::to_string(b);
+			hVarValsUp.push_back(new RooRealVar(sysVarsNameUp.c_str(),sysVarsNameUp.c_str(),sysVarsUp[l]->GetBinContent(b)));
+			hVarValsDown.push_back(new RooRealVar(sysVarsNameDown.c_str(),sysVarsNameDown.c_str(),sysVarsDown[l]->GetBinContent(b)));
+			
+			////MAKE WEIGHTS UP AND DOWN////
+			string weightUp = "("+sysVarsNameUp+" - "+nomName+")/"+nomName;
+			string weightDown = "("+sysVarsNameDown+" - "+nomName+")/"+nomName;
+
+			////FIX FORMULA////
+			if(l == 0) inFormula += "("+alphasNameUp+"/"+alphasNameDown+")*("weightUp+"/"+weightDown+")";
+			else inFormula += "+ ("+alphasNameUp+"/"+alphasNameDown+")*("weightUp+"/"+weightDown+")";
+
+			// if(m_sysVars.size() > 1){
+			// 	if(l == 0) inFormula += alphasName+"*("+sysVarsName+" - "+nomName+")/"+nomName +" + ";
+			// 	else inFormula += " + "+alphasName+"*("+sysVarsName+" - "+nomName+")/"+nomName;
+			// }
+			// else inFormula += "("+alphasNameUp+"/"+alphasNameDown+")*("weightUp+"/"+weightDown+")";	
+
+			varList.add(*hVarValsUp[l]);
+			varList.add(*hVarValsDown[l]);
 			
 			
 	//		if(b == 0){
-			std::cout << "----------------------------- \n bin #: " << b << " sysVar: " << m_sysVars[l] << std::endl;	
-			std::cout << "nomName: " << nomName << " alphasName: " << alphasName << " sysVarsName: " << sysVarsName << "\n" << std::endl;
+			// std::cout << "----------------------------- \n bin #: " << b << " sysVar: " << m_sysVars[l] << std::endl;	
+			// std::cout << "nomName: " << nomName << " alphasName: " << alphasName << " sysVarsName: " << sysVarsName << "\n" << std::endl;
 	//		}
 		}
 			//var = new RooFormulaVar((hNom->GetName()+std::to_string(b)),hNom->GetTitle(),inFormula,varList);
