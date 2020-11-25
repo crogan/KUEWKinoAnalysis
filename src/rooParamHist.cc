@@ -28,7 +28,7 @@ rooParamHistWrapper::rooParamHistWrapper(const char* name, const char* title, Ro
 	m_name = name;
 	m_title = title;
 
-	std::cout << "name: " << m_name << " title: " << m_title << std::endl;
+	// std::cout << "name: " << m_name << " title: " << m_title << std::endl;
 	m_rPH = new RooParametricHist(m_name, m_title, *m_var, *m_params, m_shape);
 	m_rPH->Print();
 }
@@ -111,23 +111,23 @@ rooParamHistMaker::~rooParamHistMaker(){
 	for(int i = 0; i < m_alphasDown.size(); i++){
 		delete m_alphasDown[i];
 	}
-	std::cout << "a" << std::endl;
+	// std::cout << "a" << std::endl;
 	for(int i = 0; i < m_rPHs.size(); i++){
 		delete m_rPHs[i];
 	}
-	std::cout << "b" << std::endl;
+	// std::cout << "b" << std::endl;
 	delete m_ws;
-	std::cout << "c" << std::endl;
+	// std::cout << "c" << std::endl;
 	m_cats.clear();
-	std::cout << "d" << std::endl;
+	// std::cout << "d" << std::endl;
 	m_fakeProcs.clear();
-	std::cout << "e" << std::endl;
+	// std::cout << "e" << std::endl;
 	m_procs.clear();
-	std::cout << "f" << std::endl;
+	// std::cout << "f" << std::endl;
 	m_sysVars.clear();
-	std::cout << "g" << std::endl;
+	// std::cout << "g" << std::endl;
 	//m_file->Close();
-	std::cout << "h" << std::endl;
+	// std::cout << "h" << std::endl;
 
 }
 
@@ -282,12 +282,12 @@ void rooParamHistMaker::makeRooParamHist(TH1D hNom, std::vector<TH1D*> sysVarsUp
 			//var = new RooFormulaVar((hNom->GetName()+std::to_string(b)),hNom->GetTitle(),inFormula,varList);
 			string varName = histName+std::to_string(b);
 			var = new RooFormulaVar(varName.c_str(),inFormula.c_str(),varList);
-			if(b == 0){ 
-			var->Print();
-			string testNames = m_alphasUp[0]->GetName();
-			if(var->getParameter((nomName+testNames).c_str()) == NULL) std::cout << "buggy thing doesn't exist" << std::endl;
-			var->dumpFormula();
-			}
+			// if(b == 0){ 
+			// var->Print();
+			// string testNames = m_alphasUp[0]->GetName();
+			// if(var->getParameter((nomName+testNames).c_str()) == NULL) std::cout << "buggy thing doesn't exist" << std::endl;
+			// var->dumpFormula();
+			// }
 			rFVs->add(*var);
 	}
 	m_rPHs.push_back(new rooParamHistWrapper(histName.c_str(),hNom.GetTitle(),rFVs,hNom));
