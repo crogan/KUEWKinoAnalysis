@@ -30,7 +30,6 @@ rooParamHistWrapper::rooParamHistWrapper(const char* name, const char* title, Ro
 
 	// std::cout << "name: " << m_name << " title: " << m_title << std::endl;
 	m_rPH = new RooParametricHist(m_name, m_title, *m_var, *m_params, m_shape);
-	m_rPH->Print();
 }
 
 rooParamHistWrapper::~rooParamHistWrapper(){
@@ -202,7 +201,6 @@ void rooParamHistMaker::makeRooParamHists(TFile* oFile){
 	makeWorkspace(oFile);
 }
 
-//TODO: CHANGE HNOM TO AN OBJECT HERE AND IN THE FUNCTION ABOVE. STORE THE OBJECT IN ROOPARAMHISTWRAPPER, AND PASS ITS POINTER TO THE ROOPARAMETRICHIST CONSTRUCTOR
 //make vector of rooFormulaVars to fil rPHs - for one cat, one ass. proc., one fake proc.
 void rooParamHistMaker::makeRooParamHist(TH1D hNom, std::vector<TH1D*> sysVarsUp, std::vector<TH1D*> sysVarsDown){
 	std::cout << "makeRooParamHist" << std::endl;
@@ -285,7 +283,6 @@ void rooParamHistMaker::makeRooParamHist(TH1D hNom, std::vector<TH1D*> sysVarsUp
 			// if(b == 0){ 
 			// var->Print();
 			// string testNames = m_alphasUp[0]->GetName();
-			// if(var->getParameter((nomName+testNames).c_str()) == NULL) std::cout << "buggy thing doesn't exist" << std::endl;
 			// var->dumpFormula();
 			// }
 			rFVs->add(*var);
@@ -298,7 +295,7 @@ void rooParamHistMaker::makeWorkspace(TFile* oFile){
 	oFile->cd();
 
 	for(int i = 0; i < m_rPHs.size(); i++){
-		m_ws->import(*m_rPHs[i]->getRooParametricHist());
+		m_ws->import(*m_rPHs[i]->getRooParametricHist(),RooFit::Silence);
 	}
 	std::cout << "imported rPHs to workspace" << std::endl;
 	m_ws->Write();
