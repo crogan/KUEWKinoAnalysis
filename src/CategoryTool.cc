@@ -181,26 +181,28 @@ CategoryList CategoryTool::GetCategories() const {
   BinsR_0L.push_back(1.05);
   FitBin Bin_0L(BinsR_0L, BinsM_0L);
 
+
+//do coarser binning to look at variations
   vector<double> BinsM_1L;
   BinsM_1L.push_back(0.);
-  BinsM_1L.push_back(5.);
-  BinsM_1L.push_back(10.);
+  //BinsM_1L.push_back(5.);
+  //BinsM_1L.push_back(10.);
   BinsM_1L.push_back(20.);
   BinsM_1L.push_back(50.);
   BinsM_1L.push_back(100.);
-  BinsM_1L.push_back(200.);
-  BinsM_1L.push_back(400.);
+  //BinsM_1L.push_back(200.);
+  //BinsM_1L.push_back(400.);
   BinsM_1L.push_back(600.);
   vector<double> BinsR_1L;
   BinsR_1L.push_back(0.8);
-  BinsR_1L.push_back(0.85);
+  //BinsR_1L.push_back(0.85);
   BinsR_1L.push_back(0.9);
-  BinsR_1L.push_back(0.925);
+  //BinsR_1L.push_back(0.925);
   BinsR_1L.push_back(0.95);
-  BinsR_1L.push_back(0.975);
+  //BinsR_1L.push_back(0.975);
   BinsR_1L.push_back(1.);
-  BinsR_1L.push_back(1.05);
-  //FitBin Bin_1L(BinsR_1L, BinsM_1L);
+  //BinsR_1L.push_back(1.05);
+  FitBin Bin_1L(BinsR_1L, BinsM_1L);
 
   vector<double> BinsM_2L;
   BinsM_2L.push_back(0.);
@@ -231,7 +233,7 @@ CategoryList CategoryTool::GetCategories() const {
   Cats_0L = Cats_0L.CreateGenericRegions("PTISR", PTISR_2LOS);
 
   cout << "Building 1L" << endl;
-  Cats_1L = Cats_1L.CreateFitBinRegions(Bin_0L);
+  Cats_1L = Cats_1L.CreateFitBinRegions(Bin_1L);
   Cats_1L = Cats_1L.CreateLeptonIDRegions(3, 2);
   Cats_1L = Cats_1L.CreateHadronicSRegions(H_1L);
   Cats_1L = Cats_1L.CreateHadronicISRRegions(H_ISR);
