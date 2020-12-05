@@ -794,6 +794,7 @@ inline void ReducedBase::Init(TTree *tree)
    // Turn off/on different branches to improve processing speed
    fChain->SetBranchStatus("*",0);
    fChain->SetBranchStatus("weight", 1);
+   fChain->SetBranchStatus("*weight*", 1);
    fChain->SetBranchStatus("index_lep*", 1);
    fChain->SetBranchStatus("Nlep", 1);
    fChain->SetBranchStatus("Nlep_*", 1);

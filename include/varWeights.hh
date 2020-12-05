@@ -2,7 +2,7 @@
 #define varWeights_HH
 
 
-#include "ReducedBase_slim.hh"
+#include "ReducedBase.hh"
 #include "Systematics.hh"
 class varWeights{
 	public:
