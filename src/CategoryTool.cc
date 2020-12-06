@@ -297,8 +297,8 @@ CategoryList CategoryTool::GetCategories() const {
   Cats_0L = Cats_0L.CreateGenericRegions("PTISR", PTISR_2LOS);
 
   cout << "Building 1L" << endl;
-  Cats_1L = Cats_1L.CreateFitBinRegions(Bin_1L);
-  Cats_1L = Cats_1L.CreateLeptonIDRegions(3, 2);
+  Cats_1L = Cats_1L.CreateFitBinRegions(Bin_0L);
+  Cats_1L = Cats_1L.CreateLeptonIDRegions(IDs, 1);
   Cats_1L = Cats_1L.CreateHadronicSRegions(H_1L);
   Cats_1L = Cats_1L.CreateHadronicISRRegions(H_ISR);
   Cats_1L = Cats_1L.CreateGenericRegions("PTISR", PTISR_2LOS);
@@ -316,6 +316,7 @@ CategoryList CategoryTool::GetCategories() const {
   Cats_2LSS = Cats_2LSS.CreateHadronicSRegions(H_2LSS);
   Cats_2LSS = Cats_2LSS.CreateHadronicISRRegions(H_ISR);
   Cats_2LSS = Cats_2LSS.CreateGenericRegions("PTISR", PTISR_2LOS);
+  
   
   //////////////////////////////////////////////////////
 
