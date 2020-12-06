@@ -20,7 +20,7 @@ using std::string;
 
 class FitInputBuilder {
 public:
-  FitInputBuilder();
+  FitInputBuilder(bool extrahist = false);
 
   virtual ~FitInputBuilder(); 
   
@@ -46,6 +46,8 @@ private:
   TTree* m_CatTree;
   CategoryBranch m_CatBranch;
   void WriteCat();
+
+  bool m_BookHist;
   
 };
 

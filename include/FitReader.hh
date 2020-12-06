@@ -40,6 +40,14 @@ public:
 			   const Process&    proc,
 			   const Systematic& sys = Systematic::Default()) const;
 
+  bool IsFilled2D(const Category&   cat,
+		  const Process&    proc,
+		  const Systematic& sys = Systematic::Default()) const;
+
+  const TH2D* GetHistogram2D(const Category&   cat,
+			     const Process&    proc,
+			     const Systematic& sys = Systematic::Default()) const;
+
   double Integral(const Category&   cat,
 		  const Process&    proc,
 		  const Systematic& sys = Systematic::Default()) const;
@@ -51,6 +59,12 @@ public:
 		       const VS& hadS_cat,
 		       const VS& hadI_cat,
 		       const string& canvas);
+
+  TCanvas* Plot2D(const VS& proc,
+		  const VS& lep_cat,
+		  const VS& hadS_cat,
+		  const VS& hadI_cat,
+		  const string& canvas);
 
   VS GetChannels() const;  
   const ProcessList&  GetProcesses() const;
@@ -66,6 +80,8 @@ private:
   mutable map<Process,Systematics> m_ProcSys;
   mutable map<Process,map<Category,TH1D*> > m_ProcHist;
   mutable map<Process,map<Systematic,map<Category,pair<TH1D*,TH1D*> > > >m_ProcHistSys;
+  mutable map<Process,map<Category,TH2D*> > m_ProcHist_2D;
+  mutable map<Process,map<Systematic,map<Category,pair<TH2D*,TH2D*> > > >m_ProcHistSys_2D;
 
   ProcessList                      m_Proc;
   mutable map<string,CategoryList> m_Chan;

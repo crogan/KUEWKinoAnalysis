@@ -15,6 +15,9 @@
 ////////// MBins class
 ///////////////////////////////////////////
 
+// minimum bin entry to remove zeroes in writing
+const double EPS = 1e-8;
+
 class MBins {
 public:
   MBins();
@@ -98,7 +101,7 @@ public:
 
   int GetBin(double R, double M) const;
   
-  FitBin& InitializeHistogram(const string& label);
+  FitBin& InitializeHistogram(const string& label, bool extrahist = false);
   
   void Fill(double weight = 1., double M = 0., double R = 0.);
 
@@ -112,6 +115,7 @@ private:
   vector<RBin*> m_RBins;
   
   TH1D* m_hist1D;
+  TH2D* m_hist2D;
 };
 
 ///////////////////////////////////////////
