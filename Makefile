@@ -37,6 +37,7 @@ cmssw : GLIBS += -L/cvmfs/cms.cern.ch/slc7_amd64_gcc700/cms/cmssw/CMSSW_10_6_5/e
 
 cmssw : CXX   += -I../. -I/cvmfs/cms.cern.ch/slc7_amd64_gcc700/external/boost/1.67.0/include/
 cmssw : CXX   += -I/cvmfs/cms.cern.ch/slc7_amd64_gcc700/external/lwtnn/2.4-gnimlf3/include/
+cmssw : CXX   += -I../../src/HiggsAnalysis/CombinedLimit/interface/
 
 locallib : GLIBS += -L/Users/christopherrogan/GitHub/lwtnn/lib -llwtnn
 locallib : CXX += -I/Users/christopherrogan/GitHub/lwtnn/include
