@@ -258,7 +258,7 @@ void rooParamHistMaker::makeRooParamHist(TH1D hNom, std::vector<TH1D*> sysVarsUp
 			string weightUp = "("+sysVarsNameUp+" - "+nomName+")/"+nomName;
 			string weightDown = "("+sysVarsNameDown+" - "+nomName+")/"+nomName;
 
-			////FIX FORMULA////
+			////TEST FORMULA////
 			if(l == 0) inFormula += "("+alphasNameUp+"/"+alphasNameDown+")*("+weightUp+"/"+weightDown+")";
 			else inFormula += "+ ("+alphasNameUp+"/"+alphasNameDown+")*("+weightUp+"/"+weightDown+")";
 
