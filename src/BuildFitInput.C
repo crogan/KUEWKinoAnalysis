@@ -147,7 +147,7 @@ int main(int argc, char* argv[]) {
 
   //set systematic event weight parameters
   varWeights vw("varWeights");
-  double maxWeight = 5.;
+  double maxWeight = 2.;
   double minWeight = 0.01;
   vw.setMinMax(minWeight,maxWeight);
 
@@ -184,27 +184,34 @@ int main(int argc, char* argv[]) {
       ReducedBase* base = new ReducedBase(chain);
 //cout << "reducedBase" << endl;
       ROOT::RDataFrame d(*base->fChain);
-//cout << "a" << endl;
       double absEta = 0;
 	int nLep = 0;
-//cout << "b" << endl;
+//cout << "leading lep pt" << endl;
+//for(int i = 0; i < 10; i++){
+//	cout << "a" << endl;
+//	base->GetEntry(i);
+//	cout << i << endl;
+//	if(base->Nlep < 1) continue;
+//	cout << "leading lep pt: " << base->PT_lep->at(0) << endl;
+//}     
+//cout << "a" << endl;
 	double ptMean = *d.Mean("PT_lep");
+//cout << "Met mean: " << *d.Mean("MET") << endl;
 //cout << "pt mean" << endl;
-      double isoMean = *d.Mean("MiniIso_lep");
-//cout << "iso mean" << endl;      
+//for(int i = 0; i < 10; i++){
+//	base->GetEntry(i);
+//	if(base->Nlep < 1) continue;
+//	cout << "Mini Iso: " << base->MiniIso_lep->at(0) << endl;
+//}     
+ double isoMean = *d.Mean("MiniIso_lep");
 d.Foreach([&absEta, &nLep](vector<double> Eta_lep) {for(int iLep = 0; iLep < Eta_lep.size(); iLep++){if(Eta_lep.at(iLep) < 0) absEta += -(Eta_lep.at(iLep)); else absEta += Eta_lep.at(iLep); nLep += Eta_lep.size();}}, {"Eta_lep"});
-//cout << "eta mean 1" << endl;
 	double etaMean = absEta/nLep; 
-//cout << "eta mean 2" << endl;     
  double sip3dMean = *d.Mean("SIP3D_lep");
-//cout << "sip3d mean" << endl;     
  int Nentry = base->fChain->GetEntries();
-//cout << "setting means" << endl;
       int SKIP = 1;
 
       // event loop
       for(int e = 0; e < Nentry; e += SKIP){
-	cout << "GetEntry" << endl;
 	base->GetEntry(e);
 	if((e/SKIP)%(std::max(1, int(Nentry/SKIP/10))) == 0)
 	  cout << "      event " << e << " | " << Nentry << endl;
@@ -232,7 +239,6 @@ d.Foreach([&absEta, &nLep](vector<double> Eta_lep) {for(int iLep = 0; iLep < Eta
 	int NjetISR  = base->Njet_ISR;
 	int NbjetISR = base->Nbjet_ISR;
 	int NSV      = base->NSV_S;
-
 	if(Nlep + NjetS + NSV < 1)
 	  continue;
 	LepList list_a;
@@ -259,15 +265,12 @@ d.Foreach([&absEta, &nLep](vector<double> Eta_lep) {for(int iLep = 0; iLep < Eta
 	  else
 	    flavor = kMuon;
 	  LepCharge charge = (base->Charge_lep->at(index) > 0 ? kPos : kNeg);
-	  LepSource source = LepSource(base->SourceID_lep->at(index));
-	    
+	  LepSource source = LepSource(base->ID_lep->at(2*index+1));
 	  list_a += Lep(flavor, charge, id, source);
 	}
 	for(int i = 0; i < base->Nlep_b; i++){
 	  index = (*base->index_lep_b)[i];
-	  
 	  int PDGID = base->PDGID_lep->at(index);
-
 	  LepID id;
 	  if(base->ID_lep->at(index) < 3 ||
 	     base->MiniIso_lep->at(index)*base->PT_lep->at(index) >= 5.)
@@ -281,12 +284,10 @@ d.Foreach([&absEta, &nLep](vector<double> Eta_lep) {for(int iLep = 0; iLep < Eta
 	    flavor = kElectron;
 	  else
 	    flavor = kMuon;
-	  LepCharge charge = (base->Charge_lep->at(index) > 0 ? kPos : kNeg);
-	  LepSource source = LepSource(base->SourceID_lep->at(index)); 
-	  
+	 LepCharge charge = (base->Charge_lep->at(index) > 0 ? kPos : kNeg);
+	  LepSource source = LepSource(base->ID_lep->at(2*index+1)); 
 	  list_b += Lep(flavor, charge, id, source);
 	}
-
 	Category Event(Leptonic(list_a, list_b),
 		       Hadronic(NjetS, NbjetS, NSV),
 		       Hadronic(NjetISR, NbjetISR, base->NSV_ISR));
@@ -308,7 +309,8 @@ d.Foreach([&absEta, &nLep](vector<double> Eta_lep) {for(int iLep = 0; iLep < Eta
 	      sys.Up();
 	    }
 	  }
-	  double weight = 1.;
+	  
+	double weight = 1.;
 	  if(!is_data){
 	    weight = base->weight*ST.Lumi();
 	    if(sys == Systematic("BTAG_SF"))
@@ -328,18 +330,17 @@ d.Foreach([&absEta, &nLep](vector<double> Eta_lep) {for(int iLep = 0; iLep < Eta
 	  	weight *= vw.expWeight(base,sip3dMean,base->SIP3D_lep,sys);
 	    if(sys == Systematic("PU_SF"))
 	      if(sys.IsUp())
-		weight *= base->PUweight_up;
+	        weight *= base->PUweight_up;
 	      else
-		weight *= base->PUweight_down;
+	        weight *= base->PUweight_down;
 	    else
 	      weight *= base->PUweight;
 	  }
-	  
 	  LepList Fakes  = list_a.GetFakes();
 	  Fakes         += list_b.GetFakes();
 	  
 	  double Mperp = base->Mperp;
-	  
+	// cout << "event #: " << e <<  ", weight: " << weight << endl; 
 	  // use Eperp
 	  if((Nlep == 1) && (NjetS == 0) && (NSV == 0))
 	    Mperp = base->EL_BoostT;
@@ -364,7 +365,7 @@ d.Foreach([&absEta, &nLep](vector<double> Eta_lep) {for(int iLep = 0; iLep < Eta
 	    FITBuilder.AddEvent(weight, Mperp, RISR,
 				Categories[eindex], proc, sys);
 	  }
-	  
+	 //cout << "event# : " << e << " weight: " << weight << endl; 
 	  // dummy data
 	  if(!addData && is_bkg)
 	    FITBuilder.AddEvent(weight, Mperp, RISR,
