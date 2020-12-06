@@ -127,27 +127,25 @@ const FitBin& Category::GetFitBin() const {
   return m_Template;
 }
 
-FitBin* Category::GetNewFitBin(const std::string& process) const {
+FitBin* Category::GetNewFitBin(const std::string& process, bool extrahist) const {
   FitBin* bin = new FitBin(m_Template);
  
-  bin->InitializeHistogram(process+"_"+Label()+"_"+GetLabel());
+  bin->InitializeHistogram(process+"_"+Label()+"_"+GetLabel(), extrahist);
 
   return bin;
 }
 
-CategoryList Category::CreateLeptonIDRegions(int NID, int Nfakemax){
+CategoryList Category::CreateLeptonIDRegions(std::vector<LepID>& IDs, int NlowQ){
   CategoryList list;
 
   if(m_Criteria.GetN() < 3)
     return list;
-  
-  if(NID <= 1 || Nfakemax <= 0){
-    list += *this;
-    return list;
-  }
+
+  int NID = IDs.size();
 
   std::map<std::string, Leptonic*> label_to_Leptonic;
 
+  // first criteria is always leptonic
   const Leptonic& leptonic = dynamic_cast<const Leptonic&>(m_Criteria[0]);
   int Nleptonic = leptonic.GetN();
   string label  = leptonic.Label();
@@ -158,54 +156,59 @@ CategoryList Category::CreateLeptonIDRegions(int NID, int Nfakemax){
     int Nb = list_b.GetN();
     int N  = Na + Nb;
     string llabel;
+
+    // 0L
     if(N < 1){
-      //llabel = list_a.GetIDLabel();
       llabel = "0^0";
       if(label_to_Leptonic.count(llabel) == 0)
 	label_to_Leptonic[llabel] = new Leptonic(list_a, list_b);
       else
 	(*label_to_Leptonic[llabel]) += Leptonic(list_a, list_b);
     }
+    
     LepList nlist_a;
     LepList nlist_b;
     LepList nlist;
-    for(int f = 0; f < N; f++){
-      for(int i = 0; i < NID; i++){
-	nlist_a.Clear();
-	nlist_b.Clear();
-	nlist.Clear();
-	Lep* lep = nullptr; 
-	if(f < Na)
-	  lep = new Lep(list_a[f]);
-	else
-	  lep = new Lep(list_b[f-Na]);
-	
-	lep->SetID(LepID(i));
-	
-	for(int j = 0; j < N; j++){
-	  if(j < Na)
-	    if(j != f)
-	      nlist_a += list_a[j];
-	    else
-	      nlist_a += *lep;
+
+    if(NlowQ == 1){
+      for(int f = 0; f < N; f++){
+	for(int i = 0; i < NID; i++){
+	  nlist_a.Clear();
+	  nlist_b.Clear();
+	  nlist.Clear();
+	  Lep* lep = nullptr; 
+	  if(f < Na)
+	    lep = new Lep(list_a[f]);
 	  else
-	    if(j != f)
-	      nlist_b += list_b[j-Na];
+	    lep = new Lep(list_b[f-Na]);
+	  
+	  lep->SetID(IDs[i]);
+	  
+	  for(int j = 0; j < N; j++){
+	    if(j < Na)
+	      if(j != f)
+		nlist_a += list_a[j];
+	      else
+		nlist_a += *lep;
 	    else
-	      nlist_b += *lep;
-	}
-	nlist += nlist_a;
-	nlist += nlist_b;
-	
-	llabel = nlist.GetIDLabel();
-	if(label_to_Leptonic.count(llabel) == 0)
-	  label_to_Leptonic[llabel] = new Leptonic(nlist_a, nlist_b);
-	else
-	  (*label_to_Leptonic[llabel]) += Leptonic(nlist_a, nlist_b);
-      } 
+	      if(j != f)
+		nlist_b += list_b[j-Na];
+	      else
+		nlist_b += *lep;
+	  }
+	  nlist += nlist_a;
+	  nlist += nlist_b;
+	  
+	  llabel = nlist.GetIDLabel();
+	  if(label_to_Leptonic.count(llabel) == 0)
+	    label_to_Leptonic[llabel] = new Leptonic(nlist_a, nlist_b);
+	  else
+	    (*label_to_Leptonic[llabel]) += Leptonic(nlist_a, nlist_b);
+	} 
+      }
     }
 
-    if(Nfakemax >= 2){
+    if(NlowQ >= 2){
       for(int f0 = 0; f0 < N-1; f0++){
 	for(int f1 = f0+1; f1 < N; f1++){	  
 	  for(int i0 = 0; i0 < NID; i0++){
@@ -559,10 +562,10 @@ CategoryList CategoryList::CreateFitBinRegions(const FitBin& bin) const {
   return list;
 }
 
-CategoryList CategoryList::CreateLeptonIDRegions(int NID, int Nfakemax) const {
+CategoryList CategoryList::CreateLeptonIDRegions(std::vector<LepID>& IDs, int NlowQ) const {
   CategoryList list;
   for(int i = 0; i < m_N; i++)
-    list += m_Cat[i]->CreateLeptonIDRegions(NID, Nfakemax);
+    list += m_Cat[i]->CreateLeptonIDRegions(IDs, NlowQ);
 
   return list;
 }
@@ -575,18 +578,28 @@ CategoryList CategoryList::CreateGenericRegions(const string& label, const VD& b
   return list;
 }
 
-CategoryList CategoryList::CreateHadronicSRegions(const vector<const Hadronic*>& had) const {
+CategoryList CategoryList::CreateHadronicSRegions(vector<Hadronic>& had) const {
+  int N = had.size();
+  vector<const Hadronic*> hadptr;
+  for(int i = 0; i < N; i++)
+    hadptr.push_back(&had[i]);
+  
   CategoryList list;
   for(int i = 0; i < m_N; i++)
-    list += m_Cat[i]->CreateHadronicSRegions(had);
+    list += m_Cat[i]->CreateHadronicSRegions(hadptr);
 
   return list;
 }
 
-CategoryList CategoryList::CreateHadronicISRRegions(const vector<const Hadronic*>& had) const {
+CategoryList CategoryList::CreateHadronicISRRegions(vector<Hadronic>& had) const {
+  int N = had.size();
+  vector<const Hadronic*> hadptr;
+  for(int i = 0; i < N; i++)
+    hadptr.push_back(&had[i]);
+  
   CategoryList list;
   for(int i = 0; i < m_N; i++)
-    list += m_Cat[i]->CreateHadronicISRRegions(had);
+    list += m_Cat[i]->CreateHadronicISRRegions(hadptr);
 
   return list;
 }

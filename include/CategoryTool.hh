@@ -23,6 +23,15 @@ public:
   virtual ~CategoryTool();
 
   CategoryList GetCategories() const;
+  CategoryList GetCategories_RandD() const;
+  CategoryList GetCategories_0L() const;
+  CategoryList GetCategories_1L() const;
+  CategoryList GetCategories_2L() const;
+  CategoryList GetCategories_3L() const;
+
+protected:
+  FitBin   GetFitBin(int index) const;
+  Hadronic GetHadronicRegion(int Njet, int index) const;
   
 };
 
