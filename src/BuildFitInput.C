@@ -30,7 +30,7 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-  string NtuplePath = "/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_23_05_20/";
+  string NtuplePath = "/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_21_09_20/";
   string OutFile    = "BuildFitInput_output.root";
 
   bool bprint = false;
@@ -38,8 +38,11 @@ int main(int argc, char* argv[]) {
   bool addBkg  = false;
   bool addSig  = false;
   bool addData = false;
+  bool extrahist = false;
   vector<string> proc_to_add;
 
+  CategoryTool CT;
+  CategoryList Categories;
   
   for(int i = 0; i < argc; i++){
     if(strncmp(argv[i],"--help", 6) == 0){
@@ -82,6 +85,21 @@ int main(int argc, char* argv[]) {
       addSig  = true;
       addData = true;
     }
+    if(strncmp(argv[i],"+hist", 5) == 0){
+      extrahist  = true;
+    }
+    if(strncmp(argv[i],"+cat0L", 6) == 0){
+      Categories += CT.GetCategories_0L();
+    }
+    if(strncmp(argv[i],"+cat1L", 6) == 0){
+      Categories += CT.GetCategories_1L();
+    }
+    if(strncmp(argv[i],"+cat2L", 6) == 0){
+      Categories += CT.GetCategories_2L();
+    }
+    if(strncmp(argv[i],"+cat3L", 6) == 0){
+      Categories += CT.GetCategories_3L();
+    }
   }
       
   if((proc_to_add.size() == 0) &&
@@ -102,6 +120,11 @@ int main(int argc, char* argv[]) {
     cout << "   ++sig               add all signal samples" << endl;
     cout << "   ++data              add all background samples" << endl;
     cout << "   ++all               add all samples" << endl;
+    cout << "   +cat0L              add 0L categories" << endl;
+    cout << "   +cat1L              add 1L categories" << endl;
+    cout << "   +cat2L              add 2L categories" << endl;
+    cout << "   +cat3L              add 3L categories" << endl;
+    cout << "   +hist               book 2D histograms also" << endl;
 
     return 0;
   }
@@ -127,19 +150,18 @@ int main(int argc, char* argv[]) {
     samples += ST.Get(proc_to_add[p]);
   }
 
-  CategoryTool CT;
-
-  CategoryList Categories = CT.GetCategories();
-
-  cout << "Categories:" << endl;
-  Categories.Print();
+  if(Categories.GetN() == 0)
+    Categories += CT.GetCategories();
+  
+  // cout << "Categories:" << endl;
+  // Categories.Print();
 
   SystematicsTool SYS;
 
   Systematics systematics(1);
   systematics += SYS.GetWeightSystematics();
 
-  FitInputBuilder FITBuilder;
+  FitInputBuilder FITBuilder(extrahist);
 
   // dummy in case there is no data requested
   Process data_obs("data_obs", kData);
@@ -171,12 +193,13 @@ int main(int argc, char* argv[]) {
       ReducedBase* base = new ReducedBase(chain);
 
       int Nentry = base->fChain->GetEntries();
-
+      
       int SKIP = 1;
 
       // event loop
       for(int e = 0; e < Nentry; e += SKIP){
 	base->GetEntry(e);
+
 	if((e/SKIP)%(std::max(1, int(Nentry/SKIP/10))) == 0)
 	  cout << "      event " << e << " | " << Nentry << endl;
 
@@ -184,16 +207,19 @@ int main(int argc, char* argv[]) {
 	if(!base->METORtrigger && is_data)
 	  continue;
 		
-	if(base->MET < 200)
+	if(base->MET < 175)
 	  continue;
 	  
 	if(base->PTISR < 200.)
 	  continue;
-	  
-	if(base->PTCM/base->PTISR > 0.2)
+
+	// current cut
+	if(base->PTCM > 75. && fabs(base->dphiCMI) < acos(-1.)/4.)
+	  continue;
+	if(base->PTCM > 50. && fabs(base->dphiCMI) > 3.*acos(-1.)/4.)
 	  continue;
 	  
-	if(base->RISR < 0.5 || base->RISR > 1.05)
+	if(base->RISR < 0.6 || base->RISR > 1.0)
 	  continue;
 	
 	int Nlep     = base->Nlep;
@@ -218,9 +244,10 @@ int main(int argc, char* argv[]) {
 	    
 	  LepID id;
 	  if(base->ID_lep->at(index) < 3 ||
-	     base->MiniIso_lep->at(index)*base->PT_lep->at(index) >= 5.)
+	     base->MiniIso_lep->at(index)*base->PT_lep->at(index) >= 4. ||
+	     base->RelIso_lep->at(index)*base->PT_lep->at(index) >= 4.)
 	    id = kBronze;
-	  else if(base->SIP3D_lep->at(index) > 4)
+	  else if(base->SIP3D_lep->at(index) > 2.)
 	    id = kSilver;
 	  else
 	    id = kGold;
@@ -230,7 +257,8 @@ int main(int argc, char* argv[]) {
 	  else
 	    flavor = kMuon;
 	  LepCharge charge = (base->Charge_lep->at(index) > 0 ? kPos : kNeg);
-	  LepSource source = LepSource(base->SourceID_lep->at(index));
+	  //LepSource source = LepSource(base->SourceID_lep->at(index));
+	  LepSource source = LepSource(base->ID_lep->at(index*2+1));
 	    
 	  list_a += Lep(flavor, charge, id, source);
 	}
@@ -241,9 +269,10 @@ int main(int argc, char* argv[]) {
 
 	  LepID id;
 	  if(base->ID_lep->at(index) < 3 ||
-	     base->MiniIso_lep->at(index)*base->PT_lep->at(index) >= 5.)
+	     base->MiniIso_lep->at(index)*base->PT_lep->at(index) >= 4. ||
+	     base->RelIso_lep->at(index)*base->PT_lep->at(index) >= 4.)
 	    id = kBronze;
-	  else if(base->SIP3D_lep->at(index) > 4)
+	  else if(base->SIP3D_lep->at(index) > 2.)
 	    id = kSilver;
 	  else
 	    id = kGold;
@@ -253,15 +282,23 @@ int main(int argc, char* argv[]) {
 	  else
 	    flavor = kMuon;
 	  LepCharge charge = (base->Charge_lep->at(index) > 0 ? kPos : kNeg);
-	  LepSource source = LepSource(base->SourceID_lep->at(index)); 
+	  //LepSource source = LepSource(base->SourceID_lep->at(index));
+	  LepSource source = LepSource(base->ID_lep->at(index*2+1));
 	  
 	  list_b += Lep(flavor, charge, id, source);
 	}
 
+	// SV eta
+	double SVmaxeta = 1.; // 1 is fine b/c less than 1.5 cutoff
+	for(int ie = 0; ie < base->NSV_S; ie++)
+	  if(fabs(base->Eta_SV->at(ie)) > SVmaxeta)
+	    SVmaxeta = fabs(base->Eta_SV->at(ie));
+	
 	Category Event(Leptonic(list_a, list_b),
 		       Hadronic(NjetS, NbjetS, NSV),
 		       Hadronic(NjetISR, NbjetISR, base->NSV_ISR));
 	Event.AddGenericVal(GenericVal(base->PTISR));
+	Event.AddGenericVal(SVmaxeta);
 	
 	int eindex = Categories.Find(Event);
 	if(eindex < 0){
@@ -290,13 +327,15 @@ int main(int argc, char* argv[]) {
 		weight *= base->BtagSFweight_down;
 	    else 
 	      weight *= base->BtagSFweight;
-	    if(sys == Systematic("PU_SF"))
-	      if(sys.IsUp())
-		weight *= base->PUweight_up;
-	      else
-		weight *= base->PUweight_down;
-	    else
-	      weight *= base->PUweight;
+
+	    // turn off PU systematics for now
+	    // if(sys == Systematic("PU_SF"))
+	    //   if(sys.IsUp())
+	    // 	weight *= base->PUweight_up;
+	    //   else
+	    // 	weight *= base->PUweight_down;
+	    // else
+	    //   weight *= base->PUweight;
 	  }
 	  
 	  LepList Fakes  = list_a.GetFakes();

@@ -31,7 +31,8 @@ public:
 
   void AddEvent(double weight, double Mperp, double RISR,
 		const Category& cat,
-		const Systematic& sys = Systematic::Default());
+		const Systematic& sys = Systematic::Default(),
+		bool extrahist = false);
 
   Process FakeProcess(const string& label) const;
 
