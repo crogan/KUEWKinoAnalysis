@@ -12,7 +12,7 @@
 #include "CombineHarvester/CombineTools/interface/Systematics.h"
 #include "CombineHarvester/CombineTools/interface/BinByBin.h"
 
-using namespace ch::CombineHarvester;
+using ch::CombineHarvester;
 
 ///////////////////////////////////////////
 ////////// FitConfiguration class
