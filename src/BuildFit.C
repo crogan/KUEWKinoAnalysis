@@ -5,16 +5,16 @@
 #include <utility>
 #include <vector>
 #include <cstdlib>
-#include "CombineHarvester/CombineTools/interface/CombineHarvester.h"
-#include "CombineHarvester/CombineTools/interface/Observation.h"
-#include "CombineHarvester/CombineTools/interface/Process.h"
-#include "CombineHarvester/CombineTools/interface/Utilities.h"
-#include "CombineHarvester/CombineTools/interface/Systematics.h"
-#include "CombineHarvester/CombineTools/interface/BinByBin.h"
+// #include "CombineHarvester/CombineTools/interface/CombineHarvester.h"
+// #include "CombineHarvester/CombineTools/interface/Observation.h"
+// #include "CombineHarvester/CombineTools/interface/Process.h"
+// #include "CombineHarvester/CombineTools/interface/Utilities.h"
+// #include "CombineHarvester/CombineTools/interface/Systematics.h"
+// #include "CombineHarvester/CombineTools/interface/BinByBin.h"
 
 #include "TSystem.h"
 
-#include "FitReader.hh"
+#include "FitConfiguration.hh"
 
 using namespace std;
 
@@ -196,6 +196,11 @@ int main(int argc, char* argv[]) {
     processes += FIT.GetProcesses().Filter(kSig);
   processes = processes.RemoveOR(proc_to_rem);
 
+  // keep only the process-by-process fakes
+  ProcessList proc_fakes = processes.Filter("_Fakes_");
+  processes.Remove("Fakes");
+  processes += proc_fakes;
+  
   VS channels;
   if(addChan)
     channels = FIT.GetChannels();
@@ -316,23 +321,8 @@ int main(int argc, char* argv[]) {
     }
   }
   
-  using ch::syst::SystMap;
-  using ch::syst::era;
-  using ch::syst::bin_id;
-  using ch::syst::process;
-
-
-  cb.cp().signals()
-    .AddSyst(cb, "lumi_$ERA", "lnN", SystMap<era>::init
-	     ({"2016"}, 1.022)
-	     ({"2017"}, 1.022)
-	     ({"2018"}, 1.022));
-  
-  cb.cp().backgrounds()
-    .AddSyst(cb, "lumi_$ERA", "lnN", SystMap<era>::init
-	     ({"2016"}, 1.022)
-	     ({"2017"}, 1.022)
-	     ({"2018"}, 1.022));
+  FitConfiguration CONFIG;
+  CONFIG.Configure(cb, processes);
   
   int Nsys = systematics.GetN();
   if(Nsys > 0){

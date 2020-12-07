@@ -19,8 +19,17 @@ SRCDIR           = ./src/
 CXX	         += -I$(INCLUDEDIR) -I.
 OUTOBJ	         = ./obj/
 
+INCLUDEDIR_CMSSW  = ./include_cmssw/
+SRCDIR_CMSSW      = ./src_cmssw/
+
+cmssw: CXX += -I$(INCLUDEDIR_CMSSW)
+
 CC_FILES := $(wildcard src/*.cc)
 HH_FILES := $(wildcard include/*.hh)
+
+cmssw: CC_FILES += $(wildcard src_cmssw/*.cc)
+cmssw: HH_FILES += $(wildcard include_cmssw/*.hh)
+
 OBJ_FILES := $(addprefix $(OUTOBJ),$(notdir $(CC_FILES:.cc=.o)))
 
 SOBJ_FILES = $(filter-out AnalysisBase.o SVDiscrTool.o ReducedNtuple.o NtupleBase.o, $(OBJ_FILES))

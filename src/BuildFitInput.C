@@ -230,6 +230,9 @@ int main(int argc, char* argv[]) {
 	  
 	if(base->RISR < 0.6 || base->RISR > 1.0)
 	  continue;
+
+	if(fabs(base->dphiMET_V) > acos(-1.)/2.)
+	  continue;
 	
 	int Nlep     = base->Nlep;
 	int NjetS    = base->Njet_S;
