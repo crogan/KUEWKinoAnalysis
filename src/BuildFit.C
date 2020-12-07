@@ -321,7 +321,7 @@ int main(int argc, char* argv[]) {
     }
   }
   
-  ch::FitConfiguration CONFIG;
+  FitConfiguration CONFIG;
   CONFIG.Configure(cb, processes);
 
   using ch::syst::SystMap;
