@@ -97,7 +97,7 @@ lib/libKUEWKino.so: $(SOBJ_FILES)
 $(OUTOBJ)%.o: src/%.cc include/%.hh
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(OUTOBJ)%.o: src_cmssw/%.cc include_cmssw/%.hh
+$(OUTOBJ_CMSSW)%.o: src_cmssw/%.cc include_cmssw/%.hh
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
