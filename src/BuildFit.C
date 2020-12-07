@@ -17,6 +17,7 @@
 #include "FitConfiguration.hh"
 
 using namespace std;
+using ch::CombineHarvester;
 
 int main(int argc, char* argv[]) {
   string InputFile = "test/FitInput_test.root";
