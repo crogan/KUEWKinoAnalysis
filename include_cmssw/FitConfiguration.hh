@@ -6,6 +6,11 @@
 
 #include "FitReader.hh"
 #include "CombineHarvester/CombineTools/interface/CombineHarvester.h"
+#include "CombineHarvester/CombineTools/interface/Observation.h"
+#include "CombineHarvester/CombineTools/interface/Process.h"
+#include "CombineHarvester/CombineTools/interface/Utilities.h"
+#include "CombineHarvester/CombineTools/interface/Systematics.h"
+#include "CombineHarvester/CombineTools/interface/BinByBin.h"
 
 ///////////////////////////////////////////
 ////////// FitConfiguration class
