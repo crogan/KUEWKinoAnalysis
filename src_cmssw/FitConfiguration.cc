@@ -6,7 +6,6 @@
 ///////////////////////////////////////////
 
 void FitConfiguration::Configure(ch::CombineHarvester& cb, ProcessList& processes){
-  CombineHarvester src = cb.cp();
 
   using ch::syst::SystMap;
   using ch::syst::era;
