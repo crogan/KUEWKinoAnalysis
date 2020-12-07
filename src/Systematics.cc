@@ -307,7 +307,7 @@ SystematicsTool::~SystematicsTool() {}
 Systematics SystematicsTool::GetWeightSystematics() const {
   Systematics list;
   
-  list += "PU_SF";
+  //list += "PU_SF"; // turn off for now
   list += "BTAG_SF";
 
   return list;

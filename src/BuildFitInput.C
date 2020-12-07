@@ -43,6 +43,9 @@ int main(int argc, char* argv[]) {
 
   CategoryTool CT;
   CategoryList Categories;
+
+  bool setLumi = false;
+  double lumi;
   
   for(int i = 0; i < argc; i++){
     if(strncmp(argv[i],"--help", 6) == 0){
@@ -100,6 +103,11 @@ int main(int argc, char* argv[]) {
     if(strncmp(argv[i],"+cat3L", 6) == 0){
       Categories += CT.GetCategories_3L();
     }
+    if(strncmp(argv[i],"-lumi", 5) == 0){
+      i++;
+      setLumi = true;
+      lumi = std::stof(argv[i]);
+    }
   }
       
   if((proc_to_add.size() == 0) &&
@@ -125,6 +133,7 @@ int main(int argc, char* argv[]) {
     cout << "   +cat2L              add 2L categories" << endl;
     cout << "   +cat3L              add 3L categories" << endl;
     cout << "   +hist               book 2D histograms also" << endl;
+    cout << "   -lumi [lumi]        set luminosity to lumi" << endl;
 
     return 0;
   }
@@ -319,7 +328,7 @@ int main(int argc, char* argv[]) {
 	  
 	  double weight = 1.;
 	  if(!is_data){
-	    weight = base->weight*ST.Lumi();
+	    weight = (setLumi ? lumi : ST.Lumi())*base->weight;
 	    if(sys == Systematic("BTAG_SF"))
 	      if(sys.IsUp())
 		weight *= base->BtagSFweight_up;
@@ -369,7 +378,7 @@ int main(int argc, char* argv[]) {
 	  }
 	  
 	  // dummy data
-	  if(!addData && is_bkg)
+	  if(!addData && is_bkg && (title.find("QCD") == string::npos))
 	    FITBuilder.AddEvent(weight, Mperp, RISR,
 				Categories[eindex], data_obs, sys);
 	}

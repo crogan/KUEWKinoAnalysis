@@ -163,7 +163,7 @@ int main(int argc, char* argv[]) {
     cout << "   ++sys               add all shape systematics" << endl;
     cout << "   +sys [label]        add systematics matching label" << endl;
     cout << "   -sys [label]        removes systematics matching label" << endl;
-    cout << "   --workspace(-w)     also build workspaces" << endl;
+    cout << "   --workspace(-w)     also build workspaces (note: faster not to, and run message)" << endl;
 
     return 0;
   }
@@ -208,7 +208,8 @@ int main(int argc, char* argv[]) {
     systematics = FIT.GetSystematics();
   else 
     systematics = FIT.GetSystematics().FilterOR(sys_to_add);
-  systematics = systematics.RemoveOR(sys_to_rem);
+  if(systematics.GetN() > 0)
+    systematics = systematics.RemoveOR(sys_to_rem);
 
   ////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////
