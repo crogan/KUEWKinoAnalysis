@@ -323,6 +323,12 @@ int main(int argc, char* argv[]) {
   
   FitConfiguration CONFIG;
   CONFIG.Configure(cb, processes);
+
+  using ch::syst::SystMap;
+  using ch::syst::era;
+  using ch::syst::channel;
+  using ch::syst::bin_id;
+  using ch::syst::process;
   
   int Nsys = systematics.GetN();
   if(Nsys > 0){
