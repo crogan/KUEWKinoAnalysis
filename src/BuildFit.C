@@ -44,6 +44,8 @@ int main(int argc, char* argv[]) {
   int  year    = 2017;
 
   bool workspace = false;
+
+  bool doMCstats = false;
     
   for(int i = 0; i < argc; i++){
     if(strncmp(argv[i],"--workspace", 11) == 0){
@@ -131,6 +133,10 @@ int main(int argc, char* argv[]) {
       i++;
       sys_to_rem += string(argv[i]);
     }
+    if(strncmp(argv[i],"+MCstats", 8) == 0){
+      doMCstats = true;
+    }
+     
   }
     
   if(!addBkg && !addSig && (proc_to_add.size() == 0))
@@ -163,6 +169,7 @@ int main(int argc, char* argv[]) {
     cout << "   ++sys               add all shape systematics" << endl;
     cout << "   +sys [label]        add systematics matching label" << endl;
     cout << "   -sys [label]        removes systematics matching label" << endl;
+    cout << "   +MCstats            adds autoMCStats uncertainties" << endl;
     cout << "   --workspace(-w)     also build workspaces (note: faster not to, and run message)" << endl;
 
     return 0;
@@ -356,6 +363,9 @@ int main(int argc, char* argv[]) {
   cb.cp().signals().ExtractShapes(InputFile,
 				  "$BIN/$PROCESS$MASS",
 				  "$BIN/$PROCESS$MASS_$SYSTEMATIC");
+  // autoMCStats
+  if(doMCstats)
+    cb.cp().SetAutoMCStats(cb, -1.);
   
   /*
   auto bbb = ch::BinByBinFactory()
