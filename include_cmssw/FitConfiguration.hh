@@ -12,19 +12,21 @@
 #include "CombineHarvester/CombineTools/interface/Systematics.h"
 #include "CombineHarvester/CombineTools/interface/BinByBin.h"
 
-using ch::CombineHarvester;
+namespace ch {
 
-///////////////////////////////////////////
-////////// FitConfiguration class
-///////////////////////////////////////////
+  ///////////////////////////////////////////
+  ////////// FitConfiguration class
+  ///////////////////////////////////////////
 
-class FitConfiguration {
-public:
-  FitConfiguration() {}
-  virtual ~FitConfiguration() {}
+  class FitConfiguration {
+  public:
+    FitConfiguration() {}
+    virtual ~FitConfiguration() {}
 
-  void Configure(CombineHarvester& cb, ProcessList& processes);
+    void Configure(CombineHarvester& cb, ProcessList& processes);
    
-};
+  };
+
+}
 
 #endif
