@@ -30,35 +30,35 @@ FitBin CategoryTool::GetFitBin(int index) const {
 
   // R1
   if(index == 1){
-     RBins.push_back(RBin(0.6,   0.7,   VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(50.).a(100.).a(120.)));
-     RBins.push_back(RBin(0.7,   0.75,  VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(50.).a(100.).a(120.)));
-     RBins.push_back(RBin(0.75,  0.8,   VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(50.).a(100.).a(120.)));
-     RBins.push_back(RBin(0.8,   0.85,  VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(50.).a(100.).a(120.)));
-     RBins.push_back(RBin(0.85,  0.9,   VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(50.).a(100.).a(120.)));
-     RBins.push_back(RBin(0.9,   0.925, VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(50.).a(100.).a(120.)));
-     RBins.push_back(RBin(0.925, 0.95,  VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(50.).a(100.).a(120.)));
-     RBins.push_back(RBin(0.95,  1.0,   VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(50.).a(100.).a(120.)));
+    RBins.push_back(RBin(0.6,   0.7,   VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(50.).a(100.).a(120.)));
+    RBins.push_back(RBin(0.7,   0.75,  VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(50.).a(100.).a(120.)));
+    RBins.push_back(RBin(0.75,  0.8,   VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(50.).a(100.).a(120.)));
+    RBins.push_back(RBin(0.8,   0.85,  VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(50.).a(100.).a(120.)));
+    RBins.push_back(RBin(0.85,  0.9,   VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(50.).a(100.).a(120.)));
+    RBins.push_back(RBin(0.9,   0.925, VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(50.).a(100.).a(120.)));
+    RBins.push_back(RBin(0.925, 0.95,  VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(50.).a(100.).a(120.)));
+    RBins.push_back(RBin(0.95,  1.0,   VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(50.).a(100.).a(120.)));
   }
 
   // R2
   if(index == 2){
-     RBins.push_back(RBin(0.6,   0.75,  VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(120.)));
-     RBins.push_back(RBin(0.75,  0.85,  VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(120.)));
-     RBins.push_back(RBin(0.85,  0.9,   VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(120.)));
-     RBins.push_back(RBin(0.9,   0.925, VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(120.)));
-     RBins.push_back(RBin(0.925, 0.95,  VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(120.)));
-     RBins.push_back(RBin(0.95,  0.975, VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(120.)));
-     RBins.push_back(RBin(0.975, 1.,    VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(120.)));
+    RBins.push_back(RBin(0.6,   0.75,  VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(120.)));
+    RBins.push_back(RBin(0.75,  0.85,  VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(120.)));
+    RBins.push_back(RBin(0.85,  0.9,   VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(120.)));
+    RBins.push_back(RBin(0.9,   0.925, VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(120.)));
+    RBins.push_back(RBin(0.925, 0.95,  VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(120.)));
+    RBins.push_back(RBin(0.95,  0.975, VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(120.)));
+    RBins.push_back(RBin(0.975, 1.,    VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(120.)));
   }
 
   // R3
   if(index == 3){
-     RBins.push_back(RBin(0.6,   0.7,   VD().a(0.).a(10.).a(20.).a(30.).a(50.).a(150.)));
-     RBins.push_back(RBin(0.7,   0.8,   VD().a(0.).a(10.).a(20.).a(30.).a(50.).a(150.)));
-     RBins.push_back(RBin(0.8,   0.85,  VD().a(0.).a(10.).a(20.).a(30.).a(50.).a(150.)));
-     RBins.push_back(RBin(0.85,  0.9,   VD().a(0.).a(10.).a(20.).a(30.).a(50.).a(150.)));
-     RBins.push_back(RBin(0.9,   0.95,  VD().a(0.).a(10.).a(20.).a(30.).a(50.).a(150.)));
-     RBins.push_back(RBin(0.95,  1.0,   VD().a(0.).a(10.).a(20.).a(30.).a(50.).a(150.)));
+    RBins.push_back(RBin(0.6,   0.7,   VD().a(0.).a(10.).a(20.).a(30.).a(50.).a(150.)));
+    RBins.push_back(RBin(0.7,   0.8,   VD().a(0.).a(10.).a(20.).a(30.).a(50.).a(150.)));
+    RBins.push_back(RBin(0.8,   0.85,  VD().a(0.).a(10.).a(20.).a(30.).a(50.).a(150.)));
+    RBins.push_back(RBin(0.85,  0.9,   VD().a(0.).a(10.).a(20.).a(30.).a(50.).a(150.)));
+    RBins.push_back(RBin(0.9,   0.95,  VD().a(0.).a(10.).a(20.).a(30.).a(50.).a(150.)));
+    RBins.push_back(RBin(0.95,  1.0,   VD().a(0.).a(10.).a(20.).a(30.).a(50.).a(150.)));
   }
 
   // R4
@@ -266,7 +266,7 @@ Hadronic CategoryTool::GetHadronicRegion(int Njet, int index) const {
       return H;
     }
 
-     // ge2j 0b
+    // ge2j 0b
     if(index == 6){
       Hadronic H(-2, 0, 0, "ge2j0b");
       H += Hadronic(-2, 0, -1);
@@ -345,7 +345,7 @@ Hadronic CategoryTool::GetHadronicRegion(int Njet, int index) const {
       return H;
     }
 
-     // ge3j 0b
+    // ge3j 0b
     if(index == 6){
       Hadronic H(-3, 0, 0, "ge3j0b");
       H += Hadronic(-3, 0, -1);
@@ -646,8 +646,8 @@ CategoryList CategoryTool::GetCategories_0L() const {
   CategoryList Cats_0L_5jS;
   Cats_0L_5jS += Category(L_0, "Ch0L");
   vector<Hadronic> H_0L_5jS;
-  H_0L_5jS.push_back(GetHadronicRegion(5, 2)); // 4j0b
-  H_0L_5jS.push_back(GetHadronicRegion(5, 3)); // 4jge1b
+  H_0L_5jS.push_back(GetHadronicRegion(5, 6)); // ge5j0b
+  H_0L_5jS.push_back(GetHadronicRegion(5, 7)); // ge5jge1b
 
   Cats_0L_5jS = Cats_0L_5jS.CreateFitBinRegions(GetFitBin(6));
   Cats_0L_5jS = Cats_0L_5jS.CreateHadronicSRegions(H_0L_5jS);
@@ -963,7 +963,7 @@ CategoryList CategoryTool::GetCategories_1L() const {
 
 CategoryList CategoryTool::GetCategories_2L() const {
   CategoryList Cats_2L;
-   cout << "Creating 2L Categories" << endl;
+  cout << "Creating 2L Categories" << endl;
 
   // define leptons
   Lep elp(kElectron, kPos);
@@ -1220,7 +1220,7 @@ CategoryList CategoryTool::GetCategories_2L() const {
 
   ///////////////////////////////////////////////
 
-   cout << "Building 2L 2j 0/1/2b object regions" << endl;
+  cout << "Building 2L 2j 0/1/2b object regions" << endl;
   CategoryList Cats_2L_2jS_gold = Cats_2Lchargehem;
   CategoryList Cats_2L_2jS_silver = Cats_2Lflavor;
   CategoryList Cats_2L_2jS_bronze = Cats_2Lflavor;
@@ -1257,13 +1257,13 @@ CategoryList CategoryTool::GetCategories_2L() const {
 
   ///////////////////////////////////////////////
 
-  cout << "Building 2L 3j 0/ge1b object regions" << endl;
+  cout << "Building 2L ge3j 0/ge1b object regions" << endl;
   CategoryList Cats_2L_3jS_gold = Cats_2Lchargehem;
   CategoryList Cats_2L_3jS_silver = Cats_2Lflavor;
   CategoryList Cats_2L_3jS_bronze = Cats_2Lflavor;
   vector<Hadronic> H_2L_3jS;
-  H_2L_3jS.push_back(GetHadronicRegion(3, 2)); // 3j0b
-  H_2L_3jS.push_back(GetHadronicRegion(3, 3)); // 3jge1b
+  H_2L_3jS.push_back(GetHadronicRegion(3, 6)); // ge3j0b
+  H_2L_3jS.push_back(GetHadronicRegion(3, 7)); // ge3jge1b
 
   Cats_2L_3jS_gold = Cats_2L_3jS_gold.CreateFitBinRegions(GetFitBin(5));
   Cats_2L_3jS_gold = Cats_2L_3jS_gold.CreateLeptonIDRegions(IDs_gold, 1);
@@ -1294,6 +1294,340 @@ CategoryList CategoryTool::GetCategories_2L() const {
 
 CategoryList CategoryTool::GetCategories_3L() const {
   CategoryList Cats_3L;
+  cout << "Creating 3L Categories" << endl;
 
+  // define leptons
+  Lep elp(kElectron, kPos);
+  Lep elm(kElectron, kNeg);
+  Lep mup(kMuon, kPos);
+  Lep mum(kMuon, kNeg);
+
+  // 3 L, elelel - OSSF hem separated
+  Leptonic    L_OSSF_elel_el(LepList().Add(elp).Add(elm), LepList().Add(elp), "OSSFelel^el");
+  L_OSSF_elel_el += Leptonic(LepList().Add(elp).Add(elm), LepList().Add(elm));
+  L_OSSF_elel_el += Leptonic(LepList().Add(elp).Add(elm).Add(elp), LepList());
+  L_OSSF_elel_el += Leptonic(LepList().Add(elp).Add(elm).Add(elm), LepList());
+  Leptonic    L_nOSSF_elel_el(LepList().Add(elp).Add(elp), LepList().Add(elp), "nOSSFelel^el");
+  L_nOSSF_elel_el += Leptonic(LepList().Add(elm).Add(elm), LepList().Add(elm));
+  L_nOSSF_elel_el += Leptonic(LepList().Add(elp).Add(elp), LepList().Add(elm));
+  L_nOSSF_elel_el += Leptonic(LepList().Add(elm).Add(elm), LepList().Add(elp));
+  L_nOSSF_elel_el += Leptonic(LepList().Add(elp).Add(elp).Add(elp), LepList());
+  L_nOSSF_elel_el += Leptonic(LepList().Add(elm).Add(elm).Add(elm), LepList());
+  // 3 L, elelel - OSSF incl
+  Leptonic    L_OSSF_elelel(LepList().Add(elp).Add(elm), LepList().Add(elp), "OSSFelelel");
+  L_OSSF_elelel += Leptonic(LepList().Add(elp).Add(elm), LepList().Add(elm));
+  L_OSSF_elelel += Leptonic(LepList().Add(elp).Add(elm).Add(elp), LepList());
+  L_OSSF_elelel += Leptonic(LepList().Add(elp).Add(elm).Add(elm), LepList());
+  L_OSSF_elelel += Leptonic(LepList().Add(elp).Add(elp), LepList().Add(elm));
+  L_OSSF_elelel += Leptonic(LepList().Add(elm).Add(elm), LepList().Add(elp));
+  Leptonic    L_nOSSF_elelel(LepList().Add(elp).Add(elp), LepList().Add(elp), "nOSSFelelel");
+  L_nOSSF_elelel += Leptonic(LepList().Add(elm).Add(elm), LepList().Add(elm));
+  L_nOSSF_elelel += Leptonic(LepList().Add(elp).Add(elp).Add(elp), LepList());
+  L_nOSSF_elelel += Leptonic(LepList().Add(elm).Add(elm).Add(elm), LepList());
+  // 3 L, elelel - incl
+  Leptonic    L_elelel(LepList().Add(elp).Add(elm), LepList().Add(elp), "elelel");
+  L_elelel += Leptonic(LepList().Add(elp).Add(elm), LepList().Add(elm));
+  L_elelel += Leptonic(LepList().Add(elp).Add(elm).Add(elp), LepList());
+  L_elelel += Leptonic(LepList().Add(elp).Add(elm).Add(elm), LepList());
+  L_elelel += Leptonic(LepList().Add(elp).Add(elp), LepList().Add(elm));
+  L_elelel += Leptonic(LepList().Add(elm).Add(elm), LepList().Add(elp));
+  L_elelel += Leptonic(LepList().Add(elp).Add(elp), LepList().Add(elp));
+  L_elelel += Leptonic(LepList().Add(elm).Add(elm), LepList().Add(elm));
+  L_elelel += Leptonic(LepList().Add(elp).Add(elp).Add(elp), LepList());
+  L_elelel += Leptonic(LepList().Add(elm).Add(elm).Add(elm), LepList());
+
+  // 3 L, mumumu - OSSF hem separated
+  Leptonic    L_OSSF_mumu_mu(LepList().Add(mup).Add(mum), LepList().Add(mup), "OSSFmumu^mu");
+  L_OSSF_mumu_mu += Leptonic(LepList().Add(mup).Add(mum), LepList().Add(mum));
+  L_OSSF_mumu_mu += Leptonic(LepList().Add(mup).Add(mum).Add(mup), LepList());
+  L_OSSF_mumu_mu += Leptonic(LepList().Add(mup).Add(mum).Add(mum), LepList());
+  Leptonic    L_nOSSF_mumu_mu(LepList().Add(mup).Add(mup), LepList().Add(mup), "nOSSFmumu^mu");
+  L_nOSSF_mumu_mu += Leptonic(LepList().Add(mum).Add(mum), LepList().Add(mum));
+  L_nOSSF_mumu_mu += Leptonic(LepList().Add(mup).Add(mup), LepList().Add(mum));
+  L_nOSSF_mumu_mu += Leptonic(LepList().Add(mum).Add(mum), LepList().Add(mup));
+  L_nOSSF_mumu_mu += Leptonic(LepList().Add(mup).Add(mup).Add(mup), LepList());
+  L_nOSSF_mumu_mu += Leptonic(LepList().Add(mum).Add(mum).Add(mum), LepList());
+  // 3 L, mumumu - OSSF incl
+  Leptonic    L_OSSF_mumumu(LepList().Add(mup).Add(mum), LepList().Add(mup), "OSSFmumumu");
+  L_OSSF_mumumu += Leptonic(LepList().Add(mup).Add(mum), LepList().Add(mum));
+  L_OSSF_mumumu += Leptonic(LepList().Add(mup).Add(mum).Add(mup), LepList());
+  L_OSSF_mumumu += Leptonic(LepList().Add(mup).Add(mum).Add(mum), LepList());
+  L_OSSF_mumumu += Leptonic(LepList().Add(mup).Add(mup), LepList().Add(mum));
+  L_OSSF_mumumu += Leptonic(LepList().Add(mum).Add(mum), LepList().Add(mup));
+  Leptonic    L_nOSSF_mumumu(LepList().Add(mup).Add(mup), LepList().Add(mup), "nOSSFmumumu");
+  L_nOSSF_mumumu += Leptonic(LepList().Add(mum).Add(mum), LepList().Add(mum));
+  L_nOSSF_mumumu += Leptonic(LepList().Add(mup).Add(mup).Add(mup), LepList());
+  L_nOSSF_mumumu += Leptonic(LepList().Add(mum).Add(mum).Add(mum), LepList());
+  // 3 L, mumumu - incl
+  Leptonic    L_mumumu(LepList().Add(mup).Add(mum), LepList().Add(mup), "mumumu");
+  L_mumumu += Leptonic(LepList().Add(mup).Add(mum), LepList().Add(mum));
+  L_mumumu += Leptonic(LepList().Add(mup).Add(mum).Add(mup), LepList());
+  L_mumumu += Leptonic(LepList().Add(mup).Add(mum).Add(mum), LepList());
+  L_mumumu += Leptonic(LepList().Add(mup).Add(mup), LepList().Add(mum));
+  L_mumumu += Leptonic(LepList().Add(mum).Add(mum), LepList().Add(mup));
+  L_mumumu += Leptonic(LepList().Add(mup).Add(mup), LepList().Add(mup));
+  L_mumumu += Leptonic(LepList().Add(mum).Add(mum), LepList().Add(mum));
+  L_mumumu += Leptonic(LepList().Add(mup).Add(mup).Add(mup), LepList());
+  L_mumumu += Leptonic(LepList().Add(mum).Add(mum).Add(mum), LepList());
+
+  // 3 L, elelmu - OSSF hem separated
+  Leptonic    L_OSSF_elel_mu(LepList().Add(elp).Add(elm), LepList().Add(mup), "OSSFelel^mu");
+  L_OSSF_elel_mu += Leptonic(LepList().Add(elp).Add(elm), LepList().Add(mum));
+  L_OSSF_elel_mu += Leptonic(LepList().Add(elp).Add(elm).Add(mup), LepList());
+  L_OSSF_elel_mu += Leptonic(LepList().Add(elp).Add(elm).Add(mum), LepList());
+  Leptonic    L_nOSSF_elel_mu(LepList().Add(elp).Add(elp), LepList().Add(mup), "nOSSFelel^mu");
+  L_nOSSF_elel_mu += Leptonic(LepList().Add(elm).Add(elm), LepList().Add(mum));
+  L_nOSSF_elel_mu += Leptonic(LepList().Add(elp).Add(elp), LepList().Add(mum));
+  L_nOSSF_elel_mu += Leptonic(LepList().Add(elm).Add(elm), LepList().Add(mup));
+  L_nOSSF_elel_mu += Leptonic(LepList().Add(elp).Add(elp).Add(mup), LepList());
+  L_nOSSF_elel_mu += Leptonic(LepList().Add(elm).Add(elm).Add(mum), LepList());
+  L_nOSSF_elel_mu += Leptonic(LepList().Add(elp).Add(elp).Add(mum), LepList());
+  L_nOSSF_elel_mu += Leptonic(LepList().Add(elm).Add(elm).Add(mup), LepList());
+  L_nOSSF_elel_mu += Leptonic(LepList().Add(elp).Add(mup), LepList().Add(elm));
+  L_nOSSF_elel_mu += Leptonic(LepList().Add(elp).Add(mum), LepList().Add(elm));
+  L_nOSSF_elel_mu += Leptonic(LepList().Add(elm).Add(mup), LepList().Add(elp));
+  L_nOSSF_elel_mu += Leptonic(LepList().Add(elm).Add(mum), LepList().Add(elp));
+  // 3 L, elelmu - OSSF incl
+  Leptonic    L_OSSF_elelmu(LepList().Add(elp).Add(elm), LepList().Add(mup), "OSSFelelmu");
+  L_OSSF_elelmu += Leptonic(LepList().Add(elp).Add(elm), LepList().Add(mum));
+  L_OSSF_elelmu += Leptonic(LepList().Add(elp).Add(elm).Add(mup), LepList());
+  L_OSSF_elelmu += Leptonic(LepList().Add(elp).Add(elm).Add(mum), LepList());
+  L_OSSF_elelmu += Leptonic(LepList().Add(elp).Add(mup), LepList().Add(elm));
+  L_OSSF_elelmu += Leptonic(LepList().Add(elp).Add(mum), LepList().Add(elm));
+  L_OSSF_elelmu += Leptonic(LepList().Add(elm).Add(mup), LepList().Add(elp));
+  L_OSSF_elelmu += Leptonic(LepList().Add(elm).Add(mum), LepList().Add(elp));
+  Leptonic    L_nOSSF_elelmu(LepList().Add(elp).Add(elp), LepList().Add(mup), "nOSSFelelmu");
+  L_nOSSF_elelmu += Leptonic(LepList().Add(elm).Add(elm), LepList().Add(mum));
+  L_nOSSF_elelmu += Leptonic(LepList().Add(elp).Add(elp), LepList().Add(mum));
+  L_nOSSF_elelmu += Leptonic(LepList().Add(elm).Add(elm), LepList().Add(mup));
+  L_nOSSF_elelmu += Leptonic(LepList().Add(elp).Add(elp).Add(mup), LepList());
+  L_nOSSF_elelmu += Leptonic(LepList().Add(elm).Add(elm).Add(mum), LepList());
+  L_nOSSF_elelmu += Leptonic(LepList().Add(elp).Add(elp).Add(mum), LepList());
+  L_nOSSF_elelmu += Leptonic(LepList().Add(elm).Add(elm).Add(mup), LepList());
+  // 3 L, elelmu - incl
+  Leptonic    L_elelmu(LepList().Add(elp).Add(elm), LepList().Add(mup), "elelmu");
+  L_elelmu += Leptonic(LepList().Add(elp).Add(elm), LepList().Add(mum));
+  L_elelmu += Leptonic(LepList().Add(elp).Add(elm).Add(mup), LepList());
+  L_elelmu += Leptonic(LepList().Add(elp).Add(elm).Add(mum), LepList());
+  L_elelmu += Leptonic(LepList().Add(elp).Add(mup), LepList().Add(elm));
+  L_elelmu += Leptonic(LepList().Add(elp).Add(mum), LepList().Add(elm));
+  L_elelmu += Leptonic(LepList().Add(elm).Add(mup), LepList().Add(elp));
+  L_elelmu += Leptonic(LepList().Add(elm).Add(mum), LepList().Add(elp));
+  L_elelmu += Leptonic(LepList().Add(elp).Add(elp), LepList().Add(mup));
+  L_elelmu += Leptonic(LepList().Add(elm).Add(elm), LepList().Add(mum));
+  L_elelmu += Leptonic(LepList().Add(elp).Add(elp), LepList().Add(mum));
+  L_elelmu += Leptonic(LepList().Add(elm).Add(elm), LepList().Add(mup));
+  L_elelmu += Leptonic(LepList().Add(elp).Add(elp).Add(mup), LepList());
+  L_elelmu += Leptonic(LepList().Add(elm).Add(elm).Add(mum), LepList());
+  L_elelmu += Leptonic(LepList().Add(elp).Add(elp).Add(mum), LepList());
+  L_elelmu += Leptonic(LepList().Add(elm).Add(elm).Add(mup), LepList());
+
+    // 3 L, mumuel - OSSF hem separated
+  Leptonic    L_OSSF_mumu_el(LepList().Add(mup).Add(mum), LepList().Add(elp), "OSSFmumu^el");
+  L_OSSF_mumu_el += Leptonic(LepList().Add(mup).Add(mum), LepList().Add(elm));
+  L_OSSF_mumu_el += Leptonic(LepList().Add(mup).Add(mum).Add(elp), LepList());
+  L_OSSF_mumu_el += Leptonic(LepList().Add(mup).Add(mum).Add(elm), LepList());
+  Leptonic    L_nOSSF_mumu_el(LepList().Add(mup).Add(mup), LepList().Add(elp), "nOSSFmumu^el");
+  L_nOSSF_mumu_el += Leptonic(LepList().Add(mum).Add(mum), LepList().Add(elm));
+  L_nOSSF_mumu_el += Leptonic(LepList().Add(mup).Add(mup), LepList().Add(elm));
+  L_nOSSF_mumu_el += Leptonic(LepList().Add(mum).Add(mum), LepList().Add(elp));
+  L_nOSSF_mumu_el += Leptonic(LepList().Add(mup).Add(mup).Add(elp), LepList());
+  L_nOSSF_mumu_el += Leptonic(LepList().Add(mum).Add(mum).Add(elm), LepList());
+  L_nOSSF_mumu_el += Leptonic(LepList().Add(mup).Add(mup).Add(elm), LepList());
+  L_nOSSF_mumu_el += Leptonic(LepList().Add(mum).Add(mum).Add(elp), LepList());
+  L_nOSSF_mumu_el += Leptonic(LepList().Add(mup).Add(elp), LepList().Add(mum));
+  L_nOSSF_mumu_el += Leptonic(LepList().Add(mup).Add(elm), LepList().Add(mum));
+  L_nOSSF_mumu_el += Leptonic(LepList().Add(mum).Add(elp), LepList().Add(mup));
+  L_nOSSF_mumu_el += Leptonic(LepList().Add(mum).Add(elm), LepList().Add(mup));
+  // 3 L, mumuel - OSSF incl
+  Leptonic    L_OSSF_mumuel(LepList().Add(mup).Add(mum), LepList().Add(elp), "OSSFmumuel");
+  L_OSSF_mumuel += Leptonic(LepList().Add(mup).Add(mum), LepList().Add(elm));
+  L_OSSF_mumuel += Leptonic(LepList().Add(mup).Add(mum).Add(elp), LepList());
+  L_OSSF_mumuel += Leptonic(LepList().Add(mup).Add(mum).Add(elm), LepList());
+  L_OSSF_mumuel += Leptonic(LepList().Add(mup).Add(elp), LepList().Add(mum));
+  L_OSSF_mumuel += Leptonic(LepList().Add(mup).Add(elm), LepList().Add(mum));
+  L_OSSF_mumuel += Leptonic(LepList().Add(mum).Add(elp), LepList().Add(mup));
+  L_OSSF_mumuel += Leptonic(LepList().Add(mum).Add(elm), LepList().Add(mup));
+  Leptonic    L_nOSSF_mumuel(LepList().Add(mup).Add(mup), LepList().Add(elp), "nOSSFmumuel");
+  L_nOSSF_mumuel += Leptonic(LepList().Add(mum).Add(mum), LepList().Add(elm));
+  L_nOSSF_mumuel += Leptonic(LepList().Add(mup).Add(mup), LepList().Add(elm));
+  L_nOSSF_mumuel += Leptonic(LepList().Add(mum).Add(mum), LepList().Add(elp));
+  L_nOSSF_mumuel += Leptonic(LepList().Add(mup).Add(mup).Add(elp), LepList());
+  L_nOSSF_mumuel += Leptonic(LepList().Add(mum).Add(mum).Add(elm), LepList());
+  L_nOSSF_mumuel += Leptonic(LepList().Add(mup).Add(mup).Add(elm), LepList());
+  L_nOSSF_mumuel += Leptonic(LepList().Add(mum).Add(mum).Add(elp), LepList());
+  // 3 L, mumuel - incl
+  Leptonic    L_mumuel(LepList().Add(mup).Add(mum), LepList().Add(elp), "mumuel");
+  L_mumuel += Leptonic(LepList().Add(mup).Add(mum), LepList().Add(elm));
+  L_mumuel += Leptonic(LepList().Add(mup).Add(mum).Add(elp), LepList());
+  L_mumuel += Leptonic(LepList().Add(mup).Add(mum).Add(elm), LepList());
+  L_mumuel += Leptonic(LepList().Add(mup).Add(elp), LepList().Add(mum));
+  L_mumuel += Leptonic(LepList().Add(mup).Add(elm), LepList().Add(mum));
+  L_mumuel += Leptonic(LepList().Add(mum).Add(elp), LepList().Add(mup));
+  L_mumuel += Leptonic(LepList().Add(mum).Add(elm), LepList().Add(mup));
+  L_mumuel += Leptonic(LepList().Add(mup).Add(mup), LepList().Add(elp));
+  L_mumuel += Leptonic(LepList().Add(mum).Add(mum), LepList().Add(elm));
+  L_mumuel += Leptonic(LepList().Add(mup).Add(mup), LepList().Add(elm));
+  L_mumuel += Leptonic(LepList().Add(mum).Add(mum), LepList().Add(elp));
+  L_mumuel += Leptonic(LepList().Add(mup).Add(mup).Add(elp), LepList());
+  L_mumuel += Leptonic(LepList().Add(mum).Add(mum).Add(elm), LepList());
+  L_mumuel += Leptonic(LepList().Add(mup).Add(mup).Add(elm), LepList());
+  L_mumuel += Leptonic(LepList().Add(mum).Add(mum).Add(elp), LepList());
+ 
+  CategoryList Cats_3Lchargehem;
+  Cats_3Lchargehem += Category(L_OSSF_elel_el, "Ch3L");
+  Cats_3Lchargehem += Category(L_nOSSF_elel_el, "Ch3L");
+  Cats_3Lchargehem += Category(L_OSSF_mumu_mu, "Ch3L");
+  Cats_3Lchargehem += Category(L_nOSSF_mumu_mu, "Ch3L");
+  Cats_3Lchargehem += Category(L_OSSF_elel_mu, "Ch3L");
+  Cats_3Lchargehem += Category(L_nOSSF_elel_mu, "Ch3L");
+  Cats_3Lchargehem += Category(L_OSSF_mumu_el, "Ch3L");
+  Cats_3Lchargehem += Category(L_nOSSF_mumu_el, "Ch3L");
+
+  CategoryList Cats_3Lcharge;
+  Cats_3Lcharge += Category(L_OSSF_elelel, "Ch3L");
+  Cats_3Lcharge += Category(L_nOSSF_elelel, "Ch3L");
+  Cats_3Lcharge += Category(L_OSSF_mumumu, "Ch3L");
+  Cats_3Lcharge += Category(L_nOSSF_mumumu, "Ch3L");
+  Cats_3Lcharge += Category(L_OSSF_elelmu, "Ch3L");
+  Cats_3Lcharge += Category(L_nOSSF_elelmu, "Ch3L");
+  Cats_3Lcharge += Category(L_OSSF_mumuel, "Ch3L");
+  Cats_3Lcharge += Category(L_nOSSF_mumuel, "Ch3L");
+
+  CategoryList Cats_3Lflavor;
+  Cats_3Lcharge += Category(L_elelel, "Ch3L");
+  Cats_3Lcharge += Category(L_mumumu, "Ch3L");
+  Cats_3Lcharge += Category(L_elelmu, "Ch3L");
+  Cats_3Lcharge += Category(L_mumuel, "Ch3L");
+
+  // Get hadronic ISR region lists - inclusive and b-separated
+  vector<Hadronic> H_ISR_noB;
+  vector<Hadronic> H_ISR_B;
+  H_ISR_noB.push_back(GetHadronicRegion(1, 0)); // ge1j
+  H_ISR_B.push_back(GetHadronicRegion(1, 6)); // ge1j0b
+  H_ISR_B.push_back(GetHadronicRegion(1, 7)); // ge1jge1b
+  
+  // Get PTISR binning
+  vector<double> PTISR_incl;
+  PTISR_incl.push_back(200.);
+
+  vector<double> PTISR_bin;
+  PTISR_bin.push_back(200.);
+  PTISR_bin.push_back(300.);
+
+  // Get SV binning
+  vector<double> SV_eta;
+  SV_eta.push_back(0.);
+  SV_eta.push_back(1.5);
+
+  // Get Lep ID vectors
+  vector<LepID> IDs_all;
+  IDs_all.push_back(kGold);
+  IDs_all.push_back(kSilver);
+  IDs_all.push_back(kBronze);
+  vector<LepID> IDs_gold;
+  IDs_gold.push_back(kGold);
+  vector<LepID> IDs_silver;
+  IDs_silver.push_back(kSilver);
+  vector<LepID> IDs_bronze;
+  IDs_bronze.push_back(kBronze);
+
+  ///////////////////////////////////////////////
+  
+  cout << "Building 3L 0S object regions" << endl;
+  CategoryList Cats_3L_0S_gold = Cats_3Lchargehem; //Cats_3Lcharge
+  CategoryList Cats_3L_0S_silver = Cats_3Lflavor;
+  CategoryList Cats_3L_0S_bronze = Cats_3Lflavor;
+  vector<Hadronic> H_3L_0S;
+  H_3L_0S.push_back(GetHadronicRegion(0, 1)); // 0j0sv
+
+  Cats_3L_0S_gold = Cats_3L_0S_gold.CreateFitBinRegions(GetFitBin(1)); // R1
+  Cats_3L_0S_gold = Cats_3L_0S_gold.CreateLeptonIDRegions(IDs_gold, 1);
+  Cats_3L_0S_gold = Cats_3L_0S_gold.CreateHadronicSRegions(H_3L_0S);
+  Cats_3L_0S_gold = Cats_3L_0S_gold.CreateHadronicISRRegions(H_ISR_B);
+  Cats_3L_0S_gold = Cats_3L_0S_gold.CreateGenericRegions("PTISR", PTISR_incl);
+
+  Cats_3L_0S_silver = Cats_3L_0S_silver.CreateFitBinRegions(GetFitBin(1));
+  Cats_3L_0S_silver = Cats_3L_0S_silver.CreateLeptonIDRegions(IDs_silver, 1);
+  Cats_3L_0S_silver = Cats_3L_0S_silver.CreateHadronicSRegions(H_3L_0S);
+  Cats_3L_0S_silver = Cats_3L_0S_silver.CreateHadronicISRRegions(H_ISR_noB);
+  Cats_3L_0S_silver = Cats_3L_0S_silver.CreateGenericRegions("PTISR", PTISR_incl);
+
+  Cats_3L_0S_bronze = Cats_3L_0S_bronze.CreateFitBinRegions(GetFitBin(1));
+  Cats_3L_0S_bronze = Cats_3L_0S_bronze.CreateLeptonIDRegions(IDs_bronze, 1);
+  Cats_3L_0S_bronze = Cats_3L_0S_bronze.CreateHadronicSRegions(H_3L_0S);
+  Cats_3L_0S_bronze = Cats_3L_0S_bronze.CreateHadronicISRRegions(H_ISR_noB);
+  Cats_3L_0S_bronze = Cats_3L_0S_bronze.CreateGenericRegions("PTISR", PTISR_incl);
+
+  Cats_3L += Cats_3L_0S_gold;
+  Cats_3L += Cats_3L_0S_silver;
+  Cats_3L += Cats_3L_0S_bronze;
+
+  ///////////////////////////////////////////////
+
+  cout << "Building 3L 1j 0/1b object regions" << endl;
+  CategoryList Cats_3L_1jS_gold = Cats_3Lchargehem; //Cats_3Lcharge
+  CategoryList Cats_3L_1jS_silver = Cats_3Lflavor;
+  CategoryList Cats_3L_1jS_bronze = Cats_3Lflavor;
+  vector<Hadronic> H_3L_1jS;
+  H_3L_1jS.push_back(GetHadronicRegion(1, 8)); // 1j0b
+  H_3L_1jS.push_back(GetHadronicRegion(1, 9)); // 1j1b
+
+  Cats_3L_1jS_gold = Cats_3L_1jS_gold.CreateFitBinRegions(GetFitBin(3));
+  Cats_3L_1jS_gold = Cats_3L_1jS_gold.CreateLeptonIDRegions(IDs_gold, 1);
+  Cats_3L_1jS_gold = Cats_3L_1jS_gold.CreateHadronicSRegions(H_3L_1jS);
+  Cats_3L_1jS_gold = Cats_3L_1jS_gold.CreateHadronicISRRegions(H_ISR_B);
+  Cats_3L_1jS_gold = Cats_3L_1jS_gold.CreateGenericRegions("PTISR", PTISR_incl);
+
+  Cats_3L_1jS_silver = Cats_3L_1jS_silver.CreateFitBinRegions(GetFitBin(3));
+  Cats_3L_1jS_silver = Cats_3L_1jS_silver.CreateLeptonIDRegions(IDs_silver, 1);
+  Cats_3L_1jS_silver = Cats_3L_1jS_silver.CreateHadronicSRegions(H_3L_1jS);
+  Cats_3L_1jS_silver = Cats_3L_1jS_silver.CreateHadronicISRRegions(H_ISR_noB);
+  Cats_3L_1jS_silver = Cats_3L_1jS_silver.CreateGenericRegions("PTISR", PTISR_incl);
+
+  Cats_3L_1jS_bronze = Cats_3L_1jS_bronze.CreateFitBinRegions(GetFitBin(3));
+  Cats_3L_1jS_bronze = Cats_3L_1jS_bronze.CreateLeptonIDRegions(IDs_bronze, 1);
+  Cats_3L_1jS_bronze = Cats_3L_1jS_bronze.CreateHadronicSRegions(H_3L_1jS);
+  Cats_3L_1jS_bronze = Cats_3L_1jS_bronze.CreateHadronicISRRegions(H_ISR_noB);
+  Cats_3L_1jS_bronze = Cats_3L_1jS_bronze.CreateGenericRegions("PTISR", PTISR_incl);
+
+  Cats_3L += Cats_3L_1jS_gold;
+  Cats_3L += Cats_3L_1jS_silver;
+  Cats_3L += Cats_3L_1jS_bronze;
+
+  ///////////////////////////////////////////////
+
+  cout << "Building 3L ge2j 0/ge1b object regions" << endl;
+  CategoryList Cats_3L_2jS_gold = Cats_3Lchargehem;
+  CategoryList Cats_3L_2jS_silver = Cats_3Lflavor;
+  CategoryList Cats_3L_2jS_bronze = Cats_3Lflavor;
+  vector<Hadronic> H_3L_2jS;
+  H_3L_2jS.push_back(GetHadronicRegion(2, 6)); // ge2j0b
+  H_3L_2jS.push_back(GetHadronicRegion(2, 7)); // ge2jge1b
+
+  Cats_3L_2jS_gold = Cats_3L_2jS_gold.CreateFitBinRegions(GetFitBin(4));
+  Cats_3L_2jS_gold = Cats_3L_2jS_gold.CreateLeptonIDRegions(IDs_gold, 1);
+  Cats_3L_2jS_gold = Cats_3L_2jS_gold.CreateHadronicSRegions(H_3L_2jS);
+  Cats_3L_2jS_gold = Cats_3L_2jS_gold.CreateHadronicISRRegions(H_ISR_B);
+  Cats_3L_2jS_gold = Cats_3L_2jS_gold.CreateGenericRegions("PTISR", PTISR_incl);
+
+  Cats_3L_2jS_silver = Cats_3L_2jS_silver.CreateFitBinRegions(GetFitBin(4));
+  Cats_3L_2jS_silver = Cats_3L_2jS_silver.CreateLeptonIDRegions(IDs_silver, 1);
+  Cats_3L_2jS_silver = Cats_3L_2jS_silver.CreateHadronicSRegions(H_3L_2jS);
+  Cats_3L_2jS_silver = Cats_3L_2jS_silver.CreateHadronicISRRegions(H_ISR_noB);
+  Cats_3L_2jS_silver = Cats_3L_2jS_silver.CreateGenericRegions("PTISR", PTISR_incl);
+
+  Cats_3L_2jS_bronze = Cats_3L_2jS_bronze.CreateFitBinRegions(GetFitBin(4));
+  Cats_3L_2jS_bronze = Cats_3L_2jS_bronze.CreateLeptonIDRegions(IDs_bronze, 1);
+  Cats_3L_2jS_bronze = Cats_3L_2jS_bronze.CreateHadronicSRegions(H_3L_2jS);
+  Cats_3L_2jS_bronze = Cats_3L_2jS_bronze.CreateHadronicISRRegions(H_ISR_noB);
+  Cats_3L_2jS_bronze = Cats_3L_2jS_bronze.CreateGenericRegions("PTISR", PTISR_incl);
+
+  Cats_3L += Cats_3L_2jS_gold;
+  Cats_3L += Cats_3L_2jS_silver;
+  Cats_3L += Cats_3L_2jS_bronze;
+
+  ///////////////////////////////////////////////
+  
   return Cats_3L;
 }
