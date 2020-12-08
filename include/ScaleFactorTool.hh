@@ -16,6 +16,9 @@ public:
 
   double GetX20BRSF(double MX2, double MX1);
 
+  double GetMETEff(double MET, int updown = 0);
+  double GetMETSF(double MET, int updown = 0);
+
 };
 
 #endif

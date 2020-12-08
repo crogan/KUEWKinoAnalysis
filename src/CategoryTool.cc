@@ -183,7 +183,7 @@ Hadronic CategoryTool::GetHadronicRegion(int Njet, int index) const {
 
     // C6 exactly 1 jet 1b ge1sv
     if(index == 5){
-      Hadronic H(1, 1, -1, "1j0bge1sv");
+      Hadronic H(1, 1, -1, "1j1bge1sv");
       return H;
     }
 

@@ -44,6 +44,12 @@ private:
   static bool m_ProcInit;
   static std::map<Process, pair<vector<string>,string> > m_Proc[3];
   static double m_Lumi[3];
+
+  // signal only
+  // static std::map<Process, bool> m_SProcInit[3];
+  // static std::map<Process, std::map<string,bool> > m_SProcFS[3]; // FastSim?
+  // static std::map<Process, std::map<string,bool> > m_SProcDL[3]; // di-lepton
+  
   
 };
 

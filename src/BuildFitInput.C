@@ -255,7 +255,7 @@ int main(int argc, char* argv[]) {
 	  int PDGID = base->PDGID_lep->at(index);
 	    
 	  LepID id;
-	  if(base->ID_lep->at(index) < 3 ||
+	  if(base->ID_lep->at(index*2) < 3 ||
 	     base->MiniIso_lep->at(index)*base->PT_lep->at(index) >= 4. ||
 	     base->RelIso_lep->at(index)*base->PT_lep->at(index) >= 4.)
 	    id = kBronze;
@@ -280,7 +280,7 @@ int main(int argc, char* argv[]) {
 	  int PDGID = base->PDGID_lep->at(index);
 
 	  LepID id;
-	  if(base->ID_lep->at(index) < 3 ||
+	  if(base->ID_lep->at(index*2) < 3 ||
 	     base->MiniIso_lep->at(index)*base->PT_lep->at(index) >= 4. ||
 	     base->RelIso_lep->at(index)*base->PT_lep->at(index) >= 4.)
 	    id = kBronze;
