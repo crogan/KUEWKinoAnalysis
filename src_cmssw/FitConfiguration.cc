@@ -31,7 +31,7 @@ void FitConfiguration::Configure(ch::CombineHarvester& cb, ProcessList& processe
   for(auto p : bkg_rate){
     ProcessList plist = backgrounds.Filter(p);
     cb.cp().process(plist.GetProcesses())
-      .AddSyst(cb, "scale"+p, "rateParam", SystMap<>::init(1.0));
+      .AddSyst(cb, "scale_"+p, "rateParam", SystMap<>::init(1.0));
   }
   
   for(auto p : bkg_rare){

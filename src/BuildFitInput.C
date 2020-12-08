@@ -225,10 +225,10 @@ int main(int argc, char* argv[]) {
 	// current cut
 	if(base->PTCM > 75. && fabs(base->dphiCMI) < acos(-1.)/4.)
 	  continue;
-	if(base->PTCM > 50. && fabs(base->dphiCMI) > 3.*acos(-1.)/4.)
+	if(base->PTCM > 100. && fabs(base->dphiCMI) > 3.*acos(-1.)/4.)
 	  continue;
 	  
-	if(base->RISR < 0.6 || base->RISR > 1.0)
+	if(base->RISR < 0.5 || base->RISR > 1.0)
 	  continue;
 
 	if(fabs(base->dphiMET_V) > acos(-1.)/2.)
