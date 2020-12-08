@@ -138,9 +138,11 @@ void SampleTool::InitSMS(const string& prefix, const string& filename){
 void SampleTool::InitProcMap(){
   m_ProcInit = true;
 
-  m_Lumi[0] = 35.922; // 2016 lumi
-  m_Lumi[1] = 41.529; // 2017 lumi
-  m_Lumi[2] = 59.74;  // 2018 lumi
+  m_Lumi[0] = 35.921875595;    // 2016 lumi
+  m_Lumi[1] = 41.529152060;    // 2017 lumi
+  m_Lumi[2] = 59.740565;       // 2018 lumi
+
+  // 2018 - 21.077794578, 38.662770624 (pre/post HEM)
 
   VS list;
   
