@@ -18,10 +18,21 @@ INCLUDEDIR       = ./include/
 SRCDIR           = ./src/
 CXX	         += -I$(INCLUDEDIR) -I.
 OUTOBJ	         = ./obj/
+OUTOBJ_CMSSW	 = ./obj_cmssw/
+
+INCLUDEDIR_CMSSW  = ./include_cmssw/
+SRCDIR_CMSSW      = ./src_cmssw/
+
+cmssw: CXX += -I$(INCLUDEDIR_CMSSW)
 
 CC_FILES := $(wildcard src/*.cc)
 HH_FILES := $(wildcard include/*.hh)
+
+CC_FILES_CMSSW := $(wildcard src_cmssw/*.cc)
+cmssw: HH_FILES += $(wildcard include_cmssw/*.hh)
+
 OBJ_FILES := $(addprefix $(OUTOBJ),$(notdir $(CC_FILES:.cc=.o)))
+OBJ_FILES_CMSSW := $(addprefix $(OUTOBJ_CMSSW),$(notdir $(CC_FILES_CMSSW:.cc=.o)))
 
 SOBJ_FILES = $(filter-out AnalysisBase.o SVDiscrTool.o ReducedNtuple.o NtupleBase.o, $(OBJ_FILES))
 
@@ -54,8 +65,8 @@ lib: lib/libKUEWKino.so
 
 alltargets: MakeReducedNtuple_NANO.x MakeEventCount_NANO.x BuildFitInput.x shapeAnalyzer2.x newMakeWS.x
 
-BuildFit.x:  $(SRCDIR)BuildFit.C $(OBJ_FILES) $(HH_FILES)
-	$(CXX) $(CXXFLAGS) -o BuildFit.x $(OUTOBJ)/*.o $(GLIBS) $ $<
+BuildFit.x:  $(SRCDIR)BuildFit.C $(OBJ_FILES) $(OBJ_FILES_CMSSW) $(HH_FILES)
+	$(CXX) $(CXXFLAGS) -o BuildFit.x $(OUTOBJ)/*.o $(OUTOBJ_CMSSW)/*.o $(GLIBS) $ $<
 	touch BuildFit.x
 
 MakeReducedNtuple.x:  $(SRCDIR)MakeReducedNtuple.C $(OBJ_FILES) $(HH_FILES)
@@ -95,8 +106,12 @@ lib/libKUEWKino.so: $(SOBJ_FILES)
 $(OUTOBJ)%.o: src/%.cc include/%.hh
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
+$(OUTOBJ_CMSSW)%.o: src_cmssw/%.cc include_cmssw/%.hh
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
 clean:
-	rm -f $(OUTOBJ)*.o 
+	rm -f $(OUTOBJ)*.o
+	rm -f $(OUTOBJ_CMSSW)*.o
 	rm -f *.x
 	rm -f AutoDict*
 	rm -f lib/libKUEWKino.so

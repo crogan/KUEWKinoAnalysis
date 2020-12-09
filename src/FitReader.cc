@@ -749,7 +749,8 @@ TCanvas* FitReader::Plot2D(const VS& proc,
 			   const VS& lep_cat,
 			   const VS& hadS_cat,
 			   const VS& hadI_cat,
-			   const string& name){
+			   const string& name,
+			   const string& extra){
   RestFrames::SetStyle();
   
   int Nproc = proc.size();
@@ -822,6 +823,9 @@ TCanvas* FitReader::Plot2D(const VS& proc,
   }
 
   cat = cat.FilterOR(vhadI);
+
+  if(extra != "")
+    cat = cat.Filter(extra);
 
   int Ncat = cat.GetN();
   

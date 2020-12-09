@@ -52,7 +52,81 @@ ProcessList SampleTool::Get(ProcessType type) const {
 
   return list;
 }
- 
+
+bool SampleTool::IsFastSim(const Process& proc, int itree){
+  if(m_SProcInit[m_iYear].count(proc) == 0)
+    return false;
+
+  if(!m_SProcInit[m_iYear][proc])
+    InitSignalProc(proc);
+
+  return m_SProcFS[m_iYear][proc][FileName(proc, itree)];
+}
+
+bool SampleTool::FilterDilepton(const Process& proc, int itree){
+  if(m_SProcInit[m_iYear].count(proc) == 0)
+    return false;
+
+  if(!m_SProcInit[m_iYear][proc])
+    InitSignalProc(proc);
+
+  return m_SProcDL[m_iYear][proc][FileName(proc, itree)];
+}
+
+double SampleTool::GetSampleWeight(const Process& proc, int itree){
+  if(m_SProcInit[m_iYear].count(proc) == 0)
+    return 1.;
+
+  if(!m_SProcInit[m_iYear][proc])
+    InitSignalProc(proc);
+  
+  return m_SProcW[m_iYear][proc][FileName(proc, itree)];
+}
+
+void SampleTool::InitSignalProc(const Process& proc){
+  if(m_SProcInit[m_iYear].count(proc) == 0)
+    return;
+  if(m_SProcInit[m_iYear][proc])
+    return;
+
+  int countDL = 0;
+  int countIN = 0;
+  vector<int> count;
+  bool isDL = false;
+  int Nfile = int(m_Proc[m_iYear][proc].first.size());
+  
+  for(int f = 0; f < Nfile; f++){
+    TChain* chain = new TChain(m_Proc[m_iYear][proc].second.c_str());
+    string filename = m_Proc[m_iYear][proc].first[f];
+    chain->AddFile(filename.c_str());
+    count.push_back(chain->GetEntries());
+    if(chain)
+      delete chain;
+    
+    if(count[f] <= 0)
+      continue;
+    
+    if(m_SProcDL[m_iYear][proc][filename]){
+      countDL += count[f];
+      isDL = true;
+    } else
+      countIN += count[f];
+  }
+
+  for(int f = 0; f < Nfile; f++){
+    string filename = m_Proc[m_iYear][proc].first[f].c_str();
+    if(m_SProcDL[m_iYear][proc][filename]){
+      m_SProcDL[m_iYear][proc][filename] = false;
+      m_SProcW[m_iYear][proc][filename] *= double(count[f])/double(countDL);
+    } else {
+      if(isDL)
+	m_SProcDL[m_iYear][proc][filename] = true;
+      m_SProcW[m_iYear][proc][filename] *= double(count[f])/double(countIN);
+    }
+  }
+  
+  m_SProcInit[m_iYear][proc] = true;
+}
   
 int SampleTool::NTrees(const Process& proc){
   if(m_Proc[m_iYear].count(proc) == 0)
@@ -64,6 +138,10 @@ int SampleTool::NTrees(const Process& proc){
 TChain* SampleTool::Tree(const Process& proc, int itree){
   if(m_Proc[m_iYear].count(proc) == 0)
     return nullptr;
+
+   if(m_SProcInit[m_iYear].count(proc) > 0)
+     if(!m_SProcInit[m_iYear][proc])
+       InitSignalProc(proc);
 
   TChain* chain = new TChain(m_Proc[m_iYear][proc].second.c_str());
   int Nfile = int(m_Proc[m_iYear][proc].first.size());
@@ -110,7 +188,7 @@ int SampleTool::YearMap(int year){
   return ydef;
 }
 
-void SampleTool::InitSMS(const string& prefix, const string& filename){
+void SampleTool::InitSMS(const string& prefix, const string& filename, double weight, bool FS, bool DL){
 
   TFile file(filename.c_str(), "READ");
   if(!file.IsOpen())
@@ -128,9 +206,26 @@ void SampleTool::InitSMS(const string& prefix, const string& filename){
     sscanf(name.c_str(), "SMS_%d_%d", &M0, &M1);
 
     Process proc(Form("%s_%d", prefix.c_str(), 10000*M0+M1), kSig);
+
     files.clear();
-    files += filename;
-    m_Proc[m_iYear][proc] = pair<vector<string>,string>(files, name);
+    if(m_Proc[m_iYear].count(proc) == 0){
+      files += filename;
+      m_Proc[m_iYear][proc] = pair<vector<string>,string>(files, name);
+      m_SProcInit[m_iYear][proc] = false;
+      m_SProcFS[m_iYear][proc] = std::map<string,bool>();
+      m_SProcDL[m_iYear][proc] = std::map<string,bool>();
+      m_SProcW[m_iYear][proc] = std::map<string,double>();
+      m_SProcFS[m_iYear][proc][filename] = FS;
+      m_SProcDL[m_iYear][proc][filename] = DL;
+      m_SProcW[m_iYear][proc][filename] = weight;
+    } else {
+      m_Proc[m_iYear][proc].first.push_back(filename);
+      m_SProcFS[m_iYear][proc][filename] = FS;
+      m_SProcDL[m_iYear][proc][filename] = DL;
+      m_SProcW[m_iYear][proc][filename] = weight;
+    }
+    
+   
   }
   file.Close();
 }
@@ -138,9 +233,11 @@ void SampleTool::InitSMS(const string& prefix, const string& filename){
 void SampleTool::InitProcMap(){
   m_ProcInit = true;
 
-  m_Lumi[0] = 35.922; // 2016 lumi
-  m_Lumi[1] = 41.529; // 2017 lumi
-  m_Lumi[2] = 59.74;  // 2018 lumi
+  m_Lumi[0] = 35.921875595;    // 2016 lumi
+  m_Lumi[1] = 41.529152060;    // 2017 lumi
+  m_Lumi[2] = 59.740565;       // 2018 lumi
+
+  // 2018 - 21.077794578, 38.662770624 (pre/post HEM)
 
   VS list;
   
@@ -253,20 +350,38 @@ void SampleTool::InitProcMap(){
     list += m_Path + "Fall17_102X/QCD_HT700to1000_TuneCP5_13TeV-madgraph-pythia8_Fall17_102X.root";
     m_Proc[m_iYear][QCD] = pair<vector<string>,string>(list, "KUAnalysis");
 
-    InitSMS("T2bW", m_Path+"Fall17_102X_SMS/SMS-T2bW_X05_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+    InitSMS("T2bW", m_Path+"Fall17_102X_SMS/SMS-T2bW_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
+    InitSMS("T2bW", m_Path+"Fall17_102X_SMS/SMS-T2bW_X05_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
+    InitSMS("T2bW", m_Path+"Fall17_102X_SMS/SMS-T2bW_X05_dM-10to80_2Lfilter_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", (3.*0.1086)*(3.*0.1086), true, true);
 
-    InitSMS("T2tt", m_Path+"Fall17_102X_SMS/SMS-T2tt_mStop-400to1200_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-    //InitSMS("T2tt", m_Path+"Fall17_102X_SMS/SMS-T2tt_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+    InitSMS("T2tt", m_Path+"Fall17_102X_SMS/SMS-T2tt_dM-10to80_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
+    InitSMS("T2tt", m_Path+"Fall17_102X_SMS/SMS-T2tt_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
+    InitSMS("T2tt", m_Path+"Fall17_102X_SMS/SMS-T2tt_mStop-400to1200_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
+    InitSMS("T2tt", m_Path+"Fall17_102X_SMS/SMS-T2tt_dM-10to80_2Lfilter_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", (3.*0.1086)*(3.*0.1086), true, true);
+    InitSMS("T2tt", m_Path+"Fall17_102X_SMS/Fall17_102X_SMS/SMS-T2tt_3J-LH_xqcut-20_top-corridorRefMasses_2Lfilter_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root", (3.*0.1086)*(3.*0.1086), false, true);
+    
+    InitSMS("TChiWZ", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true, true);
+    InitSMS("TChiWZ", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_dM-90to100_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true, true);
+    InitSMS("TChiWZ", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., false, true);
+    InitSMS("TChiWZ", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_mC1-325to1000_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., false, true);
+    InitSMS("TChiWZ", m_Path+"Fall17_102X_SMS/TChiWZ_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
+    
+    InitSMS("TChipmWW", m_Path+"Fall17_102X_SMS/SMS-TChipmWW_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
+    InitSMS("TChipmWW", m_Path+"Fall17_102X_SMS/SMS-TChipmWW_WWTo2LNu_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true, true);
 
-    InitSMS("TChiWZ", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+    InitSMS("TSlepSlep", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 2.77, true);
+    InitSMS("TSlepSlep", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_mSlep-500To1300_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 2.77, true);
 
-    InitSMS("TChipmWW", m_Path+"Fall17_102X_SMS/SMS-TChipmWW_WWTo2LNu_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+    InitSMS("T2bb", m_Path+"Fall17_102X_SMS/SMS-T2bb_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
 
-    InitSMS("TSlepSlep", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+    InitSMS("T2cc", m_Path+"Fall17_102X_SMS/SMS-T2cc_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
+    
+    InitSMS("T1bbbb", m_Path+"Fall17_102X_SMS/SMS-T1bbbb_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
+  
+    InitSMS("T1ttbb", m_Path+"Fall17_102X_SMS/SMS-T1ttbb_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
+    
+    InitSMS("T5tttt", m_Path+"Fall17_102X_SMS/SMS-T5tttt_dM175_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
 
-    InitSMS("T1bbbb", m_Path+"Fall17_102X_SMS/SMS-T1bbbb_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-
-    InitSMS("T5tttt", m_Path+"Fall17_102X_SMS/SMS-T5tttt_dM175_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
 
     Process data_obs("data_obs", kData);
     list.clear();
@@ -290,5 +405,9 @@ void SampleTool::InitProcMap(){
 bool SampleTool::m_ProcInit = false;
 
 std::map<Process, pair<vector<string>,string> > SampleTool::m_Proc[3];
+std::map<Process, bool> SampleTool::m_SProcInit[3]; // checked combined normalizations already?
+std::map<Process, std::map<string,bool> >   SampleTool::m_SProcFS[3]; // FastSim?
+std::map<Process, std::map<string,bool> >   SampleTool::m_SProcDL[3]; // di-lepton filter (ZToLL or dilepton filter);
+std::map<Process, std::map<string,double> > SampleTool::m_SProcW[3];  // some additional weight to apply
 
 double SampleTool::m_Lumi[3];

@@ -31,6 +31,7 @@ FitReader* FITReader = new FitReader(inputfile, a2, a3);
   // 			 VS().a("0bjetISR"),
   // 			 "canvas3");
 
+<<<<<<< HEAD
   //  TCanvas* cv = FITReader->Plot2D(VS().a("ttbar"),
   //      		 VS().a("1L"),
   //      		 VS().a("3j0bS").a("3j1bS").a("3jge2bS"),
@@ -63,15 +64,6 @@ FitReader* FITReader = new FitReader(inputfile, a2, a3);
 
 
 if(cv == NULL) return;
-//string oFileName = "test2Dhist.root";
-//TFile* oFile = new TFile(oFileName.c_str(),"RECREATE"); 
-//canvas3->Write();
-//oFile->Close();
-// FITReader->Plot1Dstack(VS().a("ttbar").a("ST").a("DB").a("ZDY").a("TB"),
-//			 VS().a("1L"),
-  //			 VS().a("0j0svS"),
-  //			 VS().a("ge1j0bISR"),
-  //			 "canvas2");
  // FITReader->PrintCategories();
  // FITReader->PrintProcesses();
 }
