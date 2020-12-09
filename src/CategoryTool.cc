@@ -28,6 +28,12 @@ CategoryList CategoryTool::GetCategories() const {
 FitBin CategoryTool::GetFitBin(int index) const {
   vector<RBin> RBins;
 
+  // for 0L SV regions
+  if(index == 0){
+    RBins.push_back(RBin(0.9,   0.95,  VD().a(0.).a(5.).a(10.).a(30.)));
+    RBins.push_back(RBin(0.95,  1.0,   VD().a(0.).a(5.).a(10.).a(30.)));
+  }
+  
   // R1
   if(index == 1){
     RBins.push_back(RBin(0.6,   0.7,   VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(50.).a(100.).a(120.)));
@@ -42,23 +48,23 @@ FitBin CategoryTool::GetFitBin(int index) const {
 
   // R2
   if(index == 2){
-    RBins.push_back(RBin(0.6,   0.75,  VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(120.)));
-    RBins.push_back(RBin(0.75,  0.85,  VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(120.)));
-    RBins.push_back(RBin(0.85,  0.9,   VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(120.)));
-    RBins.push_back(RBin(0.9,   0.925, VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(120.)));
-    RBins.push_back(RBin(0.925, 0.95,  VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(120.)));
-    RBins.push_back(RBin(0.95,  0.975, VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(120.)));
-    RBins.push_back(RBin(0.975, 1.,    VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(120.)));
+    RBins.push_back(RBin(0.6,   0.75,  VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(40.)));
+    RBins.push_back(RBin(0.75,  0.85,  VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(40.)));
+    RBins.push_back(RBin(0.85,  0.9,   VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(40.)));
+    RBins.push_back(RBin(0.9,   0.925, VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(40.)));
+    RBins.push_back(RBin(0.925, 0.95,  VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(40.)));
+    RBins.push_back(RBin(0.95,  0.975, VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(40.)));
+    RBins.push_back(RBin(0.975, 1.,    VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(40.)));
   }
 
   // R3
   if(index == 3){
-    RBins.push_back(RBin(0.6,   0.7,   VD().a(0.).a(10.).a(20.).a(30.).a(50.).a(150.)));
-    RBins.push_back(RBin(0.7,   0.8,   VD().a(0.).a(10.).a(20.).a(30.).a(50.).a(150.)));
-    RBins.push_back(RBin(0.8,   0.85,  VD().a(0.).a(10.).a(20.).a(30.).a(50.).a(150.)));
-    RBins.push_back(RBin(0.85,  0.9,   VD().a(0.).a(10.).a(20.).a(30.).a(50.).a(150.)));
-    RBins.push_back(RBin(0.9,   0.95,  VD().a(0.).a(10.).a(20.).a(30.).a(50.).a(150.)));
-    RBins.push_back(RBin(0.95,  1.0,   VD().a(0.).a(10.).a(20.).a(30.).a(50.).a(150.)));
+    RBins.push_back(RBin(0.6,   0.7,   VD().a(0.).a(10.).a(20.).a(30.).a(50.).a(60.)));
+    RBins.push_back(RBin(0.7,   0.8,   VD().a(0.).a(10.).a(20.).a(30.).a(50.).a(60.)));
+    RBins.push_back(RBin(0.8,   0.85,  VD().a(0.).a(10.).a(20.).a(30.).a(50.).a(60.)));
+    RBins.push_back(RBin(0.85,  0.9,   VD().a(0.).a(10.).a(20.).a(30.).a(50.).a(60.)));
+    RBins.push_back(RBin(0.9,   0.95,  VD().a(0.).a(10.).a(20.).a(30.).a(50.).a(60.)));
+    RBins.push_back(RBin(0.95,  1.0,   VD().a(0.).a(10.).a(20.).a(30.).a(50.).a(60.)));
   }
 
   // R4
@@ -581,7 +587,7 @@ CategoryList CategoryTool::GetCategories_0L() const {
   H_0L_SV.push_back(GetHadronicRegion(0, 3)); // 0j1sv
   H_0L_SV.push_back(GetHadronicRegion(0, 4)); // 0jge2sv
 
-  Cats_0L_SV = Cats_0L_SV.CreateFitBinRegions(GetFitBin(2));
+  Cats_0L_SV = Cats_0L_SV.CreateFitBinRegions(GetFitBin(0));
   Cats_0L_SV = Cats_0L_SV.CreateHadronicSRegions(H_0L_SV);
   Cats_0L_SV = Cats_0L_SV.CreateHadronicISRRegions(H_ISR_B);
   Cats_0L_SV = Cats_0L_SV.CreateGenericRegions("PTISR", PTISR_incl);
@@ -1495,10 +1501,10 @@ CategoryList CategoryTool::GetCategories_3L() const {
   Cats_3Lcharge += Category(L_nOSSF_mumuel, "Ch3L");
 
   CategoryList Cats_3Lflavor;
-  Cats_3Lcharge += Category(L_elelel, "Ch3L");
-  Cats_3Lcharge += Category(L_mumumu, "Ch3L");
-  Cats_3Lcharge += Category(L_elelmu, "Ch3L");
-  Cats_3Lcharge += Category(L_mumuel, "Ch3L");
+  Cats_3Lflavor += Category(L_elelel, "Ch3L");
+  Cats_3Lflavor += Category(L_mumumu, "Ch3L");
+  Cats_3Lflavor += Category(L_elelmu, "Ch3L");
+  Cats_3Lflavor += Category(L_mumuel, "Ch3L");
 
   // Get hadronic ISR region lists - inclusive and b-separated
   vector<Hadronic> H_ISR_noB;

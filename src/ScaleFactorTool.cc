@@ -6,13 +6,21 @@
 ////////// ScaleFactorTool class
 ///////////////////////////////////////////
 
-double ScaleFactorTool::GetX20BRSF(double MX2, double MX1){
+double ScaleFactorTool::GetX20BRSF(const string& filename, const string& treename){
 
-  if(MX2-MX1 < 5.)
+  if(filename.find("TChiWZ") == string::npos ||
+     filename.find("ZToLL") == string::npos)
+    return 1.;
+  
+   int MP, MC;
+  
+  sscanf(treename.c_str(), "SMS_%d_%d", &MP, &MC);
+  
+  if(MP-MC < 5)
     return 1.;
 
   else
-    return 1. + 0.46*ROOT::Math::lognormal_pdf(((MX2-MX1)-5.)/30., 0., 1.1);
+    return 1. + 0.46*ROOT::Math::lognormal_pdf(double((MP-MC)-5)/30., 0., 1.1);
   
 }
 
@@ -47,4 +55,26 @@ double ScaleFactorTool::GetMETSF(double MET, int updown){
     return nom*(0.99 + (MET < 300. ? -0.2e-5*(MET-300.)*(MET-300.) : 0.));
 
   return 1.;
+}
+
+bool ScaleFactorTool::DileptonEvent(ReducedBase* base){
+
+  int NWnu = 0;
+  for(int i = 0; i < base->genNnu; i++)
+    if(fabs(base->genMomPDGID_nu->at(i)) == 24)
+      NWnu++;
+
+  if(NWnu >= 2)
+    return true;
+
+  int NZlep = 0;
+  for(int i = 0; i < base->genNlep; i++)
+    if(fabs(base->genMomPDGID_lep->at(i)) == 23)
+      NZlep++;
+
+  if(NZlep >= 2)
+    return true;
+
+  return false;
+
 }

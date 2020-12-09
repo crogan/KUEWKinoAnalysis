@@ -24,6 +24,7 @@
 #include "Systematics.hh"
 #include "SampleTool.hh"
 #include "CategoryTool.hh"
+#include "ScaleFactorTool.hh"
 #include "Leptonic.hh"
 #include "Hadronic.hh"
 
@@ -141,6 +142,8 @@ int main(int argc, char* argv[]) {
   cout << "Initializing sample maps from path " << NtuplePath << " for year " << year << endl;
   SampleTool ST(NtuplePath, year);
 
+  ScaleFactorTool SF;
+
   ProcessList samples;
   if(addBkg){
     cout << "Adding all background processes" << endl;
@@ -194,8 +197,20 @@ int main(int argc, char* argv[]) {
     for(int f = 0; f < Nfile; f++){
       string file = ST.FileName(proc, f);
       string tree = ST.TreeName(proc, f);
+
+      bool is_FastSim = ST.IsFastSim(proc, f);
+      bool do_FilterDilepton = ST.FilterDilepton(proc, f);
+      double sample_weight = ST.GetSampleWeight(proc, f);
+
+      if(is_signal)
+	sample_weight *= SF.GetX20BRSF(file, tree);
       
       cout << "   Processing file " << file << " w/ tree " << tree << endl;
+      cout << "      Sample weight is " << sample_weight << endl;
+      if(is_FastSim)
+	cout << "      Is FastSim" << endl;
+      if(do_FilterDilepton)
+	cout << "      Filter Out dilepton events" << endl;
     
       TChain* chain = ST.Tree(proc, f);
 
@@ -212,8 +227,12 @@ int main(int argc, char* argv[]) {
 	if((e/SKIP)%(std::max(1, int(Nentry/SKIP/10))) == 0)
 	  cout << "      event " << e << " | " << Nentry << endl;
 
-	// only apply trigger to data for moment
-	if(!base->METORtrigger && is_data)
+	if(do_FilterDilepton)
+	  if(SF.DileptonEvent(base))
+	    continue;
+	
+	// apply trigger to data and FullSim events
+	if(!base->METORtrigger && !is_FastSim)
 	  continue;
 		
 	if(base->MET < 175)
@@ -331,7 +350,25 @@ int main(int argc, char* argv[]) {
 	  
 	  double weight = 1.;
 	  if(!is_data){
-	    weight = (setLumi ? lumi : ST.Lumi())*base->weight;
+	    weight = (setLumi ? lumi : ST.Lumi())*base->weight*sample_weight;
+	    
+	    if(sys == Systematic("MET_TRIG"))
+	      if(sys.IsUp())
+		if(is_FastSim)
+		  weight *= SF.GetMETEff(base->MET, 1);
+		else
+		  weight *= SF.GetMETSF(base->MET, 1);
+	      else
+		if(is_FastSim)
+		  weight *= SF.GetMETEff(base->MET, -1);
+		else
+		  weight *= SF.GetMETSF(base->MET, -1);
+	    else 
+	      if(is_FastSim)
+		weight *= SF.GetMETEff(base->MET);
+	      else
+		weight *= SF.GetMETSF(base->MET);
+	    
 	    if(sys == Systematic("BTAG_SF"))
 	      if(sys.IsUp())
 		weight *= base->BtagSFweight_up;

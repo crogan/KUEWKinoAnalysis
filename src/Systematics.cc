@@ -309,6 +309,7 @@ Systematics SystematicsTool::GetWeightSystematics() const {
   
   //list += "PU_SF"; // turn off for now
   list += "BTAG_SF";
+  list += "MET_TRIG";
 
   return list;
 }
