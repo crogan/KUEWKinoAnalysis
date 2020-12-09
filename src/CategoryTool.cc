@@ -387,13 +387,13 @@ CategoryList CategoryTool::GetCategories_RandD() const {
   Cats_1L += Category(L_mup_0, "Ch1L");
   Cats_1L += Category(L_mum_0, "Ch1L");
 
-  cout << "Initializing 1L" << endl;
+  cout << "Initializing 2LOS" << endl;
   CategoryList Cats_2LOS;
   Cats_2LOS += Category(L_OS_el_el,  "Ch2LOS");
   Cats_2LOS += Category(L_OS_mu_mu,  "Ch2LOS");
   Cats_2LOS += Category(L_OS_el_mu,  "Ch2LOS");
 
-  FitBin Bin_INCL = GetFitBin(1);
+  FitBin Bin_INCL = GetFitBin(2);
 
   vector<LepID> IDs;
   IDs.push_back(kGold);
@@ -418,7 +418,7 @@ CategoryList CategoryTool::GetCategories_RandD() const {
 
   CategoryList Categories;
   Categories += Cats_1L;
-  //Categories += Cats_2LOS;
+  Categories += Cats_2LOS;
 
   return Categories;
 }
@@ -470,28 +470,53 @@ FitBin CategoryTool::GetFitBin(int index) const {
     RBins.push_back(RBin(0.95, 1.0,  VD().a(0.).a(20.).a(30.).a(40.).a(50.).a(100.).a(200.)));
   }
 
-  // R5
+ // // R5
+ // if(index == 5){
+ //   RBins.push_back(RBin(0.6,  0.65, VD().a(0.).a(20.).a(40.).a(60.).a(80.).a(100.).a(200.)));
+ //   RBins.push_back(RBin(0.65, 0.7,  VD().a(0.).a(20.).a(40.).a(60.).a(80.).a(100.).a(200.)));
+ //   RBins.push_back(RBin(0.7,  0.75, VD().a(0.).a(20.).a(40.).a(60.).a(80.).a(100.).a(200.)));
+ //   RBins.push_back(RBin(0.75, 0.8,  VD().a(0.).a(20.).a(40.).a(60.).a(80.).a(100.).a(200.)));
+ //   RBins.push_back(RBin(0.8,  0.85, VD().a(0.).a(20.).a(40.).a(60.).a(80.).a(100.).a(200.)));
+ //   RBins.push_back(RBin(0.85, 0.9,  VD().a(0.).a(20.).a(40.).a(60.).a(80.).a(100.).a(200.)));
+ //   RBins.push_back(RBin(0.9,  1.0,  VD().a(0.).a(20.).a(40.).a(60.).a(80.).a(100.).a(200.)));
+ // }
+  
+// R5 - 1L 3j - based on T2tt_5000420
   if(index == 5){
-    RBins.push_back(RBin(0.6,  0.65, VD().a(0.).a(20.).a(40.).a(60.).a(80.).a(100.).a(200.)));
-    RBins.push_back(RBin(0.65, 0.7,  VD().a(0.).a(20.).a(40.).a(60.).a(80.).a(100.).a(200.)));
-    RBins.push_back(RBin(0.7,  0.75, VD().a(0.).a(20.).a(40.).a(60.).a(80.).a(100.).a(200.)));
-    RBins.push_back(RBin(0.75, 0.8,  VD().a(0.).a(20.).a(40.).a(60.).a(80.).a(100.).a(200.)));
-    RBins.push_back(RBin(0.8,  0.85, VD().a(0.).a(20.).a(40.).a(60.).a(80.).a(100.).a(200.)));
-    RBins.push_back(RBin(0.85, 0.9,  VD().a(0.).a(20.).a(40.).a(60.).a(80.).a(100.).a(200.)));
-    RBins.push_back(RBin(0.9,  1.0,  VD().a(0.).a(20.).a(40.).a(60.).a(80.).a(100.).a(200.)));
-  }
+    RBins.push_back(RBin(0.6, 0.65,  VD().a(0.).a(45).a(100.).a(160.).a(240.).a(300.)));
+    RBins.push_back(RBin(0.65, 0.7,  VD().a(0.).a(45.).a(120.).a(155.).a(200.).a(300.)));
+    RBins.push_back(RBin(0.7, 0.75,  VD().a(0.).a(40.).a(110.).a(150.).a(190.).a(300.)));
+    RBins.push_back(RBin(0.75, 0.83, VD().a(0.).a(90.).a(160.).a(300.)));
+    RBins.push_back(RBin(0.83, 0.9,  VD().a(0.).a(0).a(300.)));
+    //RBins.push_back(RBin(0.8,  0.85, VD().a(0.).a(60.).a(80.).a(100.).a(200.)));
+    //RBins.push_back(RBin(0.85, 0.9,  VD().a(0.).a(60.).a(80.).a(100.).a(200.)));
+    //RBins.push_back(RBin(0.9,  1.0,  VD().a(0.).a(60.).a(80.).a(100.).a(200.)));
 
-  // R5 M6
-  if(index == 6){
+//original R5 M6
+if(index == 6){
     RBins.push_back(RBin(0.6,  0.65, VD().a(0.).a(40.).a(60.).a(80.).a(100.).a(120.).a(200.)));
-    RBins.push_back(RBin(0.65, 0.7,  VD().a(0.).a(40.).a(60.).a(80.).a(100.).a(120.).a(200.)));
+    RBins.push_back(RBin(0.65,  0.7, VD().a(0.).a(40.).a(60.).a(80.).a(100.).a(120.).a(200.)));
     RBins.push_back(RBin(0.7,  0.75, VD().a(0.).a(40.).a(60.).a(80.).a(100.).a(120.).a(200.)));
-    RBins.push_back(RBin(0.75, 0.8,  VD().a(0.).a(40.).a(60.).a(80.).a(100.).a(120.).a(200.)));
+    RBins.push_back(RBin(0.75,  0.8, VD().a(0.).a(40.).a(60.).a(80.).a(100.).a(120.).a(200.)));
     RBins.push_back(RBin(0.8,  0.85, VD().a(0.).a(40.).a(60.).a(80.).a(100.).a(120.).a(200.)));
-    RBins.push_back(RBin(0.85, 0.9,  VD().a(0.).a(40.).a(60.).a(80.).a(100.).a(120.).a(200.)));
+    RBins.push_back(RBin(0.85,  0.9, VD().a(0.).a(40.).a(60.).a(80.).a(100.).a(120.).a(200.)));
     RBins.push_back(RBin(0.9,  1.0,  VD().a(0.).a(40.).a(60.).a(80.).a(100.).a(120.).a(200.)));
-  }
+}
 
+
+
+  // R5 M6 - 4j - based on T2tt5000420
+//  if(index == 6){
+//    RBins.push_back(RBin(0.6,  0.63, VD().a(0.).a(60.).a(140.).a(200.).a(300.)));
+//    RBins.push_back(RBin(0.63, 0.7,  VD().a(0.).a(60.).a(100.).a(140.).a(170).a(300.)));
+//    RBins.push_back(RBin(0.7,  0.8, VD().a(0.).a(60.).a(100.).a(140.).a(300.)));
+//    RBins.push_back(RBin(0.8, 0.9,  VD().a(0.).a(300.)));
+//   // RBins.push_back(RBin(0.8,  0.9,  VD().a(0.).a(100.).a(140.).a(200.)));
+//    //RBins.push_back(RBin(0.85, 0.9,  VD().a(0.).a(80.).a(120.).a(200.)));
+//   // RBins.push_back(RBin(0.9,  1.0,  VD().a(0.).a(100.).a(140.).a(200.)));
+//  }
+
+  }
   FitBin Bins(RBins);
   return Bins;
 

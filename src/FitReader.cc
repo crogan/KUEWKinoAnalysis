@@ -150,7 +150,7 @@ const TH2D* FitReader::GetHistogram2D(const Category&   cat,
 				      const Systematic& sys) const {
   if(!IsFilled2D(cat, proc, sys))
     return nullptr;
-  
+ cout << cat.GetLabel() << " " << proc.Name() << " hist integral: " << m_ProcHist_2D[proc][cat]->Integral() << endl;   
   if(!sys){
     return m_ProcHist_2D[proc][cat];
   } else {
@@ -341,7 +341,7 @@ TCanvas* FitReader::Plot1Dstack(const VS& proc,
     return nullptr;
 
   CategoryList cat = GetCategories();
-  cat.Print();
+  //cat.Print();
   
   // Leptonic
   VS lep_labels;
@@ -751,7 +751,6 @@ TCanvas* FitReader::Plot2D(const VS& proc,
 			   const VS& hadI_cat,
 			   const string& name){
   RestFrames::SetStyle();
-
   
   int Nproc = proc.size();
   int Nlep  = lep_cat.size();
@@ -764,8 +763,7 @@ TCanvas* FitReader::Plot2D(const VS& proc,
     return nullptr;
 
   CategoryList cat = GetCategories();
-  cat.Print();
-  
+  //cat.Print();
   // Leptonic
   VS lep_labels;
   VS vlep;
@@ -786,7 +784,6 @@ TCanvas* FitReader::Plot2D(const VS& proc,
   }
 
   cat = cat.FilterOR(vlep);
-
   // Hadronic S
   VS hadS_labels;
   VS vhadS;
@@ -806,7 +803,6 @@ TCanvas* FitReader::Plot2D(const VS& proc,
   }
 
   cat = cat.FilterOR(vhadS);
-
   // Hadronic ISR
   VS hadI_labels;
   VS vhadI;
@@ -831,11 +827,10 @@ TCanvas* FitReader::Plot2D(const VS& proc,
   
   if(Ncat < 1)
     return nullptr;
-  
   // Processes
   string label;
   TH2D* hist = nullptr;
-  
+ GetProcesses().Print(); 
   for(int i = 0; i < Nproc; i++){
     VS vproc;
     if(m_Strings.count(proc[i]) != 0)
@@ -847,7 +842,8 @@ TCanvas* FitReader::Plot2D(const VS& proc,
     for(int p = 0; p < int(vproc.size()); p++){
       
       int index = GetProcesses().Find(vproc[p]);
-      if(index < 0)
+	cout << "index: " << index << endl;
+	if(index < 0)
 	continue;
       
       Process pp = GetProcesses()[index];
@@ -862,7 +858,7 @@ TCanvas* FitReader::Plot2D(const VS& proc,
 	if(!IsFilled(cat[c], pp))
 	  continue;
 
-	//cout << "filled " << cat[c].GetLabel() << " " << pp.Name() << endl;
+	cout << "filled " << cat[c].GetLabel() << " " << pp.Name() << endl;
 	
 	if(!hist){
 	  hist = (TH2D*) GetHistogram2D(cat[c], pp)->Clone(Form("plothist_%d_%s_2D", i, name.c_str()));
@@ -872,7 +868,7 @@ TCanvas* FitReader::Plot2D(const VS& proc,
       }
     }
 
-    if(hist == nullptr)
+    if(hist == nullptr || hist->Integral() == 0)
       continue;
     
     if(type == kData){
@@ -924,7 +920,7 @@ TCanvas* FitReader::Plot2D(const VS& proc,
   //   blabels += bin[r].GetRBinLabel();
   
   // hists[0]->LabelsOption("v","X");
-  
+if(hist == NULL) return NULL; 
   gStyle->SetOptTitle(0);
   gStyle->SetOptStat(0);
   gStyle->SetOptFit(11111111);
@@ -941,9 +937,10 @@ TCanvas* FitReader::Plot2D(const VS& proc,
   can->SetRightMargin(hhi);
   can->SetBottomMargin(hbo);
   can->SetTopMargin(hto);
+  can->SetLogz();
   can->Draw();
   can->cd();
-  
+if(hist == NULL) {cout << "null hist" << endl; return can;}  
   hist->Draw("colz");
   hist->GetXaxis()->SetTitle("M_{#perp}   [GeV]");
   hist->GetYaxis()->SetTitle("R_{ISR}");
@@ -1019,7 +1016,6 @@ TCanvas* FitReader::Plot2D(const VS& proc,
     
     // l.DrawLatex((hi+lo)/2., yline - 8*eps, blabels[r].c_str());
   }
- 
  
   l.SetTextAlign(31);
   l.SetTextSize(0.04);

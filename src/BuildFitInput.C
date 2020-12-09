@@ -228,7 +228,6 @@ int main(int argc, char* argv[]) {
 d.Foreach([&absEta, &nLep](vector<double> Eta_lep) {for(int iLep = 0; iLep < Eta_lep.size(); iLep++){if(Eta_lep.at(iLep) < 0) absEta += -(Eta_lep.at(iLep)); else absEta += Eta_lep.at(iLep); nLep += Eta_lep.size();}}, {"Eta_lep"});
 	double etaMean = absEta/nLep; 
  double sip3dMean = *d.Mean("SIP3D_lep");
- int Nentry = base->fChain->GetEntries();
 //cout << "setting means" << endl;
 
       int Nentry = base->fChain->GetEntries();
@@ -261,7 +260,6 @@ d.Foreach([&absEta, &nLep](vector<double> Eta_lep) {for(int iLep = 0; iLep < Eta
 	if(base->RISR < 0.6 || base->RISR > 1.0)
 	  continue;
 
-	
 	int Nlep     = base->Nlep;
 	int NjetS    = base->Njet_S;
 	int NbjetS   = base->Nbjet_S;
@@ -321,23 +319,20 @@ d.Foreach([&absEta, &nLep](vector<double> Eta_lep) {for(int iLep = 0; iLep < Eta
 	  
 	  list_b += Lep(flavor, charge, id, source);
 	}
-
 	// SV eta
 	double SVmaxeta = 1.; // 1 is fine b/c less than 1.5 cutoff
 	for(int ie = 0; ie < base->NSV_S; ie++)
 	  if(fabs(base->Eta_SV->at(ie)) > SVmaxeta)
 	    SVmaxeta = fabs(base->Eta_SV->at(ie));
-	
 	Category Event(Leptonic(list_a, list_b),
 		       Hadronic(NjetS, NbjetS, NSV),
 		       Hadronic(NjetISR, NbjetISR, base->NSV_ISR));
 	Event.AddGenericVal(GenericVal(base->PTISR));
 	Event.AddGenericVal(SVmaxeta);
-	
 	int eindex = Categories.Find(Event);
 	if(eindex < 0){
 	  continue;
-	}	
+	}
 	// systematics loop
 	
 	for(int is = 0; is < Nsys; is++){
@@ -392,7 +387,6 @@ d.Foreach([&absEta, &nLep](vector<double> Eta_lep) {for(int iLep = 0; iLep < Eta
 	    Mperp = base->EJ_BoostT;
 	
 	  double RISR  = base->RISR;
-
 	  if(Fakes.GetN() > 0 && is_bkg){
 	    vector<string> flabels = Fakes.GetFakeLabels();
 	    int Nf = flabels.size();
