@@ -36,9 +36,10 @@ void TestReader(const string& inputfile = "test/FitInput_test.root", const strin
 
   FITReader->Plot2D(VS().a("ttbar"),
   			 VS().a("1L"),
-  			 VS().a("0j0svS"),
+  			 VS().a("0jge1svS"),
   			 VS().a("ge1j0bISR"),
-  			 "canvas3");
+		    "canvas3",
+		    "SVeta0");
   FITReader->Plot1Dstack(VS().a("ttbar").a("ST").a("DB").a("ZDY").a("TB"),
 			 VS().a("1L"),
   			 VS().a("0j0svS"),

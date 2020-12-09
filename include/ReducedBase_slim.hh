@@ -449,8 +449,6 @@ public :
    virtual void     Show(Long64_t entry = -1);
 };
 
-#endif
-
 inline ReducedBase::ReducedBase(TTree *tree) : fChain(0) 
 {
 // if parameter tree is not specified (or zero), connect the file
@@ -829,10 +827,15 @@ inline void ReducedBase::Init(TTree *tree)
    // fChain->SetBranchStatus("Phi_SV",1);
    // fChain->SetBranchStatus("index_SV_b",1);
    //fChain->SetBranchStatus("*jet",1);
+   fChain->SetBranchStatus("genNlep", 1);
    fChain->SetBranchStatus("genPDGID_lep", 1);
    fChain->SetBranchStatus("genMomPDGID_lep", 1);
+   fChain->SetBranchStatus("genNlnu", 1);
+   fChain->SetBranchStatus("genPDGID_nu", 1);
+   fChain->SetBranchStatus("genMomPDGID_nu", 1);
    fChain->SetBranchStatus("MET*trigger", 1);
    fChain->SetBranchStatus("Mperp",1);
+   fChain->SetBranchStatus("dphiMET_V", 1);
 }
 
 inline Bool_t ReducedBase::Notify()
@@ -860,3 +863,5 @@ inline Int_t ReducedBase::Cut(Long64_t entry)
 // returns -1 otherwise.
    return 1;
 }
+
+#endif

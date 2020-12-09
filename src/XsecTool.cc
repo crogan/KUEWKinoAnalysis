@@ -64,7 +64,7 @@ double XsecTool::GetXsec_SMS(const std::string& dataset, double MP) const {
       label = "StopStop";
     }
     if(dataset.find("TSlepSlep")!=std::string::npos)
-      label = "SlepSlep_left";
+      label = "SlepSlep_left"; //why?...
     
     if((dataset.find("T1")!=std::string::npos) ||
        (dataset.find("T5")!=std::string::npos)){

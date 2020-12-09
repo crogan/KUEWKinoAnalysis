@@ -1152,7 +1152,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
       m_genPT_boson.push_back(GenBosons[i].Pt());
       m_genEta_boson.push_back(GenBosons[i].Eta());
       m_genPhi_boson.push_back(GenBosons[i].Phi());
-      m_genM_boson.push_back(GenBosons[i].Phi());
+      m_genM_boson.push_back(GenBosons[i].M());
       m_genPDGID_boson.push_back(GenBosons[i].PDGID());
       m_genMomPDGID_boson.push_back(GenBosons[i].MomPDGID());
     }
@@ -1170,7 +1170,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
       m_genPT_susy.push_back(GenSparticles[i].Pt());
       m_genEta_susy.push_back(GenSparticles[i].Eta());
       m_genPhi_susy.push_back(GenSparticles[i].Phi());
-      m_genM_susy.push_back(GenSparticles[i].Phi());
+      m_genM_susy.push_back(GenSparticles[i].M());
       m_genPDGID_susy.push_back(GenSparticles[i].PDGID());
       m_genMomPDGID_susy.push_back(GenSparticles[i].MomPDGID());
     }

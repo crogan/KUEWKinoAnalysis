@@ -64,7 +64,8 @@ public:
 		  const VS& lep_cat,
 		  const VS& hadS_cat,
 		  const VS& hadI_cat,
-		  const string& canvas);
+		  const string& canvas,
+		  const string& extra = "");
 
   VS GetChannels() const;  
   const ProcessList&  GetProcesses() const;

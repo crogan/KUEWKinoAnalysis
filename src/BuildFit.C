@@ -5,16 +5,16 @@
 #include <utility>
 #include <vector>
 #include <cstdlib>
-#include "CombineHarvester/CombineTools/interface/CombineHarvester.h"
-#include "CombineHarvester/CombineTools/interface/Observation.h"
-#include "CombineHarvester/CombineTools/interface/Process.h"
-#include "CombineHarvester/CombineTools/interface/Utilities.h"
-#include "CombineHarvester/CombineTools/interface/Systematics.h"
-#include "CombineHarvester/CombineTools/interface/BinByBin.h"
+// #include "CombineHarvester/CombineTools/interface/CombineHarvester.h"
+// #include "CombineHarvester/CombineTools/interface/Observation.h"
+// #include "CombineHarvester/CombineTools/interface/Process.h"
+// #include "CombineHarvester/CombineTools/interface/Utilities.h"
+// #include "CombineHarvester/CombineTools/interface/Systematics.h"
+// #include "CombineHarvester/CombineTools/interface/BinByBin.h"
 
 #include "TSystem.h"
 
-#include "FitReader.hh"
+#include "FitConfiguration.hh"
 
 using namespace std;
 
@@ -44,6 +44,8 @@ int main(int argc, char* argv[]) {
   int  year    = 2017;
 
   bool workspace = false;
+
+  bool doMCstats = false;
     
   for(int i = 0; i < argc; i++){
     if(strncmp(argv[i],"--workspace", 11) == 0){
@@ -131,6 +133,10 @@ int main(int argc, char* argv[]) {
       i++;
       sys_to_rem += string(argv[i]);
     }
+    if(strncmp(argv[i],"+MCstats", 8) == 0){
+      doMCstats = true;
+    }
+     
   }
     
   if(!addBkg && !addSig && (proc_to_add.size() == 0))
@@ -163,7 +169,8 @@ int main(int argc, char* argv[]) {
     cout << "   ++sys               add all shape systematics" << endl;
     cout << "   +sys [label]        add systematics matching label" << endl;
     cout << "   -sys [label]        removes systematics matching label" << endl;
-    cout << "   --workspace(-w)     also build workspaces" << endl;
+    cout << "   +MCstats            adds autoMCStats uncertainties" << endl;
+    cout << "   --workspace(-w)     also build workspaces (note: faster not to, and run message)" << endl;
 
     return 0;
   }
@@ -189,6 +196,11 @@ int main(int argc, char* argv[]) {
     processes += FIT.GetProcesses().Filter(kSig);
   processes = processes.RemoveOR(proc_to_rem);
 
+  // keep only the process-by-process fakes
+  ProcessList proc_fakes = processes.Filter("_Fakes_");
+  processes.Remove("Fakes");
+  processes += proc_fakes;
+  
   VS channels;
   if(addChan)
     channels = FIT.GetChannels();
@@ -208,7 +220,8 @@ int main(int argc, char* argv[]) {
     systematics = FIT.GetSystematics();
   else 
     systematics = FIT.GetSystematics().FilterOR(sys_to_add);
-  systematics = systematics.RemoveOR(sys_to_rem);
+  if(systematics.GetN() > 0)
+    systematics = systematics.RemoveOR(sys_to_rem);
 
   ////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////
@@ -308,23 +321,14 @@ int main(int argc, char* argv[]) {
     }
   }
   
+  FitConfiguration CONFIG;
+  CONFIG.Configure(cb, processes);
+
   using ch::syst::SystMap;
   using ch::syst::era;
+  using ch::syst::channel;
   using ch::syst::bin_id;
   using ch::syst::process;
-
-
-  cb.cp().signals()
-    .AddSyst(cb, "lumi_$ERA", "lnN", SystMap<era>::init
-	     ({"2016"}, 1.022)
-	     ({"2017"}, 1.022)
-	     ({"2018"}, 1.022));
-  
-  cb.cp().backgrounds()
-    .AddSyst(cb, "lumi_$ERA", "lnN", SystMap<era>::init
-	     ({"2016"}, 1.022)
-	     ({"2017"}, 1.022)
-	     ({"2018"}, 1.022));
   
   int Nsys = systematics.GetN();
   if(Nsys > 0){
@@ -355,6 +359,9 @@ int main(int argc, char* argv[]) {
   cb.cp().signals().ExtractShapes(InputFile,
 				  "$BIN/$PROCESS$MASS",
 				  "$BIN/$PROCESS$MASS_$SYSTEMATIC");
+  // autoMCStats
+  if(doMCstats)
+    cb.cp().SetAutoMCStats(cb, -1.);
   
   /*
   auto bbb = ch::BinByBinFactory()

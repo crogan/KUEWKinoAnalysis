@@ -24,6 +24,7 @@
 #include "Systematics.hh"
 #include "SampleTool.hh"
 #include "CategoryTool.hh"
+#include "ScaleFactorTool.hh"
 #include "Leptonic.hh"
 #include "Hadronic.hh"
 
@@ -43,6 +44,9 @@ int main(int argc, char* argv[]) {
 
   CategoryTool CT;
   CategoryList Categories;
+
+  bool setLumi = false;
+  double lumi;
   
   for(int i = 0; i < argc; i++){
     if(strncmp(argv[i],"--help", 6) == 0){
@@ -100,6 +104,11 @@ int main(int argc, char* argv[]) {
     if(strncmp(argv[i],"+cat3L", 6) == 0){
       Categories += CT.GetCategories_3L();
     }
+    if(strncmp(argv[i],"-lumi", 5) == 0){
+      i++;
+      setLumi = true;
+      lumi = std::stof(argv[i]);
+    }
   }
       
   if((proc_to_add.size() == 0) &&
@@ -125,12 +134,15 @@ int main(int argc, char* argv[]) {
     cout << "   +cat2L              add 2L categories" << endl;
     cout << "   +cat3L              add 3L categories" << endl;
     cout << "   +hist               book 2D histograms also" << endl;
+    cout << "   -lumi [lumi]        set luminosity to lumi" << endl;
 
     return 0;
   }
 
   cout << "Initializing sample maps from path " << NtuplePath << " for year " << year << endl;
   SampleTool ST(NtuplePath, year);
+
+  ScaleFactorTool SF;
 
   ProcessList samples;
   if(addBkg){
@@ -185,8 +197,20 @@ int main(int argc, char* argv[]) {
     for(int f = 0; f < Nfile; f++){
       string file = ST.FileName(proc, f);
       string tree = ST.TreeName(proc, f);
+
+      bool is_FastSim = ST.IsFastSim(proc, f);
+      bool do_FilterDilepton = ST.FilterDilepton(proc, f);
+      double sample_weight = ST.GetSampleWeight(proc, f);
+
+      if(is_signal)
+	sample_weight *= SF.GetX20BRSF(file, tree);
       
       cout << "   Processing file " << file << " w/ tree " << tree << endl;
+      cout << "      Sample weight is " << sample_weight << endl;
+      if(is_FastSim)
+	cout << "      Is FastSim" << endl;
+      if(do_FilterDilepton)
+	cout << "      Filter Out dilepton events" << endl;
     
       TChain* chain = ST.Tree(proc, f);
 
@@ -203,8 +227,12 @@ int main(int argc, char* argv[]) {
 	if((e/SKIP)%(std::max(1, int(Nentry/SKIP/10))) == 0)
 	  cout << "      event " << e << " | " << Nentry << endl;
 
-	// only apply trigger to data for moment
-	if(!base->METORtrigger && is_data)
+	if(do_FilterDilepton)
+	  if(SF.DileptonEvent(base))
+	    continue;
+	
+	// apply trigger to data and FullSim events
+	if(!base->METORtrigger && !is_FastSim)
 	  continue;
 		
 	if(base->MET < 175)
@@ -216,10 +244,13 @@ int main(int argc, char* argv[]) {
 	// current cut
 	if(base->PTCM > 75. && fabs(base->dphiCMI) < acos(-1.)/4.)
 	  continue;
-	if(base->PTCM > 50. && fabs(base->dphiCMI) > 3.*acos(-1.)/4.)
+	if(base->PTCM > 100. && fabs(base->dphiCMI) > 3.*acos(-1.)/4.)
 	  continue;
 	  
-	if(base->RISR < 0.6 || base->RISR > 1.0)
+	if(base->RISR < 0.5 || base->RISR > 1.0)
+	  continue;
+
+	if(fabs(base->dphiMET_V) > acos(-1.)/2.)
 	  continue;
 	
 	int Nlep     = base->Nlep;
@@ -243,7 +274,7 @@ int main(int argc, char* argv[]) {
 	  int PDGID = base->PDGID_lep->at(index);
 	    
 	  LepID id;
-	  if(base->ID_lep->at(index) < 3 ||
+	  if(base->ID_lep->at(index*2) < 3 ||
 	     base->MiniIso_lep->at(index)*base->PT_lep->at(index) >= 4. ||
 	     base->RelIso_lep->at(index)*base->PT_lep->at(index) >= 4.)
 	    id = kBronze;
@@ -268,7 +299,7 @@ int main(int argc, char* argv[]) {
 	  int PDGID = base->PDGID_lep->at(index);
 
 	  LepID id;
-	  if(base->ID_lep->at(index) < 3 ||
+	  if(base->ID_lep->at(index*2) < 3 ||
 	     base->MiniIso_lep->at(index)*base->PT_lep->at(index) >= 4. ||
 	     base->RelIso_lep->at(index)*base->PT_lep->at(index) >= 4.)
 	    id = kBronze;
@@ -319,7 +350,25 @@ int main(int argc, char* argv[]) {
 	  
 	  double weight = 1.;
 	  if(!is_data){
-	    weight = base->weight*ST.Lumi();
+	    weight = (setLumi ? lumi : ST.Lumi())*base->weight*sample_weight;
+	    
+	    if(sys == Systematic("MET_TRIG"))
+	      if(sys.IsUp())
+		if(is_FastSim)
+		  weight *= SF.GetMETEff(base->MET, 1);
+		else
+		  weight *= SF.GetMETSF(base->MET, 1);
+	      else
+		if(is_FastSim)
+		  weight *= SF.GetMETEff(base->MET, -1);
+		else
+		  weight *= SF.GetMETSF(base->MET, -1);
+	    else 
+	      if(is_FastSim)
+		weight *= SF.GetMETEff(base->MET);
+	      else
+		weight *= SF.GetMETSF(base->MET);
+	    
 	    if(sys == Systematic("BTAG_SF"))
 	      if(sys.IsUp())
 		weight *= base->BtagSFweight_up;
@@ -369,7 +418,7 @@ int main(int argc, char* argv[]) {
 	  }
 	  
 	  // dummy data
-	  if(!addData && is_bkg)
+	  if(!addData && is_bkg && (title.find("QCD") == string::npos))
 	    FITBuilder.AddEvent(weight, Mperp, RISR,
 				Categories[eindex], data_obs, sys);
 	}
