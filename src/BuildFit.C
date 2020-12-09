@@ -463,11 +463,14 @@ int main(int argc, char* argv[]) {
       }
   */
   cmd = "combineTool.py -M T2W -i "+OutputFold+"/*/*/*/datacard.txt -o workspace.root --parallel 4";
+  cmd_condor = "combineTool.py -M T2W -i "+OutputFold+"/*/*/*/datacard.txt -o workspace.root --job-mode condor --sub-opts='+JobFlavour=\"espresso\"'";
   if(workspace)
     gSystem->Exec(cmd.c_str());
   else {
-    cout << "To build workspaces type:" << endl;
-    cout << "    " << cmd << endl;
+    cout << "To build workspaces type:" << endl << endl;
+    cout << "    " << cmd << endl << endl;
+    cout << "Or, to run using condor, something like:" << endl << endl;
+    cout << "    " << cmd_condor << endl << endl;
   }
 
 }

@@ -2,7 +2,8 @@
 
 #include "../include/FitReader.hh"
 
-void TestReader(const string& inputfile = "test/FitInput_test.root", const string& a2 = "", const string& a3 = ""){
+//void TestReader(const string& inputfile = "test/FitInput_test.root", const string& a2 = "", const string& a3 = ""){
+  void TestReader(const string& inputfile = "test/FitInput_test.root", const string& a2 = "", const string& a3 = ""){
   
   FitReader* FITReader = new FitReader(inputfile, a2, a3);
   FITReader->PrintCategories();
@@ -34,15 +35,26 @@ void TestReader(const string& inputfile = "test/FitInput_test.root", const strin
   // 			 VS().a("0bjetISR"),
   // 			 "canvas3");
 
-  FITReader->Plot2D(VS().a("ttbar"),
+  FITReader->Plot2D(VS().a("data_obs"),
   			 VS().a("1L"),
-  			 VS().a("0jge1svS"),
+  			 VS().a("1j0b0svS"),
   			 VS().a("ge1j0bISR"),
-		    "canvas3",
-		    "SVeta0");
-  FITReader->Plot1Dstack(VS().a("ttbar").a("ST").a("DB").a("ZDY").a("TB"),
-			 VS().a("1L"),
-  			 VS().a("0j0svS"),
-  			 VS().a("ge1j0bISR"),
-  			 "canvas2");
+		    "canvas3");
+
+   // FITReader->Plot2D(VS().a("ttbar"),
+   // 			 VS().a("2L"),
+   // 			 VS().a("0j0svS"),
+   // 			 VS().a("ge1j0bISR"),
+   // 		    "canvas1");
+
+    // FITReader->Plot2D(VS().a("T2tt_600_570"),
+    // 			 VS().a("2L"),
+    // 			 VS().a("0j0svS"),
+    // 			 VS().a("ge1j0bISR"),
+    // 		    "canvas2");
+  // FITReader->Plot1Dstack(VS().a("ttbar").a("ST").a("DB").a("ZDY").a("TB"),
+  // 			 VS().a("1L"),
+  // 			 VS().a("0j0svS"),
+  // 			 VS().a("ge1j0bISR"),
+  // 			 "canvas2");
 }
