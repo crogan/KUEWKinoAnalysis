@@ -25,13 +25,14 @@ CategoryList CategoryTool::GetCategories() const {
   return Categories;
 }
 
-FitBin CategoryTool::GetFitBin(int index) const {
+FitBin CategoryTool::GetFitBin(int index, int Njet) const {
   vector<RBin> RBins;
 
   // for 0L SV regions
-  if(index == 0){
+  if(index == 0 && Njet == 0){
     RBins.push_back(RBin(0.9,   0.95,  VD().a(0.).a(5.).a(10.).a(30.)));
-    RBins.push_back(RBin(0.95,  1.0,   VD().a(0.).a(5.).a(10.).a(30.)));
+    RBins.push_back(RBin(0.95,  0.975,   VD().a(0.).a(5.).a(10.).a(30.)));
+    RBins.push_back(RBin(0.975,  1.0,   VD().a(0.).a(5.).a(10.).a(30.)));
   }
   
   // R1
@@ -570,8 +571,9 @@ CategoryList CategoryTool::GetCategories_0L() const {
   PTISR_incl.push_back(300.);
 
   vector<double> PTISR_bin;
+  PTISR_bin.push_back(200.);
   PTISR_bin.push_back(300.);
-  PTISR_bin.push_back(450.);
+  PTISR_bin.push_back(400.);
 
   // Get SV binning
   vector<double> SV_eta;
@@ -590,7 +592,7 @@ CategoryList CategoryTool::GetCategories_0L() const {
   Cats_0L_SV = Cats_0L_SV.CreateFitBinRegions(GetFitBin(0));
   Cats_0L_SV = Cats_0L_SV.CreateHadronicSRegions(H_0L_SV);
   Cats_0L_SV = Cats_0L_SV.CreateHadronicISRRegions(H_ISR_B);
-  Cats_0L_SV = Cats_0L_SV.CreateGenericRegions("PTISR", PTISR_incl);
+  Cats_0L_SV = Cats_0L_SV.CreateGenericRegions("PTISR", PTISR_bin);
   Cats_0L_SV = Cats_0L_SV.CreateGenericRegions("SVeta", SV_eta);
 
   Cats_0L += Cats_0L_SV;
