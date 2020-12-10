@@ -2,7 +2,7 @@
 
 #include "../include/FitReader.hh"
 
-void TestReader(const string& inputfile = "T2tt_5000325FitInput17_2L_R5R6slopeBinning.root", const string& a2 = "", const string& a3 = ""){
+void TestReader(const string& inputfile = "/home/t3-ku/crogan/BuildFitInput_9_12_20.root", const string& a2 = "", const string& a3 = ""){
 	gSystem->Load("/home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/lib/libKUEWKino.so");
 FitReader* FITReader = new FitReader(inputfile, a2, a3);
   // FITReader->Plot1Dstack(SL().a("ttbar").a("ST").a("DB").a("ZDY").a("TB")
@@ -31,12 +31,12 @@ FitReader* FITReader = new FitReader(inputfile, a2, a3);
   // 			 VS().a("0bjetISR"),
   // 			 "canvas3");
 
-  //  TCanvas* cv = FITReader->Plot2D(VS().a("ttbar"),
-  //      		 VS().a("1L"),
-  //      		 VS().a("3j0bS").a("3j1bS").a("3jge2bS"),
-  // //     		 VS().a("ge4j0bS").a("ge4jge1bS"), 
-  //      		 VS().a("ge1j0bISR").a("ge1jge1bISR"),
-  //			 "canvas3");
+    TCanvas* cv = FITReader->Plot2D(VS().a("ttbar"),
+        		 VS().a("1L"),
+        		 VS().a("3j0bS").a("3j1bS").a("3jge2bS"),
+   //     		 VS().a("ge4j0bS").a("ge4jge1bS"), 
+        		 VS().a("ge1j0bISR").a("ge1jge1bISR"),
+  			 "canvas3");
   
 
 // TCanvas* cv = FITReader->Plot2D(VS().a("T1bbbb_13001100"),
@@ -46,12 +46,12 @@ FitReader* FITReader = new FitReader(inputfile, a2, a3);
 //        		 VS().a("ge1j0bISR").a("ge1jge1bISR"),
 //  			 "canvas3");
   
-   TCanvas* cv = FITReader->Plot2D(VS().a("T2tt_5000325"),
-  			 VS().a("2L"),
-        		//VS().a("ge4j0bS").a("ge4jge1bS"),
-        		 VS().a("3j0bS").a("3j1bS").a("3jge2bS"),
-        		 VS().a("ge1j0bISR").a("ge1jge1bISR"),
-  			 "canvas3");
+ //  TCanvas* cv = FITReader->Plot2D(VS().a("T2tt_5000325"),
+ // 			 VS().a("2L"),
+ //       		//VS().a("ge4j0bS").a("ge4jge1bS"),
+ //       		 VS().a("3j0bS").a("3j1bS").a("3jge2bS"),
+ //       		 VS().a("ge1j0bISR").a("ge1jge1bISR"),
+ // 			 "canvas3");
  
 
 //   TCanvas* cv = FITReader->Plot2D(VS().a("T5tttt_22001700"),

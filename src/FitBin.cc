@@ -366,7 +366,7 @@ void FitBin::Fill(double weight, double M, double R){
 
   if(m_hist2D != nullptr)
     m_hist2D->Fill(M, R, weight);
- 
+
 }
 
 void FitBin::WriteHistogram(const string& name,
