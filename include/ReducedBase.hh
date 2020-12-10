@@ -812,6 +812,10 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchStatus("PDGID_lep",1);
    fChain->SetBranchStatus("RelIso_lep", 1);
    fChain->SetBranchStatus("MiniIso_lep", 1);
+   fChain->SetBranchStatus("genMomPDGID_lep", 1);
+   fChain->SetBranchStatus("genMomPDGID_nu", 1);
+   fChain->SetBranchStatus("genNlep", 1);
+   fChain->SetBranchStatus("genNnu", 1);
    fChain->SetBranchStatus("ID_lep", 1);
    fChain->SetBranchStatus("Eta_lep", 1);
 

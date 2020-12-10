@@ -252,7 +252,6 @@ int main(int argc, char* argv[]) {
 
 	if(fabs(base->dphiMET_V) > acos(-1.)/2.)
 	  continue;
-	
 	int Nlep     = base->Nlep;
 	int NjetS    = base->Njet_S;
 	int NbjetS   = base->Nbjet_S;
@@ -260,6 +259,7 @@ int main(int argc, char* argv[]) {
 	int NbjetISR = base->Nbjet_ISR;
 	int NSV      = base->NSV_S;
 
+cout << "event #: " << e << " passed preselection" << endl;	
 	if(Nlep + NjetS + NSV < 1)
 	  continue;
 	  
@@ -319,6 +319,7 @@ int main(int argc, char* argv[]) {
 	  list_b += Lep(flavor, charge, id, source);
 	}
 
+cout << "event #: " << e << " passed lep selection" << endl;	
 	// SV eta
 	double SVmaxeta = 1.; // 1 is fine b/c less than 1.5 cutoff
 	for(int ie = 0; ie < base->NSV_S; ie++)
@@ -336,6 +337,7 @@ int main(int argc, char* argv[]) {
 	  continue;
 	}	
 	
+cout << "event #: " << e << " passed SV selection" << endl;	
 	// systematics loop
 	for(int is = 0; is < Nsys; is++){
 	  Systematic& sys = systematics[is];
@@ -387,6 +389,7 @@ int main(int argc, char* argv[]) {
 	    //   weight *= base->PUweight;
 	  }
 	  
+cout << "event #: " << e << " passed systematics" << endl;	
 	  LepList Fakes  = list_a.GetFakes();
 	  Fakes         += list_b.GetFakes();
 	  
@@ -401,6 +404,7 @@ int main(int argc, char* argv[]) {
 	
 	  double RISR  = base->RISR;
 
+cout << "event #: " << e << " passed RISR+Mperp assignment" << endl;	
 	  if(Fakes.GetN() > 0 && is_bkg){
 	    vector<string> flabels = Fakes.GetFakeLabels();
 	    int Nf = flabels.size();

@@ -58,7 +58,7 @@ double ScaleFactorTool::GetMETSF(double MET, int updown){
 }
 
 bool ScaleFactorTool::DileptonEvent(ReducedBase* base){
-
+std::cout << "genNnu: " << base->genNnu << std::endl;
   int NWnu = 0;
   for(int i = 0; i < base->genNnu; i++)
     if(fabs(base->genMomPDGID_nu->at(i)) == 24)
