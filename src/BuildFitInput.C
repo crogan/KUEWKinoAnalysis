@@ -241,10 +241,17 @@ int main(int argc, char* argv[]) {
 	if(base->PTISR < 200.)
 	  continue;
 
+	double x = fabs(base->dphiCMI);
 	// current cut
-	if(base->PTCM > 75. && fabs(base->dphiCMI) < acos(-1.)/4.)
+	if(base->PTCM > 75. && x < 0.25)
 	  continue;
-	if(base->PTCM > 100. && fabs(base->dphiCMI) > 3.*acos(-1.)/4.)
+	if(base->PTCM > 100. && x > 2.5)
+	  continue;
+	if(base->PTCM > -500.*sqrt(std::max(0.,-2.777*x*x+1.388*x+0.8264))+575. &&
+	   -2.777*x*x+1.388*x+0.8264 > 0.)
+	  continue;
+	if(base->PTCM > -500.*sqrt(std::max(0.,-1.5625*x*x+7.8125*x-8.766))+600. &&
+	   -1.5625*x*x+7.8125*x-8.766 > 0.)
 	  continue;
 	  
 	if(base->RISR < 0.5 || base->RISR > 1.0)
@@ -324,11 +331,19 @@ int main(int argc, char* argv[]) {
 	for(int ie = 0; ie < base->NSV_S; ie++)
 	  if(fabs(base->Eta_SV->at(ie)) > SVmaxeta)
 	    SVmaxeta = fabs(base->Eta_SV->at(ie));
+
+	// gammaT calc
+	double MST =
+	  sqrt(base->MX3a_BoostT*base->MX3a_BoostT+base->PX3_BoostT*base->PX3_BoostT) +
+	  sqrt(base->MX3b_BoostT*base->MX3b_BoostT+base->PX3_BoostT*base->PX3_BoostT);
+	double gammaT = 2.*base->Mperp / MST;
+
 	
 	Category Event(Leptonic(list_a, list_b),
 		       Hadronic(NjetS, NbjetS, NSV),
 		       Hadronic(NjetISR, NbjetISR, base->NSV_ISR));
 	Event.AddGenericVal(GenericVal(base->PTISR));
+	Event.AddGenericVal(gammaT);
 	Event.AddGenericVal(SVmaxeta);
 	
 	int eindex = Categories.Find(Event);

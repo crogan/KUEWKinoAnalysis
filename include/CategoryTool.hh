@@ -29,7 +29,7 @@ public:
   CategoryList GetCategories_3L() const;
 
 protected:
-  FitBin   GetFitBin(int index, int Njet = 0) const;
+  FitBin   GetFitBin(int index) const;
   Hadronic GetHadronicRegion(int Njet, int index) const;
   
 };
