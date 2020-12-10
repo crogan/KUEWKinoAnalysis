@@ -427,7 +427,7 @@ d.Foreach([&absEta, &nLep](vector<double> Eta_lep) {for(int iLep = 0; iLep < Eta
 	  Fakes         += list_b.GetFakes();
 	  
 	  double Mperp = base->Mperp;
-	// cout << "event #: " << e <<  ", weight: " << weight << endl; 
+	 cout << "event #: " << e <<  ", weight: " << weight << endl; 
 	  // use Eperp
 	  if((Nlep == 1) && (NjetS == 0) && (NSV == 0))
 	    Mperp = base->EL_BoostT;

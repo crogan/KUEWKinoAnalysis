@@ -1,5 +1,7 @@
 #include "shapeAnalyzer.hh"
 //using namespace std;
+using std::cout;
+using std::endl;
 shapeAnalyzer::shapeAnalyzer(TFile* ifile){ //for histograms within one file
 	iFile = ifile;
 	// oFile = new TFile((ofile+".root").c_str(),"RECREATE");
@@ -107,12 +109,12 @@ void shapeAnalyzer::drawHists(TDirectory* oldDir, int iHist, int iProc,std::stri
 //std::cout << "c" << std::endl;
 	upHist->SetLineColor(kRed);
 	upHist->SetMarkerColor(kRed);
-	upHist->SetMarkerStyle(20);
+	upHist->SetMarkerStyle(22);
 	upHist->SetStats(0);
 
 	downHist->SetLineColor(kBlue);
 	downHist->SetMarkerColor(kBlue);
-	downHist->SetMarkerStyle(20);
+	downHist->SetMarkerStyle(23);
 	downHist->SetStats(0);
 
 	nomHist->SetLineColor(kGreen);
@@ -139,6 +141,16 @@ void shapeAnalyzer::drawHists(TDirectory* oldDir, int iHist, int iProc,std::stri
 //	vecHists.push_back(upHist);
 //	vecHists.push_back(downHist);
 //
+
+
+	for(int i = 0; i < upHist->GetNbinsX(); i++){
+		if(isnan(upHist->GetBinContent(i))) cout << "upHist bin # " << i << " has a NaN" << endl;
+		if(isnan(downHist->GetBinContent(i))) cout << "downHist bin # " << i << " has a NaN" << endl;
+		if(isnan(ratioUpHist->GetBinContent(i))) cout << "ratioUpHist bin # " << i << " has a NaN" << endl;
+		if(isnan(ratioDownHist->GetBinContent(i))) cout << "ratioDownHist bin # " << i << " has a NaN" << endl;
+	}
+
+
 	TCanvas* c1 = new TCanvas(histName.c_str(),histName.c_str(),800,600);
 
 	TLegend* leg = new TLegend(0.35,0.7,0.9,0.9);
