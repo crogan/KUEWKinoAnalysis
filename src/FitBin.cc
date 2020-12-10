@@ -327,11 +327,34 @@ int FitBin::GetBin(double R, double M) const {
 }
 
 /////////////////////////////////////////////
-FitBin& FitBin::InitializeHistogram(const string& label){
+FitBin& FitBin::InitializeHistogram(const string& label, bool extrahist){
   m_hist1D = (TH1D*) new TH1D(string("h1D_"+label).c_str(),
 			      string("h1D_"+label).c_str(),
 			      m_N, -0.5, m_N - 0.5);
   m_hist1D->Sumw2();
+  
+  double Rmin = m_RBins[0]->Rlow();
+  double Rmax = m_RBins[m_NR-1]->Rhigh();
+  double Mmin = -1.;
+  double Mmax = -1.;
+  
+  for(int r = 0; r < m_NR; r++){
+    for(int b = m_RBins[r]->NBins(); b >= 0; b--){
+      if(Mmin < 0. || m_RBins[r]->BinEdges()[b] < Mmin)
+	Mmin = m_RBins[r]->BinEdges()[b];
+      if(Mmax < 0. || m_RBins[r]->BinEdges()[b] > Mmax)
+	Mmax = m_RBins[r]->BinEdges()[b];
+      
+    }
+  }
+
+  if(extrahist)
+    m_hist2D = (TH2D*) new TH2D(string("h2D_"+label).c_str(),
+				string("h2D_"+label).c_str(),
+				32, Mmin, Mmax,
+				32, Rmin, Rmax);
+  else
+    m_hist2D = nullptr;
   
   return *this;
 }
@@ -341,6 +364,9 @@ void FitBin::Fill(double weight, double M, double R){
     return;
   
   m_hist1D->Fill(GetBin(R, M), weight);
+
+  if(m_hist2D != nullptr)
+    m_hist2D->Fill(M, R, weight);
  
 }
 
@@ -353,9 +379,20 @@ void FitBin::WriteHistogram(const string& name,
   if(!file.IsOpen())
     return;
 
+  // remove zeroes
+  int Nb = m_hist1D->GetNbinsX();
+  for(int b = 0; b < Nb; b++)
+    if(m_hist1D->GetBinContent(b+1) < EPS){
+      m_hist1D->SetBinContent(b+1, EPS);
+      m_hist1D->SetBinError(b+1, 0.);
+    }
+
+  
   file.cd();
   file.cd(fold.c_str());
   m_hist1D->Write(name.c_str(), TObject::kOverwrite);
+  if(m_hist2D != nullptr)
+    m_hist2D->Write((name+"_2D").c_str(), TObject::kOverwrite);
 }
 
 ///////////////////////////////////////////

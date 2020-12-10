@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Tue Sep 15 14:43:11 2020 by ROOT version 6.20/04
+// Thu Oct  1 22:19:37 2020 by ROOT version 6.20/04
 // from TTree KUAnalysis/KUAnalysis
-// found on file: /Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_31_05_20/Fall17_102X/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root
+// found on file: /Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_21_09_20/Fall17_102X/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root
 //////////////////////////////////////////////////////////
 
 #ifndef ReducedBase_h
@@ -13,6 +13,7 @@
 #include <TFile.h>
 
 // Header file for the classes stored in the TTree if any.
+#include "vector"
 #include "vector"
 
 using std::vector;
@@ -260,7 +261,6 @@ public :
    TBranch        *b_M_lep;   //!
    TBranch        *b_Charge_lep;   //!
    TBranch        *b_PDGID_lep;   //!
-   TBranch        *b_SourceID_lep;   //!
    TBranch        *b_RelIso_lep;   //!
    TBranch        *b_MiniIso_lep;   //!
    TBranch        *b_Dxy_lep;   //!
@@ -270,6 +270,7 @@ public :
    TBranch        *b_IP3D_lep;   //!
    TBranch        *b_SIP3D_lep;   //!
    TBranch        *b_ID_lep;   //!
+   TBranch        *b_SourceID_lep;   //!
    TBranch        *b_Index_lep;   //!
    TBranch        *b_Njet;   //!
    TBranch        *b_Nbjet;   //!
@@ -414,8 +415,8 @@ public :
    TBranch        *b_genM_lep;   //!
    TBranch        *b_genCharge_lep;   //!
    TBranch        *b_genPDGID_lep;   //!
-   TBranch        *b_genSourceID_lep;   //!
    TBranch        *b_genMomPDGID_lep;   //!
+   TBranch        *b_genSourceID_lep;   //!
    TBranch        *b_genIndex_lep;   //!
    TBranch        *b_genNnu;   //!
    TBranch        *b_genPT_nu;   //!
@@ -448,16 +449,14 @@ public :
    virtual void     Show(Long64_t entry = -1);
 };
 
-#endif
-
 inline ReducedBase::ReducedBase(TTree *tree) : fChain(0) 
 {
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_31_05_20/Fall17_102X/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_21_09_20/Fall17_102X/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_31_05_20/Fall17_102X/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+         f = new TFile("/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_21_09_20/Fall17_102X/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
       }
       f->GetObject("KUAnalysis",tree);
 
@@ -516,6 +515,7 @@ inline void ReducedBase::Init(TTree *tree)
    IP3D_lep = 0;
    SIP3D_lep = 0;
    ID_lep = 0;
+   SourceID_lep = 0;
    Index_lep = 0;
    PT_jet = 0;
    Eta_jet = 0;
@@ -558,6 +558,7 @@ inline void ReducedBase::Init(TTree *tree)
    genCharge_lep = 0;
    genPDGID_lep = 0;
    genMomPDGID_lep = 0;
+   genSourceID_lep = 0;
    genIndex_lep = 0;
    genPT_nu = 0;
    genEta_nu = 0;
@@ -789,7 +790,7 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchAddress("genMomPDGID_susy", &genMomPDGID_susy, &b_genMomPDGID_susy);
    Notify();
 
-   fChain->SetBranchStatus("*",0);
+    fChain->SetBranchStatus("*",0);
    fChain->SetBranchStatus("*weight",1);
    fChain->SetBranchStatus("MET",1);
    fChain->SetBranchStatus("MET_phi",1);
@@ -799,6 +800,7 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchStatus("*lep",1);
    fChain->SetBranchStatus("Nlep*",1);
    fChain->SetBranchStatus("NSV*",1);
+   fChain->SetBranchStatus("Eta_SV",1);
    fChain->SetBranchStatus("Nbjet*",1);
    fChain->SetBranchStatus("Njet*",1);
    //fChain->SetBranchStatus("MS",1);
@@ -825,10 +827,15 @@ inline void ReducedBase::Init(TTree *tree)
    // fChain->SetBranchStatus("Phi_SV",1);
    // fChain->SetBranchStatus("index_SV_b",1);
    //fChain->SetBranchStatus("*jet",1);
+   fChain->SetBranchStatus("genNlep", 1);
    fChain->SetBranchStatus("genPDGID_lep", 1);
    fChain->SetBranchStatus("genMomPDGID_lep", 1);
+   fChain->SetBranchStatus("genNlnu", 1);
+   fChain->SetBranchStatus("genPDGID_nu", 1);
+   fChain->SetBranchStatus("genMomPDGID_nu", 1);
    fChain->SetBranchStatus("MET*trigger", 1);
    fChain->SetBranchStatus("Mperp",1);
+   fChain->SetBranchStatus("dphiMET_V", 1);
 }
 
 inline Bool_t ReducedBase::Notify()
@@ -856,3 +863,5 @@ inline Int_t ReducedBase::Cut(Long64_t entry)
 // returns -1 otherwise.
    return 1;
 }
+
+#endif
