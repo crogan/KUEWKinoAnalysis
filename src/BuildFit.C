@@ -463,7 +463,7 @@ int main(int argc, char* argv[]) {
       }
   */
   cmd = "combineTool.py -M T2W -i "+OutputFold+"/*/*/*/datacard.txt -o workspace.root --parallel 4";
-  cmd_condor = "combineTool.py -M T2W -i "+OutputFold+"/*/*/*/datacard.txt -o workspace.root --job-mode condor --sub-opts='+JobFlavour=\"espresso\"'";
+  string cmd_condor = "combineTool.py -M T2W -i "+OutputFold+"/*/*/*/datacard.txt -o workspace.root --job-mode condor --sub-opts='+JobFlavour=\"espresso\"'";
   if(workspace)
     gSystem->Exec(cmd.c_str());
   else {
