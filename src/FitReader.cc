@@ -105,6 +105,10 @@ void FitReader::ReadCategories(){
   for(int i = 0; i < N; i++){
     tree->GetEntry(i);
     Category cat = m_CatBranch.GetCategory();
+    if(m_CatLabel.count(cat.GetLabel()) == 0)
+      m_CatLabel[cat.GetLabel()] = true;
+    else
+      continue;
     m_Cat += cat;
     if(m_Chan.count(cat.Label()) == 0)
       m_Chan[cat.Label()] = CategoryList();
