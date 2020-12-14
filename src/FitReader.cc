@@ -737,7 +737,7 @@ TCanvas* FitReader::Plot1Dstack(const VS& proc,
   string plotlabel = "#color[7014]{"+lep_labels[0]+"} + ";
   plotlabel += "#color[7004]{"+hadS_labels[0]+"} + ";
   plotlabel += "#color[7024]{"+hadI_labels[0]+"} + ";
-  plotlabel += "p_{T}^{ISR} > 200 GeV";
+  plotlabel += "p_{T}^{ISR} > 300 GeV";
   
   l.SetTextColor(kBlack);
   l.SetTextAlign(13);
@@ -1043,7 +1043,7 @@ TCanvas* FitReader::Plot2D(const VS& proc,
   string plotlabel = "#color[7014]{"+lep_labels[0]+"} + ";
   plotlabel += "#color[7004]{"+hadS_labels[0]+"} + ";
   plotlabel += "#color[7024]{"+hadI_labels[0]+"} + ";
-  plotlabel += "p_{T}^{ISR} > 200 GeV";
+  plotlabel += "p_{T}^{ISR} > 300 GeV";
   
   l.SetTextColor(kBlack);
   l.SetTextAlign(13);
@@ -1107,7 +1107,7 @@ void FitReader::InitializeRecipes(){
   
   // leptonic categories
   m_Title["1L"] = "#scale[1.2]{single #it{l}}";
-  m_Strings["1L"] = VS().a("1L_elp-elG").a("1L_elm-elG").a("1L_mup-muG").a("1L_mum-muG");
+  m_Strings["1L"] = VS().a("1L_elm-elG").a("1L_elp-elG").a("1L_elpm-elG").a("1L_mupm-muG").a("1L_mup-muG").a("1L_mum-muG");
   
   m_Title["1Lel"] = "#scale[1.2]{single e}";
   m_Strings["1Lel"] = VS().a("1L_elp-elG").a("1L_elm-elG");
@@ -1228,7 +1228,7 @@ void FitReader::InitializeRecipes(){
   
   m_Title["ge1j0bISR"] = "#splitline{#geq 1 jet}{0 b-tags} #scale[1.2]{#in ISR}";
 
-  m_Title["ge1j0bISR"] = "#splitline{#geq 1 jet}{#geq 1 b-tags} #scale[1.2]{#in ISR}";
+  m_Title["ge1jge1bISR"] = "#splitline{#geq 1 jet}{#geq 1 b-tags} #scale[1.2]{#in ISR}";
 
   m_Title["ge1jISR"] = "#splitline{#geq 1 jet}{incl. b-tags} #scale[1.2]{#in ISR}";
 
