@@ -797,6 +797,7 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchStatus("RISR",1);
    fChain->SetBranchStatus("PTISR",1);
    fChain->SetBranchStatus("PTCM",1);
+   fChain->SetBranchStatus("dphiCMI",1);
    fChain->SetBranchStatus("*lep",1);
    fChain->SetBranchStatus("Nlep*",1);
    fChain->SetBranchStatus("NSV*",1);
@@ -836,6 +837,10 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchStatus("MET*trigger", 1);
    fChain->SetBranchStatus("Mperp",1);
    fChain->SetBranchStatus("dphiMET_V", 1);
+   fChain->SetBranchStatus("MX3a_BoostT",1);
+   fChain->SetBranchStatus("MX3b_BoostT",1);
+   fChain->SetBranchStatus("PX3_BoostT",1);
+ 
 }
 
 inline Bool_t ReducedBase::Notify()
