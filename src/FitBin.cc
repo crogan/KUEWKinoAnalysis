@@ -363,7 +363,7 @@ void FitBin::Fill(double weight, double M, double R){
   if(m_hist1D == nullptr)
     return;
   m_hist1D->Fill(GetBin(R, M), weight);
-
+//cout << "bin: " << R << " " << M << " has weight " << weight << endl;
   if(m_hist2D != nullptr)
     m_hist2D->Fill(M, R, weight);
 

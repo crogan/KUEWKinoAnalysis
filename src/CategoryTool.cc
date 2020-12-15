@@ -102,27 +102,28 @@ FitBin CategoryTool::GetFitBin(int index) const {
     //RBins.push_back(RBin(0.9,  1.0,  VD().a(0.).a(60.).a(80.).a(100.).a(200.)));
 
 ////original R5 M6
-//if(index == 6){
-//    RBins.push_back(RBin(0.6,  0.65, VD().a(0.).a(40.).a(60.).a(80.).a(100.).a(120.).a(200.)));
-//    RBins.push_back(RBin(0.65,  0.7, VD().a(0.).a(40.).a(60.).a(80.).a(100.).a(120.).a(200.)));
-//    RBins.push_back(RBin(0.7,  0.75, VD().a(0.).a(40.).a(60.).a(80.).a(100.).a(120.).a(200.)));
-//    RBins.push_back(RBin(0.75,  0.8, VD().a(0.).a(40.).a(60.).a(80.).a(100.).a(120.).a(200.)));
-//    RBins.push_back(RBin(0.8,  0.85, VD().a(0.).a(40.).a(60.).a(80.).a(100.).a(120.).a(200.)));
-//    RBins.push_back(RBin(0.85,  0.9, VD().a(0.).a(40.).a(60.).a(80.).a(100.).a(120.).a(200.)));
-//    RBins.push_back(RBin(0.9,  1.0,  VD().a(0.).a(40.).a(60.).a(80.).a(100.).a(120.).a(200.)));
-//}
+if(index == 6){
+    RBins.push_back(RBin(0.6,  0.65, VD().a(0.).a(40.).a(60.).a(80.).a(100.).a(120.).a(200.)));
+    RBins.push_back(RBin(0.65,  0.7, VD().a(0.).a(40.).a(60.).a(80.).a(100.).a(120.).a(200.)));
+    RBins.push_back(RBin(0.7,  0.75, VD().a(0.).a(40.).a(60.).a(80.).a(100.).a(120.).a(200.)));
+    RBins.push_back(RBin(0.75,  0.8, VD().a(0.).a(40.).a(60.).a(80.).a(100.).a(120.).a(200.)));
+    RBins.push_back(RBin(0.8,  0.85, VD().a(0.).a(40.).a(60.).a(80.).a(100.).a(120.).a(200.)));
+    RBins.push_back(RBin(0.85,  0.9, VD().a(0.).a(40.).a(60.).a(80.).a(100.).a(120.).a(200.)));
+    RBins.push_back(RBin(0.9,  1.0,  VD().a(0.).a(40.).a(60.).a(80.).a(100.).a(120.).a(200.)));
+}
 
 
-  // R5 M6 - 4j - based on T2tt5000420
-  if(index == 6){
-    RBins.push_back(RBin(0.6,  0.7, VD().a(0.).a(75.).a(140.).a(200.).a(300.)));
-//    RBins.push_back(RBin(0.63, 0.7,  VD().a(0.).a(60.).a(100.).a(140.).a(170).a(300.)));
-    RBins.push_back(RBin(0.7,  0.75, VD().a(0.).a(60.).a(100.).a(140.).a(300.)));
-    RBins.push_back(RBin(0.75, 0.9,  VD().a(0.).a(300.)));
-   // RBins.push_back(RBin(0.8,  0.9,  VD().a(0.).a(100.).a(140.).a(200.)));
-    //RBins.push_back(RBin(0.85, 0.9,  VD().a(0.).a(80.).a(120.).a(200.)));
-   // RBins.push_back(RBin(0.9,  1.0,  VD().a(0.).a(100.).a(140.).a(200.)));
-  }
+//  // R5 M6 - 4j - based on T2tt5000420
+//  if(index == 6){
+//    RBins.push_back(RBin(0.6,  0.63, VD().a(0.).a(50.).a(90.).a(150.).a(200.).a(250.).a(300.)));
+//    RBins.push_back(RBin(0.63, 0.7,  VD().a(0.).a(60.).a(100.).a(140.).a(200).a(300.)));
+//    RBins.push_back(RBin(0.7,  0.75, VD().a(0.).a(50.).a(130.).a(190.).a(300.)));
+//    RBins.push_back(RBin(0.75,  0.8, VD().a(0.).a(50.).a(140.).a(300.)));
+//    RBins.push_back(RBin(0.8, 0.9,  VD().a(0.).a(300.)));
+//   // RBins.push_back(RBin(0.8,  0.9,  VD().a(0.).a(100.).a(140.).a(200.)));
+//    //RBins.push_back(RBin(0.85, 0.9,  VD().a(0.).a(80.).a(120.).a(200.)));
+//   // RBins.push_back(RBin(0.9,  1.0,  VD().a(0.).a(100.).a(140.).a(200.)));
+//  }
 
   }
   FitBin Bins(RBins);
