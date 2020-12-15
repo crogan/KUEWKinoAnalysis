@@ -22,9 +22,9 @@ void FitConfiguration::Configure(ch::CombineHarvester& cb, ProcessList& processe
 
   bkg_rate += "ttbar";
   bkg_rate += "Wjets";
+  bkg_rate += "DB";
+  bkg_rate += "ZDY";
   
-  bkg_rare += "DB";
-  bkg_rare += "ZDY";
   bkg_rare += "ST";
   bkg_rare += "TB";
 
@@ -41,6 +41,8 @@ void FitConfiguration::Configure(ch::CombineHarvester& cb, ProcessList& processe
 	       ({"2016"}, 1.022)
 	       ({"2017"}, 1.022)
 	       ({"2018"}, 1.022));
+     cb.cp().process(plist.GetProcesses())
+       .AddSyst(cb, "scale_"+p, "lnN", SystMap<>::init(1.2));
   }
   
   // signal luminosity uncertainty
@@ -49,6 +51,10 @@ void FitConfiguration::Configure(ch::CombineHarvester& cb, ProcessList& processe
 	     ({"2016"}, 1.022)
 	     ({"2017"}, 1.022)
 	     ({"2018"}, 1.022));
+
+  // signal xsec uncertainty
+  cb.cp().signals()
+    .AddSyst(cb, "sig_xsec", "lnN", SystMap<>::init(1.05));
   
 }
 

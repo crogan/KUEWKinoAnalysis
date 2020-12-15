@@ -315,7 +315,6 @@ Systematics SystematicsTool::GetWeightSystematics() const {
   list += "lepIso_weight";
   list += "MET_TRIG";
 
->>>>>>> crogan-main
   return list;
 }
 

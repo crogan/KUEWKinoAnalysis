@@ -86,6 +86,7 @@ private:
 
   ProcessList                      m_Proc;
   mutable map<string,CategoryList> m_Chan;
+  mutable map<string,bool>         m_CatLabel;
   CategoryList                     m_Cat;
   Systematics                      m_Sys;
   

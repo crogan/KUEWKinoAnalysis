@@ -46,6 +46,8 @@ int main(int argc, char* argv[]) {
   bool workspace = false;
 
   bool doMCstats = false;
+
+  bool doSepChan = false;
     
   for(int i = 0; i < argc; i++){
     if(strncmp(argv[i],"--workspace", 11) == 0){
@@ -136,6 +138,9 @@ int main(int argc, char* argv[]) {
     if(strncmp(argv[i],"+MCstats", 8) == 0){
       doMCstats = true;
     }
+    if(strncmp(argv[i],"-sepchan", 8) == 0){
+      doSepChan = true;
+    }
      
   }
     
@@ -170,6 +175,7 @@ int main(int argc, char* argv[]) {
     cout << "   +sys [label]        add systematics matching label" << endl;
     cout << "   -sys [label]        removes systematics matching label" << endl;
     cout << "   +MCstats            adds autoMCStats uncertainties" << endl;
+    cout << "   -sepchan            make datacards for each group of channels separately" << endl;
     cout << "   --workspace(-w)     also build workspaces (note: faster not to, and run message)" << endl;
 
     return 0;
@@ -421,26 +427,28 @@ int main(int argc, char* argv[]) {
   }
 
   // datacard/workspace for each channel
-  for(auto ch : channels){
-    fold = OutputFold+"/"+ch;
-    gSystem->Exec(("mkdir -p "+fold).c_str());
-
-    for(auto sm : masses){
-      fold = OutputFold+"/"+ch+"/"+sm.first;
+  if(doSepChan){
+    for(auto ch : channels){
+      fold = OutputFold+"/"+ch;
       gSystem->Exec(("mkdir -p "+fold).c_str());
-
-      for(auto m : sm.second){
-	fold = OutputFold+"/"+ch+"/"+sm.first+"/"+m;
+      
+      for(auto sm : masses){
+	fold = OutputFold+"/"+ch+"/"+sm.first;
 	gSystem->Exec(("mkdir -p "+fold).c_str());
-
-	if(verbose)
-	  cout << "    * " << ch << " " << sm.first+"_"+m<< endl;
-
-	cb.cp().channel({ch}).mass({m, "*"})
-	  .WriteDatacard(fold+"/datacard.txt", output);
+	
+	for(auto m : sm.second){
+	  fold = OutputFold+"/"+ch+"/"+sm.first+"/"+m;
+	  gSystem->Exec(("mkdir -p "+fold).c_str());
+	  
+	  if(verbose)
+	    cout << "    * " << ch << " " << sm.first+"_"+m<< endl;
+	  
+	  cb.cp().channel({ch}).mass({m, "*"})
+	    .WriteDatacard(fold+"/datacard.txt", output);
+	}
       }
     }
-  }  
+  }
 
   output.Close();
 
@@ -463,11 +471,14 @@ int main(int argc, char* argv[]) {
       }
   */
   cmd = "combineTool.py -M T2W -i "+OutputFold+"/*/*/*/datacard.txt -o workspace.root --parallel 4";
+  string cmd_condor = "combineTool.py -M T2W -i "+OutputFold+"/*/*/*/datacard.txt -o workspace.root --job-mode condor --sub-opts='+JobFlavour=\"espresso\"'";
   if(workspace)
     gSystem->Exec(cmd.c_str());
   else {
-    cout << "To build workspaces type:" << endl;
-    cout << "    " << cmd << endl;
+    cout << "To build workspaces type:" << endl << endl;
+    cout << "    " << cmd << endl << endl;
+    cout << "Or, to run using condor, something like:" << endl << endl;
+    cout << "    " << cmd_condor << endl << endl;
   }
 
 }

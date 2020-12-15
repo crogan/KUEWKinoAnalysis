@@ -28,7 +28,7 @@ double ScaleFactorTool::GetMETEff(double MET, int updown){
   if(MET <= 0.)
     return 0.;
 
-  double nom = 9.921*ROOT::Math::normal_cdf(MET, 77.5, 78.57);
+  double nom = 0.9921*ROOT::Math::normal_cdf(MET, 77.5, 78.57);
   
   if(updown == 0)
     return nom;
@@ -58,7 +58,6 @@ double ScaleFactorTool::GetMETSF(double MET, int updown){
 }
 
 bool ScaleFactorTool::DileptonEvent(ReducedBase* base){
-
   int NWnu = 0;
   for(int i = 0; i < base->genNnu; i++)
     if(fabs(base->genMomPDGID_nu->at(i)) == 24)

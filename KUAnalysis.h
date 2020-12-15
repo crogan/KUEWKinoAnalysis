@@ -1,12 +1,12 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Thu Oct  1 22:19:37 2020 by ROOT version 6.20/04
+// Mon Oct 12 19:12:32 2020 by ROOT version 6.14/09
 // from TTree KUAnalysis/KUAnalysis
-// found on file: /Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_21_09_20/Fall17_102X/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root
+// found on file: /home/t3-ku/crogan/NTUPLES/NANO/NEW_21_09_20/Fall17_102X/DYJetsToLL_M-4to50_HT-100to200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root
 //////////////////////////////////////////////////////////
 
-#ifndef ReducedBase_h
-#define ReducedBase_h
+#ifndef KUAnalysis_h
+#define KUAnalysis_h
 
 #include <TROOT.h>
 #include <TChain.h>
@@ -16,9 +16,7 @@
 #include "vector"
 #include "vector"
 
-using std::vector;
-
-class ReducedBase {
+class KUAnalysis {
 public :
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
    Int_t           fCurrent; //!current Tree number in a TChain
@@ -439,24 +437,28 @@ public :
    TBranch        *b_genPDGID_susy;   //!
    TBranch        *b_genMomPDGID_susy;   //!
 
-   ReducedBase(TTree *tree=0);
-   virtual ~ReducedBase();
+   KUAnalysis(TTree *tree=0);
+   virtual ~KUAnalysis();
    virtual Int_t    Cut(Long64_t entry);
    virtual Int_t    GetEntry(Long64_t entry);
    virtual Long64_t LoadTree(Long64_t entry);
    virtual void     Init(TTree *tree);
+   virtual void     Loop();
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
 };
 
-inline ReducedBase::ReducedBase(TTree *tree) : fChain(0) 
+#endif
+
+#ifdef KUAnalysis_cxx
+KUAnalysis::KUAnalysis(TTree *tree) : fChain(0) 
 {
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_21_09_20/Fall17_102X/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("/home/t3-ku/crogan/NTUPLES/NANO/NEW_21_09_20/Fall17_102X/DYJetsToLL_M-4to50_HT-100to200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_21_09_20/Fall17_102X/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+         f = new TFile("/home/t3-ku/crogan/NTUPLES/NANO/NEW_21_09_20/Fall17_102X/DYJetsToLL_M-4to50_HT-100to200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
       }
       f->GetObject("KUAnalysis",tree);
 
@@ -464,19 +466,19 @@ inline ReducedBase::ReducedBase(TTree *tree) : fChain(0)
    Init(tree);
 }
 
-inline ReducedBase::~ReducedBase()
+KUAnalysis::~KUAnalysis()
 {
    if (!fChain) return;
    delete fChain->GetCurrentFile();
 }
 
-inline Int_t ReducedBase::GetEntry(Long64_t entry)
+Int_t KUAnalysis::GetEntry(Long64_t entry)
 {
 // Read contents of entry.
    if (!fChain) return 0;
    return fChain->GetEntry(entry);
 }
-inline Long64_t ReducedBase::LoadTree(Long64_t entry)
+Long64_t KUAnalysis::LoadTree(Long64_t entry)
 {
 // Set the environment to read one entry
    if (!fChain) return -5;
@@ -489,7 +491,7 @@ inline Long64_t ReducedBase::LoadTree(Long64_t entry)
    return centry;
 }
 
-inline void ReducedBase::Init(TTree *tree)
+void KUAnalysis::Init(TTree *tree)
 {
    // The Init() function is called when the selector needs to initialize
    // a new tree or chain. Typically here the branch addresses and branch
@@ -789,67 +791,9 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchAddress("genPDGID_susy", &genPDGID_susy, &b_genPDGID_susy);
    fChain->SetBranchAddress("genMomPDGID_susy", &genMomPDGID_susy, &b_genMomPDGID_susy);
    Notify();
-
-    fChain->SetBranchStatus("*",0);
-   fChain->SetBranchStatus("*weight",1);
-   fChain->SetBranchStatus("*weight_down",1);
-   fChain->SetBranchStatus("*weight_up",1);
-    fChain->SetBranchStatus("PUweight_up",1);
-   fChain->SetBranchStatus("NPU",1);
-   fChain->SetBranchStatus("MET",1);
-   fChain->SetBranchStatus("MET_phi",1);
-   fChain->SetBranchStatus("RISR",1);
-   fChain->SetBranchStatus("PTISR",1);
-   fChain->SetBranchStatus("PTCM",1);
-   fChain->SetBranchStatus("dphiCMI",1);
-   fChain->SetBranchStatus("*lep",1);
-   fChain->SetBranchStatus("Nlep*",1);
-   fChain->SetBranchStatus("NSV*",1);
-   fChain->SetBranchStatus("Eta_SV",1);
-   fChain->SetBranchStatus("Nbjet*",1);
-   fChain->SetBranchStatus("Njet*",1);
-   //fChain->SetBranchStatus("MS",1);
-   //fChain->SetBranchStatus("PVa",1);
-   //fChain->SetBranchStatus("PVb",1);
-   //fChain->SetBranchStatus("PzS",1);
-   //fChain->SetBranchStatus("PTS",1);
-   //fChain->SetBranchStatus("H11S",1);
-   // fChain->SetBranchStatus("dphiSI",1);
-   // fChain->SetBranchStatus("dphiCMI",1);
-   // fChain->SetBranchStatus("MX3a",1);
-   // fChain->SetBranchStatus("MX3b",1);
-   // fChain->SetBranchStatus("MVa",1);
-   // fChain->SetBranchStatus("MVb",1);
-   // fChain->SetBranchStatus("EVa",1);
-   // fChain->SetBranchStatus("EVb",1);
-   //fChain->SetBranchStatus("*_BoostT",1);
-   fChain->SetBranchStatus("ML",1);
-   // fChain->SetBranchStatus("EL",1);
-  
-   fChain->SetBranchStatus("index*",1);
-   // fChain->SetBranchStatus("*jet",1);
-   // fChain->SetBranchStatus("Eta_SV",1);
-   // fChain->SetBranchStatus("Phi_SV",1);
-   // fChain->SetBranchStatus("index_SV_b",1);
-   //fChain->SetBranchStatus("*jet",1);
-   fChain->SetBranchStatus("genNlep", 1);
-   fChain->SetBranchStatus("genPDGID_lep", 1);
-   fChain->SetBranchStatus("genMomPDGID_lep", 1);
-   fChain->SetBranchStatus("genNnu", 1);
-   fChain->SetBranchStatus("genPDGID_nu", 1);
-   fChain->SetBranchStatus("genNlnu", 1);
-   fChain->SetBranchStatus("genMomPDGID_nu", 1);
-   fChain->SetBranchStatus("genNnu", 1);
-   fChain->SetBranchStatus("MET*trigger", 1);
-   fChain->SetBranchStatus("Mperp",1);
-   fChain->SetBranchStatus("dphiMET_V", 1);
-   fChain->SetBranchStatus("MX3a_BoostT",1);
-   fChain->SetBranchStatus("MX3b_BoostT",1);
-   fChain->SetBranchStatus("PX3_BoostT",1);
- 
 }
 
-inline Bool_t ReducedBase::Notify()
+Bool_t KUAnalysis::Notify()
 {
    // The Notify() function is called when a new file is opened. This
    // can be either for a new TTree in a TChain or when when a new TTree
@@ -860,19 +804,18 @@ inline Bool_t ReducedBase::Notify()
    return kTRUE;
 }
 
-inline void ReducedBase::Show(Long64_t entry)
+void KUAnalysis::Show(Long64_t entry)
 {
 // Print contents of entry.
 // If entry is not specified, print current entry
    if (!fChain) return;
    fChain->Show(entry);
 }
-inline Int_t ReducedBase::Cut(Long64_t entry)
+Int_t KUAnalysis::Cut(Long64_t entry)
 {
 // This function may be called from Loop.
 // returns  1 if entry is accepted.
 // returns -1 otherwise.
    return 1;
 }
-
-#endif
+#endif // #ifdef KUAnalysis_cxx
