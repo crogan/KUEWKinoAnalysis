@@ -54,7 +54,11 @@ void FitInputBuilder::AddEvent(double weight, double Mperp, double RISR,
   if(m_Proc.count(sproc) == 0){
     m_Proc[sproc] = new Process(proc);
   }
-  m_Proc[sproc]->AddEvent(weight, Mperp, RISR, cat, sys, m_BookHist);
+
+  if(sys.IsDefault())
+    m_Proc[sproc]->AddEvent(weight, Mperp, RISR, cat, sys, m_BookHist);
+  else
+    m_Proc[sproc]->AddEvent(weight, Mperp, RISR, cat, sys);
 			  
 }
 

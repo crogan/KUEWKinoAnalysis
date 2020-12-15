@@ -29,54 +29,49 @@ CategoryList CategoryTool::GetCategories() const {
 FitBin CategoryTool::GetFitBin(int index) const {
   vector<RBin> RBins;
 
-  // for 0L SV regions
+  // for 1L 0S & 0L SV regions
   if(index == 0){
-    RBins.push_back(RBin(0.9,   0.95,  VD().a(0.).a(5.).a(10.).a(30.)));
-    RBins.push_back(RBin(0.95,  1.0,   VD().a(0.).a(5.).a(10.).a(30.)));
+    RBins.push_back(RBin(0.9,   0.95,   VD().a(0.).a(10.).a(40.)));
+    RBins.push_back(RBin(0.95,  0.98,   VD().a(0.).a(5.).a(10.).a(40.)));
+    RBins.push_back(RBin(0.98,  1.00,   VD().a(0.).a(5.).a(10.).a(40.)));
   }
   
-  // R1
+  // for 1L 1j, 0L 2j, 2L 0j
   if(index == 1){
-    RBins.push_back(RBin(0.6,   0.7,   VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(50.).a(100.).a(120.)));
-    RBins.push_back(RBin(0.7,   0.75,  VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(50.).a(100.).a(120.)));
-    RBins.push_back(RBin(0.75,  0.8,   VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(50.).a(100.).a(120.)));
-    RBins.push_back(RBin(0.8,   0.85,  VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(50.).a(100.).a(120.)));
-    RBins.push_back(RBin(0.85,  0.9,   VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(50.).a(100.).a(120.)));
-    RBins.push_back(RBin(0.9,   0.925, VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(50.).a(100.).a(120.)));
-    RBins.push_back(RBin(0.925, 0.95,  VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(50.).a(100.).a(120.)));
-    RBins.push_back(RBin(0.95,  1.0,   VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(50.).a(100.).a(120.)));
+    RBins.push_back(RBin(0.6,   0.7,   VD().a(0.).a(50.).a(120.)));
+    RBins.push_back(RBin(0.7,   0.8,   VD().a(0.).a(50.).a(120.)));
+    RBins.push_back(RBin(0.8,   0.85,  VD().a(0.).a(20.).a(50.).a(120.)));
+    RBins.push_back(RBin(0.85,  0.9,   VD().a(0.).a(20.).a(50.).a(120.)));
+    RBins.push_back(RBin(0.9,   0.95,  VD().a(0.).a(10.).a(20.).a(40.).a(120.)));
+    RBins.push_back(RBin(0.95,  1.0,   VD().a(0.).a(10.).a(20.).a(40.).a(120.)));
   }
 
-  // R2
+  // for 0L 3j, 1L 2j, 2L 1j
   if(index == 2){
-    RBins.push_back(RBin(0.6,   0.75,  VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(40.)));
-    RBins.push_back(RBin(0.75,  0.85,  VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(40.)));
-    RBins.push_back(RBin(0.85,  0.9,   VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(40.)));
-    RBins.push_back(RBin(0.9,   0.925, VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(40.)));
-    RBins.push_back(RBin(0.925, 0.95,  VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(40.)));
-    RBins.push_back(RBin(0.95,  0.975, VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(40.)));
-    RBins.push_back(RBin(0.975, 1.,    VD().a(0.).a(5.).a(10.).a(20.).a(30.).a(40.)));
+    RBins.push_back(RBin(0.55,  0.65, VD().a(0.).a(80.).a(120.).a(200.)));
+    RBins.push_back(RBin(0.65,  0.75, VD().a(0.).a(80.).a(120.).a(200.)));
+    RBins.push_back(RBin(0.75,  0.8,  VD().a(0.).a(80.).a(120.).a(200.)));
+    RBins.push_back(RBin(0.8,   0.85, VD().a(0.).a(80.).a(120.).a(200.)));
+    RBins.push_back(RBin(0.85,  0.9,  VD().a(0.).a(40.).a(80.).a(200.)));
+    RBins.push_back(RBin(0.9,   1.0,  VD().a(0.).a(40.).a(80.).a(200.)));
   }
 
-  // R3
+  // // for 0L 4j, 1L 3j, 2L 2j
   if(index == 3){
-    RBins.push_back(RBin(0.6,   0.7,   VD().a(0.).a(10.).a(20.).a(30.).a(50.).a(60.)));
-    RBins.push_back(RBin(0.7,   0.8,   VD().a(0.).a(10.).a(20.).a(30.).a(50.).a(60.)));
-    RBins.push_back(RBin(0.8,   0.85,  VD().a(0.).a(10.).a(20.).a(30.).a(50.).a(60.)));
-    RBins.push_back(RBin(0.85,  0.9,   VD().a(0.).a(10.).a(20.).a(30.).a(50.).a(60.)));
-    RBins.push_back(RBin(0.9,   0.95,  VD().a(0.).a(10.).a(20.).a(30.).a(50.).a(60.)));
-    RBins.push_back(RBin(0.95,  1.0,   VD().a(0.).a(10.).a(20.).a(30.).a(50.).a(60.)));
+    RBins.push_back(RBin(0.5,   0.6,  VD().a(0.).a(80.).a(120.).a(300.)));
+    RBins.push_back(RBin(0.6,   0.7,  VD().a(0.).a(80.).a(120.).a(300.)));
+    RBins.push_back(RBin(0.7,   0.8,  VD().a(0.).a(80.).a(120.).a(300.)));
+    RBins.push_back(RBin(0.8,   0.9,  VD().a(0.).a(80.).a(120.).a(300.)));
+    RBins.push_back(RBin(0.9,   1.0,  VD().a(0.).a(80.).a(120.).a(300.)));
   }
 
-  // R4
+  // for 0L 5j, 1L 4j
   if(index == 4){
-    RBins.push_back(RBin(0.6,  0.7,  VD().a(0.).a(20.).a(30.).a(40.).a(50.).a(100.).a(200.)));
-    RBins.push_back(RBin(0.7,  0.75, VD().a(0.).a(20.).a(30.).a(40.).a(50.).a(100.).a(200.)));
-    RBins.push_back(RBin(0.75, 0.8,  VD().a(0.).a(20.).a(30.).a(40.).a(50.).a(100.).a(200.)));
-    RBins.push_back(RBin(0.8,  0.85, VD().a(0.).a(20.).a(30.).a(40.).a(50.).a(100.).a(200.)));
-    RBins.push_back(RBin(0.85, 0.9,  VD().a(0.).a(20.).a(30.).a(40.).a(50.).a(100.).a(200.)));
-    RBins.push_back(RBin(0.9,  0.95, VD().a(0.).a(20.).a(30.).a(40.).a(50.).a(100.).a(200.)));
-    RBins.push_back(RBin(0.95, 1.0,  VD().a(0.).a(20.).a(30.).a(40.).a(50.).a(100.).a(200.)));
+    RBins.push_back(RBin(0.5,   0.6,  VD().a(150.).a(400.)));
+    RBins.push_back(RBin(0.6,   0.7,  VD().a(150.).a(400.)));
+    RBins.push_back(RBin(0.7,   0.8,  VD().a(150.).a(400.)));
+    RBins.push_back(RBin(0.8,   0.9,  VD().a(150.).a(400.)));
+    RBins.push_back(RBin(0.9,   1.0,  VD().a(150.).a(400.)));
   }
 
  // // R5
@@ -595,14 +590,29 @@ CategoryList CategoryTool::GetCategories_0L() const {
   vector<double> PTISR_incl;
   PTISR_incl.push_back(300.);
 
-  vector<double> PTISR_bin;
-  PTISR_bin.push_back(300.);
-  PTISR_bin.push_back(450.);
+  vector<double> PTISR_bin2;
+  PTISR_bin2.push_back(300.);
+  PTISR_bin2.push_back(400.);
 
+  vector<double> PTISR_bin3;
+  PTISR_bin3.push_back(350.);
+  PTISR_bin3.push_back(450.);
+
+   vector<double> PTISR_bin4;
+  PTISR_bin3.push_back(400.);
+  PTISR_bin3.push_back(500.);
+ 
   // Get SV binning
   vector<double> SV_eta;
   SV_eta.push_back(0.);
   SV_eta.push_back(1.5);
+
+  // Get gammaT binning
+  vector<double> gamT0;
+  gamT0.push_back(0.);
+  vector<double> gamT;
+  gamT.push_back(0.);
+  gamT.push_back(0.5);
 
   ///////////////////////////////////////////////
 
@@ -617,6 +627,7 @@ CategoryList CategoryTool::GetCategories_0L() const {
   Cats_0L_SV = Cats_0L_SV.CreateHadronicSRegions(H_0L_SV);
   Cats_0L_SV = Cats_0L_SV.CreateHadronicISRRegions(H_ISR_B);
   Cats_0L_SV = Cats_0L_SV.CreateGenericRegions("PTISR", PTISR_incl);
+  Cats_0L_SV = Cats_0L_SV.CreateGenericRegions("gamT", gamT0);
   Cats_0L_SV = Cats_0L_SV.CreateGenericRegions("SVeta", SV_eta);
 
   Cats_0L += Cats_0L_SV;
@@ -631,10 +642,11 @@ CategoryList CategoryTool::GetCategories_0L() const {
   H_0L_2jS.push_back(GetHadronicRegion(2, 4)); // 2j1b
   H_0L_2jS.push_back(GetHadronicRegion(2, 5)); // 2j2b
 
-  Cats_0L_2jS = Cats_0L_2jS.CreateFitBinRegions(GetFitBin(4));
+  Cats_0L_2jS = Cats_0L_2jS.CreateFitBinRegions(GetFitBin(1));
   Cats_0L_2jS = Cats_0L_2jS.CreateHadronicSRegions(H_0L_2jS);
   Cats_0L_2jS = Cats_0L_2jS.CreateHadronicISRRegions(H_ISR_B);
-  Cats_0L_2jS = Cats_0L_2jS.CreateGenericRegions("PTISR", PTISR_bin);
+  Cats_0L_2jS = Cats_0L_2jS.CreateGenericRegions("PTISR", PTISR_bin2);
+  Cats_0L_2jS = Cats_0L_2jS.CreateGenericRegions("gamT", gamT);
 
   Cats_0L += Cats_0L_2jS;
 
@@ -648,10 +660,11 @@ CategoryList CategoryTool::GetCategories_0L() const {
   H_0L_3jS.push_back(GetHadronicRegion(3, 4)); // 3j1b
   H_0L_3jS.push_back(GetHadronicRegion(3, 5)); // 3j2b
 
-  Cats_0L_3jS = Cats_0L_3jS.CreateFitBinRegions(GetFitBin(4));
+  Cats_0L_3jS = Cats_0L_3jS.CreateFitBinRegions(GetFitBin(2));
   Cats_0L_3jS = Cats_0L_3jS.CreateHadronicSRegions(H_0L_3jS);
   Cats_0L_3jS = Cats_0L_3jS.CreateHadronicISRRegions(H_ISR_B);
-  Cats_0L_3jS = Cats_0L_3jS.CreateGenericRegions("PTISR", PTISR_bin);
+  Cats_0L_3jS = Cats_0L_3jS.CreateGenericRegions("PTISR", PTISR_bin2);
+  Cats_0L_3jS = Cats_0L_3jS.CreateGenericRegions("gamT", gamT);
 
   Cats_0L += Cats_0L_3jS;
 
@@ -665,10 +678,11 @@ CategoryList CategoryTool::GetCategories_0L() const {
   H_0L_4jS.push_back(GetHadronicRegion(4, 4)); // 4j1b
   H_0L_4jS.push_back(GetHadronicRegion(4, 5)); // 4j2b
 
-  Cats_0L_4jS = Cats_0L_4jS.CreateFitBinRegions(GetFitBin(5));
+  Cats_0L_4jS = Cats_0L_4jS.CreateFitBinRegions(GetFitBin(3));
   Cats_0L_4jS = Cats_0L_4jS.CreateHadronicSRegions(H_0L_4jS);
   Cats_0L_4jS = Cats_0L_4jS.CreateHadronicISRRegions(H_ISR_B);
-  Cats_0L_4jS = Cats_0L_4jS.CreateGenericRegions("PTISR", PTISR_bin);
+  Cats_0L_4jS = Cats_0L_4jS.CreateGenericRegions("PTISR", PTISR_bin3);
+  Cats_0L_4jS = Cats_0L_4jS.CreateGenericRegions("gamT", gamT);
 
   Cats_0L += Cats_0L_4jS;
 
@@ -681,10 +695,11 @@ CategoryList CategoryTool::GetCategories_0L() const {
   H_0L_5jS.push_back(GetHadronicRegion(5, 6)); // ge5j0b
   H_0L_5jS.push_back(GetHadronicRegion(5, 7)); // ge5jge1b
 
-  Cats_0L_5jS = Cats_0L_5jS.CreateFitBinRegions(GetFitBin(6));
+  Cats_0L_5jS = Cats_0L_5jS.CreateFitBinRegions(GetFitBin(4));
   Cats_0L_5jS = Cats_0L_5jS.CreateHadronicSRegions(H_0L_5jS);
   Cats_0L_5jS = Cats_0L_5jS.CreateHadronicISRRegions(H_ISR_B);
-  Cats_0L_5jS = Cats_0L_5jS.CreateGenericRegions("PTISR", PTISR_bin);
+  Cats_0L_5jS = Cats_0L_5jS.CreateGenericRegions("PTISR", PTISR_bin4);
+  Cats_0L_5jS = Cats_0L_5jS.CreateGenericRegions("gamT", gamT);
 
   Cats_0L += Cats_0L_5jS;
 
@@ -728,18 +743,29 @@ CategoryList CategoryTool::GetCategories_1L() const {
   H_ISR_B.push_back(GetHadronicRegion(1, 6)); // ge1j0b
   H_ISR_B.push_back(GetHadronicRegion(1, 7)); // ge1jge1b
   
-  // Get PTISR binning
+ // Get PTISR binning
   vector<double> PTISR_incl;
-  PTISR_incl.push_back(200.);
+  PTISR_incl.push_back(300.);
 
-  vector<double> PTISR_bin;
-  PTISR_bin.push_back(200.);
-  PTISR_bin.push_back(300.);
+  vector<double> PTISR_bin2;
+  PTISR_bin2.push_back(300.);
+  PTISR_bin2.push_back(400.);
 
+  vector<double> PTISR_bin3;
+  PTISR_bin3.push_back(350.);
+  PTISR_bin3.push_back(450.);
+ 
   // Get SV binning
   vector<double> SV_eta;
   SV_eta.push_back(0.);
   SV_eta.push_back(1.5);
+
+  // Get gammaT binning
+  vector<double> gamT0;
+  gamT0.push_back(0.);
+  vector<double> gamT;
+  gamT.push_back(0.);
+  gamT.push_back(0.5);
 
   // Get Lep ID vectors
   vector<LepID> IDs_all;
@@ -763,24 +789,24 @@ CategoryList CategoryTool::GetCategories_1L() const {
   vector<Hadronic> H_1L_0S;
   H_1L_0S.push_back(GetHadronicRegion(0, 1)); // 0j0sv
 
-  Cats_1L_0S_gold = Cats_1L_0S_gold.CreateFitBinRegions(GetFitBin(1)); // R1
+  Cats_1L_0S_gold = Cats_1L_0S_gold.CreateFitBinRegions(GetFitBin(0)); // R1
   Cats_1L_0S_gold = Cats_1L_0S_gold.CreateLeptonIDRegions(IDs_gold, 1);
   Cats_1L_0S_gold = Cats_1L_0S_gold.CreateHadronicSRegions(H_1L_0S);
   Cats_1L_0S_gold = Cats_1L_0S_gold.CreateHadronicISRRegions(H_ISR_B);
-  Cats_1L_0S_gold = Cats_1L_0S_gold.CreateGenericRegions("PTISR", PTISR_bin);
-
-  Cats_1L_0S_silver = Cats_1L_0S_silver.CreateFitBinRegions(GetFitBin(1));
+  Cats_1L_0S_gold = Cats_1L_0S_gold.CreateGenericRegions("PTISR", PTISR_bin2);
+ 
+  Cats_1L_0S_silver = Cats_1L_0S_silver.CreateFitBinRegions(GetFitBin(0));
   Cats_1L_0S_silver = Cats_1L_0S_silver.CreateLeptonIDRegions(IDs_silver, 1);
   Cats_1L_0S_silver = Cats_1L_0S_silver.CreateHadronicSRegions(H_1L_0S);
   Cats_1L_0S_silver = Cats_1L_0S_silver.CreateHadronicISRRegions(H_ISR_noB);
   Cats_1L_0S_silver = Cats_1L_0S_silver.CreateGenericRegions("PTISR", PTISR_incl);
-
-  Cats_1L_0S_bronze = Cats_1L_0S_bronze.CreateFitBinRegions(GetFitBin(1));
+ 
+  Cats_1L_0S_bronze = Cats_1L_0S_bronze.CreateFitBinRegions(GetFitBin(0));
   Cats_1L_0S_bronze = Cats_1L_0S_bronze.CreateLeptonIDRegions(IDs_bronze, 1);
   Cats_1L_0S_bronze = Cats_1L_0S_bronze.CreateHadronicSRegions(H_1L_0S);
   Cats_1L_0S_bronze = Cats_1L_0S_bronze.CreateHadronicISRRegions(H_ISR_noB);
   Cats_1L_0S_bronze = Cats_1L_0S_bronze.CreateGenericRegions("PTISR", PTISR_incl);
-
+ 
   Cats_1L += Cats_1L_0S_gold;
   Cats_1L += Cats_1L_0S_silver;
   Cats_1L += Cats_1L_0S_bronze;
@@ -794,20 +820,21 @@ CategoryList CategoryTool::GetCategories_1L() const {
   vector<Hadronic> H_1L_SV0S;
   H_1L_SV0S.push_back(GetHadronicRegion(0, 2)); // 0jge1sv
 
-  Cats_1L_SV0S_gold = Cats_1L_SV0S_gold.CreateFitBinRegions(GetFitBin(2));
+  Cats_1L_SV0S_gold = Cats_1L_SV0S_gold.CreateFitBinRegions(GetFitBin(0));
   Cats_1L_SV0S_gold = Cats_1L_SV0S_gold.CreateLeptonIDRegions(IDs_gold, 1);
   Cats_1L_SV0S_gold = Cats_1L_SV0S_gold.CreateHadronicSRegions(H_1L_SV0S);
   Cats_1L_SV0S_gold = Cats_1L_SV0S_gold.CreateHadronicISRRegions(H_ISR_B);
   Cats_1L_SV0S_gold = Cats_1L_SV0S_gold.CreateGenericRegions("PTISR", PTISR_incl);
+  Cats_1L_SV0S_gold = Cats_1L_SV0S_gold.CreateGenericRegions("gamT", gamT0);
   Cats_1L_SV0S_gold = Cats_1L_SV0S_gold.CreateGenericRegions("SVeta", SV_eta);
 
-  Cats_1L_SV0S_silver = Cats_1L_SV0S_silver.CreateFitBinRegions(GetFitBin(2));
+  Cats_1L_SV0S_silver = Cats_1L_SV0S_silver.CreateFitBinRegions(GetFitBin(0));
   Cats_1L_SV0S_silver = Cats_1L_SV0S_silver.CreateLeptonIDRegions(IDs_silver, 1);
   Cats_1L_SV0S_silver = Cats_1L_SV0S_silver.CreateHadronicSRegions(H_1L_SV0S);
   Cats_1L_SV0S_silver = Cats_1L_SV0S_silver.CreateHadronicISRRegions(H_ISR_noB);
   Cats_1L_SV0S_silver = Cats_1L_SV0S_silver.CreateGenericRegions("PTISR", PTISR_incl);
 
-  Cats_1L_SV0S_bronze = Cats_1L_SV0S_bronze.CreateFitBinRegions(GetFitBin(2));
+  Cats_1L_SV0S_bronze = Cats_1L_SV0S_bronze.CreateFitBinRegions(GetFitBin(0));
   Cats_1L_SV0S_bronze = Cats_1L_SV0S_bronze.CreateLeptonIDRegions(IDs_bronze, 1);
   Cats_1L_SV0S_bronze = Cats_1L_SV0S_bronze.CreateHadronicSRegions(H_1L_SV0S);
   Cats_1L_SV0S_bronze = Cats_1L_SV0S_bronze.CreateHadronicISRRegions(H_ISR_noB);
@@ -827,19 +854,19 @@ CategoryList CategoryTool::GetCategories_1L() const {
   H_1L_1j0svS.push_back(GetHadronicRegion(1, 2)); // 1j0b0sv
   H_1L_1j0svS.push_back(GetHadronicRegion(1, 3)); // 1j1b0sv
 
-  Cats_1L_1j0svS_gold = Cats_1L_1j0svS_gold.CreateFitBinRegions(GetFitBin(3));
+  Cats_1L_1j0svS_gold = Cats_1L_1j0svS_gold.CreateFitBinRegions(GetFitBin(1));
   Cats_1L_1j0svS_gold = Cats_1L_1j0svS_gold.CreateLeptonIDRegions(IDs_gold, 1);
   Cats_1L_1j0svS_gold = Cats_1L_1j0svS_gold.CreateHadronicSRegions(H_1L_1j0svS);
   Cats_1L_1j0svS_gold = Cats_1L_1j0svS_gold.CreateHadronicISRRegions(H_ISR_B);
-  Cats_1L_1j0svS_gold = Cats_1L_1j0svS_gold.CreateGenericRegions("PTISR", PTISR_bin);
+  Cats_1L_1j0svS_gold = Cats_1L_1j0svS_gold.CreateGenericRegions("PTISR", PTISR_bin2);
 
-  Cats_1L_1j0svS_silver = Cats_1L_1j0svS_silver.CreateFitBinRegions(GetFitBin(3));
+  Cats_1L_1j0svS_silver = Cats_1L_1j0svS_silver.CreateFitBinRegions(GetFitBin(1));
   Cats_1L_1j0svS_silver = Cats_1L_1j0svS_silver.CreateLeptonIDRegions(IDs_silver, 1);
   Cats_1L_1j0svS_silver = Cats_1L_1j0svS_silver.CreateHadronicSRegions(H_1L_1j0svS);
   Cats_1L_1j0svS_silver = Cats_1L_1j0svS_silver.CreateHadronicISRRegions(H_ISR_noB);
   Cats_1L_1j0svS_silver = Cats_1L_1j0svS_silver.CreateGenericRegions("PTISR", PTISR_incl);
 
-  Cats_1L_1j0svS_bronze = Cats_1L_1j0svS_bronze.CreateFitBinRegions(GetFitBin(3));
+  Cats_1L_1j0svS_bronze = Cats_1L_1j0svS_bronze.CreateFitBinRegions(GetFitBin(1));
   Cats_1L_1j0svS_bronze = Cats_1L_1j0svS_bronze.CreateLeptonIDRegions(IDs_bronze, 1);
   Cats_1L_1j0svS_bronze = Cats_1L_1j0svS_bronze.CreateHadronicSRegions(H_1L_1j0svS);
   Cats_1L_1j0svS_bronze = Cats_1L_1j0svS_bronze.CreateHadronicISRRegions(H_ISR_noB);
@@ -859,20 +886,21 @@ CategoryList CategoryTool::GetCategories_1L() const {
   H_1L_1jge1svS.push_back(GetHadronicRegion(1, 4)); // 1j0bge1sv
   H_1L_1jge1svS.push_back(GetHadronicRegion(1, 5)); // 1j1bge1sv
 
-  Cats_1L_1jge1svS_gold = Cats_1L_1jge1svS_gold.CreateFitBinRegions(GetFitBin(3));
+  Cats_1L_1jge1svS_gold = Cats_1L_1jge1svS_gold.CreateFitBinRegions(GetFitBin(1));
   Cats_1L_1jge1svS_gold = Cats_1L_1jge1svS_gold.CreateLeptonIDRegions(IDs_gold, 1);
   Cats_1L_1jge1svS_gold = Cats_1L_1jge1svS_gold.CreateHadronicSRegions(H_1L_1jge1svS);
   Cats_1L_1jge1svS_gold = Cats_1L_1jge1svS_gold.CreateHadronicISRRegions(H_ISR_B);
   Cats_1L_1jge1svS_gold = Cats_1L_1jge1svS_gold.CreateGenericRegions("PTISR", PTISR_incl);
+  Cats_1L_1jge1svS_gold = Cats_1L_1jge1svS_gold.CreateGenericRegions("gamT", gamT0);
   Cats_1L_1jge1svS_gold = Cats_1L_1jge1svS_gold.CreateGenericRegions("SVeta", SV_eta);
 
-  Cats_1L_1jge1svS_silver = Cats_1L_1jge1svS_silver.CreateFitBinRegions(GetFitBin(3));
+  Cats_1L_1jge1svS_silver = Cats_1L_1jge1svS_silver.CreateFitBinRegions(GetFitBin(1));
   Cats_1L_1jge1svS_silver = Cats_1L_1jge1svS_silver.CreateLeptonIDRegions(IDs_silver, 1);
   Cats_1L_1jge1svS_silver = Cats_1L_1jge1svS_silver.CreateHadronicSRegions(H_1L_1jge1svS);
   Cats_1L_1jge1svS_silver = Cats_1L_1jge1svS_silver.CreateHadronicISRRegions(H_ISR_noB);
   Cats_1L_1jge1svS_silver = Cats_1L_1jge1svS_silver.CreateGenericRegions("PTISR", PTISR_incl);
 
-  Cats_1L_1jge1svS_bronze = Cats_1L_1jge1svS_bronze.CreateFitBinRegions(GetFitBin(3));
+  Cats_1L_1jge1svS_bronze = Cats_1L_1jge1svS_bronze.CreateFitBinRegions(GetFitBin(1));
   Cats_1L_1jge1svS_bronze = Cats_1L_1jge1svS_bronze.CreateLeptonIDRegions(IDs_bronze, 1);
   Cats_1L_1jge1svS_bronze = Cats_1L_1jge1svS_bronze.CreateHadronicSRegions(H_1L_1jge1svS);
   Cats_1L_1jge1svS_bronze = Cats_1L_1jge1svS_bronze.CreateHadronicISRRegions(H_ISR_noB);
@@ -885,7 +913,7 @@ CategoryList CategoryTool::GetCategories_1L() const {
   ///////////////////////////////////////////////
 
   cout << "Building 1L 2j 0/1/2b object regions" << endl;
-  CategoryList Cats_1L_2jS_gold = Cats_1Lcharge;
+  CategoryList Cats_1L_2jS_gold = Cats_1Lincl;
   CategoryList Cats_1L_2jS_silver = Cats_1Lincl;
   CategoryList Cats_1L_2jS_bronze = Cats_1Lincl;
   vector<Hadronic> H_1L_2jS;
@@ -897,19 +925,20 @@ CategoryList CategoryTool::GetCategories_1L() const {
   H_1L_2jS_bkg.push_back(GetHadronicRegion(2, 2)); // 2j0b
   H_1L_2jS_bkg.push_back(GetHadronicRegion(2, 3)); // 2jge1b
 
-  Cats_1L_2jS_gold = Cats_1L_2jS_gold.CreateFitBinRegions(GetFitBin(4));
+  Cats_1L_2jS_gold = Cats_1L_2jS_gold.CreateFitBinRegions(GetFitBin(2));
   Cats_1L_2jS_gold = Cats_1L_2jS_gold.CreateLeptonIDRegions(IDs_gold, 1);
   Cats_1L_2jS_gold = Cats_1L_2jS_gold.CreateHadronicSRegions(H_1L_2jS);
   Cats_1L_2jS_gold = Cats_1L_2jS_gold.CreateHadronicISRRegions(H_ISR_B);
-  Cats_1L_2jS_gold = Cats_1L_2jS_gold.CreateGenericRegions("PTISR", PTISR_bin);
+  Cats_1L_2jS_gold = Cats_1L_2jS_gold.CreateGenericRegions("PTISR", PTISR_bin2);
+  Cats_1L_2jS_gold = Cats_1L_2jS_gold.CreateGenericRegions("gamT", gamT);
 
-  Cats_1L_2jS_silver = Cats_1L_2jS_silver.CreateFitBinRegions(GetFitBin(4));
+  Cats_1L_2jS_silver = Cats_1L_2jS_silver.CreateFitBinRegions(GetFitBin(2));
   Cats_1L_2jS_silver = Cats_1L_2jS_silver.CreateLeptonIDRegions(IDs_silver, 1);
   Cats_1L_2jS_silver = Cats_1L_2jS_silver.CreateHadronicSRegions(H_1L_2jS_bkg);
   Cats_1L_2jS_silver = Cats_1L_2jS_silver.CreateHadronicISRRegions(H_ISR_noB);
   Cats_1L_2jS_silver = Cats_1L_2jS_silver.CreateGenericRegions("PTISR", PTISR_incl);
 
-  Cats_1L_2jS_bronze = Cats_1L_2jS_bronze.CreateFitBinRegions(GetFitBin(4));
+  Cats_1L_2jS_bronze = Cats_1L_2jS_bronze.CreateFitBinRegions(GetFitBin(2));
   Cats_1L_2jS_bronze = Cats_1L_2jS_bronze.CreateLeptonIDRegions(IDs_bronze, 1);
   Cats_1L_2jS_bronze = Cats_1L_2jS_bronze.CreateHadronicSRegions(H_1L_2jS_bkg);
   Cats_1L_2jS_bronze = Cats_1L_2jS_bronze.CreateHadronicISRRegions(H_ISR_noB);
@@ -922,7 +951,7 @@ CategoryList CategoryTool::GetCategories_1L() const {
   ///////////////////////////////////////////////
 
   cout << "Building 1L 3j 0/1/2b object regions" << endl;
-  CategoryList Cats_1L_3jS_gold = Cats_1Lcharge;
+  CategoryList Cats_1L_3jS_gold = Cats_1Lincl;
   CategoryList Cats_1L_3jS_silver = Cats_1Lincl;
   CategoryList Cats_1L_3jS_bronze = Cats_1Lincl;
   vector<Hadronic> H_1L_3jS;
@@ -934,19 +963,20 @@ CategoryList CategoryTool::GetCategories_1L() const {
   H_1L_3jS_bkg.push_back(GetHadronicRegion(3, 2)); // 3j0b
   H_1L_3jS_bkg.push_back(GetHadronicRegion(3, 3)); // 3jge1b
 
-  Cats_1L_3jS_gold = Cats_1L_3jS_gold.CreateFitBinRegions(GetFitBin(5));
+  Cats_1L_3jS_gold = Cats_1L_3jS_gold.CreateFitBinRegions(GetFitBin(3));
   Cats_1L_3jS_gold = Cats_1L_3jS_gold.CreateLeptonIDRegions(IDs_gold, 1);
   Cats_1L_3jS_gold = Cats_1L_3jS_gold.CreateHadronicSRegions(H_1L_3jS);
   Cats_1L_3jS_gold = Cats_1L_3jS_gold.CreateHadronicISRRegions(H_ISR_B);
-  Cats_1L_3jS_gold = Cats_1L_3jS_gold.CreateGenericRegions("PTISR", PTISR_bin);
+  Cats_1L_3jS_gold = Cats_1L_3jS_gold.CreateGenericRegions("PTISR", PTISR_bin3);
+  Cats_1L_3jS_gold = Cats_1L_3jS_gold.CreateGenericRegions("gamT", gamT);
 
-  Cats_1L_3jS_silver = Cats_1L_3jS_silver.CreateFitBinRegions(GetFitBin(5));
+  Cats_1L_3jS_silver = Cats_1L_3jS_silver.CreateFitBinRegions(GetFitBin(3));
   Cats_1L_3jS_silver = Cats_1L_3jS_silver.CreateLeptonIDRegions(IDs_silver, 1);
   Cats_1L_3jS_silver = Cats_1L_3jS_silver.CreateHadronicSRegions(H_1L_3jS_bkg);
   Cats_1L_3jS_silver = Cats_1L_3jS_silver.CreateHadronicISRRegions(H_ISR_noB);
   Cats_1L_3jS_silver = Cats_1L_3jS_silver.CreateGenericRegions("PTISR", PTISR_incl);
 
-  Cats_1L_3jS_bronze = Cats_1L_3jS_bronze.CreateFitBinRegions(GetFitBin(5));
+  Cats_1L_3jS_bronze = Cats_1L_3jS_bronze.CreateFitBinRegions(GetFitBin(3));
   Cats_1L_3jS_bronze = Cats_1L_3jS_bronze.CreateLeptonIDRegions(IDs_bronze, 1);
   Cats_1L_3jS_bronze = Cats_1L_3jS_bronze.CreateHadronicSRegions(H_1L_3jS_bkg);
   Cats_1L_3jS_bronze = Cats_1L_3jS_bronze.CreateHadronicISRRegions(H_ISR_noB);
@@ -959,26 +989,27 @@ CategoryList CategoryTool::GetCategories_1L() const {
   ///////////////////////////////////////////////
 
   cout << "Building 1L 4j 0/1b object regions" << endl;
-  CategoryList Cats_1L_4jS_gold = Cats_1Lcharge;
+  CategoryList Cats_1L_4jS_gold = Cats_1Lincl;
   CategoryList Cats_1L_4jS_silver = Cats_1Lincl;
   CategoryList Cats_1L_4jS_bronze = Cats_1Lincl;
   vector<Hadronic> H_1L_4jS;
   H_1L_4jS.push_back(GetHadronicRegion(4, 6)); // ge4j0b
   H_1L_4jS.push_back(GetHadronicRegion(4, 7)); // ge4jge1b
 
-  Cats_1L_4jS_gold = Cats_1L_4jS_gold.CreateFitBinRegions(GetFitBin(6));
+  Cats_1L_4jS_gold = Cats_1L_4jS_gold.CreateFitBinRegions(GetFitBin(4));
   Cats_1L_4jS_gold = Cats_1L_4jS_gold.CreateLeptonIDRegions(IDs_gold, 1);
   Cats_1L_4jS_gold = Cats_1L_4jS_gold.CreateHadronicSRegions(H_1L_4jS);
   Cats_1L_4jS_gold = Cats_1L_4jS_gold.CreateHadronicISRRegions(H_ISR_B);
-  Cats_1L_4jS_gold = Cats_1L_4jS_gold.CreateGenericRegions("PTISR", PTISR_bin);
+  Cats_1L_4jS_gold = Cats_1L_4jS_gold.CreateGenericRegions("PTISR", PTISR_bin3);
+  Cats_1L_4jS_gold = Cats_1L_4jS_gold.CreateGenericRegions("gamT", gamT);
 
-  Cats_1L_4jS_silver = Cats_1L_4jS_silver.CreateFitBinRegions(GetFitBin(6));
+  Cats_1L_4jS_silver = Cats_1L_4jS_silver.CreateFitBinRegions(GetFitBin(4));
   Cats_1L_4jS_silver = Cats_1L_4jS_silver.CreateLeptonIDRegions(IDs_silver, 1);
   Cats_1L_4jS_silver = Cats_1L_4jS_silver.CreateHadronicSRegions(H_1L_4jS);
   Cats_1L_4jS_silver = Cats_1L_4jS_silver.CreateHadronicISRRegions(H_ISR_noB);
   Cats_1L_4jS_silver = Cats_1L_4jS_silver.CreateGenericRegions("PTISR", PTISR_incl);
 
-  Cats_1L_4jS_bronze = Cats_1L_4jS_bronze.CreateFitBinRegions(GetFitBin(6));
+  Cats_1L_4jS_bronze = Cats_1L_4jS_bronze.CreateFitBinRegions(GetFitBin(4));
   Cats_1L_4jS_bronze = Cats_1L_4jS_bronze.CreateLeptonIDRegions(IDs_bronze, 1);
   Cats_1L_4jS_bronze = Cats_1L_4jS_bronze.CreateHadronicSRegions(H_1L_4jS);
   Cats_1L_4jS_bronze = Cats_1L_4jS_bronze.CreateHadronicISRRegions(H_ISR_noB);
@@ -1130,18 +1161,25 @@ CategoryList CategoryTool::GetCategories_2L() const {
   H_ISR_B.push_back(GetHadronicRegion(1, 6)); // ge1j0b
   H_ISR_B.push_back(GetHadronicRegion(1, 7)); // ge1jge1b
   
-  // Get PTISR binning
+ // Get PTISR binning
   vector<double> PTISR_incl;
-  PTISR_incl.push_back(200.);
+  PTISR_incl.push_back(250.);
 
   vector<double> PTISR_bin;
-  PTISR_bin.push_back(200.);
-  PTISR_bin.push_back(300.);
-
+  PTISR_bin.push_back(250.);
+  PTISR_bin.push_back(350.);
+ 
   // Get SV binning
   vector<double> SV_eta;
   SV_eta.push_back(0.);
   SV_eta.push_back(1.5);
+
+  // Get gammaT binning
+  vector<double> gamT0;
+  gamT0.push_back(0.);
+  vector<double> gamT;
+  gamT.push_back(0.);
+  gamT.push_back(0.5);
 
   // Get Lep ID vectors
   vector<LepID> IDs_all;
@@ -1169,6 +1207,7 @@ CategoryList CategoryTool::GetCategories_2L() const {
   Cats_2L_0S_gold = Cats_2L_0S_gold.CreateHadronicSRegions(H_2L_0S);
   Cats_2L_0S_gold = Cats_2L_0S_gold.CreateHadronicISRRegions(H_ISR_B);
   Cats_2L_0S_gold = Cats_2L_0S_gold.CreateGenericRegions("PTISR", PTISR_bin);
+  Cats_2L_0S_gold = Cats_2L_0S_gold.CreateGenericRegions("gamT", gamT);
 
   Cats_2L_0S_silver = Cats_2L_0S_silver.CreateFitBinRegions(GetFitBin(1));
   Cats_2L_0S_silver = Cats_2L_0S_silver.CreateLeptonIDRegions(IDs_silver, 1);
@@ -1188,59 +1227,28 @@ CategoryList CategoryTool::GetCategories_2L() const {
 
   ///////////////////////////////////////////////
 
-  cout << "Building 2L 0Sjet SV object regions" << endl;
-  CategoryList Cats_2L_SV0S_gold = Cats_2Lcharge;
-  CategoryList Cats_2L_SV0S_silver = Cats_2Lflavor;
-  CategoryList Cats_2L_SV0S_bronze = Cats_2Lflavor;
-  vector<Hadronic> H_2L_SV0S;
-  H_2L_SV0S.push_back(GetHadronicRegion(0, 2)); // 0jge1sv
-
-  Cats_2L_SV0S_gold = Cats_2L_SV0S_gold.CreateFitBinRegions(GetFitBin(2));
-  Cats_2L_SV0S_gold = Cats_2L_SV0S_gold.CreateLeptonIDRegions(IDs_gold, 1);
-  Cats_2L_SV0S_gold = Cats_2L_SV0S_gold.CreateHadronicSRegions(H_2L_SV0S);
-  Cats_2L_SV0S_gold = Cats_2L_SV0S_gold.CreateHadronicISRRegions(H_ISR_B);
-  Cats_2L_SV0S_gold = Cats_2L_SV0S_gold.CreateGenericRegions("PTISR", PTISR_incl);
-  Cats_2L_SV0S_gold = Cats_2L_SV0S_gold.CreateGenericRegions("SVeta", SV_eta);
-
-  Cats_2L_SV0S_silver = Cats_2L_SV0S_silver.CreateFitBinRegions(GetFitBin(2));
-  Cats_2L_SV0S_silver = Cats_2L_SV0S_silver.CreateLeptonIDRegions(IDs_silver, 1);
-  Cats_2L_SV0S_silver = Cats_2L_SV0S_silver.CreateHadronicSRegions(H_2L_SV0S);
-  Cats_2L_SV0S_silver = Cats_2L_SV0S_silver.CreateHadronicISRRegions(H_ISR_noB);
-  Cats_2L_SV0S_silver = Cats_2L_SV0S_silver.CreateGenericRegions("PTISR", PTISR_incl);
-
-  Cats_2L_SV0S_bronze = Cats_2L_SV0S_bronze.CreateFitBinRegions(GetFitBin(2));
-  Cats_2L_SV0S_bronze = Cats_2L_SV0S_bronze.CreateLeptonIDRegions(IDs_bronze, 1);
-  Cats_2L_SV0S_bronze = Cats_2L_SV0S_bronze.CreateHadronicSRegions(H_2L_SV0S);
-  Cats_2L_SV0S_bronze = Cats_2L_SV0S_bronze.CreateHadronicISRRegions(H_ISR_noB);
-  Cats_2L_SV0S_bronze = Cats_2L_SV0S_bronze.CreateGenericRegions("PTISR", PTISR_incl);
-
-  Cats_2L += Cats_2L_SV0S_gold;
-  Cats_2L += Cats_2L_SV0S_silver;
-  Cats_2L += Cats_2L_SV0S_bronze;
-
-  ///////////////////////////////////////////////
-
   cout << "Building 2L 1j 0/1b object regions" << endl;
-  CategoryList Cats_2L_1jS_gold = Cats_2Lhem;
+  CategoryList Cats_2L_1jS_gold = Cats_2Lcharge;
   CategoryList Cats_2L_1jS_silver = Cats_2Lflavor;
   CategoryList Cats_2L_1jS_bronze = Cats_2Lflavor;
   vector<Hadronic> H_2L_1jS;
   H_2L_1jS.push_back(GetHadronicRegion(1, 8)); // 1j0b
   H_2L_1jS.push_back(GetHadronicRegion(1, 9)); // 1j1b
 
-  Cats_2L_1jS_gold = Cats_2L_1jS_gold.CreateFitBinRegions(GetFitBin(3));
+  Cats_2L_1jS_gold = Cats_2L_1jS_gold.CreateFitBinRegions(GetFitBin(2));
   Cats_2L_1jS_gold = Cats_2L_1jS_gold.CreateLeptonIDRegions(IDs_gold, 1);
   Cats_2L_1jS_gold = Cats_2L_1jS_gold.CreateHadronicSRegions(H_2L_1jS);
   Cats_2L_1jS_gold = Cats_2L_1jS_gold.CreateHadronicISRRegions(H_ISR_B);
   Cats_2L_1jS_gold = Cats_2L_1jS_gold.CreateGenericRegions("PTISR", PTISR_bin);
+  Cats_2L_1jS_gold = Cats_2L_1jS_gold.CreateGenericRegions("gamT", gamT);
 
-  Cats_2L_1jS_silver = Cats_2L_1jS_silver.CreateFitBinRegions(GetFitBin(3));
+  Cats_2L_1jS_silver = Cats_2L_1jS_silver.CreateFitBinRegions(GetFitBin(2));
   Cats_2L_1jS_silver = Cats_2L_1jS_silver.CreateLeptonIDRegions(IDs_silver, 1);
   Cats_2L_1jS_silver = Cats_2L_1jS_silver.CreateHadronicSRegions(H_2L_1jS);
   Cats_2L_1jS_silver = Cats_2L_1jS_silver.CreateHadronicISRRegions(H_ISR_noB);
   Cats_2L_1jS_silver = Cats_2L_1jS_silver.CreateGenericRegions("PTISR", PTISR_incl);
 
-  Cats_2L_1jS_bronze = Cats_2L_1jS_bronze.CreateFitBinRegions(GetFitBin(3));
+  Cats_2L_1jS_bronze = Cats_2L_1jS_bronze.CreateFitBinRegions(GetFitBin(2));
   Cats_2L_1jS_bronze = Cats_2L_1jS_bronze.CreateLeptonIDRegions(IDs_bronze, 1);
   Cats_2L_1jS_bronze = Cats_2L_1jS_bronze.CreateHadronicSRegions(H_2L_1jS);
   Cats_2L_1jS_bronze = Cats_2L_1jS_bronze.CreateHadronicISRRegions(H_ISR_noB);
@@ -1253,7 +1261,7 @@ CategoryList CategoryTool::GetCategories_2L() const {
   ///////////////////////////////////////////////
 
   cout << "Building 2L 2j 0/1/2b object regions" << endl;
-  CategoryList Cats_2L_2jS_gold = Cats_2Lchargehem;
+  CategoryList Cats_2L_2jS_gold = Cats_2Lhem;
   CategoryList Cats_2L_2jS_silver = Cats_2Lflavor;
   CategoryList Cats_2L_2jS_bronze = Cats_2Lflavor;
   vector<Hadronic> H_2L_2jS;
@@ -1262,22 +1270,23 @@ CategoryList CategoryTool::GetCategories_2L() const {
   H_2L_2jS.push_back(GetHadronicRegion(2, 5)); // 2j2b
 
   vector<Hadronic> H_2L_2jS_bkg;
-  H_2L_2jS_bkg.push_back(GetHadronicRegion(2, 2)); // 2j0b
-  H_2L_2jS_bkg.push_back(GetHadronicRegion(2, 3)); // 2jge1b
+  H_2L_2jS_bkg.push_back(GetHadronicRegion(2, 6)); // ge2j0b
+  H_2L_2jS_bkg.push_back(GetHadronicRegion(2, 7)); // ge2jge1b
 
-  Cats_2L_2jS_gold = Cats_2L_2jS_gold.CreateFitBinRegions(GetFitBin(4));
+  Cats_2L_2jS_gold = Cats_2L_2jS_gold.CreateFitBinRegions(GetFitBin(3));
   Cats_2L_2jS_gold = Cats_2L_2jS_gold.CreateLeptonIDRegions(IDs_gold, 1);
-  Cats_2L_2jS_gold = Cats_2L_2jS_gold.CreateHadronicSRegions(H_2L_2jS);
+  Cats_2L_2jS_gold = Cats_2L_2jS_gold.CreateHadronicSRegions(H_2L_2jS_bkg);
   Cats_2L_2jS_gold = Cats_2L_2jS_gold.CreateHadronicISRRegions(H_ISR_B);
   Cats_2L_2jS_gold = Cats_2L_2jS_gold.CreateGenericRegions("PTISR", PTISR_bin);
+  Cats_2L_2jS_gold = Cats_2L_2jS_gold.CreateGenericRegions("gamT", gamT);
 
-  Cats_2L_2jS_silver = Cats_2L_2jS_silver.CreateFitBinRegions(GetFitBin(4));
+  Cats_2L_2jS_silver = Cats_2L_2jS_silver.CreateFitBinRegions(GetFitBin(3));
   Cats_2L_2jS_silver = Cats_2L_2jS_silver.CreateLeptonIDRegions(IDs_silver, 1);
   Cats_2L_2jS_silver = Cats_2L_2jS_silver.CreateHadronicSRegions(H_2L_2jS_bkg);
   Cats_2L_2jS_silver = Cats_2L_2jS_silver.CreateHadronicISRRegions(H_ISR_noB);
   Cats_2L_2jS_silver = Cats_2L_2jS_silver.CreateGenericRegions("PTISR", PTISR_incl);
 
-  Cats_2L_2jS_bronze = Cats_2L_2jS_bronze.CreateFitBinRegions(GetFitBin(4));
+  Cats_2L_2jS_bronze = Cats_2L_2jS_bronze.CreateFitBinRegions(GetFitBin(3));
   Cats_2L_2jS_bronze = Cats_2L_2jS_bronze.CreateLeptonIDRegions(IDs_bronze, 1);
   Cats_2L_2jS_bronze = Cats_2L_2jS_bronze.CreateHadronicSRegions(H_2L_2jS_bkg);
   Cats_2L_2jS_bronze = Cats_2L_2jS_bronze.CreateHadronicISRRegions(H_ISR_noB);
@@ -1289,35 +1298,35 @@ CategoryList CategoryTool::GetCategories_2L() const {
 
   ///////////////////////////////////////////////
 
-  cout << "Building 2L ge3j 0/ge1b object regions" << endl;
-  CategoryList Cats_2L_3jS_gold = Cats_2Lchargehem;
-  CategoryList Cats_2L_3jS_silver = Cats_2Lflavor;
-  CategoryList Cats_2L_3jS_bronze = Cats_2Lflavor;
-  vector<Hadronic> H_2L_3jS;
-  H_2L_3jS.push_back(GetHadronicRegion(3, 6)); // ge3j0b
-  H_2L_3jS.push_back(GetHadronicRegion(3, 7)); // ge3jge1b
+  // cout << "Building 2L ge3j 0/ge1b object regions" << endl;
+  // CategoryList Cats_2L_3jS_gold = Cats_2Lflavor;
+  // CategoryList Cats_2L_3jS_silver = Cats_2Lflavor;
+  // CategoryList Cats_2L_3jS_bronze = Cats_2Lflavor;
+  // vector<Hadronic> H_2L_3jS;
+  // H_2L_3jS.push_back(GetHadronicRegion(3, 6)); // ge3j0b
+  // H_2L_3jS.push_back(GetHadronicRegion(3, 7)); // ge3jge1b
 
-  Cats_2L_3jS_gold = Cats_2L_3jS_gold.CreateFitBinRegions(GetFitBin(5));
-  Cats_2L_3jS_gold = Cats_2L_3jS_gold.CreateLeptonIDRegions(IDs_gold, 1);
-  Cats_2L_3jS_gold = Cats_2L_3jS_gold.CreateHadronicSRegions(H_2L_3jS);
-  Cats_2L_3jS_gold = Cats_2L_3jS_gold.CreateHadronicISRRegions(H_ISR_B);
-  Cats_2L_3jS_gold = Cats_2L_3jS_gold.CreateGenericRegions("PTISR", PTISR_bin);
+  // Cats_2L_3jS_gold = Cats_2L_3jS_gold.CreateFitBinRegions(GetFitBin(5));
+  // Cats_2L_3jS_gold = Cats_2L_3jS_gold.CreateLeptonIDRegions(IDs_gold, 1);
+  // Cats_2L_3jS_gold = Cats_2L_3jS_gold.CreateHadronicSRegions(H_2L_3jS);
+  // Cats_2L_3jS_gold = Cats_2L_3jS_gold.CreateHadronicISRRegions(H_ISR_B);
+  // Cats_2L_3jS_gold = Cats_2L_3jS_gold.CreateGenericRegions("PTISR", PTISR_bin);
 
-  Cats_2L_3jS_silver = Cats_2L_3jS_silver.CreateFitBinRegions(GetFitBin(5));
-  Cats_2L_3jS_silver = Cats_2L_3jS_silver.CreateLeptonIDRegions(IDs_silver, 1);
-  Cats_2L_3jS_silver = Cats_2L_3jS_silver.CreateHadronicSRegions(H_2L_3jS);
-  Cats_2L_3jS_silver = Cats_2L_3jS_silver.CreateHadronicISRRegions(H_ISR_noB);
-  Cats_2L_3jS_silver = Cats_2L_3jS_silver.CreateGenericRegions("PTISR", PTISR_incl);
+  // Cats_2L_3jS_silver = Cats_2L_3jS_silver.CreateFitBinRegions(GetFitBin(5));
+  // Cats_2L_3jS_silver = Cats_2L_3jS_silver.CreateLeptonIDRegions(IDs_silver, 1);
+  // Cats_2L_3jS_silver = Cats_2L_3jS_silver.CreateHadronicSRegions(H_2L_3jS);
+  // Cats_2L_3jS_silver = Cats_2L_3jS_silver.CreateHadronicISRRegions(H_ISR_noB);
+  // Cats_2L_3jS_silver = Cats_2L_3jS_silver.CreateGenericRegions("PTISR", PTISR_incl);
 
-  Cats_2L_3jS_bronze = Cats_2L_3jS_bronze.CreateFitBinRegions(GetFitBin(5));
-  Cats_2L_3jS_bronze = Cats_2L_3jS_bronze.CreateLeptonIDRegions(IDs_bronze, 1);
-  Cats_2L_3jS_bronze = Cats_2L_3jS_bronze.CreateHadronicSRegions(H_2L_3jS);
-  Cats_2L_3jS_bronze = Cats_2L_3jS_bronze.CreateHadronicISRRegions(H_ISR_noB);
-  Cats_2L_3jS_bronze = Cats_2L_3jS_bronze.CreateGenericRegions("PTISR", PTISR_incl);
+  // Cats_2L_3jS_bronze = Cats_2L_3jS_bronze.CreateFitBinRegions(GetFitBin(5));
+  // Cats_2L_3jS_bronze = Cats_2L_3jS_bronze.CreateLeptonIDRegions(IDs_bronze, 1);
+  // Cats_2L_3jS_bronze = Cats_2L_3jS_bronze.CreateHadronicSRegions(H_2L_3jS);
+  // Cats_2L_3jS_bronze = Cats_2L_3jS_bronze.CreateHadronicISRRegions(H_ISR_noB);
+  // Cats_2L_3jS_bronze = Cats_2L_3jS_bronze.CreateGenericRegions("PTISR", PTISR_incl);
 
-  Cats_2L += Cats_2L_3jS_gold;
-  Cats_2L += Cats_2L_3jS_silver;
-  Cats_2L += Cats_2L_3jS_bronze;
+  // Cats_2L += Cats_2L_3jS_gold;
+  // Cats_2L += Cats_2L_3jS_silver;
+  // Cats_2L += Cats_2L_3jS_bronze;
 
   ///////////////////////////////////////////////
  
@@ -1539,18 +1548,25 @@ CategoryList CategoryTool::GetCategories_3L() const {
   H_ISR_B.push_back(GetHadronicRegion(1, 6)); // ge1j0b
   H_ISR_B.push_back(GetHadronicRegion(1, 7)); // ge1jge1b
   
-  // Get PTISR binning
+ // Get PTISR binning
   vector<double> PTISR_incl;
   PTISR_incl.push_back(200.);
 
   vector<double> PTISR_bin;
   PTISR_bin.push_back(200.);
   PTISR_bin.push_back(300.);
-
+ 
   // Get SV binning
   vector<double> SV_eta;
   SV_eta.push_back(0.);
   SV_eta.push_back(1.5);
+
+  // Get gammaT binning
+  vector<double> gamT0;
+  gamT0.push_back(0.);
+  vector<double> gamT;
+  gamT.push_back(0.);
+  gamT.push_back(0.5);
 
   // Get Lep ID vectors
   vector<LepID> IDs_all;
@@ -1573,19 +1589,20 @@ CategoryList CategoryTool::GetCategories_3L() const {
   vector<Hadronic> H_3L_0S;
   H_3L_0S.push_back(GetHadronicRegion(0, 1)); // 0j0sv
 
-  Cats_3L_0S_gold = Cats_3L_0S_gold.CreateFitBinRegions(GetFitBin(1)); // R1
+  Cats_3L_0S_gold = Cats_3L_0S_gold.CreateFitBinRegions(GetFitBin(5)); // R1
   Cats_3L_0S_gold = Cats_3L_0S_gold.CreateLeptonIDRegions(IDs_gold, 1);
   Cats_3L_0S_gold = Cats_3L_0S_gold.CreateHadronicSRegions(H_3L_0S);
-  Cats_3L_0S_gold = Cats_3L_0S_gold.CreateHadronicISRRegions(H_ISR_B);
+  Cats_3L_0S_gold = Cats_3L_0S_gold.CreateHadronicISRRegions(H_ISR_noB);
   Cats_3L_0S_gold = Cats_3L_0S_gold.CreateGenericRegions("PTISR", PTISR_incl);
+  Cats_3L_0S_gold = Cats_3L_0S_gold.CreateGenericRegions("gamT", gamT);
 
-  Cats_3L_0S_silver = Cats_3L_0S_silver.CreateFitBinRegions(GetFitBin(1));
+  Cats_3L_0S_silver = Cats_3L_0S_silver.CreateFitBinRegions(GetFitBin(5));
   Cats_3L_0S_silver = Cats_3L_0S_silver.CreateLeptonIDRegions(IDs_silver, 1);
   Cats_3L_0S_silver = Cats_3L_0S_silver.CreateHadronicSRegions(H_3L_0S);
   Cats_3L_0S_silver = Cats_3L_0S_silver.CreateHadronicISRRegions(H_ISR_noB);
   Cats_3L_0S_silver = Cats_3L_0S_silver.CreateGenericRegions("PTISR", PTISR_incl);
 
-  Cats_3L_0S_bronze = Cats_3L_0S_bronze.CreateFitBinRegions(GetFitBin(1));
+  Cats_3L_0S_bronze = Cats_3L_0S_bronze.CreateFitBinRegions(GetFitBin(5));
   Cats_3L_0S_bronze = Cats_3L_0S_bronze.CreateLeptonIDRegions(IDs_bronze, 1);
   Cats_3L_0S_bronze = Cats_3L_0S_bronze.CreateHadronicSRegions(H_3L_0S);
   Cats_3L_0S_bronze = Cats_3L_0S_bronze.CreateHadronicISRRegions(H_ISR_noB);
@@ -1597,27 +1614,27 @@ CategoryList CategoryTool::GetCategories_3L() const {
 
   ///////////////////////////////////////////////
 
-  cout << "Building 3L 1j 0/1b object regions" << endl;
-  CategoryList Cats_3L_1jS_gold = Cats_3Lchargehem; //Cats_3Lcharge
+  cout << "Building 3L ge1j 0/1b object regions" << endl;
+  CategoryList Cats_3L_1jS_gold = Cats_3Lflavor; //Cats_3Lcharge
   CategoryList Cats_3L_1jS_silver = Cats_3Lflavor;
   CategoryList Cats_3L_1jS_bronze = Cats_3Lflavor;
   vector<Hadronic> H_3L_1jS;
-  H_3L_1jS.push_back(GetHadronicRegion(1, 8)); // 1j0b
-  H_3L_1jS.push_back(GetHadronicRegion(1, 9)); // 1j1b
+  H_3L_1jS.push_back(GetHadronicRegion(1, 6)); // ge1j0b
+  H_3L_1jS.push_back(GetHadronicRegion(1, 7)); // ge1j1b
 
-  Cats_3L_1jS_gold = Cats_3L_1jS_gold.CreateFitBinRegions(GetFitBin(3));
+  Cats_3L_1jS_gold = Cats_3L_1jS_gold.CreateFitBinRegions(GetFitBin(5));
   Cats_3L_1jS_gold = Cats_3L_1jS_gold.CreateLeptonIDRegions(IDs_gold, 1);
   Cats_3L_1jS_gold = Cats_3L_1jS_gold.CreateHadronicSRegions(H_3L_1jS);
-  Cats_3L_1jS_gold = Cats_3L_1jS_gold.CreateHadronicISRRegions(H_ISR_B);
+  Cats_3L_1jS_gold = Cats_3L_1jS_gold.CreateHadronicISRRegions(H_ISR_noB);
   Cats_3L_1jS_gold = Cats_3L_1jS_gold.CreateGenericRegions("PTISR", PTISR_incl);
 
-  Cats_3L_1jS_silver = Cats_3L_1jS_silver.CreateFitBinRegions(GetFitBin(3));
+  Cats_3L_1jS_silver = Cats_3L_1jS_silver.CreateFitBinRegions(GetFitBin(5));
   Cats_3L_1jS_silver = Cats_3L_1jS_silver.CreateLeptonIDRegions(IDs_silver, 1);
   Cats_3L_1jS_silver = Cats_3L_1jS_silver.CreateHadronicSRegions(H_3L_1jS);
   Cats_3L_1jS_silver = Cats_3L_1jS_silver.CreateHadronicISRRegions(H_ISR_noB);
   Cats_3L_1jS_silver = Cats_3L_1jS_silver.CreateGenericRegions("PTISR", PTISR_incl);
 
-  Cats_3L_1jS_bronze = Cats_3L_1jS_bronze.CreateFitBinRegions(GetFitBin(3));
+  Cats_3L_1jS_bronze = Cats_3L_1jS_bronze.CreateFitBinRegions(GetFitBin(5));
   Cats_3L_1jS_bronze = Cats_3L_1jS_bronze.CreateLeptonIDRegions(IDs_bronze, 1);
   Cats_3L_1jS_bronze = Cats_3L_1jS_bronze.CreateHadronicSRegions(H_3L_1jS);
   Cats_3L_1jS_bronze = Cats_3L_1jS_bronze.CreateHadronicISRRegions(H_ISR_noB);
@@ -1629,35 +1646,35 @@ CategoryList CategoryTool::GetCategories_3L() const {
 
   ///////////////////////////////////////////////
 
-  cout << "Building 3L ge2j 0/ge1b object regions" << endl;
-  CategoryList Cats_3L_2jS_gold = Cats_3Lchargehem;
-  CategoryList Cats_3L_2jS_silver = Cats_3Lflavor;
-  CategoryList Cats_3L_2jS_bronze = Cats_3Lflavor;
-  vector<Hadronic> H_3L_2jS;
-  H_3L_2jS.push_back(GetHadronicRegion(2, 6)); // ge2j0b
-  H_3L_2jS.push_back(GetHadronicRegion(2, 7)); // ge2jge1b
+  // cout << "Building 3L ge2j 0/ge1b object regions" << endl;
+  // CategoryList Cats_3L_2jS_gold = Cats_3Lchargehem;
+  // CategoryList Cats_3L_2jS_silver = Cats_3Lflavor;
+  // CategoryList Cats_3L_2jS_bronze = Cats_3Lflavor;
+  // vector<Hadronic> H_3L_2jS;
+  // H_3L_2jS.push_back(GetHadronicRegion(2, 6)); // ge2j0b
+  // H_3L_2jS.push_back(GetHadronicRegion(2, 7)); // ge2jge1b
 
-  Cats_3L_2jS_gold = Cats_3L_2jS_gold.CreateFitBinRegions(GetFitBin(4));
-  Cats_3L_2jS_gold = Cats_3L_2jS_gold.CreateLeptonIDRegions(IDs_gold, 1);
-  Cats_3L_2jS_gold = Cats_3L_2jS_gold.CreateHadronicSRegions(H_3L_2jS);
-  Cats_3L_2jS_gold = Cats_3L_2jS_gold.CreateHadronicISRRegions(H_ISR_B);
-  Cats_3L_2jS_gold = Cats_3L_2jS_gold.CreateGenericRegions("PTISR", PTISR_incl);
+  // Cats_3L_2jS_gold = Cats_3L_2jS_gold.CreateFitBinRegions(GetFitBin(4));
+  // Cats_3L_2jS_gold = Cats_3L_2jS_gold.CreateLeptonIDRegions(IDs_gold, 1);
+  // Cats_3L_2jS_gold = Cats_3L_2jS_gold.CreateHadronicSRegions(H_3L_2jS);
+  // Cats_3L_2jS_gold = Cats_3L_2jS_gold.CreateHadronicISRRegions(H_ISR_B);
+  // Cats_3L_2jS_gold = Cats_3L_2jS_gold.CreateGenericRegions("PTISR", PTISR_incl);
 
-  Cats_3L_2jS_silver = Cats_3L_2jS_silver.CreateFitBinRegions(GetFitBin(4));
-  Cats_3L_2jS_silver = Cats_3L_2jS_silver.CreateLeptonIDRegions(IDs_silver, 1);
-  Cats_3L_2jS_silver = Cats_3L_2jS_silver.CreateHadronicSRegions(H_3L_2jS);
-  Cats_3L_2jS_silver = Cats_3L_2jS_silver.CreateHadronicISRRegions(H_ISR_noB);
-  Cats_3L_2jS_silver = Cats_3L_2jS_silver.CreateGenericRegions("PTISR", PTISR_incl);
+  // Cats_3L_2jS_silver = Cats_3L_2jS_silver.CreateFitBinRegions(GetFitBin(4));
+  // Cats_3L_2jS_silver = Cats_3L_2jS_silver.CreateLeptonIDRegions(IDs_silver, 1);
+  // Cats_3L_2jS_silver = Cats_3L_2jS_silver.CreateHadronicSRegions(H_3L_2jS);
+  // Cats_3L_2jS_silver = Cats_3L_2jS_silver.CreateHadronicISRRegions(H_ISR_noB);
+  // Cats_3L_2jS_silver = Cats_3L_2jS_silver.CreateGenericRegions("PTISR", PTISR_incl);
 
-  Cats_3L_2jS_bronze = Cats_3L_2jS_bronze.CreateFitBinRegions(GetFitBin(4));
-  Cats_3L_2jS_bronze = Cats_3L_2jS_bronze.CreateLeptonIDRegions(IDs_bronze, 1);
-  Cats_3L_2jS_bronze = Cats_3L_2jS_bronze.CreateHadronicSRegions(H_3L_2jS);
-  Cats_3L_2jS_bronze = Cats_3L_2jS_bronze.CreateHadronicISRRegions(H_ISR_noB);
-  Cats_3L_2jS_bronze = Cats_3L_2jS_bronze.CreateGenericRegions("PTISR", PTISR_incl);
+  // Cats_3L_2jS_bronze = Cats_3L_2jS_bronze.CreateFitBinRegions(GetFitBin(4));
+  // Cats_3L_2jS_bronze = Cats_3L_2jS_bronze.CreateLeptonIDRegions(IDs_bronze, 1);
+  // Cats_3L_2jS_bronze = Cats_3L_2jS_bronze.CreateHadronicSRegions(H_3L_2jS);
+  // Cats_3L_2jS_bronze = Cats_3L_2jS_bronze.CreateHadronicISRRegions(H_ISR_noB);
+  // Cats_3L_2jS_bronze = Cats_3L_2jS_bronze.CreateGenericRegions("PTISR", PTISR_incl);
 
-  Cats_3L += Cats_3L_2jS_gold;
-  Cats_3L += Cats_3L_2jS_silver;
-  Cats_3L += Cats_3L_2jS_bronze;
+  // Cats_3L += Cats_3L_2jS_gold;
+  // Cats_3L += Cats_3L_2jS_silver;
+  // Cats_3L += Cats_3L_2jS_bronze;
 
   ///////////////////////////////////////////////
   
