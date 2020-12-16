@@ -67,45 +67,31 @@ FitBin CategoryTool::GetFitBin(int index) const {
 
   // for 0L 5j, 1L 4j
   if(index == 4){
-    RBins.push_back(RBin(0.5,   0.6,  VD().a(150.).a(400.)));
-    RBins.push_back(RBin(0.6,   0.7,  VD().a(150.).a(400.)));
-    RBins.push_back(RBin(0.7,   0.8,  VD().a(150.).a(400.)));
-    RBins.push_back(RBin(0.8,   0.9,  VD().a(150.).a(400.)));
-    RBins.push_back(RBin(0.9,   1.0,  VD().a(150.).a(400.)));
+    RBins.push_back(RBin(0.5,   0.6,  VD().a(0.).a(150.).a(400.)));
+    RBins.push_back(RBin(0.6,   0.7,  VD().a(0.).a(150.).a(400.)));
+    RBins.push_back(RBin(0.7,   0.8,  VD().a(0.).a(150.).a(400.)));
+    RBins.push_back(RBin(0.8,   0.9,  VD().a(0.).a(150.).a(400.)));
+    RBins.push_back(RBin(0.9,   1.0,  VD().a(0.).a(150.).a(400.)));
   }
 
- // // R5
- // if(index == 5){
- //   RBins.push_back(RBin(0.6,  0.65, VD().a(0.).a(20.).a(40.).a(60.).a(80.).a(100.).a(200.)));
- //   RBins.push_back(RBin(0.65, 0.7,  VD().a(0.).a(20.).a(40.).a(60.).a(80.).a(100.).a(200.)));
- //   RBins.push_back(RBin(0.7,  0.75, VD().a(0.).a(20.).a(40.).a(60.).a(80.).a(100.).a(200.)));
- //   RBins.push_back(RBin(0.75, 0.8,  VD().a(0.).a(20.).a(40.).a(60.).a(80.).a(100.).a(200.)));
- //   RBins.push_back(RBin(0.8,  0.85, VD().a(0.).a(20.).a(40.).a(60.).a(80.).a(100.).a(200.)));
- //   RBins.push_back(RBin(0.85, 0.9,  VD().a(0.).a(20.).a(40.).a(60.).a(80.).a(100.).a(200.)));
- //   RBins.push_back(RBin(0.9,  1.0,  VD().a(0.).a(20.).a(40.).a(60.).a(80.).a(100.).a(200.)));
- // }
-  
+ // 3L
+    if(index == 5){
+        RBins.push_back(RBin(0.5,   0.65, VD().a(0.).a(100.).a(200.)));
+        RBins.push_back(RBin(0.65,  0.8,  VD().a(0.).a(100.).a(200.)));
+        RBins.push_back(RBin(0.8,   0.9,  VD().a(0.).a(100.).a(200.)));
+        RBins.push_back(RBin(0.9,   1.0,  VD().a(0.).a(100.).a(200.)));
+     } 
 // R5 - 1L 3j - based on T2tt_5000420
-  if(index == 5){
-    RBins.push_back(RBin(0.6, 0.65,  VD().a(0.).a(45).a(100.).a(160.).a(240.).a(300.)));
-    RBins.push_back(RBin(0.65, 0.7,  VD().a(0.).a(45.).a(120.).a(155.).a(200.).a(300.)));
-    RBins.push_back(RBin(0.7, 0.75,  VD().a(0.).a(40.).a(110.).a(150.).a(190.).a(300.)));
-    RBins.push_back(RBin(0.75, 0.83, VD().a(0.).a(90.).a(160.).a(300.)));
-    RBins.push_back(RBin(0.83, 0.9,  VD().a(0.).a(0).a(300.)));
-    //RBins.push_back(RBin(0.8,  0.85, VD().a(0.).a(60.).a(80.).a(100.).a(200.)));
-    //RBins.push_back(RBin(0.85, 0.9,  VD().a(0.).a(60.).a(80.).a(100.).a(200.)));
-    //RBins.push_back(RBin(0.9,  1.0,  VD().a(0.).a(60.).a(80.).a(100.).a(200.)));
+ // if(index == 5){
+ //   RBins.push_back(RBin(0.6, 0.65,  VD().a(0.).a(45).a(100.).a(160.).a(240.).a(300.)));
+ //   RBins.push_back(RBin(0.65, 0.7,  VD().a(0.).a(45.).a(120.).a(155.).a(200.).a(300.)));
+ //   RBins.push_back(RBin(0.7, 0.75,  VD().a(0.).a(40.).a(110.).a(150.).a(190.).a(300.)));
+ //   RBins.push_back(RBin(0.75, 0.83, VD().a(0.).a(90.).a(160.).a(300.)));
+ //   RBins.push_back(RBin(0.83, 0.9,  VD().a(0.).a(0).a(300.)));
+ //   //RBins.push_back(RBin(0.8,  0.85, VD().a(0.).a(60.).a(80.).a(100.).a(200.)));
+ //   //RBins.push_back(RBin(0.85, 0.9,  VD().a(0.).a(60.).a(80.).a(100.).a(200.)));
+ //   //RBins.push_back(RBin(0.9,  1.0,  VD().a(0.).a(60.).a(80.).a(100.).a(200.)));
 
-////original R5 M6
-if(index == 6){
-    RBins.push_back(RBin(0.6,  0.65, VD().a(0.).a(40.).a(60.).a(80.).a(100.).a(120.).a(200.)));
-    RBins.push_back(RBin(0.65,  0.7, VD().a(0.).a(40.).a(60.).a(80.).a(100.).a(120.).a(200.)));
-    RBins.push_back(RBin(0.7,  0.75, VD().a(0.).a(40.).a(60.).a(80.).a(100.).a(120.).a(200.)));
-    RBins.push_back(RBin(0.75,  0.8, VD().a(0.).a(40.).a(60.).a(80.).a(100.).a(120.).a(200.)));
-    RBins.push_back(RBin(0.8,  0.85, VD().a(0.).a(40.).a(60.).a(80.).a(100.).a(120.).a(200.)));
-    RBins.push_back(RBin(0.85,  0.9, VD().a(0.).a(40.).a(60.).a(80.).a(100.).a(120.).a(200.)));
-    RBins.push_back(RBin(0.9,  1.0,  VD().a(0.).a(40.).a(60.).a(80.).a(100.).a(120.).a(200.)));
-}
 
 
 //  // R5 M6 - 4j - based on T2tt5000420
@@ -120,7 +106,7 @@ if(index == 6){
 //   // RBins.push_back(RBin(0.9,  1.0,  VD().a(0.).a(100.).a(140.).a(200.)));
 //  }
 
-  }
+  
   FitBin Bins(RBins);
   return Bins;
 
