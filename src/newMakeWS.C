@@ -26,6 +26,7 @@ int main(int argc, char* argv[]){
 
 //	fallOutBoy.addProcess("Wjets");
 	fallOutBoy.setLepFlavor("el"); 
+	fallOutBoy.setLepNumber(1); 
 	//there is an internal check in the class to make sure the lepton flavor specified matches the given category(ies)
 
 	fallOutBoy.makeRooParamHists(outFile); //makes all rooParamHists and imports them to the workspace

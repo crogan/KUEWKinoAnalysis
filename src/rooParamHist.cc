@@ -255,7 +255,8 @@ void rooParamHistMaker::makeRooParamHists(TFile* oFile){
 
 //for one lepton ID, for one sys var
 string rooParamHistMaker::makeInterpolation(RooRealVar* alpha, double nomVal, double upVal, double downVal){
-	string formula;
+	string fracFormula;
+	string interpFormula;
 	double deltaUp = upVal - nomVal;
 	double deltaDown = downVal - nomVal;
 	
@@ -269,7 +270,7 @@ string rooParamHistMaker::makeInterpolation(RooRealVar* alpha, double nomVal, do
 
 	interpFormula += "abs("+paramName+") <= 1 ? "+interp+" : "+paramName+" > 1 ? "+upInterp+ " : "+downInterp+")";
 	fracFormula += "("+interpFormula+")/"+nomVal;
-	return formula;
+	return fracFormula;
 
 }
 
