@@ -323,18 +323,18 @@ std::cout << "makeFormulaBins" << std::endl;
 	vector<string> fNoHats;
 
 	//add nominal histograms to get total histogram over lepton IDs
-	TH1D hTotal = hNoms[0].Clone();
-	hTotal.Add(hNoms[1]);
-	hTotal.Add(hNoms[2]);
+	TH1D hTotal = TH1D(hNoms[0]);
+	hTotal.Add(*hNoms[1]);
+	hTotal.Add(*hNoms[2]);
 	
-	double IDNorm = 1;
+	
 
 	for(int q = 0; q < hNoms.size(); q++){
-		double norm = hNoms[q]->Integral()/hTotal.Integral();
+		double norm = hNoms[q].Integral()/hTotal.Integral();
 		IDNorm *= norm;
 	}
 
-	return IDNorm;
+
 	
 
 	if(sysVarsUp.size() != sysVarsDown.size()){
@@ -362,7 +362,7 @@ std::cout << "makeFormulaBins" << std::endl;
 	for(int b = 0; b < nBins; b++){
 		
 		string fNoHat;
-		RooFormulaVar* var;
+		
 
 		//MODULARIZE BETTER???? - WRITE OUT ON WHITEBOARD (start with what i currently have and fix from there)
 	
@@ -407,6 +407,7 @@ std::cout << "makeFormulaBins" << std::endl;
 
 //loop back over bins to add in normalizations to formula, create rFV and add to list for rPH
 	for(int b = 0; b < fNoHats.size(); b++){
+		RooFormulaVar* var;
 		inFormula[b] += "*"+to_string(IDNorm)+"*"+to_string(totalNorm)+"/"+hVarNorm;
 		//add fake source scale factors here
 
