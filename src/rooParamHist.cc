@@ -1,8 +1,10 @@
 #include "rooParamHist.hh"
 #include "paramHistHelper.hh"
 #include <algorithm>
-using std::to_string;
+#include <iostream>
 
+
+using std::to_string;
 /////////////////////////////////////////////////////
 /////////////////////////////////////////////////////
 //
@@ -83,7 +85,7 @@ rooParamHistMaker::rooParamHistMaker(std::vector<string> cats, std::vector<strin
 	m_file = file;
 	m_fakeProcs = {0};//,1,2};
 	m_procs.push_back("");
-	for(int i = 0; i < m_cats; i++) cout << m_cats[i] << endl;
+	for(int i = 0; i < m_cats.size(); i++) cout << m_cats[i] << endl;
 	// for(int l = 0; l < m_sysVars.size(); l++){
 	// 	m_alphasUp.push_back(new RooRealVar((m_sysVars[l]+"Up").c_str(), (m_sysVars[l]+"Up").c_str(),0.01,10)); //common among histograms
 	// 	m_alphasDown.push_back(new RooRealVar((m_sysVars[l]+"Down").c_str(), m_sysVars[l].c_str(),0.01,10)); //common among histograms
@@ -148,7 +150,7 @@ void rooParamHistMaker::setLepFlavor(string lep){
 }
 
 void rooParamHistMaker::setLepNumber(int lepNumber){
-	m_lepNum = to_string(lepNumer);
+	m_lepNum = to_string(lepNumber);
 }
 
 
@@ -171,7 +173,7 @@ void rooParamHistMaker::makeRooParamHists(TFile* oFile){
 		return;
 	}
 
-	if(cats[i].empty()){
+	if(m_cats[0].empty()){
 		std::cout << "Error: no category specified." << std::endl;
 		return;
 	}
@@ -232,7 +234,7 @@ void rooParamHistMaker::makeRooParamHists(TFile* oFile){
 					
 				}
 
-				makeRooParamHist(nomHist,hSysVarsUp_ID,hSysVarsDown_ID);
+				makeRooParamHist(hNom_ID,hSysVarsUp_ID,hSysVarsDown_ID);
 
 			}
 		}
@@ -247,18 +249,17 @@ void rooParamHistMaker::makeRooParamHists(TFile* oFile){
 
 
 double rooParamHistMaker::makeIDNormFactors(vector<TH1D> hNoms){
-	TH1D* hTotal = hNom[0].Clone();
-	hTotal->Add(hNom[1]);
-	hTotal->Add(hNom[2]);
+	TH1D* hTotal = hNoms[0].Clone();
+	hTotal->Add(hNoms[1]);
+	hTotal->Add(hNoms[2]);
 	
-	double IDNorm = 1;
+	double norm = 1;
 
 	for(int i = 0; i < hNoms.size(); i++){
-		double norm = hNoms[i]->Integral()/hTotal->Integral();
-		IDNorm *= norm;
+		norm *= hNoms[i]->Integral()/hTotal->Integral();
 	}
 
-	return IDNorm;
+	return norm;
 
 }
 
@@ -284,41 +285,53 @@ string rooParamHistMaker::makeInterpolation(RooRealVar* alpha, double nomVal, do
 }
 
 
+string rooParamHistMaker::getVarNorm(vector<string> fNoHats, TH1D hTotal){
+	string hVarNorm;
+	for(int b = 0; b < fNoHats.size(); b++){
+		if(b == 0) hVarNorm += "("+to_string(hTotal.GetBinContent(b))+"*"+fNoHats[b]+"+ ";
+		else hVarNorm += "+"+to_string(hTotal.GetBinContent(b))+"*"+fNoHats[b];
+	}
 
+	return hVarNorm;
+}
 
 
 
 
 //returns vector of strings (fNoHats - product over sys var, sum over lepton ID), one per bin for rPH
-void rooParamHistMaker::makeRooParamHist(std::vector<TH1D> hNom, std::vector<std::vector<TH1D*>> sysVarsUp, std::vector<std::vector<TH1D*>> sysVarsDown){
+void rooParamHistMaker::makeRooParamHist(std::vector<TH1D> hNoms, std::vector<std::vector<TH1D*>> sysVarsUp, std::vector<std::vector<TH1D*>> sysVarsDown){
 std::cout << "makeFormulaBins" << std::endl;
 
-	if(hNom[0].GetNbinsX() != hNom[1].GetNbinsX() || hNom[0].GetNbinsX() != hNom[2].GetNbinsX() || hNom[1].GetNbinsX() != hNom[2].GetNbinsX()){
+	if(hNoms[0].GetNbinsX() != hNoms[1].GetNbinsX() || hNoms[0].GetNbinsX() != hNoms[2].GetNbinsX() || hNoms[1].GetNbinsX() != hNoms[2].GetNbinsX()){
 		cout << "Error: uneven number of bins among lepton ID nominal histograms" << endl;
 		return;
 	}
 
 
-	int nBins = hNom[0].GetNbinsX();
+	int nBins = hNoms[0].GetNbinsX();
 	RooArgList* rFVs = new RooArgList("params");
 	vector<RooArgList> varLists;
 	std::vector<std::vector<RooRealVar*>> alphas_ID;
-	string histName = hNom[0].GetName();
+	string histName = hNoms[0].GetName();
 	double nomVal;
 	double upVal;
 	double downVal;
 
+	//contraints on floating bronze parameter
+	double alphaB_max = 10;
+	double alphaB_min = -10;
+
 	vector<string> fNoHats;
 
 	//add nominal histograms to get total histogram over lepton IDs
-	TH1D* hTotal = hNom[0].Clone();
-	hTotal->Add(hNom[1]);
-	hTotal->Add(hNom[2]);
+	TH1D hTotal = hNoms[0].Clone();
+	hTotal.Add(hNoms[1]);
+	hTotal.Add(hNoms[2]);
 	
 	double IDNorm = 1;
 
 	for(int q = 0; q < hNoms.size(); q++){
-		double norm = hNoms[q]->Integral()/hTotal->Integral();
+		double norm = hNoms[q]->Integral()/hTotal.Integral();
 		IDNorm *= norm;
 	}
 
@@ -354,15 +367,14 @@ std::cout << "makeFormulaBins" << std::endl;
 
 		//MODULARIZE BETTER???? - WRITE OUT ON WHITEBOARD (start with what i currently have and fix from there)
 	
-		double alphaB_max = 10;
-		double alphaB_min = -10;
+		
 		
 			
 
 		for(int l = 0; l < m_sysVars.size(); l++){ //loop over systematic variation histograms
 			string formula_IDs;
 			for(int q = 0; q < 3; q++){
-				nomVal = hNom[q].GetBinContent(b);
+				nomVal = hNoms[q].GetBinContent(b);
 				upVal = sysVarsUp[q][l]->GetBinContent(b);
 				downVal = sysVarsDown[q][l]->GetBinContent(b);
 			
@@ -375,21 +387,21 @@ std::cout << "makeFormulaBins" << std::endl;
 			}
 			formula_IDs += ")";
 			if(l == 0) fNoHat += "("+formula_IDs;
-			else fNoHat += "*"+formula_ID;
+			else fNoHat += "*"+formula_IDs;
 						
 		}
 		fNoHat += ")";
 
 		// fNoHat += "*"+to_string(nomVal);
-		fNoHat += "*"+to_string(hTotal->GetBinContent(b)); //n^MC in final equation
+		fNoHat += "*"+to_string(hTotal.GetBinContent(b)); //n^MC in final equation
 
 		fNoHats.push_back(fNoHat);
 
 	}
 
 	string hVarNorm = getVarNorm(fNoHats,hTotal); //sum over bins in denominator
-	double IDNorm = makeIDNormFactors(hNom); //omega
-	double totalNorm = hTotal->Integral(); //N_cps in numerator
+	double IDNorm = makeIDNormFactors(hNoms); //omega
+	double totalNorm = hTotal.Integral(); //N_cps in numerator
 
 	vector<string> inFormula = fNoHats;
 
@@ -412,20 +424,12 @@ std::cout << "makeFormulaBins" << std::endl;
 
 	
 
-	m_rPHs.push_back(new rooParamHistWrapper(histName.c_str(),hNom[0].GetTitle(),rFVs,hNom[0]));
+	m_rPHs.push_back(new rooParamHistWrapper(histName.c_str(),hNoms[0].GetTitle(),rFVs,hNoms[0]));
 
 
 }
 
-string rooParamHistMaker::getVarNorm(vector<string> fNoHats, TH1D* hTotal){
-	string hVarNorm;
-	for(int b = 0; b < fNoHats.size(); b++){
-		if(b == 0) hVarNorm += "("+to_string(hTotal->GetBinContent(b))+"*"+fNoHats[b]+"+ ";
-		else hVarNorm += "+"+to_string(hTotal->GetBinContent(b))+"*"+fNoHats[b];
-	}
 
-	return hVarNorm;
-}
 
 
 
