@@ -66,19 +66,19 @@ FitBin CategoryTool::GetFitBin(int index) const {
 
   // for 0L 5j, 1L 4j
   if(index == 4){
-    RBins.push_back(RBin(0.5,   0.6,  VD().a(150.).a(400.)));
-    RBins.push_back(RBin(0.6,   0.7,  VD().a(150.).a(400.)));
-    RBins.push_back(RBin(0.7,   0.8,  VD().a(150.).a(400.)));
-    RBins.push_back(RBin(0.8,   0.9,  VD().a(150.).a(400.)));
-    RBins.push_back(RBin(0.9,   1.0,  VD().a(150.).a(400.)));
+    RBins.push_back(RBin(0.5,   0.6,  VD().a(0.).a(150.).a(400.)));
+    RBins.push_back(RBin(0.6,   0.7,  VD().a(0.).a(150.).a(400.)));
+    RBins.push_back(RBin(0.7,   0.8,  VD().a(0.).a(150.).a(400.)));
+    RBins.push_back(RBin(0.8,   0.9,  VD().a(0.).a(150.).a(400.)));
+    RBins.push_back(RBin(0.9,   1.0,  VD().a(0.).a(150.).a(400.)));
   }
 
   // 3L
   if(index == 5){
-    RBins.push_back(RBin(0.5,   0.65, VD().a(100.).a(200.)));
-    RBins.push_back(RBin(0.65,  0.8,  VD().a(100.).a(200.)));
-    RBins.push_back(RBin(0.8,   0.9,  VD().a(100.).a(200.)));
-    RBins.push_back(RBin(0.9,   1.0,  VD().a(100.).a(200.)));
+    RBins.push_back(RBin(0.5,   0.65, VD().a(0.).a(100.).a(200.)));
+    RBins.push_back(RBin(0.65,  0.8,  VD().a(0.).a(100.).a(200.)));
+    RBins.push_back(RBin(0.8,   0.9,  VD().a(0.).a(100.).a(200.)));
+    RBins.push_back(RBin(0.9,   1.0,  VD().a(0.).a(100.).a(200.)));
   }
 
 
@@ -559,9 +559,9 @@ CategoryList CategoryTool::GetCategories_0L() const {
   PTISR_bin3.push_back(350.);
   PTISR_bin3.push_back(450.);
 
-   vector<double> PTISR_bin4;
-  PTISR_bin3.push_back(400.);
-  PTISR_bin3.push_back(500.);
+  vector<double> PTISR_bin4;
+  PTISR_bin4.push_back(400.);
+  PTISR_bin4.push_back(500.);
  
   // Get SV binning
   vector<double> SV_eta;
@@ -775,7 +775,7 @@ CategoryList CategoryTool::GetCategories_1L() const {
   ///////////////////////////////////////////////
 
   cout << "Building 1L 0Sjet SV object regions" << endl;
-  CategoryList Cats_1L_SV0S_gold = Cats_1Lcharge;
+  CategoryList Cats_1L_SV0S_gold = Cats_1Lincl;
   CategoryList Cats_1L_SV0S_silver = Cats_1Lincl;
   CategoryList Cats_1L_SV0S_bronze = Cats_1Lincl;
   vector<Hadronic> H_1L_SV0S;
@@ -808,7 +808,7 @@ CategoryList CategoryTool::GetCategories_1L() const {
   ///////////////////////////////////////////////
 
   cout << "Building 1L 1j 0/1b 0sv object regions" << endl;
-  CategoryList Cats_1L_1j0svS_gold = Cats_1Lcharge;
+  CategoryList Cats_1L_1j0svS_gold = Cats_1Lincl;
   CategoryList Cats_1L_1j0svS_silver = Cats_1Lincl;
   CategoryList Cats_1L_1j0svS_bronze = Cats_1Lincl;
   vector<Hadronic> H_1L_1j0svS;
@@ -840,7 +840,7 @@ CategoryList CategoryTool::GetCategories_1L() const {
   ///////////////////////////////////////////////
 
   cout << "Building 1L 1j 0/1b ge1sv object regions" << endl;
-  CategoryList Cats_1L_1jge1svS_gold = Cats_1Lcharge;
+  CategoryList Cats_1L_1jge1svS_gold = Cats_1Lincl;
   CategoryList Cats_1L_1jge1svS_silver = Cats_1Lincl;
   CategoryList Cats_1L_1jge1svS_bronze = Cats_1Lincl;
   vector<Hadronic> H_1L_1jge1svS;
