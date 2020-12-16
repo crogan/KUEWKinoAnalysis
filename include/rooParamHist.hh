@@ -50,7 +50,8 @@ class rooParamHistMaker{
 		
 		void makeRooParamHists(TFile* oFile);
 		// void makeRooParamHist(TH1D hNom, std::vector<TH1D*> sysVarsUp, std::vector<TH1D*> sysVarsDown);
-		void makeRooParamHist(vector<string> fNoHats);
+		void makeRooParamHist(std::vector<TH1D> hNom, std::vector<std::vector<TH1D*>> sysVarsUp, std::vector<std::vector<TH1D*>> sysVarsDown);
+
 
 		void addSysVar(string sysVar);
 		void addProcess(string proc);
@@ -71,8 +72,9 @@ class rooParamHistMaker{
 	private:
 		void makeWorkspace(TFile* oFile);
 		string makeInterpolation();
-		vector<RooFormulaVar*> rooParamHistMaker::makeFloatingFormula(TH1D hNom, std::vector<TH1D*> sysVarsUp, std::vector<TH1D*> sysVarsDown);
 		double makeIDNormFactors(vector<TH1D> hNoms);
+		string getVarNorm(vector<string> fNoHats, TH1D* hTotal);
+
 			// return a smooth function that is equal to +/-1 for |x| >= smoothRegion_ and it's null in zero
 		// inline double smoothStepFunc(double x) const {
 		// 	if (fabs(x) >= _smoothRegion) return x > 0 ? +1 : -1;

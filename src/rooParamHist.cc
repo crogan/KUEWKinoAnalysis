@@ -232,7 +232,7 @@ void rooParamHistMaker::makeRooParamHists(TFile* oFile){
 					
 				}
 
-				makeFormulaBins(nomHist,hSysVarsUp_ID,hSysVarsDown_ID);
+				makeRooParamHist(nomHist,hSysVarsUp_ID,hSysVarsDown_ID);
 
 			}
 		}
@@ -270,9 +270,12 @@ string rooParamHistMaker::makeInterpolation(RooRealVar* alpha, double nomVal, do
 	double deltaDown = downVal - nomVal;
 	
 	string paramName = alpha->GetName();
+	
+
 	string interp = "0.125 * "+paramName+" * ("+paramName+"*"+paramName+" * (3.*"+paramName+"*"+paramName+" - 10.) + 15)";
 	string upInterp = to_string(nomVal)+"+ "+paramName+"*"+to_string(deltaUp);
 	string downInterp = to_string(nomVal)+"+ "+paramName+"*"+to_string(deltaDown);
+	
 
 	interpFormula += "abs("+paramName+") <= 1 ? "+interp+" : "+paramName+" > 1 ? "+upInterp+ " : "+downInterp+")";
 	fracFormula += "("+interpFormula+")/"+nomVal;
@@ -280,23 +283,14 @@ string rooParamHistMaker::makeInterpolation(RooRealVar* alpha, double nomVal, do
 
 }
 
-RooArgList* rooParamHistMaker::compress2DVector(std::vector<std::vector<RooRealVar*>> vec){
-	RooArgList* argList;
-	for(int i = 0; i < vec.size(); i++){
-		for(int j = 0; j < vec[i].size()l; j++){
-			argList.add(vec[i][j]);
-		}
-	}
 
-	return argList;
-}
 
 
 
 
 
 //returns vector of strings (fNoHats - product over sys var, sum over lepton ID), one per bin for rPH
-vector<string> rooParamHistMaker::makeFloatingFormula(std::vector<TH1D> hNom, std::vector<std::vector<TH1D*>> sysVarsUp, std::vector<std::vector<TH1D*>> sysVarsDown){
+void rooParamHistMaker::makeRooParamHist(std::vector<TH1D> hNom, std::vector<std::vector<TH1D*>> sysVarsUp, std::vector<std::vector<TH1D*>> sysVarsDown){
 std::cout << "makeFormulaBins" << std::endl;
 
 	if(hNom[0].GetNbinsX() != hNom[1].GetNbinsX() || hNom[0].GetNbinsX() != hNom[2].GetNbinsX() || hNom[1].GetNbinsX() != hNom[2].GetNbinsX()){
@@ -306,10 +300,8 @@ std::cout << "makeFormulaBins" << std::endl;
 
 
 	int nBins = hNom[0].GetNbinsX();
-	// std::vector<rooFormulaVar*> rFVs;
-	// RooArgList* rFVs = new RooArgList("params");
-	// RooArgList varList;
-	// std::vector<RooRealVar*> hNomVals;
+	RooArgList* rFVs = new RooArgList("params");
+	vector<RooArgList> varLists;
 	std::vector<std::vector<RooRealVar*>> alphas_ID;
 	string histName = hNom[0].GetName();
 	double nomVal;
@@ -317,6 +309,20 @@ std::cout << "makeFormulaBins" << std::endl;
 	double downVal;
 
 	vector<string> fNoHats;
+
+	//add nominal histograms to get total histogram over lepton IDs
+	TH1D* hTotal = hNom[0].Clone();
+	hTotal->Add(hNom[1]);
+	hTotal->Add(hNom[2]);
+	
+	double IDNorm = 1;
+
+	for(int q = 0; q < hNoms.size(); q++){
+		double norm = hNoms[q]->Integral()/hTotal->Integral();
+		IDNorm *= norm;
+	}
+
+	return IDNorm;
 	
 
 	if(sysVarsUp.size() != sysVarsDown.size()){
@@ -324,23 +330,18 @@ std::cout << "makeFormulaBins" << std::endl;
 		return;
 	}
 	
-	// for(int l = 0; l < m_sysVars.size(); l++){
-	// 	varList.add(*m_alphasUp[l]);
-	// 	varList.add(*m_alphasDown[l]);	
-	// }
-
-//make floating parameters
 	
+
+	//make floating parameters
+	for(int l = 0; l < m_sysVars.size(); l++){
+		std::vector<RooRealVar*> alphas;
+		//TODO: figure out exactly how to connect the lepton ID parameters? this is a stand in for now
+		alphas.push_back(new RooRealVar((m_sysVars[l]+"_bronze").c_str(),(m_sysVars[l]+"_bronze").c_str(),alphaB_max,alphaB_min)); //bronze
+		alphas.push_back(new RooRealVar((m_sysVars[l]+"_gold").c_str(),(m_sysVars[l]+"_gold").c_str(),alphas[l]->getValV(),alphas[l]->getValV()-alphas[l]->getValV()*0.1,alphas[l]->getValV()+alphas[l]->getValV()*0.1)); //gold
+		alphas.push_back(new RooRealVar((m_sysVars[l]+"_silver").c_str(),(m_sysVars[l]+"_silver").c_str(),alphas[l]->getValV(),alphas[l]->getValV()-alphas[l]->getValV()*0.1,alphas[l]->getValV()+alphas[l]->getValV()*0.1)); //silver
 		
-		for(int l = 0; l < m_sysVars.size(); l++){
-			std::vector<RooRealVar*> alphas;
-			//figure out exactly how to connect the lepton ID parameters? this is a stand in for now
-			alphas.push_back(new RooRealVar((m_sysVars[l]+"_bronze").c_str(),(m_sysVars[l]+"_bronze").c_str(),alphaB_max,alphaB_min)); //bronze
-			alphas.push_back(new RooRealVar((m_sysVars[l]+"_gold").c_str(),(m_sysVars[l]+"_gold").c_str(),alphas[l]->getValV(),alphas[l]->getValV()-alphas[l]->getValV()*0.1,alphas[l]->getValV()+alphas[l]->getValV()*0.1)); //gold
-			alphas.push_back(new RooRealVar((m_sysVars[l]+"_silver").c_str(),(m_sysVars[l]+"_silver").c_str(),alphas[l]->getValV(),alphas[l]->getValV()-alphas[l]->getValV()*0.1,alphas[l]->getValV()+alphas[l]->getValV()*0.1)); //silver
-			
-			alphas_ID.push_back(alphas);
-		}
+		alphas_ID.push_back(alphas);
+	}
 		
 	
 	
@@ -350,18 +351,8 @@ std::cout << "makeFormulaBins" << std::endl;
 		
 		string fNoHat;
 		RooFormulaVar* var;
-		// std::vector<RooRealVar*> hVarValsUp;
-		// std::vector<RooRealVar*> hVarValsDown;
-		// string nomName = hNom.GetName();
-		// nomName +="Nom";
-		// nomName += std::to_string(b);	
-		// std::replace(nomName.begin(),nomName.end(),'-','_');
-		// hNomVals.push_back(new RooRealVar(nomName.c_str(),nomName.c_str(),hNom.GetBinContent(b)));
-		// varList.add(*hNomVals[b]);	
-		
 
 		//MODULARIZE BETTER???? - WRITE OUT ON WHITEBOARD (start with what i currently have and fix from there)
-		//need to return formula and list of variables (RooArgList) - unless this is the function that makes the rPH?
 	
 		double alphaB_max = 10;
 		double alphaB_min = -10;
@@ -369,78 +360,68 @@ std::cout << "makeFormulaBins" << std::endl;
 			
 
 		for(int l = 0; l < m_sysVars.size(); l++){ //loop over systematic variation histograms
+			string formula_IDs;
 			for(int q = 0; q < 3; q++){
 				nomVal = hNom[q].GetBinContent(b);
 				upVal = sysVarsUp[q][l]->GetBinContent(b);
 				downVal = sysVarsDown[q][l]->GetBinContent(b);
-				// alphas.push_back(new RooRealVar((m_sysVars[l]+"_bronze").c_str(),(m_sysVars[l]+"_bronze").c_str(),alphaB_max,alphaB_min)); //bronze
-				// alphas.push_back(new RooRealVar((m_sysVars[l]+"_gold").c_str(),(m_sysVars[l]+"_gold").c_str(),alphas[l]->getValV(),alphas[l]->getValV()-alphas[l]->getValV()*0.1,alphas[l]->getValV()+alphas[l]->getValV()*0.1)); //gold
-				// alphas.push_back(new RooRealVar((m_sysVars[l]+"_silver").c_str(),(m_sysVars[l]+"_silver").c_str(),alphas[l]->getValV(),alphas[l]->getValV()-alphas[l]->getValV()*0.1,alphas[l]->getValV()+alphas[l]->getValV()*0.1)); //silver
-
-
-				string formula_bronze = makeInterpolation(alphas_ID[q][l],nomVal[q],upVal[q],downVal[q]);
-				string formula_gold = makeInterpolation(alphas[1],nomVal[q],upVal[q],downVal[q]);
-				string formula_silver = makeInterpolation(alphas[2],nomVal[q],upVal[q],downVal[q]);
-
-				string formula_ID = "("+formula_bronze+" + "+formula_gold+" + "+formula_silver+")";
 			
-				if(l == 0) fNoHat += "("+formula_ID+"* ";
-				else fNoHat += "*"+formula_ID;
-				fNoHat += ")"
+				string formula_ID += makeInterpolation(alphas_ID[q][l],nomVal[q],upVal[q],downVal[q]);
+			
+				if(q == 0) formula_IDs += "("+formula_ID; //"("+formula_bronze+" + "+formula_gold+" + "+formula_silver+")";
+				else formula_IDs += "+"+formula_ID;
 
-				
-
-				
-
-				// varList.add(*alphas[l]); //bronze
-				// varList.add(*alphas[l+1]); //gold
-				// varList.add(*alphas[l+2]); //silver
-			}			
+				varLists[b].add(*alphas_ID[q][l])
+			}
+			formula_IDs += ")";
+			if(l == 0) fNoHat += "("+formula_IDs;
+			else fNoHat += "*"+formula_ID;
+						
 		}
+		fNoHat += ")";
 
+		// fNoHat += "*"+to_string(nomVal);
+		fNoHat += "*"+to_string(hTotal->GetBinContent(b)); //n^MC in final equation
 
-		
-		fNoHat += "*"+to_string(nomVal);
 		fNoHats.push_back(fNoHat);
 
-		// //var = new RooFormulaVar((hNom->GetName()+std::to_string(b)),hNom->GetTitle(),inFormula,varList);
-		// string varName = histName+"_bin"+std::to_string(b);
-		// var = new RooFormulaVar(varName.c_str(),inFormula.c_str(),varList);
+	}
+
+	string hVarNorm = getVarNorm(fNoHats,hTotal); //sum over bins in denominator
+	double IDNorm = makeIDNormFactors(hNom); //omega
+	double totalNorm = hTotal->Integral(); //N_cps in numerator
+
+	vector<string> inFormula = fNoHats;
+
+
+//loop back over bins to add in normalizations to formula, create rFV and add to list for rPH
+	for(int b = 0; b < fNoHats.size(); b++){
+		inFormula[b] += "*"+to_string(IDNorm)+"*"+to_string(totalNorm)+"/"+hVarNorm;
+		//add fake source scale factors here
+
+		string varName = histName+"_bin"+std::to_string(b);
+		var = new RooFormulaVar(varName.c_str(),inFormula[b].c_str(),varLists[b]);
+		rFVs->add(*var);
 		// if(b == 0){ 
 		// var->Print();
 		// string testNames = m_alphasUp[0]->GetName();
 		// var->dumpFormula();
 		// }
 		// rFVs->add(*var);
-
-	}
-
-	string hVarNorm = getVarNorm(fNoHats);
-	double IDNorm = makeIDNormFactors(hNom);
-
-	vector<string> inFormula = fNoHats;
-
-
-	for(int b = 0; b < fNoHats.size(); b++){
-		inFormula[b] += "*"+to_string(IDNorm)+"/"+hVarNorm;
-		//add fake source scale factors here
-
-		string varName = histName+"_bin"+std::to_string(b);
-		var = new RooFormulaVar(varName.c_str(),inFormula[b].c_str(),varList);
 	}
 
 	
 
-	
+	m_rPHs.push_back(new rooParamHistWrapper(histName.c_str(),hNom[0].GetTitle(),rFVs,hNom[0]));
 
-	// return fNoHats;
+
 }
 
-string rooParamHistMaker::getVarNorm(vector<string> fNoHats){
+string rooParamHistMaker::getVarNorm(vector<string> fNoHats, TH1D* hTotal){
 	string hVarNorm;
 	for(int b = 0; b < fNoHats.size(); b++){
-		if(b == 0) hVarNorm += "("+to_string(nomVal)+"*"+fNoHats[b]+"+ ";
-		else hVarNorm += "+"+to_string(nomVal)+"*"+fNoHats[b];
+		if(b == 0) hVarNorm += "("+to_string(hTotal->GetBinContent(b))+"*"+fNoHats[b]+"+ ";
+		else hVarNorm += "+"+to_string(hTotal->GetBinContent(b))+"*"+fNoHats[b];
 	}
 
 	return hVarNorm;
@@ -448,7 +429,20 @@ string rooParamHistMaker::getVarNorm(vector<string> fNoHats){
 
 
 
+void rooParamHistMaker::makeWorkspace(TFile* oFile){
+	oFile->cd();
 
+	for(int i = 0; i < m_rPHs.size(); i++){
+		m_ws->import(*m_rPHs[i]->getRooParametricHist(),RooFit::Silence);
+	}
+	std::cout << "imported rPHs to workspace" << std::endl;
+	m_ws->Write();
+	std::cout << "wrote to file" << std::endl;
+	oFile->Close();
+	std::cout << "closed file" << std::endl;
+
+
+}
 
 
 
@@ -550,20 +544,7 @@ string rooParamHistMaker::getVarNorm(vector<string> fNoHats){
 
 // }
 
-void rooParamHistMaker::makeWorkspace(TFile* oFile){
-	oFile->cd();
 
-	for(int i = 0; i < m_rPHs.size(); i++){
-		m_ws->import(*m_rPHs[i]->getRooParametricHist(),RooFit::Silence);
-	}
-	std::cout << "imported rPHs to workspace" << std::endl;
-	m_ws->Write();
-	std::cout << "wrote to file" << std::endl;
-	oFile->Close();
-	std::cout << "closed file" << std::endl;
-
-
-}
 
 
 
