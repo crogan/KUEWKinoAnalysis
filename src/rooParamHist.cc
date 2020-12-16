@@ -250,20 +250,7 @@ void rooParamHistMaker::makeRooParamHists(TFile* oFile){
 
 
 
-double rooParamHistMaker::makeIDNormFactors(vector<TH1D> hNoms){
-	TH1D* hTotal = hNoms[0].Clone();
-	hTotal->Add(hNoms[1]);
-	hTotal->Add(hNoms[2]);
-	
-	double norm = 1;
 
-	for(int i = 0; i < hNoms.size(); i++){
-		norm *= hNoms[i]->Integral()/hTotal->Integral();
-	}
-
-	return norm;
-
-}
 
 
 //for one lepton ID, for one sys var
@@ -331,7 +318,8 @@ std::cout << "makeFormulaBins" << std::endl;
 	hTotal.Add(*hNoms[2]);
 	
 	
-
+	//get ID efficiencies
+	double IDNorm = 1;
 	for(int q = 0; q < hNoms.size(); q++){
 		double norm = hNoms[q].Integral()/hTotal.Integral();
 		IDNorm *= norm;
@@ -380,12 +368,12 @@ std::cout << "makeFormulaBins" << std::endl;
 				upVal = sysVarsUp[q][l]->GetBinContent(b);
 				downVal = sysVarsDown[q][l]->GetBinContent(b);
 			
-				string formula_ID += makeInterpolation(alphas_ID[q][l],nomVal[q],upVal[q],downVal[q]);
+				string formula_ID = makeInterpolation(alphas_ID[q][l],nomVal[q],upVal[q],downVal[q]);
 			
 				if(q == 0) formula_IDs += "("+formula_ID; //"("+formula_bronze+" + "+formula_gold+" + "+formula_silver+")";
 				else formula_IDs += "+"+formula_ID;
 
-				varLists[b].add(*alphas_ID[q][l])
+				varLists[b].add(*alphas_ID[q][l]);
 			}
 			formula_IDs += ")";
 			if(l == 0) fNoHat += "("+formula_IDs;

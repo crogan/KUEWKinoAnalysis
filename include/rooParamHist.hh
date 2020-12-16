@@ -72,8 +72,7 @@ class rooParamHistMaker{
 	private:
 		void makeWorkspace(TFile* oFile);
 		string makeInterpolation();
-		double makeIDNormFactors(vector<TH1D> hNoms);
-		string getVarNorm(vector<string> fNoHats, TH1D* hTotal);
+		string getVarNorm(vector<string> fNoHats, TH1D hTotal);
 
 			// return a smooth function that is equal to +/-1 for |x| >= smoothRegion_ and it's null in zero
 		// inline double smoothStepFunc(double x) const {
