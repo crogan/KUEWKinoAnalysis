@@ -314,11 +314,11 @@ std::cout << "makeFormulaBins" << std::endl;
 
 	//add nominal histograms to get total histogram over lepton IDs
 	TH1D hTotal = TH1D(hNoms[0]);
-	hTotal.Add(*hNoms[1]);
-	hTotal.Add(*hNoms[2]);
+	hTotal.Add(&hNoms[1]);
+	hTotal.Add(&hNoms[2]);
 	
 	
-	//get ID efficiencies
+	//get ID efficiencies - omega
 	double IDNorm = 1;
 	for(int q = 0; q < hNoms.size(); q++){
 		double norm = hNoms[q].Integral()/hTotal.Integral();
@@ -368,7 +368,7 @@ std::cout << "makeFormulaBins" << std::endl;
 				upVal = sysVarsUp[q][l]->GetBinContent(b);
 				downVal = sysVarsDown[q][l]->GetBinContent(b);
 			
-				string formula_ID = makeInterpolation(alphas_ID[q][l],nomVal[q],upVal[q],downVal[q]);
+				string formula_ID = makeInterpolation(alphas_ID[q][l],nomVal,upVal,downVal);
 			
 				if(q == 0) formula_IDs += "("+formula_ID; //"("+formula_bronze+" + "+formula_gold+" + "+formula_silver+")";
 				else formula_IDs += "+"+formula_ID;
@@ -390,7 +390,6 @@ std::cout << "makeFormulaBins" << std::endl;
 	}
 
 	string hVarNorm = getVarNorm(fNoHats,hTotal); //sum over bins in denominator
-	double IDNorm = makeIDNormFactors(hNoms); //omega
 	double totalNorm = hTotal.Integral(); //N_cps in numerator
 
 	vector<string> inFormula = fNoHats;
