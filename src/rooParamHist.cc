@@ -83,10 +83,11 @@ rooParamHistMaker::rooParamHistMaker(std::vector<string> cats, std::vector<strin
 	m_file = file;
 	m_fakeProcs = {0};//,1,2};
 	m_procs.push_back("");
-	for(int l = 0; l < m_sysVars.size(); l++){
-		m_alphasUp.push_back(new RooRealVar((m_sysVars[l]+"Up").c_str(), (m_sysVars[l]+"Up").c_str(),0.01,10)); //common among histograms
-		m_alphasDown.push_back(new RooRealVar((m_sysVars[l]+"Down").c_str(), m_sysVars[l].c_str(),0.01,10)); //common among histograms
-	}
+	for(int i = 0; i < m_cats; i++) cout << m_cats[i] << endl;
+	// for(int l = 0; l < m_sysVars.size(); l++){
+	// 	m_alphasUp.push_back(new RooRealVar((m_sysVars[l]+"Up").c_str(), (m_sysVars[l]+"Up").c_str(),0.01,10)); //common among histograms
+	// 	m_alphasDown.push_back(new RooRealVar((m_sysVars[l]+"Down").c_str(), m_sysVars[l].c_str(),0.01,10)); //common among histograms
+	// }
 
 
 }
@@ -136,8 +137,18 @@ void rooParamHistMaker::addSysVar(string sysVar){
 	// m_nSysVar++;
 }
 
+
+void rooParamHistMaker::addCategory(string cat){
+	m_cats.push_back(cat);
+	// m_nSysVar++;
+}
+
 void rooParamHistMaker::setLepFlavor(string lep){
 	m_lepFlav = lep;
+}
+
+void rooParamHistMaker::setLepNumber(int lepNumber){
+	m_lepNum = to_string(lepNumer);
 }
 
 
@@ -146,70 +157,172 @@ void rooParamHistMaker::makeRooParamHists(TFile* oFile){
 	std::cout << "makerooParamHists" << std::endl;
 
 	string histName;
+	string dirName;
 	//PUT COUTS TO DEBUG
+	 //loop over lepton ID
+		
+	if(m_lepFlav.empty()){
+		std::cout << "Error: lepton flavor not set." << std::endl;
+		return;
+	}
 
-	for(int i = 0; i < m_cats.size(); i++){
-		std::cout << "category: " << m_cats[i] << std::endl;
-		TDirectory* dir = m_file->GetDirectory(m_cats[i].c_str());
-		//std::cout << "dir: " << dir->GetName() << "lepFlav: " << m_lepFlav << std::endl;
-		if(dir == NULL){
-		 std::cout << "Error: Directory " << m_cats[i].c_str() << " not found" << std::endl;
-			return;
-		}
-		if(m_lepFlav.empty()){
-			std::cout << "Error: lepton flavor not set." << std::endl;
-			return;
-		}
-		if(!strstr(m_cats[i].c_str(),m_lepFlav.c_str())) continue; //check for matching lepton flavor in directory (category) and histname
+	if(m_lepNum.empty()){
+		std::cout << "Error: lepton number not set." << std::endl;
+		return;
+	}
 
-		for(int k = 0; k < m_procs.size(); k++){
-			for(int j = 0; j < m_fakeProcs.size(); j++){
-				//get ith, jth, kth nominal histogram (hNom) and all associated systematic variation histograms (vector<TH1D*> sysVars)
-				//set mFile in constructor so you can just pull those histograms from there
-			std::cout << "process: " << m_procs[k] << " fake process: " << m_fakeProcs[j] << std::endl;
-					if(m_procs[k].empty())
-						histName = "Fakes_"+m_lepFlav+"f"+std::to_string(m_fakeProcs[j]);
-					else
-						histName = m_procs[k]+"_Fakes_"+m_lepFlav+"f"+std::to_string(m_fakeProcs[j]);
-				// std::cout << "a" << std::endl;
-				paramHistHelper makeNormHists(histName,m_file->GetName());	
-				TH1D nomHist = makeNormHists.getNormalizedHist(dir);
-				std::vector<TH1D*> hSysVarsUp;
-				std::vector<TH1D*> hSysVarsDown;
-				// std::cout << "b" << std::endl;
-				for(int l = 0; l < m_sysVars.size(); l++){
-					makeNormHists.SetVariation(m_sysVars[l]);
-					TH1D* varHistUp = makeNormHists.getNormalizedHist(dir,true); //up varHist
-					TH1D* varHistDown = makeNormHists.getNormalizedHist(dir,false); //down varHist
-					hSysVarsUp.push_back(varHistUp);
-					hSysVarsDown.push_back(varHistDown);
-					makeNormHists.ClearVariation();
+	if(cats[i].empty()){
+		std::cout << "Error: no category specified." << std::endl;
+		return;
+	}
+
+			
+			
+			// if(!strstr(dirName.c_str(),m_lepFlav.c_str())) continue; //check for matching lepton flavor in directory (category) and histname
+
+
+			//TODO: figure out how to add interpolations from different lepton IDs (like in slides)
+			for(int k = 0; k < m_procs.size(); k++){
+				for(int j = 0; j < m_fakeProcs.size(); j++){
+					std::vector<std::vector<TH1D*>> hSysVarsUp_ID;
+					std::vector<std::vector<TH1D*>> hSysVarsDown_ID;
+					vector<TH1D> hNom_ID;
+					for(int i = 0; i < m_cats.size(); i++){
+						for(int q = 0; q < 3; q++){
+						dirName = "Ch"+m_lepNum+"L_"+m_lepFlav+"pm-"+m_lepFlav+to_string(q)+"-"+m_cats[i];
+						cout << dirName << endl;
+						TDirectory* dir = m_file->GetDirectory(dirName.c_str());
+						//std::cout << "dir: " << dir->GetName() << "lepFlav: " << m_lepFlav << std::endl;
+						if(dir == NULL){
+						 std::cout << "Error: Directory " << dirName << " not found" << std::endl;
+							return;
+						}
+					//get ith, jth, kth nominal histogram (hNom) and all associated systematic variation histograms (vector<TH1D*> sysVars)
+					//set mFile in constructor so you can just pull those histograms from there
+				std::cout << "process: " << m_procs[k] << " fake process: " << m_fakeProcs[j] << std::endl;
+						if(m_procs[k].empty())
+							histName = "Fakes_"+m_lepFlav+"f"+std::to_string(m_fakeProcs[j]);
+						else
+							histName = m_procs[k]+"_Fakes_"+m_lepFlav+"f"+std::to_string(m_fakeProcs[j]);
+					// std::cout << "a" << std::endl;
+					paramHistHelper makeNormHists(histName,m_file->GetName());	
+					TH1D nomHist = makeNormHists.getNormalizedHist(dir);
+					hNom_ID.push_back(nomHist);
+					std::vector<TH1D*> hSysVarsUp;
+					std::vector<TH1D*> hSysVarsDown;
+					// std::cout << "b" << std::endl;
+					for(int l = 0; l < m_sysVars.size(); l++){
+						makeNormHists.SetVariation(m_sysVars[l]);
+						TH1D* varHistUp = makeNormHists.getNormalizedHist(dir,true); //up varHist
+						TH1D* varHistDown = makeNormHists.getNormalizedHist(dir,false); //down varHist
+						hSysVarsUp.push_back(varHistUp);
+						hSysVarsDown.push_back(varHistDown);
+						makeNormHists.ClearVariation();
+					}
+					hSysVarsUp_ID.push_back(hSysVarsUp);
+					hSysVarsDown_ID.push_back(hSysVarsDown);
+
+
+
+					// std::cout << "c" << std::endl;
+					//turn on later!
+					// makeRooParamHist(nomHist, hSysVarsUp, hSysVarsDown); //pushes back a rooParamHistWrapper to vector
+				//	makeRooParamHist(nomHist, hSysVarsDown,false);
+					// std::cout << "d" << std::endl;
+					
 				}
 
+				makeRooParamHist(nomHist,hSysVarsUp_ID,hSysVarsDown_ID);
 
-				// std::cout << "c" << std::endl;
-				makeRooParamHist(nomHist, hSysVarsUp, hSysVarsDown); //pushes back a rooParamHistWrapper to vector
-			//	makeRooParamHist(nomHist, hSysVarsDown,false);
-				// std::cout << "d" << std::endl;
-				
 			}
-
 		}
+
 	}
 
 
 	makeWorkspace(oFile);
 }
 
-//make vector of rooFormulaVars to fil rPHs - for one cat, one ass. proc., one fake proc.
-void rooParamHistMaker::makeRooParamHist(TH1D hNom, std::vector<TH1D*> sysVarsUp, std::vector<TH1D*> sysVarsDown){
-	std::cout << "makeRooParamHist" << std::endl;
-	int nBins = hNom.GetNbinsX();
-	// std::vector<rooFormulaVar*> rFVs;
+
+
+
+double rooParamHistMaker::makeIDNormFactors(vector<TH1D> hNoms){
+	TH1D* hTotal = hNom[0].Clone();
+	hTotal->Add(hNom[1]);
+	hTotal->Add(hNom[2]);
+	
+	double IDNorm = 1;
+
+	for(int i = 0; i < hNoms.size(); i++){
+		double norm = hNoms[i]->Integral()/hTotal->Integral();
+		IDNorm *= norm;
+	}
+
+	return IDNorm;
+
+}
+
+
+//for one lepton ID, for one sys var
+string rooParamHistMaker::makeInterpolation(RooRealVar* alpha, double nomVal, double upVal, double downVal){
+	string formula;
+	double deltaUp = upVal - nomVal;
+	double deltaDown = downVal - nomVal;
+	
+	string paramName = alpha->GetName();
+	
+
+	string interp = "0.125 * "+paramName+" * ("+paramName+"*"+paramName+" * (3.*"+paramName+"*"+paramName+" - 10.) + 15)";
+	string upInterp = to_string(nomVal)+"+ "+paramName+"*"+to_string(deltaUp);
+	string downInterp = to_string(nomVal)+"+ "+paramName+"*"+to_string(deltaDown);
+	
+
+	interpFormula += "abs("+paramName+") <= 1 ? "+interp+" : "+paramName+" > 1 ? "+upInterp+ " : "+downInterp+")";
+	fracFormula += "("+interpFormula+")/"+nomVal;
+	return formula;
+
+}
+
+
+
+
+
+
+
+//returns vector of strings (fNoHats - product over sys var, sum over lepton ID), one per bin for rPH
+void rooParamHistMaker::makeRooParamHist(std::vector<TH1D> hNom, std::vector<std::vector<TH1D*>> sysVarsUp, std::vector<std::vector<TH1D*>> sysVarsDown){
+std::cout << "makeFormulaBins" << std::endl;
+
+	if(hNom[0].GetNbinsX() != hNom[1].GetNbinsX() || hNom[0].GetNbinsX() != hNom[2].GetNbinsX() || hNom[1].GetNbinsX() != hNom[2].GetNbinsX()){
+		cout << "Error: uneven number of bins among lepton ID nominal histograms" << endl;
+		return;
+	}
+
+
+	int nBins = hNom[0].GetNbinsX();
 	RooArgList* rFVs = new RooArgList("params");
-	RooArgList varList;
-	std::vector<RooRealVar*> hNomVals;
-	string histName = hNom.GetName();
+	vector<RooArgList> varLists;
+	std::vector<std::vector<RooRealVar*>> alphas_ID;
+	string histName = hNom[0].GetName();
+	double nomVal;
+	double upVal;
+	double downVal;
+
+	vector<string> fNoHats;
+
+	//add nominal histograms to get total histogram over lepton IDs
+	TH1D* hTotal = hNom[0].Clone();
+	hTotal->Add(hNom[1]);
+	hTotal->Add(hNom[2]);
+	
+	double IDNorm = 1;
+
+	for(int q = 0; q < hNoms.size(); q++){
+		double norm = hNoms[q]->Integral()/hTotal->Integral();
+		IDNorm *= norm;
+	}
+
+	return IDNorm;
 	
 
 	if(sysVarsUp.size() != sysVarsDown.size()){
@@ -217,79 +330,104 @@ void rooParamHistMaker::makeRooParamHist(TH1D hNom, std::vector<TH1D*> sysVarsUp
 		return;
 	}
 	
-	for(int l = 0; l < m_sysVars.size(); l++){
-		varList.add(*m_alphasUp[l]);
-		varList.add(*m_alphasDown[l]);	
-	}
 	
 
+	//make floating parameters
+	for(int l = 0; l < m_sysVars.size(); l++){
+		std::vector<RooRealVar*> alphas;
+		//TODO: figure out exactly how to connect the lepton ID parameters? this is a stand in for now
+		alphas.push_back(new RooRealVar((m_sysVars[l]+"_bronze").c_str(),(m_sysVars[l]+"_bronze").c_str(),alphaB_max,alphaB_min)); //bronze
+		alphas.push_back(new RooRealVar((m_sysVars[l]+"_gold").c_str(),(m_sysVars[l]+"_gold").c_str(),alphas[l]->getValV(),alphas[l]->getValV()-alphas[l]->getValV()*0.1,alphas[l]->getValV()+alphas[l]->getValV()*0.1)); //gold
+		alphas.push_back(new RooRealVar((m_sysVars[l]+"_silver").c_str(),(m_sysVars[l]+"_silver").c_str(),alphas[l]->getValV(),alphas[l]->getValV()-alphas[l]->getValV()*0.1,alphas[l]->getValV()+alphas[l]->getValV()*0.1)); //silver
+		
+		alphas_ID.push_back(alphas);
+	}
+		
+	
+	
 	
 
 	for(int b = 0; b < nBins; b++){
 		
-		string inFormula;
+		string fNoHat;
 		RooFormulaVar* var;
-		std::vector<RooRealVar*> hVarValsUp;
-		std::vector<RooRealVar*> hVarValsDown;
-		string nomName = hNom.GetName();
-		nomName +="Nom";
-		nomName += std::to_string(b);	
-		std::replace(nomName.begin(),nomName.end(),'-','_');
-		hNomVals.push_back(new RooRealVar(nomName.c_str(),nomName.c_str(),hNom.GetBinContent(b)));
-		varList.add(*hNomVals[b]);	
+
+		//MODULARIZE BETTER???? - WRITE OUT ON WHITEBOARD (start with what i currently have and fix from there)
+	
+		double alphaB_max = 10;
+		double alphaB_min = -10;
+		
 			
+
 		for(int l = 0; l < m_sysVars.size(); l++){ //loop over systematic variation histograms
-			string alphasNameUp;
-			string alphasNameDown;
-			alphasNameUp = m_alphasUp[l]->GetName();
-			alphasNameDown = m_alphasDown[l]->GetName();
-			string sysVarsNameUp = sysVarsUp[l]->GetName();
-			string sysVarsNameDown = sysVarsDown[l]->GetName();
-
-
-			std::replace(sysVarsNameUp.begin(),sysVarsNameUp.end(),'-','_');
-			std::replace(sysVarsNameDown.begin(),sysVarsNameDown.end(),'-','_');
-			sysVarsNameUp += std::to_string(b);
-			sysVarsNameDown += std::to_string(b);
-			hVarValsUp.push_back(new RooRealVar(sysVarsNameUp.c_str(),sysVarsNameUp.c_str(),sysVarsUp[l]->GetBinContent(b)));
-			hVarValsDown.push_back(new RooRealVar(sysVarsNameDown.c_str(),sysVarsNameDown.c_str(),sysVarsDown[l]->GetBinContent(b)));
+			string formula_IDs;
+			for(int q = 0; q < 3; q++){
+				nomVal = hNom[q].GetBinContent(b);
+				upVal = sysVarsUp[q][l]->GetBinContent(b);
+				downVal = sysVarsDown[q][l]->GetBinContent(b);
 			
-			////MAKE WEIGHTS UP AND DOWN////
-			string weightUp = "("+sysVarsNameUp+" - "+nomName+")/"+nomName;
-			string weightDown = "("+sysVarsNameDown+" - "+nomName+")/"+nomName;
-
-			////TEST FORMULA////
-			if(l == 0) inFormula += "("+alphasNameUp+"/"+alphasNameDown+")*("+weightUp+"/"+weightDown+")";
-			else inFormula += "+ ("+alphasNameUp+"/"+alphasNameDown+")*("+weightUp+"/"+weightDown+")";
-
-			// if(m_sysVars.size() > 1){
-			// 	if(l == 0) inFormula += alphasName+"*("+sysVarsName+" - "+nomName+")/"+nomName +" + ";
-			// 	else inFormula += " + "+alphasName+"*("+sysVarsName+" - "+nomName+")/"+nomName;
-			// }
-			// else inFormula += "("+alphasNameUp+"/"+alphasNameDown+")*("weightUp+"/"+weightDown+")";	
-
-			varList.add(*hVarValsUp[l]);
-			varList.add(*hVarValsDown[l]);
+				string formula_ID += makeInterpolation(alphas_ID[q][l],nomVal[q],upVal[q],downVal[q]);
 			
-			
-	//		if(b == 0){
-			// std::cout << "----------------------------- \n bin #: " << b << " sysVar: " << m_sysVars[l] << std::endl;	
-			// std::cout << "nomName: " << nomName << " alphasName: " << alphasName << " sysVarsName: " << sysVarsName << "\n" << std::endl;
-	//		}
+				if(q == 0) formula_IDs += "("+formula_ID; //"("+formula_bronze+" + "+formula_gold+" + "+formula_silver+")";
+				else formula_IDs += "+"+formula_ID;
+
+				varLists[b].add(*alphas_ID[q][l])
+			}
+			formula_IDs += ")";
+			if(l == 0) fNoHat += "("+formula_IDs;
+			else fNoHat += "*"+formula_ID;
+						
 		}
-			//var = new RooFormulaVar((hNom->GetName()+std::to_string(b)),hNom->GetTitle(),inFormula,varList);
-			string varName = histName+std::to_string(b);
-			var = new RooFormulaVar(varName.c_str(),inFormula.c_str(),varList);
-			// if(b == 0){ 
-			// var->Print();
-			// string testNames = m_alphasUp[0]->GetName();
-			// var->dumpFormula();
-			// }
-			rFVs->add(*var);
+		fNoHat += ")";
+
+		// fNoHat += "*"+to_string(nomVal);
+		fNoHat += "*"+to_string(hTotal->GetBinContent(b)); //n^MC in final equation
+
+		fNoHats.push_back(fNoHat);
+
 	}
-	m_rPHs.push_back(new rooParamHistWrapper(histName.c_str(),hNom.GetTitle(),rFVs,hNom));
+
+	string hVarNorm = getVarNorm(fNoHats,hTotal); //sum over bins in denominator
+	double IDNorm = makeIDNormFactors(hNom); //omega
+	double totalNorm = hTotal->Integral(); //N_cps in numerator
+
+	vector<string> inFormula = fNoHats;
+
+
+//loop back over bins to add in normalizations to formula, create rFV and add to list for rPH
+	for(int b = 0; b < fNoHats.size(); b++){
+		inFormula[b] += "*"+to_string(IDNorm)+"*"+to_string(totalNorm)+"/"+hVarNorm;
+		//add fake source scale factors here
+
+		string varName = histName+"_bin"+std::to_string(b);
+		var = new RooFormulaVar(varName.c_str(),inFormula[b].c_str(),varLists[b]);
+		rFVs->add(*var);
+		// if(b == 0){ 
+		// var->Print();
+		// string testNames = m_alphasUp[0]->GetName();
+		// var->dumpFormula();
+		// }
+		// rFVs->add(*var);
+	}
+
+	
+
+	m_rPHs.push_back(new rooParamHistWrapper(histName.c_str(),hNom[0].GetTitle(),rFVs,hNom[0]));
+
 
 }
+
+string rooParamHistMaker::getVarNorm(vector<string> fNoHats, TH1D* hTotal){
+	string hVarNorm;
+	for(int b = 0; b < fNoHats.size(); b++){
+		if(b == 0) hVarNorm += "("+to_string(hTotal->GetBinContent(b))+"*"+fNoHats[b]+"+ ";
+		else hVarNorm += "+"+to_string(hTotal->GetBinContent(b))+"*"+fNoHats[b];
+	}
+
+	return hVarNorm;
+}
+
+
 
 void rooParamHistMaker::makeWorkspace(TFile* oFile){
 	oFile->cd();
@@ -305,6 +443,108 @@ void rooParamHistMaker::makeWorkspace(TFile* oFile){
 
 
 }
+
+
+
+
+// //make vector of rooFormulaVars to fil rPHs - for one cat, one ass. proc., one fake proc.
+// void rooParamHistMaker::makeRooParamHist(TH1D hNom, std::vector<TH1D*> sysVarsUp, std::vector<TH1D*> sysVarsDown){
+// 	std::cout << "makeRooParamHist" << std::endl;
+// 	int nBins = hNom.GetNbinsX();
+// 	// std::vector<rooFormulaVar*> rFVs;
+// 	RooArgList* rFVs = new RooArgList("params");
+// 	RooArgList varList;
+// 	// std::vector<RooRealVar*> hNomVals;
+// 	std::vector<RooRealVar*> alphas;
+// 	string histName = hNom.GetName();
+// 	double nomVal;
+// 	double upVal;
+// 	double downVal;
+	
+
+// 	if(sysVarsUp.size() != sysVarsDown.size()){
+// 		std::cout << "Error: uneven number of up/down systematic variation histograms given." << std::endl;
+// 		return;
+// 	}
+	
+// 	// for(int l = 0; l < m_sysVars.size(); l++){
+// 	// 	varList.add(*m_alphasUp[l]);
+// 	// 	varList.add(*m_alphasDown[l]);	
+// 	// }
+
+// 	double hNomNorm = hNom->Integral();
+	
+// 	string hVarNorm;
+	
+
+// 	for(int b = 0; b < nBins; b++){
+		
+// 		string inFormula;
+// 		RooFormulaVar* var;
+// 		// std::vector<RooRealVar*> hVarValsUp;
+// 		// std::vector<RooRealVar*> hVarValsDown;
+// 		// string nomName = hNom.GetName();
+// 		// nomName +="Nom";
+// 		// nomName += std::to_string(b);	
+// 		// std::replace(nomName.begin(),nomName.end(),'-','_');
+// 		// hNomVals.push_back(new RooRealVar(nomName.c_str(),nomName.c_str(),hNom.GetBinContent(b)));
+// 		// varList.add(*hNomVals[b]);	
+// 		nomVal = hNom.GetBinContent(b);
+
+
+// 		string inFormula;
+// 		double alphaB_max = 10;
+// 		double alphaB_min = -10;
+// 		for(int q = 0; q < 3; q++){
+
+// 			for(int l = 0; l < m_sysVars.size(); l++){ //loop over systematic variation histograms
+// 				upVal = sysVarsUp[l]->GetBinContent(b);
+// 				downVal = sysVarsDown[l]->GetBinContent(b);
+// 				//figure out exactly how to connect the lepton ID parameters? this is a stand in for now
+// 				alphas.push_back(new RooRealVar((m_sysVars[l]+"_bronze").c_str(),(m_sysVars[l]+"_bronze").c_str(),alphaB_max,alphaB_min)); //bronze
+// 				alphas.push_back(new RooRealVar((m_sysVars[l]+"_gold").c_str(),(m_sysVars[l]+"_gold").c_str(),alphas[l]->getValV(),alphas[l]->getValV()-alphas[l]->getValV()*0.1,alphas[l]->getValV()+alphas[l]->getValV()*0.1)); //gold
+// 				alphas.push_back(new RooRealVar((m_sysVars[l]+"_silver").c_str(),(m_sysVars[l]+"_silver").c_str(),alphas[l]->getValV(),alphas[l]->getValV()-alphas[l]->getValV()*0.1,alphas[l]->getValV()+alphas[l]->getValV()*0.1)); //silver
+
+
+// 				string formula_bronze = makeInterpolation(alphas[l],nomVal,upVal,downVal);
+// 				string formula_gold = makeInterpolation(alphas[l+1],nomVal,upVal,downVal);
+// 				string formula_silver = makeInterpolation(alphas[l+2],nomVal,upVal,downVal);
+
+// 				string formula_ID = "("+formula_bronze+" + "+formula_gold+" + "+formula_silver+")";
+			
+// 				if(l == 0) inFormula += "("+formula_ID+"* ";
+// 				else inFormula += "*"+formula_ID;
+// 				inFormula += ")"
+
+				
+
+// 				varList.add(*alphas[l]); //bronze
+// 				varList.add(*alphas[l+1]); //gold
+// 				varList.add(*alphas[l+2]); //silver
+// 			}			
+// 		}
+// 			inFormula += "*"+to_string(nomVal);
+// 			if(b == 0) hVarNorm += "("+to_string(nomVal)+"*"+inFormula+"+ ";
+// 			else hVarNorm += "+"+to_string(nomVal);
+
+// 			//var = new RooFormulaVar((hNom->GetName()+std::to_string(b)),hNom->GetTitle(),inFormula,varList);
+// 			string varName = histName+"_bin"+std::to_string(b);
+// 			var = new RooFormulaVar(varName.c_str(),inFormula.c_str(),varList);
+// 			// if(b == 0){ 
+// 			// var->Print();
+// 			// string testNames = m_alphasUp[0]->GetName();
+// 			// var->dumpFormula();
+// 			// }
+// 			rFVs->add(*var);
+
+// 	}
+	
+
+// 	m_rPHs.push_back(new rooParamHistWrapper(histName.c_str(),hNom.GetTitle(),rFVs,hNom));
+
+// }
+
+
 
 
 

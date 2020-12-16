@@ -49,12 +49,16 @@ class rooParamHistMaker{
 		virtual ~rooParamHistMaker();
 		
 		void makeRooParamHists(TFile* oFile);
-		void makeRooParamHist(TH1D hNom, std::vector<TH1D*> sysVarsUp, std::vector<TH1D*> sysVarsDown);
+		// void makeRooParamHist(TH1D hNom, std::vector<TH1D*> sysVarsUp, std::vector<TH1D*> sysVarsDown);
+		void makeRooParamHist(std::vector<TH1D> hNom, std::vector<std::vector<TH1D*>> sysVarsUp, std::vector<std::vector<TH1D*>> sysVarsDown);
+
 
 		void addSysVar(string sysVar);
 		void addProcess(string proc);
+		void addCategory(string cat);
 		void setLepFlavor(string lep);
 		void setFakeProcesses(std::vector<int> fakeProcs);
+		void setLepNumber(int lepNumber);
 
 
 
@@ -67,6 +71,17 @@ class rooParamHistMaker{
 		
 	private:
 		void makeWorkspace(TFile* oFile);
+		string makeInterpolation();
+		double makeIDNormFactors(vector<TH1D> hNoms);
+		string getVarNorm(vector<string> fNoHats, TH1D* hTotal);
+
+			// return a smooth function that is equal to +/-1 for |x| >= smoothRegion_ and it's null in zero
+		// inline double smoothStepFunc(double x) const {
+		// 	if (fabs(x) >= _smoothRegion) return x > 0 ? +1 : -1;
+		// 	double xnorm = x/_smoothRegion, xnorm2 = xnorm*xnorm;
+		// 	return 0.125 * xnorm * (xnorm2 * (3.*xnorm2 - 10.) + 15);
+		// }
+
 		RooWorkspace* m_ws;	
 		TFile* m_file;
 	
@@ -78,6 +93,7 @@ class rooParamHistMaker{
 		std::vector<string> m_procs;
 		std::vector<string> m_sysVars;
 		string m_lepFlav;
+		string m_lepNum;
 		// int m_nSysVar;
 };
 
