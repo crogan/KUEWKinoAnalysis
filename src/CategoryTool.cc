@@ -48,30 +48,30 @@ FitBin CategoryTool::GetFitBin(int index) const {
 
   // for 0L 3j, 1L 2j, 2L 1j
   if(index == 2){
-    RBins.push_back(RBin(0.55,  0.65, VD().a(0.).a(80.).a(120.).a(200.)));
-    RBins.push_back(RBin(0.65,  0.75, VD().a(0.).a(80.).a(120.).a(200.)));
-    RBins.push_back(RBin(0.75,  0.8,  VD().a(0.).a(80.).a(120.).a(200.)));
-    RBins.push_back(RBin(0.8,   0.85, VD().a(0.).a(80.).a(120.).a(200.)));
-    RBins.push_back(RBin(0.85,  0.9,  VD().a(0.).a(40.).a(80.).a(200.)));
-    RBins.push_back(RBin(0.9,   1.0,  VD().a(0.).a(40.).a(80.).a(200.)));
+    RBins.push_back(RBin(0.55,  0.65, VD().a(0.).a(120.).a(200.)));
+    RBins.push_back(RBin(0.65,  0.75, VD().a(0.).a(80.).a(200.)));
+    RBins.push_back(RBin(0.75,  0.8,  VD().a(0.).a(80.).a(200.)));
+    RBins.push_back(RBin(0.8,   0.85, VD().a(0.).a(80.).a(200.)));
+    RBins.push_back(RBin(0.85,  0.9,  VD().a(0.).a(80.).a(200.)));
+    RBins.push_back(RBin(0.9,   1.0,  VD().a(0.).a(200.)));
   }
 
   // // for 0L 4j, 1L 3j, 2L 2j
   if(index == 3){
-    RBins.push_back(RBin(0.5,   0.6,  VD().a(0.).a(80.).a(120.).a(300.)));
-    RBins.push_back(RBin(0.6,   0.7,  VD().a(0.).a(80.).a(120.).a(300.)));
-    RBins.push_back(RBin(0.7,   0.8,  VD().a(0.).a(80.).a(120.).a(300.)));
-    RBins.push_back(RBin(0.8,   0.9,  VD().a(0.).a(80.).a(120.).a(300.)));
-    RBins.push_back(RBin(0.9,   1.0,  VD().a(0.).a(80.).a(120.).a(300.)));
+    RBins.push_back(RBin(0.5,   0.6,  VD().a(0.).a(150.).a(300.)));
+    RBins.push_back(RBin(0.6,   0.7,  VD().a(0.).a(120.).a(300.)));
+    RBins.push_back(RBin(0.7,   0.8,  VD().a(0.).a(100.).a(300.)));
+    RBins.push_back(RBin(0.8,   0.9,  VD().a(0.).a(80.).a(300.)));
+    RBins.push_back(RBin(0.9,   1.0,  VD().a(0.).a(300.)));
   }
 
   // for 0L 5j, 1L 4j
   if(index == 4){
-    RBins.push_back(RBin(0.5,   0.6,  VD().a(0.).a(150.).a(400.)));
-    RBins.push_back(RBin(0.6,   0.7,  VD().a(0.).a(150.).a(400.)));
-    RBins.push_back(RBin(0.7,   0.8,  VD().a(0.).a(150.).a(400.)));
-    RBins.push_back(RBin(0.8,   0.9,  VD().a(0.).a(150.).a(400.)));
-    RBins.push_back(RBin(0.9,   1.0,  VD().a(0.).a(150.).a(400.)));
+    RBins.push_back(RBin(0.5,   0.6,  VD().a(0.).a(200.).a(400.)));
+    RBins.push_back(RBin(0.6,   0.75,  VD().a(0.).a(155.).a(400.)));
+   // RBins.push_back(RBin(0.7,   0.8,  VD().a(0.).a(135.).a(400.)));
+    RBins.push_back(RBin(0.75,   1.0,  VD().a(0.).a(400.)));
+//    RBins.push_back(RBin(0.9,   1.0,  VD().a(0.).a(150.).a(400.)));
   }
 
  // 3L
