@@ -379,13 +379,20 @@ void FitBin::WriteHistogram(const string& name,
   if(!file.IsOpen())
     return;
 
-  // remove zeroes
+  // remove zeroes in MC, integerize data
   int Nb = m_hist1D->GetNbinsX();
-  for(int b = 0; b < Nb; b++)
-    if(m_hist1D->GetBinContent(b+1) < EPS){
-      m_hist1D->SetBinContent(b+1, EPS);
-      m_hist1D->SetBinError(b+1, 0.);
+  if(name == "data_obs"){
+    for(int b = 0; b < Nb; b++){
+      m_hist1D->SetBinContent(b+1, std::max(0,int(0.5+m_hist1D->GetBinContent(b+1))));
+      m_hist1D->SetBinError(b+1, sqrt(m_hist1D->GetBinContent(b+1)));
     }
+  } else {
+    for(int b = 0; b < Nb; b++)
+      if(m_hist1D->GetBinContent(b+1) < EPS){
+	m_hist1D->SetBinContent(b+1, EPS);
+	m_hist1D->SetBinError(b+1, 0.);
+      }
+  }
 
   
   file.cd();
