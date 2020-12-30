@@ -400,7 +400,14 @@ int main(int argc, char* argv[]) {
 
   cout << "* Writing ouput to " << OutputFold << endl;
   gSystem->Exec(("mkdir -p "+OutputFold).c_str());
-  TFile output((OutputFold+"/FitInput_"+Ana+"_"+Era+".root").c_str(), "RECREATE"); 
+  
+  string OutputFile = OutputFold+"/FitInput_"+Ana+"_"+Era+".root";
+  string copy_cmd = "cp "+InputFile+" "+OutputFile;
+  cout << "COPY cmd:" << endl;
+  cout << "   " << copy_cmd << endl;
+  gSystem->Exec(copy_cmd.c_str());  
+  
+  TFile output(OutputFile.c_str(), "UPDATE"); 
 
   cout << "  * Creating datacards" << endl;
 	       	       
@@ -451,7 +458,7 @@ int main(int argc, char* argv[]) {
   }
 
   output.Close();
-
+ 
   cout << "  * Creating workspaces" << endl;
   
   string cmd = "combineTool.py -M T2W -o workspace.root -i ";
