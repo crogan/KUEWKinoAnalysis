@@ -264,6 +264,10 @@ int main(int argc, char* argv[]) {
   gSystem->Exec(("mkdir -p "+SrcFold).c_str());
   gSystem->Exec(("mkdir -p "+LogFold).c_str());
   
+  VS bkg = backgrounds.GetProcesses();
+  for(auto b : bkg)
+    BuildFitCmd += "+proc " + b + " ";
+  
   ofstream condorsubmit;
   condorsubmit.open((OutputFold+"/condor_submit.sh").c_str());
   
