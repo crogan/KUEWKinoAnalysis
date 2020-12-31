@@ -48,6 +48,8 @@ int main(int argc, char* argv[]) {
   bool doMCstats = false;
 
   bool doSepChan = false;
+
+  bool batch = false;
     
   for(int i = 0; i < argc; i++){
     if(strncmp(argv[i],"--workspace", 11) == 0){
@@ -141,6 +143,9 @@ int main(int argc, char* argv[]) {
     if(strncmp(argv[i],"-sepchan", 8) == 0){
       doSepChan = true;
     }
+    if(strncmp(argv[i],"--batch", 7) == 0){
+      batch = true;
+    }
      
   }
     
@@ -177,6 +182,7 @@ int main(int argc, char* argv[]) {
     cout << "   +MCstats            adds autoMCStats uncertainties" << endl;
     cout << "   -sepchan            make datacards for each group of channels separately" << endl;
     cout << "   --workspace(-w)     also build workspaces (note: faster not to, and run message)" << endl;
+    cout << "   --batch             for running inside a batch job" << endl;
 
     return 0;
   }
@@ -399,13 +405,16 @@ int main(int argc, char* argv[]) {
   VC cats = categories.GetCategories();
 
   cout << "* Writing ouput to " << OutputFold << endl;
-  gSystem->Exec(("mkdir -p "+OutputFold).c_str());
-  
   string OutputFile = OutputFold+"/FitInput_"+Ana+"_"+Era+".root";
-  string copy_cmd = "cp "+InputFile+" "+OutputFile;
-  cout << "COPY cmd:" << endl;
-  cout << "   " << copy_cmd << endl;
-  gSystem->Exec(copy_cmd.c_str());  
+
+  if(!batch){
+    gSystem->Exec(("mkdir -p "+OutputFold).c_str());
+  
+    string copy_cmd = "cp "+InputFile+" "+OutputFile;
+    cout << "COPY cmd:" << endl;
+    cout << "   " << copy_cmd << endl;
+    gSystem->Exec(copy_cmd.c_str());  
+  }
   
   TFile output(OutputFile.c_str(), "UPDATE"); 
 
