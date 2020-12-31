@@ -37,7 +37,7 @@ FitBin CategoryTool::GetFitBin(int index) const {
   // for 1L 0j 0sv, 1L 0j ge1sv regions
   if(index == 1){
     RBins.push_back(RBin(0.9,   0.95,   VD().a(0.).a(40.)));
-    RBins.push_back(RBin(0.95,  0.98,   VD().a(0.).a(10.).a(40.)));
+    RBins.push_back(RBin(0.95,  0.98,   VD().a(0.).a(5.).a(10.).a(40.)));
     RBins.push_back(RBin(0.98,  1.00,   VD().a(0.).a(5.).a(10.).a(40.)));
   }
 
@@ -862,8 +862,8 @@ CategoryList CategoryTool::GetCategories_1L() const {
   Cats_1L_1j0svS_gold = Cats_1L_1j0svS_gold.CreateLeptonIDRegions(IDs_gold, 1);
   Cats_1L_1j0svS_gold = Cats_1L_1j0svS_gold.CreateHadronicSRegions(H_1L_1j0svS);
   Cats_1L_1j0svS_gold = Cats_1L_1j0svS_gold.CreateHadronicISRRegions(H_ISR_B);
-  Cats_1L_1j0svS_gold = Cats_1L_1j0svS_gold.CreateGenericRegions("PTISR", PTISR_bin2);
-  Cats_1L_1j0svS_gold = Cats_1L_1j0svS_gold.CreateGenericRegions("gamT", gamT);
+  Cats_1L_1j0svS_gold = Cats_1L_1j0svS_gold.CreateGenericRegions("PTISR", PTISR_incl);
+  //Cats_1L_1j0svS_gold = Cats_1L_1j0svS_gold.CreateGenericRegions("gamT", gamT);
 
   Cats_1L_1j0svS_silver = Cats_1L_1j0svS_silver.CreateFitBinRegions(GetFitBin(2));
   Cats_1L_1j0svS_silver = Cats_1L_1j0svS_silver.CreateLeptonIDRegions(IDs_silver, 1);
