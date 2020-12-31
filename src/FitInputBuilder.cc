@@ -10,10 +10,11 @@ using std::endl;
 ////////// FitInputBuilder class
 ///////////////////////////////////////////
 
-FitInputBuilder::FitInputBuilder(){
+FitInputBuilder::FitInputBuilder(bool extrahist){
   m_OutFile  = nullptr;
   m_ProcTree = nullptr;
   m_CatTree  = nullptr;
+  m_BookHist = extrahist;
 }
 
 FitInputBuilder::~FitInputBuilder(){
@@ -53,8 +54,11 @@ void FitInputBuilder::AddEvent(double weight, double Mperp, double RISR,
   if(m_Proc.count(sproc) == 0){
     m_Proc[sproc] = new Process(proc);
   }
-  
-  m_Proc[sproc]->AddEvent(weight, Mperp, RISR, cat, sys);
+
+  if(sys.IsDefault())
+    m_Proc[sproc]->AddEvent(weight, Mperp, RISR, cat, sys, m_BookHist);
+  else
+    m_Proc[sproc]->AddEvent(weight, Mperp, RISR, cat, sys);
 			  
 }
 

@@ -52,7 +52,7 @@ ProcessType Process::Type() const {
 }
 
 void Process::AddEvent(double weight, double Mperp, double RISR,
-		       const Category& cat, const Systematic& sys){
+		       const Category& cat, const Systematic& sys, bool extrahist){
 
   string clabel = cat.Label()+"_"+cat.GetLabel();
   string plabel = sys.TreeName(Name());
@@ -61,7 +61,7 @@ void Process::AddEvent(double weight, double Mperp, double RISR,
     m_ProcBins[plabel] = map<string,FitBin*>();
     
   if(m_ProcBins[plabel].count(clabel) == 0)
-    m_ProcBins[plabel][clabel] = cat.GetNewFitBin(plabel);
+    m_ProcBins[plabel][clabel] = cat.GetNewFitBin(plabel, extrahist);
       
   m_ProcBins[plabel][clabel]->Fill(weight, Mperp, RISR);
 }
@@ -341,7 +341,7 @@ void ProcessBranch::FillProcess(Process& proc, TFile& file){
     while(c != p->second.end()){
       // write FitBin to output file for each subprocess/category
       file.cd();
-      if(!file.cd(c->first.c_str()))
+      if(!file.GetDirectory(c->first.c_str()))
 	file.mkdir(c->first.c_str());
       file.cd();
 	 

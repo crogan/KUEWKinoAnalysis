@@ -96,11 +96,15 @@ Lep& Lep::SetSource(LepSource source){
 }
 
 std::string Lep::IDLabel() const {
-  return string(m_Flavor == kElectron ? "el" : "mu")+Form("%d",m_ID);
-  // if(m_Flavor == kElectron)
-  //   return string("el")+Form("%d",m_ID)+(m_Charge == kPos ? "p" : "m");
-  // else
-  //   return string("mu")+Form("%d",m_ID)+(m_Charge == kPos ? "p" : "m");
+  string ret = string(m_Flavor == kElectron ? "el" : "mu");
+  if(m_ID == kGold)
+    ret += "G";
+  if(m_ID == kSilver)
+    ret += "S";
+  if(m_ID == kBronze)
+    ret += "B";
+  
+  return ret;
 }
 
 LepSource GetLepSource(int PDGID, int genPDGID, int momPDGID){
@@ -266,10 +270,12 @@ vector<std::string> LepList::GetFakeLabels() const {
       label += ((*this)[i].Flavor() == kElectron ? "elf" : "muf");
       if(source == kHFB || source == kHFC)
 	label += "0";
-      if(source == kLF)
+      else
 	label += "1";
-      if(source == kFake)
-	label += "2";
+      // if(source == kLF)
+      // 	label += "1";
+      // if(source == kFake)
+      // 	label += "2";
       labels.push_back(label);
     }
   }
