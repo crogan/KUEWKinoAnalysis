@@ -312,12 +312,12 @@ void WriteScript(const string& src_name,
   file << "executable = BuildFit.x" << endl;
   file << "getenv = True" << endl;
   file << "use_x509userproxy = true" << endl;
+  file << "Arguments = " << command << endl;
   file << "output = " << log_name << ".out" << endl;
   file << "error = "  << log_name << ".err" << endl;
   file << "log = "    << log_name << ".log" << endl;
   file << "Requirements = (Machine != \"red-node000.unl.edu\")" << endl;
   file << "request_memory = 4 GB" << endl;
   file << "queue " << endl;
-  file << "Arguments = " << command << endl;
   file.close();  
 }
