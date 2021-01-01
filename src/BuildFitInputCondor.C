@@ -24,6 +24,8 @@ void WriteScript(const string& src_name,
 int main(int argc, char* argv[]) {
   int  maxN = 10;
   bool dryRun = false;
+  bool doSigFile = false;
+  string SigFile = "";
   
   string NtuplePath = "/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_21_09_20/";
   string OutFile    = "BuildFitInput_output.root";
@@ -117,6 +119,11 @@ int main(int argc, char* argv[]) {
       i++;
       maxN = std::max(1, std::stoi(argv[i]));
     }
+    if(strncmp(argv[i],"-sigfile", 8) == 0){
+      i++;
+      doSigFile = true;
+      SigFile = argv[i];
+    }
     if(strncmp(argv[i],"--dry-run", 9) == 0){
       dryRun = true;
     } 
@@ -132,6 +139,7 @@ int main(int argc, char* argv[]) {
     cout << "Usage: " << argv[0] << " [options]" << endl;
     cout << "  Condor submission options:" << endl;
     cout << "   -maxN [number]      maximum number of processes per job" << endl;
+    cout << "   -sigfile            signal filename must match this string to be included" << endl;
     cout << "   --dry-run           create output folders and scripts but don't submit" << endl;
     cout << "  options:" << endl;
     cout << "   --help(-h)          print options" << endl;
@@ -200,9 +208,23 @@ int main(int argc, char* argv[]) {
   string iBFICmd;
   int Njob = 0;
   for(int p = 0; p < Nsample; p++){
-    procs.push_back(samples[p].Name());
-    iBFICmd += "+proc "+samples[p].Name()+" ";
-    cout << "Adding proc " << samples[p].Name() << endl;
+    Process proc = samples[p];
+
+    if(doSigFile && proc.Type() == kSig){
+      bool keep = false;
+      int Nfile = ST.NTrees(proc);
+      for(int f = 0; f < Nfile; f++){
+	string file = ST.FileName(proc, f);
+	if(file.find(SigFile) != string::npos)
+	  keep = true;
+      }
+      if(!keep)
+	continue;
+    }
+    
+    procs.push_back(proc.Name());
+    iBFICmd += "+proc "+proc.Name()+" ";
+    cout << "Adding proc " << proc.Name() << endl;
     if(procs.size() >= maxN || p == Nsample-1){
       WriteScript(SrcFold+Form("submit_%d",Njob)+".sh",
 		  LogFold+Form("job_%d",Njob)+".log",
