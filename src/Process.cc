@@ -341,7 +341,7 @@ void ProcessBranch::FillProcess(Process& proc, TFile& file){
     while(c != p->second.end()){
       // write FitBin to output file for each subprocess/category
       file.cd();
-      if(!file.cd(c->first.c_str()))
+      if(!file.GetDirectory(c->first.c_str()))
 	file.mkdir(c->first.c_str());
       file.cd();
 	 

@@ -171,7 +171,7 @@ int main(int argc, char* argv[]) {
   SystematicsTool SYS;
 
   Systematics systematics(1);
-  // systematics += SYS.GetWeightSystematics(); *************** OFFF FOR SPEEEDDDD!!!!
+  systematics += SYS.GetWeightSystematics();
 
   FitInputBuilder FITBuilder(extrahist);
 
