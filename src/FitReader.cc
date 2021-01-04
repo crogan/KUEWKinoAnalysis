@@ -754,12 +754,12 @@ TCanvas* FitReader::Plot1Dstack(const VS& proc,
 
 
 
-TCanvas* shapeCompare::Plot1Dratio(const VS& proc,
+TCanvas* FitReader::Plot1Dratio(const VS& proc,
            const VS& lep_cat,
            const VS& hadS_cat,
            const VS& hadI_cat,
-           const string& canvas,
-           const VS& extra = ""){
+           const string& name,
+           const VS& extra){
   RestFrames::SetStyle();
 
 
@@ -767,7 +767,8 @@ TCanvas* shapeCompare::Plot1Dratio(const VS& proc,
   int Nlep  = lep_cat.size();
   int NhadS = hadS_cat.size();
   int NhadI = hadI_cat.size();
-  int Nextra = extra.size();
+  int Nextra = -999;
+  if(!extra.empty()) Nextra = extra.size();
   if(Nproc == 0 ||
    Nlep  == 0 ||
    NhadS == 0 ||
@@ -842,7 +843,7 @@ TCanvas* shapeCompare::Plot1Dratio(const VS& proc,
   // extra (PTISR, gammaT)
   VS extra_labels;
   VS vextra;
-
+if(Nextra != -999){
   for(int i = 0; i < Nextra; i++){
   if(m_Title.count(extra[i]) != 0)
     extra_labels.push_back(m_Title[extra[i]]);
@@ -857,8 +858,8 @@ TCanvas* shapeCompare::Plot1Dratio(const VS& proc,
     vextra.push_back(extra[i]);
   }
   }
-
   cat = cat.FilterOR(vextra);
+}
 
   // if(extra != "")
   //   cat.Filter(extra);
@@ -918,7 +919,7 @@ TCanvas* shapeCompare::Plot1Dratio(const VS& proc,
   }
 
   if(hist == nullptr){
-    cout << "hist " << cat[c].GetLabel() << " " << pp.Name() << " not found" << endl;
+    cout << "hist not found" << endl;
     continue;
   }
 
@@ -948,7 +949,7 @@ TCanvas* shapeCompare::Plot1Dratio(const VS& proc,
   }
 
   // int Nsig = hists_sig.size();
-  TH1D* histTotal = new TH1D*(*hists[0]);
+  TH1D* histTotal = new TH1D(*hists[0]);
 
 
   // sort the histograms by integral (N^2/2 brute force)
@@ -967,8 +968,8 @@ TCanvas* shapeCompare::Plot1Dratio(const VS& proc,
   // vcolors.push_back(colors[i]);
   // vhists.push_back(hists[i]);
   histTotal->Add(hists[i]);
-  hist[i]->Scale(1/hist[i]->Integral());
-  if(hist[i]->GetMaximum() > hmax) hmax = hist[i]->GetMaximum();
+  hists[i]->Scale(1/hists[i]->Integral());
+  if(hists[i]->GetMaximum() > hmax) hmax = hists[i]->GetMaximum();
   // for(int j = vhists.size()-2; j >= 0; j--){
   //   if(vhists[j]->Integral() < vhists[j+1]->Integral()){
   // stemp = vlabels[j+1];
@@ -988,7 +989,7 @@ TCanvas* shapeCompare::Plot1Dratio(const VS& proc,
 
   histTotal->Scale(1/histTotal->Integral());
   for(int i = 0; i < Nhist; i++)
-    hist[i]->Divide(histTotal);
+    hists[i]->Divide(histTotal);
   
 
   // "stack" the histograms by adding
@@ -1071,7 +1072,6 @@ TCanvas* shapeCompare::Plot1Dratio(const VS& proc,
   hists[0]->GetYaxis()->SetLabelFont(42);
   hists[0]->GetYaxis()->SetLabelSize(0.035);
   hists[0]->GetYaxis()->SetTitle("ratio to total");
-  hists[0]->GetYaxis()->SetRangeUser(0,hMax+1);
 
   for(int i = 0; i < Nhist; i++){
   hists[i]->SetLineColor(colors[i]);
@@ -1129,7 +1129,7 @@ TCanvas* shapeCompare::Plot1Dratio(const VS& proc,
   //   hmax = hist_data->GetMaximum();
   // }
 
-  hists[0]->GetYaxis()->SetRangeUser(0.05, 1.1*hmax);
+  hists[0]->GetYaxis()->SetRangeUser(0.01, 1.1*hmax);
 
   TLegend* leg = new TLegend(1.-hhi+0.01, 1.- (Nhist+1)*(1.-0.49)/9., 0.98, 1.-hto-0.005);
   leg->SetTextFont(42);

@@ -834,6 +834,9 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchStatus("ID_lep", 1);
    fChain->SetBranchStatus("Eta_lep", 1);
    fChain->SetBranchStatus("Eta_SV", 1);
+   fChain->SetBranchStatus("MET*trigger", 1);
+   fChain->SetBranchStatus("PX3_BoostT", 1);
+   fChain->SetBranchStatus("MX3*_BoostT", 1);
 
 }
 

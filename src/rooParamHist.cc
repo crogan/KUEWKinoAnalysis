@@ -254,7 +254,7 @@ void rooParamHistMaker::makeRooParamHists(TFile* oFile){
 
 
 //for one lepton ID, for one sys var
-string rooParamHistMaker::makeInterpolation(RooRealVar* alpha, double nomVal, double upVal, double downVal){
+string rooParamHistMaker::makeInterpolationFormula(RooRealVar* alpha, double nomVal, double upVal, double downVal){
 	string fracFormula;
 	string interpFormula;
 	double deltaUp = upVal - nomVal;
@@ -369,7 +369,7 @@ std::cout << "makeFormulaBins" << std::endl;
 				upVal = sysVarsUp[q][l]->GetBinContent(b);
 				downVal = sysVarsDown[q][l]->GetBinContent(b);
 			
-				string formula_ID = makeInterpolation(alphas_ID[q][l],nomVal,upVal,downVal);
+				string formula_ID = makeInterpolationFormula(alphas_ID[q][l],nomVal,upVal,downVal);
 			
 				if(q == 0) formula_IDs += "("+formula_ID; //"("+formula_bronze+" + "+formula_gold+" + "+formula_silver+")";
 				else formula_IDs += "+"+formula_ID;

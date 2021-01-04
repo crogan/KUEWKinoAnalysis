@@ -86,7 +86,7 @@ FitBin CategoryTool::GetFitBin(int index) const {
     RBins.push_back(RBin(0.65,  0.8,  VD().a(0.).a(100.).a(200.)));
     RBins.push_back(RBin(0.8,   0.9,  VD().a(0.).a(100.).a(200.)));
     RBins.push_back(RBin(0.9,   1.0,  VD().a(0.).a(100.).a(200.)));
-  
+}  
   FitBin Bins(RBins);
   return Bins;
 
