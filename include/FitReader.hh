@@ -60,6 +60,13 @@ public:
 		       const VS& hadI_cat,
 		       const string& canvas);
 
+  TCanvas* Plot1Dratio(const VS& proc,
+           const VS& lep_cat,
+           const VS& hadS_cat,
+           const VS& hadI_cat,
+           const string& canvas,
+           const VS& extra = "");
+
   TCanvas* Plot2D(const VS& proc,
 		  const VS& lep_cat,
 		  const VS& hadS_cat,

@@ -39,11 +39,12 @@ FitReader* FITReader = new FitReader(inputfile, a2, a3);
   // 			 VS().a("0bjetISR"),
   // 			 "canvas3");
 
-    TCanvas* cv = FITReader->Plot2D(VS().a("ttbar").a("Wjets"),
+//the args with multiple entries are the ones that go into the total for the ratio
+    TCanvas* cv = FITReader->Plot1Dratio(VS().a("ttbar"),
         		 VS().a("1L"),
         		 VS().a("3j0bS").a("3j1bS").a("3jge2bS"),
    //     		 VS().a("ge4j0bS").a("ge4jge1bS"), 
-        		 VS().a("ge1j0bISR").a("ge1jge1bISR"),
+        		 VS().a("ge1j0bISR"),
   			 "canvas3");
   
 
