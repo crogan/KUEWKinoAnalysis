@@ -90,7 +90,6 @@ BuildFitInput.x:  $(SRCDIR)BuildFitInput.C $(OBJ_FILES) $(HH_FILES)
 	$(CXX) $(CXXFLAGS) -o BuildFitInput.x $(OUTOBJ)/*.o $(GLIBS) $ $<
 	touch BuildFitInput.x
 
-<<<<<<< HEAD
 
 shapeAnalyzer2.x:  $(SRCDIR)shapeAnalyzer2.C $(OBJ_FILES) $(HH_FILES)
 	$(CXX) $(CXXFLAGS) -o shapeAnalyzer2.x $(OUTOBJ)/*.o $(GLIBS) $ $<
@@ -99,7 +98,6 @@ shapeAnalyzer2.x:  $(SRCDIR)shapeAnalyzer2.C $(OBJ_FILES) $(HH_FILES)
 newMakeWS.x:  $(SRCDIR)newMakeWS.C $(OBJ_FILES) $(HH_FILES)
 	$(CXX) $(CXXFLAGS) -o newMakeWS.x $(OUTOBJ)/*.o $(GLIBS) $ $<
 	touch newMakeWS.x
-=======
 BuildFitInputCondor.x:  $(SRCDIR)BuildFitInputCondor.C $(OBJ_FILES) $(HH_FILES)
 	$(CXX) $(CXXFLAGS) -o BuildFitInputCondor.x $(OUTOBJ)/*.o $(GLIBS) $ $<
 	touch BuildFitInputCondor.x
@@ -107,7 +105,6 @@ BuildFitInputCondor.x:  $(SRCDIR)BuildFitInputCondor.C $(OBJ_FILES) $(HH_FILES)
 BuildFitCondor.x:  $(SRCDIR)BuildFitCondor.C $(OBJ_FILES) $(HH_FILES)
 	$(CXX) $(CXXFLAGS) -o BuildFitCondor.x $(OUTOBJ)/*.o $(GLIBS) $ $<
 	touch BuildFitCondor.x
->>>>>>> crogan-main
 
 lib/libKUEWKino.so: $(SOBJ_FILES)
 	mkdir -p lib
