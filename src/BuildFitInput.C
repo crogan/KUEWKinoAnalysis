@@ -174,7 +174,7 @@ int main(int argc, char* argv[]) {
   SystematicsTool SYS;
 
   Systematics systematics(1);
-  // systematics += SYS.GetWeightSystematics(); *************** OFFF FOR SPEEEDDDD!!!!
+   //systematics += SYS.GetWeightSystematics();// *************** OFFF FOR SPEEEDDDD!!!!
 
   FitInputBuilder FITBuilder(extrahist);
 
@@ -197,7 +197,6 @@ int main(int argc, char* argv[]) {
     bool is_data   = (proc.Type() == kData);
     bool is_bkg    = (proc.Type() == kBkg);
     bool is_signal = (proc.Type() == kSig);
-
     int Nsys = (is_data ? 1 : systematics.GetN());
     
     int Nfile = ST.NTrees(proc);
@@ -268,17 +267,13 @@ d.Foreach([&absEta, &nLep](vector<double> Eta_lep) {for(int iLep = 0; iLep < Eta
 	if(do_FilterDilepton)
 	  if(SF.DileptonEvent(base))
 	    continue;
-	
 	// apply trigger to data and FullSim events
 	if(!base->METORtrigger && !is_FastSim)
 	  continue;
-		
 	if(base->MET < 150)
 	  continue;
-	  
 	if(base->PTISR < 200.)
 	  continue;
-
 	double x = fabs(base->dphiCMI);
 	// current cut
 	if(base->PTCM > 75. && x < 0.25)
@@ -291,10 +286,8 @@ d.Foreach([&absEta, &nLep](vector<double> Eta_lep) {for(int iLep = 0; iLep < Eta
 	if(base->PTCM > -500.*sqrt(std::max(0.,-1.5625*x*x+7.8125*x-8.766))+600. &&
 	   -1.5625*x*x+7.8125*x-8.766 > 0.)
 	  continue;
-	  
 	if(base->RISR < 0.5 || base->RISR > 1.0)
 	  continue;
-
 	if(fabs(base->dphiMET_V) > acos(-1.)/2.)
 	  continue;
 	int Nlep     = base->Nlep;
@@ -303,8 +296,6 @@ d.Foreach([&absEta, &nLep](vector<double> Eta_lep) {for(int iLep = 0; iLep < Eta
 	int NjetISR  = base->Njet_ISR;
 	int NbjetISR = base->Nbjet_ISR;
 	int NSV      = base->NSV_S;
-
-//cout << "event #: " << e << " passed preselection" << endl;	
 	if(Nlep + NjetS + NSV < 1)
 	  continue;
 	LepList list_a;
@@ -371,8 +362,7 @@ d.Foreach([&absEta, &nLep](vector<double> Eta_lep) {for(int iLep = 0; iLep < Eta
 	  sqrt(base->MX3a_BoostT*base->MX3a_BoostT+base->PX3_BoostT*base->PX3_BoostT) +
 	  sqrt(base->MX3b_BoostT*base->MX3b_BoostT+base->PX3_BoostT*base->PX3_BoostT);
 	double gammaT = 2.*base->Mperp / MST;
-
-	
+//if(Nlep == 0 && NjetS >= 5) cout << "gammaT: " << gammaT << " MST: " << MST << " MX3a_BoostT: " << base->MX3a_BoostT << " PX_BoostT: " << base->PX3_BoostT << endl;
 	Category Event(Leptonic(list_a, list_b),
 		       Hadronic(NjetS, NbjetS, NSV),
 		       Hadronic(NjetISR, NbjetISR, base->NSV_ISR));
@@ -384,7 +374,6 @@ d.Foreach([&absEta, &nLep](vector<double> Eta_lep) {for(int iLep = 0; iLep < Eta
 	  continue;
 	}
 		
-	
 //cout << "event #: " << e << " passed SV selection" << endl;	
 	// systematics loop
 	
@@ -445,7 +434,6 @@ d.Foreach([&absEta, &nLep](vector<double> Eta_lep) {for(int iLep = 0; iLep < Eta
 	    // else
 	    //   weight *= base->PUweight;
 	  }
-	  
 //cout << "event #: " << e << " passed systematics" << endl;	
 	  LepList Fakes  = list_a.GetFakes();
 	  Fakes         += list_b.GetFakes();

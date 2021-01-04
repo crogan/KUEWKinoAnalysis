@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <TSystem.h>
 #include "TFile.h"
 
 int main(int argc, char* argv[]){
@@ -11,7 +12,11 @@ int main(int argc, char* argv[]){
 			iFile = argv[i];	
 		}	
 	}
-	iFile = "fitInputs/FitInput17_expWeights.root";
+	iFile = "allBkgsFitInput17_withSys_1L.root";
+	if(gSystem->AccessPathName(iFile.c_str())){
+		std::cout << "File " << iFile << " does not exist" << std::endl;
+		return 0;
+	}
 	TFile* inFile = TFile::Open(iFile.c_str());
 	TFile* outFile = new TFile("param_ws.root","RECREATE");
 

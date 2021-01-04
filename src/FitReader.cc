@@ -154,7 +154,7 @@ const TH2D* FitReader::GetHistogram2D(const Category&   cat,
 				      const Systematic& sys) const {
   if(!IsFilled2D(cat, proc, sys))
     return nullptr;
- cout << cat.GetLabel() << " " << proc.Name() << " hist integral: " << m_ProcHist_2D[proc][cat]->Integral() << endl;   
+ //cout << cat.GetLabel() << " " << proc.Name() << " hist integral: " << m_ProcHist_2D[proc][cat]->Integral() << endl;   
   if(!sys){
     return m_ProcHist_2D[proc][cat];
   } else {
@@ -168,7 +168,7 @@ TGraphErrors* FitReader::GetTotalBackground(const CategoryList& cat){
   int Ncat = cat.GetN();
   for(int i = 0; i < Ncat; i++){
     string shist = m_FileFold+cat[i].Label()+"_"+cat[i].GetLabel()+"/total_background";
-    cout << shist << endl;
+    //cout << shist << endl;
     if(hist == nullptr)
       hist = (TH1D*) m_FilePtr->Get((m_FileFold+"/"+shist).c_str())->Clone((shist+"_total").c_str());
     else
@@ -832,13 +832,13 @@ TCanvas* FitReader::Plot2D(const VS& proc,
     cat = cat.Filter(extra);
 
   int Ncat = cat.GetN();
-  
+ //cout << "Ncat: " << Ncat << endl; 
   if(Ncat < 1)
     return nullptr;
   // Processes
   string label;
   TH2D* hist = nullptr;
- GetProcesses().Print(); 
+GetProcesses().Print(); 
   for(int i = 0; i < Nproc; i++){
     VS vproc;
     if(m_Strings.count(proc[i]) != 0)
@@ -848,9 +848,9 @@ TCanvas* FitReader::Plot2D(const VS& proc,
 
     ProcessType type = kBkg;
     for(int p = 0; p < int(vproc.size()); p++){
-      
+ cout << "proc: " << vproc[p] << endl;     
       int index = GetProcesses().Find(vproc[p]);
-	cout << "index: " << index << endl;
+//cout << "index: " << index << endl;
 	if(index < 0)
 	continue;
       
@@ -862,7 +862,7 @@ TCanvas* FitReader::Plot2D(const VS& proc,
 	type = kData;
       
       for(int c = 0; c < Ncat; c++){
-	//cout << cat[c].GetLabel() << " " << pp.Name() << endl;
+	cout << cat[c].GetLabel() << " " << pp.Name() << endl;
 	if(!IsFilled(cat[c], pp))
 	  continue;
 
@@ -889,7 +889,8 @@ TCanvas* FitReader::Plot2D(const VS& proc,
 
     if(type == kBkg){
       if(m_Title.count(proc[i]) != 0)
-	label = m_Title[proc[i]];
+	if(i == 0) label += m_Title[proc[i]];
+	else label += ", "+m_Title[proc[i]];
       else
 	label = proc[i];
     } 
@@ -928,7 +929,8 @@ TCanvas* FitReader::Plot2D(const VS& proc,
   //   blabels += bin[r].GetRBinLabel();
   
   // hists[0]->LabelsOption("v","X");
-if(hist == NULL) return NULL; 
+//if(hist == NULL) return NULL; 
+if(hist == NULL) {cout << "null hist" << endl; return NULL;}  
   gStyle->SetOptTitle(0);
   gStyle->SetOptStat(0);
   gStyle->SetOptFit(11111111);
@@ -948,7 +950,6 @@ if(hist == NULL) return NULL;
   can->SetLogz();
   can->Draw();
   can->cd();
-if(hist == NULL) {cout << "null hist" << endl; return can;}  
   hist->Draw("colz");
   hist->GetXaxis()->SetTitle("M_{#perp}   [GeV]");
   hist->GetYaxis()->SetTitle("R_{ISR}");
@@ -974,7 +975,7 @@ if(hist == NULL) {cout << "null hist" << endl; return can;}
   hist->GetZaxis()->SetTitleFont(42);
   hist->GetZaxis()->SetTitleSize(0.05);
   hist->GetZaxis()->SetTitleOffset(0.9);
-
+  
   TLatex l;
   l.SetTextFont(42);
   l.SetNDC();
@@ -1024,9 +1025,10 @@ if(hist == NULL) {cout << "null hist" << endl; return can;}
     
     // l.DrawLatex((hi+lo)/2., yline - 8*eps, blabels[r].c_str());
   }
- 
+if(!extra.empty()) label += ", "+extra; 
   l.SetTextAlign(31);
-  l.SetTextSize(0.04);
+  //l.SetTextSize(0.04);
+  l.SetTextSize(0.025);
   l.SetTextFont(42);
   //l.DrawLatex(1.-hhi-eps*4, 1.-hto+0.12, "2017 MC KUEWKino");
   l.DrawLatex(1.-hhi-eps*4, 1.-hto+0.02, label.c_str());
@@ -1046,7 +1048,9 @@ if(hist == NULL) {cout << "null hist" << endl; return can;}
   l.SetTextSize(0.035);
   l.SetTextFont(42);
   l.DrawLatex(hlo+0.02, 1-hto+0.15, plotlabel.c_str());
-  
+
+ l.DrawLatex(0.06, 0.06, ("Integral: "+std::to_string(hist->Integral())).c_str()); 
+  cout << "hist integral: " << hist->Integral() << "\n" << endl;
   
   return can;
   
