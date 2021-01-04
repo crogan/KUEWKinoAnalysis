@@ -66,12 +66,13 @@ class rooParamHistMaker{
 		//function that makes rooFormulaVar for each rPH bin
 		//function that calls rooParamHistWrapper and fills it with rooFormulaVars (loops over everything)
 
-
+	protected:
+		std::vector<string> m_sysVars;
 
 		
 	private:
 		void makeWorkspace(TFile* oFile);
-		string makeInterpolation(RooRealVar* alpha, double nomVal, double upVal, double downVal);
+		string makeInterpolationFormula(RooRealVar* alpha, double nomVal, double upVal, double downVal);
 		string getVarNorm(vector<string> fNoHats, TH1D hTotal);
 
 			// return a smooth function that is equal to +/-1 for |x| >= smoothRegion_ and it's null in zero
@@ -90,7 +91,7 @@ class rooParamHistMaker{
 		std::vector<string> m_cats;
 		std::vector<int> m_fakeProcs;
 		std::vector<string> m_procs;
-		std::vector<string> m_sysVars;
+		
 		string m_lepFlav;
 		string m_lepNum;
 		// int m_nSysVar;

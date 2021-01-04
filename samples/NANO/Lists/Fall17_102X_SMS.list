@@ -59,3 +59,5 @@ samples/NANO/Fall17_102X_SMS/SMS-TChiZZ_ZToLL_ZToLL_TuneCP2_13TeV-madgraphMLM-py
 samples/NANO/Fall17_102X_SMS/SMS-TChipmWW_TuneCP2_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Fall17_102X_SMS/SMS-TChipmWW_WWTo2LNu_TuneCP2_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8.txt
+samples/NANO/Fall17_102X_SMS/SMS-TSlepSlep_mSlep-500To1300_TuneCP2_13TeV-madgraphMLM-pythia8.txt
+samples/NANO/Fall17_102X_SMS/TChiWZ_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8.txt
