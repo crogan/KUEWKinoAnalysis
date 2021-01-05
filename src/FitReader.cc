@@ -793,7 +793,7 @@ TCanvas* FitReader::Plot1Dratio(const string& proc,
   }
   //cat.Print();
 
-
+cout << "a" << endl;
 
   // Leptonic
   VS lep_labels;
@@ -806,9 +806,11 @@ TCanvas* FitReader::Plot1Dratio(const string& proc,
 
   if(m_Strings.count(lep_cat[i]) != 0){
     int N = m_Strings[lep_cat[i]].size();
-    for(int j = 0; j < N; j++){
+    cout << "number of strings in lep tag: " << N << endl;
+	for(int j = 0; j < N; j++){
   vlep[i].push_back(m_Strings[lep_cat[i]][j]);
-    }
+    cout << m_Strings[lep_cat[i]][j] << endl;
+	}
   } else {
     vlep[i].push_back(lep_cat[i]);
   }
@@ -817,12 +819,12 @@ TCanvas* FitReader::Plot1Dratio(const string& proc,
     cats[i] = cats[i].FilterOR(vlep[i]);
   }
   }
-
-  cat = cat.FilterOR(vlep);
+cout << "b" << endl;
+  //cat = cat.FilterOR(vlep);
 
   // Hadronic S
   VS hadS_labels;
-  VS vhadS;
+  vector<VS> vhadS;
   for(int i = 0; i < NhadS; i++){
   if(m_Title.count(hadS_cat[i]) != 0)
     hadS_labels.push_back(m_Title[hadS_cat[i]]);
@@ -832,9 +834,9 @@ TCanvas* FitReader::Plot1Dratio(const string& proc,
   if(m_Strings.count(hadS_cat[i]) != 0){
     int N = m_Strings[hadS_cat[i]].size();
     for(int j = 0; j < N; j++)
-  vhadS.push_back(m_Strings[hadS_cat[i]][j]);
+  vhadS[i].push_back(m_Strings[hadS_cat[i]][j]);
   } else {
-    vhadS.push_back(hadS_cat[i]);
+    vhadS[i].push_back(hadS_cat[i]);
   }
   if(NhadS > 1){
     cats[i] = GetCategories();
@@ -842,11 +844,11 @@ TCanvas* FitReader::Plot1Dratio(const string& proc,
   }
   }
 
-  cat = cat.FilterOR(vhadS);
+  //cat = cat.FilterOR(vhadS);
 
   // Hadronic ISR
   VS hadI_labels;
-  VS vhadI;
+  vector<VS> vhadI;
   for(int i = 0; i < NhadI; i++){
   if(m_Title.count(hadI_cat[i]) != 0)
     hadI_labels.push_back(m_Title[hadI_cat[i]]);
@@ -856,9 +858,9 @@ TCanvas* FitReader::Plot1Dratio(const string& proc,
   if(m_Strings.count(hadI_cat[i]) != 0){
     int N = m_Strings[hadI_cat[i]].size();
     for(int j = 0; j < N; j++)
-  vhadI.push_back(m_Strings[hadI_cat[i]][j]);
+  vhadI[i].push_back(m_Strings[hadI_cat[i]][j]);
   } else {
-    vhadI.push_back(hadI_cat[i]);
+    vhadI[i].push_back(hadI_cat[i]);
   }
   if(NhadI > 1){
     cats[i] = GetCategories();
@@ -866,12 +868,12 @@ TCanvas* FitReader::Plot1Dratio(const string& proc,
   }
   }
 
-  cat = cat.FilterOR(vhadI);
+  //cat = cat.FilterOR(vhadI);
 
 
   // extra (PTISR, gammaT)
   VS extra_labels;
-  VS vextra;
+  vector<VS> vextra;
 if(Nextra != -999){
   for(int i = 0; i < Nextra; i++){
   if(m_Title.count(extra[i]) != 0)
@@ -882,16 +884,16 @@ if(Nextra != -999){
   if(m_Strings.count(extra[i]) != 0){
     int N = m_Strings[extra[i]].size();
     for(int j = 0; j < N; j++)
-  vextra.push_back(m_Strings[extra[i]][j]);
+  vextra[i].push_back(m_Strings[extra[i]][j]);
   } else {
-    vextra.push_back(extra[i]);
+    vextra[i].push_back(extra[i]);
   }
   if(Nextra > 1){
     cats[i] = GetCategories();
     cats[i] = cats[i].FilterOR(vextra[i]);
   }
   }
-  cat = cat.FilterOR(vextra);
+ // cat = cat.FilterOR(vextra);
 }
 
  // do multiple CategoryLists for the separate histograms that go into the ratio (ie CatListBronze, CatListSilver, CatListGold)
@@ -925,7 +927,7 @@ if(Nextra != -999){
   CategoryList cat1;
   for(int cc = 0; cc < Ncats; cc++){
     cat1 = cats[cc];
-    int Ncat = cats.GetN();
+    int Ncat = cat1.GetN();
     VS vproc;
     if(m_Strings.count(proc) != 0)
       vproc = m_Strings[proc];
@@ -955,7 +957,7 @@ if(Nextra != -999){
   cout << "filled " << cat1[c].GetLabel() << " " << pp.Name() << endl;
 
   if(!hist){
-    hist = (TH1D*) GetHistogram(cat1[c], pp)->Clone(Form("plothist_%d_%s", i, name.c_str()));
+    hist = (TH1D*) GetHistogram(cat1[c], pp)->Clone(Form("plothist_%d_%s", 0, name.c_str()));
   } else {
     hist->Add(GetHistogram(cat1[c], pp));
   }
@@ -981,7 +983,7 @@ if(Nextra != -999){
     if(m_Title.count(proc) != 0)
   labels += m_Title[proc];
     else
-  labels += proc[i];
+  labels += proc;
     
     if(m_Color.count(proc) != 0)
   colors.push_back(m_Color[proc]);
