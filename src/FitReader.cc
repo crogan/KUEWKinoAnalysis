@@ -812,13 +812,13 @@ cout << "a" << endl;
 
   if(m_Strings.count(lep_cat[i]) != 0){
     int N = m_Strings[lep_cat[i]].size();
-    cout << "number of strings in lep tag: " << N << endl;
+    // cout << "number of strings in lep tag: " << N << endl;
 	for(int j = 0; j < N; j++){
     if(Nlep > 1)
       vleps[i].push_back(m_Strings[lep_cat[i]][j]);
   else
     vlep.push_back(m_Strings[lep_cat[i]][j]);
-    cout << m_Strings[lep_cat[i]][j] << endl;
+    // cout << m_Strings[lep_cat[i]][j] << endl;
 	}
   } else {
     if(Nlep > 1)
@@ -830,16 +830,18 @@ cout << "a" << endl;
     cats[i] = cats[i].FilterOR(vleps[i]);
   }
   }
-cout << "b" << endl;
+// cout << "b" << endl;
 if(Nlep == 1)
   for(int i = 0; i < Ncats; i++)
     cats[i] = cats[i].FilterOR(vlep);
-cout << "c" << endl;
+// cout << "c" << endl;
 
   // Hadronic S
   VS hadS_labels;
-  vector<VS> vhadS;
+  vector<VS> vhadSs;
+  VS vhadS;
   for(int i = 0; i < NhadS; i++){
+    vhadSs.push_back(VS());
   if(m_Title.count(hadS_cat[i]) != 0)
     hadS_labels.push_back(m_Title[hadS_cat[i]]);
   else
@@ -847,23 +849,34 @@ cout << "c" << endl;
 
   if(m_Strings.count(hadS_cat[i]) != 0){
     int N = m_Strings[hadS_cat[i]].size();
-    for(int j = 0; j < N; j++)
-  vhadS[i].push_back(m_Strings[hadS_cat[i]][j]);
-  } else {
-    vhadS[i].push_back(hadS_cat[i]);
+    for(int j = 0; j < N; j++){
+      if(NhadS > 1)
+  vhadSs[i].push_back(m_Strings[hadS_cat[i]][j]);
+else vhadS.push_back(m_Strings[hadS_cat[i]][j]);
+  } 
+  }
+  else {
+    if(NhadS > 1)
+    vhadSs[i].push_back(hadS_cat[i]);
+  else
+    vhadS.push_back(hadS_cat[i]);
   }
   if(NhadS > 1){
-    cats[i] = GetCategories();
-    cats[i] = cats[i].FilterOR(vhadS[i]);
+    cats[i] = cats[i].FilterOR(vhadSs[i]);
   }
   }
+  if(NhadS == 1)
+  for(int i = 0; i < Ncats; i++)
+    cats[i] = cats[i].FilterOR(vhadS);
 
   //cat = cat.FilterOR(vhadS);
 
   // Hadronic ISR
   VS hadI_labels;
-  vector<VS> vhadI;
+  vector<VS> vhadIs;
+  VS vhadI;
   for(int i = 0; i < NhadI; i++){
+    vhadIs.push_back(VS());
   if(m_Title.count(hadI_cat[i]) != 0)
     hadI_labels.push_back(m_Title[hadI_cat[i]]);
   else
@@ -871,25 +884,35 @@ cout << "c" << endl;
 
   if(m_Strings.count(hadI_cat[i]) != 0){
     int N = m_Strings[hadI_cat[i]].size();
-    for(int j = 0; j < N; j++)
-  vhadI[i].push_back(m_Strings[hadI_cat[i]][j]);
-  } else {
-    vhadI[i].push_back(hadI_cat[i]);
+    for(int j = 0; j < N; j++){
+      if(NhadI > 1)
+  vhadIs[i].push_back(m_Strings[hadI_cat[i]][j]);
+else vhadI.push_back(m_Strings[hadI_cat[i]][j]);
+  } 
+} else {
+  if(NhadI > 1)
+    vhadIs[i].push_back(hadI_cat[i]);
+  else
+    vhadI.push_back(hadI_cat[i]);
   }
   if(NhadI > 1){
-    cats[i] = GetCategories();
-    cats[i] = cats[i].FilterOR(vhadI[i]);
+    cats[i] = cats[i].FilterOR(vhadIs[i]);
   }
   }
+  if(NhadI == 1)
+  for(int i = 0; i < Ncats; i++)
+    cats[i] = cats[i].FilterOR(vhadI);
 
   //cat = cat.FilterOR(vhadI);
 
 
   // extra (PTISR, gammaT)
   VS extra_labels;
-  vector<VS> vextra;
+  vector<VS> vextras;
+  VS vextra;
 if(Nextra != -999){
   for(int i = 0; i < Nextra; i++){
+    vextras.push_back(VS());
   if(m_Title.count(extra[i]) != 0)
     extra_labels.push_back(m_Title[extra[i]]);
   else
@@ -897,16 +920,25 @@ if(Nextra != -999){
 
   if(m_Strings.count(extra[i]) != 0){
     int N = m_Strings[extra[i]].size();
-    for(int j = 0; j < N; j++)
-  vextra[i].push_back(m_Strings[extra[i]][j]);
-  } else {
-    vextra[i].push_back(extra[i]);
+    for(int j = 0; j < N; j++){
+      if(Nextra > 1)
+  vextras[i].push_back(m_Strings[extra[i]][j]);
+else vextra.push_back(m_Strings[extra[i]][j]);
+  } 
+  }
+  else {
+    if(Nextra > 1)
+    vextras[i].push_back(extra[i]);
+  else 
+    vextra.push_back(extra[i]);
   }
   if(Nextra > 1){
-    cats[i] = GetCategories();
-    cats[i] = cats[i].FilterOR(vextra[i]);
+    cats[i] = cats[i].FilterOR(vextras[i]);
   }
   }
+  if(Nextra == 1)
+  for(int i = 0; i < Ncats; i++)
+    cats[i] = cats[i].FilterOR(vextra);
  // cat = cat.FilterOR(vextra);
 }
 
