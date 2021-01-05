@@ -861,7 +861,8 @@ if(Nextra != -999){
   cat = cat.FilterOR(vextra);
 }
 
-  // if(extra != "")
+ // do multiple CategoryLists for the separate histograms that go into the ratio (ie CatListBronze, CatListSilver, CatListGold)
+ //// if(extra != "")
   //   cat.Filter(extra);
 
   int Ncat = cat.GetN();
@@ -912,7 +913,7 @@ if(Nextra != -999){
 
   if(!hist){
     hist = (TH1D*) GetHistogram(cat[c], pp)->Clone(Form("plothist_%d_%s", i, name.c_str()));
-  } else {
+  } else { //separate histograms for func arg with size > 1 (add for all other args)
     hist->Add(GetHistogram(cat[c], pp));
   }
     }
@@ -969,7 +970,6 @@ if(Nextra != -999){
   // vhists.push_back(hists[i]);
   histTotal->Add(hists[i]);
   hists[i]->Scale(1/hists[i]->Integral());
-  if(hists[i]->GetMaximum() > hmax) hmax = hists[i]->GetMaximum();
   // for(int j = vhists.size()-2; j >= 0; j--){
   //   if(vhists[j]->Integral() < vhists[j+1]->Integral()){
   // stemp = vlabels[j+1];
@@ -986,12 +986,14 @@ if(Nextra != -999){
   //   }
   // }
   }
-
+cout << "number of hists: " << Nhist << endl;
   histTotal->Scale(1/histTotal->Integral());
-  for(int i = 0; i < Nhist; i++)
-    hists[i]->Divide(histTotal);
-  
-
+  for(int i = 0; i < Nhist; i++){
+  cout << "hist title: " << hists[i]->GetTitle() << endl; 
+   hists[i]->Divide(histTotal);
+   if(hists[i]->GetMaximum() > hmax) hmax = hists[i]->GetMaximum();
+  }
+cout << "hmax: " << hmax << endl;
   // "stack" the histograms by adding
   // for(int i = Nhist-2; i >= 0; i--)
   // vhists[i]->Add(vhists[i+1]);
@@ -1056,7 +1058,7 @@ if(Nextra != -999){
 
   // double hmax = hists[0]->GetMaximum();
 
-  hists[0]->Draw("hist");
+  hists[0]->Draw("hist H");
   hists[0]->GetXaxis()->CenterTitle();
   hists[0]->GetXaxis()->SetTitleFont(42);
   hists[0]->GetXaxis()->SetTitleSize(0.05);
@@ -1081,7 +1083,7 @@ if(Nextra != -999){
   hists[i]->SetLineStyle(i);
   // hists[i]->SetFillColor(colors[i]);
   // hists[i]->SetFillStyle(1001);
-  hists[i]->Draw("SAME HIST");
+  hists[i]->Draw("SAME HIST H");
   }
 
   // TGraphErrors* gr = nullptr;
