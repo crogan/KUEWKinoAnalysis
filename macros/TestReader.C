@@ -47,7 +47,9 @@ FitReader* FITReader = new FitReader(inputfile, a2, a3);
 			 VS());
   
 if(cv == NULL) return;
+if(!extra.empty()) cv->SaveAs(("/home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/shapeRatios/"+signal+"_"+lep+"_"+hadS+"_"+hadISR+"_"+extra+".pdf").c_str());
 
+else cv->SaveAs(("/home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/shapeRatios/"+signal+"_"+lep+"_"+hadS+"_"+hadISR+".pdf").c_str());
 // TCanvas* cv = FITReader->Plot2D(VS().a("T1bbbb_13001100"),
 //  			 VS().a("1L"),
 //        		 //VS().a("3j0bS").a("3j1bS").a("3jge2bS"),
