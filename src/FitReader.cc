@@ -797,7 +797,7 @@ TCanvas* FitReader::Plot1Dratio(const string& proc,
 
   // Leptonic
   VS lep_labels;
-  VS vlep;
+  vector<VS> vlep;
   for(int i = 0; i < Nlep; i++){
   if(m_Title.count(lep_cat[i]) != 0)
     lep_labels.push_back(m_Title[lep_cat[i]]);
@@ -807,10 +807,10 @@ TCanvas* FitReader::Plot1Dratio(const string& proc,
   if(m_Strings.count(lep_cat[i]) != 0){
     int N = m_Strings[lep_cat[i]].size();
     for(int j = 0; j < N; j++){
-  vlep.push_back(m_Strings[lep_cat[i]][j]);
+  vlep[i].push_back(m_Strings[lep_cat[i]][j]);
     }
   } else {
-    vlep.push_back(lep_cat[i]);
+    vlep[i].push_back(lep_cat[i]);
   }
   if(Nlep > 1){
     cats[i] = GetCategories();
@@ -924,8 +924,8 @@ if(Nextra != -999){
   // for(int i = 0; i < Nproc; i++){
   CategoryList cat1;
   for(int cc = 0; cc < Ncats; cc++){
-    cat1 = cats_lep[cc];
-      
+    cat1 = cats[cc];
+    int Ncat = cats.GetN();
     VS vproc;
     if(m_Strings.count(proc) != 0)
       vproc = m_Strings[proc];
@@ -978,15 +978,15 @@ if(Nextra != -999){
   // }
 
   
-    if(m_Title.count(proc[i]) != 0)
-  labels += m_Title[proc[i]];
+    if(m_Title.count(proc) != 0)
+  labels += m_Title[proc];
     else
   labels += proc[i];
     
-    if(m_Color.count(proc[i]) != 0)
-  colors.push_back(m_Color[proc[i]]);
+    if(m_Color.count(proc) != 0)
+  colors.push_back(m_Color[proc]);
     else
-  colors.push_back(m_ColorDefault[i]);
+  colors.push_back(m_ColorDefault[0]);
     
     hists.push_back(hist); //one hist per cat group
   
