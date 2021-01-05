@@ -754,7 +754,7 @@ TCanvas* FitReader::Plot1Dstack(const VS& proc,
 
 
 
-TCanvas* FitReader::Plot1Dratio(const VS& proc,
+TCanvas* FitReader::Plot1Dratio(const string& proc,
            const VS& lep_cat,
            const VS& hadS_cat,
            const VS& hadI_cat,
@@ -763,20 +763,37 @@ TCanvas* FitReader::Plot1Dratio(const VS& proc,
   RestFrames::SetStyle();
 
 
-  int Nproc = proc.size();
+  // int Nproc = proc.size();
   int Nlep  = lep_cat.size();
   int NhadS = hadS_cat.size();
   int NhadI = hadI_cat.size();
   int Nextra = -999;
   if(!extra.empty()) Nextra = extra.size();
-  if(Nproc == 0 ||
-   Nlep  == 0 ||
+  if(Nlep  == 0 ||
    NhadS == 0 ||
    NhadI == 0)
   return nullptr;
 
+
+
   CategoryList cat = GetCategories();
+  vector<CategoryList> cats;
+  // vector<CategoryList> cats_hadS;
+  // vector<CategoryList> cats_lep;
+  // vector<CategoryList> cats_hadI;
+  // vector<CategoryList> cats_extra;
+  int Ncats;
+  if(Nlep > 1) Ncats = Nlep;
+  else if(NhadS > 1) Ncats = NhadS;
+  else if(NhadI > 1) Ncats = NhadI;
+  else if(Nextra > 1) Ncats = Nextra;
+  else{
+    cout << "Need multiple categories for either lepton ID, hadS, hadI, or extra argument to create ratios" << endl;
+    return nullptr;
+  }
   //cat.Print();
+
+
 
   // Leptonic
   VS lep_labels;
@@ -794,6 +811,10 @@ TCanvas* FitReader::Plot1Dratio(const VS& proc,
     }
   } else {
     vlep.push_back(lep_cat[i]);
+  }
+  if(Nlep > 1){
+    cats[i] = GetCategories();
+    cats[i] = cats[i].FilterOR(vlep[i]);
   }
   }
 
@@ -815,6 +836,10 @@ TCanvas* FitReader::Plot1Dratio(const VS& proc,
   } else {
     vhadS.push_back(hadS_cat[i]);
   }
+  if(NhadS > 1){
+    cats[i] = GetCategories();
+    cats[i] = cats[i].FilterOR(vhadS[i]);
+  }
   }
 
   cat = cat.FilterOR(vhadS);
@@ -834,6 +859,10 @@ TCanvas* FitReader::Plot1Dratio(const VS& proc,
   vhadI.push_back(m_Strings[hadI_cat[i]][j]);
   } else {
     vhadI.push_back(hadI_cat[i]);
+  }
+  if(NhadI > 1){
+    cats[i] = GetCategories();
+    cats[i] = cats[i].FilterOR(vhadI[i]);
   }
   }
 
@@ -857,6 +886,10 @@ if(Nextra != -999){
   } else {
     vextra.push_back(extra[i]);
   }
+  if(Nextra > 1){
+    cats[i] = GetCategories();
+    cats[i] = cats[i].FilterOR(vextra[i]);
+  }
   }
   cat = cat.FilterOR(vextra);
 }
@@ -864,13 +897,19 @@ if(Nextra != -999){
   // if(extra != "")
   //   cat.Filter(extra);
 
-  int Ncat = cat.GetN();
+  
 
-  if(Ncat < 1){
-    cout << "no categories found with specified tags" << endl;
-    return nullptr;
+  // if(Ncat < 1){
+  //   cout << "no categories found with specified tags" << endl;
+  //   return nullptr;
+  // }
+  for(int c = 0; c < Ncats; c++){
+    int Ncat = cats[c].GetN();
+    if(Ncat < 1){
+      cout << "no categories found with specified lepton tags for categoryList # " << c << endl;
+      return nullptr;
+    }
   }
-
   // Processes
   VS            labels;
   vector<int>   colors;
@@ -881,20 +920,24 @@ if(Nextra != -999){
 
   // TH1D* hist_data = nullptr;
 
-  for(int i = 0; i < Nproc; i++){
-  VS vproc;
-  if(m_Strings.count(proc[i]) != 0)
-    vproc = m_Strings[proc[i]];
-  else
-    vproc += proc[i];
+  // for(int i = 0; i < Nproc; i++){
+  CategoryList cat1;
+  for(int cc = 0; cc < Ncats; cc++){
+    cat1 = cats_lep[cc];
+      
+    VS vproc;
+    if(m_Strings.count(proc) != 0)
+      vproc = m_Strings[proc];
+    else
+      vproc += proc;
 
-  // ProcessType type = kBkg;
-  TH1D*       hist = nullptr;
-  for(int p = 0; p < int(vproc.size()); p++){
-    
-    int index = GetProcesses().Find(vproc[p]);
-    if(index < 0)
-  continue;
+    // ProcessType type = kBkg;
+    TH1D*       hist = nullptr;
+    for(int p = 0; p < int(vproc.size()); p++){
+      
+      int index = GetProcesses().Find(vproc[p]);
+      if(index < 0)
+    continue;
     
     Process pp = GetProcesses()[index];
 
@@ -902,18 +945,18 @@ if(Nextra != -999){
   // type = kSig;
   //   if(pp.Type() == kData)
   // type = kData;
-    
+  
     for(int c = 0; c < Ncat; c++){
-  cout << cat[c].GetLabel() << " " << pp.Name() << endl;
-  if(!IsFilled(cat[c], pp))
-    continue;
+      cout << cat1[c].GetLabel() << " " << pp.Name() << endl;
+      if(!IsFilled(cat1[c], pp))
+        continue;
 
-  cout << "filled " << cat[c].GetLabel() << " " << pp.Name() << endl;
+  cout << "filled " << cat1[c].GetLabel() << " " << pp.Name() << endl;
 
   if(!hist){
-    hist = (TH1D*) GetHistogram(cat[c], pp)->Clone(Form("plothist_%d_%s", i, name.c_str()));
+    hist = (TH1D*) GetHistogram(cat1[c], pp)->Clone(Form("plothist_%d_%s", i, name.c_str()));
   } else {
-    hist->Add(GetHistogram(cat[c], pp));
+    hist->Add(GetHistogram(cat1[c], pp));
   }
     }
   }
@@ -933,7 +976,7 @@ if(Nextra != -999){
   //   hists_sig.push_back(hist);
   // }
 
-  // if(type == kBkg){
+  
     if(m_Title.count(proc[i]) != 0)
   labels += m_Title[proc[i]];
     else
@@ -944,9 +987,9 @@ if(Nextra != -999){
     else
   colors.push_back(m_ColorDefault[i]);
     
-    hists.push_back(hist);
-  // } 
-  }
+    hists.push_back(hist); //one hist per cat group
+  
+}
 
   // int Nsig = hists_sig.size();
   TH1D* histTotal = new TH1D(*hists[0]);
