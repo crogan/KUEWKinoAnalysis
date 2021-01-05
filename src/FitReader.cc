@@ -791,14 +791,20 @@ TCanvas* FitReader::Plot1Dratio(const string& proc,
     cout << "Need multiple categories for either lepton ID, hadS, hadI, or extra argument to create ratios" << endl;
     return nullptr;
   }
+
+  for(int i = 0; i < Ncats; i++){
+    cats[i] = GetCategories();
+  }
   //cat.Print();
 
 cout << "a" << endl;
 
   // Leptonic
   VS lep_labels;
-  vector<VS> vlep;
+  vector<VS> vleps;
+  VS vlep;
   for(int i = 0; i < Nlep; i++){
+    vleps.push_back(VS());
   if(m_Title.count(lep_cat[i]) != 0)
     lep_labels.push_back(m_Title[lep_cat[i]]);
   else
@@ -808,19 +814,23 @@ cout << "a" << endl;
     int N = m_Strings[lep_cat[i]].size();
     cout << "number of strings in lep tag: " << N << endl;
 	for(int j = 0; j < N; j++){
-  vlep[i].push_back(m_Strings[lep_cat[i]][j]);
+  vleps[i].push_back(m_Strings[lep_cat[i]][j]);
     cout << m_Strings[lep_cat[i]][j] << endl;
 	}
   } else {
-    vlep[i].push_back(lep_cat[i]);
+    vleps[i].push_back(lep_cat[i]);
   }
   if(Nlep > 1){
-    cats[i] = GetCategories();
-    cats[i] = cats[i].FilterOR(vlep[i]);
+    cats[i] = cats[i].FilterOR(vleps[i]);
+  }
+  else{
+    vlep.push_back(vleps[i]);
   }
   }
 cout << "b" << endl;
-  //cat = cat.FilterOR(vlep);
+if(Nlep == 1)
+  cat = cat.FilterOR(vlep);
+cout << "c" << endl;
 
   // Hadronic S
   VS hadS_labels;
