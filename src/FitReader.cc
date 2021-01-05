@@ -1026,15 +1026,20 @@ else vextra.push_back(m_Strings[extra[i]][j]);
   // }
 
   
-    if(m_Title.count(proc) != 0)
-  labels += m_Title[proc];
-    else
-  labels += proc;
+  //   if(m_Title.count(proc) != 0)
+  // labels += m_Title[proc];
+  //   else
+  // labels += cc;
+  if(Nlep > 1)
+    labels += lep_cat[cc];
+  else if(NhadS > 1)
+    labels += hadS_cat[cc];
+  else if(NhadI > 1)
+    labels += hadI_cat[cc];
+  else if(Nextra > 1)
+    labels += extra[cc];
     
-    if(m_Color.count(proc) != 0)
-  colors.push_back(m_Color[proc]);
-    else
-  colors.push_back(m_ColorDefault[0]);
+  colors.push_back(m_ColorDefault[cc]);
     
     hists.push_back(hist); //one hist per cat group
   
@@ -1304,9 +1309,17 @@ cout << "hmax: " << hmax << endl;
   l.DrawLatex(hlo+eps*4, 1.-hto+0.02,"#bf{#it{CMS}} work-in-progress");
   l.SetTextSize(0.05);
 
-  string plotlabel = "#color[7014]{"+lep_labels[0]+"} + ";
-  plotlabel += "#color[7004]{"+hadS_labels[0]+"} + ";
-  plotlabel += "#color[7024]{"+hadI_labels[0]+"} + ";
+
+
+  string plotlabel;
+  if(Nlep == 1)
+    plotlabel += "#color[7014]{"+lep_labels[0]+"} + ";
+  if(NhadS == 1)
+    plotlabel += "#color[7004]{"+hadS_labels[0]+"} + ";
+  if(NhadI == 1)
+    plotlabel += "#color[7024]{"+hadI_labels[0]+"} + ";
+  if(Nextra == 1)
+    plotlabel += "#color[7024]{"+extra_labels[0]+"} + ";
   plotlabel += "p_{T}^{ISR} > 300 GeV";
 
   l.SetTextColor(kBlack);
