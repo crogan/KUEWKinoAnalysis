@@ -814,22 +814,26 @@ cout << "a" << endl;
     int N = m_Strings[lep_cat[i]].size();
     cout << "number of strings in lep tag: " << N << endl;
 	for(int j = 0; j < N; j++){
-  vleps[i].push_back(m_Strings[lep_cat[i]][j]);
+    if(Nlep > 1)
+      vleps[i].push_back(m_Strings[lep_cat[i]][j]);
+  else
+    vlep.push_back(m_Strings[lep_cat[i]][j]);
     cout << m_Strings[lep_cat[i]][j] << endl;
 	}
   } else {
+    if(Nlep > 1)
     vleps[i].push_back(lep_cat[i]);
+  else 
+    vlep.push_back(lep_cat[i]);
   }
   if(Nlep > 1){
     cats[i] = cats[i].FilterOR(vleps[i]);
   }
-  else{
-    vlep.push_back(vleps[i]);
-  }
   }
 cout << "b" << endl;
 if(Nlep == 1)
-  cat = cat.FilterOR(vlep);
+  for(int i = 0; i < Ncats; i++)
+    cats[i] = cats[i].FilterOR(vlep);
 cout << "c" << endl;
 
   // Hadronic S
