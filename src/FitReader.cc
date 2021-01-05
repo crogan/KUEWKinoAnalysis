@@ -793,7 +793,7 @@ TCanvas* FitReader::Plot1Dratio(const string& proc,
   }
 
   for(int i = 0; i < Ncats; i++){
-    cats[i] = GetCategories();
+    cats.push_back(GetCategories());
   }
   //cat.Print();
 
