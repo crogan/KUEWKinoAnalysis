@@ -1085,7 +1085,6 @@ else vextra.push_back(m_Strings[extra[i]][j]);
 cout << "number of hists: " << Nhist << endl;
   histTotal->Scale(1/histTotal->Integral());
   for(int i = 0; i < Nhist; i++){
-  cout << "hist title: " << hists[i]->GetTitle() << endl; 
    hists[i]->Divide(histTotal);
    if(hists[i]->GetMaximum() > hmax) hmax = hists[i]->GetMaximum();
   }
@@ -1154,7 +1153,7 @@ cout << "hmax: " << hmax << endl;
 
   // double hmax = hists[0]->GetMaximum();
 
-  hists[0]->Draw("hist H");
+  hists[0]->Draw("P");
   hists[0]->GetXaxis()->CenterTitle();
   hists[0]->GetXaxis()->SetTitleFont(42);
   hists[0]->GetXaxis()->SetTitleSize(0.05);
@@ -1179,7 +1178,7 @@ cout << "hmax: " << hmax << endl;
   hists[i]->SetLineStyle(i);
   // hists[i]->SetFillColor(colors[i]);
   // hists[i]->SetFillStyle(1001);
-  hists[i]->Draw("SAME HIST H");
+  hists[i]->Draw("SAME P");
   }
 
   // TGraphErrors* gr = nullptr;
@@ -1240,7 +1239,7 @@ cout << "hmax: " << hmax << endl;
   // leg->AddEntry(hist_data, "data");
   // leg->AddEntry(gr, "total uncertainty","F");
   for(int i = 0; i < Nhist; i++)
-  leg->AddEntry(hists[i], labels[i].c_str(), "F");
+  leg->AddEntry(hists[i], labels[i].c_str(), "LP");
   // for(int i = 0; i < Nsig; i++)
   // leg->AddEntry(hists_sig[i], labels_sig[i].c_str(), "L");
   leg->Draw("SAME");
@@ -1320,7 +1319,7 @@ cout << "hmax: " << hmax << endl;
     plotlabel += "#color[7024]{"+hadI_labels[0]+"} + ";
   if(Nextra == 1)
     plotlabel += "#color[7024]{"+extra_labels[0]+"} + ";
-  plotlabel += "p_{T}^{ISR} > 300 GeV";
+  plotlabel += "p_{T}^{ISR} > 300 GeV, "+m_Title[proc];
 
   l.SetTextColor(kBlack);
   l.SetTextAlign(13);
@@ -1687,6 +1686,30 @@ void FitReader::InitializeRecipes(){
   m_Title["LF"] = "light flavor";
   m_Color["LF"] = 7021;
   m_Strings["LF"] = VS().a("Fakes_elf1").a("Fakes_muf1");
+
+  m_Title["ttbar_HF"] = "ttbar, heavy flavor";
+  m_Color["ttbar_HF"] = 7022;
+  m_Strings["ttbar_HF"] = VS().a("ttbar_Fakes_elf0").a("ttbar_Fakes_muf0");
+  
+  m_Title["ttbar_LF"] = "ttbar, light flavor";
+  m_Color["ttbar_LF"] = 7021;
+  m_Strings["ttbar_LF"] = VS().a("ttbar_Fakes_elf1").a("ttbar_Fakes_muf1");
+
+  m_Title["ttbar_Fake"] = "ttbar, fake";
+  m_Color["ttbar_Fake"] = 7020;
+  m_Strings["ttbar_Fake"] = VS().a("ttbar_Fakes_elf2").a("ttbar_Fakes_muf2");
+
+  m_Title["Wjets_HF"] = "W + jets, heavy flavor";
+  m_Color["Wjets_HF"] = 7022;
+  m_Strings["Wjets_HF"] = VS().a("Wjets_Fakes_elf0").a("Wjets_Fakes_muf0");
+  
+  m_Title["Wjets_LF"] = "W + jets, light flavor";
+  m_Color["Wjets_LF"] = 7021;
+  m_Strings["Wjets_LF"] = VS().a("Wjets_Fakes_elf1").a("Wjets_Fakes_muf1");
+
+  m_Title["Wjets_Fake"] = "W + jets, fake";
+  m_Color["Wjets_Fake"] = 7020;
+  m_Strings["Wjets_Fake"] = VS().a("Wjets_Fakes_elf2").a("Wjets_Fakes_muf2");
 
   m_Title["Total"] = "total background";
   m_Color["Total"] = 7000;

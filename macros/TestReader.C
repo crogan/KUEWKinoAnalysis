@@ -2,14 +2,12 @@
 
 #include "../include/FitReader.hh"
 
-void TestReader(const string& inputfile = "bkgFitInput17_1L_R5R6slopeBinning.root", const string& a2 = "", const string& a3 = ""){
+void TestReader(const string& inputfile = "allBkgsFitInput17_1L.root", const string& a2 = "", const string& a3 = ""){
 	gSystem->Load("/home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/lib/libKUEWKino.so");
 FitReader* FITReader = new FitReader(inputfile, a2, a3);
 //void TestReader(const string& inputfile = "test/FitInput_test.root", const string& a2 = "", const string& a3 = ""){
 //  void TestReader(const string& inputfile = "test/FitInput_test.root", const string& a2 = "", const string& a3 = ""){
-  void TestReader(const string& inputfile = "TEST4jbinning_1L.root", const string& a2 = "", const string& a3 = ""){
   
-  FitReader* FITReader = new FitReader(inputfile, a2, a3);
  // FITReader->PrintCategories();
  // FITReader->PrintProcesses();
 
@@ -40,13 +38,15 @@ FitReader* FITReader = new FitReader(inputfile, a2, a3);
   // 			 "canvas3");
 
 //the args with multiple entries are the ones that go into the total for the ratio
-    TCanvas* cv = FITReader->Plot1Dratio(VS().a("ttbar"),
+    TCanvas* cv = FITReader->Plot1Dratio("ttbar_HF",
         		 VS().a("1L"),
         		 VS().a("3j0bS").a("3j1bS").a("3jge2bS"),
    //     		 VS().a("ge4j0bS").a("ge4jge1bS"), 
         		 VS().a("ge1j0bISR"),
-  			 "canvas3");
+  			 "canvas3",
+			 VS());
   
+if(cv == NULL) return;
 
 // TCanvas* cv = FITReader->Plot2D(VS().a("T1bbbb_13001100"),
 //  			 VS().a("1L"),
