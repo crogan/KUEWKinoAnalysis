@@ -797,8 +797,6 @@ TCanvas* FitReader::Plot1Dratio(const string& proc,
   }
   //cat.Print();
 
-cout << "a" << endl;
-
   // Leptonic
   VS lep_labels;
   vector<VS> vleps;
@@ -814,9 +812,9 @@ cout << "a" << endl;
     int N = m_Strings[lep_cat[i]].size();
     // cout << "number of strings in lep tag: " << N << endl;
 	for(int j = 0; j < N; j++){
-    if(Nlep > 1)
+    if(Nlep > 1){
       vleps[i].push_back(m_Strings[lep_cat[i]][j]);
-  else
+	}else
     vlep.push_back(m_Strings[lep_cat[i]][j]);
     // cout << m_Strings[lep_cat[i]][j] << endl;
 	}
@@ -830,16 +828,15 @@ cout << "a" << endl;
     cats[i] = cats[i].FilterOR(vleps[i]);
   }
   }
-// cout << "b" << endl;
 if(Nlep == 1)
   for(int i = 0; i < Ncats; i++)
     cats[i] = cats[i].FilterOR(vlep);
-// cout << "c" << endl;
 
-  // Hadronic S
+// Hadronic S
   VS hadS_labels;
   vector<VS> vhadSs;
   VS vhadS;
+
   for(int i = 0; i < NhadS; i++){
     vhadSs.push_back(VS());
   if(m_Title.count(hadS_cat[i]) != 0)
@@ -865,10 +862,21 @@ else vhadS.push_back(m_Strings[hadS_cat[i]][j]);
     cats[i] = cats[i].FilterOR(vhadSs[i]);
   }
   }
-  if(NhadS == 1)
-  for(int i = 0; i < Ncats; i++)
-    cats[i] = cats[i].FilterOR(vhadS);
-
+  if(NhadS == 1){
+ 	for(int i = 0; i < Ncats; i++){
+	if(Nlep == 1)
+		cats[i] = cats[i].FilterOR(vhadS);
+	else{
+		if(!strstr(m_Title[lep_cat[i]].c_str(),"gold")){
+			cats[i] = cats[i].FilterOR(vhadS); //if lep is !gold, filter with string given to macro for hadS_cat
+		}
+		else{
+			cats[i] = cats[i].FilterOR(m_Strings[hadS_cat[0]]); //if lep is gold, filter with VS() from m_Strings
+		}
+	}
+	}
+	
+}	
   //cat = cat.FilterOR(vhadS);
 
   // Hadronic ISR
@@ -941,11 +949,9 @@ else vextra.push_back(m_Strings[extra[i]][j]);
     cats[i] = cats[i].FilterOR(vextra);
  // cat = cat.FilterOR(vextra);
 }
-
  // do multiple CategoryLists for the separate histograms that go into the ratio (ie CatListBronze, CatListSilver, CatListGold)
  //// if(extra != "")
   //   cat.Filter(extra);
-
   
 
   // if(Ncat < 1){
@@ -955,7 +961,7 @@ else vextra.push_back(m_Strings[extra[i]][j]);
   for(int c = 0; c < Ncats; c++){
     int Ncat = cats[c].GetN();
     if(Ncat < 1){
-      cout << "no categories found with specified lepton tags for categoryList # " << c << endl;
+      cout << "no categories found with specified lepton tags for categoryList #" << c << endl;
       return nullptr;
     }
   }
@@ -1031,7 +1037,7 @@ else vextra.push_back(m_Strings[extra[i]][j]);
   //   else
   // labels += cc;
   if(Nlep > 1)
-    labels += lep_cat[cc];
+    labels += m_Title[lep_cat[cc]];
   else if(NhadS > 1)
     labels += hadS_cat[cc];
   else if(NhadI > 1)
@@ -1040,7 +1046,7 @@ else vextra.push_back(m_Strings[extra[i]][j]);
     labels += extra[cc];
     
   colors.push_back(m_ColorDefault[cc]);
-    
+   hist->Sumw2(); 
     hists.push_back(hist); //one hist per cat group
   
 }
@@ -1059,6 +1065,15 @@ else vextra.push_back(m_Strings[extra[i]][j]);
   // TH1D*  htemp;
   double hmax = -999;
   
+//cout << "original hists" << endl;
+//for(int h = 0; h < Nhist; h++){
+//	cout << "hist #" << h << endl;
+//	int nBins = hists[h]->GetNbinsX();
+//	cout << "bin content for second to last bin: " << hists[h]->GetBinContent(nBins-1) << endl;
+//	cout << "error on second to last bin: " << hists[h]->GetBinError(nBins-1) << endl;
+//	cout << "bin content for last bin: " << hists[h]->GetBinContent(nBins) << endl;
+//	cout << "error on last bin: " << hists[h]->GetBinError(nBins) << endl;
+//}
 
   for(int i = 0; i < Nhist; i++){
   // vlabels.push_back(labels[i]);
@@ -1066,6 +1081,7 @@ else vextra.push_back(m_Strings[extra[i]][j]);
   // vhists.push_back(hists[i]);
   histTotal->Add(hists[i]);
   hists[i]->Scale(1/hists[i]->Integral());
+  hists[i]->Sumw2();
   // for(int j = vhists.size()-2; j >= 0; j--){
   //   if(vhists[j]->Integral() < vhists[j+1]->Integral()){
   // stemp = vlabels[j+1];
@@ -1082,10 +1098,20 @@ else vextra.push_back(m_Strings[extra[i]][j]);
   //   }
   // }
   }
-cout << "number of hists: " << Nhist << endl;
+//cout << "after normalizing all hists" << endl;
+//for(int h = 0; h < Nhist; h++){
+//	cout << "hist #" << h << endl;
+//	int nBins = hists[h]->GetNbinsX();
+//	cout << "bin content for second to last bin: " << hists[h]->GetBinContent(nBins-1) << endl;
+//	cout << "error on second to last bin: " << hists[h]->GetBinError(nBins-1) << endl;
+//	cout << "bin content for last bin: " << hists[h]->GetBinContent(nBins) << endl;
+//	cout << "error on last bin: " << hists[h]->GetBinError(nBins) << endl;
+//}
+//cout << "number of hists: " << Nhist << endl;
   histTotal->Scale(1/histTotal->Integral());
   for(int i = 0; i < Nhist; i++){
    hists[i]->Divide(histTotal);
+   hists[i]->Sumw2();
    if(hists[i]->GetMaximum() > hmax) hmax = hists[i]->GetMaximum();
   }
 cout << "hmax: " << hmax << endl;
@@ -1096,8 +1122,16 @@ cout << "hmax: " << hmax << endl;
   // hists  = vhists;
   // labels = vlabels;
   // colors = vcolors;
-
-  const FitBin& bin = cat[0].GetFitBin();
+//cout << "after all hist operations" << endl;
+//for(int h = 0; h < Nhist; h++){
+//	cout << "hist #" << h << endl;
+//	int nBins = hists[h]->GetNbinsX();
+//	cout << "bin content for second to last bin: " << hists[h]->GetBinContent(nBins-1) << endl;
+//	cout << "error on second to last bin: " << hists[h]->GetBinError(nBins-1) << endl;
+//	cout << "bin content for last bin: " << hists[h]->GetBinContent(nBins) << endl;
+//	cout << "error on last bin: " << hists[h]->GetBinError(nBins) << endl;
+//}
+  const FitBin& bin = cats[0][0].GetFitBin();
 
   int NR = bin.NRBins();
   int NB = bin.NBins();
@@ -1114,7 +1148,7 @@ cout << "hmax: " << hmax << endl;
     lmax = len;
   }
   string space = "";
-  for(int l = 0; l < 1.6*lmax; l++)
+  for(int l = 0; l < 1.2*lmax; l++)
   space += " ";
 
   for(int b = 0; b < NB; b++){
@@ -1226,7 +1260,7 @@ cout << "hmax: " << hmax << endl;
   //   hmax = hist_data->GetMaximum();
   // }
 
-  hists[0]->GetYaxis()->SetRangeUser(0.01, 1.1*hmax);
+  hists[0]->GetYaxis()->SetRangeUser(0.0, 1.1*hmax);
 
   TLegend* leg = new TLegend(1.-hhi+0.01, 1.- (Nhist+1)*(1.-0.49)/9., 0.98, 1.-hto-0.005);
   leg->SetTextFont(42);
@@ -1720,11 +1754,15 @@ void FitReader::InitializeRecipes(){
   m_Title["1L"] = "#scale[1.2]{single #it{l}}";
   m_Strings["1L"] = VS().a("1L_elm-elG").a("1L_elp-elG").a("1L_elpm-elG").a("1L_mupm-muG").a("1L_mup-muG").a("1L_mum-muG");
   
+  m_Title["1LallID"] = "#scale[1.2]{single #it{l}}";
+  m_Strings["1LallID"] = VS().a("1L_elm-elG").a("1L_elp-elG").a("1L_elpm-elG").a("1L_mupm-muG").a("1L_mup-muG").a("1L_mum-muG").a("1L_elm-elS").a("1L_elp-elS").a("1L_elpm-elS").a("1L_mupm-muS").a("1L_mup-muS").a("1L_mum-muS").a("1L_elm-elB").a("1L_elp-elB").a("1L_elpm-elB").a("1L_mupm-muB").a("1L_mup-muB").a("1L_mum-muB");
+  
+  
   m_Title["1Lel"] = "#scale[1.2]{single e}";
-  m_Strings["1Lel"] = VS().a("1L_elp-elG").a("1L_elm-elG");
+  m_Strings["1Lel"] = VS().a("1L_elpm-elG").a("1L_elp-elG").a("1L_elm-elG").a("1L_elpm-elS").a("1L_elp-elS").a("1L_elm-elS").a("1L_elpm-elB").a("1L_elp-elB").a("1L_elm-elB");
 
   m_Title["1Lmu"] = "#scale[1.2]{single #mu}";
-  m_Strings["1Lmu"] = VS().a("1L_mup-muG").a("1L_mum-mG");
+  m_Strings["1Lmu"] = VS().a("1L_mup-muG").a("1L_mum-muG").a("1L_mupm-muG").a("1L_mup-muS").a("1L_mum-muS").a("1L_mupm-muS").a("1L_mup-muB").a("1L_mum-muB").a("1L_mupm-muB");
 
   m_Title["1Lelp"] = "#scale[1.2]{single e^{+}}";
   m_Strings["1Lelp"] = VS().a("1L_elp-elG");
@@ -1743,24 +1781,30 @@ void FitReader::InitializeRecipes(){
 
   m_Title["1Lm"] = "#scale[1.2]{single #it{l}^{-}}";
   m_Strings["1Lm"] = VS().a("1L_elm-elG").a("1L_mum-muG");
+  
+  m_Title["1Lelgold"] = "#scale[1.2]{single gold e}";
+  m_Strings["1Lelgold"] = VS().a("1L_elpm-elG").a("1L_elp-elG").a("1L_elm-elG");
+
+  m_Title["1Lmugold"] = "#scale[1.2]{single gold #mu}";
+  m_Strings["1Lmugold"] = VS().a("1L_mup-muG").a("1L_mum-muG").a("1L_mupm-muG");
 
   m_Title["1Lsilver"] = "#scale[1.2]{single silver #it{l}}";
   m_Strings["1Lsilver"] = VS().a("1L_elp-elS").a("1L_elm-elS").a("1L_mup-muS").a("1L_mum-muS");
   
   m_Title["1Lelsilver"] = "#scale[1.2]{single silver e}";
-  m_Strings["1Lelsilver"] = VS().a("1L_elp-elS").a("1L_elm-elS");
+  m_Strings["1Lelsilver"] = VS().a("1L_elp-elS").a("1L_elm-elS").a("1L_elpm-elS");
   
   m_Title["1Lmusilver"] = "#scale[1.2]{single silver #mu}";
-  m_Strings["1Lmusilver"] = VS().a("1L_mup-muS").a("1L_mum-muS");
+  m_Strings["1Lmusilver"] = VS().a("1L_mup-muS").a("1L_mum-muS").a("1L_mupm-muS");
 
   m_Title["1Lbronze"] = "#scale[1.2]{single bronze #it{l}}";
   m_Strings["1Lbronze"] = VS().a("1L_elp-elB").a("1L_elm-el2").a("1L_mup-muB").a("1L_mum-muB");
   
   m_Title["1Lelbronze"] = "#scale[1.2]{single bronze e}";
-  m_Strings["1Lelbronze"] = VS().a("1L_elp-elB").a("1L_elm-elB");
+  m_Strings["1Lelbronze"] = VS().a("1L_elp-elB").a("1L_elm-elB").a("1L_elpm-elB");
   
   m_Title["1Lmubronze"] = "#scale[1.2]{single bronze #mu}";
-  m_Strings["1Lmubonze"] = VS().a("1L_mup-muB").a("1L_mum-muB");
+  m_Strings["1Lmubronze"] = VS().a("1L_mup-muB").a("1L_mum-muB").a("1L_mupm-muB");
 
   m_Title["2LOSSF"] = "#scale[1.2]{e^{#pm} e^{#mp} or #mu^{#pm} #mu^{#mp}}";
   m_Strings["2LOSSF"] = VS().a("2LOS_el^el-elGelG").a("2LOS_mu^mu-muGmuG").a("2LOS_elel^0-elGelG").a("2LOS_mumu^0-muGmuG");
@@ -1841,6 +1885,7 @@ void FitReader::InitializeRecipes(){
   m_Title["2j2bS"] = "#splitline{2 jets}{2 b-tags} #scale[1.2]{#in S}";
 
   m_Title["3j0bS"] = "#splitline{3 jets}{0 b-tags} #scale[1.2]{#in S}";
+  m_Strings["3jS"] = VS().a("3jS").a("3j0bS").a("3j1bS").a("3jge2bS");
 
   m_Title["3j1bS"] = "#splitline{3 jets}{1 b-tags} #scale[1.2]{#in S}";
 
