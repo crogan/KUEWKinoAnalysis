@@ -600,7 +600,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
     if(!AnalysisBase<Base>::IsGoodEvent() || !m_EventFilter)
       return;
 
-  // cout << AnalysisBase<Base>::GetEventWeight() << endl;
+  //cout << "Event Weight " << tree->GetName() << " " << AnalysisBase<Base>::GetEventWeight() << endl;
   
   bool good_PV;
   TVector3 PV = AnalysisBase<Base>::GetPV(good_PV);
