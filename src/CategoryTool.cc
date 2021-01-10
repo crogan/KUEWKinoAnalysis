@@ -38,7 +38,7 @@ FitBin CategoryTool::GetFitBin(int index) const {
   if(index == 1){
     RBins.push_back(RBin(0.9,   0.95,   VD().a(0.).a(40.)));
     RBins.push_back(RBin(0.95,  0.98,   VD().a(0.).a(5.).a(10.).a(40.)));
-    RBins.push_back(RBin(0.98,  1.00,   VD().a(0.).a(5.).a(10.).a(40.)));
+    RBins.push_back(RBin(0.98,  1.00,   VD().a(0.).a(5.).a(10.).a(20.).a(40.)));
   }
 
   // 0L 2j, 1L 1j
@@ -765,7 +765,7 @@ CategoryList CategoryTool::GetCategories_1L() const {
   Leptonic L_elpm_0(LepList().Add(elp), LepList(), "elpm");
   L_elpm_0 += Leptonic(LepList().Add(elm), LepList());
   Leptonic L_mupm_0(LepList().Add(mup), LepList(), "mupm");
-  L_mupm_0 += Leptonic(LepList().Add(elm), LepList());
+  L_mupm_0 += Leptonic(LepList().Add(mum), LepList());
   CategoryList Cats_1Lincl;
   Cats_1Lincl += Category(L_elpm_0, "Ch1L"); 
   Cats_1Lincl += Category(L_mupm_0, "Ch1L");
@@ -1040,7 +1040,7 @@ CategoryList CategoryTool::GetCategories_1L() const {
   H_1L_4jS.push_back(GetHadronicRegion(4, 6)); // ge4j0b
   H_1L_4jS.push_back(GetHadronicRegion(4, 7)); // ge4jge1b
   vector<Hadronic> H_1L_4jS_bkg;
-  H_1L_4jS.push_back(GetHadronicRegion(4, 0)); // ge4j
+  H_1L_4jS_bkg.push_back(GetHadronicRegion(4, 0)); // ge4j
 
   Cats_1L_4jS_gold = Cats_1L_4jS_gold.CreateFitBinRegions(GetFitBin(5));
   Cats_1L_4jS_gold = Cats_1L_4jS_gold.CreateLeptonIDRegions(IDs_gold, 1);
@@ -1808,7 +1808,7 @@ CategoryList CategoryTool::GetCategories_3L() const {
   H_3L_1jS.push_back(GetHadronicRegion(1, 7)); // ge1jge1b
 
   vector<Hadronic> H_3L_1jS_bkg;
-  H_3L_1jS.push_back(GetHadronicRegion(1, 0)); // ge1j
+  H_3L_1jS_bkg.push_back(GetHadronicRegion(1, 0)); // ge1j
 
   Cats_3L_1jS_gold = Cats_3L_1jS_gold.CreateFitBinRegions(GetFitBin(4));
   Cats_3L_1jS_gold = Cats_3L_1jS_gold.CreateLeptonIDRegions(IDs_gold, 1);

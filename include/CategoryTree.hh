@@ -13,6 +13,29 @@
 
 enum CatLabelType { kNorm, kL, kL_sup, kL_sub, kJ, kJ_sup, kJ_sub, kX_sup, kX_sub };
 
+
+class SpectroscopicLabel {
+public:
+  SpectroscopicLabel();
+  virtual ~SpectroscopicLabel();
+
+  void AddLabel(const string& label, CatLabelType type);
+
+  string GetSpectroscopicLabel() const;
+
+private:
+  string m_L;
+  string m_J;
+
+  string m_Norm;
+  string m_Lsup;
+  string m_Lsub;
+  string m_Jsup;
+  string m_Jsub;
+  string m_Xsup;
+  string m_Xsub;
+};
+
 ///////////////////////////////////////////
 ////////// CategoryTree class
 ///////////////////////////////////////////
@@ -24,10 +47,12 @@ public:
 	       const string& spec_label = "",
 	       CatLabelType  spec_type = kNorm,
 	       bool DoDraw = true);
-  
+  CategoryTree(const CategoryTree& CT);
   
   virtual ~CategoryTree();
 
+  CategoryTree& operator = (const CategoryTree& CT);
+  
   void SetMatchString(const VS& match_string);
   void SetBareLabel(const string& bare_label);
   void SetSpecLabel(const string& spec_label, CatLabelType spec_type = kNorm);
@@ -36,11 +61,32 @@ public:
   const string& GetBareLabel() const;
   const string& GetSpecLabel() const;
   CatLabelType  GetSpecType() const;
+  bool          IsVisible() const;
 
-  void AddSubCategory(CategoryTree& cat);
+  void AddSubCategory(const CategoryTree& cat);
+
+  string GetSpectroscopicLabel() const;
+  VS     GetMatchLabels() const;
+
+  const CategoryTree* GetParent() const;
+
+  int GetDepth() const;
+
+  int GetNVisible() const;
+
+  void GetListVisible(vector<const CategoryTree*>& cats) const;
+  void GetListDeepest(vector<const CategoryTree*>& cats) const;
+  void GetListDepth(vector<const CategoryTree*>& cats, int depth = 0) const;
+
+  void Print(int depth = 0) const;
+  
 
 protected:
-  void SetParent(CategoryTree& par);
+  void SetParent(const CategoryTree& par);
+
+  const vector<CategoryTree*>& GetSubCats() const;
+
+  void AddSpectroscopicLabel(SpectroscopicLabel& slabel) const;
   
 private:
   VS           m_MatchString;
@@ -48,11 +94,31 @@ private:
   string       m_SpecLabel;
   CatLabelType m_SpecType;
   
-  CategoryTree* m_ParCat;
+  const CategoryTree* m_ParCat;
   vector<CategoryTree*> m_SubCats;
 
   bool m_DoDraw;
+
+  void Clear();
   
+};
+
+///////////////////////////////////////////
+////////// CategoryTreeTool class
+///////////////////////////////////////////
+
+class CategoryTreeTool {
+public:
+  CategoryTreeTool();
+
+  virtual ~CategoryTreeTool();
+
+  CategoryTree GetCategories() const;
+  CategoryTree GetCategories_0L() const;
+  CategoryTree GetCategories_1L() const;
+  CategoryTree GetCategories_2L() const;
+  CategoryTree GetCategories_3L() const;
+
 };
 
 #endif
