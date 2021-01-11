@@ -15,10 +15,11 @@
 
 class testClass{
 	public:
-		testClass(vector<TH1D*> hists);
-		testClass();
+		testClass(string OutFile, vector<TH1D*> hists);
+		testClass(string OutFile);
 		virtual ~testClass();
-
+		
+		void makeMaps();
 		void sumHistograms();
 		void scaleHistograms();
 
@@ -31,16 +32,16 @@ class testClass{
 		TFile m_outFile;
 
 		vector<TH1D*> m_hists;
-		std::vector<TH!1D*> m_sumHists;
+		std::vector<TH1D*> m_sumHists;
 		vector<string> m_names;
 
 		map<string,TH1D*> m_namesToHists;
 		map<string,TH1D*> m_nameToTotalHist;
-		map<string,float> m_namesToNorms;
+		map<string,double> m_namesToNorms;
 
 
 
 	
-}
+};
 
 #endif

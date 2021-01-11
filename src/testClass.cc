@@ -1,11 +1,13 @@
 #include "testClass.hh"
 
-testClass::testClass(){
+testClass::testClass(string OutFile){
 	m_CTTool = CategoryTreeTool();
 	m_CT = m_CTTool.GetCategories();
+	m_outName = OutFile;
 }
 
-testClass::testClass(vector<TH1D*> hists){
+testClass::testClass(string OutFile, vector<TH1D*> hists){
+	m_outName = OutFile;
 	for(int i = 0; i < hists.size(); i++){
 		m_hists.push_back((TH1D*)hists[i]->Clone());
 	}
@@ -15,7 +17,6 @@ testClass::testClass(vector<TH1D*> hists){
 	m_CT = m_CTTool.GetCategories();
 }
 
-//set outFile
 
 testClass::~testClass(){
 	for(int i = 0; i < m_hists.size(); i++){
@@ -31,7 +32,7 @@ testClass::~testClass(){
 //make maps
 void testClass::makeMaps(){
 	for(int i = 0; i < m_nHists; i++){
-		m_namesToNorms[m_names[i]] = m_hists[i]->GetIntegral();
+		m_namesToNorms[m_names[i]] = *m_hists[i]->GetIntegral();
 		m_namesToHists[m_names[i]] = m_hists[i];
 	}
 }
