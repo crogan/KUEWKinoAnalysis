@@ -462,6 +462,17 @@ CategoryList& CategoryList::operator += (const CategoryList& cat){
   return *this;
 }
 
+CategoryList CategoryList::Filter(const CategoryTree& CT) const {
+  CategoryList list = FilterOR(CT.GetMatchString());
+  const CategoryTree* par = CT.GetParent();
+  while(par){
+    list = list.Filter(*par);
+    par = par->GetParent();
+  }
+
+  return list;
+}
+
 CategoryList CategoryList::Filter(const string& label) const {
   CategoryList list;
 
@@ -482,7 +493,7 @@ CategoryList CategoryList::Remove(const string& label) const {
   return list;
 }
 
-CategoryList CategoryList::FilterOR(VS& labels) const {
+CategoryList CategoryList::FilterOR(const VS& labels) const {
   CategoryList list;
   int Nl = labels.size();
   for(int i = 0; i < m_N; i++){
@@ -498,7 +509,7 @@ CategoryList CategoryList::FilterOR(VS& labels) const {
   return list;
 }
 
-CategoryList CategoryList::FilterAND(VS& labels) const {
+CategoryList CategoryList::FilterAND(const VS& labels) const {
   CategoryList list;
   int Nl = labels.size();
   for(int i = 0; i < m_N; i++){
@@ -516,7 +527,7 @@ CategoryList CategoryList::FilterAND(VS& labels) const {
   return list;
 }
 
-CategoryList CategoryList::RemoveOR(VS& labels) const {
+CategoryList CategoryList::RemoveOR(const VS& labels) const {
   CategoryList list;
   int Nl = labels.size();
   for(int i = 0; i < m_N; i++){
@@ -534,7 +545,7 @@ CategoryList CategoryList::RemoveOR(VS& labels) const {
   return list;
 }
 
-CategoryList CategoryList::RemoveAND(VS& labels) const {
+CategoryList CategoryList::RemoveAND(const VS& labels) const {
   CategoryList list;
   int Nl = labels.size();
   for(int i = 0; i < m_N; i++){
