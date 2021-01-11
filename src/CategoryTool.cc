@@ -75,7 +75,7 @@ FitBin CategoryTool::GetFitBin(int index) const {
   // for 0L 5j, 1L 4j
   if(index == 5){
     RBins.push_back(RBin(0.45,   0.55,  VD().a(0.).a(210.).a(400.)));
-    RBins.push_back(RBin(0.55,   0.65,  VD().a(0.).a(180.).a(400.)));
+    RBins.push_back(RBin(0.55,   0.65,  VD().a(0.).a(150.).a(400.)));
     RBins.push_back(RBin(0.65,   0.75,  VD().a(0.).a(150.).a(400.)));
     RBins.push_back(RBin(0.75,   1.0,   VD().a(0.).a(400.)));
   }
