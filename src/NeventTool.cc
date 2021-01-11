@@ -1,5 +1,11 @@
 #include "../include/NeventTool.hh"
 
+#include <string>
+
+using std::string;
+using std::cout;
+using std::endl;
+
 NeventTool::NeventTool(){
 
   m_dataset = new std::string();
@@ -101,11 +107,22 @@ void NeventTool::Initialize_SMS(const std::string& dataset, const std::string& f
 
   double Nevent = 0;
   double Nweight = 0;
+
+  //cout << "Initializing " << dataset << " " << filetag << endl;
   
   int N = m_Tree->GetEntries();
   for(int i = 0; i < N; i++){
     m_Tree->GetEntry(i);
     
+    //cout << (*m_dataset) << " " << (*m_filetag) << endl;
+
+    //if( (*m_dataset).find("mStop") != string::npos){
+    //	cout << (*m_dataset) << " " << (*m_filetag) << endl;
+    //	cout << m_Nevent << " " << m_Nweight << endl;
+    //	cout << m_MP << " " << m_MC << endl << endl;
+    //}
+    
+
     if((dataset == (*m_dataset)) &&
        (filetag == (*m_filetag))){
 
@@ -114,6 +131,8 @@ void NeventTool::Initialize_SMS(const std::string& dataset, const std::string& f
       if(m_Label2Nevent_SMS[label].count(masses) == 0){
 	m_Label2Nevent_SMS[label][masses] = 0.;
 	m_Label2Nweight_SMS[label][masses] = 0.;
+      } else {
+	//cout << "HEREEREERE" << endl;
       }
       
       m_Label2Nevent_SMS[label][masses] += m_Nevent;
