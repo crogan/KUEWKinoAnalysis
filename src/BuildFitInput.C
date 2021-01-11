@@ -29,7 +29,8 @@
 #include "ScaleFactorTool.hh"
 #include "Leptonic.hh"
 #include "Hadronic.hh"
-#include "varWeights.hh"
+// #include "varWeights.hh"
+#include "testClass.hh"
 
 using ROOT::RDataFrame;
 using namespace std;
@@ -179,13 +180,15 @@ int main(int argc, char* argv[]) {
   FitInputBuilder FITBuilder(extrahist);
 
   //set systematic event weight parameters
-  varWeights vw("varWeights");
-  double maxWeight = 2.;
-  double minWeight = 0.01;
-  vw.setMinMax(minWeight,maxWeight);
+  // varWeights vw("varWeights");
+  // double maxWeight = 2.;
+  // double minWeight = 0.01;
+  // vw.setMinMax(minWeight,maxWeight);
 
   // dummy in case there is no data requested
   Process data_obs("data_obs", kData);
+
+  testClass tc();
 
   // sample (process) loop
   int Nsample = samples.GetN();
@@ -226,32 +229,32 @@ int main(int argc, char* argv[]) {
     
       TChain* chain = ST.Tree(proc, f);
       ReducedBase* base = new ReducedBase(chain);
-//cout << "reducedBase" << endl;
-      ROOT::RDataFrame d(*base->fChain);
-      double absEta = 0;
-	int nLep = 0;
-//cout << "leading lep pt" << endl;
-//for(int i = 0; i < 10; i++){
-//	cout << "a" << endl;
-//	base->GetEntry(i);
-//	cout << i << endl;
-//	if(base->Nlep < 1) continue;
-//	cout << "leading lep pt: " << base->PT_lep->at(0) << endl;
-//}     
-//cout << "a" << endl;
-	double ptMean = *d.Mean("PT_lep");
-//cout << "Met mean: " << *d.Mean("MET") << endl;
-//cout << "pt mean" << endl;
-//for(int i = 0; i < 10; i++){
-//	base->GetEntry(i);
-//	if(base->Nlep < 1) continue;
-//	cout << "Mini Iso: " << base->MiniIso_lep->at(0) << endl;
-//}     
- double isoMean = *d.Mean("MiniIso_lep");
-d.Foreach([&absEta, &nLep](vector<double> Eta_lep) {for(int iLep = 0; iLep < Eta_lep.size(); iLep++){if(Eta_lep.at(iLep) < 0) absEta += -(Eta_lep.at(iLep)); else absEta += Eta_lep.at(iLep); nLep += Eta_lep.size();}}, {"Eta_lep"});
-	double etaMean = absEta/nLep; 
- double sip3dMean = *d.Mean("SIP3D_lep");
-//cout << "setting means" << endl;
+      
+//variation stuff - not necessary for the time being
+//       ROOT::RDataFrame d(*base->fChain);
+//       double absEta = 0;
+// 	int nLep = 0;
+// //cout << "leading lep pt" << endl;
+// //for(int i = 0; i < 10; i++){
+// //	cout << "a" << endl;
+// //	base->GetEntry(i);
+// //	cout << i << endl;
+// //	if(base->Nlep < 1) continue;
+// //	cout << "leading lep pt: " << base->PT_lep->at(0) << endl;
+// //}     
+// //cout << "a" << endl;
+// 	double ptMean = *d.Mean("PT_lep");
+// //cout << "Met mean: " << *d.Mean("MET") << endl;
+// //cout << "pt mean" << endl;
+// //for(int i = 0; i < 10; i++){
+// //	base->GetEntry(i);
+// //	if(base->Nlep < 1) continue;
+// //	cout << "Mini Iso: " << base->MiniIso_lep->at(0) << endl;
+// //}     
+//  double isoMean = *d.Mean("MiniIso_lep");
+// d.Foreach([&absEta, &nLep](vector<double> Eta_lep) {for(int iLep = 0; iLep < Eta_lep.size(); iLep++){if(Eta_lep.at(iLep) < 0) absEta += -(Eta_lep.at(iLep)); else absEta += Eta_lep.at(iLep); nLep += Eta_lep.size();}}, {"Eta_lep"});
+// 	double etaMean = absEta/nLep; 
+//  double sip3dMean = *d.Mean("SIP3D_lep");
 
       int Nentry = base->fChain->GetEntries();
       
@@ -416,14 +419,14 @@ d.Foreach([&absEta, &nLep](vector<double> Eta_lep) {for(int iLep = 0; iLep < Eta
 		weight *= base->BtagSFweight_down;
 	    else 
 	      weight *= base->BtagSFweight;
-	  if(sys == Systematic("lepPT_weight"))
-	  	weight *= vw.expWeight(base,ptMean,base->PT_lep,sys);
-	  if(sys == Systematic("lepIso_weight"))
-	  	weight *= vw.expWeight(base,isoMean,base->MiniIso_lep,sys);
-	  if(sys == Systematic("lepEta_weight"))
-	  	weight *= vw.expWeight(base,etaMean, base->Eta_lep,sys);
-	if(sys == Systematic("lepSIP3D_weight"))
-	  	weight *= vw.expWeight(base,sip3dMean,base->SIP3D_lep,sys);
+	//   if(sys == Systematic("lepPT_weight"))
+	//   	weight *= vw.expWeight(base,ptMean,base->PT_lep,sys);
+	//   if(sys == Systematic("lepIso_weight"))
+	//   	weight *= vw.expWeight(base,isoMean,base->MiniIso_lep,sys);
+	//   if(sys == Systematic("lepEta_weight"))
+	//   	weight *= vw.expWeight(base,etaMean, base->Eta_lep,sys);
+	// if(sys == Systematic("lepSIP3D_weight"))
+	//   	weight *= vw.expWeight(base,sip3dMean,base->SIP3D_lep,sys);
 
 	    // turn off PU systematics for now
 	    // if(sys == Systematic("PU_SF"))
@@ -478,5 +481,7 @@ d.Foreach([&absEta, &nLep](vector<double> Eta_lep) {for(int iLep = 0; iLep < Eta
   }
 
   FITBuilder.WriteFit(OutFile);
+
+  tc.sumHistograms();
   
 }
