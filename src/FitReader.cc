@@ -940,7 +940,7 @@ else vextra.push_back(m_Strings[extra[i]][j]);
   if(Nextra > 1){
     cats[i] = cats[i].FilterOR(vextras[i]);
   }
-  }
+  }//add in capability to add up btag categories for gold leps in extra catLists ratios
   if(Nextra == 1)
   for(int i = 0; i < Ncats; i++)
     cats[i] = cats[i].FilterOR(vextra);
@@ -1033,6 +1033,9 @@ else vextra.push_back(m_Strings[extra[i]][j]);
   // sort the histograms by integral (N^2/2 brute force)
   int Nhist = hists.size();
   double hmax = -999;
+  for(int i = 0; i < Nhist; i++){
+   if(hists[i]->GetMaximum() > hmax) hmax = hists[i]->GetMaximum();
+  }
   
 //cout << "original hists" << endl;
 //for(int h = 0; h < Nhist; h++){
@@ -1044,7 +1047,6 @@ else vextra.push_back(m_Strings[extra[i]][j]);
 //  cout << "error on last bin: " << hists[h]->GetBinError(nBins) << endl;
 //}
 
-cout << "hmax: " << hmax << endl;
   // "stack" the histograms by adding
   // for(int i = Nhist-2; i >= 0; i--)
   // vhists[i]->Add(vhists[i+1]);
@@ -1896,7 +1898,6 @@ TCanvas* FitReader::Plot2D(const VS& proc,
   // Processes
   string label;
   TH2D* hist = nullptr;
-GetProcesses().Print(); 
   for(int i = 0; i < Nproc; i++){
     VS vproc;
     if(m_Strings.count(proc[i]) != 0)

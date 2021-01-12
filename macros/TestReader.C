@@ -2,7 +2,7 @@
 
 #include "../include/FitReader.hh"
 
-void TestReader(const string& inputfile = "allBkgsFitInput17_1L.root", const string& a2 = "", const string& a3 = ""){
+void TestReader(const string& inputfile = "FitInput17_bkgs_1L.root", const string& a2 = "", const string& a3 = ""){
 	gSystem->Load("/home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/lib/libKUEWKino.so");
 FitReader* FITReader = new FitReader(inputfile, a2, a3);
 //void TestReader(const string& inputfile = "test/FitInput_test.root", const string& a2 = "", const string& a3 = ""){
@@ -30,26 +30,22 @@ FitReader* FITReader = new FitReader(inputfile, a2, a3);
   // 			 VS().a("2j1bS"),
   // 			 VS().a("0bjetISR"),
   // 			 "canvas2");
+const string& proc = "ttbar_HF"; 
 
-  // FITReader->Plot2D(VS().a("T2tt_5000480"),
+  // TCanvas* cv = FITReader->Plot2D(VS().a(proc),
   // 			 VS().a("1L"),
-  // 			 VS().a("0jge1svS"),
-  // 			 VS().a("0bjetISR"),
+  // 			 VS().a("3j0bS"),
+  // 			 VS().a("ge1jISR"),
   // 			 "canvas3");
-
 //the args with multiple entries are the ones that go into the total for the ratio
-    TCanvas* cv = FITReader->Plot1Dratio("ttbar_HF",
-        		 VS().a("1L"),
-        		 VS().a("3j0bS").a("3j1bS").a("3jge2bS"),
-   //     		 VS().a("ge4j0bS").a("ge4jge1bS"), 
-        		 VS().a("ge1j0bISR"),
+    TCanvas* cv = FITReader->Plot1Dstraight(proc,
+        		 VS().a("1Lmugold").a("1Lmusilver").a("1Lmubronze"),
+        		 VS().a("3jbS"),
+        		 VS().a("ge1jISR"),
   			 "canvas3",
-			 VS());
+			 VS().a("PTISR0").a("PTISR1"));
   
 if(cv == NULL) return;
-if(!extra.empty()) cv->SaveAs(("/home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/shapeRatios/"+signal+"_"+lep+"_"+hadS+"_"+hadISR+"_"+extra+".pdf").c_str());
-
-else cv->SaveAs(("/home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/shapeRatios/"+signal+"_"+lep+"_"+hadS+"_"+hadISR+".pdf").c_str());
 // TCanvas* cv = FITReader->Plot2D(VS().a("T1bbbb_13001100"),
 //  			 VS().a("1L"),
 //        		 //VS().a("3j0bS").a("3j1bS").a("3jge2bS"),
