@@ -914,6 +914,10 @@ double AnalysisBase<SUSYNANOBase>::GetEventWeight(){
     if(!m_DoSMS)
       return genWeight*m_IndexToXsec[m_SampleIndex]/m_IndexToNweight[m_SampleIndex];
 
+    //cout << "genWeight " << genWeight << endl;
+    // cout << "Xsec " << m_IndexToXsec[m_SampleIndex] << endl;
+    //cout << "Nweight " << m_IndexToNweight[m_SampleIndex] << endl;
+    //cout << "Filter eff " << m_NeventTool.GetFilterEff(m_DataSet,m_FileTag,luminosityBlock) << endl;
     return genWeight*m_IndexToXsec[m_SampleIndex]/m_IndexToNweight[m_SampleIndex]*m_NeventTool.GetFilterEff(m_DataSet,m_FileTag,luminosityBlock);
   } else
     return 0.;

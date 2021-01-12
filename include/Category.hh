@@ -10,6 +10,7 @@
 #include "Generic.hh"
 #include "FitBin.hh"
 #include "Leptonic.hh"
+#include "CategoryTree.hh"
 
 class Hadronic;
 
@@ -93,12 +94,13 @@ public:
   CategoryList& operator += (const Category& cat);
   CategoryList& operator += (const CategoryList& cat);
 
+  CategoryList Filter(const CategoryTree& CT) const;
   CategoryList Filter(const string& label) const;
   CategoryList Remove(const string& label) const;
-  CategoryList FilterOR(VS& labels) const;
-  CategoryList FilterAND(VS& labels) const;
-  CategoryList RemoveOR(VS& labels) const;
-  CategoryList RemoveAND(VS& labels) const;
+  CategoryList FilterOR(const VS& labels) const;
+  CategoryList FilterAND(const VS& labels) const;
+  CategoryList RemoveOR(const VS& labels) const;
+  CategoryList RemoveAND(const VS& labels) const;
 
   void Print() const;
 

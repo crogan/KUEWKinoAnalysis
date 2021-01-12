@@ -171,7 +171,7 @@ int main(int argc, char* argv[]) {
   SystematicsTool SYS;
 
   Systematics systematics(1);
-  systematics += SYS.GetWeightSystematics();
+  //systematics += SYS.GetWeightSystematics();
 
   FitInputBuilder FITBuilder(extrahist);
 
@@ -409,10 +409,10 @@ int main(int argc, char* argv[]) {
 	  
 	  // use Eperp
 	  if((Nlep == 1) && (NjetS == 0) && (NSV == 0))
-	    Mperp = base->EL_BoostT;
+	    Mperp = 2.*base->EL_BoostT;
 	  if(((Nlep == 0) && (NjetS == 0) && (NSV == 1)) ||
 	     ((Nlep == 0) && (NjetS == 1) && (NSV == 0)))
-	    Mperp = base->EJ_BoostT;
+	    Mperp = 2.*base->EJ_BoostT;
 	
 	  double RISR  = base->RISR;
 
