@@ -69,6 +69,7 @@ public:
   VS     GetMatchLabels() const;
 
   const CategoryTree* GetParent() const;
+  const CategoryTree* GetVisibleParent() const;
 
   int GetDepth() const;
 
