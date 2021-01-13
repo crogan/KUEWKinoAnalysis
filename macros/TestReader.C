@@ -15,6 +15,9 @@ void TestReader(const string& inputfile = "test/FitInput_test.root", const strin
   CategoryTree CT_2L = CTTool.GetCategories_2L();
   CategoryTree CT_3L = CTTool.GetCategories_3L();
 
+
+  CT_1L.Print();
+
   FITReader->PlotYields("0Lyields",
 			VS().a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD")
 			.a("Wjets").a("Fakes").a("T2tt_5000490").a("T2tt_5000480").a("T2tt_5000375"),

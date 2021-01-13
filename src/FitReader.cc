@@ -1351,7 +1351,7 @@ TCanvas* FitReader::PlotYields(const string& can_name,
   fhists[0]->GetXaxis()->SetTitleSize(0.05);
   fhists[0]->GetXaxis()->SetTitleOffset(1.0);
   fhists[0]->GetXaxis()->SetLabelFont(42);
-  fhists[0]->GetXaxis()->SetLabelSize(0.04);
+  fhists[0]->GetXaxis()->SetLabelSize(std::min(2./double(Nvis), 0.04));
   fhists[0]->GetXaxis()->SetTitle("");
   fhists[0]->GetXaxis()->SetTickSize(0.);
   fhists[0]->GetYaxis()->CenterTitle();
