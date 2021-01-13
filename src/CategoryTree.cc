@@ -549,9 +549,16 @@ CategoryTree CategoryTreeTool::GetCategories_Fakes1L() const {
   CT_ge4jmu.AddSubCategory(CT_bronze0j);
  
   CategoryTree CT_1L(VS().a("Ch1L"), "1L", "1L", kL, true);
-  CT_1L.AddSubCategory(CT_bronze);
-  CT_1L.AddSubCategory(CT_silver);
-  CT_1L.AddSubCategory(CT_gold);
+  CT_1L.AddSubCategory(CT_0jel);
+  CT_1L.AddSubCategory(CT_1jel);
+  CT_1L.AddSubCategory(CT_2jel);
+  CT_1L.AddSubCategory(CT_3jel);
+  CT_1L.AddSubCategory(CT_ge4jel);
+  CT_1L.AddSubCategory(CT_0jmu);
+  CT_1L.AddSubCategory(CT_1jmu);
+  CT_1L.AddSubCategory(CT_2jmu);
+  CT_1L.AddSubCategory(CT_3jmu);
+  CT_1L.AddSubCategory(CT_ge4jmu);
 
   // // CT_1L.AddSubCategory(CT_0j);
   // // CT_1L.AddSubCategory(CT_1j);
