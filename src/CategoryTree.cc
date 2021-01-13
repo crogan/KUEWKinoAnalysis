@@ -431,21 +431,21 @@ CategoryTree CategoryTreeTool::GetCategories_Fakes1L() const {
   CT_ge1sv_1j.AddSubCategory(CT_etaC);
   CT_ge1sv_1j.AddSubCategory(CT_etaF);
 
-  CategoryTree CT_goldel_0j(VS().a("elG"), "gold", "G", kL_sub, false);
-  CategoryTree CT_goldel_1j(VS().a("elG"), "gold", "G", kL_sub, false);
-  CategoryTree CT_goldel_2j(VS().a("elG"), "gold", "G", kL_sub, false);
-  CategoryTree CT_goldel_3j(VS().a("elG"), "gold", "G", kL_sub, false);
-  CategoryTree CT_goldel_ge4j(VS().a("elG"), "gold", "G", kL_sub, false);
-  CategoryTree CT_silverel_0j(VS().a("elS"), "silver", "S", kL_sub, false);
-  CategoryTree CT_silverel_1j(VS().a("elS"), "silver", "S", kL_sub, false);
-  CategoryTree CT_silverel_2j(VS().a("elS"), "silver", "S", kL_sub, false);
-  CategoryTree CT_silverel_3j(VS().a("elS"), "silver", "S", kL_sub, false);
-  CategoryTree CT_silverel_ge4j(VS().a("elS"), "silver", "S", kL_sub, false);
-  CategoryTree CT_bronzeel_0j(VS().a("elB"), "bronze", "B", kL_sub, false);
-  CategoryTree CT_bronzeel_1j(VS().a("elB"), "bronze", "B", kL_sub, false);
-  CategoryTree CT_bronzeel_2j(VS().a("elB"), "bronze", "B", kL_sub, false);
-  CategoryTree CT_bronzeel_3j(VS().a("elB"), "bronze", "B", kL_sub, false);
-  CategoryTree CT_bronzeel_ge4j(VS().a("elB"), "bronze", "B", kL_sub, false);
+  CategoryTree CT_goldel_0j(VS().a("elG"), "e gold", "elG", kL_sub, true);
+  CategoryTree CT_goldel_1j(VS().a("elG"), "e gold", "elG", kL_sub, true);
+  CategoryTree CT_goldel_2j(VS().a("elG"), "e gold", "elG", kL_sub, true);
+  CategoryTree CT_goldel_3j(VS().a("elG"), "e gold", "elG", kL_sub, true);
+  CategoryTree CT_goldel_ge4j(VS().a("elG"), "e gold", "elG", kL_sub, true);
+  CategoryTree CT_silverel_0j(VS().a("elS"), "e silver", "elS", kL_sub, true);
+  CategoryTree CT_silverel_1j(VS().a("elS"), "e silver", "elS", kL_sub, true);
+  CategoryTree CT_silverel_2j(VS().a("elS"), "e silver", "elS", kL_sub, true);
+  CategoryTree CT_silverel_3j(VS().a("elS"), "e silver", "elS", kL_sub, true);
+  CategoryTree CT_silverel_ge4j(VS().a("elS"), "e silver", "elS", kL_sub, true);
+  CategoryTree CT_bronzeel_0j(VS().a("elB"), "e bronze", "elB", kL_sub, true);
+  CategoryTree CT_bronzeel_1j(VS().a("elB"), "e bronze", "elB", kL_sub, true);
+  CategoryTree CT_bronzeel_2j(VS().a("elB"), "e bronze", "elB", kL_sub, true);
+  CategoryTree CT_bronzeel_3j(VS().a("elB"), "e bronze", "elB", kL_sub, true);
+  CategoryTree CT_bronzeel_ge4j(VS().a("elB"), "e bronze", "elB", kL_sub, true);
 
   CT_goldel_0j.AddSubCategory(CT_0sv_0j);
   CT_goldel_0j.AddSubCategory(CT_ge1sv_0j);
@@ -486,21 +486,21 @@ CategoryTree CategoryTreeTool::GetCategories_Fakes1L() const {
   CT_bronzeel_ge4j.AddSubCategory(CT_0b);
   CT_bronzeel_ge4j.AddSubCategory(CT_ge1b);
 
-  CategoryTree CT_goldmu_0j(VS().a("muG"), "gold", "G", kL_sub, true);
-  CategoryTree CT_goldmu_1j(VS().a("muG"), "gold", "G", kL_sub, true);
-  CategoryTree CT_goldmu_2j(VS().a("muG"), "gold", "G", kL_sub, true);
-  CategoryTree CT_goldmu_3j(VS().a("muG"), "gold", "G", kL_sub, true);
-  CategoryTree CT_goldmu_ge4j(VS().a("muG"), "silver", "S", kL_sub, true);
-  CategoryTree CT_silvermu_0j(VS().a("muS"), "silver", "S", kL_sub, true);
-  CategoryTree CT_silvermu_1j(VS().a("muS"), "silver", "S", kL_sub, true);
-  CategoryTree CT_silvermu_2j(VS().a("muS"), "silver", "S", kL_sub, true);
-  CategoryTree CT_silvermu_3j(VS().a("muS"), "silver", "S", kL_sub, true);
-  CategoryTree CT_silvermu_ge4j(VS().a("muS"), "silver", "S", kL_sub, true);
-  CategoryTree CT_bronzemu_0j(VS().a("muB"), "bronze", "B", kL_sub, true);
-  CategoryTree CT_bronzemu_1j(VS().a("muB"), "bronze", "B", kL_sub, true);
-  CategoryTree CT_bronzemu_2j(VS().a("muB"), "bronze", "B", kL_sub, true);
-  CategoryTree CT_bronzemu_3j(VS().a("muB"), "bronze", "B", kL_sub, true);
-  CategoryTree CT_bronzemu_ge4j(VS().a("muB"), "bronze", "B", kL_sub, true);
+  CategoryTree CT_goldmu_0j(VS().a("muG"), "mu gold", "muG", kL_sub, true);
+  CategoryTree CT_goldmu_1j(VS().a("muG"), "mu gold", "muG", kL_sub, true);
+  CategoryTree CT_goldmu_2j(VS().a("muG"), "mu gold", "muG", kL_sub, true);
+  CategoryTree CT_goldmu_3j(VS().a("muG"), "mu gold", "muG", kL_sub, true);
+  CategoryTree CT_goldmu_ge4j(VS().a("muG"), "mu gold", "muG", kL_sub, true);
+  CategoryTree CT_silvermu_0j(VS().a("muS"), "mu silver", "muS", kL_sub, true);
+  CategoryTree CT_silvermu_1j(VS().a("muS"), "mu silver", "muS", kL_sub, true);
+  CategoryTree CT_silvermu_2j(VS().a("muS"), "mu silver", "muS", kL_sub, true);
+  CategoryTree CT_silvermu_3j(VS().a("muS"), "mu silver", "muS", kL_sub, true);
+  CategoryTree CT_silvermu_ge4j(VS().a("muS"), "mu silver", "muS", kL_sub, true);
+  CategoryTree CT_bronzemu_0j(VS().a("muB"), "mu bronze", "muB", kL_sub, true);
+  CategoryTree CT_bronzemu_1j(VS().a("muB"), "mu bronze", "muB", kL_sub, true);
+  CategoryTree CT_bronzemu_2j(VS().a("muB"), "mu bronze", "muB", kL_sub, true);
+  CategoryTree CT_bronzemu_3j(VS().a("muB"), "mu bronze", "muB", kL_sub, true);
+  CategoryTree CT_bronzemu_ge4j(VS().a("muB"), "mu bronze", "muB", kL_sub, true);
 
 
   CategoryTree CT_0jel(VS().a("-0j"), "", "0J", kJ, true);
@@ -512,18 +512,18 @@ CategoryTree CategoryTreeTool::GetCategories_Fakes1L() const {
   CT_0jel.AddSubCategory(CT_goldel_0j);
   CT_0jel.AddSubCategory(CT_silverel_0j);
   CT_0jel.AddSubCategory(CT_bronzeel_0j);
-  CT_1jel.AddSubCategory(CT_goldel_0j);
-  CT_1jel.AddSubCategory(CT_silverel_0j);
-  CT_1jel.AddSubCategory(CT_bronzeel_0j);
-  CT_2jel.AddSubCategory(CT_goldel_0j);
-  CT_2jel.AddSubCategory(CT_silverel_0j);
-  CT_2jel.AddSubCategory(CT_bronzeel_0j);
-  CT_3jel.AddSubCategory(CT_goldel_0j);
-  CT_3jel.AddSubCategory(CT_silverel_0j);
-  CT_3jel.AddSubCategory(CT_bronzeel_0j);
-  CT_ge4jel.AddSubCategory(CT_goldel_0j);
-  CT_ge4jel.AddSubCategory(CT_silverel_0j);
-  CT_ge4jel.AddSubCategory(CT_bronzeel_0j);
+  CT_1jel.AddSubCategory(CT_goldel_1j);
+  CT_1jel.AddSubCategory(CT_silverel_1j);
+  CT_1jel.AddSubCategory(CT_bronzeel_1j);
+  CT_2jel.AddSubCategory(CT_goldel_2j);
+  CT_2jel.AddSubCategory(CT_silverel_2j);
+  CT_2jel.AddSubCategory(CT_bronzeel_2j);
+  CT_3jel.AddSubCategory(CT_goldel_3j);
+  CT_3jel.AddSubCategory(CT_silverel_3j);
+  CT_3jel.AddSubCategory(CT_bronzeel_3j);
+  CT_ge4jel.AddSubCategory(CT_goldel_ge4j);
+  CT_ge4jel.AddSubCategory(CT_silverel_ge4j);
+  CT_ge4jel.AddSubCategory(CT_bronzeel_ge4j);
   
 
   CategoryTree CT_0jmu(VS().a("-0j"), "", "0J", kJ, true);
