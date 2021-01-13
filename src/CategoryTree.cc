@@ -460,6 +460,8 @@ CategoryTree CategoryTreeTool::GetCategories_Fakes1L() const {
   CT_goldel_ge4j.AddSubCategory(CT_0b);
   CT_goldel_ge4j.AddSubCategory(CT_ge1b);
 
+  //FOR SILVER + BRONZE LEPS - THERE ARE NO B TAG S DIVISIONS (ie only 2jS or 3jS)
+
   CT_silverel_0j.AddSubCategory(CT_0sv_0j);
   CT_silverel_0j.AddSubCategory(CT_ge1sv_0j);
   CT_silverel_1j.AddSubCategory(CT_0sv_1j);
