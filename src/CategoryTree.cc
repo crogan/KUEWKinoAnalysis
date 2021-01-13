@@ -775,6 +775,18 @@ CategoryTree CategoryTreeTool::GetCategories_1L() const {
   CT_gold.AddSubCategory(CT_3j);
   CT_gold.AddSubCategory(CT_ge4j);
   
+  CT_silver.AddSubCategory(CT_0j);
+  CT_silver.AddSubCategory(CT_1j);
+  CT_silver.AddSubCategory(CT_2j);
+  CT_silver.AddSubCategory(CT_3j);
+  CT_silver.AddSubCategory(CT_ge4j);
+  
+  CT_bronze.AddSubCategory(CT_0j);
+  CT_bronze.AddSubCategory(CT_1j);
+  CT_bronze.AddSubCategory(CT_2j);
+  CT_bronze.AddSubCategory(CT_3j);
+  CT_bronze.AddSubCategory(CT_ge4j);
+  
   CategoryTree CT_1L(VS().a("Ch1L"), "1L", "1L", kL, true);
   CT_1L.AddSubCategory(CT_bronze);
   CT_1L.AddSubCategory(CT_silver);
