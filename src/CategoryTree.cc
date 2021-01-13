@@ -509,21 +509,21 @@ CategoryTree CategoryTreeTool::GetCategories_Fakes1L() const {
   CategoryTree CT_3jel(VS().a("-3j"), "3 j #in S", "3J", kJ, true);
   CategoryTree CT_ge4jel(VS().a("-ge4j"), "#geq 4 j #in S", "4J", kJ, true);
   
-  CT_0jel.AddSubCategory(CT_gold0j);
-  CT_0jel.AddSubCategory(CT_silver0j);
-  CT_0jel.AddSubCategory(CT_bronze0j);
-  CT_1jel.AddSubCategory(CT_gold0j);
-  CT_1jel.AddSubCategory(CT_silver0j);
-  CT_1jel.AddSubCategory(CT_bronze0j);
-  CT_2jel.AddSubCategory(CT_gold0j);
-  CT_2jel.AddSubCategory(CT_silver0j);
-  CT_2jel.AddSubCategory(CT_bronze0j);
-  CT_3jel.AddSubCategory(CT_gold0j);
-  CT_3jel.AddSubCategory(CT_silver0j);
-  CT_3jel.AddSubCategory(CT_bronze0j);
-  CT_ge4jel.AddSubCategory(CT_gold0j);
-  CT_ge4jel.AddSubCategory(CT_silver0j);
-  CT_ge4jel.AddSubCategory(CT_bronze0j);
+  CT_0jel.AddSubCategory(CT_goldel_0j);
+  CT_0jel.AddSubCategory(CT_silverel_0j);
+  CT_0jel.AddSubCategory(CT_bronzeel_0j);
+  CT_1jel.AddSubCategory(CT_goldel_0j);
+  CT_1jel.AddSubCategory(CT_silverel_0j);
+  CT_1jel.AddSubCategory(CT_bronzeel_0j);
+  CT_2jel.AddSubCategory(CT_goldel_0j);
+  CT_2jel.AddSubCategory(CT_silverel_0j);
+  CT_2jel.AddSubCategory(CT_bronzeel_0j);
+  CT_3jel.AddSubCategory(CT_goldel_0j);
+  CT_3jel.AddSubCategory(CT_silverel_0j);
+  CT_3jel.AddSubCategory(CT_bronzeel_0j);
+  CT_ge4jel.AddSubCategory(CT_goldel_0j);
+  CT_ge4jel.AddSubCategory(CT_silverel_0j);
+  CT_ge4jel.AddSubCategory(CT_bronzeel_0j);
   
 
   CategoryTree CT_0jmu(VS().a("-0j"), "", "0J", kJ, true);
@@ -532,21 +532,21 @@ CategoryTree CategoryTreeTool::GetCategories_Fakes1L() const {
   CategoryTree CT_3jmu(VS().a("-3j"), "3 j #in S", "3J", kJ, true);
   CategoryTree CT_ge4jmu(VS().a("-ge4j"), "#geq 4 j #in S", "4J", kJ, true);
   
-  CT_0jmu.AddSubCategory(CT_gold0j);
-  CT_0jmu.AddSubCategory(CT_silver0j);
-  CT_0jmu.AddSubCategory(CT_bronze0j);
-  CT_1jmu.AddSubCategory(CT_gold0j);
-  CT_1jmu.AddSubCategory(CT_silver0j);
-  CT_1jmu.AddSubCategory(CT_bronze0j);
-  CT_2jmu.AddSubCategory(CT_gold0j);
-  CT_2jmu.AddSubCategory(CT_silver0j);
-  CT_2jmu.AddSubCategory(CT_bronze0j);
-  CT_3jmu.AddSubCategory(CT_gold0j);
-  CT_3jmu.AddSubCategory(CT_silver0j);
-  CT_3jmu.AddSubCategory(CT_bronze0j);
-  CT_ge4jmu.AddSubCategory(CT_gold0j);
-  CT_ge4jmu.AddSubCategory(CT_silver0j);
-  CT_ge4jmu.AddSubCategory(CT_bronze0j);
+  CT_0jmu.AddSubCategory(CT_goldmu_0j);
+  CT_0jmu.AddSubCategory(CT_silvermu_0j);
+  CT_0jmu.AddSubCategory(CT_bronzemu_0j);
+  CT_1jmu.AddSubCategory(CT_goldmu_0j);
+  CT_1jmu.AddSubCategory(CT_silvermu_0j);
+  CT_1jmu.AddSubCategory(CT_bronzemu_0j);
+  CT_2jmu.AddSubCategory(CT_goldmu_0j);
+  CT_2jmu.AddSubCategory(CT_silvermu_0j);
+  CT_2jmu.AddSubCategory(CT_bronzemu_0j);
+  CT_3jmu.AddSubCategory(CT_goldmu_0j);
+  CT_3jmu.AddSubCategory(CT_silvermu_0j);
+  CT_3jmu.AddSubCategory(CT_bronzemu_0j);
+  CT_ge4jmu.AddSubCategory(CT_goldmu_0j);
+  CT_ge4jmu.AddSubCategory(CT_silvermu_0j);
+  CT_ge4jmu.AddSubCategory(CT_bronzemu_0j);
  
   CategoryTree CT_1L(VS().a("Ch1L"), "1L", "1L", kL, true);
   CT_1L.AddSubCategory(CT_0jel);
