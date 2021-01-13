@@ -574,18 +574,24 @@ CategoryTree CategoryTreeTool::GetCategories_Fakes1L() const {
   CT_ge4jmu.AddSubCategory(CT_goldmu_0j);
   CT_ge4jmu.AddSubCategory(CT_silvermu_0j);
   CT_ge4jmu.AddSubCategory(CT_bronzemu_0j);
+
+  CategoryTree CT_el(VS().a("el"),"el","el",kL,true);
+  CategoryTree CT_mu(VS().a("mu"),"el","el",kL,true);
+
+  CT_el.AddSubCategory(CT_0jel);
+  CT_el.AddSubCategory(CT_1jel);
+  CT_el.AddSubCategory(CT_2jel);
+  CT_el.AddSubCategory(CT_3jel);
+
+  CT_mu.AddSubCategory(CT_0jmu);
+  CT_mu.AddSubCategory(CT_1jmu);
+  CT_mu.AddSubCategory(CT_2jmu);
+  CT_mu.AddSubCategory(CT_3jmu);
  
   CategoryTree CT_1L(VS().a("Ch1L"), "1L", "1L", kL, true);
-  CT_1L.AddSubCategory(CT_0jel);
-  CT_1L.AddSubCategory(CT_1jel);
-  CT_1L.AddSubCategory(CT_2jel);
-  CT_1L.AddSubCategory(CT_3jel);
-  CT_1L.AddSubCategory(CT_ge4jel);
-  CT_1L.AddSubCategory(CT_0jmu);
-  CT_1L.AddSubCategory(CT_1jmu);
-  CT_1L.AddSubCategory(CT_2jmu);
-  CT_1L.AddSubCategory(CT_3jmu);
-  CT_1L.AddSubCategory(CT_ge4jmu);
+  CT_1L.AddSubCategory(CT_el);
+  CT_1L.AddSubCategory(CT_mu);
+
 
   // // CT_1L.AddSubCategory(CT_0j);
   // // CT_1L.AddSubCategory(CT_1j);
