@@ -73,20 +73,34 @@ void SpectroscopicLabel::AddLabel(const string& label, CatLabelType type){
 
 string SpectroscopicLabel::GetSpectroscopicLabel() const {
   string label = m_Norm + " " + m_L;
+//  if(m_Lsup != "")
+//    label += "^{#scale[0.8]{" + m_Lsup + "}}";
+//  if(m_Lsub != "")
+//    label += "_{#scale[0.8]{" + m_Lsub + "}}";
+//  label += " " + m_J;
+//  if(m_Jsup != "")
+//    label += "^{#scale[0.8]{" + m_Jsup + "}}";
+//  if(m_Jsub != "")
+//    label += "_{#scale[0.8]{" + m_Jsub + "}}";
+//  label += " X";
+//  if(m_Xsup != "")
+//    label += "^{#scale[0.8]{" + m_Xsup + "}}";
+//  if(m_Xsub != "")
+//    label += "_{#scale[0.8]{" + m_Xsub + "}}";
   if(m_Lsup != "")
-    label += "^{#scale[0.8]{" + m_Lsup + "}}";
+    label += "^{{" + m_Lsup + "}}";
   if(m_Lsub != "")
-    label += "_{#scale[0.8]{" + m_Lsub + "}}";
+    label += "_{{" + m_Lsub + "}}";
   label += " " + m_J;
   if(m_Jsup != "")
-    label += "^{#scale[0.8]{" + m_Jsup + "}}";
+    label += "^{{" + m_Jsup + "}}";
   if(m_Jsub != "")
-    label += "_{#scale[0.8]{" + m_Jsub + "}}";
+    label += "_{{" + m_Jsub + "}}";
   label += " X";
   if(m_Xsup != "")
-    label += "^{#scale[0.8]{" + m_Xsup + "}}";
+    label += "^{{" + m_Xsup + "}}";
   if(m_Xsub != "")
-    label += "_{#scale[0.8]{" + m_Xsub + "}}";
+    label += "_{{" + m_Xsub + "}}";
 
   return label;
 }
