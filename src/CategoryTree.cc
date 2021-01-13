@@ -364,7 +364,7 @@ CategoryTree CategoryTreeTool::GetCategories() const {
 
 
 
-CategoryTree CategoryTreeTool::GetCategories_Fakes1Lel() const {
+CategoryTree CategoryTreeTool::GetCategories_Fakes1L() const {
   CategoryTree CT_0b(VS().a("j0b"), "0 b #in S", "0b", kJ_sub, true);
   CategoryTree CT_1b(VS().a("j1b"), "1 b #in S", "1b", kJ_sub, true);
   CategoryTree CT_ge1b(VS().a("ge1bS"), "geq 1 b #in S", "1b", kJ_sub, true);

@@ -119,7 +119,7 @@ public:
   CategoryTree GetCategories_1L() const;
   CategoryTree GetCategories_2L() const;
   CategoryTree GetCategories_3L() const;
-
+  CategoryTree GetCategorie_Fakes1L() const;
 };
 
 #endif
