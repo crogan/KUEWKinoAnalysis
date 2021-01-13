@@ -369,10 +369,7 @@ CategoryTree CategoryTreeTool::GetCategories_Fakes1L() const {
   CategoryTree CT_1b(VS().a("j1b"), "1 b #in S", "1b", kJ_sub, true);
   CategoryTree CT_ge1b(VS().a("ge1bS"), "geq 1 b #in S", "1b", kJ_sub, true);
   CategoryTree CT_2b(VS().a("2bS"), "#geq 2 b #in S", "2b", kJ_sub, true);
-
-  // CategoryTree CT_ge1jISR_SB(VS().a("ge1jISR"), "#geq 1 j #in ISR","1j",kX_sub,false);
-  // CategoryTree CT_ge1jISR_G(VS().a("ge1jISR"), "#geq 1 j #in ISR","1j",kX_sub,false);
-  
+ 
   CategoryTree CT_0bISR_1j(VS().a("0bISR"), "0 b #in ISR", "0b", kX_sub, false);
   CategoryTree CT_1bISR_1j(VS().a("ge1bISR"), "#geq 1 b #in ISR", "1b", kX_sub, false);
 
@@ -403,14 +400,6 @@ CategoryTree CategoryTreeTool::GetCategories_Fakes1L() const {
   CT_1bISR_1j.AddSubCategory(CT_0b);
   CT_1bISR_1j.AddSubCategory(CT_1b);
 
-// //for some lep cats, there are no b-tag splits for ISR
-//   CT_ge1jISR_SB.AddSubCategory(CT_p0); //for !gold leptons, there are no gammaT splits, only PTISR0
-//   CT_ge1jISR_G.AddSubCategory(CT_0b); //for gold leptons, there are no btagISR splits for >=2jS
-//   CT_ge1jISR_G.AddSubCategory(CT_1b);
-//   CT_ge1jISR_G.AddSubCategory(CT_ge1b);
-//   CT_ge1jISR_G.AddSubCategory(CT_2b);
-
-
   CategoryTree CT_gamT0(VS().a("gamT0"), "", "#gamma -", kX_sup, false);
   CategoryTree CT_gamT1(VS().a("gamT1"), "", "#gamma +", kX_sup, false);
 
@@ -427,18 +416,15 @@ CategoryTree CategoryTreeTool::GetCategories_Fakes1L() const {
   CT_ge1b.AddSubCategory(CT_gamT1);
   CT_2b.AddSubCategory(CT_gamT0);
   CT_2b.AddSubCategory(CT_gamT1);
-  
+ 
+
   CategoryTree CT_0sv_0j(VS().a("0svS"), "0 sv #in S", "0sv", kJ_sup, true);
   CategoryTree CT_ge1sv_0j(VS().a("ge1svS"), "#geq 1 sv #in S", "1sv", kJ_sup, true);
   CategoryTree CT_0sv_1j(VS().a("0svS"), "0 sv #in S", "0sv", kJ_sup, true);
   CategoryTree CT_ge1sv_1j(VS().a("ge1svS"), "#geq 1 sv #in S", "1sv", kJ_sup, true);
   
-  // CategoryTree CT_0sv_0j_SB(VS().a("0svS"), "0 sv #in S", "0sv", kJ_sup, true);
-  // CategoryTree CT_ge1sv_0j_SB(VS().a("ge1svS"), "#geq 1 sv #in S", "1sv", kJ_sup, true);
-  // CategoryTree CT_0sv_1j_SB(VS().a("0svS"), "0 sv #in S", "0sv", kJ_sup, true);
-  // CategoryTree CT_ge1sv_1j_SB(VS().a("ge1svS"), "#geq 1 sv #in S", "1sv", kJ_sup, true);
-  
-  //for 0jS, 1jS - gold (with PTISR, gamT, bISR splits)
+ 
+
   CT_0sv_0j.AddSubCategory(CT_0bISR_0j);
   CT_0sv_0j.AddSubCategory(CT_1bISR_0j);
   CT_0sv_1j.AddSubCategory(CT_0bISR_1j);
@@ -448,14 +434,8 @@ CategoryTree CategoryTreeTool::GetCategories_Fakes1L() const {
   CT_ge1sv_1j.AddSubCategory(CT_etaC);
   CT_ge1sv_1j.AddSubCategory(CT_etaF);
 
-//for 0jS, 1jS - !gold
-  // CT_0sv_0j_SB.AddSubCategory(CT_ge1jISR_SB);
-  // CT_0sv_1j_SB.AddSubCategory(CT_ge1jISR_SB);
-  // CT_ge1sv_0j_SB.AddSubCategory(CT_0bISR_0jsv);
-  // CT_ge1sv_0j_SB.AddSubCategory(CT_1bISR_0jsv);
-  // CT_ge1sv_1j_SB.AddSubCategory(CT_etaC);
-  // CT_ge1sv_1j_SB.AddSubCategory(CT_etaF);
 
+//depth = 4 - splits by bS multiplicity
   CategoryTree CT_goldel_0j(VS().a("elG"), "e gold", "elG", kL_sub, true);
   CategoryTree CT_goldel_1j(VS().a("elG"), "e gold", "elG", kL_sub, true);
   CategoryTree CT_goldel_2j(VS().a("elG"), "e gold", "elG", kL_sub, true);
@@ -485,7 +465,6 @@ CategoryTree CategoryTreeTool::GetCategories_Fakes1L() const {
   CT_goldel_ge4j.AddSubCategory(CT_0b);
   CT_goldel_ge4j.AddSubCategory(CT_ge1b);
 
-  //FOR SILVER + BRONZE LEPS - THERE ARE NO B TAG S DIVISIONS (ie only 2jS or 3jS)
 
   CT_silverel_0j.AddSubCategory(CT_0sv_0j);
   CT_silverel_0j.AddSubCategory(CT_ge1sv_0j);
@@ -552,7 +531,7 @@ CategoryTree CategoryTreeTool::GetCategories_Fakes1L() const {
   CT_ge4jel.AddSubCategory(CT_silverel_ge4j);
   CT_ge4jel.AddSubCategory(CT_bronzeel_ge4j);
   
-
+//depth = 3 - splits by lepton ID
   CategoryTree CT_0jmu(VS().a("-0j"), "", "0J", kJ, true);
   CategoryTree CT_1jmu(VS().a("-1j"), "", "1J", kJ, true);
   CategoryTree CT_2jmu(VS().a("-2j"), "2 j #in S", "2J", kJ, true);
@@ -575,6 +554,7 @@ CategoryTree CategoryTreeTool::GetCategories_Fakes1L() const {
   CT_ge4jmu.AddSubCategory(CT_silvermu_0j);
   CT_ge4jmu.AddSubCategory(CT_bronzemu_0j);
 
+//depth = 2 - splits by overall jet multiplicity
   CategoryTree CT_el(VS().a("el"),"el","el",kL,true);
   CategoryTree CT_mu(VS().a("mu"),"el","el",kL,true);
 
@@ -588,16 +568,11 @@ CategoryTree CategoryTreeTool::GetCategories_Fakes1L() const {
   CT_mu.AddSubCategory(CT_2jmu);
   CT_mu.AddSubCategory(CT_3jmu);
  
+ //depth = 1 - splits by flavor
   CategoryTree CT_1L(VS().a("Ch1L"), "1L", "1L", kL, true);
   CT_1L.AddSubCategory(CT_el);
   CT_1L.AddSubCategory(CT_mu);
 
-
-  // // CT_1L.AddSubCategory(CT_0j);
-  // // CT_1L.AddSubCategory(CT_1j);
-  // // CT_1L.AddSubCategory(CT_2j);
-  // // CT_1L.AddSubCategory(CT_3j);
-  // // CT_1L.AddSubCategory(CT_ge4j);
 
   return CT_1L;
 }
