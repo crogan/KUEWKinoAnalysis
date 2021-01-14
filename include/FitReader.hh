@@ -94,7 +94,7 @@ public:
   const ProcessList&  GetProcesses() const;
   const CategoryList& GetCategories(const string& channel = "") const;         
   const Systematics&  GetSystematics() const;
-  
+  void SmoothHistograms(const VS& proc, const CategoryTree& CT, const string& outFile = "smoothedHists.root", const string& name = "name"); 
 private:
   mutable TFile  m_File;
   

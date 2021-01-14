@@ -2154,7 +2154,75 @@ if(!extra.empty()) label += ", "+extra;
 
 
 
+void FitReader::SmoothHistograms(const VS& proc, const CategoryTree& CT, const string& outFile, const string& name){
+  vector<CategoryTree*> catTrees;
+  CT.GetListDepth(catTrees,2);
+  CategoryList catList = GetCategories();
+  if(!gSystem->AccessPathName(outFile))
+    TFile* f = TFile::Open(outFile);
+  else
+    TFile* f = new TFile(outFile,"RECREATE");
 
+  int depth = (int)catTrees.size();
+  int nCat;
+  int nProc = proc.size();
+  map<string,double> nameToNorm;
+  map<string,TH1D*> nameToHist;
+  int nTotalHist;
+  // vector<vector<string>> names;
+
+  for(int i = 0; i < Nproc; i++){
+    VS vproc;
+    if(m_Strings.count(proc[i]) != 0)
+      vproc = m_Strings[proc[i]];
+    else
+      vproc += proc[i];
+   
+
+    for(int p = 0; p < int(vproc.size()); p++){
+      int index = GetProcesses().Find(vproc[p])
+      if(index < 0) continue;
+      Process pp = GetProcesses()[index];
+      //this will loop through elf* and muf* separately, 
+      //so check that mismatched fake process flavors+category flavors are skipped with IsFilled()
+      // vector<string> catNames;
+      for(int list = 0; list < depth; i++){ 
+        CategoryList cats = catList.Filter(*catTrees[list]);
+        nCat = cats.GetN();
+        TH1D* totalHist = nullptr; //one total histogram per list per process
+        string slabel;
+        //add hists
+
+        for(int c = 0; c < nCat; c++){
+          if(!IsFilled(cats[c],pp)) continue;
+          if(!hist) totalHist = GetHistogram(cats[c],pp)->Clone(Form("plothist_%d_%s", i, name.c_str()));
+          else totalHist->Add(GetHistogram(cats[c],pp));
+
+          slabel = (cats[c].GetLabel()+"_"+pp.Name()).c_str()
+          nameToNorm[slabel] = GetHistogram(cats[c],pp)->Integral();
+          nameToHist[slabel] = totalHist;
+        }
+
+        //scale hists once all summed
+        for(int c = 0; c < nCat; c++){
+          if(!IsFilled(cats[c],pp)) continue;
+          slabel = (cats[c].GetLabel()+"_"+pp.Name()).c_str()
+          nameToHist[slabel] = nameToHist[slabel]->Scale(nameToNorm[slabel]/nameToHist[slabel]->Integral());
+          nameToHist[slabel]->SetTitle(pp.Name());
+          f->cd(cats[c]);
+          nameToHist[slabel]->Write();
+        }
+
+
+      } 
+    }
+  }
+
+  f->Close();
+
+
+
+}
 
 
 
