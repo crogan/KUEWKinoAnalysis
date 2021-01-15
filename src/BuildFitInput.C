@@ -29,8 +29,10 @@
 #include "ScaleFactorTool.hh"
 #include "Leptonic.hh"
 #include "Hadronic.hh"
-// #include "varWeights.hh"
-#include "testClass.hh"
+#include "CategoryTree.hh"
+#include "FitReader.hh"
+//#include "varWeights.hh"
+//#include "testClass.hh"
 
 using ROOT::RDataFrame;
 using namespace std;
@@ -147,7 +149,8 @@ int main(int argc, char* argv[]) {
   SampleTool ST(NtuplePath, year);
 
   ScaleFactorTool SF;
-
+  CategoryTreeTool CTTool;
+  FitReader FITReader(OutFile);
   ProcessList samples;
   if(addBkg){
     cout << "Adding all background processes" << endl;
@@ -188,7 +191,7 @@ int main(int argc, char* argv[]) {
   // dummy in case there is no data requested
   Process data_obs("data_obs", kData);
 
-  testClass tc();
+  //testClass tc(OutFile);
 
   // sample (process) loop
   int Nsample = samples.GetN();
@@ -256,7 +259,7 @@ int main(int argc, char* argv[]) {
 // 	double etaMean = absEta/nLep; 
 //  double sip3dMean = *d.Mean("SIP3D_lep");
 
-      int Nentry = base->fChain->GetEntries();
+      int Nentry = 1e5;//base->fChain->GetEntries();
       
       int SKIP = 1;
 
@@ -481,7 +484,12 @@ int main(int argc, char* argv[]) {
   }
 
   FITBuilder.WriteFit(OutFile);
-
-  tc.sumHistograms();
+VS fakeProcs;
+for(int i = 0; i < int(proc_to_add.size()); i++){
+	fakeProcs += proc_to_add[i]+"_HF";
+	fakeProcs += proc_to_add[i]+"_LF";
+}
+  CategoryTree CT_Fakes1L = CTTool.GetCategories_Fakes1L();
+FITReader.SmoothHistograms(fakeProcs,CT_Fakes1L,OutFile);
   
 }

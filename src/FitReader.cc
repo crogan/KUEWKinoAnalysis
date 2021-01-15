@@ -2193,7 +2193,7 @@ TFile* f = nullptr;
       int index = GetProcesses().Find(vproc[p]);
       if(index < 0) continue;
       Process pp = GetProcesses()[index];
-  // cout << pp.Name() << endl;
+   cout << pp.Name() << endl;
       for(int list = 0; list < depth; list++){
 //cout << "list #: " << list << endl;
 //cout << "n total cats: " << catList.GetN() << endl;
@@ -2740,10 +2740,6 @@ void FitReader::InitializeRecipes(){
   m_Color["ttbar_LF"] = 7021;
   m_Strings["ttbar_LF"] = VS().a("ttbar_Fakes_elf1").a("ttbar_Fakes_muf1");
 
-  m_Title["ttbar_Fake"] = "ttbar, fake";
-  m_Color["ttbar_Fake"] = 7020;
-  m_Strings["ttbar_Fake"] = VS().a("ttbar_Fakes_elf2").a("ttbar_Fakes_muf2");
-
   m_Title["Wjets_HF"] = "W + jets, heavy flavor";
   m_Color["Wjets_HF"] = 7022;
   m_Strings["Wjets_HF"] = VS().a("Wjets_Fakes_elf0").a("Wjets_Fakes_muf0");
@@ -2752,10 +2748,30 @@ void FitReader::InitializeRecipes(){
   m_Color["Wjets_LF"] = 7021;
   m_Strings["Wjets_LF"] = VS().a("Wjets_Fakes_elf1").a("Wjets_Fakes_muf1");
 
-  m_Title["Wjets_Fake"] = "W + jets, fake";
-  m_Color["Wjets_Fake"] = 7020;
-  m_Strings["Wjets_Fake"] = VS().a("Wjets_Fakes_elf2").a("Wjets_Fakes_muf2");
-
+  m_Title["ZDY_HF"] = "Z + Drell-Yan, heavy flavor";
+  m_Color["ZDY_HF"] = 7022;
+  m_Strings["ZDY_HF"] = VS().a("ZDY_Fakes_elf0").a("ZDY_Fakes_muf0");
+  
+  m_Title["ZDY_LF"] = "Z + Drell-Yan, light flavor";
+  m_Color["ZDY_LF"] = 7021;
+  m_Strings["ZDY_LF"] = VS().a("ZDY_Fakes_elf1").a("ZDY_Fakes_muf1");
+  
+  m_Title["ST_HF"] = "Single top, heavy flavor";
+  m_Color["ST_HF"] = 7022;
+  m_Strings["ZDY_HF"] = VS().a("ST_Fakes_elf0").a("ST_Fakes_muf0");
+  
+  m_Title["ST_LF"] = "Single top, light flavor";
+  m_Color["ST_LF"] = 7021;
+  m_Strings["ST_LF"] = VS().a("ST_Fakes_elf1").a("ST_Fakes_muf1");
+  
+  m_Title["DB_HF"] = "Di-boson, heavy flavor";
+  m_Color["DB_HF"] = 7022;
+  m_Strings["DB_HF"] = VS().a("DB_Fakes_elf0").a("DB_Fakes_muf0");
+  
+  m_Title["DB_LF"] = "Di-boson, light flavor";
+  m_Color["DB_LF"] = 7021;
+  m_Strings["DB_LF"] = VS().a("DB_Fakes_elf1").a("DB_Fakes_muf1");
+  
   m_Title["Total"] = "total background";
   m_Color["Total"] = 7000;
   m_Strings["Total"] = VS().a("ttbar").a("ST").a("DB").a("ZDY").a("Wjets").a("Fakes_elf0").a("Fakes_elf1").

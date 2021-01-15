@@ -464,7 +464,7 @@ CategoryList& CategoryList::operator += (const CategoryList& cat){
 
 CategoryList CategoryList::Filter(const CategoryTree& CT) const {
   CategoryList list = FilterOR(CT.GetMatchString());
-  const CategoryTree* par = CT.GetParent();
+const CategoryTree* par = CT.GetParent();
   while(par){
     list = list.Filter(*par);
     par = par->GetParent();
