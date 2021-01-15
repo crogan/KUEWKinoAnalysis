@@ -1734,8 +1734,6 @@ TCanvas* FitReader::Plot1Dstack(const string& can_name,
       }
     }
   }
-
-  cout << "and here " << endl;
  
   if(total_data > 0.){
     fhist_data = new TH1D(Form("fhistdata_%s", can_name.c_str()),
