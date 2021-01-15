@@ -1379,6 +1379,7 @@ TCanvas* FitReader::Plot1Dratio(const string& proc,
   }
   //cat.Print();
 
+cout << "pre cuts: " << cats[1].GetN() << endl;
   // Leptonic
   VS lep_labels;
   vector<VS> vleps;
@@ -1413,7 +1414,9 @@ TCanvas* FitReader::Plot1Dratio(const string& proc,
 if(Nlep == 1)
   for(int i = 0; i < Ncats; i++)
     cats[i] = cats[i].FilterOR(vlep);
+cout << "leptonic cuts: " << cats[1].GetN() << endl;
 
+cats[1].Print();
 // Hadronic S
   VS hadS_labels;
   vector<VS> vhadSs;
@@ -1421,6 +1424,7 @@ if(Nlep == 1)
 
   for(int i = 0; i < NhadS; i++){
     vhadSs.push_back(VS());
+cout << hadS_cat[i] << endl;
   if(m_Title.count(hadS_cat[i]) != 0)
     hadS_labels.push_back(m_Title[hadS_cat[i]]);
   else
@@ -1455,12 +1459,14 @@ else vhadS.push_back(m_Strings[hadS_cat[i]][j]);
 		else{
 			cats[i] = cats[i].FilterOR(m_Strings[hadS_cat[0]]); //if lep is gold, filter with VS() from m_Strings
 		}
+
 	}
 	}
 	
-}	
-  //cat = cat.FilterOR(vhadS);
-
+}
+cats[1].Print();	
+//cat = cat.FilterOR(vhadS);
+cout << "hadronic S cuts:" << cats[1].GetN() << endl;
   // Hadronic ISR
   VS hadI_labels;
   vector<VS> vhadIs;
@@ -1493,8 +1499,27 @@ else vhadI.push_back(m_Strings[hadI_cat[i]][j]);
   for(int i = 0; i < Ncats; i++)
     cats[i] = cats[i].FilterOR(vhadI);
 
-  //cat = cat.FilterOR(vhadI);
+  if(NhadI == 1){
+ 	for(int i = 0; i < Ncats; i++){
+	if(Nlep == 1)
+		cats[i] = cats[i].FilterOR(vhadI);
+	else{
+		if(!strstr(m_Title[lep_cat[i]].c_str(),"gold")){
+			cats[i] = cats[i].FilterOR(vhadI); //if lep is !gold, filter with string given to macro for hadS_cat
+		}
+		else{
+			cats[i] = cats[i].FilterOR(m_Strings[hadI_cat[0]]); //if lep is gold, filter with VS() from m_Strings
+		}
 
+	}
+	}
+	
+}	
+  //cat = cat.FilterOR(vhadI);
+for(int i = 0; i < NhadI; i++){
+cout << vhadI[i] << endl;
+}
+cout << "hadronic ISR cuts:" << cats[1].GetN() << endl;
 
   // extra (PTISR, gammaT)
   VS extra_labels;
@@ -1534,6 +1559,7 @@ else vextra.push_back(m_Strings[extra[i]][j]);
 
   
 
+cout << "extra cuts:" << cats[1].GetN() << endl;
 
   for(int c = 0; c < Ncats; c++){
     int Ncat = cats[c].GetN();
@@ -2896,8 +2922,10 @@ void FitReader::InitializeRecipes(){
 
   // hadronic categories
   m_Title["0j0svS"] = "#splitline{0 jets}{0 SV-tags} #scale[1.2]{#in S}";
+  m_Strings["0j0svS"] = VS().a("0j0svS"); 
 
   m_Title["0j1svS"] = "#splitline{0 jets}{1 SV-tag} #scale[1.2]{#in S}";
+  m_Strings["0jge1svS"] = VS().a("0jge1svS"); 
 
   m_Title["0jge1svS"] = "#splitline{0 jets}{#geq 1 SV-tag} #scale[1.2]{#in S}";
 
@@ -2906,6 +2934,7 @@ void FitReader::InitializeRecipes(){
   m_Title["1j0bge1svS"] = "#splitline{1 jet, 0 b-tags}{#geq 1 SV-tag} #scale[1.2]{#in S}";
 
   m_Title["2j0bS"] = "#splitline{2 jets}{0 b-tags} #scale[1.2]{#in S}";
+  m_Strings["2jbS"] = VS().a("2jS").a("2j0bS").a("2j1bS").a("2j2bS");  
 
   m_Title["2j1bS"] = "#splitline{2 jets}{1 b-tags} #scale[1.2]{#in S}";
 
@@ -2919,10 +2948,13 @@ void FitReader::InitializeRecipes(){
   m_Title["3j2bS"] = "#splitline{3 jets}{#geq 2 b-tags} #scale[1.2]{#in S}";
   
   m_Title["ge1j0bISR"] = "#splitline{#geq 1 jet}{0 b-tags} #scale[1.2]{#in ISR}";
+//  m_Strings["ge1j0bISR"] = VS().a("ge1jISR");
 
   m_Title["ge1jge1bISR"] = "#splitline{#geq 1 jet}{#geq 1 b-tags} #scale[1.2]{#in ISR}";
+//  m_Strings["ge1jge1bISR"] = VS().a("ge1jISR");
 
   m_Title["ge1jISR"] = "#splitline{#geq 1 jet}{incl. b-tags} #scale[1.2]{#in ISR}";
+  m_Strings["ge1jISR"] = VS().a("ge1j0bISR").a("ge1jge1bISR");
 
   m_Title["ge1j0bS"] = "#splitline{#geq 1 jet}{0 b-tags} #scale[1.2]{#in S}";
 
