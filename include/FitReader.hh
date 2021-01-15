@@ -40,10 +40,17 @@ public:
 			   const Process&    proc,
 			   const Systematic& sys = Systematic::Default()) const;
 
+  // returns a 1-bin histogram added over all RISR/Mperp bins, all cats, all procs
   TH1D* GetIntegralHist(const string&       name,
 			const CategoryList& cats,
 			const ProcessList&  procs,
 			const Systematic&   sys = Systematic::Default()) const;
+
+  // returns a RISR/Mperp histogram added over all cats, all procs (need to have same binning or errors)
+  TH1D* GetAddedHist(const string&       name,
+		     const CategoryList& cats,
+		     const ProcessList&  procs,
+		     const Systematic&   sys = Systematic::Default()) const;
 
   bool IsFilled2D(const Category&   cat,
 		  const Process&    proc,
@@ -75,6 +82,10 @@ public:
   TCanvas* PlotYields(const string& can_name,
 		      const VS& proc,
 		      const CategoryTree& CT);
+
+  TCanvas* Plot1Dstack(const string& can_name,
+		       const VS& proc,
+		       const CategoryTree& CT);
 
   VS GetChannels() const;  
   const ProcessList&  GetProcesses() const;
@@ -118,6 +129,7 @@ private:
   TGraphErrors* GetTotalBackground(const CategoryList& cat);
 
   void DrawCatTree(const CategoryTree& CT, TCanvas* can);
+  void DrawMR(const FitBin& fitbin, TCanvas* can);
   
 };
 

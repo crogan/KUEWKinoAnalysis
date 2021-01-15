@@ -12,7 +12,7 @@ SpectroscopicLabel::SpectroscopicLabel(){
   m_Jsub = "  ";
   m_Xsup = "  ";
   m_Xsub = "  ";
-  
+  m_Norm = "";
 }
 
 SpectroscopicLabel::~SpectroscopicLabel(){
@@ -87,6 +87,32 @@ string SpectroscopicLabel::GetSpectroscopicLabel() const {
     label += "^{#scale[0.8]{" + m_Xsup + "}}";
   if(m_Xsub != "")
     label += "_{#scale[0.8]{" + m_Xsub + "}}";
+
+  return label;
+}
+
+string SpectroscopicLabel::GetPlainLabel() const {
+  string label;
+  if(m_Norm != "")
+    label += m_Norm + " ";
+  if(m_L != " L")
+    label += m_L + " ";
+  if(m_Lsup != "  ")
+    label += m_Lsup + " ";
+  if(m_Lsub != "  ")
+    label += m_Lsub + " ";
+  if(m_J != " J")
+    label += m_J + " ";
+  if(m_Jsup != "  ")
+    label += m_Jsup + " ";
+  if(m_Jsub != "  ")
+    label += m_Jsub + "S ";
+  // if((m_Jsup != "  ") || (m_Jsup != "  "))
+  //   label += "#in S ";
+  if(m_Xsup != "  ")
+    label += m_Xsup + " ";
+  if(m_Xsub != "  ")
+    label += m_Xsub + "ISR ";
 
   return label;
 }
@@ -232,9 +258,20 @@ string CategoryTree::GetSpectroscopicLabel() const {
   return slabel.GetSpectroscopicLabel();
 }
 
-void CategoryTree::AddSpectroscopicLabel(SpectroscopicLabel& slabel) const {
+string CategoryTree::GetPlainLabel(int depth) const {
+  SpectroscopicLabel slabel;
+  AddSpectroscopicLabel(slabel, depth);
+  
+  return slabel.GetPlainLabel();
+}
+
+void CategoryTree::AddSpectroscopicLabel(SpectroscopicLabel& slabel, int depth) const {
+  if(IsVisible())
+    depth--;
+  if(depth == 0)
+    return;
   if(m_ParCat != nullptr)
-    m_ParCat->AddSpectroscopicLabel(slabel);
+    m_ParCat->AddSpectroscopicLabel(slabel, depth);
 
   slabel.AddLabel(m_SpecLabel, m_SpecType);
 }
@@ -383,19 +420,31 @@ CategoryTree CategoryTreeTool::GetCategories_0L() const {
   CategoryTree CT_g0(VS().a("gamT0"), "", "#gamma-", kX_sup, false);
   CategoryTree CT_g1(VS().a("gamT1"), "", "#gamma+", kX_sup, false);
 
+  CategoryTree CT_O0(VS().a("PTISR0-gamT0").a("PTISR0-gamT1").a("PTISR1-gamT0"), "", "#gamma- or p-", kX_sup, true);
+  CategoryTree CT_O1(VS().a("PTISR1-gamT1"), "", "p+", kX_sup, true);
+  
   CT_g0.AddSubCategory(CT_p0);
   CT_g0.AddSubCategory(CT_p1);
   CT_g1.AddSubCategory(CT_p0);
   CT_g1.AddSubCategory(CT_p1);
 
-  CT_0b.AddSubCategory(CT_g0);
-  CT_0b.AddSubCategory(CT_g1);
-  CT_1b.AddSubCategory(CT_g0);
-  CT_1b.AddSubCategory(CT_g1);
-  CT_ge1b.AddSubCategory(CT_g0);
-  CT_ge1b.AddSubCategory(CT_g1);
-  CT_2b.AddSubCategory(CT_g0);
-  CT_2b.AddSubCategory(CT_g1);
+  // CT_0b.AddSubCategory(CT_g0);
+  // CT_0b.AddSubCategory(CT_g1);
+  // CT_1b.AddSubCategory(CT_g0);
+  // CT_1b.AddSubCategory(CT_g1);
+  // CT_ge1b.AddSubCategory(CT_g0);
+  // CT_ge1b.AddSubCategory(CT_g1);
+  // CT_2b.AddSubCategory(CT_g0);
+  // CT_2b.AddSubCategory(CT_g1);
+
+  CT_0b.AddSubCategory(CT_O0);
+  CT_0b.AddSubCategory(CT_O1);
+  CT_1b.AddSubCategory(CT_O0);
+  CT_1b.AddSubCategory(CT_O1);
+  CT_ge1b.AddSubCategory(CT_O0);
+  CT_ge1b.AddSubCategory(CT_O1);
+  CT_2b.AddSubCategory(CT_O0);
+  CT_2b.AddSubCategory(CT_O1);
   
   CategoryTree CT_0j(VS().a("-0j"), "", "0J", kJ, true);
   CategoryTree CT_1j(VS().a("-1j"), "", "1J", kJ, true);

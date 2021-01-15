@@ -22,6 +22,7 @@ public:
   void AddLabel(const string& label, CatLabelType type);
 
   string GetSpectroscopicLabel() const;
+  string GetPlainLabel() const;
 
 private:
   string m_L;
@@ -66,6 +67,7 @@ public:
   void AddSubCategory(const CategoryTree& cat);
 
   string GetSpectroscopicLabel() const;
+  string GetPlainLabel(int depth) const;
   VS     GetMatchLabels() const;
 
   const CategoryTree* GetParent() const;
@@ -87,7 +89,7 @@ protected:
 
   const vector<CategoryTree*>& GetSubCats() const;
 
-  void AddSpectroscopicLabel(SpectroscopicLabel& slabel) const;
+  void AddSpectroscopicLabel(SpectroscopicLabel& slabel, int depth = -1) const;
   
 private:
   VS           m_MatchString;
