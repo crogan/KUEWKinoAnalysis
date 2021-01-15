@@ -5,6 +5,7 @@
 #include <TLatex.h>
 #include <TGraphErrors.h>
 #include <TLine.h>
+#include <TSystem.h>
 
 #include "FitReader.hh"
 
@@ -25,6 +26,7 @@ FitReader::FitReader(const string& inputfile,
   
   ReadCategories();
 
+  m_inputfile = inputfile;
   if(otherfile != ""){
     m_FilePtr = new TFile(otherfile.c_str(), "READ");
     if(!m_FilePtr || !m_FilePtr->IsOpen())
@@ -2154,72 +2156,83 @@ if(!extra.empty()) label += ", "+extra;
 
 
 
-void FitReader::SmoothHistograms(const VS& proc, const CategoryTree& CT, const string& outFile, const string& name){
-  vector<CategoryTree*> catTrees;
+void FitReader::SmoothHistograms(const VS& proc, const CategoryTree& CT,  const string& name){
+vector<const CategoryTree*> catTrees;
   CT.GetListDepth(catTrees,2);
+//PrintCategories();
+TFile* f = nullptr;
   CategoryList catList = GetCategories();
-  if(!gSystem->AccessPathName(outFile))
-    TFile* f = TFile::Open(outFile);
+//if(!m_File.IsOpen()) f = TFile::Open(m_inputfile.c_str(),"UPDATE");
+//else{
+//m_File.Close();
+//f = TFile::Open(m_inputfile.c_str(),"UPDATE");
+//} 
+ //TFile* f = nullptr;
+  if(!gSystem->AccessPathName(m_inputfile.c_str()))
+     f = TFile::Open(m_inputfile.c_str(),"UPDATE");
   else
-    TFile* f = new TFile(outFile,"RECREATE");
+     f = new TFile(m_inputfile.c_str(),"RECREATE");
 
   int depth = (int)catTrees.size();
   int nCat;
   int nProc = proc.size();
   map<string,double> nameToNorm;
   map<string,TH1D*> nameToHist;
-  int nTotalHist;
-  // vector<vector<string>> names;
+  map<string,const char*> nameToTitle;
 
-  for(int i = 0; i < Nproc; i++){
+//cout << "nProc: " << nProc << endl;
+  for(int i = 0; i < nProc; i++){
     VS vproc;
     if(m_Strings.count(proc[i]) != 0)
       vproc = m_Strings[proc[i]];
     else
       vproc += proc[i];
-   
+   //cout << "vproc.size(): " << vproc.size() << endl;
 
     for(int p = 0; p < int(vproc.size()); p++){
-      int index = GetProcesses().Find(vproc[p])
+      int index = GetProcesses().Find(vproc[p]);
       if(index < 0) continue;
       Process pp = GetProcesses()[index];
-      //this will loop through elf* and muf* separately, 
-      //so check that mismatched fake process flavors+category flavors are skipped with IsFilled()
-      // vector<string> catNames;
-      for(int list = 0; list < depth; i++){ 
-        CategoryList cats = catList.Filter(*catTrees[list]);
+  // cout << pp.Name() << endl;
+      for(int list = 0; list < depth; list++){
+//cout << "list #: " << list << endl;
+//cout << "n total cats: " << catList.GetN() << endl;
+	 CategoryList cats = catList.Filter(*catTrees[list]);
         nCat = cats.GetN();
         TH1D* totalHist = nullptr; //one total histogram per list per process
-        string slabel;
+//catTrees[list]->Print();
+//cout << "nCat for list: " << nCat << endl;      
+string slabel;
         //add hists
-
         for(int c = 0; c < nCat; c++){
+//cout << "cat: " << cats[c].GetLabel() << endl;
           if(!IsFilled(cats[c],pp)) continue;
-          if(!hist) totalHist = GetHistogram(cats[c],pp)->Clone(Form("plothist_%d_%s", i, name.c_str()));
+          if(!totalHist) totalHist = (TH1D*)GetHistogram(cats[c],pp)->Clone(Form("plothist_%d_%s", i, name.c_str()));
           else totalHist->Add(GetHistogram(cats[c],pp));
-
-          slabel = (cats[c].GetLabel()+"_"+pp.Name()).c_str()
+          slabel = cats[c].GetLabel()+"_"+pp.Name();
           nameToNorm[slabel] = GetHistogram(cats[c],pp)->Integral();
-          nameToHist[slabel] = totalHist;
+          nameToTitle[slabel] = GetHistogram(cats[c],pp)->GetTitle();
+	  nameToHist[slabel] = totalHist;
         }
-
         //scale hists once all summed
         for(int c = 0; c < nCat; c++){
           if(!IsFilled(cats[c],pp)) continue;
-          slabel = (cats[c].GetLabel()+"_"+pp.Name()).c_str()
-          nameToHist[slabel] = nameToHist[slabel]->Scale(nameToNorm[slabel]/nameToHist[slabel]->Integral());
-          nameToHist[slabel]->SetTitle(pp.Name());
-          f->cd(cats[c]);
-          nameToHist[slabel]->Write();
+          slabel = cats[c].GetLabel()+"_"+pp.Name();
+//	cout << cats[c].GetLabel() << "_" << pp.Name() << endl;
+//cout << "original norm of total hist: " << nameToHist[slabel]->Integral() << " norm of corresponding hist: " << nameToNorm[slabel] << endl; 
+	  nameToHist[slabel]->Scale(nameToNorm[slabel]/nameToHist[slabel]->Integral());
+//cout << "new norm of total hist: " << nameToHist[slabel]->Integral() << endl;
+          nameToHist[slabel]->SetTitle(nameToTitle[slabel]);
+          nameToHist[slabel]->SetName((pp.Name()+"_smoothed").c_str());
+          f->cd((cats[c].Label()+"_"+cats[c].GetLabel()).c_str());
+  //        nameToHist[slabel]->Write((pp.Name()+"_smoothed").c_str());
+    	   nameToHist[slabel]->Write();
         }
-
 
       } 
     }
   }
-
   f->Close();
-
 
 
 }
