@@ -120,6 +120,8 @@ public:
   CategoryTree GetCategories_2L() const;
   CategoryTree GetCategories_3L() const;
   CategoryTree GetCategories_Fakes1L() const;
+  CategoryTree GetCategories_Fakes2L() const;
+  CategoryTree GetCategories_Fakes3L() const;
 };
 
 #endif
