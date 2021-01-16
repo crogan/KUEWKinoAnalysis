@@ -6,6 +6,7 @@
 #include <TGraphErrors.h>
 #include <TLine.h>
 #include <TSystem.h>
+#include <TMultiGraph.h>
 
 #include "FitReader.hh"
 
@@ -944,7 +945,22 @@ else vhadI.push_back(m_Strings[hadI_cat[i]][j]);
   if(NhadI == 1)
   for(int i = 0; i < Ncats; i++)
     cats[i] = cats[i].FilterOR(vhadI);
+  if(NhadI == 1){
+ 	for(int i = 0; i < Ncats; i++){
+	if(Nlep == 1)
+		cats[i] = cats[i].FilterOR(vhadI);
+	else{
+		if(!strstr(m_Title[lep_cat[i]].c_str(),"gold")){
+			cats[i] = cats[i].FilterOR(vhadI); //if lep is !gold, filter with string given to macro for hadS_cat
+		}
+		else{
+			cats[i] = cats[i].FilterOR(m_Strings[hadI_cat[0]]); //if lep is gold, filter with VS() from m_Strings
+		}
 
+	}
+	}
+	
+}
   //cat = cat.FilterOR(vhadI);
 
 
@@ -1134,8 +1150,12 @@ else vextra.push_back(m_Strings[extra[i]][j]);
 
   hists[0]->LabelsOption("v","X");
 
-
-
+//vector<TGraphErrors*> gr;
+//TGraphErrors* graph;
+//for(int h = 0; h < Nhist; h++){
+//graph = new TGraphErrors(hists[h]);
+// gr.push_back(graph);
+//}
   gStyle->SetOptTitle(0);
   gStyle->SetOptStat(0);
   gStyle->SetOptFit(11111111);
@@ -1156,34 +1176,31 @@ else vextra.push_back(m_Strings[extra[i]][j]);
 
   // double hmax = hists[0]->GetMaximum();
 
-  hists[0]->Draw("P");
-  hists[0]->GetXaxis()->CenterTitle();
-  hists[0]->GetXaxis()->SetTitleFont(42);
-  hists[0]->GetXaxis()->SetTitleSize(0.05);
-  hists[0]->GetXaxis()->SetTitleOffset(1.0);
-  hists[0]->GetXaxis()->SetLabelFont(42);
-  hists[0]->GetXaxis()->SetLabelSize(0.04);
-  hists[0]->GetXaxis()->SetTitle("");
-  hists[0]->GetXaxis()->SetTickSize(0.);
-  hists[0]->GetYaxis()->CenterTitle();
-  hists[0]->GetYaxis()->SetTitleFont(42);
-  hists[0]->GetYaxis()->SetTitleSize(0.04);
-  hists[0]->GetYaxis()->SetTitleOffset(0.85);
-  hists[0]->GetYaxis()->SetLabelFont(42);
-  hists[0]->GetYaxis()->SetLabelSize(0.035);
-  hists[0]->GetYaxis()->SetTitle("ratio to total");
-
+ //gr[0]->Draw("P");
+ hists[0]->GetXaxis()->CenterTitle();
+ hists[0]->GetXaxis()->SetTitleFont(42);
+ hists[0]->GetXaxis()->SetTitleSize(0.05);
+ hists[0]->GetXaxis()->SetTitleOffset(1.0);
+ hists[0]->GetXaxis()->SetLabelFont(42);
+ hists[0]->GetXaxis()->SetLabelSize(0.04);
+ hists[0]->GetXaxis()->SetTitle("");
+ hists[0]->GetXaxis()->SetTickSize(0.);
+ hists[0]->GetYaxis()->CenterTitle();
+ hists[0]->GetYaxis()->SetTitleFont(42);
+ hists[0]->GetYaxis()->SetTitleSize(0.04);
+ hists[0]->GetYaxis()->SetTitleOffset(0.85);
+ hists[0]->GetYaxis()->SetLabelFont(42);
+ hists[0]->GetYaxis()->SetLabelSize(0.035);
+ hists[0]->GetYaxis()->SetTitle("# events");
+TMultiGraph* mg = new TMultiGraph();
   for(int i = 0; i < Nhist; i++){
   hists[i]->SetLineColor(colors[i]);
   hists[i]->SetMarkerColor(colors[i]);
   hists[i]->SetLineWidth(1.0);
   hists[i]->SetMarkerStyle(20+i);
   hists[i]->SetLineStyle(i);
-  // hists[i]->SetFillColor(colors[i]);
-  // hists[i]->SetFillStyle(1001);
   hists[i]->Draw("SAME P");
   }
-
   // TGraphErrors* gr = nullptr;
   // if(!m_FilePtr){
   // vector<double> X;
@@ -1339,7 +1356,7 @@ else vextra.push_back(m_Strings[extra[i]][j]);
 
 
 
-TCanvas* FitReader::Plot1Dratio(const string& proc,
+TCanvas* FitReader::Plot1Dratio(const VS& proc,
            const VS& lep_cat,
            const VS& hadS_cat,
            const VS& hadI_cat,
@@ -1348,7 +1365,7 @@ TCanvas* FitReader::Plot1Dratio(const string& proc,
   RestFrames::SetStyle();
 
 
-  // int Nproc = proc.size();
+  int Nproc = proc.size();
   int Nlep  = lep_cat.size();
   int NhadS = hadS_cat.size();
   int NhadI = hadI_cat.size();
@@ -1365,12 +1382,13 @@ TCanvas* FitReader::Plot1Dratio(const string& proc,
   vector<CategoryList> cats;
 
   int Ncats;
-  if(Nlep > 1) Ncats = Nlep;
+  if(Nproc > 1) Ncats = Nproc;
+  else if(Nlep > 1) Ncats = Nlep;
   else if(NhadS > 1) Ncats = NhadS;
   else if(NhadI > 1) Ncats = NhadI;
   else if(Nextra > 1) Ncats = Nextra;
   else{
-    cout << "Need multiple categories for either lepton ID, hadS, hadI, or extra argument to create ratios" << endl;
+    cout << "Need multiple categories for either process, lepton ID, hadS, hadI, or extra argument to create ratios" << endl;
     return nullptr;
   }
 
@@ -1379,7 +1397,6 @@ TCanvas* FitReader::Plot1Dratio(const string& proc,
   }
   //cat.Print();
 
-cout << "pre cuts: " << cats[1].GetN() << endl;
   // Leptonic
   VS lep_labels;
   vector<VS> vleps;
@@ -1414,9 +1431,7 @@ cout << "pre cuts: " << cats[1].GetN() << endl;
 if(Nlep == 1)
   for(int i = 0; i < Ncats; i++)
     cats[i] = cats[i].FilterOR(vlep);
-cout << "leptonic cuts: " << cats[1].GetN() << endl;
 
-cats[1].Print();
 // Hadronic S
   VS hadS_labels;
   vector<VS> vhadSs;
@@ -1424,7 +1439,6 @@ cats[1].Print();
 
   for(int i = 0; i < NhadS; i++){
     vhadSs.push_back(VS());
-cout << hadS_cat[i] << endl;
   if(m_Title.count(hadS_cat[i]) != 0)
     hadS_labels.push_back(m_Title[hadS_cat[i]]);
   else
@@ -1464,9 +1478,7 @@ else vhadS.push_back(m_Strings[hadS_cat[i]][j]);
 	}
 	
 }
-cats[1].Print();	
 //cat = cat.FilterOR(vhadS);
-cout << "hadronic S cuts:" << cats[1].GetN() << endl;
   // Hadronic ISR
   VS hadI_labels;
   vector<VS> vhadIs;
@@ -1514,12 +1526,8 @@ else vhadI.push_back(m_Strings[hadI_cat[i]][j]);
 	}
 	}
 	
-}	
-  //cat = cat.FilterOR(vhadI);
-for(int i = 0; i < NhadI; i++){
-cout << vhadI[i] << endl;
 }
-cout << "hadronic ISR cuts:" << cats[1].GetN() << endl;
+  //cat = cat.FilterOR(vhadI);
 
   // extra (PTISR, gammaT)
   VS extra_labels;
@@ -1559,7 +1567,6 @@ else vextra.push_back(m_Strings[extra[i]][j]);
 
   
 
-cout << "extra cuts:" << cats[1].GetN() << endl;
 
   for(int c = 0; c < Ncats; c++){
     int Ncat = cats[c].GetN();
@@ -1573,26 +1580,29 @@ cout << "extra cuts:" << cats[1].GetN() << endl;
   vector<int>   colors;
   vector<TH1D*> hists;
 
-
-  CategoryList cat1;
-  for(int cc = 0; cc < Ncats; cc++){
-    cat1 = cats[cc];
-    int Ncat = cat1.GetN();
-    VS vproc;
-    if(m_Strings.count(proc) != 0)
-      vproc = m_Strings[proc];
+for(int i = 0; i < Nproc; i++){
+  VS vproc;
+    if(m_Strings.count(proc[i]) != 0)
+      vproc = m_Strings[proc[i]];
     else
-      vproc += proc;
+      vproc += proc[i];
+for(int p = 0; p < int(vproc.size()); p++){
 
-    // ProcessType type = kBkg;
-    TH1D*       hist = nullptr;
-    for(int p = 0; p < int(vproc.size()); p++){
-      
       int index = GetProcesses().Find(vproc[p]);
       if(index < 0)
     continue;
     
     Process pp = GetProcesses()[index];
+  CategoryList cat1;
+//    TH1D*       hist = nullptr;
+  for(int cc = 0; cc < Ncats; cc++){
+    cat1 = cats[cc];
+    int Ncat = cat1.GetN();
+
+    // ProcessType type = kBkg;
+    TH1D*       hist = nullptr;
+//    for(int p = 0; p < int(vproc.size()); p++){
+      
   
     for(int c = 0; c < Ncat; c++){
       cout << cat1[c].GetLabel() << " " << pp.Name() << endl;
@@ -1607,7 +1617,7 @@ cout << "extra cuts:" << cats[1].GetN() << endl;
     hist->Add(GetHistogram(cat1[c], pp));
   }
     }
-  }
+  
 
   if(hist == nullptr){
     cout << "hist not found" << endl;
@@ -1627,9 +1637,9 @@ cout << "extra cuts:" << cats[1].GetN() << endl;
   colors.push_back(m_ColorDefault[cc]);
    hist->Sumw2(); 
     hists.push_back(hist); //one hist per cat group
-  
+ } 
 }
-
+}
   // int Nsig = hists_sig.size();
   TH1D* histTotal = new TH1D(*hists[0]);
 
@@ -1668,10 +1678,17 @@ cout << "extra cuts:" << cats[1].GetN() << endl;
 //	cout << "error on last bin: " << hists[h]->GetBinError(nBins) << endl;
 //}
 //cout << "number of hists: " << Nhist << endl;
+int nBins;
+int gBin; 
   histTotal->Scale(1/histTotal->Integral());
   for(int i = 0; i < Nhist; i++){
    hists[i]->Divide(histTotal);
-   hists[i]->Sumw2();
+   //hists[i]->Sumw2();
+	nBins = hists[i]->GetNbinsX();
+	for(int b = 0; b < nBins+1; b++){
+		gBin = hists[i]->GetBin(b);
+		if(hists[i]->GetBinError(gBin) == 0) hists[i]->SetBinContent(gBin,1e-8);
+	}
    if(hists[i]->GetMaximum() > hmax) hmax = hists[i]->GetMaximum();
   }
 cout << "hmax: " << hmax << endl;
@@ -1855,7 +1872,7 @@ cout << "hmax: " << hmax << endl;
     plotlabel += "#color[7024]{"+hadI_labels[0]+"} + ";
   if(Nextra == 1)
     plotlabel += "#color[7024]{"+extra_labels[0]+"} + ";
-  plotlabel += "p_{T}^{ISR} > 300 GeV, "+m_Title[proc];
+  plotlabel += "p_{T}^{ISR} > 300 GeV, "+m_Title[proc[0]];
 
   l.SetTextColor(kBlack);
   l.SetTextAlign(13);
@@ -2948,13 +2965,11 @@ void FitReader::InitializeRecipes(){
   m_Title["3j2bS"] = "#splitline{3 jets}{#geq 2 b-tags} #scale[1.2]{#in S}";
   
   m_Title["ge1j0bISR"] = "#splitline{#geq 1 jet}{0 b-tags} #scale[1.2]{#in ISR}";
-//  m_Strings["ge1j0bISR"] = VS().a("ge1jISR");
 
   m_Title["ge1jge1bISR"] = "#splitline{#geq 1 jet}{#geq 1 b-tags} #scale[1.2]{#in ISR}";
-//  m_Strings["ge1jge1bISR"] = VS().a("ge1jISR");
 
   m_Title["ge1jISR"] = "#splitline{#geq 1 jet}{incl. b-tags} #scale[1.2]{#in ISR}";
-  m_Strings["ge1jISR"] = VS().a("ge1j0bISR").a("ge1jge1bISR");
+  m_Strings["ge1jISR"] = VS().a("ge1jISR").a("ge1j0bISR").a("ge1jge1bISR");
 
   m_Title["ge1j0bS"] = "#splitline{#geq 1 jet}{0 b-tags} #scale[1.2]{#in S}";
 
