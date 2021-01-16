@@ -3137,13 +3137,13 @@ cout << "nHists: " << Nhist << endl;
 
 
   string plotlabel;
-    plotlabel += "#color[7014]{"+lep_labels+"} + ";
+    plotlabel += "#color[7014]{"+lep_labels[0]+"} + ";
 
-    plotlabel += "#color[7004]{"+hadS_labels+"} + ";
+    plotlabel += "#color[7004]{"+hadS_labels[0]+"} + ";
 
-    plotlabel += "#color[7024]{"+hadI_labels+"} + ";
+    plotlabel += "#color[7024]{"+hadI_labels[0]+"} + ";
 
-    plotlabel += "#color[7024]{"+extra_labels+"} + ";
+    plotlabel += "#color[7024]{"+extra_labels[0]+"} + ";
   plotlabel += "p_{T}^{ISR} > 300 GeV";
 
   
