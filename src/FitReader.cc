@@ -1362,7 +1362,7 @@ TCanvas* FitReader::Plot1Dratio(const VS& proc,
            const VS& hadI_cat,
            const string& name,
            const VS& extra){
-cout << "begin function" << endl;
+
   RestFrames::SetStyle();
 
 
@@ -1591,6 +1591,7 @@ VS vproc;
     else
       vproc += proc[i];
 for(int p = 0; p < int(vproc.size()); p++){
+
 cout << "vprocess: " << vproc[p] << endl;
       int index = GetProcesses().Find(vproc[p]);
       if(index < 0)
@@ -1599,12 +1600,13 @@ cout << "vprocess: " << vproc[p] << endl;
     Process pp = GetProcesses()[index];
   CategoryList cat1;
 //    TH1D*       hist = nullptr;
+  TH1D* hist = nullptr;
   for(int cc = 0; cc < Ncats; cc++){
     cat1 = cats[cc];
     int Ncat = cat1.GetN();
 cout << "categoryList has " << Ncat << " cats" << endl;
     // ProcessType type = kBkg;
-    TH1D*       hist = nullptr;
+    
 //    for(int p = 0; p < int(vproc.size()); p++){
       
   
