@@ -1590,6 +1590,7 @@ VS vproc;
       vproc = m_Strings[proc[i]];
     else
       vproc += proc[i];
+    TH1D* hist = nullptr;
 for(int p = 0; p < int(vproc.size()); p++){
 
 cout << "vprocess: " << vproc[p] << endl;
@@ -1600,7 +1601,7 @@ cout << "vprocess: " << vproc[p] << endl;
     Process pp = GetProcesses()[index];
   CategoryList cat1;
 //    TH1D*       hist = nullptr;
-  TH1D* hist = nullptr;
+
   for(int cc = 0; cc < Ncats; cc++){
     cat1 = cats[cc];
     int Ncat = cat1.GetN();
