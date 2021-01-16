@@ -1612,7 +1612,7 @@ cout << "categoryList has " << Ncat << " cats" << endl;
       
   
     for(int c = 0; c < Ncat; c++){
-      cout << cat1[c].GetLabel() << " " << pp.Name() << endl;
+      // cout << cat1[c].GetLabel() << " " << pp.Name() << endl;
       if(!IsFilled(cat1[c], pp))
         continue;
 
@@ -1644,12 +1644,14 @@ cout << "categoryList has " << Ncat << " cats" << endl;
     
   colors.push_back(m_ColorDefault[cc]);
    hist->Sumw2(); 
-    hists.push_back(hist); //one hist per cat group
+  if(Nproc != 1)  hists.push_back(hist); //one hist per cat group
  } 
 }
+if(Nproc == 1)  hists.push_back(hist); //one hist per cat group
 }
   // int Nsig = hists_sig.size();
   TH1D* histTotal = new TH1D(*hists[0]);
+  hists[0]->Scale(1/hists[0]->Integral());
 
 
   // sort the histograms by integral (N^2/2 brute force)
@@ -1667,13 +1669,13 @@ cout << "categoryList has " << Ncat << " cats" << endl;
 //	cout << "error on last bin: " << hists[h]->GetBinError(nBins) << endl;
 //}
 
-  for(int i = 0; i < Nhist; i++){
+  for(int i = 1; i < Nhist; i++){
   // vlabels.push_back(labels[i]);
   // vcolors.push_back(colors[i]);
   // vhists.push_back(hists[i]);
   histTotal->Add(hists[i]);
   hists[i]->Scale(1/hists[i]->Integral());
-  hists[i]->Sumw2();
+  // hists[i]->Sumw2();
  
   }
 //cout << "after normalizing all hists" << endl;
