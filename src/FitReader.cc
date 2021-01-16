@@ -2779,6 +2779,10 @@ void FitReader::InitializeRecipes(){
   m_Color["LF"] = 7021;
   m_Strings["LF"] = VS().a("Fakes_elf1").a("Fakes_muf1");
 
+  m_Title["ttbar_Fakes"] = "ttbar, all fakes";
+  m_Color["ttbar_Fakes"] = 7022;
+  m_Strings["ttbar_Fakes"] = VS().a("ttbar_Fakes_elf0").a("ttbar_Fakes_muf0").a("ttbar_Fakes_elf1").a("ttbar_Fakes_muf1");
+
   m_Title["ttbar_HF"] = "ttbar, heavy flavor";
   m_Color["ttbar_HF"] = 7022;
   m_Strings["ttbar_HF"] = VS().a("ttbar_Fakes_elf0").a("ttbar_Fakes_muf0");
@@ -2794,6 +2798,10 @@ void FitReader::InitializeRecipes(){
   m_Title["Wjets_LF"] = "W + jets, light flavor";
   m_Color["Wjets_LF"] = 7021;
   m_Strings["Wjets_LF"] = VS().a("Wjets_Fakes_elf1").a("Wjets_Fakes_muf1");
+
+  m_Title["Wjets_Fakes"] = "Wjets, all fakes";
+  m_Color["Wjets_Fakes"] = 7022;
+  m_Strings["Wjets_Fakes"] = VS().a("Wjets_Fakes_elf0").a("Wjets_Fakes_muf0").a("Wjets_Fakes_elf1").a("Wjets_Fakes_muf1");
 
   m_Title["ZDY_HF"] = "Z + Drell-Yan, heavy flavor";
   m_Color["ZDY_HF"] = 7022;
