@@ -1366,7 +1366,6 @@ TCanvas* FitReader::Plot1Dratio(const string& proc,
   RestFrames::SetStyle();
 
 
-  int Nproc = proc.size();
   int Nlep  = lep_cat.size();
   int NhadS = hadS_cat.size();
   int NhadI = hadI_cat.size();
@@ -1383,12 +1382,13 @@ TCanvas* FitReader::Plot1Dratio(const string& proc,
   vector<CategoryList> cats;
 
   int Ncats;
-  if(Nproc > 1) Ncats = Nproc;
   else if(Nlep > 1) Ncats = Nlep;
   else if(NhadS > 1) Ncats = NhadS;
   else if(NhadI > 1) Ncats = NhadI;
   else if(Nextra > 1) Ncats = Nextra;
-  else{
+  if(Nlep  < 2 &&
+   NhadS < 2 &&
+   NhadI < 2){
     cout << "Need multiple categories for either process, lepton ID, hadS, hadI, or extra argument to create ratios" << endl;
     return nullptr;
   }
@@ -1437,7 +1437,6 @@ cout << "leptonic cuts passed" << endl;
   VS hadS_labels;
   vector<VS> vhadSs;
   VS vhadS;
-
   for(int i = 0; i < NhadS; i++){
     vhadSs.push_back(VS());
   if(m_Title.count(hadS_cat[i]) != 0)
