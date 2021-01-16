@@ -1628,8 +1628,9 @@ cout << "categoryList has " << Ncat << " cats" << endl;
     continue;
   }
 
- 
-  if(Nlep > 1)
+  if(Nproc > 1)
+    labels += proc[i];
+  else if(Nlep > 1)
     labels += m_Title[lep_cat[cc]];
   else if(NhadS > 1)
     labels += hadS_cat[cc];
@@ -1731,7 +1732,6 @@ cout << "nHists: " << Nhist << endl;
 
   hists[0]->LabelsOption("v","X");
 
-cout << "set bin labels" << endl;
 
   gStyle->SetOptTitle(0);
   gStyle->SetOptStat(0);
@@ -1781,17 +1781,14 @@ cout << "set bin labels" << endl;
   hists[i]->Draw("SAME P");
   }
 
-  cout << "drew hists" << endl;
 
   hists[0]->GetYaxis()->SetRangeUser(0.0, 1.1*hmax);
-
   TLegend* leg = new TLegend(1.-hhi+0.01, 1.- (Nhist+1)*(1.-0.49)/9., 0.98, 1.-hto-0.005);
   leg->SetTextFont(42);
   leg->SetTextSize(0.035);
   leg->SetFillColor(kWhite);
   leg->SetLineColor(kWhite);
   leg->SetShadowColor(kWhite);
-
   // if(hist_data)
   // leg->AddEntry(hist_data, "data");
   // leg->AddEntry(gr, "total uncertainty","F");
@@ -1799,8 +1796,7 @@ cout << "set bin labels" << endl;
   leg->AddEntry(hists[i], labels[i].c_str(), "LP");
   // for(int i = 0; i < Nsig; i++)
   // leg->AddEntry(hists_sig[i], labels_sig[i].c_str(), "L");
-  leg->Draw("SAME");
-cout << "did legend" << endl;
+ leg->Draw("SAME");
   double eps = 0.0015;
 
   TLatex l;
@@ -1866,7 +1862,6 @@ cout << "did legend" << endl;
   l.SetTextSize(0.05);
 
 
-cout << "did plot text" << endl;
   string plotlabel;
   if(Nlep == 1)
     plotlabel += "#color[7014]{"+lep_labels[0]+"} + ";
@@ -1876,8 +1871,9 @@ cout << "did plot text" << endl;
     plotlabel += "#color[7024]{"+hadI_labels[0]+"} + ";
   if(Nextra == 1)
     plotlabel += "#color[7024]{"+extra_labels[0]+"} + ";
-  plotlabel += "p_{T}^{ISR} > 300 GeV, "+m_Title[proc[0]];
-cout << "did plotlabel" << endl;
+  plotlabel += "p_{T}^{ISR} > 300 GeV, ";
+  if(Nproc == 1) plotlabel += m_Title[proc[0]];
+  
   l.SetTextColor(kBlack);
   l.SetTextAlign(13);
   l.SetTextSize(0.035);
