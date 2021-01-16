@@ -1584,14 +1584,6 @@ else vextra.push_back(m_Strings[extra[i]][j]);
   vector<TH1D*> hists;
 
 
- 
-
-    
-
-
-
-  
-
   CategoryList cat1;
   for(int cc = 0; cc < Ncats; cc++){
     cat1 = cats[cc];
@@ -2727,6 +2719,444 @@ void FitReader::DrawCatTree(const CategoryTree& CT, TCanvas* can){
 
 
 
+
+
+
+TCanvas* FitReader::Plot1DratioProc(const VS& proc,
+           const string& lep_cat,
+           const string& hadS_cat,
+           const string& hadI_cat,
+           const string& name,
+           const string& extra){
+
+  RestFrames::SetStyle();
+
+
+  int Nproc = proc.size();
+  if(Nproc  == 0)
+  return nullptr;
+
+  
+
+
+  CategoryList cat = GetCategories();
+  // vector<CategoryList> cats;
+
+  int Ncats = Nproc;
+
+  // for(int i = 0; i < Ncats; i++){
+  //   cats.push_back(GetCategories());
+  // }
+  //cat.Print();
+
+  // Leptonic
+  VS lep_labels;
+  // vector<VS> vleps;
+  VS vlep;
+
+  if(m_Title.count(lep_cat) != 0)
+    lep_labels.push_back(m_Title[lep_cat]);
+  else
+    lep_labels.push_back(lep_cat);
+
+  if(m_Strings.count(lep_cat) != 0){
+    int N = m_Strings[lep_cat].size();
+    // cout << "number of strings in lep tag: " << N << endl;
+  for(int j = 0; j < N; j++){
+    vlep.push_back(m_Strings[lep_cat][j]);
+    // cout << m_Strings[lep_cat[i]][j] << endl;
+  }
+  } else {
+    vlep.push_back(lep_cat);
+  }
+  // for(int i = 0; i < Ncats; i++)
+  //   cats[i] = cats[i].FilterOR(vlep);
+  cat.FilterOR(vlep);
+
+cout << "leptonic cuts passed" << endl;
+// Hadronic S
+  VS hadS_labels;
+  // vector<VS> vhadSs;
+  VS vhadS;
+  if(m_Title.count(hadS_cat) != 0)
+    hadS_labels.push_back(m_Title[hadS_cat]);
+  else
+    hadS_labels.push_back(hadS_cat);
+
+  if(m_Strings.count(hadS_cat) != 0){
+    int N = m_Strings[hadS_cat].size();
+    for(int j = 0; j < N; j++){
+      vhadS.push_back(m_Strings[hadS_cat][j]);
+  } 
+  }
+  else {
+    vhadS.push_back(hadS_cat);
+  }
+  
+ //   for(int i = 0; i < Ncats; i++){
+  //  cats[i] = cats[i].FilterOR(vhadS);
+  // }
+  
+// }
+cat = cat.FilterOR(vhadS);
+ 
+cout << "hadronic S cuts passed" << endl;
+ // Hadronic ISR
+  VS hadI_labels;
+  // vector<VS> vhadIs;
+  VS vhadI;
+
+  if(m_Title.count(hadI_cat) != 0)
+    hadI_labels.push_back(m_Title[hadI_cat]);
+  else
+    hadI_labels.push_back(hadI_cat);
+
+  if(m_Strings.count(hadI_cat) != 0){
+    int N = m_Strings[hadI_cat].size();
+    for(int j = 0; j < N; j++){
+      vhadI.push_back(m_Strings[hadI_cat][j]);
+  } 
+} else {
+    vhadI.push_back(hadI_cat);
+  }
+  
+  
+  // // if(NhadI == 1)
+  // for(int i = 0; i < Ncats; i++)
+  //   cats[i] = cats[i].FilterOR(vhadI);
+cat.FilterOR(vhadI);
+  
+  
+// }
+  //cat = cat.FilterOR(vhadI);
+cout << "hadronic ISR cuts passed" << endl;
+  // extra (PTISR, gammaT)
+  VS extra_labels;
+  // vector<VS> vextras;
+  VS vextra;
+
+  if(m_Title.count(extra) != 0)
+    extra_labels.push_back(m_Title[extra]);
+  else
+    extra_labels.push_back(extra);
+
+  if(m_Strings.count(extra) != 0){
+    int N = m_Strings[extra].size();
+    for(int j = 0; j < N; j++){
+    vextra.push_back(m_Strings[extra][j]);
+  } 
+  }
+  else {
+    vextra.push_back(extra);
+  }
+  
+  // for(int i = 0; i < Ncats; i++)
+  //   cats[i] = cats[i].FilterOR(vextra);
+cat.FilterOR(vextra;)
+
+  cout << "extra cuts passed" << endl;
+
+
+
+    int Ncat = cat.GetN();
+    if(Ncat < 1){
+      cout << "no categories found with specified lepton tags for categoryList #" << c << endl;
+      return nullptr;
+    }
+  
+  // Processes
+  VS            labels;
+  vector<int>   colors;
+  vector<TH1D*> hists;
+
+
+  for(int i = 0; i < Nproc; i++){
+    TH1D* hist = nullptr;
+    VS vproc;
+    for(int p = 0; p < int(vproc.size()); p++){
+      if(m_Strings.count(proc[i]) != 0)
+        vproc = m_Strings[proc[i]];
+      else
+        vproc += proc[i];
+      // TH1D* hist = nullptr;
+
+        cout << "vprocess: " << vproc[p] << endl;
+        int index = GetProcesses().Find(vproc[p]);
+        if(index < 0)
+      continue;
+
+      Process pp = GetProcesses()[index];
+
+      for(int c = 0; c < Ncat; c++){
+          // cout << cat1[c].GetLabel() << " " << pp.Name() << endl;
+          if(!IsFilled(cat[c], pp))
+            continue;
+
+        cout << "filled " << cat[c].GetLabel() << " " << pp.Name() << endl;
+
+        if(!hist){
+          hist = (TH1D*) GetHistogram(cat[c], pp)->Clone(Form("plothist_%d_%s", 0, name.c_str()));
+        } else {
+          hist->Add(GetHistogram(cat[c], pp));
+        }
+      }
+    }
+
+    if(hist == nullptr){
+      cout << "hist not found" << endl;
+      continue;
+    }
+
+    labels += proc[i];
+
+
+    colors.push_back(m_ColorDefault[i]);
+    hist->Sumw2(); 
+    hists.push_back(hist); //one hist per process
+  } 
+
+
+
+
+  // int Nsig = hists_sig.size();
+  TH1D* histTotal = new TH1D(*hists[0]);
+  hists[0]->Scale(1/hists[0]->Integral());
+
+
+  // sort the histograms by integral (N^2/2 brute force)
+  int Nhist = hists.size();
+
+  double hmax = -999;
+  
+//cout << "original hists" << endl;
+//for(int h = 0; h < Nhist; h++){
+//  cout << "hist #" << h << endl;
+//  int nBins = hists[h]->GetNbinsX();
+//  cout << "bin content for second to last bin: " << hists[h]->GetBinContent(nBins-1) << endl;
+//  cout << "error on second to last bin: " << hists[h]->GetBinError(nBins-1) << endl;
+//  cout << "bin content for last bin: " << hists[h]->GetBinContent(nBins) << endl;
+//  cout << "error on last bin: " << hists[h]->GetBinError(nBins) << endl;
+//}
+
+  for(int i = 1; i < Nhist; i++){
+  // vlabels.push_back(labels[i]);
+  // vcolors.push_back(colors[i]);
+  // vhists.push_back(hists[i]);
+  histTotal->Add(hists[i]);
+  hists[i]->Scale(1/hists[i]->Integral());
+  // hists[i]->Sumw2();
+ 
+  }
+//cout << "after normalizing all hists" << endl;
+//for(int h = 0; h < Nhist; h++){
+//  cout << "hist #" << h << endl;
+//  int nBins = hists[h]->GetNbinsX();
+//  cout << "bin content for second to last bin: " << hists[h]->GetBinContent(nBins-1) << endl;
+//  cout << "error on second to last bin: " << hists[h]->GetBinError(nBins-1) << endl;
+//  cout << "bin content for last bin: " << hists[h]->GetBinContent(nBins) << endl;
+//  cout << "error on last bin: " << hists[h]->GetBinError(nBins) << endl;
+//}
+//cout << "number of hists: " << Nhist << endl;
+int nBins;
+int gBin; 
+  histTotal->Scale(1/histTotal->Integral());
+  for(int i = 0; i < Nhist; i++){
+   hists[i]->Divide(histTotal);
+   //hists[i]->Sumw2();
+  nBins = hists[i]->GetNbinsX();
+  for(int b = 0; b < nBins+1; b++){
+    gBin = hists[i]->GetBin(b);
+    if(hists[i]->GetBinError(gBin) == 0) hists[i]->SetBinContent(gBin,1e-8);
+  }
+   if(hists[i]->GetMaximum() > hmax) hmax = hists[i]->GetMaximum();
+  }
+cout << "hmax: " << hmax << endl;
+cout << "nHists: " << Nhist << endl; 
+  const FitBin& bin = cats[0][0].GetFitBin();
+
+  int NR = bin.NRBins();
+  int NB = bin.NBins();
+  VS blabels;
+  for(int r = 0; r < NR; r++)
+  blabels += bin[r].GetMBinLabels();
+
+  int lmax = 0;
+  for(int b = 0; b < NB; b++){
+  int len = blabels[b].length();
+  if(blabels[b].find("#infty") != std::string::npos)
+    len -= 5;
+  if(len > lmax)
+    lmax = len;
+  }
+  string space = "";
+  for(int l = 0; l < 1.2*lmax; l++)
+  space += " ";
+
+  for(int b = 0; b < NB; b++){
+  if(b%2 == 1)
+    hists[0]->GetXaxis()->SetBinLabel(b+1, (blabels[b]+space).c_str());
+  else
+    hists[0]->GetXaxis()->SetBinLabel(b+1, blabels[b].c_str());
+  }
+
+  blabels.clear();
+
+  for(int r = 0; r < NR; r++)
+  blabels += bin[r].GetRBinLabel();
+
+  hists[0]->LabelsOption("v","X");
+
+
+  gStyle->SetOptTitle(0);
+  gStyle->SetOptStat(0);
+  gStyle->SetOptFit(11111111);
+  TCanvas* can = new TCanvas(Form("can_%s", name.c_str()),
+           Form("can_%s", name.c_str()),
+           1200, 700);
+  double hlo = 0.09;
+  double hhi = 0.22;
+  double hbo = 0.27;
+  double hto = 0.07;
+  can->SetLeftMargin(hlo);
+  can->SetRightMargin(hhi);
+  can->SetBottomMargin(hbo);
+  can->SetTopMargin(hto);
+  can->SetGridy();
+  can->Draw();
+  can->cd();
+
+  // double hmax = hists[0]->GetMaximum();
+
+  hists[0]->Draw("P");
+  hists[0]->GetXaxis()->CenterTitle();
+  hists[0]->GetXaxis()->SetTitleFont(42);
+  hists[0]->GetXaxis()->SetTitleSize(0.05);
+  hists[0]->GetXaxis()->SetTitleOffset(1.0);
+  hists[0]->GetXaxis()->SetLabelFont(42);
+  hists[0]->GetXaxis()->SetLabelSize(0.04);
+  hists[0]->GetXaxis()->SetTitle("");
+  hists[0]->GetXaxis()->SetTickSize(0.);
+  hists[0]->GetYaxis()->CenterTitle();
+  hists[0]->GetYaxis()->SetTitleFont(42);
+  hists[0]->GetYaxis()->SetTitleSize(0.04);
+  hists[0]->GetYaxis()->SetTitleOffset(0.85);
+  hists[0]->GetYaxis()->SetLabelFont(42);
+  hists[0]->GetYaxis()->SetLabelSize(0.035);
+  hists[0]->GetYaxis()->SetTitle("ratio to total");
+
+  for(int i = 0; i < Nhist; i++){
+  hists[i]->SetLineColor(colors[i]);
+  hists[i]->SetMarkerColor(colors[i]);
+  hists[i]->SetLineWidth(1.0);
+  hists[i]->SetMarkerStyle(20+i);
+  hists[i]->SetLineStyle(i);
+  // hists[i]->SetFillColor(colors[i]);
+  // hists[i]->SetFillStyle(1001);
+  hists[i]->Draw("SAME P");
+  }
+
+
+  hists[0]->GetYaxis()->SetRangeUser(0.0, 1.1*hmax);
+  TLegend* leg = new TLegend(1.-hhi+0.01, 1.- (Nhist+1)*(1.-0.49)/9., 0.98, 1.-hto-0.005);
+  leg->SetTextFont(42);
+  leg->SetTextSize(0.035);
+  leg->SetFillColor(kWhite);
+  leg->SetLineColor(kWhite);
+  leg->SetShadowColor(kWhite);
+  // if(hist_data)
+  // leg->AddEntry(hist_data, "data");
+  // leg->AddEntry(gr, "total uncertainty","F");
+  for(int i = 0; i < Nhist; i++)
+  leg->AddEntry(hists[i], labels[i].c_str(), "LP");
+  // for(int i = 0; i < Nsig; i++)
+  // leg->AddEntry(hists_sig[i], labels_sig[i].c_str(), "L");
+ leg->Draw("SAME");
+  double eps = 0.0015;
+
+  TLatex l;
+  l.SetTextFont(42);
+  l.SetNDC();
+
+  TLine* line = new TLine();
+  line->SetLineWidth(2);
+  line->SetLineColor(kBlack);
+
+  // line->DrawLineNDC(hlo, hbo-0.024*lmax, 1-hhi, hbo-0.0235*lmax);
+
+  l.SetTextSize(0.025);
+  l.SetTextFont(42);
+  l.SetTextAlign(23);
+  line->SetLineWidth(1);
+  double lo = hlo;
+  double hi = hlo;
+  double yline = hbo-0.024*lmax;
+  int ib = 0;
+  for(int r = 0; r < NR; r++){
+  int NM = bin[r].NBins();
+  lo = hi;
+  hi = double(NM)/double(NB)*(1.-hhi-hlo) + lo;
+
+  line->SetLineStyle(1);
+  line->DrawLineNDC(lo + eps, yline,
+            lo + eps, yline + 6*eps);
+  line->DrawLineNDC(hi - eps, yline,
+            hi - eps, yline + 6*eps);
+  line->DrawLineNDC(lo + eps, yline,
+            hi - eps, yline);
+  line->SetLineStyle(5);
+  line->DrawLineNDC(hi, hbo, hi, 1.-hto);
+  line->SetLineStyle(3);
+  for(int b = 0; b < NM; b++){
+    if(ib%2 == 1)
+    line->DrawLineNDC(lo + (hi-lo)*(b+0.5)/double(NM), hbo,
+          lo + (hi-lo)*(b+0.5)/double(NM), (hbo+yline)/2.+eps);
+    ib++;
+  }
+
+  l.DrawLatex((hi+lo)/2., yline - 8*eps, blabels[r].c_str());
+  }
+     
+  l.SetTextAlign(32);
+  l.SetTextSize(0.03);
+  l.SetTextFont(42);
+  l.DrawLatex(hlo, (hbo+yline)/2.+eps, "M_{#perp}   [GeV] #in");
+
+  l.SetTextSize(0.03);
+  l.SetTextFont(42);
+  l.DrawLatex(hlo, yline - 15*eps, "#scale[1.15]{R_{ISR}} #in");
+
+  l.SetTextAlign(31);
+  l.SetTextSize(0.04);
+  l.SetTextFont(42);
+  l.DrawLatex(1.-hhi-eps*4, 1.-hto+0.02, "2017 MC KUEWKino");
+  l.SetTextAlign(11);
+  l.SetTextSize(0.04);
+  l.SetTextFont(42);
+  l.DrawLatex(hlo+eps*4, 1.-hto+0.02,"#bf{#it{CMS}} work-in-progress");
+  l.SetTextSize(0.05);
+
+
+  string plotlabel;
+    plotlabel += "#color[7014]{"+lep_labels+"} + ";
+
+    plotlabel += "#color[7004]{"+hadS_labels+"} + ";
+
+    plotlabel += "#color[7024]{"+hadI_labels+"} + ";
+
+    plotlabel += "#color[7024]{"+extra_labels+"} + ";
+  plotlabel += "p_{T}^{ISR} > 300 GeV";
+
+  
+  l.SetTextColor(kBlack);
+  l.SetTextAlign(13);
+  l.SetTextSize(0.035);
+  l.SetTextFont(42);
+  l.DrawLatex(hlo+0.02, 1-hto-0.012, plotlabel.c_str());
+
+  return can;
+  
+
+  }
 
 
 

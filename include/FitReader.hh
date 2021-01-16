@@ -95,6 +95,12 @@ public:
   const CategoryList& GetCategories(const string& channel = "") const;         
   const Systematics&  GetSystematics() const;
   void SmoothHistograms(const VS& proc, const CategoryTree& CT,  const string& name = "name"); 
+TCanvas* Plot1DratioProc(const VS& proc,
+           const string& lep_cat,
+           const string& hadS_cat,
+           const string& hadI_cat,
+           const string& name,
+           const string& extra);
 private:
   mutable TFile  m_File;
   string	 m_inputfile; 
