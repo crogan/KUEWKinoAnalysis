@@ -1589,10 +1589,10 @@ else vextra.push_back(m_Strings[extra[i]][j]);
     cat1 = cats[cc];
     int Ncat = cat1.GetN();
 VS vproc;
-    if(m_Strings.count(proc[i]) != 0)
-      vproc = m_Strings[proc[i]];
+    if(m_Strings.count(proc) != 0)
+      vproc = m_Strings[proc];
     else
-      vproc += proc[i];
+      vproc += proc;
     TH1D* hist = nullptr;
     for(int p = 0; p < int(vproc.size()); p++){
       cout << "vprocess: " << vproc[p] << endl;
@@ -1866,8 +1866,7 @@ cout << "nHists: " << Nhist << endl;
     plotlabel += "#color[7024]{"+hadI_labels[0]+"} + ";
   if(Nextra == 1)
     plotlabel += "#color[7024]{"+extra_labels[0]+"} + ";
-  plotlabel += "p_{T}^{ISR} > 300 GeV, ";
-  if(Nproc == 1) plotlabel += m_Title[proc[0]];
+  plotlabel += "p_{T}^{ISR} > 300 GeV, "+m_Title[proc];
   
   l.SetTextColor(kBlack);
   l.SetTextAlign(13);
@@ -2852,7 +2851,7 @@ cout << "hadronic ISR cuts passed" << endl;
   
   // for(int i = 0; i < Ncats; i++)
   //   cats[i] = cats[i].FilterOR(vextra);
-cat.FilterOR(vextra;)
+cat.FilterOR(vextra);
 
   cout << "extra cuts passed" << endl;
 
@@ -2860,7 +2859,7 @@ cat.FilterOR(vextra;)
 
     int Ncat = cat.GetN();
     if(Ncat < 1){
-      cout << "no categories found with specified lepton tags for categoryList #" << c << endl;
+      cout << "no categories found"  << endl;
       return nullptr;
     }
   
@@ -2873,11 +2872,12 @@ cat.FilterOR(vextra;)
   for(int i = 0; i < Nproc; i++){
     TH1D* hist = nullptr;
     VS vproc;
-    for(int p = 0; p < int(vproc.size()); p++){
+cout << "process: " << proc[i] << endl;
       if(m_Strings.count(proc[i]) != 0)
         vproc = m_Strings[proc[i]];
       else
         vproc += proc[i];
+    for(int p = 0; p < int(vproc.size()); p++){
       // TH1D* hist = nullptr;
 
         cout << "vprocess: " << vproc[p] << endl;
@@ -2972,7 +2972,7 @@ int gBin;
   }
 cout << "hmax: " << hmax << endl;
 cout << "nHists: " << Nhist << endl; 
-  const FitBin& bin = cats[0][0].GetFitBin();
+  const FitBin& bin = cat[0].GetFitBin();
 
   int NR = bin.NRBins();
   int NB = bin.NBins();
