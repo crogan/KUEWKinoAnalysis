@@ -2771,7 +2771,7 @@ TCanvas* FitReader::Plot1DratioProc(const VS& proc,
   //   cats[i] = cats[i].FilterOR(vlep);
   cat.FilterOR(vlep);
 
-cout << "leptonic cuts passed" << endl;
+cout << "leptonic cuts passed, Ncats: " << cat.GetN() << endl;
 // Hadronic S
   VS hadS_labels;
   // vector<VS> vhadSs;
@@ -2798,7 +2798,7 @@ cout << "leptonic cuts passed" << endl;
 // }
 cat = cat.FilterOR(vhadS);
  
-cout << "hadronic S cuts passed" << endl;
+cout << "hadronic S cuts passed, Ncats: " << cat.GetN() << endl;
  // Hadronic ISR
   VS hadI_labels;
   // vector<VS> vhadIs;
@@ -2827,7 +2827,7 @@ cat.FilterOR(vhadI);
   
 // }
   //cat = cat.FilterOR(vhadI);
-cout << "hadronic ISR cuts passed" << endl;
+cout << "hadronic ISR cuts passed, Ncats: " << cat.GetN() << endl;
   // extra (PTISR, gammaT)
   VS extra_labels;
   // vector<VS> vextras;
@@ -2852,7 +2852,7 @@ cout << "hadronic ISR cuts passed" << endl;
   //   cats[i] = cats[i].FilterOR(vextra);
 cat.FilterOR(vextra);
 
-  cout << "extra cuts passed" << endl;
+  cout << "extra cuts passed, Ncats: " << cat.GetN() << endl;
 
 
 
