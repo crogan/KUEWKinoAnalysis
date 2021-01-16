@@ -1382,7 +1382,7 @@ TCanvas* FitReader::Plot1Dratio(const string& proc,
   vector<CategoryList> cats;
 
   int Ncats;
-  else if(Nlep > 1) Ncats = Nlep;
+  if(Nlep > 1) Ncats = Nlep;
   else if(NhadS > 1) Ncats = NhadS;
   else if(NhadI > 1) Ncats = NhadI;
   else if(Nextra > 1) Ncats = Nextra;
