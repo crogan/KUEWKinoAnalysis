@@ -1356,7 +1356,7 @@ TMultiGraph* mg = new TMultiGraph();
 
 
 
-TCanvas* FitReader::Plot1Dratio(const VS& proc,
+TCanvas* FitReader::Plot1Dratio(const string& proc,
            const VS& lep_cat,
            const VS& hadS_cat,
            const VS& hadI_cat,
@@ -1583,34 +1583,33 @@ else vextra.push_back(m_Strings[extra[i]][j]);
   vector<int>   colors;
   vector<TH1D*> hists;
 
-for(int i = 0; i < Nproc; i++){
-cout << "process: " << proc[i] << endl;  
+
+ 
+
+    
+
+
+
+  
+
+  CategoryList cat1;
+  for(int cc = 0; cc < Ncats; cc++){
+    cat1 = cats[cc];
+    int Ncat = cat1.GetN();
 VS vproc;
     if(m_Strings.count(proc[i]) != 0)
       vproc = m_Strings[proc[i]];
     else
       vproc += proc[i];
-    if(Nproc != 1) TH1D* hist = nullptr;
-for(int p = 0; p < int(vproc.size()); p++){
-
-cout << "vprocess: " << vproc[p] << endl;
+    TH1D* hist = nullptr;
+    for(int p = 0; p < int(vproc.size()); p++){
+      cout << "vprocess: " << vproc[p] << endl;
       int index = GetProcesses().Find(vproc[p]);
       if(index < 0)
     continue;
     
     Process pp = GetProcesses()[index];
-  CategoryList cat1;
-  if(Nproc == 1) TH1D*       hist = nullptr;
 
-  for(int cc = 0; cc < Ncats; cc++){
-    cat1 = cats[cc];
-    int Ncat = cat1.GetN();
-cout << "categoryList has " << Ncat << " cats" << endl;
-    // ProcessType type = kBkg;
-    
-//    for(int p = 0; p < int(vproc.size()); p++){
-      
-  
     for(int c = 0; c < Ncat; c++){
       // cout << cat1[c].GetLabel() << " " << pp.Name() << endl;
       if(!IsFilled(cat1[c], pp))
@@ -1624,15 +1623,14 @@ cout << "categoryList has " << Ncat << " cats" << endl;
     hist->Add(GetHistogram(cat1[c], pp));
   }
     }
-  
+  }
 
   if(hist == nullptr){
     cout << "hist not found" << endl;
     continue;
   }
 
-  if(Nproc > 1)
-    labels += proc[i];
+
   else if(Nlep > 1)
     labels += m_Title[lep_cat[cc]];
   else if(NhadS > 1)
@@ -1644,11 +1642,11 @@ cout << "categoryList has " << Ncat << " cats" << endl;
     
   colors.push_back(m_ColorDefault[cc]);
    hist->Sumw2(); 
-  if(Nproc != 1)  hists.push_back(hist); //one hist per cat group
+  hists.push_back(hist); //one hist per cat group
  } 
-}
-if(Nproc == 1)  hists.push_back(hist); //one hist per cat group
-}
+
+
+
   // int Nsig = hists_sig.size();
   TH1D* histTotal = new TH1D(*hists[0]);
   hists[0]->Scale(1/hists[0]->Integral());
