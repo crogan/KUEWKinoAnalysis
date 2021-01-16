@@ -1581,13 +1581,15 @@ else vextra.push_back(m_Strings[extra[i]][j]);
   vector<TH1D*> hists;
 
 for(int i = 0; i < Nproc; i++){
+  cout << "process: " << proc[i] << endl;
   VS vproc;
     if(m_Strings.count(proc[i]) != 0)
       vproc = m_Strings[proc[i]];
     else
       vproc += proc[i];
+    TH1D*       hist = nullptr;
 for(int p = 0; p < int(vproc.size()); p++){
-
+cout << "process: " << vproc[i] << endl;
       int index = GetProcesses().Find(vproc[p]);
       if(index < 0)
     continue;
@@ -1596,11 +1598,12 @@ for(int p = 0; p < int(vproc.size()); p++){
   CategoryList cat1;
 //    TH1D*       hist = nullptr;
   for(int cc = 0; cc < Ncats; cc++){
+    cout << "catList with " << cat1.GetN() << " categories" << endl;
     cat1 = cats[cc];
     int Ncat = cat1.GetN();
 
     // ProcessType type = kBkg;
-    TH1D*       hist = nullptr;
+    
 //    for(int p = 0; p < int(vproc.size()); p++){
       
   
