@@ -1362,6 +1362,7 @@ TCanvas* FitReader::Plot1Dratio(const VS& proc,
            const VS& hadI_cat,
            const string& name,
            const VS& extra){
+cout << "begin function" << endl;
   RestFrames::SetStyle();
 
 
@@ -1431,7 +1432,7 @@ TCanvas* FitReader::Plot1Dratio(const VS& proc,
 if(Nlep == 1)
   for(int i = 0; i < Ncats; i++)
     cats[i] = cats[i].FilterOR(vlep);
-
+cout << "leptonic cuts passed" << endl;
 // Hadronic S
   VS hadS_labels;
   vector<VS> vhadSs;
@@ -1479,7 +1480,9 @@ else vhadS.push_back(m_Strings[hadS_cat[i]][j]);
 	
 }
 //cat = cat.FilterOR(vhadS);
-  // Hadronic ISR
+ 
+cout << "hadronic S cuts passed" << endl;
+ // Hadronic ISR
   VS hadI_labels;
   vector<VS> vhadIs;
   VS vhadI;
@@ -1528,7 +1531,7 @@ else vhadI.push_back(m_Strings[hadI_cat[i]][j]);
 	
 }
   //cat = cat.FilterOR(vhadI);
-
+cout << "hadronic ISR cuts passed" << endl;
   // extra (PTISR, gammaT)
   VS extra_labels;
   vector<VS> vextras;
@@ -1565,7 +1568,7 @@ else vextra.push_back(m_Strings[extra[i]][j]);
  // cat = cat.FilterOR(vextra);
 }
 
-  
+  cout << "extra cuts passed" << endl;
 
 
   for(int c = 0; c < Ncats; c++){
@@ -1581,15 +1584,14 @@ else vextra.push_back(m_Strings[extra[i]][j]);
   vector<TH1D*> hists;
 
 for(int i = 0; i < Nproc; i++){
-  cout << "process: " << proc[i] << endl;
-  VS vproc;
+cout << "process: " << proc[i] << endl;  
+VS vproc;
     if(m_Strings.count(proc[i]) != 0)
       vproc = m_Strings[proc[i]];
     else
       vproc += proc[i];
-    TH1D*       hist = nullptr;
 for(int p = 0; p < int(vproc.size()); p++){
-cout << "vprocess: " << vproc[i] << endl;
+cout << "vprocess: " << vproc[p] << endl;
       int index = GetProcesses().Find(vproc[p]);
       if(index < 0)
     continue;
@@ -1598,12 +1600,11 @@ cout << "vprocess: " << vproc[i] << endl;
   CategoryList cat1;
 //    TH1D*       hist = nullptr;
   for(int cc = 0; cc < Ncats; cc++){
-    cout << "catList with " << cat1.GetN() << " categories" << endl;
     cat1 = cats[cc];
     int Ncat = cat1.GetN();
-
+cout << "categoryList has " << Ncat << " cats" << endl;
     // ProcessType type = kBkg;
-    
+    TH1D*       hist = nullptr;
 //    for(int p = 0; p < int(vproc.size()); p++){
       
   
@@ -1695,7 +1696,7 @@ int gBin;
    if(hists[i]->GetMaximum() > hmax) hmax = hists[i]->GetMaximum();
   }
 cout << "hmax: " << hmax << endl;
- 
+cout << "nHists: " << Nhist << endl; 
   const FitBin& bin = cats[0][0].GetFitBin();
 
   int NR = bin.NRBins();
@@ -1730,7 +1731,7 @@ cout << "hmax: " << hmax << endl;
 
   hists[0]->LabelsOption("v","X");
 
-
+cout << "set bin labels" << endl;
 
   gStyle->SetOptTitle(0);
   gStyle->SetOptStat(0);
@@ -1780,7 +1781,7 @@ cout << "hmax: " << hmax << endl;
   hists[i]->Draw("SAME P");
   }
 
-  
+  cout << "drew hists" << endl;
 
   hists[0]->GetYaxis()->SetRangeUser(0.0, 1.1*hmax);
 
@@ -1799,7 +1800,7 @@ cout << "hmax: " << hmax << endl;
   // for(int i = 0; i < Nsig; i++)
   // leg->AddEntry(hists_sig[i], labels_sig[i].c_str(), "L");
   leg->Draw("SAME");
-
+cout << "did legend" << endl;
   double eps = 0.0015;
 
   TLatex l;
@@ -1865,7 +1866,7 @@ cout << "hmax: " << hmax << endl;
   l.SetTextSize(0.05);
 
 
-
+cout << "did plot text" << endl;
   string plotlabel;
   if(Nlep == 1)
     plotlabel += "#color[7014]{"+lep_labels[0]+"} + ";
@@ -1876,7 +1877,7 @@ cout << "hmax: " << hmax << endl;
   if(Nextra == 1)
     plotlabel += "#color[7024]{"+extra_labels[0]+"} + ";
   plotlabel += "p_{T}^{ISR} > 300 GeV, "+m_Title[proc[0]];
-
+cout << "did plotlabel" << endl;
   l.SetTextColor(kBlack);
   l.SetTextAlign(13);
   l.SetTextSize(0.035);
@@ -2778,10 +2779,6 @@ void FitReader::InitializeRecipes(){
   m_Color["LF"] = 7021;
   m_Strings["LF"] = VS().a("Fakes_elf1").a("Fakes_muf1");
 
-  m_Title["ttbar_Fakes"] = "ttbar, all fakes";
-  m_Color["ttbar_Fakes"] = 7022;
-  m_Strings["ttbar_Fakes"] = VS().a("ttbar_Fakes_elf0").a("ttbar_Fakes_muf0").a("ttbar_Fakes_elf1").a("ttbar_Fakes_muf1");
-
   m_Title["ttbar_HF"] = "ttbar, heavy flavor";
   m_Color["ttbar_HF"] = 7022;
   m_Strings["ttbar_HF"] = VS().a("ttbar_Fakes_elf0").a("ttbar_Fakes_muf0");
@@ -2797,11 +2794,6 @@ void FitReader::InitializeRecipes(){
   m_Title["Wjets_LF"] = "W + jets, light flavor";
   m_Color["Wjets_LF"] = 7021;
   m_Strings["Wjets_LF"] = VS().a("Wjets_Fakes_elf1").a("Wjets_Fakes_muf1");
-
-  m_Title["Wjets_Fakes"] = "Wjets, all fakes";
-  m_Color["Wjets_Fakes"] = 7022;
-  m_Strings["Wjets_Fakes"] = VS().a("Wjets_Fakes_elf0").a("Wjets_Fakes_muf0").a("Wjets_Fakes_elf1").a("Wjets_Fakes_muf1");
-
 
   m_Title["ZDY_HF"] = "Z + Drell-Yan, heavy flavor";
   m_Color["ZDY_HF"] = 7022;
