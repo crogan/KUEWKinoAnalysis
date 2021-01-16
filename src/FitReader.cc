@@ -2802,7 +2802,6 @@ void FitReader::InitializeRecipes(){
   m_Color["Wjets_Fakes"] = 7022;
   m_Strings["Wjets_Fakes"] = VS().a("Wjets_Fakes_elf0").a("Wjets_Fakes_muf0").a("Wjets_Fakes_elf1").a("Wjets_Fakes_muf1");
 
-
   m_Title["ZDY_HF"] = "Z + Drell-Yan, heavy flavor";
   m_Color["ZDY_HF"] = 7022;
   m_Strings["ZDY_HF"] = VS().a("ZDY_Fakes_elf0").a("ZDY_Fakes_muf0");
