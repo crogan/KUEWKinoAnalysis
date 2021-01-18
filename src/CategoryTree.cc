@@ -1060,33 +1060,69 @@ CategoryTree CategoryTreeTool::GetCategories_Fakes2L() const {
   CT_ge1sv.AddSubCategory(CT_SF);
   CT_ge1sv.AddSubCategory(CT_OF);
 
+  CategoryTree CTgold_0j(VS().a("elGelG").a("elGmuG").a("muGmuG"), "gold", "G", kJ, true);
+  CategoryTree CTgold_1j(VS().a("elGelG").a("elGmuG").a("muGmuG"), "gold", "G", kJ, true);
+  CategoryTree CTgold_ge2j(VS().a("-gelGelG").a("elGmuG").a("muGmuG"), "gold", "G", kJ, true);
+  CategoryTree CTsilver_0j(VS().a("elS").a("muS"), "silver", "S", kJ, true);
+  CategoryTree CTsilver_1j(VS().a("elS").a("muS"), "silver", "S", kJ, true);
+  CategoryTree CTsilver_ge2j(VS().a("elS").a("muS"), "silver", "S", kJ, true);
+  CategoryTree CTbronze_0j(VS().a("elB").a("muB"), "bronze", "B", kJ, true);
+  CategoryTree CTbronze_1j(VS().a("elB").a("muB"), "bronze", "B", kJ, true);
+  CategoryTree CTbronze_ge2j(VS().a("elB").a("muB"), "bronze", "B", kJ, true);
+  
+  CTgold_0j.AddSubCategory(CT_0sv);
+  CTgold_0j.AddSubCategory(CT_ge1sv);
+  CTsilver_0j.AddSubCategory(CT_0sv);
+  CTsilver_0j.AddSubCategory(CT_ge1sv);
+  CTbronze_0j.AddSubCategory(CT_0sv);
+  CTbronze_0j.AddSubCategory(CT_ge1sv);
+  CTgold_1j.AddSubCategory(CT_OSSF_1j);
+  CTgold_1j.AddSubCategory(CT_OSOF_1j);
+  CTgold_1j.AddSubCategory(CT_SSSF_1j);
+  CTgold_1j.AddSubCategory(CT_SSOF_1j);
+  CTsilver_1j.AddSubCategory(CT_OSSF_1j);
+  CTsilver_1j.AddSubCategory(CT_OSOF_1j);
+  CTsilver_1j.AddSubCategory(CT_SSSF_1j);
+  CTsilver_1j.AddSubCategory(CT_SSOF_1j);
+  CTbronze_1j.AddSubCategory(CT_OSSF_1j);
+  CTbronze_1j.AddSubCategory(CT_OSOF_1j);
+  CTbronze_1j.AddSubCategory(CT_SSSF_1j);
+  CTbronze_1j.AddSubCategory(CT_SSOF_1j);
+  CTgold_ge2j.AddSubCategory(CT_SHSF);
+  CTgold_ge2j.AddSubCategory(CT_SHOF);
+  CTgold_ge2j.AddSubCategory(CT_OHSF);
+  CTgold_ge2j.AddSubCategory(CT_OHOF);
+  CTsilver_ge2j.AddSubCategory(CT_SHSF);
+  CTsilver_ge2j.AddSubCategory(CT_SHOF);
+  CTsilver_ge2j.AddSubCategory(CT_OHSF);
+  CTsilver_ge2j.AddSubCategory(CT_OHOF);
+  CTbronze_ge2j.AddSubCategory(CT_SHSF);
+  CTbronze_ge2j.AddSubCategory(CT_SHOF);
+  CTbronze_ge2j.AddSubCategory(CT_OHSF);
+  CTbronze_ge2j.AddSubCategory(CT_OHOF);
+
+  // CategoryTree CT_gold(VS().a("elGelG").a("elGmuG").a("muGmuG"), "gold", "G", kL_sub, true);
+  // CategoryTree CT_silver(VS().a("elS").a("muS"), "silver", "S", kL_sub, true);
+  // CategoryTree CT_bronze(VS().a("elB").a("muB"), "bronze", "B", kL_sub, true);
+
   CategoryTree CT_0j(VS().a("-0j"), "", "0J", kJ, true);
   CategoryTree CT_1j(VS().a("-1j"), "", "1J", kJ, true);
   CategoryTree CT_ge2j(VS().a("-ge2j"), "#geq 2 j #in S", "2J", kJ, true);
-  
-  CT_0j.AddSubCategory(CT_0sv);
-  CT_0j.AddSubCategory(CT_ge1sv);
-  CT_1j.AddSubCategory(CT_OSSF_1j);
-  CT_1j.AddSubCategory(CT_OSOF_1j);
-  CT_1j.AddSubCategory(CT_SSSF_1j);
-  CT_1j.AddSubCategory(CT_SSOF_1j);
-  CT_ge2j.AddSubCategory(CT_SHSF);
-  CT_ge2j.AddSubCategory(CT_SHOF);
-  CT_ge2j.AddSubCategory(CT_OHSF);
-  CT_ge2j.AddSubCategory(CT_OHOF);
 
-  CategoryTree CT_gold(VS().a("elGelG").a("elGmuG").a("muGmuG"), "gold", "G", kL_sub, true);
-  CategoryTree CT_silver(VS().a("elS").a("muS"), "silver", "S", kL_sub, true);
-  CategoryTree CT_bronze(VS().a("elB").a("muB"), "bronze", "B", kL_sub, true);
-
-  CT_gold.AddSubCategory(CT_0j);
-  CT_gold.AddSubCategory(CT_1j);
-  CT_gold.AddSubCategory(CT_ge2j);
+  CT_0j.AddSubCategory(CTgold_0j);
+  CT_0j.AddSubCategory(CTsilver_0j);
+  CT_0j.AddSubCategory(CTbronze_0j);
+  CT_1j.AddSubCategory(CTgold_1j);
+  CT_1j.AddSubCategory(CTsilver_1j);
+  CT_1j.AddSubCategory(CTbronze_1j);
+  CT_ge2j.AddSubCategory(CTgold_ge2j);
+  CT_ge2j.AddSubCategory(CTsilver_ge2j);
+  CT_ge2j.AddSubCategory(CTbronze_ge2j);
  
   CategoryTree CT_2L(VS().a("Ch2L"), "2L", "2L", kL, true);
-  CT_2L.AddSubCategory(CT_bronze);
-  CT_2L.AddSubCategory(CT_silver);
-  CT_2L.AddSubCategory(CT_gold);
+  CT_2L.AddSubCategory(CT_0j);
+  CT_2L.AddSubCategory(CT_1j);
+  CT_2L.AddSubCategory(CT_ge2j);
 
   return CT_2L;
   
