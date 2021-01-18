@@ -2751,7 +2751,7 @@ TCanvas* FitReader::Plot1DratioProc(const VS& proc,
   VS lep_labels;
   // vector<VS> vleps;
   VS vlep;
-
+cout << "N original cats: " << cat.GetN() << endl;
   if(m_Title.count(lep_cat) != 0)
     lep_labels.push_back(m_Title[lep_cat]);
   else
@@ -2770,7 +2770,7 @@ TCanvas* FitReader::Plot1DratioProc(const VS& proc,
   // for(int i = 0; i < Ncats; i++)
   //   cats[i] = cats[i].FilterOR(vlep);
   cat.FilterOR(vlep);
-
+for(int i = 0; i < int(vlep.size()); i++) cout << vlep[i] << endl;
 cout << "leptonic cuts passed, Ncats: " << cat.GetN() << endl;
 // Hadronic S
   VS hadS_labels;
@@ -2894,10 +2894,12 @@ cout << "process: " << proc[i] << endl;
         cout << "filled " << cat[c].GetLabel() << " " << pp.Name() << endl;
 
         if(!hist){
+	  cout << "first histogram: " << cat[c].GetLabel() << " " << pp.Name() << endl;
           hist = (TH1D*) GetHistogram(cat[c], pp)->Clone(Form("plothist_%d_%s", 0, name.c_str()));
         } else {
           hist->Add(GetHistogram(cat[c], pp));
-        }
+  	  cout << "Added histogram: " << cat[c].GetLabel() << " " << pp.Name() << endl;
+          }
       }
     }
 
@@ -3210,6 +3212,14 @@ void FitReader::InitializeRecipes(){
   m_Title["ttbar_Fakes"] = "ttbar, all fakes";
   m_Color["ttbar_Fakes"] = 7022;
   m_Strings["ttbar_Fakes"] = VS().a("ttbar_Fakes_elf0").a("ttbar_Fakes_muf0").a("ttbar_Fakes_elf1").a("ttbar_Fakes_muf1");
+  
+  m_Title["ttbar_Fakes_el"] = "ttbar, all fakes";
+  m_Color["ttbar_Fakes_el"] = 7022;
+  m_Strings["ttbar_Fakes_el"] = VS().a("ttbar_Fakes_elf0").a("ttbar_Fakes_elf1");
+  
+  m_Title["ttbar_Fakes_mu"] = "ttbar, all fakes";
+  m_Color["ttbar_Fakes_mu"] = 7022;
+  m_Strings["ttbar_Fakes_mu"] = VS().a("ttbar_Fakes_muf0").a("ttbar_Fakes_muf1");
 
   m_Title["ttbar_HF"] = "ttbar, heavy flavor";
   m_Color["ttbar_HF"] = 7022;
@@ -3230,6 +3240,14 @@ void FitReader::InitializeRecipes(){
   m_Title["Wjets_Fakes"] = "Wjets, all fakes";
   m_Color["Wjets_Fakes"] = 7022;
   m_Strings["Wjets_Fakes"] = VS().a("Wjets_Fakes_elf0").a("Wjets_Fakes_muf0").a("Wjets_Fakes_elf1").a("Wjets_Fakes_muf1");
+  
+  m_Title["Wjets_Fakes_el"] = "Wjets, all fakes";
+  m_Color["Wjets_Fakes_el"] = 7022;
+  m_Strings["Wjets_Fakes_el"] = VS().a("Wjets_Fakes_elf0").a("Wjets_Fakes_elf1");
+  
+  m_Title["Wjets_Fakes_mu"] = "Wjets, all fakes";
+  m_Color["Wjets_Fakes_mu"] = 7022;
+  m_Strings["Wjets_Fakes_mu"] = VS().a("Wjets_Fakes_muf0").a("Wjets_Fakes_muf1");
 
   m_Title["ZDY_HF"] = "Z + Drell-Yan, heavy flavor";
   m_Color["ZDY_HF"] = 7022;
