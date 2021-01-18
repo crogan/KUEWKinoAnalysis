@@ -1398,6 +1398,8 @@ TCanvas* FitReader::Plot1Dratio(const string& proc,
   }
   //cat.Print();
 
+cout << "total # of cats: " << cats[0].GetN() << endl;
+
   // Leptonic
   VS lep_labels;
   vector<VS> vleps;
@@ -1432,6 +1434,7 @@ TCanvas* FitReader::Plot1Dratio(const string& proc,
 if(Nlep == 1)
   for(int i = 0; i < Ncats; i++)
     cats[i] = cats[i].FilterOR(vlep);
+cout << cats[0].GetN() << endl;
 cout << "leptonic cuts passed" << endl;
 // Hadronic S
   VS hadS_labels;
@@ -1479,6 +1482,7 @@ else vhadS.push_back(m_Strings[hadS_cat[i]][j]);
 	
 }
 //cat = cat.FilterOR(vhadS);
+cout << cats[0].GetN() << endl;
  
 cout << "hadronic S cuts passed" << endl;
  // Hadronic ISR
@@ -1530,6 +1534,7 @@ else vhadI.push_back(m_Strings[hadI_cat[i]][j]);
 	
 }
   //cat = cat.FilterOR(vhadI);
+cout << cats[0].GetN() << endl;
 cout << "hadronic ISR cuts passed" << endl;
   // extra (PTISR, gammaT)
   VS extra_labels;
@@ -1566,7 +1571,7 @@ else vextra.push_back(m_Strings[extra[i]][j]);
     cats[i] = cats[i].FilterOR(vextra);
  // cat = cat.FilterOR(vextra);
 }
-
+cout << cats[0].GetN() << endl;
   cout << "extra cuts passed" << endl;
 
 
@@ -2192,9 +2197,26 @@ if(!extra.empty()) label += ", "+extra;
 
 
 
-void FitReader::SmoothHistograms(const VS& proc, const CategoryTree& CT,  const string& name){
+void FitReader::SmoothHistograms(const VS& proc, const string& lepMult,  const string& name){
 vector<const CategoryTree*> catTrees;
+CategoryTreeTool CTT;
+CategoryTree CT;
+if(lepMult == "1L"){
+  CT = CTT.GetCategories_Fakes1L();
   CT.GetListDepth(catTrees,2);
+}
+else if(lepMult == "2L"){
+  CT = CTT.GetCategories_Fakes2L();
+  CT.GetListDepth(catTrees,1);
+}
+else if(lepMult == "3L"){
+  CT = CTT.GetCategories_Fakes3L();
+  cout << "fakes not set for 3L yet" << endl;
+  return;
+}
+else{
+cout << "Please give a valid lepton multiplicity: 1L, 2L, or 3L." << endl;
+}
 //PrintCategories();
 TFile* f = nullptr;
   CategoryList catList = GetCategories();
@@ -3341,8 +3363,9 @@ void FitReader::InitializeRecipes(){
   m_Strings["2LOSOF"] = VS().a("2LOS_el^mu-elGmuG").a("2LOS_elmu^0-elGmuG");
 
   m_Title["2LSSSF"] = "#scale[1.2]{e^{#pm} e^{#pm} or #mu^{#pm} #mu^{#pm}}";
-  m_Strings["2LSSSF"] = VS().a("2LOS_el^el-elGelG").a("2LOS_mu^mu-muGmuG").a("2LOS_elel^0-elGelG").a("2LOS_mumu^0-muGmuG");
-  
+  //m_Strings["2LSSSF"] = VS().a("2L_SSel^el-elGelG").a("2L_SSmu^mu-muGmuG").a("2L_SSelel^0-elGelG").a("2L_SSmumu^0-muGmuG");
+  m_Strings["2LSSSF"] = VS().a("2L_SSelel").a("2L_SSmumu");
+
   m_Title["2LSSOF"] = "#scale[1.2]{e^{#pm} #mu^{#pm}}";
   m_Strings["2LSSOF"] = VS().a("2LSS_el^mu-elGmuG").a("2LSS_elmu^0-elGmuG");
 
@@ -3385,7 +3408,12 @@ void FitReader::InitializeRecipes(){
   m_Strings["2LSSOFbronze"] = VS().a("2LSS_el^mu-el0mu2").a("2LSS_elmu^0-el0mu2").a("2LSS_el^mu-mu0el2").a("2LSS_elmu^0-mu0el2")
     .a("2LSS_el^mu-el1mu2").a("2LSS_elmu^0-el1mu2").a("2LSS_el^mu-mu1el2").a("2LSS_elmu^0-mu1el2")
     .a("2LSS_el^mu-el2mu2").a("2LSS_elmu^1-el2mu2");
-
+  
+  m_Title["2LSFbronze"] = "#scale[1.2]{#e #e or #mu #mu, #geq 1 bronze #it{l}}";
+  m_Strings["2LSFbronze"] = VS().a("2L_elel-elGelB").a("2L_mumu-muGmuB"); 
+  
+  m_Title["2LSFsilver"] = "#scale[1.2]{#e #e or #mu #mu, #geq 1 silver #it{l}}";
+  m_Strings["2LSFsilver"] = VS().a("2L_elel-elGelS").a("2L_mumu-muGmuS"); 
  
   //extra cats
   m_Title["PTISR0"] = "#scale[1.2]{PTISR0}";
@@ -3407,6 +3435,9 @@ void FitReader::InitializeRecipes(){
   m_Title["0jge2svS"] = "#splitline{0 jets}{#geq 2 SV-tags} #scale[1.2]{#in S}";
 
   m_Title["1j0bge1svS"] = "#splitline{1 jet, 0 b-tags}{#geq 1 SV-tag} #scale[1.2]{#in S}";
+
+  m_Title["1jS"] = "#spitline{1 jet}{incl. b-tags} #scale[1.2]{#in S}";
+  m_Strings["1jS"] = VS().a("1jS").a("1j0bS").a("1j1bS");
 
   m_Title["2j0bS"] = "#splitline{2 jets}{0 b-tags} #scale[1.2]{#in S}";
   m_Strings["2jbS"] = VS().a("2jS").a("2j0bS").a("2j1bS").a("2j2bS");  
