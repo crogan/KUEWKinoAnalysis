@@ -87,6 +87,10 @@ public:
 		       const VS& proc,
 		       const CategoryTree& CT);
 
+  TCanvas* Plot2D(const string& can_name,
+		  const VS& proc,
+		  const CategoryTree& CT);
+
   VS GetChannels() const;  
   const ProcessList&  GetProcesses() const;
   const CategoryList& GetCategories(const string& channel = "") const;         

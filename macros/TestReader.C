@@ -15,75 +15,50 @@ void TestReader(const string& inputfile = "test/FitInput_test.root", const strin
   CategoryTree CT_2L = CTTool.GetCategories_2L();
   CategoryTree CT_3L = CTTool.GetCategories_3L();
 
-  // FITReader->PlotYields("0Lyields",
-  // 			VS().a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD")
-  // 			.a("Wjets").a("Fakes").a("T2tt_5000490").a("T2tt_5000480").a("T2tt_5000375"),
-  // 			CT_0L);
-  // FITReader->PlotYields("1Lyields",
-  // 			VS().a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD")
-  // 			.a("Wjets").a("Fakes").a("T2tt_5000490").a("T2tt_5000480").a("T2tt_5000375"),
-  // 			CT_1L);
-  FITReader->PlotYields("2Lyields",
-  			VS().a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD")
-  			.a("Wjets").a("Fakes").a("TChiWZ_3000295").a("TChiWZ_3000250").a("TChiWZ_3000200"),
-  			CT_2L);
-  // FITReader->PlotYields("3Lyields",
-  // 			VS().a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD")
-  // 			.a("Wjets").a("Fakes").a("T2tt_5000490").a("T2tt_5000480").a("T2tt_5000375"),
-  // 			CT_3L);
+  VS signals;
+  //signals.a("TChiWZ_2500240").a("TChiWZ_2500220").a("TChiWZ_2500200").a("TChiWZ_2500160");
+  //signals.a("T2tt_5000490").a("T2bW_5000490").a("T2tt_5000480").a("T2bW_5000480");
+  //signals.a("T2tt_5000450").a("T2bW_5000450").a("T2tt_5000420").a("T2bW_5000420");
+  signals.a("T2tt_5000450").a("T2bW_5000420").a("T2tt_5000375").a("T2bW_5000325");
+  //signals.a("T2bb_5000475").a("T2bb_5000450").a("T2bb_5000400").a("T2bb_5000350");
+  VS all = signals;
+  all.a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD").a("Wjets").a("Fakes");
 
-  // FITReader->PlotYields("0Lyields",
-  // 			VS().a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD")
-  // 			.a("Wjets").a("Fakes").a("TChiWZ_3000295").a("TChiWZ_3000250").a("TChiWZ_3000200"),
-  // 			CT_0L);
-  // FITReader->PlotYields("1Lyields",
-  // 			VS().a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD")
-  // 			.a("Wjets").a("Fakes").a("TChiWZ_3000295").a("TChiWZ_3000250").a("TChiWZ_3000200"),
-  // 			CT_1L);
-  // FITReader->PlotYields("2Lyields",
-  // 			VS().a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD")
-  // 			.a("Wjets").a("Fakes").a("TChiWZ_3000295").a("TChiWZ_3000250").a("TChiWZ_3000200"),
-  // 			CT_2L);
-  // FITReader->PlotYields("3Lyields",
-  // 			VS().a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD")
-  // 			.a("Wjets").a("Fakes").a("TChiWZ_3000295").a("TChiWZ_3000250").a("TChiWZ_3000200"),
-  // 			CT_3L);
+  FITReader->PlotYields("0Lyields",
+  			all,
+  			CT_0L);
+  FITReader->PlotYields("1Lyields",
+  			all,
+  			CT_1L);
+  FITReader->PlotYields("2Lyields",
+  			all,
+  			CT_2L);
+  FITReader->PlotYields("3Lyields",
+  			all,
+  			CT_3L);
+
+  return;
   
-  int depth0 = CT_0L.GetDepth();
+  int depth0 = CT_2L.GetDepth();
   vector<const CategoryTree*> CTs;
   CT_2L.GetListDepth(CTs, depth0-1);
-  cout << "SIZE " << CTs.size() << endl;
-  FITReader->Plot1Dstack("0Lstack2",
-			 VS().a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD")
-			 .a("Wjets").a("Fakes").a("TChiWZ_3000290").a("TChipmWW_2000180").a("TChiWZ_3000200"),
-			 *CTs[10]);
-				   
-				   FITReader->Plot1Dstack("0Lstack3",
-			VS().a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD")
-			.a("Wjets").a("Fakes").a("TChiWZ_3000290").a("TChipmWW_2000180").a("TChiWZ_3000200"),
-			*CTs[11]);
-		     FITReader->Plot1Dstack("0Lstack0",
-			 VS().a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD")
-			 .a("Wjets").a("Fakes").a("TChiWZ_3000290").a("TChipmWW_2000180").a("TChiWZ_3000200"),
-			 *CTs[12]);
-				   
-				   FITReader->Plot1Dstack("0Lstack1",
-			VS().a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD")
-			.a("Wjets").a("Fakes").a("TChiWZ_3000290").a("TChipmWW_2000180").a("TChiWZ_3000200"),
-			*CTs[13]);
-  //*CTs[16]
+
+  vector<const CategoryTree*> CTs_deep;
+  CT_2L.GetListDepth(CTs_deep, depth0-1);
+
+  int iCT = 0;
+  int iCTd = 0;
   
-  // FITReader->Plot1Dstack(VS().a("ttbar").a("ST").a("DB").a("ZDY").a("TB")
-  // 			 .a("Wjets").a("Fake").a("HF").a("LF").a("T2tt_5000470").a("T2tt_5000450").a("T2tt_5000420"),
-  // 			 VS().a("1L"),
-  // 			 VS().a("2j1bS"),
-  // 			 VS().a("0bjetISR"),
-  // 			 "canvas0");
-  // FITReader->Plot2D(VS().a("ttbar").a("ST").a("DB").a("ZDY").a("TB")
-  // 			 .a("Wjets").a("Fake").a("HF").a("LF"),
-  // 			 VS().a("1L"),
-  // 			 VS().a("2j1bS"),
-  // 			 VS().a("0bjetISR"),
-  // 			 "canvas1");
+  FITReader->Plot1Dstack("0Lstack2",
+			 all,
+			 *CTs[iCT]);
+  FITReader->Plot2D("2D0",
+		    VS().a("data_obs"),
+		    *CTs_deep[iCTd]);
+  for(int s = 0; s < signals.size(); s++){
+    FITReader->Plot2D(Form("2D%d",s+1),
+		      VS().a(signals[s]),
+		      *CTs_deep[iCTd]);
+  }
   
 }

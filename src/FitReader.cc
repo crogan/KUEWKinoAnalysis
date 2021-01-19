@@ -933,7 +933,7 @@ TCanvas* FitReader::Plot2D(const VS& proc,
 	//cout << "filled " << cat[c].GetLabel() << " " << pp.Name() << endl;
 	
 	if(!hist){
-	  hist = (TH2D*) GetHistogram2D(cat[c], pp)->Clone(Form("plothist_%d_%s_2D", i, name.c_str()));
+	  hist = (TH2D*) GetHistogram2D(cat[c], pp)->Clone(Form("plothist_%dhis_%s_2D", i, name.c_str()));
 	} else {
 	  hist->Add(GetHistogram2D(cat[c], pp));
 	}
@@ -1115,16 +1115,6 @@ TCanvas* FitReader::Plot2D(const VS& proc,
   return can;
   
 }
-
-
-
-
-
-
-
-
-
-
 
 TCanvas* FitReader::PlotYields(const string& can_name,
 			       const VS& proc,
@@ -1565,7 +1555,7 @@ void FitReader::DrawCatTree(const CategoryTree& CT, TCanvas* can){
 TCanvas* FitReader::Plot1Dstack(const string& can_name,
 				const VS& proc,
 				const CategoryTree& CT){
-   RestFrames::SetStyle();
+  RestFrames::SetStyle();
 
   int Nproc = proc.size();
   if(Nproc == 0)
@@ -1883,7 +1873,7 @@ TCanvas* FitReader::Plot1Dstack(const string& can_name,
 
   double logrange = log(hmax) - log(hmin);
   hmin = exp(log(hmin) - logrange*0.2);
-  fhists[0]->GetYaxis()->SetRangeUser(hmin, hmax*1.2);
+  fhists[0]->GetYaxis()->SetRangeUser(hmin, hmax*1.5);
 
   TLegend* leg = new TLegend(1.-hhi+0.007, 1.- (Nbkg+Nsig+1)*(1.-0.49)/9., 0.98, 1.-hto-0.005);
   leg->SetTextFont(42);
@@ -1932,9 +1922,6 @@ TCanvas* FitReader::Plot1Dstack(const string& can_name,
   l.DrawLatex(hlo+eps*4, 1.-hto+0.02, m_CMSLabel.c_str());
   
   return can;
-
-
-  
 }
 
 void FitReader::DrawMR(const FitBin& fitbin, TCanvas* can){
@@ -2004,7 +1991,7 @@ void FitReader::DrawMR(const FitBin& fitbin, TCanvas* can){
     l.DrawLatex((hi+lo)/2., yline - 8*eps, rlabels[r].c_str());
   }
 
-  line->SetLineStyle(7);
+  line->SetLineStyle(1);
   l.SetTextAngle(90);
   l.SetTextAlign(32);
   for(int b = 0; b < NB; b++){
@@ -2021,7 +2008,189 @@ void FitReader::DrawMR(const FitBin& fitbin, TCanvas* can){
 }
 
 
+TCanvas* FitReader::Plot2D(const string& can_name,
+			   const VS& proc,
+			   const CategoryTree& CT){
+  RestFrames::SetStyle();
 
+  int Nproc = proc.size();
+  if(Nproc == 0)
+    return nullptr;
+  
+  vector<const CategoryTree*> CatTrees;
+  CT.GetListDeepest(CatTrees);
+  
+  int Nvis = CatTrees.size();
+  
+  if(Nvis < 1)
+    return nullptr;
+  
+  CategoryList CatList = GetCategories();
+  
+  if(CatList.GetN() < 1)
+    return nullptr;
+  
+  // Processes
+  string label;
+  TH2D* hist = nullptr;
+
+  CategoryList cat = CatList.Filter(CT);
+  int Ncat = cat.GetN();
+  
+  for(int i = 0; i < Nproc; i++){
+    VS vproc;
+    if(m_Strings.count(proc[i]) != 0)
+      vproc = m_Strings[proc[i]];
+    else
+      vproc += proc[i];
+    
+    ProcessList procs;
+    
+    ProcessType type = kBkg;
+    
+    for(int p = 0; p < int(vproc.size()); p++){
+      
+      int index = GetProcesses().Find(vproc[p]);
+      if(index < 0)
+	continue;
+      
+      Process pp = GetProcesses()[index];
+
+      procs += pp;
+
+      if(pp.Type() == kSig){
+	type = kSig;
+      }
+      
+      if(pp.Type() == kData){
+	type = kData;
+      }
+
+      for(int c = 0; c < Ncat; c++){
+	if(GetHistogram2D(cat[c],pp)){
+	  if(!hist)
+	    hist = (TH2D*) GetHistogram2D(cat[c],pp)
+	      ->Clone(Form("plothist2D_%s", can_name.c_str()));
+	  else
+	    hist->Add(GetHistogram2D(cat[c], pp));
+	}
+      }
+    }
+    if(hist == nullptr)
+      continue;
+    
+    if(type == kData){
+      label = "Data";
+    }
+
+    if(type == kSig){
+      label = GetSignalTitle(proc[i]);
+    }
+
+    if(type == kBkg){
+      if(m_Title.count(proc[i]) != 0)
+	label = m_Title[proc[i]];
+      else
+	label = proc[i];
+    }
+  }
+
+  if(!hist)
+    return nullptr;
+  
+  const FitBin& bin = cat[0].GetFitBin();
+
+  int NR = bin.NRBins();
+  int NB = bin.NBins();
+  
+  gStyle->SetOptTitle(0);
+  gStyle->SetOptStat(0);
+  gStyle->SetOptFit(11111111);
+  TCanvas* can = new TCanvas(Form("can_%s", can_name.c_str()),
+			     Form("can_%s", can_name.c_str()),
+			     700, 700);
+  double eps = 0.0015;
+
+  double hlo = 0.14;
+  double hhi = 0.18;
+  double hbo = 0.13;
+  double hto = 0.17;
+  can->SetLeftMargin(hlo);
+  can->SetRightMargin(hhi);
+  can->SetBottomMargin(hbo);
+  can->SetTopMargin(hto);
+  can->Draw();
+  can->cd();
+  
+  hist->Draw("colz");
+  hist->GetXaxis()->SetTitle("M_{#perp}   [GeV]");
+  hist->GetYaxis()->SetTitle("R_{ISR}");
+  hist->GetZaxis()->SetTitle("number of events");
+  
+  hist->GetXaxis()->CenterTitle();
+  hist->GetXaxis()->SetTitleFont(42);
+  hist->GetXaxis()->SetTitleSize(0.05);
+  hist->GetXaxis()->SetTitleOffset(1.15);
+  hist->GetXaxis()->SetLabelFont(42);
+  hist->GetXaxis()->SetLabelSize(0.04);
+  hist->GetXaxis()->SetTickSize(0.);
+  
+  hist->GetYaxis()->CenterTitle();
+  hist->GetYaxis()->SetTitleFont(42);
+  hist->GetYaxis()->SetTitleSize(0.05);
+  hist->GetYaxis()->SetTitleOffset(1.15);
+  hist->GetYaxis()->SetLabelFont(42);
+  hist->GetYaxis()->SetLabelSize(0.035);
+  hist->GetYaxis()->SetTickSize(0.);
+  
+  hist->GetZaxis()->CenterTitle();
+  hist->GetZaxis()->SetTitleFont(42);
+  hist->GetZaxis()->SetTitleSize(0.05);
+  hist->GetZaxis()->SetTitleOffset(0.9);
+
+  TLatex l;
+  l.SetTextFont(42);
+  l.SetNDC();
+
+  TLine* line = new TLine();
+  line->SetLineWidth(2);
+  line->SetLineColor(7024);
+ 
+  l.SetTextSize(0.025);
+  l.SetTextFont(42);
+  l.SetTextAlign(23);
+  line->SetLineWidth(3);
+  line->SetLineColor(7024);
+  line->SetLineStyle(7);
+ 
+  for(int r = 0; r < NR; r++){
+    line->DrawLine(hist->GetXaxis()->GetXmin(), bin[r].Rlow(),
+		   hist->GetXaxis()->GetXmax(), bin[r].Rlow());
+    line->DrawLine(hist->GetXaxis()->GetXmin(), bin[r].Rhigh(),
+		   hist->GetXaxis()->GetXmax(), bin[r].Rhigh());
+
+    for(int b = 0; b <  bin[r].BinEdges().size()-1; b++){
+      line->DrawLine(bin[r].BinEdges()[b], bin[r].Rlow(),
+		     bin[r].BinEdges()[b], bin[r].Rhigh());
+    }
+  }
+
+  l.SetTextAngle(0);
+  l.SetTextColor(kBlack);
+  l.SetTextSize(0.04);
+  l.SetTextAlign(31);
+  l.DrawLatex(1.-hhi+eps*10, 1.-hto+0.02, string(CT.GetSpectroscopicLabel()).c_str());
+  l.SetTextAlign(11);
+  l.DrawLatex(hlo+eps*4, 1.-hto+0.02, m_CMSLabel.c_str());
+  l.SetTextAlign(33);
+  l.DrawLatex(1.-hhi-eps*6, 1.-hto-0.02, label.c_str());
+  
+ 
+  
+  return can;
+
+
+}
 
 
 
@@ -2217,11 +2386,11 @@ void FitReader::InitializeRecipes(){
     m_ColorDefault.push_back(7004+i*10);
 
   m_SignalColor.clear();
-  m_SignalColor.push_back(7041);
-  m_SignalColor.push_back(7071);
-  m_SignalColor.push_back(7031);
-  m_SignalColor.push_back(7061);
   m_SignalColor.push_back(7043);
+  m_SignalColor.push_back(7071);
+  m_SignalColor.push_back(7041);
+  m_SignalColor.push_back(7061);
+  m_SignalColor.push_back(7040);
 
   m_CMSLabel = "#bf{#it{CMS}} work-in-progress";
 }

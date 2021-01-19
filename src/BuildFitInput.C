@@ -34,6 +34,9 @@ int main(int argc, char* argv[]) {
   string NtuplePath = "/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_21_09_20/";
   string OutFile    = "BuildFitInput_output.root";
 
+  bool doSigFile = false;
+  string SigFile = "";
+
   bool bprint = false;
   int  year   = 2017;
   bool addBkg  = false;
@@ -109,6 +112,11 @@ int main(int argc, char* argv[]) {
       setLumi = true;
       lumi = std::stof(argv[i]);
     }
+    if(strncmp(argv[i],"-sigfile", 8) == 0){
+      i++;
+      doSigFile = true;
+      SigFile = argv[i];
+    }
   }
       
   if((proc_to_add.size() == 0) &&
@@ -135,6 +143,7 @@ int main(int argc, char* argv[]) {
     cout << "   +cat3L              add 3L categories" << endl;
     cout << "   +hist               book 2D histograms also" << endl;
     cout << "   -lumi [lumi]        set luminosity to lumi" << endl;
+    cout << "   -sigfile            signal filename must match this string to be included" << endl;
 
     return 0;
   }
@@ -182,6 +191,34 @@ int main(int argc, char* argv[]) {
   int Nsample = samples.GetN();
   for(int s = 0; s < Nsample; s++){
     Process proc = samples[s];
+    if(doSigFile && proc.Type() == kSig){
+      bool keep = false;
+      int Nfile = ST.NTrees(proc);
+      for(int f = 0; f < Nfile; f++){
+	string file = ST.FileName(proc, f);
+	if(file.find(SigFile) != string::npos)
+	  keep = true;
+      }
+      if(!keep)
+	continue;
+    }
+    cout << "processing sample " << proc.Name() << endl;
+  }
+  
+  for(int s = 0; s < Nsample; s++){
+    Process proc = samples[s];
+
+    if(doSigFile && proc.Type() == kSig){
+      bool keep = false;
+      int Nfile = ST.NTrees(proc);
+      for(int f = 0; f < Nfile; f++){
+	string file = ST.FileName(proc, f);
+	if(file.find(SigFile) != string::npos)
+	  keep = true;
+      }
+      if(!keep)
+	continue;
+    }
     
     string title = proc.Name();
 
@@ -242,10 +279,8 @@ int main(int argc, char* argv[]) {
 	  continue;
 
 	double x = fabs(base->dphiCMI);
-	// current cut
-	if(base->PTCM > 75. && x < 0.25)
-	  continue;
-	if(base->PTCM > 100. && x > 2.5)
+	
+	if(base->PTCM > 200.)
 	  continue;
 	if(base->PTCM > -500.*sqrt(std::max(0.,-2.777*x*x+1.388*x+0.8264))+575. &&
 	   -2.777*x*x+1.388*x+0.8264 > 0.)
@@ -254,7 +289,7 @@ int main(int argc, char* argv[]) {
 	   -1.5625*x*x+7.8125*x-8.766 > 0.)
 	  continue;
 	  
-	if(base->RISR < 0.5 || base->RISR > 1.0)
+	if(base->RISR < 0.45 || base->RISR > 1.0)
 	  continue;
 
 	if(fabs(base->dphiMET_V) > acos(-1.)/2.)
@@ -410,9 +445,11 @@ int main(int argc, char* argv[]) {
 	  // use Eperp
 	  if((Nlep == 1) && (NjetS == 0) && (NSV == 0))
 	    Mperp = 2.*base->EL_BoostT;
-	  if(((Nlep == 0) && (NjetS == 0) && (NSV == 1)) ||
-	     ((Nlep == 0) && (NjetS == 1) && (NSV == 0)))
+	  if((Nlep == 0) && (NjetS == 0) && (NSV == 1))
 	    Mperp = 2.*base->EJ_BoostT;
+	  if((Nlep == 0) && (NjetS == 1) && (NSV == 0))
+	    Mperp = base->EJ_BoostT;
+	  
 	
 	  double RISR  = base->RISR;
 
