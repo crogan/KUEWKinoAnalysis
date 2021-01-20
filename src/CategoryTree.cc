@@ -73,34 +73,34 @@ void SpectroscopicLabel::AddLabel(const string& label, CatLabelType type){
 
 string SpectroscopicLabel::GetSpectroscopicLabel() const {
   string label = m_Norm + " " + m_L;
-//  if(m_Lsup != "")
-//    label += "^{#scale[0.8]{" + m_Lsup + "}}";
-//  if(m_Lsub != "")
-//    label += "_{#scale[0.8]{" + m_Lsub + "}}";
-//  label += " " + m_J;
-//  if(m_Jsup != "")
-//    label += "^{#scale[0.8]{" + m_Jsup + "}}";
-//  if(m_Jsub != "")
-//    label += "_{#scale[0.8]{" + m_Jsub + "}}";
-//  label += " X";
-//  if(m_Xsup != "")
-//    label += "^{#scale[0.8]{" + m_Xsup + "}}";
-//  if(m_Xsub != "")
-//    label += "_{#scale[0.8]{" + m_Xsub + "}}";
   if(m_Lsup != "")
-    label += "^{{" + m_Lsup + "}}";
+    label += "^{#scale[0.8]{" + m_Lsup + "}}";
   if(m_Lsub != "")
-    label += "_{{" + m_Lsub + "}}";
+    label += "_{#scale[0.8]{" + m_Lsub + "}}";
   label += " " + m_J;
   if(m_Jsup != "")
-    label += "^{{" + m_Jsup + "}}";
+    label += "^{#scale[0.8]{" + m_Jsup + "}}";
   if(m_Jsub != "")
-    label += "_{{" + m_Jsub + "}}";
+    label += "_{#scale[0.8]{" + m_Jsub + "}}";
   label += " X";
   if(m_Xsup != "")
-    label += "^{{" + m_Xsup + "}}";
+    label += "^{#scale[0.8]{" + m_Xsup + "}}";
   if(m_Xsub != "")
-    label += "_{{" + m_Xsub + "}}";
+    label += "_{#scale[0.8]{" + m_Xsub + "}}";
+//  if(m_Lsup != "")
+//    label += "^{{" + m_Lsup + "}}";
+//  if(m_Lsub != "")
+//    label += "_{{" + m_Lsub + "}}";
+//  label += " " + m_J;
+//  if(m_Jsup != "")
+//    label += "^{{" + m_Jsup + "}}";
+//  if(m_Jsub != "")
+//    label += "_{{" + m_Jsub + "}}";
+//  label += " X";
+//  if(m_Xsup != "")
+//    label += "^{{" + m_Xsup + "}}";
+//  if(m_Xsub != "")
+//    label += "_{{" + m_Xsub + "}}";
 
   return label;
 }
@@ -901,6 +901,7 @@ CategoryTree CategoryTreeTool::GetCategories_Fakes1L() const {
   CategoryTree CT_2j(VS().a("-2j"), "2 j #in S", "2J", kJ, true);
   CategoryTree CT_3j(VS().a("-3j"), "3 j #in S", "3J", kJ, true);
   CategoryTree CT_ge4j(VS().a("-ge4j"), "#geq 4 j #in S", "4J", kJ, true);
+
   
   CT_0j.AddSubCategory(CT_gold_0j);
   CT_0j.AddSubCategory(CT_silver_0j);
@@ -918,7 +919,36 @@ CategoryTree CategoryTreeTool::GetCategories_Fakes1L() const {
   CT_ge4j.AddSubCategory(CT_silver_ge4j);
   CT_ge4j.AddSubCategory(CT_bronze_ge4j);
   
+  CT_0jmu.AddSubCategory(CT_goldmu_0j);
+  CT_0jmu.AddSubCategory(CT_silvermu_0j);
+  CT_0jmu.AddSubCategory(CT_bronzemu_0j);
+  CT_1jmu.AddSubCategory(CT_goldmu_0j);
+  CT_1jmu.AddSubCategory(CT_silvermu_0j);
+  CT_1jmu.AddSubCategory(CT_bronzemu_0j);
+  CT_2jmu.AddSubCategory(CT_goldmu_0j);
+  CT_2jmu.AddSubCategory(CT_silvermu_0j);
+  CT_2jmu.AddSubCategory(CT_bronzemu_0j);
+  CT_3jmu.AddSubCategory(CT_goldmu_0j);
+  CT_3jmu.AddSubCategory(CT_silvermu_0j);
+  CT_3jmu.AddSubCategory(CT_bronzemu_0j);
+  CT_ge4jmu.AddSubCategory(CT_goldmu_0j);
+  CT_ge4jmu.AddSubCategory(CT_silvermu_0j);
+  CT_ge4jmu.AddSubCategory(CT_bronzemu_0j);
 
+//depth = 2 - splits by overall jet multiplicity
+  CategoryTree CT_el(VS().a("el"),"el","el",kL,true);
+  CategoryTree CT_mu(VS().a("mu"),"mu","mu",kL,true);
+
+  CT_el.AddSubCategory(CT_0jel);
+  CT_el.AddSubCategory(CT_1jel);
+  CT_el.AddSubCategory(CT_2jel);
+  CT_el.AddSubCategory(CT_3jel);
+
+  CT_mu.AddSubCategory(CT_0jmu);
+  CT_mu.AddSubCategory(CT_1jmu);
+  CT_mu.AddSubCategory(CT_2jmu);
+  CT_mu.AddSubCategory(CT_3jmu);
+>>>>>>> 313145c693adb3378cd311c52c4457bc8b687db0
  
  //depth = 1 - splits by jet mult.
   CategoryTree CT_1L(VS().a("Ch1L"), "1L", "1L", kL, true);
