@@ -919,36 +919,6 @@ CategoryTree CategoryTreeTool::GetCategories_Fakes1L() const {
   CT_ge4j.AddSubCategory(CT_silver_ge4j);
   CT_ge4j.AddSubCategory(CT_bronze_ge4j);
   
-  CT_0jmu.AddSubCategory(CT_goldmu_0j);
-  CT_0jmu.AddSubCategory(CT_silvermu_0j);
-  CT_0jmu.AddSubCategory(CT_bronzemu_0j);
-  CT_1jmu.AddSubCategory(CT_goldmu_0j);
-  CT_1jmu.AddSubCategory(CT_silvermu_0j);
-  CT_1jmu.AddSubCategory(CT_bronzemu_0j);
-  CT_2jmu.AddSubCategory(CT_goldmu_0j);
-  CT_2jmu.AddSubCategory(CT_silvermu_0j);
-  CT_2jmu.AddSubCategory(CT_bronzemu_0j);
-  CT_3jmu.AddSubCategory(CT_goldmu_0j);
-  CT_3jmu.AddSubCategory(CT_silvermu_0j);
-  CT_3jmu.AddSubCategory(CT_bronzemu_0j);
-  CT_ge4jmu.AddSubCategory(CT_goldmu_0j);
-  CT_ge4jmu.AddSubCategory(CT_silvermu_0j);
-  CT_ge4jmu.AddSubCategory(CT_bronzemu_0j);
-
-//depth = 2 - splits by overall jet multiplicity
-  CategoryTree CT_el(VS().a("el"),"el","el",kL,true);
-  CategoryTree CT_mu(VS().a("mu"),"mu","mu",kL,true);
-
-  CT_el.AddSubCategory(CT_0jel);
-  CT_el.AddSubCategory(CT_1jel);
-  CT_el.AddSubCategory(CT_2jel);
-  CT_el.AddSubCategory(CT_3jel);
-
-  CT_mu.AddSubCategory(CT_0jmu);
-  CT_mu.AddSubCategory(CT_1jmu);
-  CT_mu.AddSubCategory(CT_2jmu);
-  CT_mu.AddSubCategory(CT_3jmu);
->>>>>>> 313145c693adb3378cd311c52c4457bc8b687db0
  
  //depth = 1 - splits by jet mult.
   CategoryTree CT_1L(VS().a("Ch1L"), "1L", "1L", kL, true);
