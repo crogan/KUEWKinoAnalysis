@@ -94,7 +94,7 @@ public:
   const ProcessList&  GetProcesses() const;
   const CategoryList& GetCategories(const string& channel = "") const;         
   const Systematics&  GetSystematics() const;
-  void SmoothHistograms(const VS& proc, const CategoryTree& CT,  const string& name = "name"); 
+  void SmoothHistograms(const VS& proc, const string& lepMult,  const string& name = "name"); 
 TCanvas* Plot1DratioProc(const VS& proc,
            const string& lep_cat,
            const string& hadS_cat,

@@ -1089,6 +1089,14 @@ else vextra.push_back(m_Strings[extra[i]][j]);
   for(int i = 0; i < Nhist; i++){
    if(hists[i]->GetMaximum() > hmax) hmax = hists[i]->GetMaximum();
   }
+//cout << "original hists" << endl;
+//for(int i = 0; i < Nhist; i++){
+//	cout << "hist #"<< i << endl;
+//	for(int b = 0; b < hists[i]->GetNbinsX()+1; b++){
+//		cout << "bin #" << b << " bin content: " << hists[i]->GetBinContent(b) << " bin error: " << hists[i]->GetBinError(b) << endl;  
+//	}
+//	cout << "hist integral: " << hists[i]->Integral() << endl;
+//}
   
 //cout << "original hists" << endl;
 //for(int h = 0; h < Nhist; h++){
@@ -1398,7 +1406,7 @@ TCanvas* FitReader::Plot1Dratio(const string& proc,
   }
   //cat.Print();
 
-cout << "total # of cats: " << cats[0].GetN() << endl;
+cout << "total # of cats: " << cats[1].GetN() << endl;
 
   // Leptonic
   VS lep_labels;
@@ -1434,7 +1442,7 @@ cout << "total # of cats: " << cats[0].GetN() << endl;
 if(Nlep == 1)
   for(int i = 0; i < Ncats; i++)
     cats[i] = cats[i].FilterOR(vlep);
-cout << cats[0].GetN() << endl;
+cout << cats[1].GetN() << endl;
 cout << "leptonic cuts passed" << endl;
 // Hadronic S
   VS hadS_labels;
@@ -1472,9 +1480,11 @@ else vhadS.push_back(m_Strings[hadS_cat[i]][j]);
 	else{
 		if(!strstr(m_Title[lep_cat[i]].c_str(),"gold")){
 			cats[i] = cats[i].FilterOR(vhadS); //if lep is !gold, filter with string given to macro for hadS_cat
+			for(int i = 0; i < vhadS.size(); i++) cout << vhadS[i] << endl;
 		}
 		else{
 			cats[i] = cats[i].FilterOR(m_Strings[hadS_cat[0]]); //if lep is gold, filter with VS() from m_Strings
+			cout << hadS_cat[0] << endl;
 		}
 
 	}
@@ -1482,7 +1492,7 @@ else vhadS.push_back(m_Strings[hadS_cat[i]][j]);
 	
 }
 //cat = cat.FilterOR(vhadS);
-cout << cats[0].GetN() << endl;
+cout << cats[1].GetN() << endl;
  
 cout << "hadronic S cuts passed" << endl;
  // Hadronic ISR
@@ -1534,7 +1544,7 @@ else vhadI.push_back(m_Strings[hadI_cat[i]][j]);
 	
 }
   //cat = cat.FilterOR(vhadI);
-cout << cats[0].GetN() << endl;
+cout << cats[1].GetN() << endl;
 cout << "hadronic ISR cuts passed" << endl;
   // extra (PTISR, gammaT)
   VS extra_labels;
@@ -1571,7 +1581,7 @@ else vextra.push_back(m_Strings[extra[i]][j]);
     cats[i] = cats[i].FilterOR(vextra);
  // cat = cat.FilterOR(vextra);
 }
-cout << cats[0].GetN() << endl;
+cout << cats[1].GetN() << endl;
   cout << "extra cuts passed" << endl;
 
 
@@ -1641,8 +1651,6 @@ VS vproc;
   hists.push_back(hist); //one hist per cat group
  } 
 
-
-
   // int Nsig = hists_sig.size();
   TH1D* histTotal = new TH1D(*hists[0]);
   hists[0]->Scale(1/hists[0]->Integral());
@@ -1672,6 +1680,12 @@ VS vproc;
   // hists[i]->Sumw2();
  
   }
+//for(int i = 0; i < Nhist; i++){
+//	cout << "hist #"<< i << endl;
+//	for(int b = 0; b < hists[i]->GetNbinsX()+1; b++){
+//		cout << "bin #" << b << " bin content: " << hists[i]->GetBinContent(b) << " bin error: " << hists[i]->GetBinError(b) << endl;  
+//	}
+//}
 //cout << "after normalizing all hists" << endl;
 //for(int h = 0; h < Nhist; h++){
 //	cout << "hist #" << h << endl;
@@ -1684,7 +1698,12 @@ VS vproc;
 //cout << "number of hists: " << Nhist << endl;
 int nBins;
 int gBin; 
-  histTotal->Scale(1/histTotal->Integral());
+//cout << "total hist" << endl;	
+//for(int b = 0; b < histTotal->GetNbinsX()+1; b++){
+//		cout << "bin #" << b << " bin content: " << histTotal->GetBinContent(b) << " bin error: " << histTotal->GetBinError(b) << endl;  
+//	}
+//cout << "total hist integral: " << histTotal->Integral() << endl;  
+histTotal->Scale(1/histTotal->Integral());
   for(int i = 0; i < Nhist; i++){
    hists[i]->Divide(histTotal);
    //hists[i]->Sumw2();
@@ -1695,6 +1714,13 @@ int gBin;
 	}
    if(hists[i]->GetMaximum() > hmax) hmax = hists[i]->GetMaximum();
   }
+//cout << "after division" << endl;
+//for(int i = 0; i < Nhist; i++){
+//	cout << "hist #"<< i << endl;
+//	for(int b = 0; b < hists[i]->GetNbinsX()+1; b++){
+//		cout << "bin #" << b << " bin content: " << hists[i]->GetBinContent(b) << " bin error: " << hists[i]->GetBinError(b) << endl;  
+//	}
+//}
 cout << "hmax: " << hmax << endl;
 cout << "nHists: " << Nhist << endl; 
   const FitBin& bin = cats[0][0].GetFitBin();
@@ -3301,11 +3327,11 @@ void FitReader::InitializeRecipes(){
     a("Fakes_elf2").a("Fakes_muf0").a("Fakes_muf1").a("Fakes_muf2");
   
   // leptonic categories
-  m_Title["1L"] = "#scale[1.2]{single #it{l}}";
-  m_Strings["1L"] = VS().a("1L_elm-elG").a("1L_elp-elG").a("1L_elpm-elG").a("1L_mupm-muG").a("1L_mup-muG").a("1L_mum-muG");
+  m_Title["1Lgold"] = "#scale[1.2]{single #it{l}}";
+  m_Strings["1Lgold"] = VS().a("1L_elm-elG").a("1L_elp-elG").a("1L_elpm-elG").a("1L_mupm-muG").a("1L_mup-muG").a("1L_mum-muG");
   
-  m_Title["1LallID"] = "#scale[1.2]{single #it{l}}";
-  m_Strings["1LallID"] = VS().a("1L_elm-elG").a("1L_elp-elG").a("1L_elpm-elG").a("1L_mupm-muG").a("1L_mup-muG").a("1L_mum-muG").a("1L_elm-elS").a("1L_elp-elS").a("1L_elpm-elS").a("1L_mupm-muS").a("1L_mup-muS").a("1L_mum-muS").a("1L_elm-elB").a("1L_elp-elB").a("1L_elpm-elB").a("1L_mupm-muB").a("1L_mup-muB").a("1L_mum-muB");
+  m_Title["1L"] = "#scale[1.2]{single #it{l}}";
+  m_Strings["1L"] = VS().a("1L_elm-elG").a("1L_elp-elG").a("1L_elpm-elG").a("1L_mupm-muG").a("1L_mup-muG").a("1L_mum-muG").a("1L_elm-elS").a("1L_elp-elS").a("1L_elpm-elS").a("1L_mupm-muS").a("1L_mup-muS").a("1L_mum-muS").a("1L_elm-elB").a("1L_elp-elB").a("1L_elpm-elB").a("1L_mupm-muB").a("1L_mup-muB").a("1L_mum-muB");
   
   
   m_Title["1Lel"] = "#scale[1.2]{single e}";
@@ -3364,10 +3390,17 @@ void FitReader::InitializeRecipes(){
 
   m_Title["2LSSSF"] = "#scale[1.2]{e^{#pm} e^{#pm} or #mu^{#pm} #mu^{#pm}}";
   //m_Strings["2LSSSF"] = VS().a("2L_SSel^el-elGelG").a("2L_SSmu^mu-muGmuG").a("2L_SSelel^0-elGelG").a("2L_SSmumu^0-muGmuG");
-  m_Strings["2LSSSF"] = VS().a("2L_SSelel").a("2L_SSmumu");
+  m_Strings["2LSSSF"] = VS().a("2L_SSelel-elGelG").a("2L_SSmumu-muGmuG");
 
   m_Title["2LSSOF"] = "#scale[1.2]{e^{#pm} #mu^{#pm}}";
   m_Strings["2LSSOF"] = VS().a("2LSS_el^mu-elGmuG").a("2LSS_elmu^0-elGmuG");
+
+  m_Title["2LSH"] = "#scale[1.2]{same side}";
+  m_Strings["2LSH"] = VS().a("2L_elel^0-elGelG").a("2L_elmu^0-elGmuG").a("2L_mumu^0-muGmuG");
+
+  m_Title["2LOH"] = "#scale[1.2]{opp. side}";
+  m_Strings["2LOH"] = VS().a("2L_el^el-elGelG").a("2L_el^mu-elGmuG").a("2L_mu^mu-muGmuG");
+
 
   m_Title["2LOSSFsilver"] = "#scale[1.2]{e^{#pm} e^{#mp} or #mu^{#pm} #mu^{#mp}, #geq 1 silver #it{l}}";
   m_Strings["2LOSSFsilver"] = VS().a("2LOS_el^el-el0el1").a("2LOS_mu^mu-mu0mu1").a("2LOS_elel^0-el0el1").a("2LOS_mumu^0-mu0mu1")
@@ -3409,10 +3442,10 @@ void FitReader::InitializeRecipes(){
     .a("2LSS_el^mu-el1mu2").a("2LSS_elmu^0-el1mu2").a("2LSS_el^mu-mu1el2").a("2LSS_elmu^0-mu1el2")
     .a("2LSS_el^mu-el2mu2").a("2LSS_elmu^1-el2mu2");
   
-  m_Title["2LSFbronze"] = "#scale[1.2]{#e #e or #mu #mu, #geq 1 bronze #it{l}}";
+  m_Title["2LSFbronze"] = "#scale[0.8]{e e or #mu #mu, #geq 1 bronze #it{l}}";
   m_Strings["2LSFbronze"] = VS().a("2L_elel-elGelB").a("2L_mumu-muGmuB"); 
   
-  m_Title["2LSFsilver"] = "#scale[1.2]{#e #e or #mu #mu, #geq 1 silver #it{l}}";
+  m_Title["2LSFsilver"] = "#scale[0.8]{e e or #mu #mu, #geq 1 silver #it{l}}";
   m_Strings["2LSFsilver"] = VS().a("2L_elel-elGelS").a("2L_mumu-muGmuS"); 
  
   //extra cats
@@ -3436,15 +3469,20 @@ void FitReader::InitializeRecipes(){
 
   m_Title["1j0bge1svS"] = "#splitline{1 jet, 0 b-tags}{#geq 1 SV-tag} #scale[1.2]{#in S}";
 
-  m_Title["1jS"] = "#spitline{1 jet}{incl. b-tags} #scale[1.2]{#in S}";
-  m_Strings["1jS"] = VS().a("1jS").a("1j0bS").a("1j1bS");
+  m_Title["1jS"] = "#splitline{1 jet}{incl. b-tags} #scale[1.2]{#in S}";
+  m_Strings["1jS"] = VS().a("1j0svS").a("1jge1svS").a("1j0b0svS").a("1j0bge1vsS").a("1j1b0svS").a("1j1bge1svS");
 
   m_Title["2j0bS"] = "#splitline{2 jets}{0 b-tags} #scale[1.2]{#in S}";
-  m_Strings["2jbS"] = VS().a("2jS").a("2j0bS").a("2j1bS").a("2j2bS");  
+  
+  m_Title["2jS"] = "#splitline{2 jets}{incl. b-tags} #scale[1.2}{#in S}";
+  m_Strings["2jS"] = VS().a("2jS").a("2j0bS").a("2j1bS").a("2j2bS");  
 
   m_Title["2j1bS"] = "#splitline{2 jets}{1 b-tags} #scale[1.2]{#in S}";
 
   m_Title["2j2bS"] = "#splitline{2 jets}{2 b-tags} #scale[1.2]{#in S}";
+
+  m_Title["ge2jS"] = "#splitline{#geq 2 jets}{incl. b-tags} #scale[1.2]{#in S}";
+  m_Strings["ge2jS"] = VS().a("gejS").a("ge2j0bS").a("ge2jge1bS");
 
   m_Title["3j0bS"] = "#splitline{3 jets}{0 b-tags} #scale[1.2]{#in S}";
   m_Strings["3jS"] = VS().a("3jS").a("3j0bS").a("3j1bS").a("3jge2bS");
