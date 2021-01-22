@@ -489,7 +489,11 @@ for(int i = 0; i < int(proc_to_add.size()); i++){
 	fakeProcs += proc_to_add[i]+"_HF";
 	fakeProcs += proc_to_add[i]+"_LF";
 }
-  CategoryTree CT_Fakes1L = CTTool.GetCategories_Fakes1L();
+CategoryTree CT_Fakes1L = CTTool.GetCategories_Fakes1L();
+CategoryTree CT_Fakes2L = CTTool.GetCategories_Fakes2L();
+CategoryTree CT_Fakes3L = CTTool.GetCategories_Fakes3L();
 FITReader.SmoothHistograms(fakeProcs,CT_Fakes1L,OutFile);
+FITReader.SmoothHistograms(fakeProcs,CT_Fakes2L,OutFile);
+FITReader.SmoothHistograms(fakeProcs,CT_Fakes3L,OutFile);
   
 }
