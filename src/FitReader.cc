@@ -1406,7 +1406,7 @@ TCanvas* FitReader::Plot1Dratio(const string& proc,
   }
   //cat.Print();
 
-cout << "total # of cats: " << cats[1].GetN() << endl;
+cout << "total # of cats: " << cats[2].GetN() << endl;
 
   // Leptonic
   VS lep_labels;
@@ -1442,7 +1442,7 @@ cout << "total # of cats: " << cats[1].GetN() << endl;
 if(Nlep == 1)
   for(int i = 0; i < Ncats; i++)
     cats[i] = cats[i].FilterOR(vlep);
-cout << cats[1].GetN() << endl;
+cout << cats[2].GetN() << endl;
 cout << "leptonic cuts passed" << endl;
 // Hadronic S
   VS hadS_labels;
@@ -1492,7 +1492,7 @@ else vhadS.push_back(m_Strings[hadS_cat[i]][j]);
 	
 }
 //cat = cat.FilterOR(vhadS);
-cout << cats[1].GetN() << endl;
+cout << cats[2].GetN() << endl;
  
 cout << "hadronic S cuts passed" << endl;
  // Hadronic ISR
@@ -1544,7 +1544,7 @@ else vhadI.push_back(m_Strings[hadI_cat[i]][j]);
 	
 }
   //cat = cat.FilterOR(vhadI);
-cout << cats[1].GetN() << endl;
+cout << cats[2].GetN() << endl;
 cout << "hadronic ISR cuts passed" << endl;
   // extra (PTISR, gammaT)
   VS extra_labels;
@@ -1581,7 +1581,7 @@ else vextra.push_back(m_Strings[extra[i]][j]);
     cats[i] = cats[i].FilterOR(vextra);
  // cat = cat.FilterOR(vextra);
 }
-cout << cats[1].GetN() << endl;
+cout << cats[2].GetN() << endl;
   cout << "extra cuts passed" << endl;
 
 
@@ -2223,26 +2223,9 @@ if(!extra.empty()) label += ", "+extra;
 
 
 
-void FitReader::SmoothHistograms(const VS& proc, const string& lepMult,  const string& name){
+void FitReader::SmoothHistograms(const VS& proc, const CategoryTree& CT,  const string& name){
 vector<const CategoryTree*> catTrees;
-CategoryTreeTool CTT;
-CategoryTree CT;
-if(lepMult == "1L"){
-  CT = CTT.GetCategories_Fakes1L();
-  CT.GetListDepth(catTrees,2);
-}
-else if(lepMult == "2L"){
-  CT = CTT.GetCategories_Fakes2L();
-  CT.GetListDepth(catTrees,1);
-}
-else if(lepMult == "3L"){
-  CT = CTT.GetCategories_Fakes3L();
-  cout << "fakes not set for 3L yet" << endl;
-  return;
-}
-else{
-cout << "Please give a valid lepton multiplicity: 1L, 2L, or 3L." << endl;
-}
+CT.GetListDepth(catTrees,1);
 //PrintCategories();
 TFile* f = nullptr;
   CategoryList catList = GetCategories();
@@ -2817,7 +2800,7 @@ cout << "N original cats: " << cat.GetN() << endl;
   }
   // for(int i = 0; i < Ncats; i++)
   //   cats[i] = cats[i].FilterOR(vlep);
-  cat.FilterOR(vlep);
+  cat = cat.FilterOR(vlep);
 for(int i = 0; i < int(vlep.size()); i++) cout << vlep[i] << endl;
 cout << "leptonic cuts passed, Ncats: " << cat.GetN() << endl;
 // Hadronic S
@@ -2901,7 +2884,6 @@ cout << "hadronic ISR cuts passed, Ncats: " << cat.GetN() << endl;
 cat.FilterOR(vextra);
 
   cout << "extra cuts passed, Ncats: " << cat.GetN() << endl;
-
 
 
     int Ncat = cat.GetN();
@@ -3307,7 +3289,7 @@ void FitReader::InitializeRecipes(){
   
   m_Title["ST_HF"] = "Single top, heavy flavor";
   m_Color["ST_HF"] = 7022;
-  m_Strings["ZDY_HF"] = VS().a("ST_Fakes_elf0").a("ST_Fakes_muf0");
+  m_Strings["ST_HF"] = VS().a("ST_Fakes_elf0").a("ST_Fakes_muf0");
   
   m_Title["ST_LF"] = "Single top, light flavor";
   m_Color["ST_LF"] = 7021;
@@ -3382,6 +3364,9 @@ void FitReader::InitializeRecipes(){
   m_Title["1Lmubronze"] = "#scale[1.2]{single bronze #mu}";
   m_Strings["1Lmubronze"] = VS().a("1L_mup-muB").a("1L_mum-muB").a("1L_mupm-muB");
 
+  m_Title["2L"] = "#scale[1.2]{2 #it{l}}";
+  m_Strings["2L"] = VS().a("2L_elel-elGelB").a("2L_elel-elGelG").a("2L_elel-elGelS").a("2L_elmu-elGmuB").a("2L_elmu-elGmuG").a("2L_elmu-elGmuS").a("2L_elmu-muGelB").a("2L_elmu-muGelS").a("2L_mumu-muGmuB").a("2L_mumu-muGmuS").a("2L_mumu-muGmuG");
+
   m_Title["2LOSSF"] = "#scale[1.2]{e^{#pm} e^{#mp} or #mu^{#pm} #mu^{#mp}}";
   m_Strings["2LOSSF"] = VS().a("2LOS_el^el-elGelG").a("2LOS_mu^mu-muGmuG").a("2LOS_elel^0-elGelG").a("2LOS_mumu^0-muGmuG");
   
@@ -3401,6 +3386,14 @@ void FitReader::InitializeRecipes(){
   m_Title["2LOH"] = "#scale[1.2]{opp. side}";
   m_Strings["2LOH"] = VS().a("2L_el^el-elGelG").a("2L_el^mu-elGmuG").a("2L_mu^mu-muGmuG");
 
+  m_Title["2LOF"] = "#scale[1.2]{e #mu}";
+  m_Strings["2LOF"] = VS().a("2L_elmu^0-elGmuG").a("2L_el^mu-elGmuG").a("2L_elmu-elGmuB").a("2L_elmu-elGmuG").a("2L_elmu-elGmuS");
+
+  m_Title["2LSFe"] = "#scale[1.2]{e e}";
+  m_Strings["2LSFe"] = VS().a("2L_el^el-elGelG").a("2L_elel^0-elGelG").a("2L_elel-elGelG").a("2L_elel-elGelS").a("2L_elel-elGelB");
+
+  m_Title["2LSFmu"] = "#scale[1.2]{#mu #mu}";
+  m_Strings["2LSFmu"] = VS().a("2L_mumu-muGmuB").a("2L_mumu-muGmuG").a("2L_mu^mu-muGmuG").a("2L_mumu^0-muGmuG").a("2L_mumu-muGmuS");
 
   m_Title["2LOSSFsilver"] = "#scale[1.2]{e^{#pm} e^{#mp} or #mu^{#pm} #mu^{#mp}, #geq 1 silver #it{l}}";
   m_Strings["2LOSSFsilver"] = VS().a("2LOS_el^el-el0el1").a("2LOS_mu^mu-mu0mu1").a("2LOS_elel^0-el0el1").a("2LOS_mumu^0-mu0mu1")
@@ -3447,7 +3440,31 @@ void FitReader::InitializeRecipes(){
   
   m_Title["2LSFsilver"] = "#scale[0.8]{e e or #mu #mu, #geq 1 silver #it{l}}";
   m_Strings["2LSFsilver"] = VS().a("2L_elel-elGelS").a("2L_mumu-muGmuS"); 
- 
+
+  m_Title["3L"] = "#scale[1.2]{3 #it{l}}";
+  m_Strings["3L"] = VS().a("3L_OSSFelel^el-elGelGelG-0jS").a("3L_OSSFelel^mu-elGelGmuG-0jS").a("3L_OSSFmumu^el-elGmuGmuG").a("3L_OSSFmumu^mu-muGmuGmuG").a("3L_elelel-elGelGelB").a("3L_elelel-elGelGelS-0jS").a("3L_elelmu-elGelGmuB-0jS").a("3L_elelmu-elGelGmuS-0jS").a("3L_elelmu-elGmuGelB-0jS").a("3L_elelmu-elGmuGelS-0jS").a("3L_mumuel-elGmuGmuB-0jS").a("3L_mumuel-elGmuGmuS-0jS").a("3L_mumuel-muGmuGelB-0jS").a("3L_mumuel-muGmuGelS-0jS").a("3L_mumumu-muGmuGmuB-0jS").a("3L_nOSSFelel^el-elGelGelG-0jS").a("3L_nOSSFelel^mu-elGelGmuG-0jS").a("3L_nOSSFmumu^el-elGmuGmuG-0jS").a("3L_nOSSFmumu^mu-muGmuGmuG-0jS"); 
+
+  m_Title["3Lgold"] = "#scale[0.7]{#it{l}#it{l}#it{l}, all gold}";
+  m_Strings["3Lgold"] = VS().a("3L_nOSSFelel^el-elGelGelG").a("3L_nOSSFelel^mu-elGelGmuG").a("3L_nOSSFmumu^el-elGmuGmuG").a("3L_nOSSFmumu^mu-muGmuGmuG");
+
+  m_Title["3Lsilver"] = "#scale[0.7]{#it{l}#it{l}#it{l}, #geq 1 silver #it{l}}";
+  m_Strings["3Lsilver"] = VS().a("3L_elelel-elGelGelS").a("3L_elelmu-elGelGmuS").a("3L_mumuel-elGmuGmuS").a("3L_mumumu-muGmuGmuS");
+  
+  m_Title["3Lbronze"] = "#scale[0.7]{#it{l}#it{l}#it{l}, #geq 1 bronze #it{l}}";
+  m_Strings["3Lbronze"] = VS().a("3L_elelel-elGelGelB").a("3L_elelmu-elGelGmuB").a("3L_mumuel-elGmuGmuB").a("3L_mumumu-muGmuGmuB");
+  
+  m_Title["3Leee"] = "#scale[1.2]{e e e}";
+  m_Strings["3Leee"] = VS().a("3L_OSSFelel^el-elGelGelG").a("3L_elelel-elGelGelB").a("3L_elelel-elGelGelG").a("3L_elelel-elGelGelS").a("3L_nOSSFelel^el-elGelGelG");
+
+  m_Title["3Lmumumu"] = "#scale[1.2]{#mu #mu #mu}";
+  m_Strings["3Lmumumu"] = VS().a("3L_nOSSFmumu^mu-muGmuGmuG").a("3L_mumumu-muGmuGmuS").a("3L_mumumu-muGmuGmuG").a("3L_mumumu-muGmuGmuB").a("3L_OSSFmumu^mu-muGmuGmuG");
+
+  m_Title["3Leemu"] = "#scale[1.2]{e e #mu}";
+  m_Strings["3Leemu"] = VS().a("3L_OSSFelel^mu-elGelGmuG").a("3L_elelmu-elGelGmuB").a("3L_elelmu-elGelGmuG").a("3L_elelmu-elGelGmuS").a("3L_elelmu-elGmuGelB").a("3L_elelmu-elGmuGelS").a("3L_nOSSFelel^mu-elGelGmuG");
+
+  m_Title["3Lemumu"] = "#scale[1.2]{e #mu #mu}";
+  m_Strings["3Lemumu"] = VS().a("3L_nOSSFmumu^el-elGmuGmuG").a("3L_mumuel-muGmuGelS").a("3L_mumuel-muGmuGelB").a("3L_mumuel-elGmuGmuS").a("3L_mumuel-elGmuGmuB").a("3L_mumuel-elGmuGmuG").a("3L_OSSFmumu^el-elGmuGmuG");
+
   //extra cats
   m_Title["PTISR0"] = "#scale[1.2]{PTISR0}";
   m_Title["PTISR1"] = "#scale[1.2]{PTISR1}";
@@ -3468,6 +3485,9 @@ void FitReader::InitializeRecipes(){
   m_Title["0jge2svS"] = "#splitline{0 jets}{#geq 2 SV-tags} #scale[1.2]{#in S}";
 
   m_Title["1j0bge1svS"] = "#splitline{1 jet, 0 b-tags}{#geq 1 SV-tag} #scale[1.2]{#in S}";
+
+  m_Title["0jS"] = "#scale[1.2]{0 jets #in S}";
+  m_Strings["0jS"] = VS().a("0jS").a("0j0svS").a("0jge1svS");
 
   m_Title["1jS"] = "#splitline{1 jet}{incl. b-tags} #scale[1.2]{#in S}";
   m_Strings["1jS"] = VS().a("1j0svS").a("1jge1svS").a("1j0b0svS").a("1j0bge1vsS").a("1j1b0svS").a("1j1bge1svS");
