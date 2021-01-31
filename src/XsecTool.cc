@@ -58,6 +58,8 @@ double XsecTool::GetXsec_SMS(const std::string& dataset, double MP) const {
     if((dataset.find("T2tt")!=std::string::npos) ||
        (dataset.find("T2cc")!=std::string::npos) ||
        (dataset.find("T2bW")!=std::string::npos) ||
+       (dataset.find("T2bt")!=std::string::npos) ||
+       (dataset.find("T2tb")!=std::string::npos) ||
        (dataset.find("mStop")!=std::string::npos) ||
        (dataset.find("T2-4bd")!=std::string::npos) ||
        (dataset.find("T2bb")!=std::string::npos)){

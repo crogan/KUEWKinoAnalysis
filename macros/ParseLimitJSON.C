@@ -26,12 +26,17 @@ double popdouble(std::string& line);
 std::string popstring(std::string& line);
 
 TGraph2D* Get2DGraph_MCvMP(const vector<pair<int,double> >& vec);
+TGraph2D* Get2DGraph_dMvMP(const vector<pair<int,double> >& vec);
 
-TGraph* GetContourGraph_MCvMP(TH2D* hist, double rval = 1.);
+vector<TGraph*> GetContourGraph(TH2D* hist, double rval = 1.);
 
 TH2D* Get2DHist_MCvMP(const vector<pair<int,double> >& vec, const string& name);
+TH2D* Get2DHist_dMvMP(const vector<pair<int,double> >& vec, const string& name);
 
-TCanvas* Plot2DHist_MCvMP(const string& can, TH2D* hist);
+enum PlotType { kTChiWZ, kT2tt, kT2bW, kT2bb };
+
+TCanvas* Plot2DHist_MCvMP(const string& can, TH2D* hist, PlotType ptype);
+TCanvas* Plot2DHist_dMvMP(const string& can, TH2D* hist, PlotType ptype);
 
 void Invert2DHist(TH2D* hist);
 
@@ -44,7 +49,7 @@ int max_MC = -1;
 int min_dM = -1;
 int max_dM = -1;
 
-void ParseLimitJSON(const string& json){
+void ParseLimitJSON(const string& json, PlotType ptype){
   RestFrames::SetStyle();
 
   std::ifstream ifile(json.c_str());
@@ -86,6 +91,7 @@ void ParseLimitJSON(const string& json){
       line.replace(found,1," ");
     }
 
+    
     if(line.find("{") != string::npos){
       mass = int(popdouble(line));
       MP[mass] = mass/10000;
@@ -107,7 +113,7 @@ void ParseLimitJSON(const string& json){
       cout << "MP = " << MP[mass] << " MC = " << MC[mass] << endl;
       continue;
     }
-
+    
     if(line.find("exp0") != string::npos){
       popstring(line);
       double r = popdouble(line);
@@ -135,20 +141,22 @@ void ParseLimitJSON(const string& json){
   }
 
   TH2D* hist_Rexp0 = Get2DHist_MCvMP(R_exp0, "R_exp0");
-  Plot2DHist_MCvMP("norm", hist_Rexp0);
+  //TH2D* hist_Rexp0 = Get2DHist_dMvMP(R_exp0, "R_exp0");
 
   TH2D* hist_iRexp0 = Get2DHist_MCvMP(iR_exp0, "iR_exp0");
+  //TH2D* hist_iRexp0 = Get2DHist_dMvMP(iR_exp0, "iR_exp0");
   Invert2DHist(hist_iRexp0);
 
-  TGraph* gr_iRexp0 = (TGraph*) GetContourGraph_MCvMP(hist_iRexp0, 1.);
+  //vector<TGraph*> gr_Rexp0 = GetContourGraph(hist_Rexp0, 1.);
+  vector<TGraph*> gr_iRexp0 = GetContourGraph(hist_iRexp0, 1.);
   
-  TCanvas* can_inv = Plot2DHist_MCvMP("inv", hist_iRexp0);
+  TCanvas* can_inv = Plot2DHist_MCvMP("inv", hist_iRexp0, ptype);
   can_inv->cd();
-  gr_iRexp0->SetMarkerColor(kWhite);
-  gr_iRexp0->Draw("same P");
+  for(int g = 0; g < gr_iRexp0.size(); g++){
+    gr_iRexp0[g]->SetMarkerColor(7040);
+    gr_iRexp0[g]->Draw("same P");
+  }
  
-  
-  cout << "HERE" << endl;
   
 }
 
@@ -196,17 +204,102 @@ TGraph2D* Get2DGraph_MCvMP(const vector<pair<int,double> >& vec){
 
   TGraph2D* gr = new TGraph2D();
   for(int i = 0; i < N; i++){
+    //if(MP[vec[i].first] > 600.) continue;
     gr->SetPoint(i, MP[vec[i].first], MC[vec[i].first], vec[i].second);
   }
 
   return gr;
 }
 
+TGraph2D* Get2DGraph_dMvMP(const vector<pair<int,double> >& vec){
+  int N = vec.size();
+
+  TGraph2D* gr = new TGraph2D();
+  for(int i = 0; i < N; i++){
+    //if(MP[vec[i].first] > 600.) continue;
+    gr->SetPoint(i, MP[vec[i].first], MP[vec[i].first]-MC[vec[i].first], vec[i].second);
+  }
+
+  return gr;
+}
+
+TH2D* Get2DHist_dMvMP(const vector<pair<int,double> >& vec, const string& name){
+  TGraph2D* gr = Get2DGraph_dMvMP(vec);
+
+  int Nx = max_MP+1 - min_MP;
+  int Ny = max_dM+1 - min_dM;
+  double xmin = min_MP+1;
+  double xmax = max_MP+1;
+  double ymin = min_dM+1;
+  double ymax = max_dM+1;
+  
+  TH2D* hist = new TH2D(name.c_str(),name.c_str(),
+			Nx, xmin, xmax,
+			Ny, ymin, ymax);
+
+  for(int x = 0; x < Nx; x++){
+    double mp = hist->GetXaxis()->GetBinCenter(x+1);
+    for(int y = 0; y < Ny; y++){
+      double dm = hist->GetYaxis()->GetBinCenter(y+1);
+
+      hist->SetBinContent(x+1,y+1,gr->Interpolate(mp,dm));
+    }
+  }
+
+  // fill in missing entries
+  // for(int x = 0; x < Nx; x++){
+  //   bool filled = false;
+  //   for(int y = Ny-1; y >= 0; y--){
+  //     if(hist->GetBinContent(x+1,y+1) > 0)
+  // 	filled = true;
+  //     if(hist->GetBinContent(x+1,y+1) > 0 || filled == false)
+  // 	continue;
+      
+  //     if(x-1 >= 0){
+  // 	if(y-1 >= 0){
+  // 	  if(hist->GetBinContent(x, y) > 0.){
+  // 	    hist->SetBinContent(x+1,y+1, hist->GetBinContent(x, y));
+  // 	  }
+  // 	} else {
+  // 	  if(hist->GetBinContent(x, y+1) > 0.){
+  // 	    hist->SetBinContent(x+1,y+1, hist->GetBinContent(x, y+1));
+  // 	  }	    
+  // 	}
+  //     }
+  //   }
+  // }
+  // for(int x = Nx-1; x >= 0; x--){
+  //   bool filled = false;
+  //   for(int y = Ny-1; y >= 0; y--){
+  //     if(hist->GetBinContent(x+1,y+1) > 0)
+  // 	filled = true;
+  //     if(hist->GetBinContent(x+1,y+1) > 0 || filled == false)
+  // 	continue;
+      
+  //     if(x+1 < Nx){
+  // 	if(y-1 >= 0){
+  // 	  if(hist->GetBinContent(x+2, y) > 0.){
+  // 	    hist->SetBinContent(x+1,y+1, hist->GetBinContent(x+2, y));
+  // 	  }
+  // 	} else {
+  // 	  if(hist->GetBinContent(x+2, y+1) > 0.){
+  // 	    hist->SetBinContent(x+1,y+1, hist->GetBinContent(x+2, y+1));
+  // 	  }	    
+  // 	}
+  //     }
+  //   }
+  // }
+	    
+	
+  delete gr;
+  return hist;
+}
+
 TH2D* Get2DHist_MCvMP(const vector<pair<int,double> >& vec, const string& name){
   TGraph2D* gr = Get2DGraph_MCvMP(vec);
 
   int Nx = max_MP+1 - min_MP;
-  int Ny = max_MC+1 - min_MC;
+  int Ny = max_MP+1 - min_MC;
   double xmin = min_MP+1;
   double xmax = max_MP+1;
   double ymin = min_MC+1;
@@ -227,51 +320,6 @@ TH2D* Get2DHist_MCvMP(const vector<pair<int,double> >& vec, const string& name){
     }
   }
 
-  // fill in missing entries
-  for(int x = 0; x < Nx; x++){
-    bool filled = false;
-    for(int y = Ny-1; y >= 0; y--){
-      if(hist->GetBinContent(x+1,y+1) > 0)
-	filled = true;
-      if(hist->GetBinContent(x+1,y+1) > 0 || filled == false)
-	continue;
-      
-      if(x-1 >= 0){
-	if(y-1 >= 0){
-	  if(hist->GetBinContent(x, y) > 0.){
-	    hist->SetBinContent(x+1,y+1, hist->GetBinContent(x, y));
-	  }
-	} else {
-	  if(hist->GetBinContent(x, y+1) > 0.){
-	    hist->SetBinContent(x+1,y+1, hist->GetBinContent(x, y+1));
-	  }	    
-	}
-      }
-    }
-  }
-  for(int x = Nx-1; x >= 0; x--){
-    bool filled = false;
-    for(int y = Ny-1; y >= 0; y--){
-      if(hist->GetBinContent(x+1,y+1) > 0)
-	filled = true;
-      if(hist->GetBinContent(x+1,y+1) > 0 || filled == false)
-	continue;
-      
-      if(x+1 < Nx){
-	if(y-1 >= 0){
-	  if(hist->GetBinContent(x+2, y) > 0.){
-	    hist->SetBinContent(x+1,y+1, hist->GetBinContent(x+2, y));
-	  }
-	} else {
-	  if(hist->GetBinContent(x+2, y+1) > 0.){
-	    hist->SetBinContent(x+1,y+1, hist->GetBinContent(x+2, y+1));
-	  }	    
-	}
-      }
-    }
-  }
-	    
-	
   delete gr;
   return hist;
 }
@@ -288,24 +336,115 @@ void Invert2DHist(TH2D* hist){
   }
 }
 
-TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist){
-  TCanvas* can = (TCanvas*) new TCanvas(name.c_str(),name.c_str(),700.,600);
+TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist, PlotType ptype){
+   TCanvas* can = (TCanvas*) new TCanvas(name.c_str(),name.c_str(),700.,600);
 
-   can->SetLeftMargin(0.15);
-   can->SetRightMargin(0.18);
-   can->SetBottomMargin(0.15);
-   can->SetGridx();
-   can->SetGridy();
-   can->SetLogz();
-   can->Draw();
-   can->cd();
+  string xlabel = "M_{P} [GeV]";
+  string ylabel = "M_{#tilde{#chi}^{0}_{1}} [GeV]";
 
+  if(ptype == kTChiWZ){
+    xlabel = "M_{#tilde{#chi}^{#pm}_{1}} [GeV]";
+    ylabel = "M_{#tilde{#chi}^{0}_{1}} [GeV]";
+  }
+  if(ptype == kT2tt || ptype == kT2bW){
+    xlabel = "M_{ #tilde{t}} [GeV]";
+    ylabel = "M_{#tilde{#chi}^{0}_{1}} [GeV]";
+  }
+  if(ptype == kT2bb){
+    xlabel = "M_{ #tilde{b}} [GeV]";
+    ylabel = "M_{#tilde{#chi}^{0}_{1}} [GeV]";
+  }
+  
+  can->SetLeftMargin(0.15);
+  can->SetRightMargin(0.2);
+  can->SetBottomMargin(0.15);
+  can->SetGridx();
+  can->SetGridy();
+  can->SetLogz();
+  can->Draw();
+  can->cd();
+  
+  hist->GetXaxis()->CenterTitle();
+  hist->GetXaxis()->SetTitleFont(42);
+  hist->GetXaxis()->SetTitleSize(0.06);
+  hist->GetXaxis()->SetTitleOffset(1.06);
+  hist->GetXaxis()->SetLabelFont(42);
+   hist->GetXaxis()->SetLabelSize(0.05);
+   hist->GetXaxis()->SetTitle(xlabel.c_str());
+   hist->GetYaxis()->CenterTitle();
+   hist->GetYaxis()->SetTitleFont(42);
+   hist->GetYaxis()->SetTitleSize(0.06);
+   hist->GetYaxis()->SetTitleOffset(1.12);
+   hist->GetYaxis()->SetLabelFont(42);
+   hist->GetYaxis()->SetLabelSize(0.05);
+   hist->GetYaxis()->SetTitle(ylabel.c_str());
+   hist->GetZaxis()->CenterTitle();
+   hist->GetZaxis()->SetTitleFont(42);
+   hist->GetZaxis()->SetTitleSize(0.055);
+   hist->GetZaxis()->SetTitleOffset(1.1);
+   hist->GetZaxis()->SetLabelFont(42);
+   hist->GetZaxis()->SetLabelSize(0.05);
+   hist->GetZaxis()->SetTitle("95% C.L. #sigma_{excl} / #sigma_{theory}");
    hist->Draw("COLZ");
 
    return can;
 }
 
-TGraph* GetContourGraph_MCvMP(TH2D* hist, double rval){
+TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
+  TCanvas* can = (TCanvas*) new TCanvas(name.c_str(),name.c_str(),700.,600);
+
+  string xlabel = "M_{P} [GeV]";
+  string ylabel = "M_{P} - M_{ #tilde{#chi}^{0}_{1}} [GeV]";
+
+  if(ptype == kTChiWZ){
+    xlabel = "M_{#tilde{#chi}^{#pm}_{1}} [GeV]";
+    ylabel = "M_{#tilde{#chi}^{#pm}_{1}} - M_{#tilde{#chi}^{0}_{1}} [GeV]";
+  }
+  if(ptype == kT2tt || ptype == kT2bW){
+    xlabel = "M_{ #tilde{t}} [GeV]";
+    ylabel = "M_{ #tilde{t}} - M_{#tilde{#chi}^{0}_{1}} [GeV]";
+  }
+  if(ptype == kT2bb){
+    xlabel = "M_{ #tilde{b}} [GeV]";
+    ylabel = "M_{ #tilde{b} - M_{#tilde{#chi}^{0}_{1}} [GeV]";
+  }
+  
+  can->SetLeftMargin(0.15);
+  can->SetRightMargin(0.2);
+  can->SetBottomMargin(0.15);
+  can->SetGridx();
+  can->SetGridy();
+  can->SetLogz();
+  can->Draw();
+  can->cd();
+  
+  hist->GetXaxis()->CenterTitle();
+  hist->GetXaxis()->SetTitleFont(42);
+  hist->GetXaxis()->SetTitleSize(0.06);
+  hist->GetXaxis()->SetTitleOffset(1.06);
+  hist->GetXaxis()->SetLabelFont(42);
+   hist->GetXaxis()->SetLabelSize(0.05);
+   hist->GetXaxis()->SetTitle(xlabel.c_str());
+   hist->GetYaxis()->CenterTitle();
+   hist->GetYaxis()->SetTitleFont(42);
+   hist->GetYaxis()->SetTitleSize(0.06);
+   hist->GetYaxis()->SetTitleOffset(1.12);
+   hist->GetYaxis()->SetLabelFont(42);
+   hist->GetYaxis()->SetLabelSize(0.05);
+   hist->GetYaxis()->SetTitle(ylabel.c_str());
+   hist->GetZaxis()->CenterTitle();
+   hist->GetZaxis()->SetTitleFont(42);
+   hist->GetZaxis()->SetTitleSize(0.055);
+   hist->GetZaxis()->SetTitleOffset(1.1);
+   hist->GetZaxis()->SetLabelFont(42);
+   hist->GetZaxis()->SetLabelSize(0.05);
+   hist->GetZaxis()->SetTitle("95% C.L. #sigma_{excl} / #sigma_{theory}");
+   hist->Draw("COLZ");
+
+   return can;
+}
+
+vector<TGraph*> GetContourGraph(TH2D* hist, double rval){
   TH2D* h = (TH2D*) hist->Clone("myclone");
 
   int Nx = h->GetNbinsX();
@@ -328,9 +467,14 @@ TGraph* GetContourGraph_MCvMP(TH2D* hist, double rval){
   gPad->Update();
   TObjArray *conts = (TObjArray*) gROOT->GetListOfSpecials()->FindObject("contours");
   TList *l = (TList*) conts->At(0);
-  
-  TGraph *gr = (TGraph*) l->At(0)->Clone();
 
+  int N = l->GetEntries();
+
+  vector<TGraph*> gr;
+  for(int i = 0; i < N; i++){
+    gr.push_back((TGraph*) l->At(i)->Clone());
+  }
+  
   delete l;
   delete can;
   delete h;

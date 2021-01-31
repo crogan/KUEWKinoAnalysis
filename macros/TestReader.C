@@ -36,15 +36,13 @@ void TestReader(const string& inputfile = "test/FitInput_test.root", const strin
   FITReader->PlotYields("3Lyields",
   			all,
   			CT_3L);
-
-  return;
   
-  int depth0 = CT_2L.GetDepth();
+  int depth0 = CT_0L.GetDepth();
   vector<const CategoryTree*> CTs;
-  CT_2L.GetListDepth(CTs, depth0-1);
+  CT_0L.GetListDepth(CTs, depth0-2);
 
   vector<const CategoryTree*> CTs_deep;
-  CT_2L.GetListDepth(CTs_deep, depth0-1);
+  CT_0L.GetListDepth(CTs_deep, depth0-1);
 
   int iCT = 0;
   int iCTd = 0;
