@@ -1698,15 +1698,18 @@ VS vproc;
 //cout << "number of hists: " << Nhist << endl;
 int nBins;
 int gBin; 
+vector<TEfficiency*> ratios;
 //cout << "total hist" << endl;	
 //for(int b = 0; b < histTotal->GetNbinsX()+1; b++){
 //		cout << "bin #" << b << " bin content: " << histTotal->GetBinContent(b) << " bin error: " << histTotal->GetBinError(b) << endl;  
 //	}
 //cout << "total hist integral: " << histTotal->Integral() << endl;  
+
 histTotal->Scale(1/histTotal->Integral());
   for(int i = 0; i < Nhist; i++){
    hists[i]->Divide(histTotal);
    //hists[i]->Sumw2();
+    ratios.push_back(new TEfficiency(hists[i],histTotal));
 	nBins = hists[i]->GetNbinsX();
 	for(int b = 0; b < nBins+1; b++){
 		gBin = hists[i]->GetBin(b);
@@ -1778,36 +1781,36 @@ cout << "nHists: " << Nhist << endl;
 
   // double hmax = hists[0]->GetMaximum();
 
-  hists[0]->Draw("P");
-  hists[0]->GetXaxis()->CenterTitle();
-  hists[0]->GetXaxis()->SetTitleFont(42);
-  hists[0]->GetXaxis()->SetTitleSize(0.05);
-  hists[0]->GetXaxis()->SetTitleOffset(1.0);
-  hists[0]->GetXaxis()->SetLabelFont(42);
-  hists[0]->GetXaxis()->SetLabelSize(0.04);
-  hists[0]->GetXaxis()->SetTitle("");
-  hists[0]->GetXaxis()->SetTickSize(0.);
-  hists[0]->GetYaxis()->CenterTitle();
-  hists[0]->GetYaxis()->SetTitleFont(42);
-  hists[0]->GetYaxis()->SetTitleSize(0.04);
-  hists[0]->GetYaxis()->SetTitleOffset(0.85);
-  hists[0]->GetYaxis()->SetLabelFont(42);
-  hists[0]->GetYaxis()->SetLabelSize(0.035);
-  hists[0]->GetYaxis()->SetTitle("ratio to total");
+  ratios[0]->Draw("P");
+  ratios[0]->GetXaxis()->CenterTitle();
+  ratios[0]->GetXaxis()->SetTitleFont(42);
+  ratios[0]->GetXaxis()->SetTitleSize(0.05);
+  ratios[0]->GetXaxis()->SetTitleOffset(1.0);
+  ratios[0]->GetXaxis()->SetLabelFont(42);
+  ratios[0]->GetXaxis()->SetLabelSize(0.04);
+  ratios[0]->GetXaxis()->SetTitle("");
+  ratios[0]->GetXaxis()->SetTickSize(0.);
+  ratios[0]->GetYaxis()->CenterTitle();
+  ratios[0]->GetYaxis()->SetTitleFont(42);
+  ratios[0]->GetYaxis()->SetTitleSize(0.04);
+  ratios[0]->GetYaxis()->SetTitleOffset(0.85);
+  ratios[0]->GetYaxis()->SetLabelFont(42);
+  ratios[0]->GetYaxis()->SetLabelSize(0.035);
+  ratios[0]->GetYaxis()->SetTitle("ratio to total");
 
   for(int i = 0; i < Nhist; i++){
-  hists[i]->SetLineColor(colors[i]);
-  hists[i]->SetMarkerColor(colors[i]);
-  hists[i]->SetLineWidth(1.0);
-  hists[i]->SetMarkerStyle(20+i);
-  hists[i]->SetLineStyle(i);
+  ratios[i]->SetLineColor(colors[i]);
+  ratios[i]->SetMarkerColor(colors[i]);
+  ratios[i]->SetLineWidth(1.0);
+  ratios[i]->SetMarkerStyle(20+i);
+  ratios[i]->SetLineStyle(i);
   // hists[i]->SetFillColor(colors[i]);
   // hists[i]->SetFillStyle(1001);
-  hists[i]->Draw("SAME P");
+  ratios[i]->Draw("SAME P");
   }
 
 
-  hists[0]->GetYaxis()->SetRangeUser(0.0, 1.1*hmax);
+  // hists[0]->GetYaxis()->SetRangeUser(0.0, 1.1*hmax);
   TLegend* leg = new TLegend(1.-hhi+0.01, 1.- (Nhist+1)*(1.-0.49)/9., 0.98, 1.-hto-0.005);
   leg->SetTextFont(42);
   leg->SetTextSize(0.035);
@@ -1818,7 +1821,7 @@ cout << "nHists: " << Nhist << endl;
   // leg->AddEntry(hist_data, "data");
   // leg->AddEntry(gr, "total uncertainty","F");
   for(int i = 0; i < Nhist; i++)
-  leg->AddEntry(hists[i], labels[i].c_str(), "LP");
+  leg->AddEntry(ratios[i], labels[i].c_str(), "LP");
   // for(int i = 0; i < Nsig; i++)
   // leg->AddEntry(hists_sig[i], labels_sig[i].c_str(), "L");
  leg->Draw("SAME");
