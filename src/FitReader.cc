@@ -4,9 +4,11 @@
 #include <TLegend.h>
 #include <TLatex.h>
 #include <TGraphErrors.h>
+#include <TGraphAsymmErrors.h>
 #include <TLine.h>
 #include <TSystem.h>
 #include <TMultiGraph.h>
+#include <TEfficiency.h>
 
 #include "FitReader.hh"
 
@@ -1647,14 +1649,12 @@ VS vproc;
     labels += extra[cc];
     
   colors.push_back(m_ColorDefault[cc]);
-   hist->Sumw2(); 
   hists.push_back(hist); //one hist per cat group
  } 
 
   // int Nsig = hists_sig.size();
   TH1D* histTotal = new TH1D(*hists[0]);
   hists[0]->Scale(1/hists[0]->Integral());
-
 
   // sort the histograms by integral (N^2/2 brute force)
   int Nhist = hists.size();
@@ -1676,56 +1676,45 @@ VS vproc;
   // vcolors.push_back(colors[i]);
   // vhists.push_back(hists[i]);
   histTotal->Add(hists[i]);
-  hists[i]->Scale(1/hists[i]->Integral());
   // hists[i]->Sumw2();
+  hists[i]->Scale(1/hists[i]->Integral());
  
   }
+histTotal->Scale(1/histTotal->Integral());
 //for(int i = 0; i < Nhist; i++){
 //	cout << "hist #"<< i << endl;
 //	for(int b = 0; b < hists[i]->GetNbinsX()+1; b++){
 //		cout << "bin #" << b << " bin content: " << hists[i]->GetBinContent(b) << " bin error: " << hists[i]->GetBinError(b) << endl;  
 //	}
 //}
-//cout << "after normalizing all hists" << endl;
-//for(int h = 0; h < Nhist; h++){
-//	cout << "hist #" << h << endl;
-//	int nBins = hists[h]->GetNbinsX();
-//	cout << "bin content for second to last bin: " << hists[h]->GetBinContent(nBins-1) << endl;
-//	cout << "error on second to last bin: " << hists[h]->GetBinError(nBins-1) << endl;
-//	cout << "bin content for last bin: " << hists[h]->GetBinContent(nBins) << endl;
-//	cout << "error on last bin: " << hists[h]->GetBinError(nBins) << endl;
-//}
-//cout << "number of hists: " << Nhist << endl;
 int nBins;
 int gBin; 
-vector<TEfficiency*> ratios;
-//cout << "total hist" << endl;	
-//for(int b = 0; b < histTotal->GetNbinsX()+1; b++){
-//		cout << "bin #" << b << " bin content: " << histTotal->GetBinContent(b) << " bin error: " << histTotal->GetBinError(b) << endl;  
-//	}
-//cout << "total hist integral: " << histTotal->Integral() << endl;  
-
-histTotal->Scale(1/histTotal->Integral());
+vector<TGraphAsymmErrors*> ratios;
+TEfficiency* eff;
   for(int i = 0; i < Nhist; i++){
-   hists[i]->Divide(histTotal);
-   //hists[i]->Sumw2();
-    ratios.push_back(new TEfficiency(hists[i],histTotal));
 	nBins = hists[i]->GetNbinsX();
+cout << "nBins: " << nBins << endl;
+Double_t edges[nBins];
+   //hists[i]->GetXaxis()->GetLowEdge(edges);
+ for(int b = 0; b < nBins+1; b++) edges[b] = hists[i]->GetXaxis()->GetBinLowEdge(b);
+ eff = new TEfficiency("eff"," ; ;ratio to total",nBins, edges);
+   for(int b = 0; b < nBins+1; b++){
+  cout << "hist #: " << i << " bin #: " << b << " bin value: " << edges[b] << " value: " << hists[i]->GetBinContent(b) << " total value for this bin: " << histTotal->GetBinContent(b) <<" error: " << hists[i]->GetBinError(b) << endl;
+    eff->Fill(true,hists[i]->GetBinContent(b));
+    eff->Fill(false,histTotal->GetBinContent(b));
+    }
+
+  ratios.push_back(eff->CreateGraph());
+  hists[i]->Divide(histTotal);
 	for(int b = 0; b < nBins+1; b++){
 		gBin = hists[i]->GetBin(b);
 		if(hists[i]->GetBinError(gBin) == 0) hists[i]->SetBinContent(gBin,1e-8);
 	}
    if(hists[i]->GetMaximum() > hmax) hmax = hists[i]->GetMaximum();
   }
-//cout << "after division" << endl;
-//for(int i = 0; i < Nhist; i++){
-//	cout << "hist #"<< i << endl;
-//	for(int b = 0; b < hists[i]->GetNbinsX()+1; b++){
-//		cout << "bin #" << b << " bin content: " << hists[i]->GetBinContent(b) << " bin error: " << hists[i]->GetBinError(b) << endl;  
-//	}
-//}
 cout << "hmax: " << hmax << endl;
 cout << "nHists: " << Nhist << endl; 
+
   const FitBin& bin = cats[0][0].GetFitBin();
 
   int NR = bin.NRBins();
@@ -1745,14 +1734,12 @@ cout << "nHists: " << Nhist << endl;
   string space = "";
   for(int l = 0; l < 1.2*lmax; l++)
   space += " ";
-
   for(int b = 0; b < NB; b++){
   if(b%2 == 1)
-    hists[0]->GetXaxis()->SetBinLabel(b+1, (blabels[b]+space).c_str());
+    ratios[0]->GetXaxis()->SetBinLabel(b+1, (blabels[b]+space).c_str());
   else
-    hists[0]->GetXaxis()->SetBinLabel(b+1, blabels[b].c_str());
+    ratios[0]->GetXaxis()->SetBinLabel(b+1, blabels[b].c_str());
   }
-
   blabels.clear();
 
   for(int r = 0; r < NR; r++)
@@ -1781,21 +1768,21 @@ cout << "nHists: " << Nhist << endl;
 
   // double hmax = hists[0]->GetMaximum();
 
-  ratios[0]->Draw("P");
-  ratios[0]->GetXaxis()->CenterTitle();
-  ratios[0]->GetXaxis()->SetTitleFont(42);
-  ratios[0]->GetXaxis()->SetTitleSize(0.05);
-  ratios[0]->GetXaxis()->SetTitleOffset(1.0);
-  ratios[0]->GetXaxis()->SetLabelFont(42);
-  ratios[0]->GetXaxis()->SetLabelSize(0.04);
-  ratios[0]->GetXaxis()->SetTitle("");
-  ratios[0]->GetXaxis()->SetTickSize(0.);
-  ratios[0]->GetYaxis()->CenterTitle();
-  ratios[0]->GetYaxis()->SetTitleFont(42);
-  ratios[0]->GetYaxis()->SetTitleSize(0.04);
-  ratios[0]->GetYaxis()->SetTitleOffset(0.85);
-  ratios[0]->GetYaxis()->SetLabelFont(42);
-  ratios[0]->GetYaxis()->SetLabelSize(0.035);
+  ratios[0]->Draw();
+//  ratios[0]->GetXaxis()->CenterTitle();
+//  ratios[0]->GetXaxis()->SetTitleFont(42);
+//  ratios[0]->GetXaxis()->SetTitleSize(0.05);
+//  ratios[0]->GetXaxis()->SetTitleOffset(1.0);
+//  ratios[0]->GetXaxis()->SetLabelFont(42);
+//  ratios[0]->GetXaxis()->SetLabelSize(0.04);
+//  ratios[0]->GetXaxis()->SetTitle("");
+//  ratios[0]->GetXaxis()->SetTickSize(0.);
+//  ratios[0]->GetYaxis()->CenterTitle();
+//  ratios[0]->GetYaxis()->SetTitleFont(42);
+//  ratios[0]->GetYaxis()->SetTitleSize(0.04);
+//  ratios[0]->GetYaxis()->SetTitleOffset(0.85);
+//  ratios[0]->GetYaxis()->SetLabelFont(42);
+//  ratios[0]->GetYaxis()->SetLabelSize(0.035);
   ratios[0]->GetYaxis()->SetTitle("ratio to total");
 
   for(int i = 0; i < Nhist; i++){
@@ -1806,7 +1793,7 @@ cout << "nHists: " << Nhist << endl;
   ratios[i]->SetLineStyle(i);
   // hists[i]->SetFillColor(colors[i]);
   // hists[i]->SetFillStyle(1001);
-  ratios[i]->Draw("SAME P");
+  ratios[i]->Draw("SAME");
   }
 
 
@@ -2971,7 +2958,6 @@ cout << "process: " << proc[i] << endl;
 //  cout << "bin content for last bin: " << hists[h]->GetBinContent(nBins) << endl;
 //  cout << "error on last bin: " << hists[h]->GetBinError(nBins) << endl;
 //}
-
   for(int i = 1; i < Nhist; i++){
   // vlabels.push_back(labels[i]);
   // vcolors.push_back(colors[i]);
@@ -2993,10 +2979,12 @@ cout << "process: " << proc[i] << endl;
 //cout << "number of hists: " << Nhist << endl;
 int nBins;
 int gBin; 
+vector<TEfficiency*> ratios;
   histTotal->Scale(1/histTotal->Integral());
   for(int i = 0; i < Nhist; i++){
-   hists[i]->Divide(histTotal);
    //hists[i]->Sumw2();
+   //ratios.push_back(new TEfficiency(*hists[i],*histTotal));
+   hists[i]->Divide(histTotal);
   nBins = hists[i]->GetNbinsX();
   for(int b = 0; b < nBins+1; b++){
     gBin = hists[i]->GetBin(b);
@@ -3076,6 +3064,7 @@ cout << "nHists: " << Nhist << endl;
   hists[0]->GetYaxis()->SetTitleOffset(0.85);
   hists[0]->GetYaxis()->SetLabelFont(42);
   hists[0]->GetYaxis()->SetLabelSize(0.035);
+  //ratios[0]->SetTitle(" ; ;ratio to total");
   hists[0]->GetYaxis()->SetTitle("ratio to total");
 
   for(int i = 0; i < Nhist; i++){
@@ -3497,7 +3486,7 @@ void FitReader::InitializeRecipes(){
 
   m_Title["2j0bS"] = "#splitline{2 jets}{0 b-tags} #scale[1.2]{#in S}";
   
-  m_Title["2jS"] = "#splitline{2 jets}{incl. b-tags} #scale[1.2}{#in S}";
+  m_Title["2jS"] = "#splitline{2 jets}{incl. b-tags} #scale[1.2]{#in S}";
   m_Strings["2jS"] = VS().a("2jS").a("2j0bS").a("2j1bS").a("2j2bS");  
 
   m_Title["2j1bS"] = "#splitline{2 jets}{1 b-tags} #scale[1.2]{#in S}";
