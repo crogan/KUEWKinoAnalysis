@@ -1686,43 +1686,31 @@ VS vproc;
   
   //compare each individual histogram to each other - likelihood ratio test
   for(int i = 0; i < Nhist; i++){
-	for(int j = 0; j < Nhist; j++){ 
-    		if(i <= j) continue; //account for same combinations (ie i = 0 and j = 1 is the same as j = 1 and i = 0
-		cout << "i " << i << " j " << j << endl;
-		shapeComparison* sc = new shapeComparison(hists[i],hists[j]);
-		double pval = sc->getPvalue();
-    		cout << pval << " for hist " << hists[i]->GetTitle() << " and " << hists[j]->GetTitle() << endl;
-    		pvals.push_back(pval);
-	}
+  	for(int j = 0; j < Nhist; j++){ 
+      		if(i <= j) continue; //account for same combinations 
+  		cout << "i " << i << " j " << j << endl;
+  		shapeComparison* sc = new shapeComparison(hists[i],hists[j]);
+  		double pval = sc->getPvalue();
+      		cout << pval << " for hist " << hists[i]->GetTitle() << " and " << hists[j]->GetTitle() << endl;
+      		pvals.push_back(pval);
+  	}
   }
 
 
-  for(int i = 0; i < Nhist; i++) hists[i]->Scale(1/hists[i]->Integral());
+for(int i = 0; i < hists[0]->GetNbinsX()+1; i++) cout << "bin #" << i << " bin content: " << hists[0]->GetBinContent(i) << " bin error: " << hists[0]->GetBinError(i) << endl;
+
+
+  
+//do histogram scalings
+for(int i = 0; i < Nhist; i++) hists[i]->Scale(1/hists[i]->Integral());
 histTotal->Scale(1/histTotal->Integral());
-//for(int i = 0; i < Nhist; i++){
-//	cout << "hist #"<< i << endl;
-//	for(int b = 0; b < hists[i]->GetNbinsX()+1; b++){
-//		cout << "bin #" << b << " bin content: " << hists[i]->GetBinContent(b) << " bin error: " << hists[i]->GetBinError(b) << endl;  
-//	}
-//}
+
 int nBins;
 int gBin; 
-// vector<TGraphAsymmErrors*> ratios;
-// TEfficiency* eff;
+
+//do ratios
   for(int i = 0; i < Nhist; i++){
 	nBins = hists[i]->GetNbinsX();
-// cout << "nBins: " << nBins << endl;
-// Double_t edges[nBins];
-//    //hists[i]->GetXaxis()->GetLowEdge(edges);
-//  for(int b = 0; b < nBins+1; b++) edges[b] = hists[i]->GetXaxis()->GetBinLowEdge(b);
- // eff = new TEfficiency("eff"," ; ;ratio to total",nBins, edges);
-  //  for(int b = 0; b < nBins+1; b++){
-  // cout << "hist #: " << i << " bin #: " << b << " bin value: " << edges[b] << " value: " << hists[i]->GetBinContent(b) << " total value for this bin: " << histTotal->GetBinContent(b) <<" error: " << hists[i]->GetBinError(b) << endl;
-  //   eff->Fill(true,hists[i]->GetBinContent(b));
-  //   eff->Fill(false,histTotal->GetBinContent(b));
-  //   }
-  // ratios.push_back(eff->CreateGraph());
-
   hists[i]->Divide(histTotal);
 	for(int b = 0; b < nBins+1; b++){
 		gBin = hists[i]->GetBin(b);
