@@ -1,4 +1,7 @@
 //to compare two histograms
+#include <iostream>
+#include <vector>
+#include "TH1D.h"
 class shapeComparison{
 	
 	public:
@@ -17,7 +20,7 @@ class shapeComparison{
 		double Nu;
 		int nBins;
 
-		vector<double> lambdas;
+		std::vector<double> lambdas;
 
 		double nDof;
 

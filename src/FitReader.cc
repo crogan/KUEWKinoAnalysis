@@ -1387,7 +1387,7 @@ TCanvas* FitReader::Plot1Dratio(const string& proc,
    NhadI == 0)
   return nullptr;
 
-
+int catTest = 0;
 
   CategoryList cat = GetCategories();
   vector<CategoryList> cats;
@@ -1445,7 +1445,7 @@ cout << "total # of cats: " << cats[2].GetN() << endl;
 if(Nlep == 1)
   for(int i = 0; i < Ncats; i++)
     cats[i] = cats[i].FilterOR(vlep);
-cout << cats[2].GetN() << endl;
+cout << cats[catTest].GetN() << endl;
 cout << "leptonic cuts passed" << endl;
 // Hadronic S
   VS hadS_labels;
@@ -1495,7 +1495,7 @@ else vhadS.push_back(m_Strings[hadS_cat[i]][j]);
 	
 }
 //cat = cat.FilterOR(vhadS);
-cout << cats[2].GetN() << endl;
+cout << cats[catTest].GetN() << endl;
  
 cout << "hadronic S cuts passed" << endl;
  // Hadronic ISR
@@ -1547,7 +1547,7 @@ else vhadI.push_back(m_Strings[hadI_cat[i]][j]);
 	
 }
   //cat = cat.FilterOR(vhadI);
-cout << cats[2].GetN() << endl;
+cout << cats[catTest].GetN() << endl;
 cout << "hadronic ISR cuts passed" << endl;
   // extra (PTISR, gammaT)
   VS extra_labels;
@@ -1584,7 +1584,7 @@ else vextra.push_back(m_Strings[extra[i]][j]);
     cats[i] = cats[i].FilterOR(vextra);
  // cat = cat.FilterOR(vextra);
 }
-cout << cats[2].GetN() << endl;
+cout << cats[catTest].GetN() << endl;
   cout << "extra cuts passed" << endl;
 
 
@@ -1683,14 +1683,19 @@ VS vproc;
   }
 
   vector<double> pvals;
-
-  //compare each individual histogram to the total composite one - likelihood ratio test
-  for(int h = 0; h < Nhist; h++){
-    shapeComparison sc(hist[i],histTotal);
-    double pval = sc.getPvalue();
-    cout << pval << " for hist " << hist[i]->GetTitle() << endl;
-    pvals.push_back(pval);
+  
+  //compare each individual histogram to each other - likelihood ratio test
+  for(int i = 0; i < Nhist; i++){
+	for(int j = 0; j < Nhist; j++){ 
+    		if(i <= j) continue; //account for same combinations (ie i = 0 and j = 1 is the same as j = 1 and i = 0
+		cout << "i " << i << " j " << j << endl;
+		shapeComparison* sc = new shapeComparison(hists[i],hists[j]);
+		double pval = sc->getPvalue();
+    		cout << pval << " for hist " << hists[i]->GetTitle() << " and " << hists[j]->GetTitle() << endl;
+    		pvals.push_back(pval);
+	}
   }
+
 
   for(int i = 0; i < Nhist; i++) hists[i]->Scale(1/hists[i]->Integral());
 histTotal->Scale(1/histTotal->Integral());
@@ -1749,9 +1754,9 @@ cout << "nHists: " << Nhist << endl;
   space += " ";
   for(int b = 0; b < NB; b++){
   if(b%2 == 1)
-    ratios[0]->GetXaxis()->SetBinLabel(b+1, (blabels[b]+space).c_str());
+    hists[0]->GetXaxis()->SetBinLabel(b+1, (blabels[b]+space).c_str());
   else
-    ratios[0]->GetXaxis()->SetBinLabel(b+1, blabels[b].c_str());
+    hists[0]->GetXaxis()->SetBinLabel(b+1, blabels[b].c_str());
   }
   blabels.clear();
 
@@ -2954,7 +2959,7 @@ cout << "process: " << proc[i] << endl;
 
   // int Nsig = hists_sig.size();
   TH1D* histTotal = new TH1D(*hists[0]);
-  hists[0]->Scale(1/hists[0]->Integral());
+  //hists[0]->Scale(1/hists[0]->Integral());
 
 
   // sort the histograms by integral (N^2/2 brute force)
@@ -2976,10 +2981,26 @@ cout << "process: " << proc[i] << endl;
   // vcolors.push_back(colors[i]);
   // vhists.push_back(hists[i]);
   histTotal->Add(hists[i]);
-  hists[i]->Scale(1/hists[i]->Integral());
+  //hists[i]->Scale(1/hists[i]->Integral());
   // hists[i]->Sumw2();
  
   }
+  vector<double> pvals;
+  
+  //compare each individual histogram to each other - likelihood ratio test
+  for(int i = 0; i < Nhist; i++){
+	for(int j = 0; j < Nhist; j++){ 
+    		if(j <= i) continue; //account for same combinations (ie i = 0 and j = 1 is the same as j = 1 and i = 0
+		cout << "i " << i << " j " << j << endl;
+		shapeComparison* sc = new shapeComparison(hists[i],hists[j]);
+		double pval = sc->getPvalue();
+    		cout << pval << " for hist " << hists[i]->GetTitle() << " and " << hists[j]->GetTitle() << endl;
+    		pvals.push_back(pval);
+	}
+  }
+
+
+  for(int i = 0; i < Nhist; i++) hists[i]->Scale(1/hists[i]->Integral());
 //cout << "after normalizing all hists" << endl;
 //for(int h = 0; h < Nhist; h++){
 //  cout << "hist #" << h << endl;
@@ -3352,7 +3373,7 @@ void FitReader::InitializeRecipes(){
   m_Strings["1Lmugold"] = VS().a("1L_mup-muG").a("1L_mum-muG").a("1L_mupm-muG");
 
   m_Title["1Lsilver"] = "#scale[1.2]{single silver #it{l}}";
-  m_Strings["1Lsilver"] = VS().a("1L_elp-elS").a("1L_elm-elS").a("1L_mup-muS").a("1L_mum-muS");
+  m_Strings["1Lsilver"] = VS().a("1L_elp-elS").a("1L_elm-elS").a("1L_elpm-elS").a("1L_mupm-muS").a("1L_mup-muS").a("1L_mum-muS");
   
   m_Title["1Lelsilver"] = "#scale[1.2]{single silver e}";
   m_Strings["1Lelsilver"] = VS().a("1L_elp-elS").a("1L_elm-elS").a("1L_elpm-elS");
@@ -3361,7 +3382,7 @@ void FitReader::InitializeRecipes(){
   m_Strings["1Lmusilver"] = VS().a("1L_mup-muS").a("1L_mum-muS").a("1L_mupm-muS");
 
   m_Title["1Lbronze"] = "#scale[1.2]{single bronze #it{l}}";
-  m_Strings["1Lbronze"] = VS().a("1L_elp-elB").a("1L_elm-el2").a("1L_mup-muB").a("1L_mum-muB");
+  m_Strings["1Lbronze"] = VS().a("1L_elp-elB").a("1L_elm-elB").a("1L_elpm-elB").a("1L_mupm-muB").a("1L_mup-muB").a("1L_mum-muB");
   
   m_Title["1Lelbronze"] = "#scale[1.2]{single bronze e}";
   m_Strings["1Lelbronze"] = VS().a("1L_elp-elB").a("1L_elm-elB").a("1L_elpm-elB");
