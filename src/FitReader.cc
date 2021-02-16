@@ -1688,7 +1688,6 @@ VS vproc;
   for(int i = 0; i < Nhist; i++){
   	for(int j = 0; j < Nhist; j++){ 
       		if(i <= j) continue; //account for same combinations 
-  		cout << "i " << i << " j " << j << endl;
   		shapeComparison* sc = new shapeComparison(hists[i],hists[j]);
   		double pval = sc->getPvalue();
       		cout << pval << " for hist " << hists[i]->GetTitle() << " and " << hists[j]->GetTitle() << endl;
@@ -2979,14 +2978,16 @@ cout << "process: " << proc[i] << endl;
   for(int i = 0; i < Nhist; i++){
 	for(int j = 0; j < Nhist; j++){ 
     		if(j <= i) continue; //account for same combinations (ie i = 0 and j = 1 is the same as j = 1 and i = 0
-		cout << "i " << i << " j " << j << endl;
 		shapeComparison* sc = new shapeComparison(hists[i],hists[j]);
 		double pval = sc->getPvalue();
     		cout << pval << " for hist " << hists[i]->GetTitle() << " and " << hists[j]->GetTitle() << endl;
     		pvals.push_back(pval);
 	}
   }
-
+for(int i = 0; i < hists[0]->GetNbinsX()+1; i++) cout << "bin #" << i << " bin content: " << hists[0]->GetBinContent(i) << " bin error: " << hists[0]->GetBinError(i) << endl;
+cout << "hist0 integral: " << hists[0]->Integral() << endl;
+for(int i = 0; i < hists[1]->GetNbinsX()+1; i++) cout << "bin #" << i << " bin content: " << hists[1]->GetBinContent(i) << " bin error: " << hists[1]->GetBinError(i) << endl;
+cout << "hist1 integral: " << hists[1]->Integral() << endl;
 
   for(int i = 0; i < Nhist; i++) hists[i]->Scale(1/hists[i]->Integral());
 //cout << "after normalizing all hists" << endl;
