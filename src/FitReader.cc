@@ -1654,33 +1654,38 @@ VS vproc;
  } 
 
   // int Nsig = hists_sig.size();
-  TH1D* histTotal = new TH1D(*hists[0]);
+//   TH1D* histTotal = new TH1D(*hists[0]);
   
 
-  // sort the histograms by integral (N^2/2 brute force)
-  int Nhist = hists.size();
+//   // sort the histograms by integral (N^2/2 brute force)
+//   int Nhist = hists.size();
 
-  double hmax = -999;
+//   double hmax = -999;
   
-//cout << "original hists" << endl;
-//for(int h = 0; h < Nhist; h++){
-//	cout << "hist #" << h << endl;
-//	int nBins = hists[h]->GetNbinsX();
-//	cout << "bin content for second to last bin: " << hists[h]->GetBinContent(nBins-1) << endl;
-//	cout << "error on second to last bin: " << hists[h]->GetBinError(nBins-1) << endl;
-//	cout << "bin content for last bin: " << hists[h]->GetBinContent(nBins) << endl;
-//	cout << "error on last bin: " << hists[h]->GetBinError(nBins) << endl;
-//}
+// //cout << "original hists" << endl;
+// //for(int h = 0; h < Nhist; h++){
+// //	cout << "hist #" << h << endl;
+// //	int nBins = hists[h]->GetNbinsX();
+// //	cout << "bin content for second to last bin: " << hists[h]->GetBinContent(nBins-1) << endl;
+// //	cout << "error on second to last bin: " << hists[h]->GetBinError(nBins-1) << endl;
+// //	cout << "bin content for last bin: " << hists[h]->GetBinContent(nBins) << endl;
+// //	cout << "error on last bin: " << hists[h]->GetBinError(nBins) << endl;
+// //}
 
 
 
-  for(int i = 1; i < Nhist; i++){
-  // vlabels.push_back(labels[i]);
-  // vcolors.push_back(colors[i]);
-  // vhists.push_back(hists[i]);
-  histTotal->Add(hists[i]);
-  // hists[i]->Sumw2();
-  }
+//   for(int i = 1; i < Nhist; i++){
+//   // vlabels.push_back(labels[i]);
+//   // vcolors.push_back(colors[i]);
+//   // vhists.push_back(hists[i]);
+//   histTotal->Add(hists[i]);
+//   // hists[i]->Sumw2();
+//   }
+
+ shapeComparison sc1;
+ plotShapeComparison psc;
+ vector<TGraphAsymmErrors*> grs = sc1.getRatios(hists);
+
 
   vector<double> pvals;
   
@@ -1704,21 +1709,26 @@ for(int i = 0; i < hists[0]->GetNbinsX()+1; i++) cout << "bin #" << i << " bin c
 for(int i = 0; i < Nhist; i++) hists[i]->Scale(1/hists[i]->Integral());
 histTotal->Scale(1/histTotal->Integral());
 
+
+
+
+
 int nBins;
 int gBin; 
 
-//do ratios
-  for(int i = 0; i < Nhist; i++){
-	nBins = hists[i]->GetNbinsX();
-  hists[i]->Divide(histTotal);
-	for(int b = 0; b < nBins+1; b++){
-		gBin = hists[i]->GetBin(b);
-		if(hists[i]->GetBinError(gBin) == 0) hists[i]->SetBinContent(gBin,1e-8);
-	}
-   if(hists[i]->GetMaximum() > hmax) hmax = hists[i]->GetMaximum();
-  }
-cout << "hmax: " << hmax << endl;
-cout << "nHists: " << Nhist << endl; 
+// //do ratios
+//   for(int i = 0; i < Nhist; i++){
+// 	nBins = hists[i]->GetNbinsX();
+//   hists[i]->Divide(histTotal);
+// 	for(int b = 0; b < nBins+1; b++){
+// 		gBin = hists[i]->GetBin(b);
+// 		if(hists[i]->GetBinError(gBin) == 0) hists[i]->SetBinContent(gBin,1e-8);
+// 	}
+//    if(hists[i]->GetMaximum() > hmax) hmax = hists[i]->GetMaximum();
+//   }
+// cout << "hmax: " << hmax << endl;
+// cout << "nHists: " << Nhist << endl; 
+
 
   const FitBin& bin = cats[0][0].GetFitBin();
 
@@ -1752,71 +1762,75 @@ cout << "nHists: " << Nhist << endl;
 
   hists[0]->LabelsOption("v","X");
 
-
-  gStyle->SetOptTitle(0);
-  gStyle->SetOptStat(0);
-  gStyle->SetOptFit(11111111);
-  TCanvas* can = new TCanvas(Form("can_%s", name.c_str()),
-           Form("can_%s", name.c_str()),
-           1200, 700);
-  double hlo = 0.09;
-  double hhi = 0.22;
-  double hbo = 0.27;
-  double hto = 0.07;
-  can->SetLeftMargin(hlo);
-  can->SetRightMargin(hhi);
-  can->SetBottomMargin(hbo);
-  can->SetTopMargin(hto);
-  can->SetGridy();
-  can->Draw();
+  plotShapeComparison* psc = new plotShapeComparison(hists,colors,labels);
+  TCanvas* can = psc->formatPlots();
   can->cd();
 
-  // double hmax = hists[0]->GetMaximum();
 
-  hists[0]->Draw();
-  hists[0]->GetXaxis()->CenterTitle();
-  hists[0]->GetXaxis()->SetTitleFont(42);
-  hists[0]->GetXaxis()->SetTitleSize(0.05);
-  hists[0]->GetXaxis()->SetTitleOffset(1.0);
-  hists[0]->GetXaxis()->SetLabelFont(42);
-  hists[0]->GetXaxis()->SetLabelSize(0.04);
-  hists[0]->GetXaxis()->SetTitle("");
-  hists[0]->GetXaxis()->SetTickSize(0.);
-  hists[0]->GetYaxis()->CenterTitle();
-  hists[0]->GetYaxis()->SetTitleFont(42);
-  hists[0]->GetYaxis()->SetTitleSize(0.04);
-  hists[0]->GetYaxis()->SetTitleOffset(0.85);
-  hists[0]->GetYaxis()->SetLabelFont(42);
-  hists[0]->GetYaxis()->SetLabelSize(0.035);
-  hists[0]->GetYaxis()->SetTitle("ratio to total");
+ //  gStyle->SetOptTitle(0);
+ //  gStyle->SetOptStat(0);
+ //  gStyle->SetOptFit(11111111);
+ //  TCanvas* can = new TCanvas(Form("can_%s", name.c_str()),
+ //           Form("can_%s", name.c_str()),
+ //           1200, 700);
+ //  double hlo = 0.09;
+ //  double hhi = 0.22;
+ //  double hbo = 0.27;
+ //  double hto = 0.07;
+ //  can->SetLeftMargin(hlo);
+ //  can->SetRightMargin(hhi);
+ //  can->SetBottomMargin(hbo);
+ //  can->SetTopMargin(hto);
+ //  can->SetGridy();
+ //  can->Draw();
+ //  can->cd();
 
-  for(int i = 0; i < Nhist; i++){
-  hists[i]->SetLineColor(colors[i]);
-  hists[i]->SetMarkerColor(colors[i]);
-  hists[i]->SetLineWidth(1.0);
-  hists[i]->SetMarkerStyle(20+i);
-  hists[i]->SetLineStyle(i);
-  // hists[i]->SetFillColor(colors[i]);
-  // hists[i]->SetFillStyle(1001);
-  hists[i]->Draw("SAME");
-  }
+ //  double hmax = graphs[0]->GetMaximum();
+
+ //  hists[0]->Draw();
+ //  hists[0]->GetXaxis()->CenterTitle();
+ //  hists[0]->GetXaxis()->SetTitleFont(42);
+ //  hists[0]->GetXaxis()->SetTitleSize(0.05);
+ //  hists[0]->GetXaxis()->SetTitleOffset(1.0);
+ //  hists[0]->GetXaxis()->SetLabelFont(42);
+ //  hists[0]->GetXaxis()->SetLabelSize(0.04);
+ //  hists[0]->GetXaxis()->SetTitle("");
+ //  hists[0]->GetXaxis()->SetTickSize(0.);
+ //  hists[0]->GetYaxis()->CenterTitle();
+ //  hists[0]->GetYaxis()->SetTitleFont(42);
+ //  hists[0]->GetYaxis()->SetTitleSize(0.04);
+ //  hists[0]->GetYaxis()->SetTitleOffset(0.85);
+ //  hists[0]->GetYaxis()->SetLabelFont(42);
+ //  hists[0]->GetYaxis()->SetLabelSize(0.035);
+ //  hists[0]->GetYaxis()->SetTitle("ratio to total");
+
+ //  for(int i = 0; i < Nhist; i++){
+ //  hists[i]->SetLineColor(colors[i]);
+ //  hists[i]->SetMarkerColor(colors[i]);
+ //  hists[i]->SetLineWidth(1.0);
+ //  hists[i]->SetMarkerStyle(20+i);
+ //  hists[i]->SetLineStyle(i);
+ //  // hists[i]->SetFillColor(colors[i]);
+ //  // hists[i]->SetFillStyle(1001);
+ //  hists[i]->Draw("SAME");
+ //  }
 
 
-  // hists[0]->GetYaxis()->SetRangeUser(0.0, 1.1*hmax);
-  TLegend* leg = new TLegend(1.-hhi+0.01, 1.- (Nhist+1)*(1.-0.49)/9., 0.98, 1.-hto-0.005);
-  leg->SetTextFont(42);
-  leg->SetTextSize(0.035);
-  leg->SetFillColor(kWhite);
-  leg->SetLineColor(kWhite);
-  leg->SetShadowColor(kWhite);
-  // if(hist_data)
-  // leg->AddEntry(hist_data, "data");
-  // leg->AddEntry(gr, "total uncertainty","F");
-  for(int i = 0; i < Nhist; i++)
-  leg->AddEntry(hists[i], labels[i].c_str(), "LP");
-  // for(int i = 0; i < Nsig; i++)
-  // leg->AddEntry(hists_sig[i], labels_sig[i].c_str(), "L");
- leg->Draw("SAME");
+ //  graphs[0]->GetYaxis()->SetRangeUser(0.0, 1.1*hmax);
+ //  TLegend* leg = new TLegend(1.-hhi+0.01, 1.- (Nhist+1)*(1.-0.49)/9., 0.98, 1.-hto-0.005);
+ //  leg->SetTextFont(42);
+ //  leg->SetTextSize(0.035);
+ //  leg->SetFillColor(kWhite);
+ //  leg->SetLineColor(kWhite);
+ //  leg->SetShadowColor(kWhite);
+ //  // if(hist_data)
+ //  // leg->AddEntry(hist_data, "data");
+ //  // leg->AddEntry(gr, "total uncertainty","F");
+ //  for(int i = 0; i < Nhist; i++)
+ //  leg->AddEntry(hists[i], labels[i].c_str(), "LP");
+ //  // for(int i = 0; i < Nsig; i++)
+ //  // leg->AddEntry(hists_sig[i], labels_sig[i].c_str(), "L");
+ // leg->Draw("SAME");
   double eps = 0.0015;
 
   TLatex l;

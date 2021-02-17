@@ -1,5 +1,8 @@
 //#include <iostream>
 #include <random>
+#include <TEfficiency.h>
+#include <TGraphAsymmErrors.h>
+#include <TLatex.h>
 #include "shapeComparison.hh"
 
 
@@ -23,6 +26,8 @@ shapeComparison::shapeComparison(TH1D* hist1, TH1D* hist2){
 	nBins = mHist1->GetNbinsX();
 
 	nDof = mHist1->GetNbinsX() - 1; //mHist1 and mHist2 have to have the same binning
+
+	weightedScale(); //scale histograms to account for weighting so poisson distribution uses correct rate and therefore has the correct error (sqrt(N) where N = (bin/binErr)^2)
 	
 }
 
@@ -33,13 +38,22 @@ shapeComparison::~shapeComparison(){
 	lambdas.clear();
 }
 
+void shapeComparison::weightedScale(){
+	for(int i = 0; i < nBins+1; i++){ 
+		mHist1->SetBinContent(i, pow(mHist1->GetBinContent(i)/mHist1->GetBinError(i),2));
+		mHist2->SetBinContent(i, pow(mHist2->GetBinContent(i)/mHist2->GetBinError(i),2));
+	}
+}
+
+
+
 
 
 double shapeComparison::calcLikelihood(){ //calculates negative log likelihood ratio
 	double u;
 	double v;
 	double t;
-	double lambda = 0;
+	lambda = 0;
 	double norms = Nv/Nu;
 	for(int i = 0; i < nBins; i++){
 		u = mHist1->GetBinContent(i);

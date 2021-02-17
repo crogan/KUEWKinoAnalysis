@@ -10,6 +10,9 @@ class shapeComparison{
 		virtual ~shapeComparison();
 		double getPvalue();
 
+		std::vector<double> lambdas;
+		double lambda;
+
 
 
 	private:
@@ -20,7 +23,7 @@ class shapeComparison{
 		double Nu;
 		int nBins;
 
-		std::vector<double> lambdas;
+		
 
 		double nDof;
 
@@ -30,6 +33,7 @@ class shapeComparison{
 		void gser(double *gamser, double a, double x, double *gln);
 		void gcf(double *gammcf, double a, double x, double *gln);
 		double gammln(double xx);
+		void weightedScale();
 		
 
 
