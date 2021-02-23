@@ -12,6 +12,7 @@
 
 #include "FitReader.hh"
 #include "shapeComparison.hh"
+#include "plotShapeComparison.hh"
 
 #include "RestFrames/RestFrames.hh"
 
@@ -1374,7 +1375,7 @@ TCanvas* FitReader::Plot1Dratio(const string& proc,
            const string& name,
            const VS& extra){
 
-  RestFrames::SetStyle();
+  //RestFrames::SetStyle();
 
 
   int Nlep  = lep_cat.size();
@@ -1652,11 +1653,8 @@ VS vproc;
   colors.push_back(m_ColorDefault[cc]);
   hists.push_back(hist); //one hist per cat group
  } 
-
+int Nhist = hists.size();
   // int Nsig = hists_sig.size();
-//   TH1D* histTotal = new TH1D(*hists[0]);
-  
-
 //   // sort the histograms by integral (N^2/2 brute force)
 //   int Nhist = hists.size();
 
@@ -1682,32 +1680,29 @@ VS vproc;
 //   // hists[i]->Sumw2();
 //   }
 
- shapeComparison sc1;
- plotShapeComparison psc;
- vector<TGraphAsymmErrors*> grs = sc1.getRatios(hists);
 
 
-  vector<double> pvals;
+//  vector<double> pvals;
   
   //compare each individual histogram to each other - likelihood ratio test
-  for(int i = 0; i < Nhist; i++){
-  	for(int j = 0; j < Nhist; j++){ 
-      		if(i <= j) continue; //account for same combinations 
-  		shapeComparison* sc = new shapeComparison(hists[i],hists[j]);
-  		double pval = sc->getPvalue();
-      		cout << pval << " for hist " << hists[i]->GetTitle() << " and " << hists[j]->GetTitle() << endl;
-      		pvals.push_back(pval);
-  	}
-  }
-
-
-for(int i = 0; i < hists[0]->GetNbinsX()+1; i++) cout << "bin #" << i << " bin content: " << hists[0]->GetBinContent(i) << " bin error: " << hists[0]->GetBinError(i) << endl;
+//  for(int i = 0; i < Nhist; i++){
+//  	for(int j = 0; j < Nhist; j++){ 
+//      		if(i <= j) continue; //account for same combinations 
+//  		shapeComparison* sc = new shapeComparison(hists[i],hists[j]);
+//  		double pval = sc->getPvalue();
+//      		cout << pval << " for hist " << hists[i]->GetTitle() << " and " << hists[j]->GetTitle() << endl;
+//      		pvals.push_back(pval);
+//  	}
+//  }
+//
+//
+//for(int i = 0; i < hists[0]->GetNbinsX()+1; i++) cout << "bin #" << i << " bin content: " << hists[0]->GetBinContent(i) << " bin error: " << hists[0]->GetBinError(i) << endl;
 
 
   
 //do histogram scalings
-for(int i = 0; i < Nhist; i++) hists[i]->Scale(1/hists[i]->Integral());
-histTotal->Scale(1/histTotal->Integral());
+//for(int i = 0; i < Nhist; i++) hists[i]->Scale(1/hists[i]->Integral());
+//histTotal->Scale(1/histTotal->Integral());
 
 
 
@@ -1729,19 +1724,28 @@ int gBin;
 // cout << "hmax: " << hmax << endl;
 // cout << "nHists: " << Nhist << endl; 
 
-
   const FitBin& bin = cats[0][0].GetFitBin();
-
   int NR = bin.NRBins();
   int NB = bin.NBins();
-  VS blabels;
+  plotShapeComparison* psc = new plotShapeComparison(hists,colors,labels);
+  //TCanvas* can = psc->formatPlots(name);
+vector<TGraphAsymmErrors*> graphs = psc->m_graphs;
+vector<TGraphAsymmErrors*> gLHs = psc->m_gLHs;
+
+TAxis* ax = gLHs[0]->GetHistogram()->GetXaxis();
+double ax_x1 = ax->GetBinLowEdge(1);
+double ax_x2 = ax->GetBinUpEdge(ax->GetNbins());
+gLHs[0]->GetHistogram()->GetXaxis()->Set(NB,ax_x1,ax_x2);
+
+  VS blabels_RISR;
+  VS blabels_Mperp;
   for(int r = 0; r < NR; r++)
-  blabels += bin[r].GetMBinLabels();
+  blabels_Mperp += bin[r].GetMBinLabels();
 
   int lmax = 0;
   for(int b = 0; b < NB; b++){
-  int len = blabels[b].length();
-  if(blabels[b].find("#infty") != std::string::npos)
+  int len = blabels_Mperp[b].length();
+  if(blabels_Mperp[b].find("#infty") != std::string::npos)
     len -= 5;
   if(len > lmax)
     lmax = len;
@@ -1749,89 +1753,174 @@ int gBin;
   string space = "";
   for(int l = 0; l < 1.2*lmax; l++)
   space += " ";
-  for(int b = 0; b < NB; b++){
-  if(b%2 == 1)
-    hists[0]->GetXaxis()->SetBinLabel(b+1, (blabels[b]+space).c_str());
-  else
-    hists[0]->GetXaxis()->SetBinLabel(b+1, blabels[b].c_str());
-  }
-  blabels.clear();
+ // for(int b = 0; b < NB; b++){
+ // if(b%2 == 1)
+ //   gLHs[0]->GetHistogram()->GetXaxis()->SetBinLabel(b+1, (blabels[b]+space).c_str());
+ // else
+ //   gLHs[0]->GetHistogram()->GetXaxis()->SetBinLabel(b+1, blabels[b].c_str());
+ // }
+ // blabels.clear();
 
   for(int r = 0; r < NR; r++)
-  blabels += bin[r].GetRBinLabel();
+  blabels_RISR += bin[r].GetRBinLabel();
 
-  hists[0]->LabelsOption("v","X");
+  //gLHs[0]->GetHistogram()->LabelsOption("v","X");
 
-  plotShapeComparison* psc = new plotShapeComparison(hists,colors,labels);
-  TCanvas* can = psc->formatPlots();
-  can->cd();
+double x; double y;
+//for(int i = 0; i < graphs[0]->GetN(); i++) { graphs[0]->GetPoint(i,x,y); cout << "point #" << i << "| x: " << x << " y: " << y << endl;}
 
-
- //  gStyle->SetOptTitle(0);
- //  gStyle->SetOptStat(0);
- //  gStyle->SetOptFit(11111111);
- //  TCanvas* can = new TCanvas(Form("can_%s", name.c_str()),
- //           Form("can_%s", name.c_str()),
- //           1200, 700);
- //  double hlo = 0.09;
- //  double hhi = 0.22;
- //  double hbo = 0.27;
- //  double hto = 0.07;
- //  can->SetLeftMargin(hlo);
- //  can->SetRightMargin(hhi);
- //  can->SetBottomMargin(hbo);
- //  can->SetTopMargin(hto);
- //  can->SetGridy();
- //  can->Draw();
- //  can->cd();
-
- //  double hmax = graphs[0]->GetMaximum();
-
- //  hists[0]->Draw();
- //  hists[0]->GetXaxis()->CenterTitle();
- //  hists[0]->GetXaxis()->SetTitleFont(42);
- //  hists[0]->GetXaxis()->SetTitleSize(0.05);
- //  hists[0]->GetXaxis()->SetTitleOffset(1.0);
- //  hists[0]->GetXaxis()->SetLabelFont(42);
- //  hists[0]->GetXaxis()->SetLabelSize(0.04);
- //  hists[0]->GetXaxis()->SetTitle("");
- //  hists[0]->GetXaxis()->SetTickSize(0.);
- //  hists[0]->GetYaxis()->CenterTitle();
- //  hists[0]->GetYaxis()->SetTitleFont(42);
- //  hists[0]->GetYaxis()->SetTitleSize(0.04);
- //  hists[0]->GetYaxis()->SetTitleOffset(0.85);
- //  hists[0]->GetYaxis()->SetLabelFont(42);
- //  hists[0]->GetYaxis()->SetLabelSize(0.035);
- //  hists[0]->GetYaxis()->SetTitle("ratio to total");
-
- //  for(int i = 0; i < Nhist; i++){
- //  hists[i]->SetLineColor(colors[i]);
- //  hists[i]->SetMarkerColor(colors[i]);
- //  hists[i]->SetLineWidth(1.0);
- //  hists[i]->SetMarkerStyle(20+i);
- //  hists[i]->SetLineStyle(i);
- //  // hists[i]->SetFillColor(colors[i]);
- //  // hists[i]->SetFillStyle(1001);
- //  hists[i]->Draw("SAME");
- //  }
+  gStyle->SetPadTopMargin(0.09);
+    gStyle->SetPadRightMargin(0.25);
+    gStyle->SetPadBottomMargin(0.18);
+    gStyle->SetPadLeftMargin(0.15);
+   gStyle->SetOptTitle(0);
+   gStyle->SetOptStat(0);
+   gStyle->SetOptFit(11111111);
+   TCanvas* can = new TCanvas(Form("can_%s", name.c_str()),
+            Form("can_%s", name.c_str()),
+            0,45,1337, 738);
+   double hlo = 0.15;
+   double hhi = 0.22;
+   double hbo = 0.27;
+   double hto = 0.07;
+   can->SetLeftMargin(hlo);
+   can->SetRightMargin(hhi);
+   can->SetBottomMargin(hbo);
+   can->SetTopMargin(hto);
+   //can->SetGridy();
+   can->Draw();
+   can->cd();
+ TPad* pRatio = new TPad("pRatio","pRatio",0,0.3,1.,1.);
+  pRatio->SetGridy();
+  pRatio->SetGridx();
+  pRatio->SetBottomMargin(0.02);
+  pRatio->Draw();
+  pRatio->cd();
+  can->Update();
 
 
- //  graphs[0]->GetYaxis()->SetRangeUser(0.0, 1.1*hmax);
- //  TLegend* leg = new TLegend(1.-hhi+0.01, 1.- (Nhist+1)*(1.-0.49)/9., 0.98, 1.-hto-0.005);
- //  leg->SetTextFont(42);
- //  leg->SetTextSize(0.035);
- //  leg->SetFillColor(kWhite);
- //  leg->SetLineColor(kWhite);
- //  leg->SetShadowColor(kWhite);
- //  // if(hist_data)
- //  // leg->AddEntry(hist_data, "data");
- //  // leg->AddEntry(gr, "total uncertainty","F");
- //  for(int i = 0; i < Nhist; i++)
- //  leg->AddEntry(hists[i], labels[i].c_str(), "LP");
- //  // for(int i = 0; i < Nsig; i++)
- //  // leg->AddEntry(hists_sig[i], labels_sig[i].c_str(), "L");
- // leg->Draw("SAME");
+  pRatio->cd();
+
+
+   double hmax = graphs[0]->GetMaximum();
+TMultiGraph* mg = new TMultiGraph("ratios","ratios");
+   mg->GetYaxis()->SetRangeUser(0.0, 1.1*hmax);
+   //mg->Draw("AP");
+   mg->GetXaxis()->CenterTitle();
+   mg->GetXaxis()->SetTitleFont(42);
+   mg->GetXaxis()->SetTitleSize(0.05);
+   mg->GetXaxis()->SetTitleOffset(1.0);
+   mg->GetXaxis()->SetLabelFont(42);
+   mg->GetXaxis()->SetLabelSize(0.04);
+   mg->GetXaxis()->SetTitle("");
+   mg->GetXaxis()->SetTickSize(0.);
+   mg->GetYaxis()->CenterTitle();
+   mg->GetYaxis()->SetTitleFont(42);
+   mg->GetYaxis()->SetTitleSize(0.04);
+   mg->GetYaxis()->SetTitleOffset(0.85);
+   mg->GetYaxis()->SetLabelFont(42);
+   mg->GetYaxis()->SetTickLength(0.02);
+   mg->GetYaxis()->SetLabelSize(0.03);
+   mg->GetYaxis()->SetTitle("Ratio to total");
+   mg->GetXaxis()->SetLabelOffset(999);
+   mg->GetXaxis()->SetLabelSize(0);
+   mg->GetXaxis()->SetTickLength(0);
+   gStyle->SetTickLength(0.);
+   gStyle->SetLabelOffset(999);
+   gStyle->SetLabelSize(0.);
+   for(int i = 0; i < Nhist; i++){
+   graphs[i]->SetLineColor(colors[i]);
+   graphs[i]->SetMarkerColor(colors[i]);
+   graphs[i]->SetLineWidth(1.0);
+   graphs[i]->SetMarkerStyle(20+i);
+   graphs[i]->SetLineStyle(i);
+   // hists[i]->SetFillColor(colors[i]);
+   // hists[i]->SetFillStyle(1001);
+   //graphs[i]->Draw("SAMEAP");
+   mg->Add(graphs[i]);
+   }
+mg->Draw("AP");
+can->Modified();
+can->Update();
+can->cd();
+  TPad* pLH = new TPad("pLikelihood","pLikelihood",0,0,1,0.3);
+  pLH->SetGridy();
+  pLH->SetGridx();
+  pLH->SetTopMargin(0.);
+  //pLH->SetBottomMargin(0.2);
+  pLH->Draw();
+  pLH->cd();
+  pLH->Update();
+  can->Update();
+TMultiGraph* mgLH = new TMultiGraph("LH","LH");
+//gLHs[0]->Draw("AP");
+   mgLH->GetXaxis()->CenterTitle();
+//   gLHs[0]->GetYaxis()->SetRangeUser(0.0, 1.1*gLHs[0]->GetMaximum());
+   mgLH->GetXaxis()->SetTitleFont(42);
+   mgLH->GetXaxis()->SetTitleSize(0.3);
+   mgLH->GetXaxis()->SetTitleOffset(1.0);
+   mgLH->GetXaxis()->SetLabelFont(42);
+   mgLH->GetXaxis()->SetLabelSize(0.3);
+   mgLH->GetXaxis()->SetTitle("Bin Number");
+   mgLH->GetXaxis()->SetTickSize(0.03);
+   mgLH->GetYaxis()->SetTickSize(0.02);
+   mgLH->GetYaxis()->CenterTitle();
+   mgLH->GetYaxis()->SetTitleFont(42);
+   mgLH->GetYaxis()->SetTitleSize(0.3);
+   mgLH->GetYaxis()->SetTitleOffset(0.37);
+   mgLH->GetYaxis()->SetLabelFont(42);
+   mgLH->GetYaxis()->SetLabelSize(0.07);
+   mgLH->GetYaxis()->SetTitle("Log Likelihood Ratio");
+   gStyle->SetTickLength(0.02,"X");
+   gStyle->SetTickLength(0.02,"Y");
+   gStyle->SetTitleOffset(0.5,"Y");
+   gStyle->SetTitleOffset(0.9,"X");
+   gStyle->SetLabelOffset(0.01,"X");
+   gStyle->SetLabelSize(0.07,"X");
+   gStyle->SetLabelSize(0.07,"Y");
+   gStyle->SetTitleSize(0.07,"X");
+   gStyle->SetTitleSize(0.07,"Y");
+for(int i = 0; i < gLHs.size(); i++){
+   gLHs[i]->SetLineColor(colors[i]);
+   gLHs[i]->SetMarkerColor(colors[i]);
+   gLHs[i]->SetLineWidth(1.0);
+   gLHs[i]->SetMarkerStyle(20+i);
+   gLHs[i]->SetLineStyle(i);
+   mgLH->Add(gLHs[i]);
+ //gLHs[i]->Draw("AP same");
+}
+mgLH->Draw("AP");
+can->Modified();
+can->Update();
+can->cd();
+pRatio->cd();
+   TLegend* leg = new TLegend(1.-hhi+0.03, 1.- (Nhist+1)*(1.-0.49)/9., 0.98, 1.-hto);
+   leg->SetTextFont(132);
+   leg->SetTextSize(0.035);
+   leg->SetFillColor(kWhite);
+   leg->SetLineColor(kWhite);
+   leg->SetShadowColor(kWhite);
+   // if(hist_data)
+   // leg->AddEntry(hist_data, "data");
+   // leg->AddEntry(gr, "total uncertainty","F");
+   for(int i = 0; i < Nhist; i++)
+   leg->AddEntry(graphs[i], labels[i].c_str(), "LP");
+  leg->Draw("SAME");
   double eps = 0.0015;
+
+can->Modified();
+can->Update();
+can->cd();
+pLH->cd();
+   TLegend* legLH = new TLegend(1.-hhi-0.01, 1.- (Nhist+1)*(1.-0.49)/9.-0.4, 0.98, 1.-hto);
+   legLH->SetTextFont(132);
+   legLH->SetTextSize(0.06);
+   legLH->SetFillColor(kWhite);
+   legLH->SetLineColor(kWhite);
+   legLH->SetShadowColor(kWhite);
+   for(int i = 0; i < gLHs.size(); i++)
+   legLH->AddEntry(gLHs[i], psc->m_LHlabels[i].c_str(), "LP");
+  legLH->Draw("same");
 
   TLatex l;
   l.SetTextFont(42);
@@ -1840,50 +1929,82 @@ int gBin;
   TLine* line = new TLine();
   line->SetLineWidth(2);
   line->SetLineColor(kBlack);
-
-  // line->DrawLineNDC(hlo, hbo-0.024*lmax, 1-hhi, hbo-0.0235*lmax);
-
-  l.SetTextSize(0.025);
-  l.SetTextFont(42);
-  l.SetTextAlign(23);
-  line->SetLineWidth(1);
+can->Modified();
+can->Update();
+can->cd();
+pLH->cd();  
+// line->DrawLineNDC(hlo, hbo-0.024*lmax, 1-hhi, hbo-0.0235*lmax);
+  l.SetTextSize(0.03);
+  l.SetTextFont(132);
+  l.SetTextAlign(13);
+//  line->SetLineWidth(1);
   double lo = hlo;
   double hi = hlo;
   double yline = hbo-0.024*lmax;
-  int ib = 0;
-  for(int r = 0; r < NR; r++){
-  int NM = bin[r].NBins();
-  lo = hi;
-  hi = double(NM)/double(NB)*(1.-hhi-hlo) + lo;
+//  int ib = 0;
+//cout << "# bins total: " << NB << endl;
+//cout << "# RISR bins: " << NR << endl;  
+//for(int r = 0; r < NR; r++){
+//  int NM = bin[r].NBins();
+//  lo = hi;
+//  hi = lo + double(NM)*binWidth/xr;//double(NM)/double(NB)*(1.-hhi-hlo) + lo + 10*eps - 0.03;
+//  double x1 = (lo  );
+//  double x2 = (hi  );
+//cout << "RISR bin " << r << " x1: " << x1 << " x2: " << x2 << endl; 
+//  line->SetLineStyle(1); //drawing RISR brackets
+//  line->DrawLineNDC(x1, yline,
+//            x1, yline + 30*eps);
+//  line->DrawLineNDC(x2, yline,
+//            x2, yline + 30*eps);
+//  line->DrawLineNDC(x1, yline,
+//            x2, yline);
+//  line->SetLineStyle(5);//drawing RISR divisions
+//  line->DrawLineNDC(x2, hbo, x2, 1.);
+//line->SetLineStyle(3); //drawing Mperp lines
+//cout << "# Mperp bins: " << NM << " for RISR bin #" << r << endl;  
+////for(int b = 0; b < NM; b++){
+////    if(ib%2 == 1)
+////    line->DrawLineNDC(lo + (hi-lo)*(b+0.5)/double(NM), hbo,
+////          lo + (hi-lo)*(b+0.5)/double(NM), (hbo+yline)/2.+eps-0.01);
+////    ib++;
+////  }
+//cout << "label: " << blabels[r] << endl;
+//  l.DrawLatex((x1+x2)/2., yline - 20*eps, blabels[r].c_str());
+//  }
+//
+//
+can->Modified();
+can->Update();
+can->cd();
+pRatio->cd();
+int ib = 0;
+for(int r = 0; r < NR; r++){
+int NM = bin[r].NBins();
+	for(int m = 0; m < NM; m++){
+	string binLabel = "Bin #"+std::to_string(ib)+" | RISR: "+blabels_RISR[r]+" | M_{#perp}  : "+blabels_Mperp[m]; 
+	l.DrawLatex(1.-hhi+0.01, 1.- (Nhist+1)*(1.-0.49)/9. - 0.05- 0.05*ib,binLabel.c_str());
+	//1.-hhi+0.01, 1.- (Nhist+1)*(1.-0.49)/9., 0.98, 1.-hto-0.005
+	ib++;
+	}	
+}      
+can->Modified();
+can->Update();
+can->cd();
+pLH->cd();
+//  l.SetTextAlign(32);
+//  l.SetTextSize(0.05);
+//  l.SetTextFont(42);
+//  l.DrawLatex(hlo - 10*eps, yline - 20*eps, "M_{#perp} #in");
+  //l.DrawLatex(hlo - 0.01, (hbo+yline)/2.+eps, "M_{#perp}   [GeV] #in");
 
-  line->SetLineStyle(1);
-  line->DrawLineNDC(lo + eps, yline,
-            lo + eps, yline + 6*eps);
-  line->DrawLineNDC(hi - eps, yline,
-            hi - eps, yline + 6*eps);
-  line->DrawLineNDC(lo + eps, yline,
-            hi - eps, yline);
-  line->SetLineStyle(5);
-  line->DrawLineNDC(hi, hbo, hi, 1.-hto);
-  line->SetLineStyle(3);
-  for(int b = 0; b < NM; b++){
-    if(ib%2 == 1)
-    line->DrawLineNDC(lo + (hi-lo)*(b+0.5)/double(NM), hbo,
-          lo + (hi-lo)*(b+0.5)/double(NM), (hbo+yline)/2.+eps);
-    ib++;
-  }
+  //l.SetTextSize(0.05);
+  //l.SetTextFont(42);
+  //l.DrawLatex(hlo - 10*eps, yline - 20*eps, "#scale[1.15]{R_{ISR}} #in");
 
-  l.DrawLatex((hi+lo)/2., yline - 8*eps, blabels[r].c_str());
-  }
-     
-  l.SetTextAlign(32);
-  l.SetTextSize(0.03);
-  l.SetTextFont(42);
-  l.DrawLatex(hlo, (hbo+yline)/2.+eps, "M_{#perp}   [GeV] #in");
-
-  l.SetTextSize(0.03);
-  l.SetTextFont(42);
-  l.DrawLatex(hlo, yline - 15*eps, "#scale[1.15]{R_{ISR}} #in");
+can->Modified();
+can->Update();
+can->cd();
+pRatio->cd();
 
   l.SetTextAlign(31);
   l.SetTextSize(0.04);
@@ -1911,7 +2032,7 @@ int gBin;
   l.SetTextAlign(13);
   l.SetTextSize(0.035);
   l.SetTextFont(42);
-  l.DrawLatex(hlo+0.02, 1-hto-0.012, plotlabel.c_str());
+  l.DrawLatex(0.177796, 0.890436, plotlabel.c_str());
 
   return can;
   
@@ -2238,12 +2359,6 @@ CT.GetListDepth(catTrees,1);
 //PrintCategories();
 TFile* f = nullptr;
   CategoryList catList = GetCategories();
-//if(!m_File.IsOpen()) f = TFile::Open(m_inputfile.c_str(),"UPDATE");
-//else{
-//m_File.Close();
-//f = TFile::Open(m_inputfile.c_str(),"UPDATE");
-//} 
- //TFile* f = nullptr;
   if(!gSystem->AccessPathName(m_inputfile.c_str()))
      f = TFile::Open(m_inputfile.c_str(),"UPDATE");
   else
@@ -2256,14 +2371,12 @@ TFile* f = nullptr;
   map<string,TH1D*> nameToHist;
   map<string,const char*> nameToTitle;
 
-//cout << "nProc: " << nProc << endl;
   for(int i = 0; i < nProc; i++){
     VS vproc;
     if(m_Strings.count(proc[i]) != 0)
       vproc = m_Strings[proc[i]];
     else
       vproc += proc[i];
-   //cout << "vproc.size(): " << vproc.size() << endl;
 
     for(int p = 0; p < int(vproc.size()); p++){
       int index = GetProcesses().Find(vproc[p]);
@@ -2271,17 +2384,12 @@ TFile* f = nullptr;
       Process pp = GetProcesses()[index];
    cout << pp.Name() << endl;
       for(int list = 0; list < depth; list++){
-//cout << "list #: " << list << endl;
-//cout << "n total cats: " << catList.GetN() << endl;
 	 CategoryList cats = catList.Filter(*catTrees[list]);
         nCat = cats.GetN();
         TH1D* totalHist = nullptr; //one total histogram per list per process
-//catTrees[list]->Print();
-//cout << "nCat for list: " << nCat << endl;      
 string slabel;
         //add hists
         for(int c = 0; c < nCat; c++){
-//cout << "cat: " << cats[c].GetLabel() << endl;
           if(!IsFilled(cats[c],pp)) continue;
           if(!totalHist) totalHist = (TH1D*)GetHistogram(cats[c],pp)->Clone(Form("plothist_%d_%s", i, name.c_str()));
           else totalHist->Add(GetHistogram(cats[c],pp));
@@ -2294,14 +2402,10 @@ string slabel;
         for(int c = 0; c < nCat; c++){
           if(!IsFilled(cats[c],pp)) continue;
           slabel = cats[c].GetLabel()+"_"+pp.Name();
-//	cout << cats[c].GetLabel() << "_" << pp.Name() << endl;
-//cout << "original norm of total hist: " << nameToHist[slabel]->Integral() << " norm of corresponding hist: " << nameToNorm[slabel] << endl; 
 	  nameToHist[slabel]->Scale(nameToNorm[slabel]/nameToHist[slabel]->Integral());
-//cout << "new norm of total hist: " << nameToHist[slabel]->Integral() << endl;
           nameToHist[slabel]->SetTitle(nameToTitle[slabel]);
           nameToHist[slabel]->SetName((pp.Name()+"_smoothed").c_str());
           f->cd((cats[c].Label()+"_"+cats[c].GetLabel()).c_str());
-  //        nameToHist[slabel]->Write((pp.Name()+"_smoothed").c_str());
     	   nameToHist[slabel]->Write();
         }
 
@@ -3338,7 +3442,7 @@ void FitReader::InitializeRecipes(){
     a("Fakes_elf2").a("Fakes_muf0").a("Fakes_muf1").a("Fakes_muf2");
   
   // leptonic categories
-  m_Title["1Lgold"] = "#scale[1.2]{single #it{l}}";
+  m_Title["1Lgold"] = "#scale[1.2]{single gold #it{l}}";
   m_Strings["1Lgold"] = VS().a("1L_elm-elG").a("1L_elp-elG").a("1L_elpm-elG").a("1L_mupm-muG").a("1L_mup-muG").a("1L_mum-muG");
   
   m_Title["1L"] = "#scale[1.2]{single #it{l}}";

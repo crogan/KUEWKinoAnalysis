@@ -9,25 +9,30 @@
 shapeComparison::shapeComparison(){
 	mHist1 = NULL;
 	mHist2 = NULL;
+	m_weightedScale = false;
 }
 
-shapeComparison::shapeComparison(TH1D* hist1, TH1D* hist2){
+
+shapeComparison::shapeComparison(TH1D* hist1, TH1D* hist2, bool on){
 	if(hist1->GetNbinsX() != hist2->GetNbinsX()){
 		std::cout << "Error: binnings not the same." << std::endl;
 		return;
 	}
 
-	mHist1 = hist1;
-	mHist2 = hist2;
+	mHist1 = (TH1D*)hist1->Clone();
+	mHist2 = (TH1D*)hist2->Clone();
+
+	calcWeightsAndScale(mHist1);
+	calcWeightsAndScale(mHist2);
 
 	Nu = mHist1->Integral();
 	Nv = mHist2->Integral();
-
 	nBins = mHist1->GetNbinsX();
 
 	nDof = mHist1->GetNbinsX() - 1; //mHist1 and mHist2 have to have the same binning
 
-	weightedScale(); //scale histograms to account for weighting so poisson distribution uses correct rate and therefore has the correct error (sqrt(N) where N = (bin/binErr)^2)
+	//weightedScale(); //scale histograms to account for weighting so poisson distribution uses correct rate and therefore has the correct error (sqrt(N) where N = (bin/binErr)^2)
+	m_weightedScale = on;
 	
 }
 
@@ -38,34 +43,87 @@ shapeComparison::~shapeComparison(){
 	lambdas.clear();
 }
 
-void shapeComparison::weightedScale(){
-	for(int i = 0; i < nBins+1; i++){ 
-		mHist1->SetBinContent(i, pow(mHist1->GetBinContent(i)/mHist1->GetBinError(i),2));
-		mHist2->SetBinContent(i, pow(mHist2->GetBinContent(i)/mHist2->GetBinError(i),2));
+
+void shapeComparison::calcWeightsAndScale(TH1D* hist){
+	double weight = 0;
+	for(int i = 0; i < hist->GetNbinsX()+1; i++){
+		double tmp_b = hist->GetBinContent(i)/hist->GetBinError(i);
+		double tmp_w = hist->GetBinError(i)/tmp_b;
+		if(tmp_w > weight) weight = tmp_w;
 	}
+	hist->Scale(1/weight);
 }
 
-
-
-
-
-double shapeComparison::calcLikelihood(){ //calculates negative log likelihood ratio
+double shapeComparison::calcLikelihoodScaled(){ //calculates negative log likelihood ratio
+//	unweightHistograms();	
+//	Nu = mHist1->Integral(); Nv = mHist2->Integral();
 	double u;
 	double v;
 	double t;
 	lambda = 0;
+	double tmp_lambda;
 	double norms = Nv/Nu;
-	for(int i = 0; i < nBins; i++){
+	std::cout << "Nu: " << Nu << " Nv: " << Nv << std::endl;
+	for(int i = 0; i < nBins+1; i++){
+		std::cout << "bin #" << i << std::endl;
 		u = mHist1->GetBinContent(i);
 		v = mHist2->GetBinContent(i);
 		t = u + v;
-		
-		lambda += t*log( (1 + v/u)/(1 + Nv/Nu) ) + v*log( (Nv/Nu)*(u/v) );
-		lambdas.push_back(-2*(t*(log( (1 + v/u)/(1 + Nv/Nu) ) + v*log( (Nv/Nu)*(u/v) ))));
+		std::cout << "unweighted u: " << u  << " unweighted v: " << v  << " t: " << t << std::endl;
+		if(u == 0 && v == 0) { lambdas.push_back(0.); continue;}
+		else if(u == 0 && v != 0) tmp_lambda = -2*t*log(Nu/(Nu+Nv));
+		else if(u != 0 && v == 0) tmp_lambda = -2*t*log(Nv/(Nu+Nv));
+		else tmp_lambda = -2*(t*log( (1 + v/u)/(1 + Nv/Nu) ) + v*log( (Nv/Nu)*(u/v) ));
+		lambda += tmp_lambda; 
+		lambdas.push_back(tmp_lambda);
+		std::cout << "unweighted LH for bin " << i << ": " << tmp_lambda << " total LH so far: " << lambda << std::endl;
 	}
-	return -2*lambda;
+	return lambda;
 }
 
+
+void shapeComparison::unweightHistograms(){
+	for(int i = 0; i < nBins+1; i++){
+		mHist1->SetBinContent(i,mHist1->GetBinContent(i)/mHist1->GetBinError(i));
+		mHist2->SetBinContent(i,mHist2->GetBinContent(i)/mHist2->GetBinError(i));
+	}
+}
+
+
+
+double shapeComparison::calcLikelihood(){ //calculates negative log likelihood ratio
+	double u; 
+	double v; 
+	double t; 
+	lambda = 0;
+	double tmp_lambda;
+	double norms = Nv/Nu;
+	std::cout << "Nu: " << Nu << " Nv: " << Nv << std::endl;
+	for(int i = 0; i < nBins+1; i++){
+		std::cout << "bin #" << i << std::endl;
+		u = mHist1->GetBinContent(i);
+		v = mHist2->GetBinContent(i);
+		t = u + v;  
+		std::cout << "weighted u: " <<  u  << " weighted v: " << v << std::endl;
+		if(u == 0 && v == 0) { lambdas.push_back(0.); continue;}
+		else if(u == 0 && v != 0){ tmp_lambda = -2*t*log(Nu/(Nu+Nv)); }
+		else if(u != 0 && v == 0){ tmp_lambda = -2*t*log(Nv/(Nu+Nv)); }
+		else tmp_lambda = -2*(t*log( (1 + v/u)/(1 + Nv/Nu) ) + v*log( (Nv/Nu)*(u/v) ));
+		lambda += tmp_lambda; 
+		lambdas.push_back(tmp_lambda);
+		std::cout << "weighted LH for bin " << i << ": " << tmp_lambda << " total weighted LH so far: " << lambda <<  std::endl;
+	}
+	return lambda;
+}
+
+double shapeComparison::getPvalue(){
+	double LH = calcLikelihood();
+	double LH_scaled = calcLikelihoodScaled();
+	double cdf = 1 - gammp(nDof/2.0,LH/2.0); //value of cumulative distribution function
+	double cdf_scaled = 1 - gammp(nDof/2.0,LH_scaled/2.0);	
+std::cout << " weighted pvalue: " << 1 - cdf << " weighted likelihood: " << LH << " unweighted p-value: " << 1 - cdf_scaled << " unweighted likelihood: " << LH_scaled <<  std::endl;
+	return 1 - cdf_scaled; //pvalue is inverse of cdf value
+}
 double shapeComparison::chi2Distribution(){
 	std::default_random_engine generator;
 	std::chi_squared_distribution<double> distribution(nDof);
@@ -78,18 +136,26 @@ double shapeComparison::chi2Distribution(){
 	return *chi2;	
 }
 
-double shapeComparison::getPvalue(){
-	double LH = calcLikelihood();
-	double cdf = 1 - gammp(nDof/2.0,LH/2.0); //value of cumulative distribution function
-	return 1 - cdf; //pvalue is inverse of cdf value
-}
 
+std::vector<double> shapeComparison::getBinPvalues(){
+	double LH = calcLikelihood();
+	std::vector<double> pvals;
+	for(int i = 0; i < nBins; i++){
+		double cdf = 1 - gammp(nDof/2.0,lambdas[i]/2.0); //value of cumulative distribution function
+		pvals.push_back(1 - cdf);//pvalue is inverse of cdf value
+//		std::cout << "bin #: " << i << " likelihood: " << lambdas[i] << " pval: " << pvals[i] << std::endl; 
+	}
+	return pvals; 
+}
 
 double shapeComparison::gammp(double a, double x){
 	double gamser;
 	double gammcf;
 	double gln;
-	if(x < 0.0 || a <= 0.0) std::cout << "Invalid arguments in gammp." << std::endl;
+	if(x < 0.0 || a <= 0.0){
+	 std::cout << "Invalid arguments in gammp." << std::endl;
+	 return 0.;
+	}
 	if(x < (a+1.0)){ //use series representation
 		gser(&gamser,a,x,&gln);
 		return gamser;
@@ -139,7 +205,6 @@ void shapeComparison::gcf(double *gammcf, double a, double x, double *gln){
 	c = 1.0/FPMIN;
 	d = 1.0/b;
 	h = d;
-
 	for(i = 1; i <= ITMAX; i++){
 		an = -i*(i-a);
 		b += 2.0;
