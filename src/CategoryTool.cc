@@ -154,7 +154,7 @@ FitBin CategoryTool::GetFitBin(int Nlep, int index) const {
 //   // RBins.push_back(RBin(0.9,  1.0,  VD().a(0.).a(100.).a(140.).a(200.)));
 //  }
 
-  }
+  
   FitBin Bins(RBins);
   return Bins;
 

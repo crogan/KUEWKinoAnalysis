@@ -404,7 +404,6 @@ int main(int argc, char* argv[]) {
 	  sqrt(base->MX3a_BoostT*base->MX3a_BoostT+base->PX3_BoostT*base->PX3_BoostT) +
 	  sqrt(base->MX3b_BoostT*base->MX3b_BoostT+base->PX3_BoostT*base->PX3_BoostT);
 	double gammaT = 2.*base->Mperp / MST;
-//if(Nlep == 0 && NjetS >= 5) cout << "gammaT: " << gammaT << " MST: " << MST << " MX3a_BoostT: " << base->MX3a_BoostT << " PX_BoostT: " << base->PX3_BoostT << endl;
 	Category Event(Leptonic(list_a, list_b),
 		       Hadronic(NjetS, NbjetS, NSV),
 		       Hadronic(NjetISR, NbjetISR, base->NSV_ISR));
@@ -509,7 +508,6 @@ int main(int argc, char* argv[]) {
 	    FITBuilder.AddEvent(weight, Mperp, RISR,
 				Categories[eindex], proc, sys);
 	  }
-	 //cout << "event# : " << e << " weight: " << weight << endl; 
 	  // dummy data
 	  if(!addData && is_bkg && (title.find("QCD") == string::npos))
 	    FITBuilder.AddEvent(weight, Mperp, RISR,
@@ -524,14 +522,17 @@ int main(int argc, char* argv[]) {
   FITBuilder.WriteFit(OutFile);
 VS fakeProcs;
 for(int i = 0; i < int(proc_to_add.size()); i++){
-	fakeProcs += proc_to_add[i]+"_HF";
-	fakeProcs += proc_to_add[i]+"_LF";
+	fakeProcs += proc_to_add[i]+"_Fakes_elf0";
+	fakeProcs += proc_to_add[i]+"_Fakes_elf1";
+	fakeProcs += proc_to_add[i]+"_Fakes_muf0";
+	fakeProcs += proc_to_add[i]+"_Fakes_muf1";
+//	fakeProcs += proc_to_add[i]+"_LF";
 }
 CategoryTree CT_Fakes1L = CTTool.GetCategories_Fakes1L();
 CategoryTree CT_Fakes2L = CTTool.GetCategories_Fakes2L();
 CategoryTree CT_Fakes3L = CTTool.GetCategories_Fakes3L();
 FITReader.SmoothHistograms(fakeProcs,CT_Fakes1L,OutFile);
-FITReader.SmoothHistograms(fakeProcs,CT_Fakes2L,OutFile);
-FITReader.SmoothHistograms(fakeProcs,CT_Fakes3L,OutFile);
+//FITReader.SmoothHistograms(fakeProcs,CT_Fakes2L,OutFile);
+//FITReader.SmoothHistograms(fakeProcs,CT_Fakes3L,OutFile);
   
 }

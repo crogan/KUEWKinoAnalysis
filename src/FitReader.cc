@@ -2184,14 +2184,12 @@ TFile* f = nullptr;
   map<string,double> nameToNorm;
   map<string,TH1D*> nameToHist;
   map<string,const char*> nameToTitle;
-
-  for(int i = 0; i < nProc; i++){
+for(int i = 0; i < nProc; i++){
     VS vproc;
     if(m_Strings.count(proc[i]) != 0)
       vproc = m_Strings[proc[i]];
     else
       vproc += proc[i];
-
     for(int p = 0; p < int(vproc.size()); p++){
       int index = GetProcesses().Find(vproc[p]);
       if(index < 0) continue;
@@ -2226,6 +2224,7 @@ string slabel;
       } 
     }
   }
+
   f->Close();
 
 
@@ -2874,7 +2873,6 @@ cout << "process: " << proc[i] << endl;
   // sort the histograms by integral (N^2/2 brute force)
   int Nhist = hists.size();
 
-  double hmax = -999;
   
 
   int nBins;
@@ -2891,14 +2889,15 @@ int gBin;
 
 
 
-  VS blabels;
+  VS blabels_RISR;
+  VS blabels_Mperp;
   for(int r = 0; r < NR; r++)
-  blabels += bin[r].GetMBinLabels();
+  blabels_Mperp += bin[r].GetMBinLabels();
 
   int lmax = 0;
   for(int b = 0; b < NB; b++){
-  int len = blabels[b].length();
-  if(blabels[b].find("#infty") != std::string::npos)
+  int len = blabels_Mperp[b].length();
+  if(blabels_Mperp[b].find("#infty") != std::string::npos)
     len -= 5;
   if(len > lmax)
     lmax = len;
@@ -2907,17 +2906,9 @@ int gBin;
   for(int l = 0; l < 1.2*lmax; l++)
   space += " ";
 
-  for(int b = 0; b < NB; b++){
-  if(b%2 == 1)
-    hists[0]->GetXaxis()->SetBinLabel(b+1, (blabels[b]+space).c_str());
-  else
-    hists[0]->GetXaxis()->SetBinLabel(b+1, blabels[b].c_str());
-  }
-
-  blabels.clear();
 
   for(int r = 0; r < NR; r++)
-  blabels += bin[r].GetRBinLabel();
+  blabels_RISR += bin[r].GetRBinLabel();
 
   // hists[0]->LabelsOption("v","X");
 
@@ -2956,7 +2947,7 @@ int gBin;
   double hmax = graphs[0]->GetMaximum();
 
   TMultiGraph* mg = new TMultiGraph("ratios","ratios");
-  mg->GetYaxis->SetRangeUser(0.0,1.1*hmax);
+  mg->GetYaxis()->SetRangeUser(0.0,1.1*hmax);
   mg->GetXaxis()->CenterTitle();
    mg->GetXaxis()->SetTitleFont(42);
    mg->GetXaxis()->SetTitleSize(0.05);
@@ -3131,8 +3122,13 @@ pRatio->cd();
   l.DrawLatex(hlo+eps*4, 1.-hto+0.02,"#bf{#it{CMS}} work-in-progress");
   l.SetTextSize(0.05);
 
-
-  string plotlabel;
+int Nlep = lep_cat.size();
+int NhadS = hadS_cat.size();
+int NhadI = hadI_cat.size();
+int Nextra = -999;
+if(!extra.empty()) Nextra = extra.size();
+  
+string plotlabel;
   if(Nlep == 1)
     plotlabel += "#color[7014]{"+lep_labels[0]+"} + ";
   if(NhadS == 1)
@@ -3141,7 +3137,7 @@ pRatio->cd();
     plotlabel += "#color[7024]{"+hadI_labels[0]+"} + ";
   if(Nextra == 1)
     plotlabel += "#color[7024]{"+extra_labels[0]+"} + ";
-  plotlabel += "p_{T}^{ISR} > 300 GeV, "+m_Title[proc];
+  plotlabel += "p_{T}^{ISR} > 300 GeV";
   
   l.SetTextColor(kBlack);
   l.SetTextAlign(13);
