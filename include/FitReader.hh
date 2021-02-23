@@ -40,6 +40,18 @@ public:
 			   const Process&    proc,
 			   const Systematic& sys = Systematic::Default()) const;
 
+  // returns a 1-bin histogram added over all RISR/Mperp bins, all cats, all procs
+  TH1D* GetIntegralHist(const string&       name,
+			const CategoryList& cats,
+			const ProcessList&  procs,
+			const Systematic&   sys = Systematic::Default()) const;
+
+  // returns a RISR/Mperp histogram added over all cats, all procs (need to have same binning or errors)
+  TH1D* GetAddedHist(const string&       name,
+		     const CategoryList& cats,
+		     const ProcessList&  procs,
+		     const Systematic&   sys = Systematic::Default()) const;
+
   bool IsFilled2D(const Category&   cat,
 		  const Process&    proc,
 		  const Systematic& sys = Systematic::Default()) const;
@@ -67,6 +79,18 @@ public:
 		  const string& canvas,
 		  const string& extra = "");
 
+  TCanvas* PlotYields(const string& can_name,
+		      const VS& proc,
+		      const CategoryTree& CT);
+
+  TCanvas* Plot1Dstack(const string& can_name,
+		       const VS& proc,
+		       const CategoryTree& CT);
+
+  TCanvas* Plot2D(const string& can_name,
+		  const VS& proc,
+		  const CategoryTree& CT);
+
   VS GetChannels() const;  
   const ProcessList&  GetProcesses() const;
   const CategoryList& GetCategories(const string& channel = "") const;         
@@ -77,6 +101,8 @@ private:
   
   mutable TFile* m_FilePtr;
   string         m_FileFold;
+
+  string m_CMSLabel;
 
   mutable map<Process,Systematics> m_ProcSys;
   mutable map<Process,map<Category,TH1D*> > m_ProcHist;
@@ -99,11 +125,15 @@ private:
   map<string,string>          m_Title;
   map<string,int>             m_Color;
   vector<int>                 m_ColorDefault;
+  vector<int>                 m_SignalColor;
   map<string,VS> m_Strings;
   void InitializeRecipes();
   string GetSignalTitle(const string& label);
 
   TGraphErrors* GetTotalBackground(const CategoryList& cat);
+
+  void DrawCatTree(const CategoryTree& CT, TCanvas* can);
+  void DrawMR(const FitBin& fitbin, TCanvas* can);
   
 };
 

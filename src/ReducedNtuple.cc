@@ -600,7 +600,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
     if(!AnalysisBase<Base>::IsGoodEvent() || !m_EventFilter)
       return;
 
-  // cout << AnalysisBase<Base>::GetEventWeight() << endl;
+  //cout << "Event Weight " << tree->GetName() << " " << AnalysisBase<Base>::GetEventWeight() << endl;
   
   bool good_PV;
   TVector3 PV = AnalysisBase<Base>::GetPV(good_PV);
@@ -635,7 +635,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   Jets = Jets.RemoveOverlap(Leptons, 0.2);
 
   // merge jets until total number is combinatorically manageable
-  Jets = Jets.BinaryMerge(14-SVs.size()-Leptons.size());
+  Jets = Jets.BinaryMerge(13-SVs.size()-Leptons.size());
   Jets.SortByPt();
   
   // skip event reconstruction for now if too many jets

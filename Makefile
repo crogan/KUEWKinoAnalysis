@@ -63,7 +63,7 @@ locallib: lib
 
 lib: lib/libKUEWKino.so
 
-alltargets: MakeReducedNtuple_NANO.x MakeEventCount_NANO.x BuildFitInput.x shapeAnalyzer2.x newMakeWS.x
+alltargets: MakeReducedNtuple_NANO.x MakeEventCount_NANO.x BuildFitInput.x BuildFitInputCondor.x BuildFitCondor.x
 
 BuildFit.x:  $(SRCDIR)BuildFit.C $(OBJ_FILES) $(OBJ_FILES_CMSSW) $(HH_FILES)
 	$(CXX) $(CXXFLAGS) -o BuildFit.x $(OUTOBJ)/*.o $(OUTOBJ_CMSSW)/*.o $(GLIBS) $ $<
@@ -89,14 +89,13 @@ BuildFitInput.x:  $(SRCDIR)BuildFitInput.C $(OBJ_FILES) $(HH_FILES)
 	$(CXX) $(CXXFLAGS) -o BuildFitInput.x $(OUTOBJ)/*.o $(GLIBS) $ $<
 	touch BuildFitInput.x
 
+BuildFitInputCondor.x:  $(SRCDIR)BuildFitInputCondor.C $(OBJ_FILES) $(HH_FILES)
+	$(CXX) $(CXXFLAGS) -o BuildFitInputCondor.x $(OUTOBJ)/*.o $(GLIBS) $ $<
+	touch BuildFitInputCondor.x
 
-shapeAnalyzer2.x:  $(SRCDIR)shapeAnalyzer2.C $(OBJ_FILES) $(HH_FILES)
-	$(CXX) $(CXXFLAGS) -o shapeAnalyzer2.x $(OUTOBJ)/*.o $(GLIBS) $ $<
-	touch shapeAnalyzer2.x
-
-newMakeWS.x:  $(SRCDIR)newMakeWS.C $(OBJ_FILES) $(HH_FILES)
-	$(CXX) $(CXXFLAGS) -o newMakeWS.x $(OUTOBJ)/*.o $(GLIBS) $ $<
-	touch newMakeWS.x
+BuildFitCondor.x:  $(SRCDIR)BuildFitCondor.C $(OBJ_FILES) $(HH_FILES)
+	$(CXX) $(CXXFLAGS) -o BuildFitCondor.x $(OUTOBJ)/*.o $(GLIBS) $ $<
+	touch BuildFitCondor.x
 
 lib/libKUEWKino.so: $(SOBJ_FILES)
 	mkdir -p lib

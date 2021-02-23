@@ -132,6 +132,8 @@ int main(int argc, char* argv[]) {
   NeventTool NevtTool;
   NevtTool.BuildFilterEffMap(string(FilterEff));
   
+  cout << "DONE Filter eff" << endl;
+
   Float_t genWeight;
   UInt_t  luminosityBlock;
   
@@ -139,8 +141,8 @@ int main(int argc, char* argv[]) {
   TBranch *b_luminosityBlock;
 
   UInt_t  nGenPart;
-  Float_t GenPart_mass[200];  
-  Int_t   GenPart_pdgId[200];
+  Float_t GenPart_mass[400];  
+  Int_t   GenPart_pdgId[400];
   TBranch *b_nGenPart;
   TBranch *b_GenPart_mass;
   TBranch *b_GenPart_pdgId;
@@ -148,6 +150,8 @@ int main(int argc, char* argv[]) {
   string dataset = string(DataSet);
   string filetag = string(FileTag);
   
+  cout << "Setting Branch Addresses" << endl;
+
   chain->SetBranchAddress("genWeight", &genWeight, &b_genWeight);
   chain->SetBranchAddress("luminosityBlock", &luminosityBlock, &b_luminosityBlock);
   
@@ -161,6 +165,8 @@ int main(int argc, char* argv[]) {
   chain->SetBranchStatus("GenPart_mass", 1);
   chain->SetBranchStatus("GenPart_pdgId", 1);
 
+  cout << "...Done" << endl;
+
   double Nevent = 0.;
   double Nweight = 0.;
 
@@ -171,6 +177,8 @@ int main(int argc, char* argv[]) {
   std::map<std::pair<int,int>,double > mapNevent;
   std::map<std::pair<int,int>,double > mapNweight;
    
+  int maxNGEN = 0;
+
   int NEVENT = chain->GetEntries();
   cout << "TOTAL of " << NEVENT << " entries" << endl;
   for(int e = 0; e < NEVENT; e++){
@@ -190,6 +198,12 @@ int main(int argc, char* argv[]) {
       MP = 0;
       MC = 0;
       int Ngen = nGenPart;
+      if(nGenPart > 400){
+	cout << "weight? " << genWeight << endl;
+      }
+      //cout << "NGEN " << Ngen << endl;
+      if(Ngen > maxNGEN)
+	maxNGEN = Ngen;
       for(int i = 0; i < Ngen; i++){
 	PDGID = abs(GenPart_pdgId[i]);
 	if(PDGID > 1000000 && PDGID < 3000000){
@@ -212,6 +226,8 @@ int main(int argc, char* argv[]) {
       mapNweight[masspair] += genWeight;
     }
   }
+
+  cout << "MAX NGEN " << maxNGEN << endl;
 
   TFile* fout = new TFile(string(outputFileName).c_str(),"RECREATE");
   TTree* tout = (TTree*) new TTree("EventCount", "EventCount");
