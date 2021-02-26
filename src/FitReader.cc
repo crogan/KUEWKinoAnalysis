@@ -1322,7 +1322,7 @@ TMultiGraph* mg = new TMultiGraph();
    NhadI == 0)
   return nullptr;
 
-int catTest = 0;
+int catTest = 1;
 
   CategoryList cat = GetCategories();
   vector<CategoryList> cats;
@@ -1344,7 +1344,7 @@ int catTest = 0;
   }
   //cat.Print();
 
-cout << "total # of cats: " << cats[2].GetN() << endl;
+cout << "total # of cats: " << cats[catTest].GetN() << endl;
 
   // Leptonic
   VS lep_labels;
@@ -1359,13 +1359,13 @@ cout << "total # of cats: " << cats[2].GetN() << endl;
 
   if(m_Strings.count(lep_cat[i]) != 0){
     int N = m_Strings[lep_cat[i]].size();
-    // cout << "number of strings in lep tag: " << N << endl;
+     cout << "number of strings in lep tag: " << N << endl;
   for(int j = 0; j < N; j++){
     if(Nlep > 1){
       vleps[i].push_back(m_Strings[lep_cat[i]][j]);
   }else
     vlep.push_back(m_Strings[lep_cat[i]][j]);
-    // cout << m_Strings[lep_cat[i]][j] << endl;
+     cout << m_Strings[lep_cat[i]][j] << endl;
   }
   } else {
     if(Nlep > 1)
@@ -1850,7 +1850,6 @@ pRatio->cd();
   if(Nextra == 1)
     plotlabel += "#color[7024]{"+extra_labels[0]+"} + ";
   plotlabel += "p_{T}^{ISR} > 300 GeV, "+m_Title[proc];
-  
   l.SetTextColor(kBlack);
   l.SetTextAlign(13);
   l.SetTextSize(0.035);
@@ -3828,6 +3827,10 @@ void FitReader::InitializeRecipes(){
   m_Color["Fakes"] = 7021;
   m_Strings["Fakes"] = VS().a("Fakes_elf0").a("Fakes_elf1").a("Fakes_elf2").a("Fakes_muf0").a("Fakes_muf1").a("Fakes_muf2");
   
+  m_Title["ttbar_Fakes"] = "ttbar, all fakes";
+  m_Color["Fakes"] = 7022;
+  m_Strings["Fakes"] = VS().a("ttbar_Fakes_elf0").a("ttbar_Fakes_elf1").a("ttbar_Fakes_muf0").a("ttbar_Fakes_muf1");
+  
   m_Title["Fake"] = "fake";
   m_Color["Fake"] = 7020;
   m_Strings["Fake"] = VS().a("Fakes_elf2").a("Fakes_muf2");
@@ -3836,10 +3839,26 @@ void FitReader::InitializeRecipes(){
   m_Color["HF"] = 7022;
   m_Strings["HF"] = VS().a("Fakes_elf0").a("Fakes_muf0");
 
+  m_Title["ttbar_HF"] = "ttbar, heavy flavor";
+  m_Color["ttbar_HF"] = 7022;
+  m_Strings["ttbar_HF"] = VS().a("ttbar_Fakes_elf0").a("ttbar_Fakes_muf0");
+  
+  m_Title["Wjets_HF"] = "W + jets, heavy flavor";
+  m_Color["Wjets_HF"] = 7022;
+  m_Strings["Wjets_HF"] = VS().a("Wjets_Fakes_elf0").a("Wjets_Fakes_muf0");
+  
   m_Title["LF"] = "light flavor";
   m_Color["LF"] = 7021;
   m_Strings["LF"] = VS().a("Fakes_elf1").a("Fakes_muf1");
 
+  m_Title["ttbar_LF"] = "ttbar, light flavor + unm.";
+  m_Color["ttbar_LF"] = 7021;
+  m_Strings["ttbar_LF"] = VS().a("ttbar_Fakes_elf1").a("ttbar_Fakes_muf1");
+  
+  m_Title["Wjets_LF"] = "W + jets, light flavor";
+  m_Color["Wjets_LF"] = 7021;
+  m_Strings["Wjets_LF"] = VS().a("Wjets_Fakes_elf1").a("Wjets_Fakes_muf1");
+  
   m_Title["Total"] = "total background";
   m_Color["Total"] = 7000;
   m_Strings["Total"] = VS().a("ttbar").a("ST").a("DB").a("ZDY").a("Wjets").a("Fakes_elf0").a("Fakes_elf1").
@@ -3847,7 +3866,16 @@ void FitReader::InitializeRecipes(){
   
   // leptonic categories
   m_Title["1L"] = "#scale[1.2]{single #it{l}}";
-  m_Strings["1L"] = VS().a("1L_elm-elG").a("1L_elp-elG").a("1L_elpm-elG").a("1L_mupm-muG").a("1L_mup-muG").a("1L_mum-muG");
+  m_Strings["1L"] = VS().a("1L_elm-elG").a("1L_elp-elG").a("1L_elpm-elG").a("1L_mupm-muG").a("1L_mup-muG").a("1L_mum-muG").a("1L_elm-elS").a("1L_elp-elS").a("1L_elpm-elS").a("1L_mup-muS").a("1L_mum-muS").a("1L_mupm-muS").a("1L_elp-elB").a("1L_elm-elB").a("1L_elpm-elB").a("1L_mup-muB").a("1L_mum-muB").a("1L_mupm-muB");
+ 
+  m_Title["1Lgold"] = "#scale[1.2]{single gold #it{l}}";
+  m_Strings["1Lgold"] = VS().a("1L_elm-elG").a("1L_elp-elG").a("1L_elpm-elG").a("1L_mupm-muG").a("1L_mup-muG").a("1L_mum-muG");
+
+  m_Title["1Lsilver"] = "#scale[1.2]{single silver #it{l}}";
+  m_Strings["1Lsilver"] = VS().a("1L_elm-elS").a("1L_elp-elS").a("1L_elpm-elS").a("1L_mupm-muS").a("1L_mup-muS").a("1L_mum-muS");
+ 
+  m_Title["1Lbronze"] = "#scale[1.2]{single bronze #it{l}}";
+  m_Strings["1Lbronze"] = VS().a("1L_elm-elB").a("1L_elp-elB").a("1L_elpm-elB").a("1L_mupm-muB").a("1L_mup-muB").a("1L_mum-muB");
   
   m_Title["1Lel"] = "#scale[1.2]{single e}";
   m_Strings["1Lel"] = VS().a("1L_elp-elG").a("1L_elm-elG");
@@ -3873,8 +3901,6 @@ void FitReader::InitializeRecipes(){
   m_Title["1Lm"] = "#scale[1.2]{single #it{l}^{-}}";
   m_Strings["1Lm"] = VS().a("1L_elm-elG").a("1L_mum-muG");
 
-  m_Title["1Lsilver"] = "#scale[1.2]{single silver #it{l}}";
-  m_Strings["1Lsilver"] = VS().a("1L_elp-elS").a("1L_elm-elS").a("1L_mup-muS").a("1L_mum-muS");
   
   m_Title["1Lelsilver"] = "#scale[1.2]{single silver e}";
   m_Strings["1Lelsilver"] = VS().a("1L_elp-elS").a("1L_elm-elS");
@@ -3882,8 +3908,6 @@ void FitReader::InitializeRecipes(){
   m_Title["1Lmusilver"] = "#scale[1.2]{single silver #mu}";
   m_Strings["1Lmusilver"] = VS().a("1L_mup-muS").a("1L_mum-muS");
 
-  m_Title["1Lbronze"] = "#scale[1.2]{single bronze #it{l}}";
-  m_Strings["1Lbronze"] = VS().a("1L_elp-elB").a("1L_elm-el2").a("1L_mup-muB").a("1L_mum-muB");
   
   m_Title["1Lelbronze"] = "#scale[1.2]{single bronze e}";
   m_Strings["1Lelbronze"] = VS().a("1L_elp-elB").a("1L_elm-elB");
@@ -3954,11 +3978,17 @@ void FitReader::InitializeRecipes(){
 
   m_Title["1j0bge1svS"] = "#splitline{1 jet, 0 b-tags}{#geq 1 SV-tag} #scale[1.2]{#in S}";
 
+  m_Title["1jS"] = "#splitline{1 jet}{incl. b-tags} #scale[1.2]{#in S}";
+  m_Strings["1jS"] = VS().a("1j0svS").a("1jge1svS").a("1j0b0svS").a("1j0bge1svS").a("1j1b0svS").a("1j1bge1svS");
+
   m_Title["2j0bS"] = "#splitline{2 jets}{0 b-tags} #scale[1.2]{#in S}";
 
   m_Title["2j1bS"] = "#splitline{2 jets}{1 b-tags} #scale[1.2]{#in S}";
 
   m_Title["2j2bS"] = "#splitline{2 jets}{2 b-tags} #scale[1.2]{#in S}";
+  
+  m_Title["2jS"] = "#splitline{2 jet}{incl. b-tags} #scale[1.2}{#in S}";
+  m_Strings["2jS"] = VS().a("2j0bS").a("2j1bS").a("2j2bS");
 
   m_Title["3j0bS"] = "#splitline{3 jets}{0 b-tags} #scale[1.2]{#in S}";
 
@@ -3966,11 +3996,15 @@ void FitReader::InitializeRecipes(){
 
   m_Title["3j2bS"] = "#splitline{3 jets}{#geq 2 b-tags} #scale[1.2]{#in S}";
   
+  m_Title["3jS"] = "#splitline{3 jet}{incl. b-tags} #scale[1.2}{#in S}";
+  m_Strings["3jS"] = VS().a("3jS").a("3j0bS").a("3j1bS").a("3jge2bS");
+  
   m_Title["ge1j0bISR"] = "#splitline{#geq 1 jet}{0 b-tags} #scale[1.2]{#in ISR}";
 
   m_Title["ge1jge1bISR"] = "#splitline{#geq 1 jet}{#geq 1 b-tags} #scale[1.2]{#in ISR}";
 
   m_Title["ge1jISR"] = "#splitline{#geq 1 jet}{incl. b-tags} #scale[1.2]{#in ISR}";
+  m_Strings["ge1jISR"] = VS().a("ge1jISR").a("ge1j0bISR").a("ge1jge1bISR");
 
   m_Title["ge1j0bS"] = "#splitline{#geq 1 jet}{0 b-tags} #scale[1.2]{#in S}";
 

@@ -47,8 +47,10 @@ shapeComparison::~shapeComparison(){
 void shapeComparison::calcWeightsAndScale(TH1D* hist){
 	double weight = 0;
 	for(int i = 0; i < hist->GetNbinsX()+1; i++){
+		std::cout << "bin #" << i << std::endl;
 		double tmp_b = hist->GetBinContent(i)/hist->GetBinError(i);
 		double tmp_w = hist->GetBinError(i)/tmp_b;
+		std::cout << "tmp_w: " << tmp_w << " weight from formula: " << pow(hist->GetBinError(i),2)/hist->GetBinContent(i) << std::endl;
 		if(tmp_w > weight) weight = tmp_w;
 	}
 	hist->Scale(1/weight);
