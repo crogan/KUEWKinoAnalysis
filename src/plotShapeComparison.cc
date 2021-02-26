@@ -28,8 +28,8 @@ plotShapeComparison::plotShapeComparison(vector<TH1D*> hists, vector<int> colors
   m_labels = labels;
   getLHs();
   makePlots();
-  plotPvalues(m_pvals,"Overall p-values");
-  plotPvalues(m_binPvals,"Bin-by-bin p-values");
+  plotPvalues(m_pvals,"overallPvals","Overall p-values");
+  plotPvalues(m_binPvals,"binPvals","Bin-by-bin p-values");
 
 
 }
@@ -45,13 +45,13 @@ void plotShapeComparison::getLHs(){
   for(int i = 0; i < m_nHists; i++){
    for(int j = 0; j < m_nHists; j++){ 
           if(i >= j) continue; //account for same combinations 
-      shapeComparison* sc = new shapeComparison(m_hists[i],m_hists[j],false);
+      shapeComparison* sc = new shapeComparison(m_hists[i],m_hists[j]);
       double pval = sc->getPvalue();
       cout << "p-val: " << pval << " for hist " << m_hists[i]->GetTitle() << " and " << m_hists[j]->GetTitle() << endl;
       m_pvals.push_back(pval);
       vector<double> binPvals = sc->getBinPvalues();
       for(int val = 0; val < binPvals.size(); val++) m_binPvals.push_back(binPvals[i]); //get p-values
-      m_LHs.push_back(binPvals); //get likelihoods
+      m_LHs.push_back(sc->lambdas); //get likelihoods
       m_LHlabels.push_back("#splitline{"+m_labels[i]+" #scale[1.2]{to} "+m_labels[j]+"}{#scale[1.2]{p-value: "+std::to_string(pval)+"}}");
     }
   }
@@ -96,14 +96,14 @@ void plotShapeComparison::makePlots(){
 }
 
 
-void plotShapeComparison::plotPvalues(std::vector<doule> pvals, string title){
-  TCanvas* cv = new TCanvas("cv","cv",600,800);
-  TH1D* hist = new TH1D("pvals",title.c_str(),0,1,20);
+void plotShapeComparison::plotPvalues(std::vector<double> pvals, string name, string title){
+  TCanvas* cv = new TCanvas(name.c_str(),title.c_str(),600,600);
+  TH1D* hist = new TH1D(name.c_str(),title.c_str(),20,0,0.5);
   for(int i = 0; i < pvals.size(); i++) hist->Fill(pvals[i]);
-  hist->GetXaxis()->SetLabel("p-value");
-  hist->GetYaxis()->SetLabel("a.u.");
+  hist->GetXaxis()->SetTitle("p-value");
+  hist->GetYaxis()->SetTitle("a.u.");
+		std::vector<double> m_pvals;
   hist->Draw();
-
 }
 
 

@@ -5,7 +5,7 @@
 class shapeComparison{
 	
 	public:
-		shapeComparison(TH1D* hist1, TH1D* hist2, bool on=false);
+		shapeComparison(TH1D* hist1, TH1D* hist2);
 		shapeComparison();
 		virtual ~shapeComparison();
 		double getPvalue();
@@ -27,9 +27,7 @@ class shapeComparison{
 
 		double nDof;
 
-		void unweightHistograms();
 		double calcLikelihood();
-		double calcLikelihoodScaled();	
 		double chi2Distribution();
 		double gammp(double a, double x);
 		void gser(double *gamser, double a, double x, double *gln);

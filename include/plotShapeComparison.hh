@@ -8,7 +8,7 @@ class plotShapeComparison{
 		virtual ~plotShapeComparison();
 		void getLHs();
 		void makePlots();
-		void plotPvalues(std::vector<doule> pvals, string title);
+		void plotPvalues(std::vector<double> pvals, string name, string title);
 		std::vector<TGraphAsymmErrors*> m_graphs;
 		std::vector<TGraphAsymmErrors*> m_gLHs;
 		VS m_LHlabels;
@@ -18,7 +18,6 @@ class plotShapeComparison{
 		vector<double> m_pvals;
 		vector<std::vector<double>> m_LHs;
 		std::vector<double> m_binPvals;
-		std::vector<double> m_pvals;
 		vector<TH1D*> m_hists;
 		vector<int> m_colors;
 		VS m_labels;

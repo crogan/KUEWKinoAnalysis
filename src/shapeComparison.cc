@@ -13,7 +13,7 @@ shapeComparison::shapeComparison(){
 }
 
 
-shapeComparison::shapeComparison(TH1D* hist1, TH1D* hist2, bool on){
+shapeComparison::shapeComparison(TH1D* hist1, TH1D* hist2){
 	if(hist1->GetNbinsX() != hist2->GetNbinsX()){
 		std::cout << "Error: binnings not the same." << std::endl;
 		return;
@@ -31,8 +31,6 @@ shapeComparison::shapeComparison(TH1D* hist1, TH1D* hist2, bool on){
 
 	nDof = mHist1->GetNbinsX() - 1; //mHist1 and mHist2 have to have the same binning
 
-	//weightedScale(); //scale histograms to account for weighting so poisson distribution uses correct rate and therefore has the correct error (sqrt(N) where N = (bin/binErr)^2)
-	m_weightedScale = on;
 	
 }
 
@@ -47,49 +45,14 @@ shapeComparison::~shapeComparison(){
 void shapeComparison::calcWeightsAndScale(TH1D* hist){
 	double weight = 0;
 	for(int i = 0; i < hist->GetNbinsX()+1; i++){
-		std::cout << "bin #" << i << std::endl;
-		double tmp_b = hist->GetBinContent(i)/hist->GetBinError(i);
-		double tmp_w = hist->GetBinError(i)/tmp_b;
-		std::cout << "tmp_w: " << tmp_w << " weight from formula: " << pow(hist->GetBinError(i),2)/hist->GetBinContent(i) << std::endl;
+		double tmp_w = pow(hist->GetBinError(i),2)/hist->GetBinContent(i);
 		if(tmp_w > weight) weight = tmp_w;
 	}
 	hist->Scale(1/weight);
 }
 
-double shapeComparison::calcLikelihoodScaled(){ //calculates negative log likelihood ratio
-//	unweightHistograms();	
-//	Nu = mHist1->Integral(); Nv = mHist2->Integral();
-	double u;
-	double v;
-	double t;
-	lambda = 0;
-	double tmp_lambda;
-	double norms = Nv/Nu;
-	std::cout << "Nu: " << Nu << " Nv: " << Nv << std::endl;
-	for(int i = 0; i < nBins+1; i++){
-		std::cout << "bin #" << i << std::endl;
-		u = mHist1->GetBinContent(i);
-		v = mHist2->GetBinContent(i);
-		t = u + v;
-		std::cout << "unweighted u: " << u  << " unweighted v: " << v  << " t: " << t << std::endl;
-		if(u == 0 && v == 0) { lambdas.push_back(0.); continue;}
-		else if(u == 0 && v != 0) tmp_lambda = -2*t*log(Nu/(Nu+Nv));
-		else if(u != 0 && v == 0) tmp_lambda = -2*t*log(Nv/(Nu+Nv));
-		else tmp_lambda = -2*(t*log( (1 + v/u)/(1 + Nv/Nu) ) + v*log( (Nv/Nu)*(u/v) ));
-		lambda += tmp_lambda; 
-		lambdas.push_back(tmp_lambda);
-		std::cout << "unweighted LH for bin " << i << ": " << tmp_lambda << " total LH so far: " << lambda << std::endl;
-	}
-	return lambda;
-}
 
 
-void shapeComparison::unweightHistograms(){
-	for(int i = 0; i < nBins+1; i++){
-		mHist1->SetBinContent(i,mHist1->GetBinContent(i)/mHist1->GetBinError(i));
-		mHist2->SetBinContent(i,mHist2->GetBinContent(i)/mHist2->GetBinError(i));
-	}
-}
 
 
 
@@ -100,31 +63,24 @@ double shapeComparison::calcLikelihood(){ //calculates negative log likelihood r
 	lambda = 0;
 	double tmp_lambda;
 	double norms = Nv/Nu;
-	std::cout << "Nu: " << Nu << " Nv: " << Nv << std::endl;
 	for(int i = 0; i < nBins+1; i++){
-		std::cout << "bin #" << i << std::endl;
 		u = mHist1->GetBinContent(i);
 		v = mHist2->GetBinContent(i);
 		t = u + v;  
-		std::cout << "weighted u: " <<  u  << " weighted v: " << v << std::endl;
 		if(u == 0 && v == 0) { lambdas.push_back(0.); continue;}
 		else if(u == 0 && v != 0){ tmp_lambda = -2*t*log(Nu/(Nu+Nv)); }
 		else if(u != 0 && v == 0){ tmp_lambda = -2*t*log(Nv/(Nu+Nv)); }
 		else tmp_lambda = -2*(t*log( (1 + v/u)/(1 + Nv/Nu) ) + v*log( (Nv/Nu)*(u/v) ));
 		lambda += tmp_lambda; 
 		lambdas.push_back(tmp_lambda);
-		std::cout << "weighted LH for bin " << i << ": " << tmp_lambda << " total weighted LH so far: " << lambda <<  std::endl;
 	}
 	return lambda;
 }
 
 double shapeComparison::getPvalue(){
 	double LH = calcLikelihood();
-	double LH_scaled = calcLikelihoodScaled();
 	double cdf = 1 - gammp(nDof/2.0,LH/2.0); //value of cumulative distribution function
-	double cdf_scaled = 1 - gammp(nDof/2.0,LH_scaled/2.0);	
-std::cout << " weighted pvalue: " << 1 - cdf << " weighted likelihood: " << LH << " unweighted p-value: " << 1 - cdf_scaled << " unweighted likelihood: " << LH_scaled <<  std::endl;
-	return 1 - cdf_scaled; //pvalue is inverse of cdf value
+	return 1 - cdf; //pvalue is inverse of cdf value
 }
 double shapeComparison::chi2Distribution(){
 	std::default_random_engine generator;
