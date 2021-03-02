@@ -1691,14 +1691,12 @@ TMultiGraph* mg = new TMultiGraph("ratios","ratios");
    gStyle->SetLabelOffset(999);
    gStyle->SetLabelSize(0.);
    for(int i = 0; i < Nhist; i++){
+  cout << "graph #" << i << " color: " << colors[i] << endl;
    graphs[i]->SetLineColor(colors[i]);
    graphs[i]->SetMarkerColor(colors[i]);
    graphs[i]->SetLineWidth(1.0);
    graphs[i]->SetMarkerStyle(20+i);
    graphs[i]->SetLineStyle(i);
-   // hists[i]->SetFillColor(colors[i]);
-   // hists[i]->SetFillStyle(1001);
-   //graphs[i]->Draw("SAMEAP");
    mg->Add(graphs[i]);
    }
 mg->Draw("AP");

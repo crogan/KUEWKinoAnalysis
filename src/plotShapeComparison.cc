@@ -28,8 +28,8 @@ plotShapeComparison::plotShapeComparison(vector<TH1D*> hists, vector<int> colors
   m_labels = labels;
   getLHs();
   makePlots();
-  plotPvalues(m_pvals,"overallPvals","Overall p-values");
-  plotPvalues(m_binPvals,"binPvals","Bin-by-bin p-values");
+  //plotPvalues(m_pvals,"overallPvals","Overall p-values");
+  //plotPvalues(m_binPvals,"binPvals","Bin-by-bin p-values");
 
 
 }
