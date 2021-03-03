@@ -1,4 +1,5 @@
 #include <vector>
+#include <algorithm>
 #include <iostream>
 #include <TCanvas.h>
 #include <TLegend.h>
@@ -27,10 +28,8 @@ plotShapeComparison::plotShapeComparison(vector<TH1D*> hists, vector<int> colors
   m_colors = colors;
   m_labels = labels;
   getLHs();
-  makePlots();
-  //plotPvalues(m_pvals,"overallPvals","Overall p-values");
-  //plotPvalues(m_binPvals,"binPvals","Bin-by-bin p-values");
-
+  plotRatioAndLH();
+  plotDist(m_binLHs,"binLHs","bin by bin likelihoods");
 
 }
 
@@ -49,8 +48,8 @@ void plotShapeComparison::getLHs(){
       double pval = sc->getPvalue();
       cout << "p-val: " << pval << " for hist " << m_hists[i]->GetTitle() << " and " << m_hists[j]->GetTitle() << endl;
       m_pvals.push_back(pval);
-      vector<double> binPvals = sc->getBinPvalues();
-      for(int val = 0; val < binPvals.size(); val++) m_binPvals.push_back(binPvals[i]); //get p-values
+      vector<double> binLHs = sc->lambdas;
+      for(int val = 0; val < binLHs.size(); val++) m_binLHs.push_back(binLHs[val]); //get p-values
       m_LHs.push_back(sc->lambdas); //get likelihoods
       m_LHlabels.push_back("#splitline{"+m_labels[i]+" #scale[1.2]{to} "+m_labels[j]+"}{#scale[1.2]{p-value: "+std::to_string(pval)+"}}");
     }
@@ -59,7 +58,7 @@ void plotShapeComparison::getLHs(){
 
 }
 
-void plotShapeComparison::makePlots(){
+void plotShapeComparison::plotRatioAndLH(){
   double scale;
   TH1D* histTotal = new TH1D(*m_hists[0]);
 
@@ -96,13 +95,14 @@ void plotShapeComparison::makePlots(){
 }
 
 
-void plotShapeComparison::plotPvalues(std::vector<double> pvals, string name, string title){
+void plotShapeComparison::plotDist(std::vector<double> vals, string name, string title){
   TCanvas* cv = new TCanvas(name.c_str(),title.c_str(),600,600);
-  TH1D* hist = new TH1D(name.c_str(),title.c_str(),20,0,0.5);
-  for(int i = 0; i < pvals.size(); i++) hist->Fill(pvals[i]);
-  hist->GetXaxis()->SetTitle("p-value");
+  double max = *std::max_element(std::begin(vals),std::end(vals));
+  TH1D* hist = new TH1D(name.c_str(),title.c_str(),20,0.,max);
+  for(int i = 0; i < vals.size(); i++) hist->Fill(vals[i]); 
+  hist->GetXaxis()->SetTitle(name.c_str());
   hist->GetYaxis()->SetTitle("a.u.");
-		std::vector<double> m_pvals;
+  hist->SetTitle(title.c_str());
   hist->Draw();
 }
 

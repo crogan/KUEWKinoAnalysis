@@ -1600,6 +1600,7 @@ int gBin;
   //TCanvas* can = psc->formatPlots(name);
 vector<TGraphAsymmErrors*> graphs = psc->m_graphs;
 vector<TGraphAsymmErrors*> gLHs = psc->m_gLHs;
+vector<double> pvals = psc->m_pvals;
 
 TAxis* ax = gLHs[0]->GetHistogram()->GetXaxis();
 double ax_x1 = ax->GetBinLowEdge(1);
@@ -1691,7 +1692,6 @@ TMultiGraph* mg = new TMultiGraph("ratios","ratios");
    gStyle->SetLabelOffset(999);
    gStyle->SetLabelSize(0.);
    for(int i = 0; i < Nhist; i++){
-  cout << "graph #" << i << " color: " << colors[i] << endl;
    graphs[i]->SetLineColor(colors[i]);
    graphs[i]->SetMarkerColor(colors[i]);
    graphs[i]->SetLineWidth(1.0);
