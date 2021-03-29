@@ -1,0 +1,27 @@
+#include <vector>
+#include <iostream>
+
+class shapeTemplate{
+
+	public:
+		shapeTemplate();
+		virtual ~shapeTemplate();
+		TH1D* sortBins(TH1D* hist);
+		//get corresponding consolidated histogram
+		//replace low statistics bins recursively - with normalization constraint
+		//do error tweaking to cover changes
+		//check agreement with original histogram - LLR test
+		//
+		//return frankenstein histogram to file
+
+
+
+
+
+
+
+
+
+}
+
+
