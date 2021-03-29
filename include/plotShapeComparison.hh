@@ -7,20 +7,23 @@ class plotShapeComparison{
 		plotShapeComparison(vector<TH1D*> hists, vector<int> colors, VS labels);		
 		virtual ~plotShapeComparison();
 		void getLHs();
-		void plotRatioAndLH();
+		void getRatioPlots();
+		void getLHplots();
 		void plotDist(std::vector<double> pvals, string name, string title);
 		std::vector<TGraphAsymmErrors*> m_graphs;
 		std::vector<TGraphAsymmErrors*> m_gLHs;
 		VS m_LHlabels;
+		vector<double> m_pvals;
 
 	private:
-		TH1D* histTotal;
-		vector<double> m_pvals;
+		TH1D* m_histTotal;
 		vector<std::vector<double>> m_LHs;
 		std::vector<double> m_binLHs;
 		vector<TH1D*> m_hists;
 		vector<int> m_colors;
 		VS m_labels;
 		int m_nHists;
-
+		double m_x = 0.;
+		map<string,double> m_histToFudgeFactor;
+		
 };

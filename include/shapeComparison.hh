@@ -8,10 +8,10 @@ class shapeComparison{
 		shapeComparison(TH1D* hist1, TH1D* hist2);
 		shapeComparison();
 		virtual ~shapeComparison();
-		double getPvalue();
-		std::vector<double> getBinPvalues();
-		std::vector<double> lambdas;
-		double lambda;
+		double getPvalue(std::vector<double> &lambdas, double &a);
+		double getPvalue(std::vector<double> &lambdas);
+		//std::vector<double> getBinPvalues();
+		//double lambda;
 		
 
 
@@ -27,7 +27,7 @@ class shapeComparison{
 
 		double nDof;
 
-		double calcLikelihood();
+		double calcLikelihood(std::vector<double> &lambdas, double x=1.);
 		double chi2Distribution();
 		double gammp(double a, double x);
 		void gser(double *gamser, double a, double x, double *gln);

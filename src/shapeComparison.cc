@@ -1,4 +1,4 @@
-//#include <iostream>
+#include <vector>
 #include <random>
 #include <TEfficiency.h>
 #include <TGraphAsymmErrors.h>
@@ -18,18 +18,26 @@ shapeComparison::shapeComparison(TH1D* hist1, TH1D* hist2){
 		std::cout << "Error: binnings not the same." << std::endl;
 		return;
 	}
-
-	mHist1 = (TH1D*)hist1->Clone();
-	mHist2 = (TH1D*)hist2->Clone();
-
+	if(hist1->Integral() > hist2->Integral()){ 
+		mHist1 = (TH1D*)hist2->Clone();
+		mHist2 = (TH1D*)hist1->Clone();
+	}
+	else if(hist1->Integral() < hist2->Integral()){ 
+		mHist1 = (TH1D*)hist1->Clone();
+		mHist2 = (TH1D*)hist2->Clone();
+	}
+	
+	
 	calcWeightsAndScale(mHist1);
 	calcWeightsAndScale(mHist2);
 
-	Nu = mHist1->Integral();
-	Nv = mHist2->Integral();
 	nBins = mHist1->GetNbinsX();
+	//Nu > Nv s.t. Nv/Nu < 1
+	Nu = mHist1->Integral(1,nBins);
+	Nv = mHist2->Integral(1,nBins);
+	
 
-	nDof = mHist1->GetNbinsX() - 1; //mHist1 and mHist2 have to have the same binning
+	nDof = nBins - 1; //mHist1 and mHist2 have to have the same binning
 
 	
 }
@@ -38,7 +46,6 @@ shapeComparison::shapeComparison(TH1D* hist1, TH1D* hist2){
 shapeComparison::~shapeComparison(){
 	delete mHist1;
 	delete mHist2;
-	lambdas.clear();
 }
 
 
@@ -55,33 +62,65 @@ void shapeComparison::calcWeightsAndScale(TH1D* hist){
 
 
 
-
-double shapeComparison::calcLikelihood(){ //calculates negative log likelihood ratio
+double shapeComparison::calcLikelihood(std::vector<double> &lambdas, double x) { //calculates negative log likelihood ratio
+	if(lambdas.size() > 0) lambdas.clear();
 	double u; 
 	double v; 
 	double t; 
-	lambda = 0;
+	double lambda = 0;
 	double tmp_lambda;
-	double norms = Nv/Nu;
-	for(int i = 0; i < nBins+1; i++){
+//std::cout << "x: " << x << std::endl;
+	//double norms = Nv/Nu;
+//std::cout << "nBins " << nBins << std::endl;
+	for(int i = 1; i < nBins+1; i++){ //i starting at i discards bin #0 underflow bin (should be empty anyways)
 		u = mHist1->GetBinContent(i);
 		v = mHist2->GetBinContent(i);
+		v *= x;
 		t = u + v;  
 		if(u == 0 && v == 0) { lambdas.push_back(0.); continue;}
-		else if(u == 0 && v != 0){ tmp_lambda = -2*t*log(Nu/(Nu+Nv)); }
-		else if(u != 0 && v == 0){ tmp_lambda = -2*t*log(Nv/(Nu+Nv)); }
+		else if(u == 0 && v != 0){ tmp_lambda = -2*t*log(Nv/(Nu+Nv)); }
+		else if(u != 0 && v == 0){ tmp_lambda = -2*t*log(Nu/(Nu+Nv)); }
 		else tmp_lambda = -2*(t*log( (1 + v/u)/(1 + Nv/Nu) ) + v*log( (Nv/Nu)*(u/v) ));
 		lambda += tmp_lambda; 
+		//std::cout << "hist1 bin #" << i << ": " << u << " hist2 bin#" << i << ": " << v << " bin LH: " << tmp_lambda << " LH so far: " << lambda << std::endl;
 		lambdas.push_back(tmp_lambda);
 	}
 	return lambda;
 }
 
-double shapeComparison::getPvalue(){
-	double LH = calcLikelihood();
-	double cdf = 1 - gammp(nDof/2.0,LH/2.0); //value of cumulative distribution function
-	return 1 - cdf; //pvalue is inverse of cdf value
+//original function
+double shapeComparison::getPvalue(std::vector<double> &lambdas){
+	double LH = calcLikelihood(lambdas); //fill vector of LHs (bin-by-bin) by passing empty vector by reference to calcLikelihood
+	double pval = 1 - gammp(nDof/2.0,LH/2.0); //value of cumulative distribution function - take inverse b/c we want the probability of a value equal to or greater than our test statistic - this is our p-value
+	std::cout << "LH: " << LH <<  " pval: " << pval << std::endl;
+	return pval;
 }
+
+double shapeComparison::getPvalue(std::vector<double> &lambdas,double &a){
+	double LH;
+	double cdf;
+	a = 1.;
+	double b = Nv/Nu;
+	std::cout << "Nv/Nu: " << b << std::endl;
+	double EPS = 1e-2;
+	double ITMAX = int(abs(a-b)/EPS);
+	double goal_pval = 0.50;
+	if(Nv > Nu) EPS = -EPS; 
+	else if(Nv < Nu) EPS = EPS;
+	else if(Nv == Nu){ std::cout << "Histogram normalizations the same." << std::endl; return 0.;}
+	for(int i = 0; i < ITMAX; i++){
+		LH = calcLikelihood(lambdas,a);
+		cdf = 1 - gammp(nDof/2.0,LH/2.0); //value of cumulative distribution function
+//		if( i % std::max(1,int(ITMAX/10)) == 0) std::cout << "pval: " << 1 - cdf << " at iteration #" << i << " with fudge factor: " << a << std::endl;
+		if(1 - cdf >= goal_pval){ std::cout << "fudge factor x: " << a << " on histogram: " << mHist2->GetTitle() <<" pval: " << 1 - cdf  << std::endl; return 1 - cdf;}
+		a = a + EPS;
+	}
+	std::cout << "Iteration did not converge to desired p-value: " << goal_pval << std::endl;
+	return 1 - cdf; 
+}
+
+
+
 double shapeComparison::chi2Distribution(){
 	std::default_random_engine generator;
 	std::chi_squared_distribution<double> distribution(nDof);
@@ -95,16 +134,16 @@ double shapeComparison::chi2Distribution(){
 }
 
 
-std::vector<double> shapeComparison::getBinPvalues(){
-	double LH = calcLikelihood();
-	std::vector<double> pvals;
-	for(int i = 0; i < nBins; i++){
-		double cdf = 1 - gammp(nDof/2.0,lambdas[i]/2.0); //value of cumulative distribution function
-		pvals.push_back(1 - cdf);//pvalue is inverse of cdf value
-//		std::cout << "bin #: " << i << " likelihood: " << lambdas[i] << " pval: " << pvals[i] << std::endl; 
-	}
-	return pvals; 
-}
+//std::vector<double> shapeComparison::getBinPvalues(){
+//	double LH = calcLikelihood();
+//	std::vector<double> pvals;
+//	for(int i = 0; i < nBins; i++){
+//		double cdf = 1 - gammp(nDof/2.0,lambdas[i]/2.0); //value of cumulative distribution function
+//		pvals.push_back(1 - cdf);//pvalue is inverse of cdf value
+////		std::cout << "bin #: " << i << " likelihood: " << lambdas[i] << " pval: " << pvals[i] << std::endl; 
+//	}
+//	return pvals; 
+//}
 
 double shapeComparison::gammp(double a, double x){
 	double gamser;
