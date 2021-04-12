@@ -2166,68 +2166,68 @@ if(hist == NULL) {cout << "null hist" << endl; return can;}
   
 }
 
-void FitReader::SmoothHistograms(const VS& proc, const CategoryTree& CT,  const string& name){
-vector<const CategoryTree*> catTrees;
-CT.GetListDepth(catTrees,1);
-//PrintCategories();
-TFile* f = nullptr;
-  CategoryList catList = GetCategories();
-  if(!gSystem->AccessPathName(m_inputfile.c_str()))
-     f = TFile::Open(m_inputfile.c_str(),"UPDATE");
-  else
-     f = new TFile(m_inputfile.c_str(),"RECREATE");
+// void FitReader::SmoothHistograms(const VS& proc, const CategoryTree& CT,  const string& name){
+// vector<const CategoryTree*> catTrees;
+// CT.GetListDepth(catTrees,1);
+// //PrintCategories();
+// TFile* f = nullptr;
+//   CategoryList catList = GetCategories();
+//   if(!gSystem->AccessPathName(m_inputfile.c_str()))
+//      f = TFile::Open(m_inputfile.c_str(),"UPDATE");
+//   else
+//      f = new TFile(m_inputfile.c_str(),"RECREATE");
 
-  int depth = (int)catTrees.size();
-  int nCat;
-  int nProc = proc.size();
-  map<string,double> nameToNorm;
-  map<string,TH1D*> nameToHist;
-  map<string,const char*> nameToTitle;
-for(int i = 0; i < nProc; i++){
-    VS vproc;
-    if(m_Strings.count(proc[i]) != 0)
-      vproc = m_Strings[proc[i]];
-    else
-      vproc += proc[i];
-    for(int p = 0; p < int(vproc.size()); p++){
-      int index = GetProcesses().Find(vproc[p]);
-      if(index < 0) continue;
-      Process pp = GetProcesses()[index];
-   cout << pp.Name() << endl;
-      for(int list = 0; list < depth; list++){
-   CategoryList cats = catList.Filter(*catTrees[list]);
-        nCat = cats.GetN();
-        TH1D* totalHist = nullptr; //one total histogram per list per process
-string slabel;
-        //add hists
-        for(int c = 0; c < nCat; c++){
-          if(!IsFilled(cats[c],pp)) continue;
-          if(!totalHist) totalHist = (TH1D*)GetHistogram(cats[c],pp)->Clone(Form("plothist_%d_%s", i, name.c_str()));
-          else totalHist->Add(GetHistogram(cats[c],pp));
-          slabel = cats[c].GetLabel()+"_"+pp.Name();
-          nameToNorm[slabel] = GetHistogram(cats[c],pp)->Integral();
-          nameToTitle[slabel] = GetHistogram(cats[c],pp)->GetTitle();
-    nameToHist[slabel] = totalHist;
-        }
-        //scale hists once all summed
-        for(int c = 0; c < nCat; c++){
-          if(!IsFilled(cats[c],pp)) continue;
-          slabel = cats[c].GetLabel()+"_"+pp.Name();
-    nameToHist[slabel]->Scale(nameToNorm[slabel]/nameToHist[slabel]->Integral());
-          nameToHist[slabel]->SetTitle(nameToTitle[slabel]);
-          nameToHist[slabel]->SetName((pp.Name()+"_smoothed").c_str());
-          f->cd((cats[c].Label()+"_"+cats[c].GetLabel()).c_str());
-         nameToHist[slabel]->Write();
-        }
+//   int depth = (int)catTrees.size();
+//   int nCat;
+//   int nProc = proc.size();
+//   map<string,double> nameToNorm;
+//   map<string,TH1D*> nameToHist;
+//   map<string,const char*> nameToTitle;
+// for(int i = 0; i < nProc; i++){
+//     VS vproc;
+//     if(m_Strings.count(proc[i]) != 0)
+//       vproc = m_Strings[proc[i]];
+//     else
+//       vproc += proc[i];
+//     for(int p = 0; p < int(vproc.size()); p++){
+//       int index = GetProcesses().Find(vproc[p]);
+//       if(index < 0) continue;
+//       Process pp = GetProcesses()[index];
+//    cout << pp.Name() << endl;
+//       for(int list = 0; list < depth; list++){
+//    CategoryList cats = catList.Filter(*catTrees[list]);
+//         nCat = cats.GetN();
+//         TH1D* totalHist = nullptr; //one total histogram per list per process
+// string slabel;
+//         //add hists
+//         for(int c = 0; c < nCat; c++){
+//           if(!IsFilled(cats[c],pp)) continue;
+//           if(!totalHist) totalHist = (TH1D*)GetHistogram(cats[c],pp)->Clone(Form("plothist_%d_%s", i, name.c_str()));
+//           else totalHist->Add(GetHistogram(cats[c],pp));
+//           slabel = cats[c].GetLabel()+"_"+pp.Name();
+//           nameToNorm[slabel] = GetHistogram(cats[c],pp)->Integral();
+//           nameToTitle[slabel] = GetHistogram(cats[c],pp)->GetTitle();
+//     nameToHist[slabel] = totalHist;
+//         }
+//         //scale hists once all summed
+//         for(int c = 0; c < nCat; c++){
+//           if(!IsFilled(cats[c],pp)) continue;
+//           slabel = cats[c].GetLabel()+"_"+pp.Name();
+//     nameToHist[slabel]->Scale(nameToNorm[slabel]/nameToHist[slabel]->Integral());
+//           nameToHist[slabel]->SetTitle(nameToTitle[slabel]);
+//           nameToHist[slabel]->SetName((pp.Name()+"_smoothed").c_str());
+//           f->cd((cats[c].Label()+"_"+cats[c].GetLabel()).c_str());
+//          nameToHist[slabel]->Write();
+//         }
 
-      } 
-    }
-  }
+//       } 
+//     }
+//   }
 
-  f->Close();
+//   f->Close();
 
 
-}
+// }
 
 TCanvas* FitReader::PlotYields(const string& can_name,
 			       const VS& proc,

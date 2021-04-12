@@ -31,6 +31,7 @@
 #include "Hadronic.hh"
 #include "CategoryTree.hh"
 #include "FitReader.hh"
+#include "shapeTemplate.hh"
 //#include "varWeights.hh"
 //#include "testClass.hh"
 
@@ -521,7 +522,6 @@ if(RISR < rlow){ underflow += 1.;}
       delete chain;
     }
   }
-cout << "# underflow events: " << underflow << endl;
   FITBuilder.WriteFit(OutFile);
 VS fakeProcs;
 for(int i = 0; i < int(proc_to_add.size()); i++){
@@ -534,7 +534,9 @@ for(int i = 0; i < int(proc_to_add.size()); i++){
 CategoryTree CT_Fakes1L = CTTool.GetCategories_Fakes1L();
 CategoryTree CT_Fakes2L = CTTool.GetCategories_Fakes2L();
 CategoryTree CT_Fakes3L = CTTool.GetCategories_Fakes3L();
-FITReader.SmoothHistograms(fakeProcs,CT_Fakes1L,OutFile);
+// FITReader.SmoothHistograms(fakeProcs,CT_Fakes1L,OutFile);
+shapeTemplateTool STT(OutFile,CT_Fakes1L,fakeProcs);
+STT.createTemplates();
 //FITReader.SmoothHistograms(fakeProcs,CT_Fakes2L,OutFile);
 //FITReader.SmoothHistograms(fakeProcs,CT_Fakes3L,OutFile);
   
