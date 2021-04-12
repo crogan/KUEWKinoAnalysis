@@ -359,11 +359,15 @@ FitBin& FitBin::InitializeHistogram(const string& label, bool extrahist){
   return *this;
 }
 
+vector<RBin*> FitBin::RBins(){
+  return m_RBins;
+}
+
 void FitBin::Fill(double weight, double M, double R){
   if(m_hist1D == nullptr)
     return;
   m_hist1D->Fill(GetBin(R, M), weight);
-//cout << "bin: " << R << " " << M << " has weight " << weight << endl;
+//if(GetBin(R,M) < -0.5) cout << "bin: " << GetBin(R,M) << " R: " << R << " M: " << M << " has weight " << weight << " R high: " << m_RBins[0]->Rhigh() << " first bin R low: " << m_RBins[0]->Rlow() << endl;
   if(m_hist2D != nullptr)
     m_hist2D->Fill(M, R, weight);
 

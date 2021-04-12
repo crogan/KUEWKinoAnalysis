@@ -40,14 +40,15 @@ FitInputBuilder::~FitInputBuilder(){
     delete m_CatTree;
 }
 
-void FitInputBuilder::AddEvent(double weight, double Mperp, double RISR,
+
+double FitInputBuilder::AddEvent(double weight, double Mperp, double RISR,
 			  const Category&   cat,
 			  const Process&    proc,
 			  const Systematic& sys){
   
   string scat  = cat.Label()+"-"+cat.GetLabel();
   string sproc = proc.Name();
-  
+  double rlow;
   if(m_Cat.count(scat) == 0)
     m_Cat[scat] = new Category(cat);
   
@@ -56,10 +57,10 @@ void FitInputBuilder::AddEvent(double weight, double Mperp, double RISR,
   }
 
   if(sys.IsDefault())
-    m_Proc[sproc]->AddEvent(weight, Mperp, RISR, cat, sys, m_BookHist);
+   rlow =  m_Proc[sproc]->AddEvent(weight, Mperp, RISR, cat, sys, m_BookHist);
   else
-    m_Proc[sproc]->AddEvent(weight, Mperp, RISR, cat, sys);
-			  
+    rlow = m_Proc[sproc]->AddEvent(weight, Mperp, RISR, cat, sys);
+return rlow;			  
 }
 
 const Process& FitInputBuilder::FakeProcess(const string& label){

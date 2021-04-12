@@ -824,7 +824,7 @@ TCanvas* FitReader::Plot1Dstraight(const string& proc,
            const VS& hadI_cat,
            const string& name,
            const VS& extra){
-  RestFrames::SetStyle();
+  //RestFrames::SetStyle();
 
 
   // int Nproc = proc.size();
@@ -1191,7 +1191,7 @@ TMultiGraph* mg = new TMultiGraph();
   hists[i]->SetLineWidth(1.0);
   hists[i]->SetMarkerStyle(20+i);
   hists[i]->SetLineStyle(i);
-  hists[i]->Draw("SAME P");
+  hists[i]->Draw("SAME E0");
   }
   
 
@@ -1322,7 +1322,7 @@ TMultiGraph* mg = new TMultiGraph();
    NhadI == 0)
   return nullptr;
 
-int catTest = 1;
+int catTest = 0;
 
   CategoryList cat = GetCategories();
   vector<CategoryList> cats;
@@ -1342,7 +1342,7 @@ int catTest = 1;
   for(int i = 0; i < Ncats; i++){
     cats.push_back(GetCategories());
   }
-  //cat.Print();
+ // cat.Print();
 
 cout << "total # of cats: " << cats[catTest].GetN() << endl;
 
@@ -1399,6 +1399,7 @@ cout << "leptonic cuts passed" << endl;
       if(NhadS > 1)
   vhadSs[i].push_back(m_Strings[hadS_cat[i]][j]);
 else vhadS.push_back(m_Strings[hadS_cat[i]][j]);
+     cout << m_Strings[hadS_cat[i]][j] << endl;
   } 
   }
   else {
@@ -1563,8 +1564,10 @@ VS vproc;
 
   if(!hist){
     hist = (TH1D*) GetHistogram(cat1[c], pp)->Clone(Form("plothist_%d_%s", 0, name.c_str()));
+  //  if(hist->GetBinContent(0) != 0) cout << hist->GetTitle() << " has bin #0 filled with " << hist->GetBinContent(0) << endl;
   } else {
     hist->Add(GetHistogram(cat1[c], pp));
+    //if(hist->GetBinContent(0) != 0) cout << GetHistogram(cat1[c], pp)->GetTitle() << " has bin #0 filled with " << GetHistogram(cat1[c], pp)->GetBinContent(0) << endl;
   }
     }
   }
@@ -1588,7 +1591,6 @@ VS vproc;
   hists.push_back(hist); //one hist per cat group
  } 
 int Nhist = hists.size();
-
 
 int nBins;
 int gBin; 
@@ -1695,8 +1697,8 @@ TMultiGraph* mg = new TMultiGraph("ratios","ratios");
    graphs[i]->SetLineColor(colors[i]);
    graphs[i]->SetMarkerColor(colors[i]);
    graphs[i]->SetLineWidth(1.0);
-   graphs[i]->SetMarkerStyle(20+i);
-   graphs[i]->SetLineStyle(i);
+   graphs[i]->SetMarkerStyle(20);
+   graphs[i]->SetLineStyle(i+1);
    mg->Add(graphs[i]);
    }
 mg->Draw("AP");
@@ -1707,7 +1709,6 @@ can->cd();
   pLH->SetGridy();
   pLH->SetGridx();
   pLH->SetTopMargin(0.);
-  //pLH->SetBottomMargin(0.2);
   pLH->Draw();
   pLH->cd();
   pLH->Update();
@@ -1744,8 +1745,8 @@ for(int i = 0; i < gLHs.size(); i++){
    gLHs[i]->SetLineColor(colors[i]);
    gLHs[i]->SetMarkerColor(colors[i]);
    gLHs[i]->SetLineWidth(1.0);
-   gLHs[i]->SetMarkerStyle(20+i);
-   gLHs[i]->SetLineStyle(i);
+   gLHs[i]->SetMarkerStyle(20);
+   gLHs[i]->SetLineStyle(i+1);
    mgLH->Add(gLHs[i]);
  //gLHs[i]->Draw("AP same");
 }
@@ -1754,7 +1755,7 @@ can->Modified();
 can->Update();
 can->cd();
 pRatio->cd();
-   TLegend* leg = new TLegend(1.-hhi+0.03, 1.- (Nhist+1)*(1.-0.49)/9., 0.98, 1.-hto);
+   TLegend* leg = new TLegend(1.-hhi+0.03, 1.- (Nhist+1)*(1.-0.49)/9.-0.15, 0.98, 1.-hto);
    leg->SetTextFont(132);
    leg->SetTextSize(0.035);
    leg->SetFillColor(kWhite);
@@ -1764,7 +1765,7 @@ pRatio->cd();
    // leg->AddEntry(hist_data, "data");
    // leg->AddEntry(gr, "total uncertainty","F");
    for(int i = 0; i < Nhist; i++)
-   leg->AddEntry(graphs[i], labels[i].c_str(), "LP");
+   leg->AddEntry(graphs[i], ("#splitline{"+labels[i]+"}{Integral: "+std::to_string(hists[i]->Integral(1,hists[i]->GetNbinsX()))+"}").c_str(), "LP");
   leg->Draw("SAME");
   double eps = 0.0015;
 
@@ -1811,7 +1812,8 @@ for(int r = 0; r < NR; r++){
 int NM = bin[r].NBins();
   for(int m = 0; m < NM; m++){
   string binLabel = "Bin #"+std::to_string(ib)+" | RISR: "+blabels_RISR[r]+" | M_{#perp}  : "+blabels_Mperp[m]; 
-  l.DrawLatex(1.-hhi+0.01, 1.- (Nhist+1)*(1.-0.49)/9. - 0.05- 0.05*ib,binLabel.c_str());
+  l.DrawLatex(1.-hhi+0.01, 1.- (Nhist+1)*(1.-0.49)/9. - 0.23- 0.05*ib,binLabel.c_str());
+   //TLegend* leg = new TLegend(1.-hhi+0.03, 1.- (Nhist+1)*(1.-0.49)/9.-0.2, 0.98, 1.-hto);
   //1.-hhi+0.01, 1.- (Nhist+1)*(1.-0.49)/9., 0.98, 1.-hto-0.005
   ib++;
   } 
@@ -2671,7 +2673,7 @@ TCanvas* FitReader::Plot1DratioProc(const VS& proc,
            const string& name,
            const string& extra){
 
-  RestFrames::SetStyle();
+ // RestFrames::SetStyle();
 
 
   int Nproc = proc.size();
@@ -2881,10 +2883,15 @@ int gBin;
   int NB = bin.NBins();
 
   plotShapeComparison* psc = new plotShapeComparison(hists,colors,labels);
-  vector<TGraphAsymmErrors*> graphs = psc->m_graphs;
-  vector<TGraphAsymmErrors*> gLHs = psc->m_gLHs;
+  //TCanvas* can = psc->formatPlots(name);
+vector<TGraphAsymmErrors*> graphs = psc->m_graphs;
+vector<TGraphAsymmErrors*> gLHs = psc->m_gLHs;
+vector<double> pvals = psc->m_pvals;
 
-
+TAxis* ax = gLHs[0]->GetHistogram()->GetXaxis();
+double ax_x1 = ax->GetBinLowEdge(1);
+double ax_x2 = ax->GetBinUpEdge(ax->GetNbins());
+gLHs[0]->GetHistogram()->GetXaxis()->Set(NB,ax_x1,ax_x2);
 
   VS blabels_RISR;
   VS blabels_Mperp;
@@ -2903,49 +2910,52 @@ int gBin;
   for(int l = 0; l < 1.2*lmax; l++)
   space += " ";
 
-
   for(int r = 0; r < NR; r++)
   blabels_RISR += bin[r].GetRBinLabel();
 
-  // hists[0]->LabelsOption("v","X");
+  //gLHs[0]->GetHistogram()->LabelsOption("v","X");
 
-  double x; double y;
+double x; double y;
+//for(int i = 0; i < graphs[0]->GetN(); i++) { graphs[0]->GetPoint(i,x,y); cout << "point #" << i << "| x: " << x << " y: " << y << endl;}
+
   gStyle->SetPadTopMargin(0.09);
-  gStyle->SetPadRightMargin(0.25);
-  gStyle->SetPadBottomMargin(0.18);
-  gStyle->SetPadLeftMargin(0.15);
-  gStyle->SetOptTitle(0);
-  gStyle->SetOptStat(0);
-  gStyle->SetOptFit(11111111);
-  TCanvas* can = new TCanvas(Form("can_%s", name.c_str()),
-           Form("can_%s", name.c_str()),
-           1200, 700);
-  double hlo = 0.15;
-  double hhi = 0.22;
-  double hbo = 0.27;
-  double hto = 0.07;
-  can->SetLeftMargin(hlo);
-  can->SetRightMargin(hhi);
-  can->SetBottomMargin(hbo);
-  can->SetTopMargin(hto);
-  // can->SetGridy();
-  can->Draw();
-  can->cd();
-
-  TPad* pRatio = new TPad("pRatio","pRatio",0.,0.3,1.,1.);
+    gStyle->SetPadRightMargin(0.25);
+    gStyle->SetPadBottomMargin(0.18);
+    gStyle->SetPadLeftMargin(0.15);
+   gStyle->SetOptTitle(0);
+   gStyle->SetOptStat(0);
+   gStyle->SetOptFit(11111111);
+   TCanvas* can = new TCanvas(Form("can_%s", name.c_str()),
+            Form("can_%s", name.c_str()),
+            0,45,1337, 738);
+   double hlo = 0.15;
+   double hhi = 0.22;
+   double hbo = 0.27;
+   double hto = 0.07;
+   can->SetLeftMargin(hlo);
+   can->SetRightMargin(hhi);
+   can->SetBottomMargin(hbo);
+   can->SetTopMargin(hto);
+   //can->SetGridy();
+   can->Draw();
+   can->cd();
+ TPad* pRatio = new TPad("pRatio","pRatio",0,0.3,1.,1.);
   pRatio->SetGridy();
   pRatio->SetGridx();
   pRatio->SetBottomMargin(0.02);
   pRatio->Draw();
   pRatio->cd();
   can->Update();
+
+
   pRatio->cd();
 
-  double hmax = graphs[0]->GetMaximum();
 
-  TMultiGraph* mg = new TMultiGraph("ratios","ratios");
-  mg->GetYaxis()->SetRangeUser(0.0,1.1*hmax);
-  mg->GetXaxis()->CenterTitle();
+   double hmax = graphs[0]->GetMaximum();
+TMultiGraph* mg = new TMultiGraph("ratios","ratios");
+   mg->GetYaxis()->SetRangeUser(0.0, 1.1*hmax);
+   //mg->Draw("AP");
+   mg->GetXaxis()->CenterTitle();
    mg->GetXaxis()->SetTitleFont(42);
    mg->GetXaxis()->SetTitleSize(0.05);
    mg->GetXaxis()->SetTitleOffset(1.0);
@@ -2971,11 +2981,8 @@ int gBin;
    graphs[i]->SetLineColor(colors[i]);
    graphs[i]->SetMarkerColor(colors[i]);
    graphs[i]->SetLineWidth(1.0);
-   graphs[i]->SetMarkerStyle(20+i);
-   graphs[i]->SetLineStyle(i);
-   // hists[i]->SetFillColor(colors[i]);
-   // hists[i]->SetFillStyle(1001);
-   //graphs[i]->Draw("SAMEAP");
+   graphs[i]->SetMarkerStyle(20);
+   graphs[i]->SetLineStyle(i+1);
    mg->Add(graphs[i]);
    }
 mg->Draw("AP");
@@ -2986,12 +2993,11 @@ can->cd();
   pLH->SetGridy();
   pLH->SetGridx();
   pLH->SetTopMargin(0.);
-  //pLH->SetBottomMargin(0.2);
   pLH->Draw();
   pLH->cd();
   pLH->Update();
   can->Update();
-  TMultiGraph* mgLH = new TMultiGraph("LH","LH");
+TMultiGraph* mgLH = new TMultiGraph("LH","LH");
 //gLHs[0]->Draw("AP");
    mgLH->GetXaxis()->CenterTitle();
 //   gLHs[0]->GetYaxis()->SetRangeUser(0.0, 1.1*gLHs[0]->GetMaximum());
@@ -3023,35 +3029,35 @@ for(int i = 0; i < gLHs.size(); i++){
    gLHs[i]->SetLineColor(colors[i]);
    gLHs[i]->SetMarkerColor(colors[i]);
    gLHs[i]->SetLineWidth(1.0);
-   gLHs[i]->SetMarkerStyle(20+i);
-   gLHs[i]->SetLineStyle(i);
+   gLHs[i]->SetMarkerStyle(20);
+   gLHs[i]->SetLineStyle(i+1);
    mgLH->Add(gLHs[i]);
  //gLHs[i]->Draw("AP same");
 }
-  mgLH->Draw("AP");
-  can->Modified();
-  can->Update();
-  can->cd();
-  pRatio->cd();
-     TLegend* leg = new TLegend(1.-hhi+0.03, 1.- (Nhist+1)*(1.-0.49)/9., 0.98, 1.-hto);
-     leg->SetTextFont(132);
-     leg->SetTextSize(0.035);
-     leg->SetFillColor(kWhite);
-     leg->SetLineColor(kWhite);
-     leg->SetShadowColor(kWhite);
-     // if(hist_data)
-     // leg->AddEntry(hist_data, "data");
-     // leg->AddEntry(gr, "total uncertainty","F");
-     for(int i = 0; i < Nhist; i++)
-     leg->AddEntry(graphs[i], labels[i].c_str(), "LP");
-    leg->Draw("SAME");
-    double eps = 0.0015;
+mgLH->Draw("AP");
+can->Modified();
+can->Update();
+can->cd();
+pRatio->cd();
+   TLegend* leg = new TLegend(1.-hhi+0.03, 1.- (Nhist+1)*(1.-0.49)/9.-0.15, 0.98, 1.-hto);
+   leg->SetTextFont(132);
+   leg->SetTextSize(0.035);
+   leg->SetFillColor(kWhite);
+   leg->SetLineColor(kWhite);
+   leg->SetShadowColor(kWhite);
+   // if(hist_data)
+   // leg->AddEntry(hist_data, "data");
+   // leg->AddEntry(gr, "total uncertainty","F");
+   for(int i = 0; i < Nhist; i++)
+   leg->AddEntry(graphs[i], ("#splitline{"+labels[i]+"}{Integral: "+std::to_string(hists[i]->Integral(1,hists[i]->GetNbinsX()))+"}").c_str(), "LP");
+  leg->Draw("SAME");
+  double eps = 0.0015;
 
-  can->Modified();
-  can->Update();
-  can->cd();
-  pLH->cd();
-  TLegend* legLH = new TLegend(1.-hhi-0.01, 1.- (Nhist+1)*(1.-0.49)/9.-0.4, 0.98, 1.-hto);
+can->Modified();
+can->Update();
+can->cd();
+pLH->cd();
+   TLegend* legLH = new TLegend(1.-hhi-0.01, 1.- (Nhist+1)*(1.-0.49)/9.-0.4, 0.98, 1.-hto);
    legLH->SetTextFont(132);
    legLH->SetTextSize(0.06);
    legLH->SetFillColor(kWhite);
@@ -3060,10 +3066,7 @@ for(int i = 0; i < gLHs.size(); i++){
    for(int i = 0; i < gLHs.size(); i++)
    legLH->AddEntry(gLHs[i], psc->m_LHlabels[i].c_str(), "LP");
   legLH->Draw("same");
-  
 
-
-  
   TLatex l;
   l.SetTextFont(42);
   l.SetNDC();
@@ -3093,7 +3096,8 @@ for(int r = 0; r < NR; r++){
 int NM = bin[r].NBins();
   for(int m = 0; m < NM; m++){
   string binLabel = "Bin #"+std::to_string(ib)+" | RISR: "+blabels_RISR[r]+" | M_{#perp}  : "+blabels_Mperp[m]; 
-  l.DrawLatex(1.-hhi+0.01, 1.- (Nhist+1)*(1.-0.49)/9. - 0.05- 0.05*ib,binLabel.c_str());
+  l.DrawLatex(1.-hhi+0.01, 1.- (Nhist+1)*(1.-0.49)/9. - 0.23- 0.05*ib,binLabel.c_str());
+   //TLegend* leg = new TLegend(1.-hhi+0.03, 1.- (Nhist+1)*(1.-0.49)/9.-0.2, 0.98, 1.-hto);
   //1.-hhi+0.01, 1.- (Nhist+1)*(1.-0.49)/9., 0.98, 1.-hto-0.005
   ib++;
   } 
@@ -3119,23 +3123,17 @@ pRatio->cd();
   l.DrawLatex(hlo+eps*4, 1.-hto+0.02,"#bf{#it{CMS}} work-in-progress");
   l.SetTextSize(0.05);
 
-int Nlep = lep_cat.size();
-int NhadS = hadS_cat.size();
-int NhadI = hadI_cat.size();
-int Nextra = -999;
-if(!extra.empty()) Nextra = extra.size();
-  
-string plotlabel;
-  if(Nlep == 1)
+
+  string plotlabel;
+  //if(Nlep == 1)
     plotlabel += "#color[7014]{"+lep_labels[0]+"} + ";
-  if(NhadS == 1)
+  //if(NhadS == 1)
     plotlabel += "#color[7004]{"+hadS_labels[0]+"} + ";
-  if(NhadI == 1)
+  //if(NhadI == 1)
     plotlabel += "#color[7024]{"+hadI_labels[0]+"} + ";
-  if(Nextra == 1)
+  //if(Nextra == 1)
     plotlabel += "#color[7024]{"+extra_labels[0]+"} + ";
   plotlabel += "p_{T}^{ISR} > 300 GeV";
-  
   l.SetTextColor(kBlack);
   l.SetTextAlign(13);
   l.SetTextSize(0.035);
@@ -3876,10 +3874,10 @@ void FitReader::InitializeRecipes(){
   m_Strings["1Lbronze"] = VS().a("1L_elm-elB").a("1L_elp-elB").a("1L_elpm-elB").a("1L_mupm-muB").a("1L_mup-muB").a("1L_mum-muB");
   
   m_Title["1Lel"] = "#scale[1.2]{single e}";
-  m_Strings["1Lel"] = VS().a("1L_elp-elG").a("1L_elm-elG");
+  m_Strings["1Lel"] = VS().a("1L_elp-elG").a("1L_elm-elG").a("1L_elpm-elG").a("1L_elp-elS").a("1L_elm-elS").a("1L_elpm-elS").a("1L_elp-elB").a("1L_elm-elB").a("1L_elpm-elB");
 
   m_Title["1Lmu"] = "#scale[1.2]{single #mu}";
-  m_Strings["1Lmu"] = VS().a("1L_mup-muG").a("1L_mum-mG");
+  m_Strings["1Lmu"] = VS().a("1L_mup-muG").a("1L_mum-muG").a("1L_mupm-muG").a("1L_mup-muS").a("1L_mum-muS").a("1L_mupm-muS").a("1L_mup-muB").a("1L_mum-muB").a("1L_mupm-muB");
 
   m_Title["1Lelp"] = "#scale[1.2]{single e^{+}}";
   m_Strings["1Lelp"] = VS().a("1L_elp-elG");
@@ -3899,6 +3897,8 @@ void FitReader::InitializeRecipes(){
   m_Title["1Lm"] = "#scale[1.2]{single #it{l}^{-}}";
   m_Strings["1Lm"] = VS().a("1L_elm-elG").a("1L_mum-muG");
 
+  m_Title["1Lelgold"] = "#scale[1.2]{single gold e}";
+  m_Strings["1Lelgold"] = VS().a("1L_elp-elG").a("1L_elm-elG").a("1L_elpm-elG");
   
   m_Title["1Lelsilver"] = "#scale[1.2]{single silver e}";
   m_Strings["1Lelsilver"] = VS().a("1L_elp-elS").a("1L_elm-elS");
@@ -3966,15 +3966,25 @@ void FitReader::InitializeRecipes(){
     .a("2LSS_el^mu-el2mu2").a("2LSS_elmu^1-el2mu2");
 
   // hadronic categories
+  m_Title["0jS"] = "#splitline{0 jet}{incl. SVs} #scale[1.2]{#in S}";
+  m_Strings["0jS"] = VS().a("0j0svS").a("0j1svS").a("0jge1svS").a("0jge2svS"); 
+ 
   m_Title["0j0svS"] = "#splitline{0 jets}{0 SV-tags} #scale[1.2]{#in S}";
 
   m_Title["0j1svS"] = "#splitline{0 jets}{1 SV-tag} #scale[1.2]{#in S}";
 
   m_Title["0jge1svS"] = "#splitline{0 jets}{#geq 1 SV-tag} #scale[1.2]{#in S}";
+  m_Strings["0jge1svS"] = VS().a("0jge1svS");
 
   m_Title["0jge2svS"] = "#splitline{0 jets}{#geq 2 SV-tags} #scale[1.2]{#in S}";
 
   m_Title["1j0bge1svS"] = "#splitline{1 jet, 0 b-tags}{#geq 1 SV-tag} #scale[1.2]{#in S}";
+  
+  m_Title["1j0svS"] = "#splitline{1 jet}{#geq 1 SV-tag} #scale[1.2]{#in S}";
+  m_Strings["1j0svS"] = VS().a("1j0b0svS").a("1j1b0svS");
+
+  m_Title["1jge1svS"] = "#splitline{1 jet}{#geq 1 SV-tag} #scale[1.2]{#in S}";
+  m_Strings["1jge1svS"] = VS().a("1jge1svS");
 
   m_Title["1jS"] = "#splitline{1 jet}{incl. b-tags} #scale[1.2]{#in S}";
   m_Strings["1jS"] = VS().a("1j0svS").a("1jge1svS").a("1j0b0svS").a("1j0bge1svS").a("1j1b0svS").a("1j1bge1svS");
@@ -3985,7 +3995,7 @@ void FitReader::InitializeRecipes(){
 
   m_Title["2j2bS"] = "#splitline{2 jets}{2 b-tags} #scale[1.2]{#in S}";
   
-  m_Title["2jS"] = "#splitline{2 jet}{incl. b-tags} #scale[1.2}{#in S}";
+  m_Title["2jS"] = "#splitline{2 jet}{incl. b-tags} #scale[1.2]{#in S}";
   m_Strings["2jS"] = VS().a("2j0bS").a("2j1bS").a("2j2bS");
 
   m_Title["3j0bS"] = "#splitline{3 jets}{0 b-tags} #scale[1.2]{#in S}";
@@ -3994,7 +4004,7 @@ void FitReader::InitializeRecipes(){
 
   m_Title["3j2bS"] = "#splitline{3 jets}{#geq 2 b-tags} #scale[1.2]{#in S}";
   
-  m_Title["3jS"] = "#splitline{3 jet}{incl. b-tags} #scale[1.2}{#in S}";
+  m_Title["3jS"] = "#splitline{3 jet}{incl. b-tags} #scale[1.2]{#in S}";
   m_Strings["3jS"] = VS().a("3jS").a("3j0bS").a("3j1bS").a("3jge2bS");
   
   m_Title["ge1j0bISR"] = "#splitline{#geq 1 jet}{0 b-tags} #scale[1.2]{#in ISR}";

@@ -108,7 +108,7 @@ public:
   void WriteHistogram(const string& name,
 		      const string& fold,
 		      TFile& file) const;
-  
+   vector<RBin*> RBins();
 private:
   int m_N;
   int m_NR;

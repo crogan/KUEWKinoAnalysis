@@ -29,7 +29,7 @@ public:
   const string& Name() const;
   ProcessType Type() const;
 
-  void AddEvent(double weight, double Mperp, double RISR,
+  double AddEvent(double weight, double Mperp, double RISR,
 		const Category& cat,
 		const Systematic& sys = Systematic::Default(),
 		bool extrahist = false);
@@ -42,6 +42,7 @@ public:
 
   SM GetSM() const;
 
+  double GetRlow(const Category& cat, const Systematic& sys);
 private:
   string m_Title;
   ProcessType m_Type;
