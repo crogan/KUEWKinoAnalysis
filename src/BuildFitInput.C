@@ -191,6 +191,8 @@ int main(int argc, char* argv[]) {
 
   FitInputBuilder FITBuilder(extrahist);
 
+  int underflow = 0.;
+
   //set systematic event weight parameters
   // varWeights vw("varWeights");
   // double maxWeight = 2.;
@@ -491,34 +493,35 @@ int main(int argc, char* argv[]) {
 	  
 	
 	  double RISR  = base->RISR;
-
+	double rlow;
 //cout << "event #: " << e << " passed RISR+Mperp assignment" << endl;	
 	  if(Fakes.GetN() > 0 && is_bkg){
 	    vector<string> flabels = Fakes.GetFakeLabels();
 	    int Nf = flabels.size();
 	    for(int fl = 0; fl < Nf; fl++){
 	      if(title.find("QCD") == string::npos)
-		FITBuilder.AddEvent(weight/double(Nf), Mperp, RISR,
+		rlow = FITBuilder.AddEvent(weight/double(Nf), Mperp, RISR,
 				    Categories[eindex], FITBuilder.FakeProcess(flabels[fl]), sys);
 	      
-	      FITBuilder.AddEvent(weight/double(Nf), Mperp, RISR,
+	      rlow = FITBuilder.AddEvent(weight/double(Nf), Mperp, RISR,
 				  Categories[eindex], proc.FakeProcess(flabels[fl]), sys);
 	    }
 	  } else {
-	    FITBuilder.AddEvent(weight, Mperp, RISR,
+	    rlow = FITBuilder.AddEvent(weight, Mperp, RISR,
 				Categories[eindex], proc, sys);
 	  }
 	  // dummy data
 	  if(!addData && is_bkg && (title.find("QCD") == string::npos))
-	    FITBuilder.AddEvent(weight, Mperp, RISR,
+	   double rlowData = FITBuilder.AddEvent(weight, Mperp, RISR,
 				Categories[eindex], data_obs, sys);
+if(RISR < rlow){ underflow += 1.;}
 	}
       }
       delete base;
       delete chain;
     }
   }
-
+cout << "# underflow events: " << underflow << endl;
   FITBuilder.WriteFit(OutFile);
 VS fakeProcs;
 for(int i = 0; i < int(proc_to_add.size()); i++){
