@@ -109,13 +109,15 @@ public:
   const ProcessList&  GetProcesses() const;
   const CategoryList& GetCategories(const string& channel = "") const;         
   const Systematics&  GetSystematics() const;
-  void SmoothHistograms(const VS& proc, const CategoryTree& CT,  const string& name = "name"); 
+  // void SmoothHistograms(const VS& proc, const CategoryTree& CT,  const string& name = "name"); 
 TCanvas* Plot1DratioProc(const VS& proc,
            const string& lep_cat,
            const string& hadS_cat,
            const string& hadI_cat,
            const string& name,
            const string& extra);
+map<string,VS> m_Strings;
+
 private:
   mutable TFile  m_File;
   string	 m_inputfile; 
@@ -146,7 +148,7 @@ private:
   map<string,int>             m_Color;
   vector<int>                 m_ColorDefault;
   vector<int>                 m_SignalColor;
-  map<string,VS> m_Strings;
+  
   void InitializeRecipes();
   string GetSignalTitle(const string& label);
 
