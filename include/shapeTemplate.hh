@@ -36,8 +36,8 @@ class shapeTemplate{
 		double m_minVal = 10.;
 		vector<pair<int,double>> m_binsSorted;
 		vector<pair<int,double>> m_binsSorted_cons;
-		string m_fileName;
-		string m_dirName;
+		// string m_fileName;
+		// string m_dirName;
 		//Category m_cat;
 		
 		double m_unwtNorm;

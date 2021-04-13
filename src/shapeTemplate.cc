@@ -15,7 +15,7 @@
 ////////////////////////////////////////////////
 
 
-shapeTemplate::shapeTemplate(TH1D* hist, TH1D* hist_cons, Category cat, string ofile){
+shapeTemplate::shapeTemplate(TH1D* hist, TH1D* hist_cons){
 	//should take CategoryTree as input
 	if(hist == NULL){ std::cout << "Histogram not found." << std::endl; return;}
 
@@ -25,10 +25,7 @@ shapeTemplate::shapeTemplate(TH1D* hist, TH1D* hist_cons, Category cat, string o
 	int m_nBins = hist->GetNbinsX();
 	m_norm = hist->Integral(1,m_nBins);
 	m_hist_cons = hist_cons;
-	m_cat = cat;
-
-	m_fileName = ofile;
-	m_dirName = cat.Label()+"_"+m_cat.GetLabel();
+	
 	
 
 	//unweight histogram 
@@ -126,7 +123,7 @@ void shapeTemplate::setErrors(){
 
 }
 
-void shapeTemplate::replaceHistogram(){
+void shapeTemplate::replaceHistogram(string file, Category cat){
 	replaceBins();
 
 	if(m_hist_rec->Integral() == 0.){ cout << "Error: recreated histogram empty." << endl; return;}
@@ -137,9 +134,10 @@ void shapeTemplate::replaceHistogram(){
 	setErrors();
 
 	//write recreated histogram to file
+	dirName = cat.Label()+"_"+m_cat.GetLabel();
 
-	TFile* f = TFile::Open(m_fileName.c_str());
-	f->cd(m_dirName.c_str());
+	TFile* f = TFile::Open(file.c_str());
+	f->cd(dirName.c_str());
 	m_hist_rec->Write();
 	f->Close();
 
@@ -304,11 +302,11 @@ void shapeTemplateTool::getHistograms(){
 					slabel = cats[c].GetLabel()+"_"+pp.Name();
 		//			cout << "slabel: " << slabel << endl;
 			//		m_histsAndLabels.push_back(std::make_pair((TH1D*)fitReader.GetHistogram(cats[c],pp),slabel));
-					shapeTemplate st((TH1D*)fitReader.GetHistogram(cats[c],pp),m_nameToHist[slabel],cats[c], m_file);
+					shapeTemplate st((TH1D*)fitReader.GetHistogram(cats[c],pp),m_nameToHist[slabel]);
 			//		cout << "compareShapes" << endl;
 			//		pvals.push_back(st.compareShapes());
 			//		cout << "replaceHistogram" << endl;
-//		st.replaceHistogram();
+			//		st.replaceHistogram(cats[c], m_file);
 				}
 			}
 		}
