@@ -22,34 +22,41 @@ void TestReader(const string& inputfile = "test/FitInput_test.root", const strin
   signals.a("T2tt_5000450").a("T2bW_5000420").a("T2tt_5000375").a("T2bW_5000325");
   //signals.a("T2bb_5000475").a("T2bb_5000450").a("T2bb_5000400").a("T2bb_5000350");
   VS all = signals;
-  all.a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD").a("Wjets").a("Fakes");
+  //all.a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD").a("Wjets").a("Fakes");
+  all.a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("Wjets").a("Fakes");
 
-  FITReader->PlotYields("0Lyields",
-  			all,
-  			CT_0L);
+  // FITReader->PlotYields("0Lyields",
+  // 			all,
+  // 			CT_0L);
   FITReader->PlotYields("1Lyields",
   			all,
   			CT_1L);
-  FITReader->PlotYields("2Lyields",
-  			all,
-  			CT_2L);
-  FITReader->PlotYields("3Lyields",
-  			all,
-  			CT_3L);
+  // FITReader->PlotYields("2Lyields",
+  // 			all,
+  // 			CT_2L);
+  // FITReader->PlotYields("3Lyields",
+  // 			all,
+  // 			CT_3L);
   
-  int depth0 = CT_0L.GetDepth();
+  int depth0 = CT_1L.GetDepth();
   vector<const CategoryTree*> CTs;
-  CT_0L.GetListDepth(CTs, depth0-2);
+  CT_1L.GetListDepth(CTs, depth0-2);
 
   vector<const CategoryTree*> CTs_deep;
-  CT_0L.GetListDepth(CTs_deep, depth0-1);
+  CT_1L.GetListDepth(CTs_deep, depth0-2);
 
-  int iCT = 0;
-  int iCTd = 0;
+  int iCT = 4;
+  int iCTd = 4;
   
   FITReader->Plot1Dstack("0Lstack2",
 			 all,
-			 *CTs[iCT]);
+			 *CTs[2]);
+  FITReader->Plot1Dstack("0Lstack3",
+			 all,
+			 *CTs[3]);
+   FITReader->Plot1Dstack("0Lstack4",
+			 all,
+			 *CTs[4]);
   FITReader->Plot2D("2D0",
 		    VS().a("data_obs"),
 		    *CTs_deep[iCTd]);
