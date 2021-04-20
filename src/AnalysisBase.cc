@@ -204,6 +204,14 @@ bool AnalysisBase<Base>::PassEventFilter(){
 }
 
 template <class Base>
+bool AnalysisBase<Base>::IsHEM(Particle part){
+  if(part.Eta() > -3.2 && part.Eta() < -1.2 && part.Phi() > -1.77 && part.Phi() < -0.67)
+    return true;
+
+  return false;
+}
+
+template <class Base>
 double AnalysisBase<Base>::GetEventWeight(){
   return 0;
 }
@@ -239,6 +247,11 @@ TVector3 AnalysisBase<Base>::GetMET(){
 }
 
 template <class Base>
+TVector3 AnalysisBase<Base>::GetAltMET(){
+  return TVector3(0.,0.,0.);
+}
+
+template <class Base>
 TVector3 AnalysisBase<Base>::GetPV(bool& good){
   good = false;
   return TVector3();
@@ -260,17 +273,42 @@ bool AnalysisBase<Base>::GetMETORtrigger(){
 }
 
 template <class Base>
+bool AnalysisBase<Base>::GetSingleElectrontrigger(){
+  return false;
+}
+
+template <class Base>
+bool AnalysisBase<Base>::GetSingleMuontrigger(){
+  return false;
+}
+
+template <class Base>
+bool AnalysisBase<Base>::GetDoubleElectrontrigger(){
+  return false;
+}
+
+template <class Base>
+bool AnalysisBase<Base>::GetDoubleMuontrigger(){
+  return false;
+}
+
+template <class Base>
+bool AnalysisBase<Base>::GetEMutrigger(){
+  return false;
+}
+
+template <class Base>
 ParticleList AnalysisBase<Base>::GetSVs(const TVector3& PV){
   return ParticleList();
 }
 
 template <class Base>
-ParticleList AnalysisBase<Base>::GetJetsMET(TVector3& MET){
+ParticleList AnalysisBase<Base>::GetJetsMET(TVector3& MET, int id){
   return ParticleList();
 }
 
 template <class Base>
-ParticleList AnalysisBase<Base>::GetJets(){
+ParticleList AnalysisBase<Base>::GetJets(int id){
   return ParticleList();
 }
 
@@ -482,7 +520,7 @@ TVector3 AnalysisBase<StopNtupleTree>::GetGenMET(){
 }
 
 template <>
-ParticleList AnalysisBase<StopNtupleTree>::GetJets(){
+ParticleList AnalysisBase<StopNtupleTree>::GetJets(int id){
   ParticleList list;
 
   int Njet = jetsLVec->size();
@@ -838,6 +876,93 @@ bool AnalysisBase<SUSYNANOBase>::GetMETORtrigger(){
 }
 
 template <>
+bool AnalysisBase<SUSYNANOBase>::GetSingleElectrontrigger(){
+  int year = 2016;
+  if(m_FileTag.find("17") != std::string::npos)
+    year = 2017;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+
+  if(year == 2016)
+    return (HLT_Ele27_WPTight_Gsf);
+  if(year == 2017 ||
+     year == 2018)
+    return (HLT_Ele32_WPTight_Gsf);
+
+  return 0;
+}
+
+template <>
+bool AnalysisBase<SUSYNANOBase>::GetSingleMuontrigger(){
+  int year = 2016;
+  if(m_FileTag.find("17") != std::string::npos)
+    year = 2017;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+
+  if(year == 2016)
+    return (HLT_IsoMu24 ||
+            HLT_IsoTkMu24);
+  if(year == 2017 ||
+     year == 2018)
+    return (HLT_IsoMu24 ||
+            HLT_IsoTkMu24);
+
+  return 0;
+}
+
+template <>
+bool AnalysisBase<SUSYNANOBase>::GetDoubleElectrontrigger(){
+  int year = 2016;
+  if(m_FileTag.find("17") != std::string::npos)
+    year = 2017;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+
+  if(year == 2016)
+    return (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL);
+  if(year == 2017 ||
+     year == 2018)
+    return (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL);
+
+  return 0;
+}
+
+template <>
+bool AnalysisBase<SUSYNANOBase>::GetDoubleMuontrigger(){
+  int year = 2016;
+  if(m_FileTag.find("17") != std::string::npos)
+    year = 2017;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+
+  if(year == 2016)
+    return (HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL);
+  if(year == 2017 ||
+     year == 2018)
+    return (HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL);
+
+  return 0;
+}
+
+template <>
+bool AnalysisBase<SUSYNANOBase>::GetEMutrigger(){
+  int year = 2016;
+  if(m_FileTag.find("17") != std::string::npos)
+    year = 2017;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+
+  if(year == 2016)
+    return (HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ);
+  if(year == 2017 ||
+     year == 2018)
+    return (HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ);
+
+  return 0;
+}
+
+template <>
 std::pair<int,int> AnalysisBase<SUSYNANOBase>::GetSUSYMasses(){
   if(!IsData()){
     int MP = 0;
@@ -1103,7 +1228,7 @@ void AnalysisBase<SUSYNANOBase>::BookHistograms(vector<TH1D*>& histos){
 }
 
 template <>
-ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET){
+ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET, int id){
   int year = 2017;
   if(m_FileTag.find("16") != std::string::npos)
     year = 2016;
@@ -1124,7 +1249,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET){
     bool failID = false;
     if(Jet_pt[i] < 15. || fabs(Jet_eta[i]) > 5.)
       continue;
-    if(Jet_jetId[i] < 3)
+    if(Jet_jetId[i] < id)
       continue;
     
     Particle jet;
@@ -1268,9 +1393,17 @@ TVector3 AnalysisBase<SUSYNANOBase>::GetMET(){
 }
 
 template <>
-ParticleList AnalysisBase<SUSYNANOBase>::GetJets(){
+TVector3 AnalysisBase<SUSYNANOBase>::GetAltMET(){
+  TVector3 MET;
+  MET.SetPtEtaPhi(MET_pt,0.0,MET_phi);
+
+  return MET;
+}
+
+template <>
+ParticleList AnalysisBase<SUSYNANOBase>::GetJets(int id){
   TVector3 dum;
-  return GetJetsMET(dum);
+  return GetJetsMET(dum, id);
 }
 
 template <>

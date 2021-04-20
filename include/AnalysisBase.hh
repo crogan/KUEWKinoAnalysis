@@ -67,14 +67,24 @@ public:
   virtual bool GetMETtrigger();
   virtual bool GetMETHTtrigger();
   virtual bool GetMETORtrigger();
+
+  virtual bool GetSingleElectrontrigger();
+  virtual bool GetSingleMuontrigger();
+  virtual bool GetDoubleElectrontrigger();
+  virtual bool GetDoubleMuontrigger();
+  virtual bool GetEMutrigger(); 
   
   virtual TVector3 GetPV(bool& good);
   virtual TVector3 GetMET();
-  virtual ParticleList GetJets();
-  virtual ParticleList GetJetsMET(TVector3& MET);
+  virtual ParticleList GetJets(int id = -1);
+  virtual ParticleList GetJetsMET(TVector3& MET, int id = -1);
   virtual ParticleList GetElectrons();
   virtual ParticleList GetMuons();
   virtual ParticleList GetSVs(const TVector3& PV);
+
+  virtual TVector3 GetAltMET();
+  
+  virtual bool IsHEM(Particle part);
 
   virtual TVector3 GetGenMET();
   virtual ParticleList GetGenElectrons();

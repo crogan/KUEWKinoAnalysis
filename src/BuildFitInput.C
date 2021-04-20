@@ -264,6 +264,9 @@ int main(int argc, char* argv[]) {
 	if((e/SKIP)%(std::max(1, int(Nentry/SKIP/10))) == 0)
 	  cout << "      event " << e << " | " << Nentry << endl;
 
+	if(!base->EventFilter)
+	  continue;
+	
 	if(do_FilterDilepton)
 	  if(SF.DileptonEvent(base))
 	    continue;
