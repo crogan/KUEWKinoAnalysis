@@ -208,6 +208,10 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("BtagSFweight_up", &m_BtagSFweight_up);
   tree->Branch("BtagSFweight_down", &m_BtagSFweight_down);
 
+  tree->Branch("MetTrigSFweight", &m_MetTrigSFweight);
+  tree->Branch("MetTrigSFweight_up", &m_MetTrigSFweight_up);
+  tree->Branch("MetTrigSFweight_down", &m_MetTrigSFweight_down);
+
   tree->Branch("runnum", &m_runnum);
   tree->Branch("luminum", &m_runnum);
   tree->Branch("eventnum", &m_eventnum);
@@ -612,6 +616,7 @@ void ReducedNtuple<Base>::ClearVariables(){
 
 template <class Base>
 void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
+  
   AnalysisBase<Base>::SetSystematic(sys);
 
   m_EventFilter = AnalysisBase<Base>::PassEventFilter();
@@ -1068,6 +1073,10 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
     m_BtagSFweight_up = AnalysisBase<Base>::GetBtagSFWeight(Jets, 1, kMedium);
     m_BtagSFweight_down = AnalysisBase<Base>::GetBtagSFWeight(Jets, -1, kMedium);
 
+    m_MetTrigSFweight = AnalysisBase<Base>::GetMETTriggerSFWeight(m_MET, m_HT_eta5, m_Nele, m_Nmu, 0);
+    m_MetTrigSFweight_up = AnalysisBase<Base>::GetMETTriggerSFWeight(m_MET, m_HT_eta5, m_Nele, m_Nmu, 1);
+    m_MetTrigSFweight_down = AnalysisBase<Base>::GetMETTriggerSFWeight(m_MET, m_HT_eta5, m_Nele, m_Nmu, -1);
+   
     m_NPU = AnalysisBase<Base>::GetNPUtrue();
 
     TVector3 genETMiss = AnalysisBase<Base>::GetGenMET();

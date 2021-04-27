@@ -69,6 +69,7 @@ def write_sh(srcfile,ifile,ofile,lfile,dataset,filetag,i,n):
     fsrc.write('-btag='+BTAGFOLD+" ")
     fsrc.write('-jme='+JMEFOLD+" ")
     fsrc.write('-svfile='+SVFILE+" ")
+    fsrc.write('-metfile='+METFILE+" ")
     splitstring = '-split=%d,%d \n' % (i+1,n)
     fsrc.write(splitstring)
     fsrc.write('output = '+lfile+"_out.log \n")
@@ -184,6 +185,10 @@ if __name__ == "__main__":
     # copy JME files
     os.system("cp -r data/JME "+config+".")
     JMEFOLD = config+"JME/"
+
+    # copy MET trigger files
+    os.system("cp -r csv/METTrigger "+config+".")
+    METFILE = config+"METTrigger/Parameters.csv"
 
     # copy SV NN model
     os.system("cat json/lwtnn/nano_train_model.json > "+config+"NNmodel.json")

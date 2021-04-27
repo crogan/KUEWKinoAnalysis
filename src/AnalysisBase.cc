@@ -89,7 +89,7 @@ string AnalysisBase<Base>::GetEntry(int entry){
   Base::ClearEvent();
   Base::fChain->GetEntry(entry);
   m_SampleIndex = GetSampleIndex();
-
+  
   return m_IndexToSample[m_SampleIndex];
 }
 
@@ -153,6 +153,11 @@ void AnalysisBase<Base>::AddJMEFolder(const string& jmefold){
 template <class Base>
 void AnalysisBase<Base>::AddSVDiscrFile(const string& svfile){
   m_SVDiscrTool.CreateNN(svfile);
+}
+
+template <class Base>
+void AnalysisBase<Base>::AddMETTriggerFile(const string& csvfile){
+  m_METTriggerTool.BuildMap(csvfile);
 }
 
 template <class Base>
@@ -223,6 +228,11 @@ double AnalysisBase<Base>::GetPUWeight(int updown){
 
 template <class Base>
 double AnalysisBase<Base>::GetBtagSFWeight(const ParticleList& jets, int updown, ParticleIDType tag){
+  return 0;
+}
+
+template <class Base>
+double AnalysisBase<Base>::GetMETTriggerSFWeight(double MET, double HT, int Nele, int Nmu, int updown){
   return 0;
 }
 
@@ -1104,6 +1114,28 @@ double AnalysisBase<SUSYNANOBase>::GetBtagSFWeight(const ParticleList& jets, int
     return 1.;
 
   return probDATA/probMC;
+}
+
+template <>
+double AnalysisBase<SUSYNANOBase>::GetMETTriggerSFWeight(double MET, double HT, int Nele, int Nmu, int updown){
+  if(IsData())
+    return 1.;
+
+  int year = 2016;
+  if(m_FileTag.find("17") != std::string::npos)
+    year = 2017;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+
+  if(IsFastSim()){
+    return m_METTriggerTool.Get_EFF(MET, HT, year = 2017,
+				    (Nele > 0), (Nmu > 0),
+				    false, updown);
+  } else {
+    return m_METTriggerTool.Get_SF(MET, HT, year = 2017,
+				   (Nele > 0), (Nmu > 0),
+				   false, updown);
+  }
 }
 
 template <>

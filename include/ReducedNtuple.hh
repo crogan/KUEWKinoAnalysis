@@ -32,6 +32,9 @@ private:
   double m_BtagSFweight;
   double m_BtagSFweight_up;
   double m_BtagSFweight_down;
+  double m_MetTrigSFweight;
+  double m_MetTrigSFweight_up;
+  double m_MetTrigSFweight_down;
 
   int m_runnum;
   int m_luminum;

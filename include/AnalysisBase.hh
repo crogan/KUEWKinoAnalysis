@@ -16,6 +16,7 @@
 #include "BtagSFTool.hh"
 #include "JMETool.hh"
 #include "SVDiscrTool.hh"
+#include "METTriggerTool.hh"
 
 #include "Particle.hh"
 #include "Systematics.hh"
@@ -39,6 +40,7 @@ public:
   void AddBtagFolder(const string& btagfold);
   void AddJMEFolder(const string& jmefold);
   void AddSVDiscrFile(const string& svfile);
+  void AddMETTriggerFile(const string& csvfile);
   void DoSMS();
   void DoData();
   void DoFastSim();
@@ -115,6 +117,7 @@ protected:
   virtual double GetEventWeight();
   virtual double GetPUWeight(int updown = 0);
   virtual double GetBtagSFWeight(const ParticleList& jets, int updown = 0, ParticleIDType tag = kMedium);
+  virtual double GetMETTriggerSFWeight(double MET, double HT, int Nele, int Nmu, int updown = 0);
   virtual double GetXsec();
   virtual bool   IsGoodEvent();
 
@@ -135,6 +138,7 @@ private:
   JMETool         m_JMETool;
   SVDiscrTool     m_SVDiscrTool;
   SystematicsTool m_SysTool;
+  METTriggerTool  m_METTriggerTool;
 
   int m_SampleIndex;
   virtual int GetSampleIndex();
