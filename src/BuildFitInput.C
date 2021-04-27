@@ -535,7 +535,10 @@ CategoryTree CT_Fakes1L = CTTool.GetCategories_Fakes1L();
 CategoryTree CT_Fakes2L = CTTool.GetCategories_Fakes2L();
 CategoryTree CT_Fakes3L = CTTool.GetCategories_Fakes3L();
 // FITReader.SmoothHistograms(fakeProcs,CT_Fakes1L,OutFile);
+cout << "shapeTemplateTool" << endl;
+
 shapeTemplateTool STT(OutFile,CT_Fakes1L,fakeProcs);
+cout << "createTemplates" << endl;
 STT.createTemplates();
 //FITReader.SmoothHistograms(fakeProcs,CT_Fakes2L,OutFile);
 //FITReader.SmoothHistograms(fakeProcs,CT_Fakes3L,OutFile);
