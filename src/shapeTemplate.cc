@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <iostream>
+#include <random>
 
 #include <TSystem.h>
 
@@ -16,44 +17,39 @@
 
 
 shapeTemplate::shapeTemplate(TH1D* hist, TH1D* hist_cons){
-	//should take CategoryTree as input
+//	cout << "create shapeTemplate" << endl;
 	if(hist == NULL){ std::cout << "Histogram not found." << std::endl; return;}
 
 	m_hist_OG = (TH1D*)hist->Clone();
 	m_hist_scaled = (TH1D*)hist->Clone();
 	m_hist_rec = (TH1D*)hist->Clone();
-	int m_nBins = hist->GetNbinsX();
+	m_nBins = hist->GetNbinsX();
 	m_norm = hist->Integral(1,m_nBins);
-	m_hist_cons = hist_cons;
-	
-	
+	m_hist_cons = (TH1D*)hist_cons->Clone();
+//	cout << "name: " << m_hist_OG->GetName() << " title: " << m_hist_OG->GetTitle() << endl;
+//	string recName = std::string(m_hist_OG->GetName())+"_recreated"; 
+//	m_hist_rec->SetName(recName.c_str());//set m_hist_rec's Name to name of OG+"_recreated"	
+//	cout << "set member histograms" << endl;
+	//cout << "raw integral: " << m_norm << endl;
+	//cout << "raw histogram: " << m_hist_scaled->GetBinContent(m_idx) << endl;
+	//cout << "raw cons histogram: " << m_hist_cons->GetBinContent(m_idx) << endl;
 
-	//unweight histogram 
-	double m_weight = 0;
-	for(int i = 0; i < m_hist_scaled->GetNbinsX(); i++){
-		double tmp_w = pow(m_hist_scaled->GetBinError(i+1),2)/m_hist_scaled->GetBinContent(i+1);
-		if(tmp_w > m_weight) m_weight = tmp_w;
-	}
-	m_hist_scaled->Scale(1/m_weight);
-
-	m_unwtNorm = m_hist_scaled->Integral(1,m_hist_scaled->GetNbinsX());
-
-	//normalize histogram
-	m_hist_scaled->Scale(1/m_unwtNorm);
-
-	vector<pair<int,double>> array;
-	for(int i = 0; i < m_nBins; i++){
-		array.push_back(std::make_pair(i+1,m_hist_scaled->GetBinContent(i+1)));
-	}
-	vector<pair<int,double>> array_cons;
-	for(int i = 0; i < m_nBins; i++){
-		array_cons.push_back(std::make_pair(i+1,m_hist_cons->GetBinContent(i+1)));
-	}
-	vector<pair<int,double>> m_binsSorted = sortBins(array);
-	vector<pair<int,double>> m_binsSorted_cons = sortBins(array_cons);
-	//first in the pair is the true bin index, second is the unweighted, normalized bin content
-
+	unweightHistogram(m_hist_scaled);
+	unweightHistogram(m_hist_cons);
+	//cout << "unweighted histogram: " << m_hist_scaled->GetBinContent(m_idx) << endl;
+	//cout << "unweighted cons histogram: " << m_hist_cons->GetBinContent(m_idx) << endl;
+	//cout << "unweighted integral: " << m_hist_scaled->Integral() << endl;
+	//cout << "unweighted cons integral: " << m_hist_cons->Integral() << endl;
+//cout << "unweighted histograms" << endl;
+//	//normalize histogram
+	normalizeHistogram(m_hist_scaled);
+	normalizeHistogram(m_hist_cons);
+//	cout << "normalized histogram: " << m_hist_scaled->GetBinContent(m_idx) << endl;
+//	cout << "normalized cons histogram: " << m_hist_cons->GetBinContent(m_idx) << endl;
+//cout << "normalized histogram" << endl;
+//	cout << m_hist_scaled->GetBinContent(1) << endl;
 }
+
 
 shapeTemplate::~shapeTemplate(){
 	delete m_hist_OG;
@@ -62,136 +58,181 @@ shapeTemplate::~shapeTemplate(){
 	m_binsSorted.clear();	
 }
 
+void shapeTemplate::sortHistograms(){
+//cout << "sortHistograms" << endl;
+	vector<pair<int,double>> array;
+	for(int i = 0; i < m_nBins; i++){
+		//cout << "array entry #" << i << endl;
+		array.push_back(std::make_pair(i+1,m_hist_scaled->GetBinContent(i+1)));
+	}
+	vector<pair<int,double>> array_cons;
+	for(int i = 0; i < m_nBins; i++){
+		array_cons.push_back(std::make_pair(i+1,m_hist_cons->GetBinContent(i+1)));
+	}
+	sortBins(array);
+	sortBins(array_cons);
+	m_binsSorted = array;//sortBins(array);
+	m_binsSorted_cons = array_cons;//sortBins(array_cons);
+	//first in the pair is the true bin index, second is the unweighted, normalized bin content
+//cout << "created index/bin content pairs" << endl;
+
+
+
+}
+
+void shapeTemplate::normalizeHistogram(TH1D* hist){
+	double norm = hist->Integral(1,hist->GetNbinsX());
+	hist->Scale(1/norm);
+}
+
+void shapeTemplate::unweightHistogram(TH1D* hist){
+//cout << "unweightHistogram " << hist->GetName() << endl;
+	double weight = 0;
+	for(int i = 0; i < m_hist_scaled->GetNbinsX(); i++){
+		double tmp_w = sqrt(pow(hist->GetBinError(i+1),2)/hist->GetBinContent(i+1));
+		if(tmp_w > weight) weight = tmp_w;
+	}
+if(weight == 0) return;
+//for(int i = 0; i < m_hist_scaled->GetNbinsX(); i++)
+//cout << "bin #" << i << " error: " << hist->GetBinError(i+1) << " bin content: " << hist->GetBinContent(i+1) << endl;
+//	cout << "max weight: " << weight << endl;
+//	cout << "scale histogram by " << 1/weight << endl;
+//}
+else	hist->Scale(1/weight);
+}
+
+
 void shapeTemplate::replaceBins(int idx, double Prem, double Prem_cons){
 	//idx is index of SORTED histogram; m_binsSorted[idx].first is index of true histogram
-		if(idx > m_nBins) return;
-		else{
-			
-		
+		if(idx >= m_nBins) return;
 			double bin = m_hist_OG->GetBinContent(m_binsSorted[idx].first);
-			double bin_cons = m_binsSorted_cons[idx].second/Prem_cons;
-			double bin_repl = bin_cons*Prem;
+			double err = m_hist_OG->GetBinError(m_binsSorted[idx].first);
+			double effBin = (bin/err)*(bin/err);
+			double bin_cons = m_binsSorted_cons[idx].second;
+			double bin_repl = bin_cons*(Prem/Prem_cons);
+	if(m_binsSorted[idx].first == m_idx){
+	//	cout << "sorted histogram: " << m_binsSorted[idx].second << endl;
+	//	cout << "bin to compare to minVal: " << bin << endl;
+	//	cout << "sorted cons histogram: " << m_binsSorted_cons[idx].second << endl;
+	//	cout << "Prem: " << Prem << " Prem_cons: " << Prem_cons << endl;
+	}
+			//cout <<  "idx: " << idx << " bin #: " << m_binsSorted[idx].first <<  " OG bin value: " << bin << " bin_repl: " << bin_repl  << " bin_cons normalized: " << bin_cons << " Prem: " << Prem << " m_binSorted_cons: " << m_binsSorted_cons[idx].second << endl; 	
+
 			//replace bin and error from consolidated if the normalized, unweighted bin content is less than a certain value
 			if(bin < m_minVal){
+//				cout << "replaced bin #" << m_binsSorted[idx].first << endl;
 				//replace bin
-				m_hist_rec->SetBinContent(m_binsSorted[idx].first,bin_repl); 
+				if(bin == 1e-8){
+					m_hist_rec->SetBinContent(m_binsSorted[idx].first,bin_cons);
+				}
+				else{
+					m_hist_rec->SetBinContent(m_binsSorted[idx].first,bin_repl); 
+				}
 				m_hist_rec->SetBinError(m_binsSorted[idx].first,m_hist_cons->GetBinError(m_binsSorted[idx].first));
 			}
-
 			//else take bin value and error from original histogram
 			else{
 				m_hist_rec->SetBinContent(m_binsSorted[idx].first,m_binsSorted[idx].second);
-				m_hist_rec->SetBinError(m_binsSorted[idx].first,m_unwtNorm*m_hist_scaled->GetBinError(m_binsSorted[idx].first));
+				m_hist_rec->SetBinError(m_binsSorted[idx].first,m_hist_scaled->GetBinError(m_binsSorted[idx].first));
 			}
-
-			// double Prem = 0.; //m_hist_OG->Integral(idx+1,m_nBins); //this should be integral of sorted histogram
-			// for(int i = idx; i < m_nBins; i++){
-			// 	Prem += m_binsSorted[i].second;
-			// }
 
 			Prem -= m_binsSorted[idx].second;
 			Prem_cons -= m_binsSorted_cons[idx].second;
-
 			replaceBins(idx+1,Prem,Prem_cons);
-		}
+		
 }
 
 
 double shapeTemplate::compareShapes(){
 	//check m_hist_rec is all filled
-
+//cout << "compareShapes" << endl;
+	if(m_hist_rec->Integral() < 1e-7){ cout << "Error: recreated histogram empty." << endl; return -999.;}
+	for(int i = 1; i < m_hist_rec->GetNbinsX()+1; i++){
+		double bin_rec = m_hist_rec->GetBinContent(i);
+		double err_rec = m_hist_rec->GetBinError(i);
+		double fracErr_rec = err_rec/bin_rec;
+		double effBin_rec = fracErr_rec*fracErr_rec;
+		double bin_OG = m_hist_OG->GetBinContent(i);
+		double err_OG = m_hist_OG->GetBinError(i);
+		double fracErr_OG = err_OG/bin_OG;
+		double effBin_OG = fracErr_OG*fracErr_OG;
+	//cout << "bin #" << i << endl;
+	//cout << "rec bin - " << bin_rec << " rec err - " << err_rec << " | og bin - " << bin_OG << " OG err - " << err_OG << endl;
+	//cout <<  "rec effective bin count - " << effBin_rec << " rec frational error - " << fracErr_rec << " | og effective bin count - " << effBin_OG << " og fractional error - " << fracErr_OG << endl;
+	}
 	shapeComparison* sc = new shapeComparison(m_hist_OG,m_hist_rec);
 	double pval = sc->getPvalue();
+cout << m_hist_rec->GetTitle() << " pval: " << pval << endl;
 	return pval;
 }
 
 void shapeTemplate::setErrors(){
+//cout << "setErrors" << endl;
 	for(int b = 0; b < m_nBins; b++){
 		double oldBin = m_hist_OG->GetBinContent(b+1);
 		double newBin = m_hist_rec->GetBinContent(b+1);
-		double oldErr = m_hist_rec->GetBinError(b+1);
+		double oldErr = m_hist_OG->GetBinError(b+1);
 		double newErr = m_hist_rec->GetBinError(b+1);
-
-		double pull = (oldBin - newBin)/sqrt(oldErr*oldErr - newErr*newErr);
-
-		if(pull > 1){
-			newErr = sqrt(pow((oldBin - newBin),2) - oldErr*oldErr);
+		
+		double err = newErr;// = m_hist_OG->GetBinError(b+1);
+		double pull = (oldBin - newBin)/sqrt(oldErr*oldErr + newErr*newErr);
+			if(pull > 1){
+				err = sqrt(pow((oldBin - newBin),2) - oldErr*oldErr);
+		
+			}
+			if(isnan(err)) cout << "old bin: " << oldBin << " newBin: " << newBin << " oldErr: " << oldErr << " newErr: " << newErr << endl; 
+			if(oldBin == 1e-8) err = sqrt(newBin);
+//err = m_hist_cons->GetBinError(b+1); cout << "bin #" << b+1 << " error: " << err << endl;}
+		if(err == 0.) { 
+		cout << "old bin: " << oldBin << " newBin: " << newBin << " oldErr: " << oldErr << " newErr: " << newErr << " set error to: " << err << endl; 	
 		}
-
-		m_hist_rec->SetBinError(b+1,newErr);
+		if(newBin < 1e-6 && err == 0.) err = 0.;	
+		m_hist_rec->SetBinError(b+1,err);
+		
 	}
+
 
 }
 
-void shapeTemplate::replaceHistogram(string file, Category cat){
+TH1D* shapeTemplate::replaceHistogram(){
+	sortHistograms();
+	if(m_binsSorted.size() == 0) return NULL;
+	//if original histogram is empty, just take that histogram as the replacement
 	replaceBins();
 
-	if(m_hist_rec->Integral() == 0.){ cout << "Error: recreated histogram empty." << endl; return;}
-	
-	m_hist_rec->Scale(m_norm);
-	
-	// double pValue = compareShapes();
+	//cout << "recreated histogram: " << m_hist_rec->GetBinContent(m_idx) << endl;
+	//cout << "cons histogram: " << m_hist_cons->GetBinContent(m_idx) << endl;
 	setErrors();
-
-	//write recreated histogram to file
-	dirName = cat.Label()+"_"+m_cat.GetLabel();
-
-	TFile* f = TFile::Open(file.c_str());
-	f->cd(dirName.c_str());
-	m_hist_rec->Write();
-	f->Close();
-
+	if(m_hist_rec->Integral() == 0.){ cout << "Error: recreated histogram empty." << endl; return NULL;}
+	//scale to 1 once all bins have been replaced
+	m_hist_rec->Scale(1/m_hist_rec->Integral());
+	//cout << "normalized to 1 histogram: " << m_hist_rec->GetBinContent(m_idx) << endl;
+	//scale to original histogram	
+	m_hist_rec->Scale(m_norm);
+	//cout << "normalized to data histogram: " << m_hist_rec->GetBinContent(m_idx) << endl;
+	return m_hist_rec;
 }
 
 
 
 
-//vector<pair<int,double>> shapeTemplate::sortBins(TH1D* hist){
-vector<pair<int,double>> shapeTemplate::sortBins(vector<pair<int,double>>& array){
+void shapeTemplate::sortBins(vector<pair<int,double>>& array){
+	//cout << "sortBins" << endl;
 	int N = array.size();
+	//cout << "array size: " << N << endl;
+	for(int i = 1; i < N; i++){
+		pair<int,double> key_item = array[i];
 
-
-	// If the input array (histogram) contains fewer than two elements (bins),
-	// then return array with only two elements (bins)
-	if(N < 2)
-	return array;
-
-	vector<pair<int,double>> low;
-	vector<pair<int,double>> same;
-	vector<pair<int,double>> high;
-
-	// Select your `pivot` element randomly
-	double pivot = array[int(rand()*N)].second;
-
-	for(int i = 0; i < N; i++){
-		// Elements that are smaller than the `pivot` go to
-		// the `low` list. Elements that are larger than
-		// `pivot` go to the `high` list. Elements that are
-		// equal to `pivot` go to the `same` list.
-		if(array[i].second < pivot){
-			low.push_back(array[i]);
-		} else if(array[i].second == pivot){
-			same.push_back(array[i]);
-		} else {
-			high.push_back(array[i]);
+		int j = i - 1;
+		while(j >= 0 && array[j].second < key_item.second){
+			array[j+1] = array[j];
+			j -= 1;
 		}
+		array[j+1] = key_item;
 	}
 
-	// The final result combines the sorted `low` list
-	// with the `same` list and the sorted `high` list
-	sortBins(low);
-	sortBins(high);
-	// recreate sorted array from pieces
-	array.clear();
-	for(auto val : high)
-	array.push_back(val);
-	for(auto val : same)
-	array.push_back(val);
-	for(auto val : low)
-	array.push_back(val);
+
 }
-
-
 
 
 
@@ -210,6 +251,7 @@ shapeTemplateTool::shapeTemplateTool(const string& inputfile, const CategoryTree
 }
 
 shapeTemplateTool::~shapeTemplateTool(){
+
 }
 
 
@@ -224,102 +266,16 @@ CategoryTree shapeTemplateTool::getCategoryTree(){
 
 
 
+
+
+
+
+
 void shapeTemplateTool::createTemplates(){
-	cout << "smoothHistograms" << endl;
-	smoothHistograms();
-	cout << "getHistograms" << endl;
-	getHistograms();
-	vector<double> pvals;
-
-	std::map<string,TH1D*>::key_compare comp = m_nameToHist.key_comp();
-
-//	cout << "map contains:\n";
-//	string first = m_nameToHist.rbegin()->first;
-//
-//	std::map<string,TH1D*>::iterator it = m_nameToHist.begin();
-//	do{
-//		std::cout << it->first << " => " << it->second->GetName() << '\n';
-//		}while( comp((*it++).first,first));
-//	std::cout << '\n';
-
-//	cout << m_histsAndLabels[0].first << " " << m_histsAndLabels[0].second << " " << m_nameToHist[m_histsAndLabels[0].second] << endl;
-//	if(m_nameToHist[m_histsAndLabels[0].second] == NULL) cout << "null hist" << endl;
-//cout << m_histsAndLabels[0].first->GetTitle() << endl;
-//return;
-
-
-//cout << "shapeTemplate" << endl;
-//	for(int h = 0; h < m_histsAndLabels.size(); h++){
-//		cout << "hist # " << h << " cons hist name: " << m_histsAndLabels[h].second <<  " " << m_nameToHist[m_histsAndLabels[h].second]->GetName() << endl;
-//
-//	if(m_nameToHist[m_histsAndLabels[h].second] == NULL){ cout << m_histsAndLabels[h].second << " not consolidated hist" << endl; return;}
-//
-//	
-//				    	//individual hist, 			label -> to cons. hist
-//		shapeTemplate st(m_histsAndLabels[h].first,m_nameToHist[m_histsAndLabels[h].second], m_file);
-//		cout << "compareShapes" << endl;
-//		pvals.push_back(st.compareShapes());
-//		cout << "replaceHistogram" << endl;
-//		st.replaceHistogram();
-//	}
-}
-
-void shapeTemplateTool::getHistograms(){
-	FitReader fitReader(m_file);
-	vector<const CategoryTree*> catTrees;
-	vector<TH1D*> hists;
-	m_CT.GetListDepth(catTrees,1);
-	//PrintCategories();
-	TFile* f = nullptr;
-	CategoryList catList = fitReader.GetCategories();
-	if(!gSystem->AccessPathName(m_file.c_str()))
-	 f = TFile::Open(m_file.c_str(),"UPDATE");
-	else
-	 f = new TFile(m_file.c_str(),"RECREATE");
-
-	int depth = (int)catTrees.size();
-	int nCat;
-	int nProc = m_proc.size();
-
-	for(int i = 0; i < nProc; i++){
-		VS vproc;
-		if(fitReader.m_Strings.count(m_proc[i]) != 0)
-			vproc = fitReader.m_Strings[m_proc[i]];
-		else
-			vproc += m_proc[i];
-		for(int p = 0; p < int(vproc.size()); p++){
-			int index = fitReader.GetProcesses().Find(vproc[p]);
-			if(index < 0) continue;
-			Process pp = fitReader.GetProcesses()[index];
-			//cout << pp.Name() << endl;
-			for(int list = 0; list < depth; list++){
-				CategoryList cats = catList.Filter(*catTrees[list]);
-				nCat = cats.GetN();
-				string slabel;
-				//add hists
-				for(int c = 0; c < nCat; c++){
-					if(!fitReader.IsFilled(cats[c],pp)) continue;
-					slabel = cats[c].GetLabel()+"_"+pp.Name();
-		//			cout << "slabel: " << slabel << endl;
-			//		m_histsAndLabels.push_back(std::make_pair((TH1D*)fitReader.GetHistogram(cats[c],pp),slabel));
-					shapeTemplate st((TH1D*)fitReader.GetHistogram(cats[c],pp),m_nameToHist[slabel]);
-			//		cout << "compareShapes" << endl;
-			//		pvals.push_back(st.compareShapes());
-			//		cout << "replaceHistogram" << endl;
-			//		st.replaceHistogram(cats[c], m_file);
-				}
-			}
-		}
-	}
-}
-
-
-
-
-void shapeTemplateTool::smoothHistograms(){
+cout << "createTemplates" << endl;
 FitReader fitReader(m_file);
 vector<const CategoryTree*> catTrees;
-m_CT.GetListDepth(catTrees,1);
+m_CT.GetListDepth(catTrees,2);
 //PrintCategories();
 TFile* f = nullptr;
   CategoryList catList = fitReader.GetCategories();
@@ -327,11 +283,12 @@ TFile* f = nullptr;
      f = TFile::Open(m_file.c_str(),"UPDATE");
   else
      f = new TFile(m_file.c_str(),"RECREATE");
-
+//f->ls();
   int depth = (int)catTrees.size();
   int nCat;
   int nProc = m_proc.size();
-  
+  vector<TH1D*> totalHists; 
+
 for(int i = 0; i < nProc; i++){
     VS vproc;
     if(fitReader.m_Strings.count(m_proc[i]) != 0)
@@ -342,34 +299,49 @@ for(int i = 0; i < nProc; i++){
       int index = fitReader.GetProcesses().Find(vproc[p]);
       if(index < 0) continue;
       Process pp = fitReader.GetProcesses()[index];
-   //cout << pp.Name() << endl;
+   cout << pp.Name() << endl;
       for(int list = 0; list < depth; list++){
+	cout << "list #" << list << endl;
    CategoryList cats = catList.Filter(*catTrees[list]);
-        nCat = cats.GetN();
-        TH1D* totalHist = nullptr; //one total histogram per list per process
-string slabel;
-        //add hists
-        for(int c = 0; c < nCat; c++){
-			if(!fitReader.IsFilled(cats[c],pp)) continue;
-			if(!totalHist) totalHist = (TH1D*)fitReader.GetHistogram(cats[c],pp)->Clone(Form("plothist_%d_%s", i, m_file.c_str()));
-			else totalHist->Add(fitReader.GetHistogram(cats[c],pp));
-			slabel = cats[c].GetLabel()+"_"+pp.Name();
-			m_nameToNorm[slabel] = fitReader.GetHistogram(cats[c],pp)->Integral();
-			m_nameToTitle[slabel] = fitReader.GetHistogram(cats[c],pp)->GetTitle();
-			m_nameToHist[slabel] = totalHist;
-        }
-        //scale hists once all summed
-        for(int c = 0; c < nCat; c++){
-			if(!fitReader.IsFilled(cats[c],pp)) continue;
-			slabel = cats[c].GetLabel()+"_"+pp.Name();
-			m_nameToHist[slabel]->Scale(m_nameToNorm[slabel]/m_nameToHist[slabel]->Integral());
-			m_nameToHist[slabel]->SetTitle(m_nameToTitle[slabel]);
-			m_nameToHist[slabel]->SetName((pp.Name()+"_smoothed").c_str());
-			//f->cd((cats[c].Label()+"_"+cats[c].GetLabel()).c_str());
-			m_nameToHist[slabel]->Write();
-        }
+	//cats.Print();
+	//cout << "\n" << endl;
+	nCat = cats.GetN();
+       	ProcessList ppp;
+	ppp += pp; 
+	//one total hist per list per process
+	TH1D* totalHist = fitReader.GetAddedHist(pp.Name()+"_smoothed",cats,ppp);
+	if(totalHist == nullptr) continue;//cout << "null consolidated histogram" << endl; continue;}
+	
+	m_listToHist[list] = totalHist;
+	m_listToHist[list]->SetName((pp.Name()+"_smoothed").c_str());
+	//scale hists once all summed
+	for(int c = 0; c < nCat; c++){
+		if(!fitReader.IsFilled(cats[c],pp)) continue;
+		TH1D* oldHist = (TH1D*)fitReader.GetHistogram(cats[c],pp);
+		TH1D* newHist;
+		m_listToHist[list]->Scale(oldHist->Integral()/m_listToHist[list]->Integral());
+		if(oldHist->Integral() > 1e-6){ 
+			shapeTemplate st(oldHist,m_listToHist[list]); 
+			newHist = (TH1D*)st.replaceHistogram();
+			st.compareShapes();
+			newHist->SetName((pp.Name()+"_recreated").c_str());
+			f->cd((cats[c].Label()+"_"+cats[c].GetLabel()).c_str());
+			newHist->Write();
+		}	
+		else{
+			newHist = oldHist; 
+			if(newHist == NULL) { cout << "newHist null" << endl; return;}
+			newHist->SetName((pp.Name()+"_recreated").c_str());
+			f->cd((cats[c].Label()+"_"+cats[c].GetLabel()).c_str());
+			newHist->Write();
+        	}
+		
+	}
+    }
 
-      } 
+
+
+       
     }
   }
 

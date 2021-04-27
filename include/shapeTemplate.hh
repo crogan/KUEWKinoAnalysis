@@ -18,15 +18,16 @@ using std::vector;
 class shapeTemplate{
 
 	public:
-		shapeTemplate(TH1D* hist,TH1D* hist_cons, Category cat,string ofile);
+		shapeTemplate(TH1D* hist,TH1D* hist_cons);
 		virtual ~shapeTemplate();
-		vector<pair<int,double>> sortBins(vector<pair<int,double>>& array);
-		void replaceHistogram();
+		void sortBins(vector<pair<int,double>>& array);
+		TH1D* replaceHistogram();
 		double compareShapes();
-		
-		
+		void sortHistograms();
+			
 
 	private:
+		int m_idx = 4;
 		int m_nBins;
 		double m_norm;
 		TH1D* m_hist_OG;
@@ -40,8 +41,8 @@ class shapeTemplate{
 		// string m_dirName;
 		//Category m_cat;
 		
-		double m_unwtNorm;
-
+		void normalizeHistogram(TH1D* hist);
+		void unweightHistogram(TH1D* hist);
 		
 		void replaceBins(int idx=0, double Prem=1., double Prem_cons=1.);
 		void setErrors();
@@ -55,8 +56,6 @@ public:
 	shapeTemplateTool(const string &inputfile, const CategoryTree& CT, const VS& proc);
 	virtual ~shapeTemplateTool();
 
-	void smoothHistograms();
-	void getHistograms();
 	void createTemplates();
 	CategoryTree getCategoryTree();
 	VS getProcess();
@@ -70,7 +69,7 @@ private:
 	vector<std::pair<TH1D*,string>> m_histsAndLabels;
 
 	map<string,double> m_nameToNorm;
-	map<string,TH1D*> m_nameToHist;
+	map<int,TH1D*> m_listToHist;
 	map<string,const char*> m_nameToTitle;
 };
 
