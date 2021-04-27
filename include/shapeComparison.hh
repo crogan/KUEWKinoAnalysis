@@ -12,7 +12,6 @@ class shapeComparison{
 		double getPvalue();
 		//std::vector<double> getBinPvalues();
 		//double lambda;
-		
 
 
 	private:
