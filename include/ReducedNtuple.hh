@@ -29,9 +29,12 @@ private:
   double m_PUweight;
   double m_PUweight_up;
   double m_PUweight_down;
-  double m_BtagSFweight;
-  double m_BtagSFweight_up;
-  double m_BtagSFweight_down;
+  double m_BtagHFSFweight;
+  double m_BtagHFSFweight_up;
+  double m_BtagHFSFweight_down;
+  double m_BtagLFSFweight;
+  double m_BtagLFSFweight_up;
+  double m_BtagLFSFweight_down;
   double m_MetTrigSFweight;
   double m_MetTrigSFweight_up;
   double m_MetTrigSFweight_down;

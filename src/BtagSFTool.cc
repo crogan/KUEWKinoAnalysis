@@ -9,39 +9,65 @@
 
 using std::string;
 
-double BtagSFTool::EFF(double pT, int year, int flavor){
+double BtagSFTool::EFF(double pT, int year, int flavor, bool FastSim){
   if(flavor < 0 || flavor > 2)
     return 0.;
-  
-  if(year == 2016)
-    if(m_BtagEff2016[flavor] != nullptr)
-      return m_BtagEff2016[flavor]->GetEfficiency(m_BtagEff2016[flavor]->FindFixBin(pT));
-  if(year == 2017)
-    if(m_BtagEff2017[flavor] != nullptr)
-      return m_BtagEff2017[flavor]->GetEfficiency(m_BtagEff2016[flavor]->FindFixBin(pT));
-  if(year == 2018)
-    if(m_BtagEff2018[flavor] != nullptr)
-      return m_BtagEff2018[flavor]->GetEfficiency(m_BtagEff2016[flavor]->FindFixBin(pT));
 
+  if(FastSim){
+    if(year == 2016)
+      if(m_BtagEff2016_FastSim[flavor] != nullptr)
+	return m_BtagEff2016_FastSim[flavor]->GetEfficiency(m_BtagEff2016[flavor]->FindFixBin(pT));
+    if(year == 2017)
+      if(m_BtagEff2017_FastSim[flavor] != nullptr)
+	return m_BtagEff2017_FastSim[flavor]->GetEfficiency(m_BtagEff2016[flavor]->FindFixBin(pT));
+    if(year == 2018)
+      if(m_BtagEff2018_FastSim[flavor] != nullptr)
+	return m_BtagEff2018_FastSim[flavor]->GetEfficiency(m_BtagEff2016[flavor]->FindFixBin(pT));
+  } else {
+    if(year == 2016)
+      if(m_BtagEff2016[flavor] != nullptr)
+	return m_BtagEff2016[flavor]->GetEfficiency(m_BtagEff2016[flavor]->FindFixBin(pT));
+    if(year == 2017)
+      if(m_BtagEff2017[flavor] != nullptr)
+	return m_BtagEff2017[flavor]->GetEfficiency(m_BtagEff2016[flavor]->FindFixBin(pT));
+    if(year == 2018)
+      if(m_BtagEff2018[flavor] != nullptr)
+	return m_BtagEff2018[flavor]->GetEfficiency(m_BtagEff2016[flavor]->FindFixBin(pT));
+  }
+  
   return 0.;
 }
 
-double BtagSFTool::SF(double pT, int year, int flavor, int updown){
+double BtagSFTool::SF(double pT, int year, int flavor, int updown, bool FastSim){
+  double SF = 1.;
+
   if(abs(updown) > 1)
     return 1.;
   if(flavor < 0 || flavor > 2)
     return 1;
 
-  if(year == 2016)
-    if(m_SFs[0][flavor][updown+1] != nullptr)
-      return m_SFs[0][flavor][updown+1]->SF(pT);
-  if(year == 2017)
-    if(m_SFs[1][flavor][updown+1] != nullptr)
-      return m_SFs[1][flavor][updown+1]->SF(pT);
-  if(year == 2018)
-    if(m_SFs[2][flavor][updown+1] != nullptr)
-      return m_SFs[2][flavor][updown+1]->SF(pT);
-
+  if(FastSim){
+    if(year == 2016)
+      if(m_SFs_FastSim[0][flavor][updown+1] != nullptr)
+	return m_SFs_FastSim[0][flavor][updown+1]->SF(pT);
+    if(year == 2017)
+      if(m_SFs_FastSim[1][flavor][updown+1] != nullptr)
+	return m_SFs_FastSim[1][flavor][updown+1]->SF(pT);
+    if(year == 2018)
+      if(m_SFs_FastSim[2][flavor][updown+1] != nullptr)
+	return m_SFs_FastSim[2][flavor][updown+1]->SF(pT);
+  } else {
+    if(year == 2016)
+      if(m_SFs[0][flavor][updown+1] != nullptr)
+	return m_SFs[0][flavor][updown+1]->SF(pT);
+    if(year == 2017)
+      if(m_SFs[1][flavor][updown+1] != nullptr)
+	return m_SFs[1][flavor][updown+1]->SF(pT);
+    if(year == 2018)
+      if(m_SFs[2][flavor][updown+1] != nullptr)
+	return m_SFs[2][flavor][updown+1]->SF(pT);
+  }
+    
   return 1;
 }
 
@@ -50,6 +76,9 @@ void BtagSFTool::BuildMap(const std::string& btagSFfolder){
   SetSFs(btagSFfolder+"/DeepJet_2016.csv", 2016);
   SetSFs(btagSFfolder+"/DeepJet_2017.csv", 2017);
   SetSFs(btagSFfolder+"/DeepJet_2018.csv", 2018);
+  SetSFs(btagSFfolder+"/DeepFlav_13TEV_16SL_18_3_2019.csv", 2016, true);
+  SetSFs(btagSFfolder+"/DeepFlav_13TEV_17SL_18_3_2019.csv", 2017, true);
+  SetSFs(btagSFfolder+"/DeepFlav_13TEV_18SL_7_5_2019.csv", 2018, true);
 }
 
 void BtagSFTool::SetEfficiencies(const std::string& rootfile){
@@ -60,6 +89,12 @@ void BtagSFTool::SetEfficiencies(const std::string& rootfile){
       delete m_BtagEff2017[i];
     if(m_BtagEff2018[i] != nullptr)
       delete m_BtagEff2018[i];
+    if(m_BtagEff2016_FastSim[i] != nullptr)
+      delete m_BtagEff2016_FastSim[i];
+    if(m_BtagEff2017_FastSim[i] != nullptr)
+      delete m_BtagEff2017_FastSim[i];
+    if(m_BtagEff2018_FastSim[i] != nullptr)
+      delete m_BtagEff2018_FastSim[i];
   }
 
   TFile* input = new TFile(rootfile.c_str(),"READ");
@@ -70,26 +105,40 @@ void BtagSFTool::SetEfficiencies(const std::string& rootfile){
     m_BtagEff2016[i] = (TEfficiency*)((TEfficiency*)input->Get(Form("BtagEff_2016_flavor%d",i)))->Clone("BEff_2016_flavor%d");
     m_BtagEff2017[i] = (TEfficiency*)((TEfficiency*)input->Get(Form("BtagEff_2017_flavor%d",i)))->Clone("BEff_2017_flavor%d");
     m_BtagEff2018[i] = (TEfficiency*)((TEfficiency*)input->Get(Form("BtagEff_2018_flavor%d",i)))->Clone("BEff_2018_flavor%d");
+    m_BtagEff2016_FastSim[i] = (TEfficiency*)((TEfficiency*)input->Get(Form("BtagEff_2016_flavor%d",i)))->Clone("BEff_2016_FastSim_flavor%d");
+    m_BtagEff2017_FastSim[i] = (TEfficiency*)((TEfficiency*)input->Get(Form("BtagEff_2017_flavor%d",i)))->Clone("BEff_2017_FastSim_flavor%d");
+    m_BtagEff2018_FastSim[i] = (TEfficiency*)((TEfficiency*)input->Get(Form("BtagEff_2018_flavor%d",i)))->Clone("BEff_2018_FastSim_flavor%d");
   }
   
   input->Close();
 }
 
-void BtagSFTool::SetSFs(const std::string& csvfile, int year){
+void BtagSFTool::SetSFs(const std::string& csvfile, int year, bool FastSim){
   if(year == 2016)
-    ParseCSV(csvfile, 0);
+    ParseCSV(csvfile, 0, FastSim);
   if(year == 2017)
-    ParseCSV(csvfile, 1);
+    ParseCSV(csvfile, 1, FastSim);
   if(year == 2018)
-    ParseCSV(csvfile, 2);
+    ParseCSV(csvfile, 2, FastSim);
 }
 
-void BtagSFTool::ParseCSV(const std::string& csvfile, int iyear){
-  for(int i = 0; i < 3; i++){
-    for(int j = 0; j < 3; j++){
-      if(m_SFs[iyear][i][j] != nullptr)
-	delete m_SFs[iyear][i][j];
-      m_SFs[iyear][i][j] = new FormulaBins();
+void BtagSFTool::ParseCSV(const std::string& csvfile, int iyear, bool FastSim){
+
+  if(FastSim){
+    for(int i = 0; i < 3; i++){
+      for(int j = 0; j < 3; j++){
+	if(m_SFs_FastSim[iyear][i][j] != nullptr)
+	  delete m_SFs_FastSim[iyear][i][j];
+	m_SFs_FastSim[iyear][i][j] = new FormulaBins();
+      }
+    }
+  } else {
+    for(int i = 0; i < 3; i++){
+      for(int j = 0; j < 3; j++){
+	if(m_SFs[iyear][i][j] != nullptr)
+	  delete m_SFs[iyear][i][j];
+	m_SFs[iyear][i][j] = new FormulaBins();
+      }
     }
   }
 
@@ -118,9 +167,14 @@ void BtagSFTool::ParseCSV(const std::string& csvfile, int iyear){
 
     // measurement type
     name = popcomma(line);
-    if(name.find("comb") == string::npos &&
-       name.find("incl") == string::npos)
-      continue;
+    if(FastSim){
+      if(name.find("fastsim") == string::npos)
+	continue;
+    } else {
+      if(name.find("comb") == string::npos &&
+	 name.find("incl") == string::npos)
+	continue;
+    }
 
     // sys type
     int isys = -2;
@@ -169,8 +223,11 @@ void BtagSFTool::ParseCSV(const std::string& csvfile, int iyear){
     name = line.substr(0,found);
 
     //cout << iyear << " " << iflavor << " " << isys << " " << name << endl;
-    
-    m_SFs[iyear][iflavor][isys+1]->AddBin(pt_min, pt_max, name);
+
+    if(FastSim)
+      m_SFs_FastSim[iyear][iflavor][isys+1]->AddBin(pt_min, pt_max, name);
+    else
+      m_SFs[iyear][iflavor][isys+1]->AddBin(pt_min, pt_max, name);
   }
   
   ifile.close();

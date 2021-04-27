@@ -116,7 +116,7 @@ protected:
   
   virtual double GetEventWeight();
   virtual double GetPUWeight(int updown = 0);
-  virtual double GetBtagSFWeight(const ParticleList& jets, int updown = 0, ParticleIDType tag = kMedium);
+  virtual double GetBtagSFWeight(const ParticleList& jets, bool HForLF, int updown = 0, ParticleIDType tag = kMedium);
   virtual double GetMETTriggerSFWeight(double MET, double HT, int Nele, int Nmu, int updown = 0);
   virtual double GetXsec();
   virtual bool   IsGoodEvent();

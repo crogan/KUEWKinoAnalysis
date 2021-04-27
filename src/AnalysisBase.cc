@@ -227,7 +227,7 @@ double AnalysisBase<Base>::GetPUWeight(int updown){
 }
 
 template <class Base>
-double AnalysisBase<Base>::GetBtagSFWeight(const ParticleList& jets, int updown, ParticleIDType tag){
+double AnalysisBase<Base>::GetBtagSFWeight(const ParticleList& jets, bool HForLF, int updown, ParticleIDType tag){
   return 0;
 }
 
@@ -1073,10 +1073,12 @@ double AnalysisBase<SUSYNANOBase>::GetPUWeight(int updown){
 }
 
 template <>
-double AnalysisBase<SUSYNANOBase>::GetBtagSFWeight(const ParticleList& jets, int updown, ParticleIDType tag){
+double AnalysisBase<SUSYNANOBase>::GetBtagSFWeight(const ParticleList& jets, bool HForLF, int updown, ParticleIDType tag){
   if(IsData())
     return 1.;
 
+  bool FastSim = IsFastSim();
+  
   int year = 2016;
   if(m_FileTag.find("17") != std::string::npos)
     year = 2017;
@@ -1098,8 +1100,15 @@ double AnalysisBase<SUSYNANOBase>::GetBtagSFWeight(const ParticleList& jets, int
     else
       iflavor = 2;
 
-    EFF = m_BtagSFTool.EFF(jets[i].Pt(), year, iflavor);
+    if(HForLF && iflavor == 2)
+      continue;
+    if(!HForLF && iflavor != 2)
+      continue;
+    
+    EFF = m_BtagSFTool.EFF(jets[i].Pt(), year, iflavor, FastSim);
     SF  = m_BtagSFTool.SF(jets[i].Pt(), year, iflavor, updown);
+    if(FastSim)
+      SF *= m_BtagSFTool.SF(jets[i].Pt(), year, iflavor, updown, FastSim);
 
     if(jets[i].BtagID() >= tag){
       probMC   *= EFF;

@@ -204,9 +204,12 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("PUweight_up", &m_PUweight_up);
   tree->Branch("PUweight_down", &m_PUweight_down);
 
-  tree->Branch("BtagSFweight", &m_BtagSFweight);
-  tree->Branch("BtagSFweight_up", &m_BtagSFweight_up);
-  tree->Branch("BtagSFweight_down", &m_BtagSFweight_down);
+  tree->Branch("BtagHFSFweight", &m_BtagHFSFweight);
+  tree->Branch("BtagHFSFweight_up", &m_BtagHFSFweight_up);
+  tree->Branch("BtagHFSFweight_down", &m_BtagHFSFweight_down);
+  tree->Branch("BtagLFSFweight", &m_BtagLFSFweight);
+  tree->Branch("BtagLFSFweight_up", &m_BtagLFSFweight_up);
+  tree->Branch("BtagLFSFweight_down", &m_BtagLFSFweight_down);
 
   tree->Branch("MetTrigSFweight", &m_MetTrigSFweight);
   tree->Branch("MetTrigSFweight_up", &m_MetTrigSFweight_up);
@@ -1069,9 +1072,12 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
     m_PUweight_up = AnalysisBase<Base>::GetPUWeight(1);
     m_PUweight_down = AnalysisBase<Base>::GetPUWeight(-1);
     
-    m_BtagSFweight = AnalysisBase<Base>::GetBtagSFWeight(Jets, 0, kMedium);
-    m_BtagSFweight_up = AnalysisBase<Base>::GetBtagSFWeight(Jets, 1, kMedium);
-    m_BtagSFweight_down = AnalysisBase<Base>::GetBtagSFWeight(Jets, -1, kMedium);
+    m_BtagHFSFweight = AnalysisBase<Base>::GetBtagSFWeight(Jets, true, 0, kMedium);
+    m_BtagHFSFweight_up = AnalysisBase<Base>::GetBtagSFWeight(Jets, true, 1, kMedium);
+    m_BtagHFSFweight_down = AnalysisBase<Base>::GetBtagSFWeight(Jets, true, -1, kMedium);
+    m_BtagLFSFweight = AnalysisBase<Base>::GetBtagSFWeight(Jets, false, 0, kMedium);
+    m_BtagLFSFweight_up = AnalysisBase<Base>::GetBtagSFWeight(Jets, false, 1, kMedium);
+    m_BtagLFSFweight_down = AnalysisBase<Base>::GetBtagSFWeight(Jets, false, -1, kMedium);
 
     m_MetTrigSFweight = AnalysisBase<Base>::GetMETTriggerSFWeight(m_MET, m_HT_eta5, m_Nele, m_Nmu, 0);
     m_MetTrigSFweight_up = AnalysisBase<Base>::GetMETTriggerSFWeight(m_MET, m_HT_eta5, m_Nele, m_Nmu, 1);
@@ -1087,9 +1093,17 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
     m_PUweight = 1;
     m_PUweight_up = 1;
     m_PUweight_down = 1;
-    m_BtagSFweight = 1;
-    m_BtagSFweight_up = 1;
-    m_BtagSFweight_down = 1;
+    m_BtagHFSFweight = 1;
+    m_BtagHFSFweight_up = 1;
+    m_BtagHFSFweight_down = 1;
+    m_BtagLFSFweight = 1;
+    m_BtagLFSFweight_up = 1;
+    m_BtagLFSFweight_down = 1;
+    m_MetTrigSFweight = 1.;
+    m_MetTrigSFweight_up = 1.;
+    m_MetTrigSFweight_down = 1.;
+
+    m_NPU = 0.;
   }
   
   m_runnum   = AnalysisBase<Base>::GetRunNum();

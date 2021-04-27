@@ -422,7 +422,15 @@ int main(int argc, char* argv[]) {
 	      else
 		weight *= SF.GetMETSF(base->MET);
 	    
-	    if(sys == Systematic("BTAG_SF"))
+	    if(sys == Systematic("BTAGHF_SF"))
+	      if(sys.IsUp())
+		weight *= base->BtagSFweight_up;
+	      else
+		weight *= base->BtagSFweight_down;
+	    else 
+	      weight *= base->BtagSFweight;
+
+	     if(sys == Systematic("BTAGLF_SF"))
 	      if(sys.IsUp())
 		weight *= base->BtagSFweight_up;
 	      else
