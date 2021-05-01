@@ -157,7 +157,7 @@ double shapeComparison::gammp(double a, double x){
 	double gammcf;
 	double gln;
 	if(x < 0.0 || a <= 0.0){
-	 std::cout << "Invalid arguments in gammp." << std::endl;
+	 std::cout << "Invalid arguments in gammp. x: " << x << " a:" << a  << std::endl;
 	 return 0.;
 	}
 	if(x < (a+1.0)){ //use series representation
