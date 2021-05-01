@@ -26,8 +26,8 @@ shapeTemplate::shapeTemplate(TH1D* hist, TH1D* hist_cons){
 	m_nBins = hist->GetNbinsX();
 	m_norm = hist->Integral(1,m_nBins);
 	m_hist_cons = (TH1D*)hist_cons->Clone();
-	cout << hist->GetName() << endl;
-	for(int i = 0; i < hist->GetNbinsX(); i++) cout << "bin #" << i+1 << ": " << m_hist_OG->GetBinContent(i+1) << endl;
+	//cout << hist->GetName() << endl;
+	//for(int i = 0; i < hist->GetNbinsX(); i++) cout << "bin #" << i+1 << ": " << m_hist_OG->GetBinContent(i+1) << endl;
 	
 //	cout << "name: " << m_hist_OG->GetName() << " title: " << m_hist_OG->GetTitle() << endl;
 //	string recName = std::string(m_hist_OG->GetName())+"_recreated"; 
@@ -190,9 +190,6 @@ void shapeTemplate::setErrors(){
 		if(oldBin == 1e-8 && newErr > sqrt(newBin)) err = sqrt(newBin);
 		//cout << "bin #" << b << " old bin: " << oldBin << " recBin: " << newBin << " oldErr: " << oldErr << " recErr: " << newErr << " pull: " << pull << " new error: " << err << endl; 
 //err = m_hist_cons->GetBinError(b+1); cout << "bin #" << b+1 << " error: " << err << endl;}
-		if(err == 0.) { 
-		cout << "old bin: " << oldBin << " newBin: " << newBin << " oldErr: " << oldErr << " newErr: " << newErr << " set error to: " << err << endl; 	
-		}
 		if(newBin < 1e-6 && err == 0.) err = 0.;	
 		m_hist_rec->SetBinError(b+1,err);
 		
@@ -211,11 +208,11 @@ TH1D* shapeTemplate::replaceHistogram(){
 	//cout << "cons histogram: " << m_hist_cons->GetBinContent(m_idx) << endl;
 	if(m_hist_rec->Integral() == 0.){ cout << "Error: recreated histogram empty." << endl; return NULL;}
 	//scale to 1 once all bins have been replaced
-	cout << "scale back to 1 with: " << m_hist_rec->Integral() << endl;
+	//cout << "scale back to 1 with: " << m_hist_rec->Integral() << endl;
 	m_hist_rec->Scale(1/m_hist_rec->Integral());
 	//cout << "normalized to 1 histogram: " << m_hist_rec->GetBinContent(m_idx) << endl;
 	//scale to original histogram	
-	cout << "original norm: " << m_norm << endl;
+	//cout << "original norm: " << m_norm << endl;
 	m_hist_rec->Scale(m_norm);
 	setErrors();
 	//cout << "normalized to data histogram: " << m_hist_rec->GetBinContent(m_idx) << endl;
@@ -264,7 +261,6 @@ shapeTemplateTool::shapeTemplateTool(const string& inputfile, const CategoryTree
 	m_CT = CT;
 	for(int i = 0; i < procs.GetN(); i++) m_proc += procs[i].Name();
 	//m_proc = proc;
-	for(int i = 0; i < m_proc.size(); i++) cout << "process: " << m_proc[i] << endl;
 
 }
 
@@ -285,7 +281,6 @@ CategoryTree shapeTemplateTool::getCategoryTree(){
 
 
 void shapeTemplateTool::createTemplates(){
-cout << "createTemplates" << endl;
 FitReader fitReader(m_file);
 vector<const CategoryTree*> catTrees;
 m_CT.GetListDepth(catTrees,2);
@@ -312,7 +307,7 @@ for(int i = 0; i < nProc; i++){
       int index = fitReader.GetProcesses().Find(vproc[p]);
       if(index < 0) continue;
       Process pp = fitReader.GetProcesses()[index];
-   cout << pp.Name() << endl;
+//   cout << pp.Name() << endl;
       for(int list = 0; list < depth; list++){
 //	cout << "list #" << list << endl;
    CategoryList cats = catList.Filter(*catTrees[list]);
@@ -332,7 +327,7 @@ for(int i = 0; i < nProc; i++){
 		if(!fitReader.IsFilled(cats[c],pp)) continue;
 		TH1D* oldHist = (TH1D*)fitReader.GetHistogram(cats[c],pp);
 		TH1D* newHist;
-	cout << cats[c].Label() << "_" << cats[c].GetLabel() << endl;
+	//cout << cats[c].Label() << "_" << cats[c].GetLabel() << endl;
 		//m_listToHist[list]->Scale(oldHist->Integral()/m_listToHist[list]->Integral());
 		if(oldHist->Integral() > 1e-6){ 
 			shapeTemplate st(oldHist,m_listToHist[list]); 
@@ -342,7 +337,6 @@ for(int i = 0; i < nProc; i++){
 			oldHist->SetName((pp.Name()+"_raw").c_str());
 			f->cd((cats[c].Label()+"_"+cats[c].GetLabel()).c_str());
 			newHist->Write();
-			oldHist->Write();
 		}	
 		else{
 			newHist = oldHist; 
@@ -350,7 +344,6 @@ for(int i = 0; i < nProc; i++){
 			newHist->SetName((pp.Name()).c_str());
 			oldHist->SetName((pp.Name()+"_raw").c_str());
 			f->cd((cats[c].Label()+"_"+cats[c].GetLabel()).c_str());
-			oldHist->Write();
 			newHist->Write();
         	}
 		f->cd((cats[c].Label()+"_"+cats[c].GetLabel()).c_str());
