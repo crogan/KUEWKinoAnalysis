@@ -1,3 +1,5 @@
+#include <iostream>
+#include <stdlib.h>
 #include <vector>
 #include <random>
 #include <TEfficiency.h>
@@ -5,6 +7,7 @@
 #include <TLatex.h>
 #include "shapeComparison.hh"
 
+using std::cout; using std::endl;
 
 shapeComparison::shapeComparison(){
 	mHist1 = NULL;
@@ -22,11 +25,10 @@ shapeComparison::shapeComparison(TH1D* hist1, TH1D* hist2){
 		mHist1 = (TH1D*)hist2->Clone();
 		mHist2 = (TH1D*)hist1->Clone();
 	}
-	else if(hist1->Integral() < hist2->Integral()){ 
+	else{ //if(hist1->Integral() < hist2->Integral()){ 
 		mHist1 = (TH1D*)hist1->Clone();
 		mHist2 = (TH1D*)hist2->Clone();
 	}
-	
 	
 	calcWeightsAndScale(mHist1);
 	calcWeightsAndScale(mHist2);
@@ -51,6 +53,7 @@ shapeComparison::~shapeComparison(){
 
 void shapeComparison::calcWeightsAndScale(TH1D* hist){
 	double weight = 0;
+	if(hist == NULL) cout << "hist null" << endl;
 	for(int i = 0; i < hist->GetNbinsX(); i++){
 		double tmp_w = pow(hist->GetBinError(i+1),2)/hist->GetBinContent(i+1);
 		if(tmp_w > weight) weight = tmp_w;
@@ -60,7 +63,6 @@ void shapeComparison::calcWeightsAndScale(TH1D* hist){
 
 
 double shapeComparison::calcLikelihood() { //calculates negative log likelihood ratio
-	if(lambdas.size() > 0) lambdas.clear();
 	double u; 
 	double v; 
 	double t; 
@@ -72,9 +74,8 @@ double shapeComparison::calcLikelihood() { //calculates negative log likelihood 
 	for(int i = 1; i < nBins+1; i++){ //i starting at i discards bin #0 underflow bin (should be empty anyways)
 		u = mHist1->GetBinContent(i);
 		v = mHist2->GetBinContent(i);
-		v *= x;
 		t = u + v;  
-		if(u == 0 && v == 0) { lambdas.push_back(0.); continue;}
+		if(u == 0 && v == 0) { tmp_lambda = 0.; }
 		else if(u == 0 && v != 0){ tmp_lambda = -2*t*log(Nv/(Nu+Nv)); }
 		else if(u != 0 && v == 0){ tmp_lambda = -2*t*log(Nu/(Nu+Nv)); }
 		else tmp_lambda = -2*(t*log( (1 + v/u)/(1 + Nv/Nu) ) + v*log( (Nv/Nu)*(u/v) ));
@@ -97,7 +98,6 @@ double shapeComparison::calcLikelihood(std::vector<double> &lambdas) { //calcula
 	for(int i = 1; i < nBins+1; i++){ //i starting at i discards bin #0 underflow bin (should be empty anyways)
 		u = mHist1->GetBinContent(i);
 		v = mHist2->GetBinContent(i);
-		v *= x;
 		t = u + v;  
 		if(u == 0 && v == 0) { lambdas.push_back(0.); continue;}
 		else if(u == 0 && v != 0){ tmp_lambda = -2*t*log(Nv/(Nu+Nv)); }
@@ -120,6 +120,7 @@ double shapeComparison::getPvalue(std::vector<double> &lambdas){
 
 double shapeComparison::getPvalue(){
 	double LH = calcLikelihood(); //fill vector of LHs (bin-by-bin) by passing empty vector by reference to calcLikelihood
+	//cout << "likelihood: " << LH << endl;
 	double pval = 1 - gammp(nDof/2.0,LH/2.0); //value of cumulative distribution function - take inverse b/c we want the probability of a value equal to or greater than our test statistic - this is our p-value
 	// std::cout << "LH: " << LH <<  " pval: " << pval << std::endl;
 	return pval;
@@ -156,7 +157,7 @@ double shapeComparison::gammp(double a, double x){
 	double gammcf;
 	double gln;
 	if(x < 0.0 || a <= 0.0){
-	 std::cout << "Invalid arguments in gammp." << std::endl;
+	 std::cout << "Invalid arguments in gammp. x: " << x << " a:" << a  << std::endl;
 	 return 0.;
 	}
 	if(x < (a+1.0)){ //use series representation
