@@ -32,13 +32,14 @@
 #include "CategoryTree.hh"
 #include "FitReader.hh"
 #include "shapeTemplate.hh"
+#include "shapeVariation.hh"
 //#include "varWeights.hh"
 //#include "testClass.hh"
 
 using ROOT::RDataFrame;
 using namespace std;
 int main(int argc, char* argv[]) {
-  string NtuplePath = "/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_21_09_20/";
+  string NtuplePath = "/home/t3-ku/crogan/NTUPLES/NANO/NEW_21_09_20/";//"/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_21_09_20/";
   string OutFile    = "BuildFitInput_output.root";
 
   bool doSigFile = false;
@@ -524,23 +525,35 @@ if(RISR < rlow){ underflow += 1.;}
   }
   FITBuilder.WriteFit(OutFile);
 VS fakeProcs;
+ProcessList fakeProcList;
 for(int i = 0; i < int(proc_to_add.size()); i++){
 	fakeProcs += proc_to_add[i]+"_Fakes_elf0";
 	fakeProcs += proc_to_add[i]+"_Fakes_elf1";
 	fakeProcs += proc_to_add[i]+"_Fakes_muf0";
 	fakeProcs += proc_to_add[i]+"_Fakes_muf1";
-//	fakeProcs += proc_to_add[i]+"_LF";
+	
+	
+	
+}
+for(int i = 0; i < samples.GetN(); i++){
+	if(samples[i].Type() == kBkg){
+		fakeProcList += samples[i].FakeProcess("Fakes_elf0");
+		fakeProcList += samples[i].FakeProcess("Fakes_elf1");
+		fakeProcList += samples[i].FakeProcess("Fakes_muf0");
+		fakeProcList += samples[i].FakeProcess("Fakes_muf1");
+	}
 }
 CategoryTree CT_Fakes1L = CTTool.GetCategories_Fakes1L();
 CategoryTree CT_Fakes2L = CTTool.GetCategories_Fakes2L();
 CategoryTree CT_Fakes3L = CTTool.GetCategories_Fakes3L();
-// FITReader.SmoothHistograms(fakeProcs,CT_Fakes1L,OutFile);
 cout << "shapeTemplateTool" << endl;
 
-shapeTemplateTool STT(OutFile,CT_Fakes1L,fakeProcs);
+shapeTemplateTool STT(OutFile,CT_Fakes1L,fakeProcList);
 cout << "createTemplates" << endl;
 STT.createTemplates();
-//FITReader.SmoothHistograms(fakeProcs,CT_Fakes2L,OutFile);
-//FITReader.SmoothHistograms(fakeProcs,CT_Fakes3L,OutFile);
-  
+ 
+shapeVariationTool SVT(CT_Fakes1L, fakeProcList, OutFile);
+cout << "do variations" << endl;
+SVT.doVariations();
+ 
 }
