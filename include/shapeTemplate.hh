@@ -9,6 +9,9 @@
 #include <TH1D.h>
 #include "Criteria.hh"
 #include "CategoryTree.hh"
+#include "Process.hh"
+
+
 
 using std::map;
 using std::string;
@@ -54,6 +57,7 @@ class shapeTemplate{
 class shapeTemplateTool{
 public:
 	shapeTemplateTool(const string &inputfile, const CategoryTree& CT, const VS& proc);
+	shapeTemplateTool(const string &inputfile, const CategoryTree& CT, ProcessList proc);
 	virtual ~shapeTemplateTool();
 
 	void createTemplates();

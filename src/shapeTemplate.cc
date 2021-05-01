@@ -8,7 +8,7 @@
 #include "shapeComparison.hh"
 #include "FitReader.hh"
 #include "CategoryTree.hh"
-
+#include "Process.hh"
 
 
 ////////////////////////////////////////////////
@@ -26,6 +26,9 @@ shapeTemplate::shapeTemplate(TH1D* hist, TH1D* hist_cons){
 	m_nBins = hist->GetNbinsX();
 	m_norm = hist->Integral(1,m_nBins);
 	m_hist_cons = (TH1D*)hist_cons->Clone();
+	cout << hist->GetName() << endl;
+	for(int i = 0; i < hist->GetNbinsX(); i++) cout << "bin #" << i+1 << ": " << m_hist_OG->GetBinContent(i+1) << endl;
+	
 //	cout << "name: " << m_hist_OG->GetName() << " title: " << m_hist_OG->GetTitle() << endl;
 //	string recName = std::string(m_hist_OG->GetName())+"_recreated"; 
 //	m_hist_rec->SetName(recName.c_str());//set m_hist_rec's Name to name of OG+"_recreated"	
@@ -120,7 +123,7 @@ void shapeTemplate::replaceBins(int idx, double Prem, double Prem_cons){
 
 			//replace bin and error from consolidated if the normalized, unweighted bin content is less than a certain value
 			if(bin < m_minVal){
-//				cout << "replaced bin #" << m_binsSorted[idx].first << endl;
+	//			cout << "replaced bin #" << m_binsSorted[idx].first << " original: " << m_binsSorted[idx].second << " set to: " << bin_repl << endl;
 				//replace bin
 				if(bin == 1e-8){
 					m_hist_rec->SetBinContent(m_binsSorted[idx].first,bin_cons);
@@ -132,6 +135,7 @@ void shapeTemplate::replaceBins(int idx, double Prem, double Prem_cons){
 			}
 			//else take bin value and error from original histogram
 			else{
+	//			cout << "did not replaced bin #" << m_binsSorted[idx].first << " set content to: " << m_binsSorted[idx].second  << endl;
 				m_hist_rec->SetBinContent(m_binsSorted[idx].first,m_binsSorted[idx].second);
 				m_hist_rec->SetBinError(m_binsSorted[idx].first,m_hist_scaled->GetBinError(m_binsSorted[idx].first));
 			}
@@ -162,7 +166,7 @@ double shapeTemplate::compareShapes(){
 	}
 	shapeComparison* sc = new shapeComparison(m_hist_OG,m_hist_rec);
 	double pval = sc->getPvalue();
-cout << m_hist_rec->GetTitle() << " pval: " << pval << endl;
+//cout << m_hist_rec->GetTitle() << " pval: " << pval << endl;
 	return pval;
 }
 
@@ -176,12 +180,15 @@ void shapeTemplate::setErrors(){
 		
 		double err = newErr;// = m_hist_OG->GetBinError(b+1);
 		double pull = (oldBin - newBin)/sqrt(oldErr*oldErr + newErr*newErr);
-			if(pull > 1){
-				err = sqrt(pow((oldBin - newBin),2) - oldErr*oldErr);
+		if(std::fabs(pull) > 1){
+			err = sqrt(pow((oldBin - newBin),2) - oldErr*oldErr);
 		
-			}
-			if(isnan(err)) cout << "old bin: " << oldBin << " newBin: " << newBin << " oldErr: " << oldErr << " newErr: " << newErr << endl; 
-			if(oldBin == 1e-8) err = sqrt(newBin);
+		}
+		else{
+			err = newErr;//sqrt(newBin);
+		}
+		if(oldBin == 1e-8 && newErr > sqrt(newBin)) err = sqrt(newBin);
+		//cout << "bin #" << b << " old bin: " << oldBin << " recBin: " << newBin << " oldErr: " << oldErr << " recErr: " << newErr << " pull: " << pull << " new error: " << err << endl; 
 //err = m_hist_cons->GetBinError(b+1); cout << "bin #" << b+1 << " error: " << err << endl;}
 		if(err == 0.) { 
 		cout << "old bin: " << oldBin << " newBin: " << newBin << " oldErr: " << oldErr << " newErr: " << newErr << " set error to: " << err << endl; 	
@@ -202,13 +209,15 @@ TH1D* shapeTemplate::replaceHistogram(){
 
 	//cout << "recreated histogram: " << m_hist_rec->GetBinContent(m_idx) << endl;
 	//cout << "cons histogram: " << m_hist_cons->GetBinContent(m_idx) << endl;
-	setErrors();
 	if(m_hist_rec->Integral() == 0.){ cout << "Error: recreated histogram empty." << endl; return NULL;}
 	//scale to 1 once all bins have been replaced
+	cout << "scale back to 1 with: " << m_hist_rec->Integral() << endl;
 	m_hist_rec->Scale(1/m_hist_rec->Integral());
 	//cout << "normalized to 1 histogram: " << m_hist_rec->GetBinContent(m_idx) << endl;
 	//scale to original histogram	
+	cout << "original norm: " << m_norm << endl;
 	m_hist_rec->Scale(m_norm);
+	setErrors();
 	//cout << "normalized to data histogram: " << m_hist_rec->GetBinContent(m_idx) << endl;
 	return m_hist_rec;
 }
@@ -250,6 +259,15 @@ shapeTemplateTool::shapeTemplateTool(const string& inputfile, const CategoryTree
 
 }
 
+shapeTemplateTool::shapeTemplateTool(const string& inputfile, const CategoryTree& CT, ProcessList procs){
+	m_file = inputfile;
+	m_CT = CT;
+	for(int i = 0; i < procs.GetN(); i++) m_proc += procs[i].Name();
+	//m_proc = proc;
+	for(int i = 0; i < m_proc.size(); i++) cout << "process: " << m_proc[i] << endl;
+
+}
+
 shapeTemplateTool::~shapeTemplateTool(){
 
 }
@@ -263,11 +281,6 @@ VS shapeTemplateTool::getProcess(){
 CategoryTree shapeTemplateTool::getCategoryTree(){
 	return m_CT;
 }
-
-
-
-
-
 
 
 
@@ -301,9 +314,9 @@ for(int i = 0; i < nProc; i++){
       Process pp = fitReader.GetProcesses()[index];
    cout << pp.Name() << endl;
       for(int list = 0; list < depth; list++){
-	cout << "list #" << list << endl;
+//	cout << "list #" << list << endl;
    CategoryList cats = catList.Filter(*catTrees[list]);
-	//cats.Print();
+//	cats.Print();
 	//cout << "\n" << endl;
 	nCat = cats.GetN();
        	ProcessList ppp;
@@ -319,23 +332,29 @@ for(int i = 0; i < nProc; i++){
 		if(!fitReader.IsFilled(cats[c],pp)) continue;
 		TH1D* oldHist = (TH1D*)fitReader.GetHistogram(cats[c],pp);
 		TH1D* newHist;
-		m_listToHist[list]->Scale(oldHist->Integral()/m_listToHist[list]->Integral());
+	cout << cats[c].Label() << "_" << cats[c].GetLabel() << endl;
+		//m_listToHist[list]->Scale(oldHist->Integral()/m_listToHist[list]->Integral());
 		if(oldHist->Integral() > 1e-6){ 
 			shapeTemplate st(oldHist,m_listToHist[list]); 
 			newHist = (TH1D*)st.replaceHistogram();
 			st.compareShapes();
-			newHist->SetName((pp.Name()+"_recreated").c_str());
+			newHist->SetName((pp.Name()).c_str());
+			oldHist->SetName((pp.Name()+"_raw").c_str());
 			f->cd((cats[c].Label()+"_"+cats[c].GetLabel()).c_str());
 			newHist->Write();
+			oldHist->Write();
 		}	
 		else{
 			newHist = oldHist; 
 			if(newHist == NULL) { cout << "newHist null" << endl; return;}
-			newHist->SetName((pp.Name()+"_recreated").c_str());
+			newHist->SetName((pp.Name()).c_str());
+			oldHist->SetName((pp.Name()+"_raw").c_str());
 			f->cd((cats[c].Label()+"_"+cats[c].GetLabel()).c_str());
+			oldHist->Write();
 			newHist->Write();
         	}
-		
+		f->cd((cats[c].Label()+"_"+cats[c].GetLabel()).c_str());
+		m_listToHist[list]->Write();
 	}
     }
 
