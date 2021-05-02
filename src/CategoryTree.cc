@@ -401,9 +401,9 @@ CategoryTree CategoryTreeTool::GetCategories() const {
 
 CategoryTree CategoryTreeTool::GetCategoriesFakes() const {
 
-  CategoryTree CT_1L = GetCategories_Fakes1L();
-  CategoryTree CT_2L = GetCategories_Fakes2L();
-  CategoryTree CT_3L = GetCategories_Fakes3L();
+  CategoryTree CT_Fakes1L = GetCategories_Fakes1L();
+  CategoryTree CT_Fakes2L = GetCategories_Fakes2L();
+  CategoryTree CT_Fakes3L = GetCategories_Fakes3L();
 
   CategoryTree CT_all(VS().a("Ch"), "", "", kNorm, false);
   CT_all.AddSubCategory(CT_Fakes1L);
@@ -1119,10 +1119,10 @@ CategoryTree CategoryTreeTool::GetCategories_Fakes2L() const {
   CT_p0.AddSubCategory(CT_gamT1);
   CT_p1.AddSubCategory(CT_gamT1);
 
-  CT_0b.AddSubCategory(CT_0bISR);
-  CT_0b.AddSubCategory(CT_1bISR);
-  CT_1b.AddSubCategory(CT_0bISR);
-  CT_1b.AddSubCategory(CT_1bISR);
+  CT_0b.AddSubCategory(CT_0bISR_0jsv);
+  CT_0b.AddSubCategory(CT_1bISR_0jsv);
+  CT_1b.AddSubCategory(CT_0bISR_0jsv);
+  CT_1b.AddSubCategory(CT_1bISR_0jsv);
 
   CT_0bISR_0jsv.AddSubCategory(CT_etaF);
   CT_0bISR_0jsv.AddSubCategory(CT_etaC);
