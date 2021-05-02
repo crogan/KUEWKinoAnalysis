@@ -117,6 +117,7 @@ public:
   virtual ~CategoryTreeTool();
 
   CategoryTree GetCategories() const;
+  CategoryTree GetCategoriesFakes() const;
   CategoryTree GetCategories_0L() const;
   CategoryTree GetCategories_1L() const;
   CategoryTree GetCategories_2L() const;
@@ -124,6 +125,7 @@ public:
   CategoryTree GetCategories_Fakes1L() const;
   CategoryTree GetCategories_Fakes2L() const;
   CategoryTree GetCategories_Fakes3L() const;
+  CategoryTree GetCategories_QCD() const;
 };
 
 #endif
