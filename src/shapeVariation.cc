@@ -174,7 +174,7 @@ delete m_fr;
 
 void shapeVariationTool::doVariations(){
 	vector<const CategoryTree*> CTs;
-	m_ct.GetListDepth(CTs,2);
+	m_ct.GetListDepth(CTs,1);
 	for(int i = 0; i < m_nProc; i++){
 		VS vproc;
 		if(m_fr->m_Strings.count(m_proc[i]) != 0)
@@ -196,7 +196,7 @@ void shapeVariationTool::doVariations(){
 
 void shapeVariationTool::makeCatMaps(){
         vector<const CategoryTree*> catTrees;
-        m_ct.GetListDepth(catTrees,2);
+        m_ct.GetListDepth(catTrees,1);
         FitReader fr(m_file);
         int nCatTrees = catTrees.size();
         CategoryList allCats = fr.GetCategories(); 

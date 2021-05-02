@@ -283,7 +283,7 @@ CategoryTree shapeTemplateTool::getCategoryTree(){
 void shapeTemplateTool::createTemplates(){
 FitReader fitReader(m_file);
 vector<const CategoryTree*> catTrees;
-m_CT.GetListDepth(catTrees,2);
+m_CT.GetListDepth(catTrees,1);
 //PrintCategories();
 TFile* f = nullptr;
   CategoryList catList = fitReader.GetCategories();
@@ -337,6 +337,7 @@ for(int i = 0; i < nProc; i++){
 			oldHist->SetName((pp.Name()+"_raw").c_str());
 			f->cd((cats[c].Label()+"_"+cats[c].GetLabel()).c_str());
 			newHist->Write();
+			oldHist->Write();
 		}	
 		else{
 			newHist = oldHist; 
@@ -345,6 +346,7 @@ for(int i = 0; i < nProc; i++){
 			oldHist->SetName((pp.Name()+"_raw").c_str());
 			f->cd((cats[c].Label()+"_"+cats[c].GetLabel()).c_str());
 			newHist->Write();
+			oldHist->Write();
         	}
 		f->cd((cats[c].Label()+"_"+cats[c].GetLabel()).c_str());
 		m_listToHist[list]->Write();
