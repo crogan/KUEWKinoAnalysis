@@ -1119,10 +1119,6 @@ CategoryTree CategoryTreeTool::GetCategories_Fakes2L() const {
   CT_p0.AddSubCategory(CT_gamT1);
   CT_p1.AddSubCategory(CT_gamT1);
 
-  CT_0b.AddSubCategory(CT_0bISR_0jsv);
-  CT_0b.AddSubCategory(CT_1bISR_0jsv);
-  CT_1b.AddSubCategory(CT_0bISR_0jsv);
-  CT_1b.AddSubCategory(CT_1bISR_0jsv);
 
   CT_0bISR_0jsv.AddSubCategory(CT_etaF);
   CT_0bISR_0jsv.AddSubCategory(CT_etaC);
