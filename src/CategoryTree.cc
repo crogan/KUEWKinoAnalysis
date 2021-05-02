@@ -1101,18 +1101,18 @@ CategoryTree CategoryTreeTool::GetCategories_Fakes1L() const {
 
 
 CategoryTree CategoryTreeTool::GetCategories_Fakes2L() const {
-  CategoryTree CT_0b(VS().a("j0b"), "0b", "0b #in S", kJ_sub, false);
-  CategoryTree CT_1b(VS().a("1bS"), "1b", "1b #in S", kJ_sub, false);
-  CategoryTree CT_ge1b(VS().a("ge1bS"), "ge1b", "ge1b #in S", kJ_sub, false);
+  CategoryTree CT_0b(VS().a("j0b"), "0b", "0b #in S", kJ_sub, true);
+  CategoryTree CT_1b(VS().a("1bS"), "1b", "1b #in S", kJ_sub, true);
+  CategoryTree CT_ge1b(VS().a("ge1bS"), "ge1b", "ge1b #in S", kJ_sub, true);
 
-  CategoryTree CT_0bISR_1j(VS().a("0bISR"), "0 b #in ISR", "0b", kX_sub, true);
-  CategoryTree CT_1bISR_1j(VS().a("ge1bISR"), "#geq 1 b #in ISR", "1b", kX_sub, true);
+  CategoryTree CT_0bISR_1j(VS().a("0bISR"), "0 b #in ISR", "0b", kX_sub, false);
+  CategoryTree CT_1bISR_1j(VS().a("ge1bISR"), "#geq 1 b #in ISR", "1b", kX_sub, false);
 
-  CategoryTree CT_0bISR_0j(VS().a("0bISR"), "0 b #in ISR", "0b", kX_sub, true);
-  CategoryTree CT_1bISR_0j(VS().a("ge1bISR"), "#geq 1 b #in ISR", "1b", kX_sub, true);
+  CategoryTree CT_0bISR_0j(VS().a("0bISR"), "0 b #in ISR", "0b", kX_sub, false);
+  CategoryTree CT_1bISR_0j(VS().a("ge1bISR"), "#geq 1 b #in ISR", "1b", kX_sub, false);
 
-  CategoryTree CT_0bISR_0jsv(VS().a("0bISR"), "0 b #in ISR", "0b", kX_sub, true);
-  CategoryTree CT_1bISR_0jsv(VS().a("ge1bISR"), "#geq 1 b #in ISR", "1b", kX_sub, true);
+  CategoryTree CT_0bISR_0jsv(VS().a("0bISR"), "0 b #in ISR", "0b", kX_sub, false);
+  CategoryTree CT_1bISR_0jsv(VS().a("ge1bISR"), "#geq 1 b #in ISR", "1b", kX_sub, false);
 
   CategoryTree CT_etaC(VS().a("SVeta0"), "|#eta^{SV}| #leq 1.5", "svc", kX_sup, true);
   CategoryTree CT_etaF(VS().a("SVeta1"), "|#eta^{SV}| > 1.5", "svf", kX_sup, true);
@@ -1122,12 +1122,6 @@ CategoryTree CategoryTreeTool::GetCategories_Fakes2L() const {
   
   CategoryTree CT_gamT0(VS().a("gamT0"), "", "#gamma -", kX_sup, false);
   CategoryTree CT_gamT1(VS().a("gamT1"), "", "#gamma +", kX_sup, false);
-
-
-  CT_p0.AddSubCategory(CT_gamT0);
-  CT_p1.AddSubCategory(CT_gamT0);
-  CT_p0.AddSubCategory(CT_gamT1);
-  CT_p1.AddSubCategory(CT_gamT1);
 
 
   CT_0bISR_0jsv.AddSubCategory(CT_etaF);
@@ -1145,16 +1139,20 @@ CategoryTree CategoryTreeTool::GetCategories_Fakes2L() const {
   CT_1bISR_1j.AddSubCategory(CT_0b);
   CT_1bISR_1j.AddSubCategory(CT_1b);
 
+  CT_gamT0.AddSubCategory(CT_p0);
+  CT_gamT1.AddSubCategory(CT_p0);
+  CT_gamT0.AddSubCategory(CT_p1);
+  CT_gamT1.AddSubCategory(CT_p1);
 
-  //CT_0b.AddSubCategory(CT_gamT0);
-  //CT_0b.AddSubCategory(CT_gamT1);
-  //CT_1b.AddSubCategory(CT_gamT0);
-  //CT_1b.AddSubCategory(CT_gamT1);
-  //CT_ge1b.AddSubCategory(CT_gamT0);
-  //CT_ge1b.AddSubCategory(CT_gamT1);
+  CT_0b.AddSubCategory(CT_gamT0);
+  CT_0b.AddSubCategory(CT_gamT1);
+  CT_1b.AddSubCategory(CT_gamT0);
+  CT_1b.AddSubCategory(CT_gamT1);
+  CT_ge1b.AddSubCategory(CT_gamT0);
+  CT_ge1b.AddSubCategory(CT_gamT1);
 
   
-  CategoryTree CT_0sv_0j(VS().a("0svS"), "0sv", "0sv", kJ_sup, false);
+  CategoryTree CT_0sv_0j(VS().a("0svS"), "0sv", "0sv", kJ_sup, true);
   CategoryTree CT_ge1sv_0j(VS().a("ge1svS"), "ge1sv", "ge1sv", kJ_sup, true);
   CategoryTree CT_0sv_1j(VS().a("0svS"), "0sv", "0sv", kJ_sup, false);
   CategoryTree CT_ge1sv_1j(VS().a("ge1svS"), "ge1sv", "ge1sv", kJ_sup, true);
@@ -1189,41 +1187,41 @@ CategoryTree CategoryTreeTool::GetCategories_Fakes2L() const {
   // CT_k1.AddSubCategory(CT_1b);
 
   //depth 4 - splits by bS multiplicity
-  CategoryTree CT_gold_0j_el(VS().a("elGelG"), "gold ee", "2L0jelG", kL_sub, false);
-  CategoryTree CT_silver_0j_el(VS().a("elS"), "silver ee", "2L0jelS", kL_sub, false);
-  CategoryTree CT_bronze_0j_el(VS().a("elB"), "bronze ee", "2L0jelB", kL_sub, false);
+  CategoryTree CT_gold_0j_el(VS().a("elGelG"), "gold ee", "2L0jelG", kL_sub, true);
+  CategoryTree CT_silver_0j_el(VS().a("elS"), "silver ee", "2L0jelS", kL_sub, true);
+  CategoryTree CT_bronze_0j_el(VS().a("elB"), "bronze ee", "2L0jelB", kL_sub, true);
 
-  CategoryTree CT_gold_1j_el(VS().a("elGelG"), "gold ee", "2L1jelG", kL_sub, false);
-  CategoryTree CT_silver_1j_el(VS().a("elS"), "silver ee", "2L1jelS", kL_sub, false);
-  CategoryTree CT_bronze_1j_el(VS().a("elB"), "bronze ee", "2L1jelB", kL_sub, false);
+  CategoryTree CT_gold_1j_el(VS().a("elGelG"), "gold ee", "2L1jelG", kL_sub, true);
+  CategoryTree CT_silver_1j_el(VS().a("elS"), "silver ee", "2L1jelS", kL_sub, true);
+  CategoryTree CT_bronze_1j_el(VS().a("elB"), "bronze ee", "2L1jelB", kL_sub, true);
 
-  CategoryTree CT_gold_ge2j_el(VS().a("elGelG"), "gold ee", "2Lge2jelG", kL_sub, false);
-  CategoryTree CT_silver_ge2j_el(VS().a("elS"), "silver ee", "2Lge2jelS", kL_sub, false);
-  CategoryTree CT_bronze_ge2j_el(VS().a("elB"), "bronze ee", "2Lge2jelB", kL_sub, false);
+  CategoryTree CT_gold_ge2j_el(VS().a("elGelG"), "gold ee", "2Lge2jelG", kL_sub, true);
+  CategoryTree CT_silver_ge2j_el(VS().a("elS"), "silver ee", "2Lge2jelS", kL_sub, true);
+  CategoryTree CT_bronze_ge2j_el(VS().a("elB"), "bronze ee", "2Lge2jelB", kL_sub, true);
 
-  CategoryTree CT_gold_0j_mu(VS().a("muGmuG"), "gold mumu", "2L0jmuG", kL_sub, false);
-  CategoryTree CT_silver_0j_mu(VS().a("muS"), "silver mumu", "2L0jmuS", kL_sub, false);
-  CategoryTree CT_bronze_0j_mu(VS().a("muB"), "bronze mumu", "2L0jmuB", kL_sub, false);
+  CategoryTree CT_gold_0j_mu(VS().a("muGmuG"), "gold mumu", "2L0jmuG", kL_sub, true);
+  CategoryTree CT_silver_0j_mu(VS().a("muS"), "silver mumu", "2L0jmuS", kL_sub, true);
+  CategoryTree CT_bronze_0j_mu(VS().a("muB"), "bronze mumu", "2L0jmuB", kL_sub, true);
 
-  CategoryTree CT_gold_1j_mu(VS().a("muGmuG"), "gold mumu", "2L1jmuG", kL_sub, false);
-  CategoryTree CT_silver_1j_mu(VS().a("muS"), "silver mumu", "2L1jmuS", kL_sub, false);
-  CategoryTree CT_bronze_1j_mu(VS().a("muB"), "bronze mumu", "2L1jmuB", kL_sub, false);
+  CategoryTree CT_gold_1j_mu(VS().a("muGmuG"), "gold mumu", "2L1jmuG", kL_sub, true);
+  CategoryTree CT_silver_1j_mu(VS().a("muS"), "silver mumu", "2L1jmuS", kL_sub, true);
+  CategoryTree CT_bronze_1j_mu(VS().a("muB"), "bronze mumu", "2L1jmuB", kL_sub, true);
 
-  CategoryTree CT_gold_ge2j_mu(VS().a("muGmuG"), "gold mumu", "2Lge2jmuG", kL_sub, false);
-  CategoryTree CT_silver_ge2j_mu(VS().a("muS"), "silver mumu", "2Lge2jmuS", kL_sub, false);
-  CategoryTree CT_bronze_ge2j_mu(VS().a("muB"), "bronze mumu", "2Lge2jmuB", kL_sub, false);
+  CategoryTree CT_gold_ge2j_mu(VS().a("muGmuG"), "gold mumu", "2Lge2jmuG", kL_sub, true);
+  CategoryTree CT_silver_ge2j_mu(VS().a("muS"), "silver mumu", "2Lge2jmuS", kL_sub, true);
+  CategoryTree CT_bronze_ge2j_mu(VS().a("muB"), "bronze mumu", "2Lge2jmuB", kL_sub, true);
 
-  CategoryTree CT_gold_0j_elmu(VS().a("el^mu-elGmuG").a("elmu^0-elGmuG").a("elmu-elGmuG").a("SSelmu-elGmuG").a("OSelmu-elGmuG"), "gold emu", "2L0jelGmuG", kL_sub, false);
-  CategoryTree CT_silver_0j_elmu(VS().a("elmu-elGmuS").a("elmu-muGelS"), "silver emu", "2L0j(elmu)S", kL_sub, false);
-  CategoryTree CT_bronze_0j_elmu(VS().a("elmu-muGelB").a("elmu-elGmuB"), "bronze emu", "2L0j(elmu)B", kL_sub, false);
+  CategoryTree CT_gold_0j_elmu(VS().a("el^mu-elGmuG").a("elmu^0-elGmuG").a("elmu-elGmuG").a("SSelmu-elGmuG").a("OSelmu-elGmuG"), "gold emu", "2L0jelGmuG", kL_sub, true);
+  CategoryTree CT_silver_0j_elmu(VS().a("elmu-elGmuS").a("elmu-muGelS"), "silver emu", "2L0j(elmu)S", kL_sub, true);
+  CategoryTree CT_bronze_0j_elmu(VS().a("elmu-muGelB").a("elmu-elGmuB"), "bronze emu", "2L0j(elmu)B", kL_sub, true);
 
-  CategoryTree CT_gold_1j_elmu(VS().a("el^mu-elGmuG").a("elmu^0-elGmuG").a("elmu-elGmuG").a("SSelmu-elGmuG").a("OSelmu-elGmuG"), "gold emu", "2L1jelGmuG", kL_sub, false);
-  CategoryTree CT_silver_1j_elmu(VS().a("elmu-elGmuS").a("elmu-muGelS"), "silver emu", "2L1j(elmu)S", kL_sub, false);
-  CategoryTree CT_bronze_1j_elmu(VS().a("elmu-muGelB").a("elmu-elGmuB"), "bronze emu", "2L1j(elmu)B", kL_sub, false);
+  CategoryTree CT_gold_1j_elmu(VS().a("el^mu-elGmuG").a("elmu^0-elGmuG").a("elmu-elGmuG").a("SSelmu-elGmuG").a("OSelmu-elGmuG"), "gold emu", "2L1jelGmuG", kL_sub, true);
+  CategoryTree CT_silver_1j_elmu(VS().a("elmu-elGmuS").a("elmu-muGelS"), "silver emu", "2L1j(elmu)S", kL_sub, true);
+  CategoryTree CT_bronze_1j_elmu(VS().a("elmu-muGelB").a("elmu-elGmuB"), "bronze emu", "2L1j(elmu)B", kL_sub, true);
 
-  CategoryTree CT_gold_ge2j_elmu(VS().a("el^mu-elGmuG").a("elmu^0-elGmuG").a("elmu-elGmuG").a("SSelmu-elGmuG").a("OSelmu-elGmuG"), "gold emu", "2Lge2jelGmuG", kL_sub, false);
-  CategoryTree CT_silver_ge2j_elmu(VS().a("elmu-elGmuS").a("elmu-muGelS"), "silver emu", "2Lge2j(elmu)S", kL_sub, false);
-  CategoryTree CT_bronze_ge2j_elmu(VS().a("elmu-muGelB").a("elmu-elGmuB"), "bronze emu", "2Lge2j(elmu)B", kL_sub, false);
+  CategoryTree CT_gold_ge2j_elmu(VS().a("el^mu-elGmuG").a("elmu^0-elGmuG").a("elmu-elGmuG").a("SSelmu-elGmuG").a("OSelmu-elGmuG"), "gold emu", "2Lge2jelGmuG", kL_sub, true);
+  CategoryTree CT_silver_ge2j_elmu(VS().a("elmu-elGmuS").a("elmu-muGelS"), "silver emu", "2Lge2j(elmu)S", kL_sub, true);
+  CategoryTree CT_bronze_ge2j_elmu(VS().a("elmu-muGelB").a("elmu-elGmuB"), "bronze emu", "2Lge2j(elmu)B", kL_sub, true);
   
 
   // CategoryTree CT_Z(VS().a("OSelel").a("OSmumu").a("OSSHelel").a("OSSHmumu"), "Z*", "Z*", kL_sup, true);
@@ -1304,17 +1302,17 @@ CategoryTree CategoryTreeTool::GetCategories_Fakes2L() const {
   CT_bronze_ge2j_elmu.AddSubCategory(CT_ge1b);
 
 
-  CategoryTree CT_0j_el(VS().a("-0j"), "", "0J", kJ, true);
-  CategoryTree CT_1j_el(VS().a("-1j"), "", "1J", kJ, true);
-  CategoryTree CT_ge2j_el(VS().a("-2j"), "#geq 2 j #in S", "2J", kJ, true);
+  CategoryTree CT_0j_el(VS().a("-0j"), "", "2Lelel0J", kJ, true);
+  CategoryTree CT_1j_el(VS().a("-1j"), "", "2Lelel1J", kJ, true);
+  CategoryTree CT_ge2j_el(VS().a("-ge2j"), "#geq 2 j #in S", "2Lelel2J", kJ, true);
 
-  CategoryTree CT_0j_mu(VS().a("-0j"), "", "0J", kJ, true);
-  CategoryTree CT_1j_mu(VS().a("-1j"), "", "1J", kJ, true);
-  CategoryTree CT_ge2j_mu(VS().a("-2j"), "#geq 2 j #in S", "2J", kJ, true);
+  CategoryTree CT_0j_mu(VS().a("-0j"), "", "2Lmumu0J", kJ, true);
+  CategoryTree CT_1j_mu(VS().a("-1j"), "", "2Lmumu1J", kJ, true);
+  CategoryTree CT_ge2j_mu(VS().a("-ge2j"), "#geq 2 j #in S", "2Lmumu2J", kJ, true);
 
-  CategoryTree CT_0j_elmu(VS().a("-0j"), "", "0J", kJ, true);
-  CategoryTree CT_1j_elmu(VS().a("-1j"), "", "1J", kJ, true);
-  CategoryTree CT_ge2j_elmu(VS().a("-2j"), "#geq 2 j #in S", "2J", kJ, true);
+  CategoryTree CT_0j_elmu(VS().a("-0j"), "", "2Lelmu0J", kJ, true);
+  CategoryTree CT_1j_elmu(VS().a("-1j"), "", "2Lelmu1J", kJ, true);
+  CategoryTree CT_ge2j_elmu(VS().a("-ge2j"), "#geq 2 j #in S", "2Lelmu2J", kJ, true);
   
   CT_0j_el.AddSubCategory(CT_gold_0j_el);
   CT_0j_el.AddSubCategory(CT_silver_0j_el);
@@ -1354,20 +1352,27 @@ CategoryTree CategoryTreeTool::GetCategories_Fakes2L() const {
   CT_ge2j_elmu.AddSubCategory(CT_bronze_ge2j_elmu);
 
   
+  CategoryTree CT_2Lee(VS().a("_elel").a("_OSelel").a("_SSelel").a("_el^el").a("_elel^0"),"elel","2Lelel",kL,false);
+  CategoryTree CT_2Lmumu(VS().a("_mumu").a("_OSmumu").a("_SSmumu").a("_mu^mu").a("_mumu^0"),"mumu","2Lmumu",kL,false);
+  CategoryTree CT_2Lemu(VS().a("_elmu").a("_OSelmu").a("_SSelmu").a("_el^mu").a("_elmu^0"),"elmu","2Lelmu",kL,false);
+
+  CT_2Lee.AddSubCategory(CT_0j_el);
+  CT_2Lee.AddSubCategory(CT_1j_el);
+  CT_2Lee.AddSubCategory(CT_ge2j_el);
+
+  CT_2Lmumu.AddSubCategory(CT_0j_mu);
+  CT_2Lmumu.AddSubCategory(CT_1j_mu);
+  CT_2Lmumu.AddSubCategory(CT_ge2j_mu);
+
+  CT_2Lemu.AddSubCategory(CT_0j_elmu);
+  CT_2Lemu.AddSubCategory(CT_1j_elmu);
+  CT_2Lemu.AddSubCategory(CT_ge2j_elmu);
  
-  CategoryTree CT_2L(VS().a("Ch2L"), "2L", "2L", kL, false);
-  CT_2L.AddSubCategory(CT_0j_el);
-  CT_2L.AddSubCategory(CT_1j_el);
-  CT_2L.AddSubCategory(CT_ge2j_el);
+  CategoryTree CT_2L(VS().a("Ch2L"), "2L", "2L", kL, true);
 
-  CT_2L.AddSubCategory(CT_0j_mu);
-  CT_2L.AddSubCategory(CT_1j_mu);
-  CT_2L.AddSubCategory(CT_ge2j_mu);
-
-  CT_2L.AddSubCategory(CT_0j_elmu);
-  CT_2L.AddSubCategory(CT_1j_elmu);
-  CT_2L.AddSubCategory(CT_ge2j_elmu);
-
+  CT_2L.AddSubCategory(CT_2Lee);
+  CT_2L.AddSubCategory(CT_2Lmumu);
+  CT_2L.AddSubCategory(CT_2Lemu);
   
   return CT_2L;
   
@@ -1385,8 +1390,8 @@ CategoryTree CategoryTreeTool::GetCategories_Fakes3L() const {
   // CategoryTree CT_etaC(VS().a("SVeta0"), "|#eta^{SV}| #leq 1.5", "svc", kX_sup, true);
   // CategoryTree CT_etaF(VS().a("SVeta1"), "|#eta^{SV}| > 1.5", "svf", kX_sup, true);
 
-  CategoryTree CT_gam0(VS().a("gamT0"), "", "#gamma-", kX_sup, true);
-  CategoryTree CT_gam1(VS().a("gamT1"), "", "#gamma+", kX_sup, true);
+  CategoryTree CT_gam0(VS().a("gamT0"), "", "#gamma-", kX_sup, false);
+  CategoryTree CT_gam1(VS().a("gamT1"), "", "#gamma+", kX_sup, false);
 
   CategoryTree CT_OSSFelelel_gold_0j(VS().a("OSSFelel^el"), "OSSF#it{ee e} ", "OSSF#it{ee e}", kL_sup, true);
   CategoryTree CT_OSSFelelmu_gold_0j(VS().a("OSSFelel^mu"), "OSSF#it{ee} #mu", "OSSF#it{ee} #mu", kL_sup, true);
@@ -1460,41 +1465,63 @@ CategoryTree CategoryTreeTool::GetCategories_Fakes3L() const {
   CT_mumumu_gold_0j.AddSubCategory(CT_nOSSFmumumu_gold_0j);
 
 
-  CategoryTree CT_0j(VS().a("-0j"), "", "0J", kJ, true);
-  CategoryTree CT_ge1j(VS().a("-ge1j"), "", "1J", kJ, true);
+  CategoryTree CT_0jelelel(VS().a("-0j"), "", "3Lelelel0J", kJ, true);
+  CategoryTree CT_ge1jelelel(VS().a("-ge1j"), "", "3Lelelel1J", kJ, true);
+  CategoryTree CT_0jelelmu(VS().a("-0j"), "", "3Lelelmu0J", kJ, true);
+  CategoryTree CT_ge1jelelmu(VS().a("-ge1j"), "", "3Lelelmu1J", kJ, true);
+  CategoryTree CT_0jmumuel(VS().a("-0j"), "", "3Lmumuel0J", kJ, true);
+  CategoryTree CT_ge1jmumuel(VS().a("-ge1j"), "", "3Lmumuel1J", kJ, true);
+  CategoryTree CT_0jmumumu(VS().a("-0j"), "", "3Lmumumu0J", kJ, true);
+  CategoryTree CT_ge1jmumumu(VS().a("-ge1j"), "", "3Lmumumu1J", kJ, true);
+
   
   
-  CT_0j.AddSubCategory(CT_elelel_gold_0j);
-  CT_0j.AddSubCategory(CT_elelel_silver_0j);
-  CT_0j.AddSubCategory(CT_elelel_bronze_0j);
-  CT_0j.AddSubCategory(CT_elelmu_gold_0j);
-  CT_0j.AddSubCategory(CT_elelmu_silver_0j);
-  CT_0j.AddSubCategory(CT_elelmu_bronze_0j);
-  CT_0j.AddSubCategory(CT_mumuel_gold_0j);
-  CT_0j.AddSubCategory(CT_mumuel_silver_0j);
-  CT_0j.AddSubCategory(CT_mumuel_bronze_0j);
-  CT_0j.AddSubCategory(CT_mumumu_gold_0j);
-  CT_0j.AddSubCategory(CT_mumumu_silver_0j);
-  CT_0j.AddSubCategory(CT_mumumu_bronze_0j);
+  CT_0jelelel.AddSubCategory(CT_elelel_gold_0j);
+  CT_0jelelel.AddSubCategory(CT_elelel_silver_0j);
+  CT_0jelelel.AddSubCategory(CT_elelel_bronze_0j);
+  CT_0jelelmu.AddSubCategory(CT_elelmu_gold_0j);
+  CT_0jelelmu.AddSubCategory(CT_elelmu_silver_0j);
+  CT_0jelelmu.AddSubCategory(CT_elelmu_bronze_0j);
+  CT_0jmumuel.AddSubCategory(CT_mumuel_gold_0j);
+  CT_0jmumuel.AddSubCategory(CT_mumuel_silver_0j);
+  CT_0jmumuel.AddSubCategory(CT_mumuel_bronze_0j);
+  CT_0jmumumu.AddSubCategory(CT_mumumu_gold_0j);
+  CT_0jmumumu.AddSubCategory(CT_mumumu_silver_0j);
+  CT_0jmumumu.AddSubCategory(CT_mumumu_bronze_0j);
 
-  CT_ge1j.AddSubCategory(CT_elelel_gold_1j);
-  CT_ge1j.AddSubCategory(CT_elelel_silver_1j);
-  CT_ge1j.AddSubCategory(CT_elelel_bronze_1j);
-  CT_ge1j.AddSubCategory(CT_elelmu_gold_1j);
-  CT_ge1j.AddSubCategory(CT_elelmu_silver_1j);
-  CT_ge1j.AddSubCategory(CT_elelmu_bronze_1j);
-  CT_ge1j.AddSubCategory(CT_mumuel_gold_1j);
-  CT_ge1j.AddSubCategory(CT_mumuel_silver_1j);
-  CT_ge1j.AddSubCategory(CT_mumuel_bronze_1j);
-  CT_ge1j.AddSubCategory(CT_mumumu_gold_1j);
-  CT_ge1j.AddSubCategory(CT_mumumu_silver_1j);
-  CT_ge1j.AddSubCategory(CT_mumumu_bronze_1j);
+  CT_ge1jelelel.AddSubCategory(CT_elelel_gold_1j);
+  CT_ge1jelelel.AddSubCategory(CT_elelel_silver_1j);
+  CT_ge1jelelel.AddSubCategory(CT_elelel_bronze_1j);
+  CT_ge1jelelmu.AddSubCategory(CT_elelmu_gold_1j);
+  CT_ge1jelelmu.AddSubCategory(CT_elelmu_silver_1j);
+  CT_ge1jelelmu.AddSubCategory(CT_elelmu_bronze_1j);
+  CT_ge1jmumuel.AddSubCategory(CT_mumuel_gold_1j);
+  CT_ge1jmumuel.AddSubCategory(CT_mumuel_silver_1j);
+  CT_ge1jmumuel.AddSubCategory(CT_mumuel_bronze_1j);
+  CT_ge1jmumumu.AddSubCategory(CT_mumumu_gold_1j);
+  CT_ge1jmumumu.AddSubCategory(CT_mumumu_silver_1j);
+  CT_ge1jmumumu.AddSubCategory(CT_mumumu_bronze_1j);
 
+  CategoryTree CT_3Leee(VS().a("_elelel").a("_OSSFelel^el").a("_nOSSFelel^el"),"eee","3Lelelel",kL,false); 
+  CategoryTree CT_3Leemu(VS().a("_elelmu").a("_OSSFelel^mu").a("_nOSSFelel^mu"),"eemu","3Lelelmu",kL,false); 
+  CategoryTree CT_3Lemumu(VS().a("_mumuel").a("_OSSFmumu^el").a("_nOSSFmumu^el"),"mumue","3Lmumuel",kL,false); 
+  CategoryTree CT_3Lmumumu(VS().a("_mumumu").a("_OSSFmumu^mu").a("_nOSSFmumu^mu"),"mumumu","3Lmumumu",kL,false); 
  
+  CT_3Leee.AddSubCategory(CT_ge1jelelel);
+  CT_3Leee.AddSubCategory(CT_0jelelel);
+  CT_3Leemu.AddSubCategory(CT_0jelelmu);
+  CT_3Leemu.AddSubCategory(CT_ge1jelelmu);
+  CT_3Lemumu.AddSubCategory(CT_ge1jmumuel);
+  CT_3Lemumu.AddSubCategory(CT_0jmumuel);
+  CT_3Lmumumu.AddSubCategory(CT_0jmumumu);
+  CT_3Lmumumu.AddSubCategory(CT_ge1jmumumu);
   
   CategoryTree CT_3L(VS().a("Ch3L"), "3L", "3L", kL, true);
-  CT_3L.AddSubCategory(CT_0j);
-  CT_3L.AddSubCategory(CT_ge1j);
+
+  CT_3L.AddSubCategory(CT_3Leee);
+  CT_3L.AddSubCategory(CT_3Leemu);
+  CT_3L.AddSubCategory(CT_3Lemumu);
+  CT_3L.AddSubCategory(CT_3Lmumumu);
 
   return CT_3L;
 }
