@@ -84,7 +84,6 @@ void shapeVariation::doVariationRISR(TH1D* hist, const FitBin& fb, bool isUp){
 
 
 	int midpoint = int(bins.size()/2) + 1;
-	double maxVar = 50.;
 	for(int r = 0; r < int(bins.size()); r++){
 		// set variation for grouping of RISR bins here -> double var =
 		// make sure this is based on the r # 
@@ -132,7 +131,6 @@ void shapeVariation::doVariationMperp(TH1D* hist, const FitBin& fb, bool isUp){
 
 
 	int midpoint = int(bins.size()/2) + 1;
-	double maxVar = 50.;
 	for(int r = 0; r < int(bins.size()); r++){
 		// set variation for grouping of RISR bins here -> double var =
 		// make sure this is based on the r # 

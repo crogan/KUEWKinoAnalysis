@@ -39,6 +39,7 @@ class shapeVariation {
 		void doVariationDown();
 		void doVariations(Process pp, map<Category,string> labels);
 	private:
+		double maxVar = 50;
 		CategoryList m_cats;
 		string m_file;
 };

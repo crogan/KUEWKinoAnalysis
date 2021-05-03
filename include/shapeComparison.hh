@@ -10,6 +10,8 @@ class shapeComparison{
 		virtual ~shapeComparison();
 		double getPvalue(std::vector<double> &lambdas);
 		double getPvalue();
+		double getSigma();
+		double getSigma(std::vector<double> &lambdas);
 		//std::vector<double> getBinPvalues();
 		//double lambda;
 
