@@ -228,7 +228,7 @@ if __name__ == "__main__":
 
     # copy MET trigger files
     os.system("cp -r csv/METTrigger "+config+".")
-    METFILE = config+"METTrigger/Parameters.csv"
+    METFILE = "./config/METTrigger/Parameters.csv"
 
     # copy SV NN model
     os.system("cat json/lwtnn/nano_plus_pt20_model.json > "+config+"NNmodel.json")
