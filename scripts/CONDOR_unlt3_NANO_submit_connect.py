@@ -9,14 +9,17 @@ home = os.environ['HOME']
 #######################################
 RUN_DIR = pwd
 TEMP = pwd
+jobEXE  = "execute_script.sh"
 EXE  = "MakeReducedNtuple_NANO.x"
 #EXE  = "MakeEventCount_NANO.x"
+RESTFRAMES = './scripts/setup_RestFrames_connect.sh'
+CMSSW_SETUP = './scripts/cmssw_setup_connect.sh'
 TREE = "Events"
-OUT  = "/home/t3-ku/crogan/NTUPLES/Processing/"
-#OUT = pwd
+USER = os.environ['USER']
+OUT  = "/stash/user/"+USER+"/NTUPLES/Processing/"
 LIST = "default.list"
 QUEUE = ""
-MAXN = 10
+MAXN = 1
 SPLIT = 1
 
 def new_listfile(rootlist, listfile):
@@ -33,28 +36,27 @@ def create_filelist(rootlist, dataset, filetag):
     for f in rootlist:
         sublist.append(f)
         if len(sublist) >= MAXN and MAXN > 0:
-            listfile = "%s/%s_%s_%d.list" % (listdir, dataset, filetag, listcount)
+            listfile = "%s/%s_%s_%d.list" % (listdir_sam, dataset, filetag, listcount)
             new_listfile(sublist, listfile)
             listlist.append(listfile)
             sublist = []
             listcount += 1
 
     if len(sublist) > 0:
-        listfile = "%s/%s_%s_%d.list" % (listdir, dataset, filetag, listcount)
+        listfile = "%s/%s_%s_%d.list" % (listdir_sam, dataset, filetag, listcount)
         new_listfile(sublist, listfile)
         listlist.append(listfile)
 
     return listlist
 
-def write_sh(srcfile,ifile,ofile,lfile,dataset,filetag,i,n):
+def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
     fsrc = open(srcfile,'w')
     fsrc.write('universe = vanilla \n')
-    fsrc.write('executable = '+EXE+" \n")
-    fsrc.write('getenv = True \n')
+    fsrc.write('executable = '+jobEXE+" \n")
     fsrc.write('use_x509userproxy = true \n')
     fsrc.write('Arguments = ');
-    fsrc.write('-ilist='+ifile+" ")
-    fsrc.write('-ofile='+ofile+" ")
+    fsrc.write('-ilist=$(Item) ')
+    fsrc.write('-ofile='+ofile.split('/')[-1]+" ")
     fsrc.write('-tree='+TREE+" ")
     if DO_SMS == 1:
         fsrc.write('--sms ')
@@ -70,14 +72,48 @@ def write_sh(srcfile,ifile,ofile,lfile,dataset,filetag,i,n):
     fsrc.write('-jme='+JMEFOLD+" ")
     fsrc.write('-svfile='+SVFILE+" ")
     fsrc.write('-metfile='+METFILE+" ")
-    splitstring = '-split=%d,%d \n' % (i+1,n)
+    splitstring = '-split=%s,%d\n' % ('$$([$(Step)+1])', n)
     fsrc.write(splitstring)
-    fsrc.write('output = '+lfile+"_out.log \n")
-    fsrc.write('error = '+lfile+"_err.log \n")
-    fsrc.write('log = '+lfile+"_log.log \n")
+
+    outlog = outfile+".out"
+    errlog = errfile+".err"
+    loglog = logfile+".log"
+    #fsrc.write('output = '+outlog.split('/')[-1]+" \n")
+    #fsrc.write('error = '+errlog.split('/')[-1]+" \n")
+    #fsrc.write('log = '+loglog.split('/')[-1]+" \n")
+    fsrc.write('output = '+outlog+" \n")
+    fsrc.write('error = '+errlog+" \n")
+    fsrc.write('log = '+loglog+" \n")
     fsrc.write('Requirements = (Machine != "red-node000.unl.edu")\n')
-    fsrc.write('request_memory = 4 GB \n')
-    fsrc.write('queue \n')
+    fsrc.write('request_memory = 2 GB \n')
+    #fsrc.write('+RequiresCVMFS = True \n')
+    #fsrc.write('+RequiresSharedFS = True \n')
+
+    transfer_input = 'transfer_input_files = '+TARGET+'config.tgz\n'
+    fsrc.write(transfer_input)
+
+    fsrc.write('should_transfer_files = YES\n')
+    fsrc.write('when_to_transfer_output = ON_EXIT\n')
+
+    transfer_out_files = 'transfer_output_files = '+ofile.split('/')[-1]+'\n'
+    #transfer_out_files += ','+outlog.split('/')[-1]
+    #transfer_out_files += ','+errlog.split('/')[-1]
+    #transfer_out_files += ','+loglog.split('/')[-1]+' \n'
+    fsrc.write(transfer_out_files)
+
+    transfer_out_remap = 'transfer_output_remaps = "'+ofile.split('/')[-1]+'='+ofile
+    transfer_out_remap += '"\n'
+    #transfer_out_remap += ';'
+    #transfer_out_remap += outlog.split('/')[-1]+' = '+outlog
+    #transfer_out_remap += ' ; '
+    #transfer_out_remap += errlog.split('/')[-1]+' = '+errlog
+    #transfer_out_remap += ' ; '
+    #transfer_out_remap += loglog.split('/')[-1]+' = '+loglog+'"\n'
+    fsrc.write(transfer_out_remap)
+    
+    fsrc.write('+ProjectName="cms.org.ku"\n')
+    fsrc.write('+REQUIRED_OS="rhel7"\n')
+    fsrc.write('queue '+str(n)+' from '+ifile+'\n')
     #fsrc.write('cd '+RUN_DIR+" \n")
     #fsrc.write('source ../RestFrames/setup_RestFrames.sh \n')
     fsrc.close()
@@ -153,8 +189,12 @@ if __name__ == "__main__":
     listdir = TARGET+"list/"
     srcdir  = TARGET+"src/"
     logdir  = TARGET+"log/"
+    outdir  = TARGET+"out/"
+    errdir  = TARGET+"err/"
     os.system("mkdir -p "+listdir)
     os.system("mkdir -p "+logdir)
+    os.system("mkdir -p "+outdir)
+    os.system("mkdir -p "+errdir)
     os.system("mkdir -p "+srcdir)
 
     # make config directory
@@ -163,37 +203,44 @@ if __name__ == "__main__":
 
     # make EventCount file
     os.system("hadd "+config+"EventCount.root root/EventCount/*.root")
-    EVTCNT = config+"EventCount.root"
+    EVTCNT = "./config/EventCount.root"
 
     # make FilterEff file 
     os.system("hadd "+config+"FilterEff.root root/FilterEff/*.root")
-    FILTEREFF = config+"FilterEff.root"
+    FILTEREFF = "./config/FilterEff.root"
 
     # make json file
     os.system("cat json/GoodRunList/* > "+config+"GRL_JSON.txt")
-    JSON = config+"GRL_JSON.txt"
+    JSON = "./config/GRL_JSON.txt"
 
     # copy PU root files
     os.system("cp -r root/PU "+config+".")
-    PUFOLD = config+"PU/"
+    PUFOLD = "./config/PU/"
 
     # copy BTAG SF files
     os.system("cp -r root/BtagSF "+config+".")
     os.system("cp -r csv/BtagSF/* "+config+"BtagSF/.")
-    BTAGFOLD = config+"BtagSF/"
+    BTAGFOLD = "./config/BtagSF/"
 
     # copy JME files
     os.system("cp -r data/JME "+config+".")
-    JMEFOLD = config+"JME/"
+    JMEFOLD = "./config/JME/"
 
     # copy MET trigger files
     os.system("cp -r csv/METTrigger "+config+".")
-    METFILE = config+"METTrigger/Parameters.csv"
+    METFILE = "./config/METTrigger/Parameters.csv"
 
     # copy SV NN model
-    os.system("cat json/lwtnn/nano_train_model.json > "+config+"NNmodel.json")
-    SVFILE = config+"NNmodel.json"
+    os.system("cat json/lwtnn/nano_plus_pt20_model.json > "+config+"NNmodel.json")
+    SVFILE = "./config/NNmodel.json"
     
+    os.system("cp "+EXE+" "+config+".")
+    os.system("cp "+RESTFRAMES+" "+config+".")
+    os.system("cp "+CMSSW_SETUP+" "+config+".")
+
+    print TARGET
+    #os.system("tar -czf "+TARGET+"/config.tgz "+config)
+
     # output root files
     ROOT = OUT+"/"+NAME+"/"
     if ROOT == TARGET:
@@ -211,6 +258,7 @@ if __name__ == "__main__":
         inputlist = mylist.readlines()
 
         for flist in inputlist:
+            if '#' in flist: continue
             flist = flist.strip('\n\r')
             print "Processing list from %s" % flist
 
@@ -250,15 +298,43 @@ if __name__ == "__main__":
             datasetlist[p][2].extend(rootlist)
 
     for (dataset,filetag,rootlist) in datasetlist:
+        os.system("mkdir -p "+os.path.join(listdir, dataset+'_'+filetag))
+        listdir_sam = os.path.join(listdir, dataset+'_'+filetag)
         listlist = create_filelist(rootlist, dataset, filetag)
+        overlist_name = listdir_sam+'/'+dataset+'_'+filetag+'_list.list'
+        with open(overlist_name,'w') as overlist:
+            newlistlist = ['config/'+'/'.join(l.split('/')[-3:])+'\n' for l in listlist]
+            overlist.writelines(newlistlist)
+            overlist.close()
 
-        for f in listlist:
-            filename = f.split("/")
-            filename = filename[-1]
-            name = filename.replace(".list",'')
-            for i in range(SPLIT):
-                namei = name + "_%d" % i
-                write_sh(srcdir+namei+".sh",f,ROOT+dataset+"_"+filetag+"/"+namei+".root",logdir+namei,dataset,filetag,i,SPLIT)
-                os.system('condor_submit '+srcdir+namei+".sh")
-            
-    
+        os.system("mkdir -p "+os.path.join(logdir, dataset+'_'+filetag))
+        os.system("mkdir -p "+os.path.join(outdir, dataset+'_'+filetag))
+        os.system("mkdir -p "+os.path.join(errdir, dataset+'_'+filetag))
+
+        file_name = os.path.join(ROOT, dataset+'_'+filetag, overlist_name.split('/')[-1].replace('_list.list', '_$(ItemIndex)_$(Step)'))
+
+        logfile = os.path.join(logdir, dataset+'_'+filetag, file_name.split('/')[-1])
+        outfile= os.path.join(outdir, dataset+'_'+filetag, file_name.split('/')[-1])
+        errfile = os.path.join(errdir, dataset+'_'+filetag, file_name.split('/')[-1])
+
+        script_name = srcdir+'_'.join([dataset, filetag])+'.submit'
+        write_sh(script_name, overlist_name, file_name+'.root', logfile, outfile, errfile, dataset, filetag, SPLIT)
+        #os.system('condor_submit '+script_name)
+
+    print listdir
+    os.system("cp -r "+listdir+" "+config)
+    print "creating tarbal from: ", TARGET
+
+    os.system("tar -C "+config+"/../ -czvf "+TARGET+"/config.tgz config")
+
+    submit_dir = srcdir        
+    submit_list = [os.path.join(submit_dir, f) for f in os.listdir(submit_dir) if (os.path.isfile(os.path.join(submit_dir, f)) and ('.submit' in f))]
+
+    for f in submit_list:
+        print "submitting: ", f
+        os.system('condor_submit ' + f)
+   
+
+
+
+ 

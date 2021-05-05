@@ -204,9 +204,16 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("PUweight_up", &m_PUweight_up);
   tree->Branch("PUweight_down", &m_PUweight_down);
 
-  tree->Branch("BtagSFweight", &m_BtagSFweight);
-  tree->Branch("BtagSFweight_up", &m_BtagSFweight_up);
-  tree->Branch("BtagSFweight_down", &m_BtagSFweight_down);
+  tree->Branch("BtagHFSFweight", &m_BtagHFSFweight);
+  tree->Branch("BtagHFSFweight_up", &m_BtagHFSFweight_up);
+  tree->Branch("BtagHFSFweight_down", &m_BtagHFSFweight_down);
+  tree->Branch("BtagLFSFweight", &m_BtagLFSFweight);
+  tree->Branch("BtagLFSFweight_up", &m_BtagLFSFweight_up);
+  tree->Branch("BtagLFSFweight_down", &m_BtagLFSFweight_down);
+
+  tree->Branch("MetTrigSFweight", &m_MetTrigSFweight);
+  tree->Branch("MetTrigSFweight_up", &m_MetTrigSFweight_up);
+  tree->Branch("MetTrigSFweight_down", &m_MetTrigSFweight_down);
 
   tree->Branch("runnum", &m_runnum);
   tree->Branch("luminum", &m_runnum);
@@ -215,15 +222,35 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("NPV", &m_NPV);
 
   tree->Branch("EventFilter", &m_EventFilter);
+
+  tree->Branch("EventFlag_FailJetID", &m_EventFlag_FailJetID);
+  tree->Branch("EventFlag_JetInHEM", &m_EventFlag_JetInHEM);
+  tree->Branch("EventFlag_JetInHEM_Pt20", &m_EventFlag_JetInHEM_Pt20);
+  tree->Branch("EventFlag_JetInHEM_Pt20_JetID", &m_EventFlag_JetInHEM_Pt20_JetID);
+  tree->Branch("HEM_Veto", &m_HEM_Veto);
   
   tree->Branch("METtrigger", &m_METtrigger);
   tree->Branch("METHTtrigger", &m_METHTtrigger);
   tree->Branch("METORtrigger", &m_METORtrigger);
+
+  tree->Branch("SingleElectrontrigger", &m_SingleElectrontrigger);
+  tree->Branch("SingleMuontrigger", &m_SingleMuontrigger);
+  tree->Branch("DoubleElectrontrigger", &m_DoubleElectrontrigger);
+  tree->Branch("DoubleMuontrigger", &m_DoubleMuontrigger);
+  tree->Branch("EMutrigger", &m_EMutrigger);
   
   tree->Branch("MET", &m_MET);
   tree->Branch("MET_phi", &m_MET_phi);
-  
-  tree->Branch("HT", &m_HT);
+
+  tree->Branch("altMET", &m_altMET);
+  tree->Branch("altMET_phi", &m_altMET_phi);
+
+  tree->Branch("HT_eta24", &m_HT_eta24);
+  tree->Branch("HT_eta24_id", &m_HT_eta24_id);
+  tree->Branch("HT_eta3", &m_HT_eta3);
+  tree->Branch("HT_eta3_id", &m_HT_eta3_id);
+  tree->Branch("HT_eta5", &m_HT_eta5);
+  tree->Branch("HT_eta5_id", &m_HT_eta5_id);
 
   tree->Branch("Nele", &m_Nele);
   tree->Branch("Nmu", &m_Nmu);
@@ -592,12 +619,13 @@ void ReducedNtuple<Base>::ClearVariables(){
 
 template <class Base>
 void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
+  
   AnalysisBase<Base>::SetSystematic(sys);
 
   m_EventFilter = AnalysisBase<Base>::PassEventFilter();
 
   if(AnalysisBase<Base>::IsData())
-    if(!AnalysisBase<Base>::IsGoodEvent() || !m_EventFilter)
+    if(!AnalysisBase<Base>::IsGoodEvent())
       return;
 
   //cout << "Event Weight " << tree->GetName() << " " << AnalysisBase<Base>::GetEventWeight() << endl;
@@ -609,14 +637,79 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
     return;
 
   TVector3 ETMiss;
-  ParticleList Jets = AnalysisBase<Base>::GetJetsMET(ETMiss);
-  Jets = Jets.PtEtaCut(20., 2.4);
-
+  ParticleList Jets_noID = AnalysisBase<Base>::GetJetsMET(ETMiss);
+  ParticleList Jets      = AnalysisBase<Base>::GetJetsMET(ETMiss, 3); // jet ID 3
+  
   if(ETMiss.Mag() < 150.)
     return;
   
   ClearVariables();
 
+  if(Jets_noID.size() != Jets.size())
+    m_EventFlag_FailJetID = true;
+  else
+    m_EventFlag_FailJetID = false;
+
+  int Njet      = Jets.size();
+  int Njet_noID = Jets_noID.size();
+
+  // any jets in HEM region?
+  m_EventFlag_JetInHEM = false;
+  for(int j = 0; j < Njet_noID; j++)
+    if(AnalysisBase<Base>::IsHEM(Jets_noID[j]))
+      m_EventFlag_JetInHEM = true;
+
+  Jets      = Jets.PtEtaCut(20., 5.);
+  Jets_noID = Jets_noID.PtEtaCut(20., 5.);
+  Njet      = Jets.size();
+  Njet_noID = Jets_noID.size();
+
+  m_EventFlag_JetInHEM_Pt20 = false;
+  m_HT_eta5 = 0.;
+  for(int j = 0; j < Njet_noID; j++){
+    if(AnalysisBase<Base>::IsHEM(Jets_noID[j]))
+      m_EventFlag_JetInHEM_Pt20 = true;
+    m_HT_eta5 += Jets_noID[j].Pt();
+  }
+
+  m_EventFlag_JetInHEM_Pt20_JetID = false;
+  m_HT_eta5_id = 0.;
+  for(int j = 0; j < Njet; j++){
+    if(AnalysisBase<Base>::IsHEM(Jets[j]))
+      m_EventFlag_JetInHEM_Pt20_JetID = true;
+    m_HT_eta5_id += Jets[j].Pt();
+  }
+
+  Jets      = Jets.PtEtaCut(20., 3.);
+  Jets_noID = Jets_noID.PtEtaCut(20., 3.);
+  Njet      = Jets.size();
+  Njet_noID = Jets_noID.size();
+
+  m_HT_eta3 = 0.;
+  for(int j = 0; j < Njet_noID; j++){
+    m_HT_eta3 += Jets_noID[j].Pt();
+  }
+
+  m_HT_eta3_id = 0.;
+  for(int j = 0; j < Njet; j++){
+    m_HT_eta3_id += Jets[j].Pt();
+  }
+
+  Jets      = Jets.PtEtaCut(20., 2.4);
+  Jets_noID = Jets_noID.PtEtaCut(20., 2.4);
+  Njet      = Jets.size();
+  Njet_noID = Jets_noID.size();
+
+  m_HT_eta24 = 0.;
+  for(int j = 0; j < Njet_noID; j++){
+    m_HT_eta24 += Jets_noID[j].Pt();
+  }
+
+  m_HT_eta24_id = 0.;
+  for(int j = 0; j < Njet; j++){
+    m_HT_eta24_id += Jets[j].Pt();
+  }
+  
   ParticleList Muons = AnalysisBase<Base>::GetMuons();
   Muons = Muons.ParticleIDCut(kVeryLoose);
   Muons = Muons.PtEtaCut(3.0);
@@ -673,6 +766,15 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   // not enough stuff
   if(m_Nlep + m_Njet + m_NSV < 2 || m_Njet < 1)
     return;
+
+  m_HEM_Veto = m_EventFlag_JetInHEM_Pt20;
+  for(int l = 0; l < m_Nlep; l++)
+    if(AnalysisBase<Base>::IsHEM(Leptons[l]))
+      m_HEM_Veto = true;
+
+  TVector3 altETMiss = AnalysisBase<Base>::GetAltMET();
+  m_altMET     = altETMiss.Pt();
+  m_altMET_phi = altETMiss.Phi();
   
   // Sparticle pair-production trees analysis
     
@@ -970,10 +1072,17 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
     m_PUweight_up = AnalysisBase<Base>::GetPUWeight(1);
     m_PUweight_down = AnalysisBase<Base>::GetPUWeight(-1);
     
-    m_BtagSFweight = AnalysisBase<Base>::GetBtagSFWeight(Jets, 0, kMedium);
-    m_BtagSFweight_up = AnalysisBase<Base>::GetBtagSFWeight(Jets, 1, kMedium);
-    m_BtagSFweight_down = AnalysisBase<Base>::GetBtagSFWeight(Jets, -1, kMedium);
+    m_BtagHFSFweight = AnalysisBase<Base>::GetBtagSFWeight(Jets, true, 0, kMedium);
+    m_BtagHFSFweight_up = AnalysisBase<Base>::GetBtagSFWeight(Jets, true, 1, kMedium);
+    m_BtagHFSFweight_down = AnalysisBase<Base>::GetBtagSFWeight(Jets, true, -1, kMedium);
+    m_BtagLFSFweight = AnalysisBase<Base>::GetBtagSFWeight(Jets, false, 0, kMedium);
+    m_BtagLFSFweight_up = AnalysisBase<Base>::GetBtagSFWeight(Jets, false, 1, kMedium);
+    m_BtagLFSFweight_down = AnalysisBase<Base>::GetBtagSFWeight(Jets, false, -1, kMedium);
 
+    m_MetTrigSFweight = AnalysisBase<Base>::GetMETTriggerSFWeight(m_MET, m_HT_eta5, m_Nele, m_Nmu, 0);
+    m_MetTrigSFweight_up = AnalysisBase<Base>::GetMETTriggerSFWeight(m_MET, m_HT_eta5, m_Nele, m_Nmu, 1);
+    m_MetTrigSFweight_down = AnalysisBase<Base>::GetMETTriggerSFWeight(m_MET, m_HT_eta5, m_Nele, m_Nmu, -1);
+   
     m_NPU = AnalysisBase<Base>::GetNPUtrue();
 
     TVector3 genETMiss = AnalysisBase<Base>::GetGenMET();
@@ -984,9 +1093,17 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
     m_PUweight = 1;
     m_PUweight_up = 1;
     m_PUweight_down = 1;
-    m_BtagSFweight = 1;
-    m_BtagSFweight_up = 1;
-    m_BtagSFweight_down = 1;
+    m_BtagHFSFweight = 1;
+    m_BtagHFSFweight_up = 1;
+    m_BtagHFSFweight_down = 1;
+    m_BtagLFSFweight = 1;
+    m_BtagLFSFweight_up = 1;
+    m_BtagLFSFweight_down = 1;
+    m_MetTrigSFweight = 1.;
+    m_MetTrigSFweight_up = 1.;
+    m_MetTrigSFweight_down = 1.;
+
+    m_NPU = 0.;
   }
   
   m_runnum   = AnalysisBase<Base>::GetRunNum();
@@ -998,6 +1115,12 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   m_METtrigger   = AnalysisBase<Base>::GetMETtrigger();
   m_METHTtrigger = AnalysisBase<Base>::GetMETHTtrigger();
   m_METORtrigger = AnalysisBase<Base>::GetMETORtrigger();
+
+  m_SingleElectrontrigger = AnalysisBase<Base>::GetSingleElectrontrigger();
+  m_SingleMuontrigger = AnalysisBase<Base>::GetSingleMuontrigger();
+  m_DoubleElectrontrigger = AnalysisBase<Base>::GetDoubleElectrontrigger();
+  m_DoubleMuontrigger = AnalysisBase<Base>::GetDoubleMuontrigger();
+  m_EMutrigger = AnalysisBase<Base>::GetEMutrigger(); 
   
   m_MET     = ETMiss.Pt();
   m_MET_phi = ETMiss.Phi();

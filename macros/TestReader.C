@@ -42,6 +42,7 @@ FitReader* FITReader = new FitReader(inputfile, a2, a3);
 //			.a("Wjets").a("Fakes").a("T2tt_5000490").a("T2tt_5000480").a("T2tt_5000375"),
 //			CT_3L);
 
+<<<<<<< HEAD
   // FITReader->Plot1Dstack(SL().a("ttbar").a("ST").a("DB").a("ZDY").a("TB")
   // 			 .a("Wjets").a("Fakes").a("T2bW_50000490").a("T2bW_50000480").a("T2bW_50000470"),
   // FITReader->Plot1Dstack(VS().a("ttbar").a("ST").a("DB").a("ZDY").a("TB")
@@ -98,6 +99,39 @@ const string& hadS3 = "3jS";
 // 	     		 hadI,
 //  			 "canvas3",
 // 			 "");
+=======
+  VS signals;
+  //signals.a("TChiWZ_2500240").a("TChiWZ_2500220").a("TChiWZ_2500200").a("TChiWZ_2500160");
+  signals.a("T2tt_5000490").a("T2bW_5000490").a("T2tt_5000480").a("T2bW_5000480");
+  //signals.a("T2tt_5000450").a("T2bW_5000450").a("T2tt_5000420").a("T2bW_5000420");
+  //signals.a("T2tt_5000450").a("T2bW_5000420").a("T2tt_5000375").a("T2bW_5000325");
+  //signals.a("T2bb_5000475").a("T2bb_5000450").a("T2bb_5000400").a("T2bb_5000350");
+  VS all = signals;
+  all.a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD").a("Wjets").a("Fakes");
+
+  FITReader->PlotYields("0Lyields",
+  			all,
+  			CT_0L);
+  FITReader->PlotYields("1Lyields",
+  			all,
+  			CT_1L);
+  FITReader->PlotYields("2Lyields",
+  			all,
+  			CT_2L);
+  FITReader->PlotYields("3Lyields",
+  			all,
+  			CT_3L);
+  
+  int depth0 = CT_1L.GetDepth();
+  vector<const CategoryTree*> CTs;
+  CT_1L.GetListDepth(CTs, depth0-2);
+
+  vector<const CategoryTree*> CTs_deep;
+  CT_1L.GetListDepth(CTs_deep, depth0-2);
+
+  int iCT = 2;
+  int iCTd = 2;
+>>>>>>> 384fb64aee8fb4487a255ace50dcb58023cccb2d
   
 // TCanvas* cv = FITReader->Plot2D(VS().a("T1bbbb_13001100"),
 //  			 VS().a("1L"),

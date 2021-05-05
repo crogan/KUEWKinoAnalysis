@@ -50,4 +50,4 @@ at this point you will need to have set the **RestFrames**
 environmental varables set, i.e. have done* `source setup_RestFrames.sh`)
 
 	>$ cd KUEWKinoAnalysis
-	>$ make CMSSW
+	>$ make cmssw

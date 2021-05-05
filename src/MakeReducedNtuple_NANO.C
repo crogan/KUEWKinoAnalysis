@@ -43,6 +43,7 @@ int main(int argc, char* argv[]) {
   char BTAGFOLD[400];
   char JMEFOLD[400];
   char SVFILE[400];
+  char METTRIGFILE[400];
 
   bool DO_FILE = false;
   bool DO_LIST = false;
@@ -101,6 +102,7 @@ int main(int argc, char* argv[]) {
     if (strncmp(argv[i],"-btag",5)==0)   sscanf(argv[i],"-btag=%s", BTAGFOLD);
     if (strncmp(argv[i],"-jme",4)==0)   sscanf(argv[i],"-jme=%s", JMEFOLD);
     if (strncmp(argv[i],"-svfile",7)==0)   sscanf(argv[i],"-svfile=%s", SVFILE);
+    if (strncmp(argv[i],"-metfile",8)==0)   sscanf(argv[i],"-metfile=%s", METTRIGFILE);
     
     if (strncmp(argv[i],"--sms",5)==0)  DO_SMS = true;
     if (strncmp(argv[i],"--data",6)==0)  IS_DATA = true;
@@ -178,6 +180,7 @@ int main(int argc, char* argv[]) {
   ntuple->AddBtagFolder(string(BTAGFOLD));
   ntuple->AddJMEFolder(string(JMEFOLD));
   ntuple->AddSVDiscrFile(string(SVFILE));
+  ntuple->AddMETTriggerFile(string(METTRIGFILE));
 
   if(DO_SYS)
     ntuple->AddSystematics();

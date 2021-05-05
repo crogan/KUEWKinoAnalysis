@@ -790,12 +790,13 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchAddress("genMomPDGID_susy", &genMomPDGID_susy, &b_genMomPDGID_susy);
    Notify();
 
-    fChain->SetBranchStatus("*",0);
+   fChain->SetBranchStatus("*",0);
    fChain->SetBranchStatus("*weight",1);
    fChain->SetBranchStatus("*weight_down",1);
    fChain->SetBranchStatus("*weight_up",1);
     fChain->SetBranchStatus("PUweight_up",1);
    fChain->SetBranchStatus("NPU",1);
+   fChain->SetBranchStatus("EventFilter", 1);
    fChain->SetBranchStatus("MET",1);
    fChain->SetBranchStatus("MET_phi",1);
    fChain->SetBranchStatus("RISR",1);
