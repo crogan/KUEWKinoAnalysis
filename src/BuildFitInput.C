@@ -546,14 +546,20 @@ for(int i = 0; i < samples.GetN(); i++){
 CategoryTree CT_Fakes1L = CTTool.GetCategories_Fakes1L();
 CategoryTree CT_Fakes2L = CTTool.GetCategories_Fakes2L();
 CategoryTree CT_Fakes3L = CTTool.GetCategories_Fakes3L();
-cout << "shapeTemplateTool" << endl;
 
-shapeTemplateTool STT(OutFile,CT_Fakes1L,fakeProcList);
-cout << "createTemplates" << endl;
-STT.createTemplates();
- 
-shapeVariationTool SVT(CT_Fakes1L, fakeProcList, OutFile);
-cout << "do variations" << endl;
-SVT.doVariations();
+//shapeTemplateTool STT1L(OutFile,CT_Fakes1L,fakeProcList);
+//STT1L.createTemplates();
+// 
+//shapeVariationTool SVT1L(CT_Fakes1L, fakeProcList, OutFile);
+//SVT1L.doVariations();
+//
+//shapeTemplateTool STT2L(OutFile,CT_Fakes2L,fakeProcList);
+//STT2L.createTemplates();
+// 
+//shapeVariationTool SVT2L(CT_Fakes2L, fakeProcList, OutFile);
+//SVT2L.doVariations();
+// 
+//shapeTemplateTool STT3L(OutFile,CT_Fakes3L,fakeProcList);
+//STT3L.createTemplates();
  
 }
