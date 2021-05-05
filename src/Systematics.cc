@@ -308,16 +308,12 @@ Systematics SystematicsTool::GetWeightSystematics() const {
   Systematics list;
   
   //list += "PU_SF"; // turn off for now
-<<<<<<< HEAD
-  list += "BTAG_SF";
-  list += "lepPT_weight";
-  list += "lepEta_weight";
-  list += "lepSIP3D_weight";
-  list += "lepIso_weight";
-=======
+  //list += "lepPT_weight";
+  //list += "lepEta_weight";
+  //list += "lepSIP3D_weight";
+  //list += "lepIso_weight";
   list += "BTAGHF_SF";
   list += "BTAGLF_SF";
->>>>>>> 384fb64aee8fb4487a255ace50dcb58023cccb2d
   list += "MET_TRIG";
 
   return list;
