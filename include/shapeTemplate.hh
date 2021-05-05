@@ -67,10 +67,13 @@ public:
 
 private:
 	string m_file;
-
 	VS m_proc;
+	VS ST_fakes;
+	VS dom_fakes;
 	CategoryTree m_CT;
 	vector<std::pair<TH1D*,string>> m_histsAndLabels;
+
+	map<string,VS> m_domToRare;
 
 	map<string,double> m_nameToNorm;
 	map<int,TH1D*> m_listToHist;

@@ -260,6 +260,16 @@ shapeTemplateTool::shapeTemplateTool(const string& inputfile, const CategoryTree
 	m_file = inputfile;
 	m_CT = CT;
 	for(int i = 0; i < procs.GetN(); i++) m_proc += procs[i].Name();
+
+	m_domToRare["ttbar_Fakes_elf0"] = VS().a("ST_Fakes_elf0"); 
+	m_domToRare["ttbar_Fakes_elf1"] = VS().a("ST_Fakes_elf1"); 
+	m_domToRare["ttbar_Fakes_muf0"] = VS().a("ST_Fakes_muf0"); 
+	m_domToRare["ttbar_Fakes_muf1"] = VS().a("ST_Fakes_muf1"); 
+
+	m_domToRare["Wjets_Fakes_elf0"] = VS().a("TB_Fakes_elf0").a("DB_Fakes_elf0"); 
+	m_domToRare["Wjets_Fakes_elf1"] = VS().a("TB_Fakes_elf1").a("DB_Fakes_elf1"); 
+	m_domToRare["Wjets_Fakes_muf0"] = VS().a("TB_Fakes_muf0").a("DB_Fakes_muf0"); 
+	m_domToRare["Wjets_Fakes_muf1"] = VS().a("TB_Fakes_muf1").a("DB_Fakes_muf1"); 
 	//m_proc = proc;
 
 }
@@ -303,10 +313,15 @@ for(int i = 0; i < nProc; i++){
       vproc = fitReader.m_Strings[m_proc[i]];
     else
       vproc += m_proc[i];
-    for(int p = 0; p < int(vproc.size()); p++){
+    for(int p = 0; p < int(vproc.size()); p++i){
+      //skip if rare
+      if(vproc[p].find("DB") == str::npos || vproc[p].find("TB") == str::npos || vproc[p].find("ST") == str::npos) continue;
       int index = fitReader.GetProcesses().Find(vproc[p]);
       if(index < 0) continue;
       Process pp = fitReader.GetProcesses()[index];
+      vector<int> ridxs;
+      for(int r = 0; r < m_domToRare[vproc[p]].size(); r++)
+      ridxs.push_back(fitReader.GetProcesses().Find(m_domToRare[vproc[p]][r]));
 //   cout << pp.Name() << endl;
       for(int list = 0; list < depth; list++){
 //	cout << "list #" << list << endl;
@@ -316,6 +331,15 @@ for(int i = 0; i < nProc; i++){
 	nCat = cats.GetN();
        	ProcessList ppp;
 	ppp += pp; 
+	//if process pp == ST or TB or DB, combine with another background (ST with ttbar, TB+DB with Wjets)
+	if(ridxs.size() > 0) {
+        	for(int r = 0; r < ridxs.size(); r++){
+			if(ridxs[r] < 0) continue;
+	 		ppp += fitReader.GetProcesses()[ridxs[r]];
+		}
+	
+	}	
+	 
 	//one total hist per list per process
 	TH1D* totalHist = fitReader.GetAddedHist(pp.Name()+"_smoothed",cats,ppp);
 	if(totalHist == nullptr) continue;//cout << "null consolidated histogram" << endl; continue;}
