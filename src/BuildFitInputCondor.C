@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
   bool doSigFile = false;
   string SigFile = "";
   
-  string NtuplePath = "/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_21_09_20/";
+  string NtuplePath = "/home/t3-ku/crogan/NANO/NTUPLES/NEW_21_09_20/";//"/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_21_09_20/";
   string OutFile    = "BuildFitInput_output.root";
 
   bool bprint = false;
@@ -262,7 +262,7 @@ void WriteScript(const string& src_name,
   file << "output = " << log_name << ".out" << endl;
   file << "error = "  << log_name << ".err" << endl;
   file << "log = "    << log_name << ".log" << endl;
-  file << "Requirements = (Machine != \"red-node000.unl.edu\")" << endl;
+  file << "Requirements = (Machine != \"16597184.000.unl.edu\")" << endl;
   file << "request_memory = 4 GB" << endl;
   file << "queue " << endl;
   file.close();  
