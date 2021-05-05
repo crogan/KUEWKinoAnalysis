@@ -42,7 +42,7 @@ private:
 
   int YearMap(int year);
 
-  void InitSMS(const string& prefix, const string& filename, double weight = 1., bool SF = false, bool DL = false);
+  void InitSMS(const string& prefix, const string& filename, double weight = 1., bool FS = false, bool DL = false);
   void InitProcMap();
   static bool m_ProcInit;
   static std::map<Process, pair<vector<string>,string> > m_Proc[3];

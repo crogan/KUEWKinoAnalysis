@@ -89,7 +89,7 @@ string AnalysisBase<Base>::GetEntry(int entry){
   Base::ClearEvent();
   Base::fChain->GetEntry(entry);
   m_SampleIndex = GetSampleIndex();
-
+  
   return m_IndexToSample[m_SampleIndex];
 }
 
@@ -156,6 +156,11 @@ void AnalysisBase<Base>::AddSVDiscrFile(const string& svfile){
 }
 
 template <class Base>
+void AnalysisBase<Base>::AddMETTriggerFile(const string& csvfile){
+  m_METTriggerTool.BuildMap(csvfile);
+}
+
+template <class Base>
 void AnalysisBase<Base>::InitializeHistograms(vector<TH1D*>& histos){}
 
 template <class Base>
@@ -204,6 +209,14 @@ bool AnalysisBase<Base>::PassEventFilter(){
 }
 
 template <class Base>
+bool AnalysisBase<Base>::IsHEM(Particle part){
+  if(part.Eta() > -3.2 && part.Eta() < -1.2 && part.Phi() > -1.77 && part.Phi() < -0.67)
+    return true;
+
+  return false;
+}
+
+template <class Base>
 double AnalysisBase<Base>::GetEventWeight(){
   return 0;
 }
@@ -214,7 +227,12 @@ double AnalysisBase<Base>::GetPUWeight(int updown){
 }
 
 template <class Base>
-double AnalysisBase<Base>::GetBtagSFWeight(const ParticleList& jets, int updown, ParticleIDType tag){
+double AnalysisBase<Base>::GetBtagSFWeight(const ParticleList& jets, bool HForLF, int updown, ParticleIDType tag){
+  return 0;
+}
+
+template <class Base>
+double AnalysisBase<Base>::GetMETTriggerSFWeight(double MET, double HT, int Nele, int Nmu, int updown){
   return 0;
 }
 
@@ -235,6 +253,11 @@ bool AnalysisBase<Base>::IsGoodEvent(){
 
 template <class Base>
 TVector3 AnalysisBase<Base>::GetMET(){
+  return TVector3(0.,0.,0.);
+}
+
+template <class Base>
+TVector3 AnalysisBase<Base>::GetAltMET(){
   return TVector3(0.,0.,0.);
 }
 
@@ -260,17 +283,42 @@ bool AnalysisBase<Base>::GetMETORtrigger(){
 }
 
 template <class Base>
+bool AnalysisBase<Base>::GetSingleElectrontrigger(){
+  return false;
+}
+
+template <class Base>
+bool AnalysisBase<Base>::GetSingleMuontrigger(){
+  return false;
+}
+
+template <class Base>
+bool AnalysisBase<Base>::GetDoubleElectrontrigger(){
+  return false;
+}
+
+template <class Base>
+bool AnalysisBase<Base>::GetDoubleMuontrigger(){
+  return false;
+}
+
+template <class Base>
+bool AnalysisBase<Base>::GetEMutrigger(){
+  return false;
+}
+
+template <class Base>
 ParticleList AnalysisBase<Base>::GetSVs(const TVector3& PV){
   return ParticleList();
 }
 
 template <class Base>
-ParticleList AnalysisBase<Base>::GetJetsMET(TVector3& MET){
+ParticleList AnalysisBase<Base>::GetJetsMET(TVector3& MET, int id){
   return ParticleList();
 }
 
 template <class Base>
-ParticleList AnalysisBase<Base>::GetJets(){
+ParticleList AnalysisBase<Base>::GetJets(int id){
   return ParticleList();
 }
 
@@ -482,7 +530,7 @@ TVector3 AnalysisBase<StopNtupleTree>::GetGenMET(){
 }
 
 template <>
-ParticleList AnalysisBase<StopNtupleTree>::GetJets(){
+ParticleList AnalysisBase<StopNtupleTree>::GetJets(int id){
   ParticleList list;
 
   int Njet = jetsLVec->size();
@@ -838,6 +886,93 @@ bool AnalysisBase<SUSYNANOBase>::GetMETORtrigger(){
 }
 
 template <>
+bool AnalysisBase<SUSYNANOBase>::GetSingleElectrontrigger(){
+  int year = 2016;
+  if(m_FileTag.find("17") != std::string::npos)
+    year = 2017;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+
+  if(year == 2016)
+    return (HLT_Ele27_WPTight_Gsf);
+  if(year == 2017 ||
+     year == 2018)
+    return (HLT_Ele32_WPTight_Gsf);
+
+  return 0;
+}
+
+template <>
+bool AnalysisBase<SUSYNANOBase>::GetSingleMuontrigger(){
+  int year = 2016;
+  if(m_FileTag.find("17") != std::string::npos)
+    year = 2017;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+
+  if(year == 2016)
+    return (HLT_IsoMu24 ||
+            HLT_IsoTkMu24);
+  if(year == 2017 ||
+     year == 2018)
+    return (HLT_IsoMu24 ||
+            HLT_IsoTkMu24);
+
+  return 0;
+}
+
+template <>
+bool AnalysisBase<SUSYNANOBase>::GetDoubleElectrontrigger(){
+  int year = 2016;
+  if(m_FileTag.find("17") != std::string::npos)
+    year = 2017;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+
+  if(year == 2016)
+    return (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL);
+  if(year == 2017 ||
+     year == 2018)
+    return (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL);
+
+  return 0;
+}
+
+template <>
+bool AnalysisBase<SUSYNANOBase>::GetDoubleMuontrigger(){
+  int year = 2016;
+  if(m_FileTag.find("17") != std::string::npos)
+    year = 2017;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+
+  if(year == 2016)
+    return (HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL);
+  if(year == 2017 ||
+     year == 2018)
+    return (HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL);
+
+  return 0;
+}
+
+template <>
+bool AnalysisBase<SUSYNANOBase>::GetEMutrigger(){
+  int year = 2016;
+  if(m_FileTag.find("17") != std::string::npos)
+    year = 2017;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+
+  if(year == 2016)
+    return (HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ);
+  if(year == 2017 ||
+     year == 2018)
+    return (HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ);
+
+  return 0;
+}
+
+template <>
 std::pair<int,int> AnalysisBase<SUSYNANOBase>::GetSUSYMasses(){
   if(!IsData()){
     int MP = 0;
@@ -938,10 +1073,12 @@ double AnalysisBase<SUSYNANOBase>::GetPUWeight(int updown){
 }
 
 template <>
-double AnalysisBase<SUSYNANOBase>::GetBtagSFWeight(const ParticleList& jets, int updown, ParticleIDType tag){
+double AnalysisBase<SUSYNANOBase>::GetBtagSFWeight(const ParticleList& jets, bool HForLF, int updown, ParticleIDType tag){
   if(IsData())
     return 1.;
 
+  bool FastSim = IsFastSim();
+  
   int year = 2016;
   if(m_FileTag.find("17") != std::string::npos)
     year = 2017;
@@ -963,8 +1100,15 @@ double AnalysisBase<SUSYNANOBase>::GetBtagSFWeight(const ParticleList& jets, int
     else
       iflavor = 2;
 
-    EFF = m_BtagSFTool.EFF(jets[i].Pt(), year, iflavor);
+    if(HForLF && iflavor == 2)
+      continue;
+    if(!HForLF && iflavor != 2)
+      continue;
+    
+    EFF = m_BtagSFTool.EFF(jets[i].Pt(), year, iflavor, FastSim);
     SF  = m_BtagSFTool.SF(jets[i].Pt(), year, iflavor, updown);
+    if(FastSim)
+      SF *= m_BtagSFTool.SF(jets[i].Pt(), year, iflavor, updown, FastSim);
 
     if(jets[i].BtagID() >= tag){
       probMC   *= EFF;
@@ -979,6 +1123,28 @@ double AnalysisBase<SUSYNANOBase>::GetBtagSFWeight(const ParticleList& jets, int
     return 1.;
 
   return probDATA/probMC;
+}
+
+template <>
+double AnalysisBase<SUSYNANOBase>::GetMETTriggerSFWeight(double MET, double HT, int Nele, int Nmu, int updown){
+  if(IsData())
+    return 1.;
+
+  int year = 2016;
+  if(m_FileTag.find("17") != std::string::npos)
+    year = 2017;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+
+  if(IsFastSim()){
+    return m_METTriggerTool.Get_EFF(MET, HT, year = 2017,
+				    (Nele > 0), (Nmu > 0),
+				    false, updown);
+  } else {
+    return m_METTriggerTool.Get_SF(MET, HT, year = 2017,
+				   (Nele > 0), (Nmu > 0),
+				   false, updown);
+  }
 }
 
 template <>
@@ -1103,7 +1269,7 @@ void AnalysisBase<SUSYNANOBase>::BookHistograms(vector<TH1D*>& histos){
 }
 
 template <>
-ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET){
+ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET, int id){
   int year = 2017;
   if(m_FileTag.find("16") != std::string::npos)
     year = 2016;
@@ -1124,7 +1290,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET){
     bool failID = false;
     if(Jet_pt[i] < 15. || fabs(Jet_eta[i]) > 5.)
       continue;
-    if(Jet_jetId[i] < 3)
+    if(Jet_jetId[i] < id)
       continue;
     
     Particle jet;
@@ -1268,9 +1434,17 @@ TVector3 AnalysisBase<SUSYNANOBase>::GetMET(){
 }
 
 template <>
-ParticleList AnalysisBase<SUSYNANOBase>::GetJets(){
+TVector3 AnalysisBase<SUSYNANOBase>::GetAltMET(){
+  TVector3 MET;
+  MET.SetPtEtaPhi(MET_pt,0.0,MET_phi);
+
+  return MET;
+}
+
+template <>
+ParticleList AnalysisBase<SUSYNANOBase>::GetJets(int id){
   TVector3 dum;
-  return GetJetsMET(dum);
+  return GetJetsMET(dum, id);
 }
 
 template <>
