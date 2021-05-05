@@ -113,6 +113,7 @@ double shapeComparison::calcLikelihood(std::vector<double> &lambdas) { //calcula
 //original function
 double shapeComparison::getPvalue(std::vector<double> &lambdas){
 	double LH = calcLikelihood(lambdas); //fill vector of LHs (bin-by-bin) by passing empty vector by reference to calcLikelihood
+	for(int i = 0; i < lambdas.size(); i++) lambdas[i] = sqrt(lambdas[i]);
 	double pval = 1 - gammp(nDof/2.0,LH/2.0); //value of cumulative distribution function - take inverse b/c we want the probability of a value equal to or greater than our test statistic - this is our p-value
 	std::cout << "LH: " << LH <<  " pval: " << pval << std::endl;
 	return pval;
@@ -126,6 +127,20 @@ double shapeComparison::getPvalue(){
 	return pval;
 }
 
+double shapeComparison::getSigma(std::vector<double> &lambdas){
+	double LH = sqrt(calcLikelihood(lambdas)); //fill vector of LHs (bin-by-bin) by passing empty vector by reference to calcLikelihood
+
+	double pval = 1 - gammp(nDof/2.0,LH/2.0); //value of cumulative distribution function - take inverse b/c we want the probability of a value equal to or greater than our test statistic - this is our p-value
+	std::cout << "LH: " << LH <<  " pval: " << pval << std::endl;
+	return pval;
+}
+double shapeComparison::getSigma(){
+	double LH = sqrt(calcLikelihood()); //fill vector of LHs (bin-by-bin) by passing empty vector by reference to calcLikelihood
+	//cout << "likelihood: " << LH << endl;
+	double pval = 1 - gammp(nDof/2.0,LH/2.0); //value of cumulative distribution function - take inverse b/c we want the probability of a value equal to or greater than our test statistic - this is our p-value
+	// std::cout << "LH: " << LH <<  " pval: " << pval << std::endl;
+	return pval;
+}
 
 
 double shapeComparison::chi2Distribution(){

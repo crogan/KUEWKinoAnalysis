@@ -125,7 +125,6 @@ assymGraph->Draw();
 
 void plotShapeComparison::getLHplots(){
   for(int gr = 0; gr < m_nHists; gr++){
-cout << "graph #" << gr << " mLHs size: " << m_LHs[gr].size() << endl;
 if(m_LHs[gr].size() < 1) continue;
     TGraphAsymmErrors* gLH = new TGraphAsymmErrors(m_graphs[gr]->GetN());
     for(int i = 0; i < m_graphs[gr]->GetN(); i++){
