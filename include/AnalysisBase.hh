@@ -16,6 +16,7 @@
 #include "BtagSFTool.hh"
 #include "JMETool.hh"
 #include "SVDiscrTool.hh"
+#include "METTriggerTool.hh"
 
 #include "Particle.hh"
 #include "Systematics.hh"
@@ -39,6 +40,7 @@ public:
   void AddBtagFolder(const string& btagfold);
   void AddJMEFolder(const string& jmefold);
   void AddSVDiscrFile(const string& svfile);
+  void AddMETTriggerFile(const string& csvfile);
   void DoSMS();
   void DoData();
   void DoFastSim();
@@ -67,14 +69,24 @@ public:
   virtual bool GetMETtrigger();
   virtual bool GetMETHTtrigger();
   virtual bool GetMETORtrigger();
+
+  virtual bool GetSingleElectrontrigger();
+  virtual bool GetSingleMuontrigger();
+  virtual bool GetDoubleElectrontrigger();
+  virtual bool GetDoubleMuontrigger();
+  virtual bool GetEMutrigger(); 
   
   virtual TVector3 GetPV(bool& good);
   virtual TVector3 GetMET();
-  virtual ParticleList GetJets();
-  virtual ParticleList GetJetsMET(TVector3& MET);
+  virtual ParticleList GetJets(int id = -1);
+  virtual ParticleList GetJetsMET(TVector3& MET, int id = -1);
   virtual ParticleList GetElectrons();
   virtual ParticleList GetMuons();
   virtual ParticleList GetSVs(const TVector3& PV);
+
+  virtual TVector3 GetAltMET();
+  
+  virtual bool IsHEM(Particle part);
 
   virtual TVector3 GetGenMET();
   virtual ParticleList GetGenElectrons();
@@ -104,7 +116,8 @@ protected:
   
   virtual double GetEventWeight();
   virtual double GetPUWeight(int updown = 0);
-  virtual double GetBtagSFWeight(const ParticleList& jets, int updown = 0, ParticleIDType tag = kMedium);
+  virtual double GetBtagSFWeight(const ParticleList& jets, bool HForLF, int updown = 0, ParticleIDType tag = kMedium);
+  virtual double GetMETTriggerSFWeight(double MET, double HT, int Nele, int Nmu, int updown = 0);
   virtual double GetXsec();
   virtual bool   IsGoodEvent();
 
@@ -125,6 +138,7 @@ private:
   JMETool         m_JMETool;
   SVDiscrTool     m_SVDiscrTool;
   SystematicsTool m_SysTool;
+  METTriggerTool  m_METTriggerTool;
 
   int m_SampleIndex;
   virtual int GetSampleIndex();
