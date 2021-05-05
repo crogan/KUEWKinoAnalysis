@@ -855,7 +855,7 @@ TCanvas* FitReader::Plot1Dstraight(const string& proc,
   for(int i = 0; i < Ncats; i++){
     cats.push_back(GetCategories());
   }
-  //cat.Print();
+  cat.Print();
 
   // Leptonic
   VS lep_labels;
@@ -870,28 +870,34 @@ TCanvas* FitReader::Plot1Dstraight(const string& proc,
 
   if(m_Strings.count(lep_cat[i]) != 0){
     int N = m_Strings[lep_cat[i]].size();
-    // cout << "number of strings in lep tag: " << N << endl;
+     //cout << "number of strings in lep tag: " << N << endl;
   for(int j = 0; j < N; j++){
     if(Nlep > 1){
       vleps[i].push_back(m_Strings[lep_cat[i]][j]);
+//     cout << m_Strings[lep_cat[i]][j] << endl;
   }else
     vlep.push_back(m_Strings[lep_cat[i]][j]);
-    // cout << m_Strings[lep_cat[i]][j] << endl;
   }
   } else {
     if(Nlep > 1)
+{
     vleps[i].push_back(lep_cat[i]);
+//	cout << lep_cat[i] << endl;
+}
   else 
     vlep.push_back(lep_cat[i]);
   }
   if(Nlep > 1){
     cats[i] = cats[i].FilterOR(vleps[i]);
   }
-  }
+ }
 if(Nlep == 1)
   for(int i = 0; i < Ncats; i++)
     cats[i] = cats[i].FilterOR(vlep);
 
+
+for(int c = 0; c < Ncats; c++) cout << "categoryList #" << c << " " << cats[c].GetN() << endl;
+cout << "leptonic cuts passed" << endl;
 // Hadronic S
   VS hadS_labels;
   vector<VS> vhadSs;
@@ -906,7 +912,9 @@ if(Nlep == 1)
 
   if(m_Strings.count(hadS_cat[i]) != 0){
     int N = m_Strings[hadS_cat[i]].size();
+     cout << "number of strings in hadS tag: " << N << endl;
     for(int j = 0; j < N; j++){
+	cout << hadS_cat[i] << " " << m_Strings[hadS_cat[i]][j] << endl;
       if(NhadS > 1)
   vhadSs[i].push_back(m_Strings[hadS_cat[i]][j]);
 else vhadS.push_back(m_Strings[hadS_cat[i]][j]);
@@ -937,8 +945,10 @@ else vhadS.push_back(m_Strings[hadS_cat[i]][j]);
   }
   
 } 
-  //cat = cat.FilterOR(vhadS);
+  cat = cat.FilterOR(vhadS);
 
+for(int c = 0; c < Ncats; c++) cout << "categoryList #" << c << " " << cats[c].GetN() << endl;
+cout << "hadS cuts passed" << endl;
   // Hadronic ISR
   VS hadI_labels;
   vector<VS> vhadIs;
@@ -952,6 +962,7 @@ else vhadS.push_back(m_Strings[hadS_cat[i]][j]);
 
   if(m_Strings.count(hadI_cat[i]) != 0){
     int N = m_Strings[hadI_cat[i]].size();
+     cout << "number of strings in hadI tag: " << N << endl;
     for(int j = 0; j < N; j++){
       if(NhadI > 1)
   vhadIs[i].push_back(m_Strings[hadI_cat[i]][j]);
@@ -986,9 +997,11 @@ else vhadI.push_back(m_Strings[hadI_cat[i]][j]);
   }
   
 }
-  //cat = cat.FilterOR(vhadI);
+  cat = cat.FilterOR(vhadI);
 
 
+for(int c = 0; c < Ncats; c++) cout << "categoryList #" << c << " " << cats[c].GetN() << endl;
+cout << "hadI cuts passed" << endl;
   // extra (PTISR, gammaT)
   VS extra_labels;
   vector<VS> vextras;
@@ -1003,6 +1016,7 @@ if(Nextra != -999){
 
   if(m_Strings.count(extra[i]) != 0){
     int N = m_Strings[extra[i]].size();
+     cout << "number of strings in extra tag: " << N << endl;
     for(int j = 0; j < N; j++){
       if(Nextra > 1)
   vextras[i].push_back(m_Strings[extra[i]][j]);
@@ -1022,8 +1036,10 @@ else vextra.push_back(m_Strings[extra[i]][j]);
   if(Nextra == 1)
   for(int i = 0; i < Ncats; i++)
     cats[i] = cats[i].FilterOR(vextra);
- // cat = cat.FilterOR(vextra);
+  cat = cat.FilterOR(vextra);
 }
+for(int c = 0; c < Ncats; c++) cout << "categoryList #" << c << " " << cats[c].GetN() << endl;
+cout << "extra cuts passed" << endl;
 
   for(int c = 0; c < Ncats; c++){
     int Ncat = cats[c].GetN();
@@ -1614,6 +1630,8 @@ gLHs[0]->GetHistogram()->GetXaxis()->Set(NB,ax_x1,ax_x2);
   for(int r = 0; r < NR; r++)
   blabels_Mperp += bin[r].GetMBinLabels();
 
+for(int i = 0; i < blabels_Mperp.size(); i++) cout << "Mperp bin #: " << i << " bin label: " << blabels_Mperp[i] << endl;
+
   int lmax = 0;
   for(int b = 0; b < NB; b++){
   int len = blabels_Mperp[b].length();
@@ -1731,7 +1749,7 @@ TMultiGraph* mgLH = new TMultiGraph("LH","LH");
    mgLH->GetYaxis()->SetTitleOffset(0.37);
    mgLH->GetYaxis()->SetLabelFont(42);
    mgLH->GetYaxis()->SetLabelSize(0.07);
-   mgLH->GetYaxis()->SetTitle("Log Likelihood Ratio");
+   mgLH->GetYaxis()->SetTitle("Sigma");
    gStyle->SetTickLength(0.02,"X");
    gStyle->SetTickLength(0.02,"Y");
    gStyle->SetTitleOffset(0.5,"Y");
@@ -1811,7 +1829,8 @@ int ib = 0;
 for(int r = 0; r < NR; r++){
 int NM = bin[r].NBins();
   for(int m = 0; m < NM; m++){
-  string binLabel = "Bin #"+std::to_string(ib)+" | RISR: "+blabels_RISR[r]+" | M_{#perp}  : "+blabels_Mperp[m]; 
+  string binLabel = "Bin #"+std::to_string(ib)+" | RISR: "+blabels_RISR[r]+" | M_{#perp}  : "+bin[r].GetMBinLabels()[m]; 
+  //string binLabel = "Bin #"+std::to_string(ib)+" | RISR: "+blabels_RISR[r]+" | M_{#perp}  : "+blabels_Mperp[m]; 
   l.DrawLatex(1.-hhi+0.01, 1.- (Nhist+1)*(1.-0.49)/9. - 0.23- 0.05*ib,binLabel.c_str());
    //TLegend* leg = new TLegend(1.-hhi+0.03, 1.- (Nhist+1)*(1.-0.49)/9.-0.2, 0.98, 1.-hto);
   //1.-hhi+0.01, 1.- (Nhist+1)*(1.-0.49)/9., 0.98, 1.-hto-0.005
@@ -2898,6 +2917,8 @@ gLHs[0]->GetHistogram()->GetXaxis()->Set(NB,ax_x1,ax_x2);
   for(int r = 0; r < NR; r++)
   blabels_Mperp += bin[r].GetMBinLabels();
 
+for(int i = 0; i < blabels_Mperp.size(); i++) cout << "Mperp bin #: " << i << " bin label: " << blabels_Mperp[i] << endl;
+
   int lmax = 0;
   for(int b = 0; b < NB; b++){
   int len = blabels_Mperp[b].length();
@@ -3015,7 +3036,7 @@ TMultiGraph* mgLH = new TMultiGraph("LH","LH");
    mgLH->GetYaxis()->SetTitleOffset(0.37);
    mgLH->GetYaxis()->SetLabelFont(42);
    mgLH->GetYaxis()->SetLabelSize(0.07);
-   mgLH->GetYaxis()->SetTitle("Log Likelihood Ratio");
+   mgLH->GetYaxis()->SetTitle("Sigma");
    gStyle->SetTickLength(0.02,"X");
    gStyle->SetTickLength(0.02,"Y");
    gStyle->SetTitleOffset(0.5,"Y");
@@ -3094,8 +3115,8 @@ pRatio->cd();
 int ib = 0;
 for(int r = 0; r < NR; r++){
 int NM = bin[r].NBins();
-  for(int m = 0; m < NM; m++){
-  string binLabel = "Bin #"+std::to_string(ib)+" | RISR: "+blabels_RISR[r]+" | M_{#perp}  : "+blabels_Mperp[m]; 
+  for(int m = 0; m < bin[r].GetMBinLabels().size(); m++){
+  string binLabel = "Bin #"+std::to_string(ib)+" | RISR: "+blabels_RISR[r]+" | M_{#perp}  : "+bin[r].GetMBinLabels()[m]; 
   l.DrawLatex(1.-hhi+0.01, 1.- (Nhist+1)*(1.-0.49)/9. - 0.23- 0.05*ib,binLabel.c_str());
    //TLegend* leg = new TLegend(1.-hhi+0.03, 1.- (Nhist+1)*(1.-0.49)/9.-0.2, 0.98, 1.-hto);
   //1.-hhi+0.01, 1.- (Nhist+1)*(1.-0.49)/9., 0.98, 1.-hto-0.005
@@ -3855,6 +3876,40 @@ void FitReader::InitializeRecipes(){
   m_Color["Wjets_LF"] = 7021;
   m_Strings["Wjets_LF"] = VS().a("Wjets_Fakes_elf1").a("Wjets_Fakes_muf1");
   
+  m_Title["ZDY_LF_el"] = "Z+DY, light flavor + unm.";
+  m_Color["ZDY_LF_el"] = 7021;
+  m_Strings["ZDY_LF_el"] = VS().a("ZDY_Fakes_elf1");
+  
+  m_Title["ZDY_HF_el"] = "Z+DY, heavy flavor + unm.";
+  m_Color["ZDY_HF_el"] = 7021;
+  m_Strings["ZDY_HF_el"] = VS().a("ZDY_Fakes_elf0");
+  
+  m_Title["ZDY_LF_mu"] = "Z+DY, light flavor + unm.";
+  m_Color["ZDY_LF_mu"] = 7021;
+  m_Strings["ZDY_LF_mu"] = VS().a("ZDY_Fakes_muf1");
+  
+  m_Title["ZDY_HF_mu"] = "Z+DY, heavy flavor + unm.";
+  m_Color["ZDY_HF_mu"] = 7021;
+  m_Strings["ZDY_HF_mu"] = VS().a("ZDY_Fakes_muf0");
+
+  m_Title["DB+rare_LF_el"] = "Di-boson + tri-boson + rare, light flavor";
+  m_Color["DB+rare_LF_el"] = 7021;
+  m_Strings["DB+rare_LF_el"] = VS().a("TB_Fakes_elf1").a("DB_Fakes_elf1");
+  
+  m_Title["DB+rare_LF_mu"] = "Di-boson + tri-boson + rare, light flavor";
+  m_Color["DB+rare_LF_mu"] = 7021;
+  m_Strings["DB+rare_LF_mu"] = VS().a("TB_Fakes_muf1").a("DB_Fakes_muf1");
+  
+  m_Title["DB+rare_HF_el"] = "Di-boson + tri-boson + rare, heavy flavor";
+  m_Color["DB+rare_HF_el"] = 7021;
+  m_Strings["DB+rare_HF_el"] = VS().a("TB_Fakes_elf0").a("DB_Fakes_elf0");
+
+  m_Title["DB+rare_HF_mu"] = "Di-boson + tri-boson + rare, heavy flavor";
+  m_Color["DB+rare_HF_mu"] = 7021;
+  m_Strings["DB+rare_HF_mu"] = VS().a("TB_Fakes_muf0").a("DB_Fakes_muf0");
+
+
+
   m_Title["Total"] = "total background";
   m_Color["Total"] = 7000;
   m_Strings["Total"] = VS().a("ttbar").a("ST").a("DB").a("ZDY").a("Wjets").a("Fakes_elf0").a("Fakes_elf1").
@@ -3965,9 +4020,47 @@ void FitReader::InitializeRecipes(){
     .a("2LSS_el^mu-el1mu2").a("2LSS_elmu^0-el1mu2").a("2LSS_el^mu-mu1el2").a("2LSS_elmu^0-mu1el2")
     .a("2LSS_el^mu-el2mu2").a("2LSS_elmu^1-el2mu2");
 
+  m_Title["3Lelgold"] = "#scale[1.2]{e^{#pm}G e^{#pm}G e^{#pm}G}";
+  m_Strings["3Lelgold"] = VS().a("elGelGelG");
+
+  m_Title["3Lelsilver"] = "#scale[1.2]{e^{#pm}G e^{#pm}G e^{#pm}S}";
+  m_Strings["3Lelsilver"] = VS().a("elGelGelS");
+
+  m_Title["3Lelbronze"] = "#scale[1.2]{e^{#pm}G e^{#pm}G e^{#pm}B}";
+  m_Strings["3Lelbronze"] = VS().a("elGelGelB");
+  
+  m_Title["3Leemugold"] = "#scale[1.2]{e^{#pm}G e^{#pm}G #mu^{#pm}G}";
+  m_Strings["3Leemugold"] = VS().a("elGelGmuG");
+  
+  m_Title["3Leemusilver"] = "#scale[1.2]{e^{#pm}G (e^{#pm} #mu^{#pm})S}";
+  m_Strings["3Leemusilver"] = VS().a("elGelGmuS").a("elGmuGelS");
+  
+  m_Title["3Leemubronze"] = "#scale[1.2]{e^{#pm}G (e^{#pm} #mu^{#pm})B}";
+  m_Strings["3Leemubronze"] = VS().a("elGelGmuB").a("elGmuGelB");
+
+  m_Title["3Lemumugold"] = "#scale[1.2]{e^{#pm}G #mu^{#pm}G #mu^{#pm}G}";
+  m_Strings["3Lemumugold"] = VS().a("elGmuGmuG");
+  
+  m_Title["3Lemumusilver"] = "#scale[1.2]{#mu^{#pm}G (e^{#pm} #mu^{#pm})S}";
+  m_Strings["3Lemumusilver"] = VS().a("elGmuGmuS").a("muGmuGelS");
+
+  m_Title["3Lemumubronze"] = "#scale[1.2]{#mu^{#pm}G (e^{#pm} #mu^{#pm})B}";
+  m_Strings["3Lemumubronze"] = VS().a("elGmuGmuB").a("muGmuGelB");
+
+  m_Title["3Lmugold"] = "#scale[1.2]{#mu^{#pm}G #mu^{#pm}G #mu^{#pm}G}";
+  m_Strings["3Lmugold"] = VS().a("muGmuGmuG");
+
+  m_Title["3Lmusilver"] = "#scale[1.2]{#mu^{#pm}G #mu^{#pm}G #mu^{#pm}S}";
+  m_Strings["3Lmusilver"] = VS().a("muGmuGmuS");
+
+  m_Title["3Lmubronze"] = "#scale[1.2]{#mu^{#pm}G #mu^{#pm}G #mu^{#pm}B}";
+  m_Strings["3Lmubronze"] = VS().a("muGmuGmuB");
+
+
+
   // hadronic categories
   m_Title["0jS"] = "#splitline{0 jet}{incl. SVs} #scale[1.2]{#in S}";
-  m_Strings["0jS"] = VS().a("0j0svS").a("0j1svS").a("0jge1svS").a("0jge2svS"); 
+  m_Strings["0jS"] = VS().a("0jS").a("0j0svS").a("0j1svS").a("0jge1svS").a("0jge2svS"); 
  
   m_Title["0j0svS"] = "#splitline{0 jets}{0 SV-tags} #scale[1.2]{#in S}";
 
