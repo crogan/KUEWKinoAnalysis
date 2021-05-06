@@ -520,9 +520,9 @@ CategoryTree CategoryTreeTool::GetCategories_1L() const {
   CategoryTree CT_1b(VS().a("1bS").a("j1b"), "1b", "1b", kJ_sub, false);
   CategoryTree CT_2b(VS().a("2bS"), "2b", "2b", kJ_sub, false);
   
-  CategoryTree CT_0bISR(VS().a("0bISR"), "0 b #in ISR", "0b", kX_sub, true);
-  CategoryTree CT_1bISR(VS().a("ge1bISR"), "#geq 1 b #in ISR", "1b", kX_sub, true);
-  CategoryTree CT_inclbISR(VS().a("ge1jISR"), "", "", kX_sub, true);
+  CategoryTree CT_0bISR(VS().a("0bISR"), "0 b #in ISR", "0b", kX_sub, false);
+  CategoryTree CT_1bISR(VS().a("ge1bISR"), "#geq 1 b #in ISR", "1b", kX_sub, false);
+  CategoryTree CT_inclbISR(VS().a("ge1jISR"), "", "", kX_sub, false);
 
   CT_0b.AddSubCategory(CT_0bISR);
   CT_0b.AddSubCategory(CT_1bISR);
@@ -530,8 +530,8 @@ CategoryTree CategoryTreeTool::GetCategories_1L() const {
   CT_1b.AddSubCategory(CT_1bISR);
   CT_2b.AddSubCategory(CT_inclbISR);
   
-  CategoryTree CT_etaC(VS().a("SVeta0"), "|#eta^{SV}| #leq 1.5", "svc", kX_sup, true);
-  CategoryTree CT_etaF(VS().a("SVeta1"), "|#eta^{SV}| > 1.5", "svf", kX_sup, true);
+  CategoryTree CT_etaC(VS().a("SVeta0"), "|#eta^{SV}| #leq 1.5", "svc", kX_sup, false);
+  CategoryTree CT_etaF(VS().a("SVeta1"), "|#eta^{SV}| > 1.5", "svf", kX_sup, false);
   
   CategoryTree CT_0sv_0(VS().a("0svS"), "0sv", "0sv", kJ_sup, false);
   CategoryTree CT_0sv_1(VS().a("0svS"), "0sv", "0sv", kJ_sup, false);
@@ -540,8 +540,8 @@ CategoryTree CategoryTreeTool::GetCategories_1L() const {
   CT_1sv.AddSubCategory(CT_etaC);
   CT_1sv.AddSubCategory(CT_etaF);
 
-  CategoryTree CT_p0(VS().a("PTISR0"), "", "p-", kX_sup, true);
-  CategoryTree CT_p1(VS().a("PTISR1"), "", "p+", kX_sup, true);
+  CategoryTree CT_p0(VS().a("PTISR0"), "", "p-", kX_sup, false);
+  CategoryTree CT_p1(VS().a("PTISR1"), "", "p+", kX_sup, false);
 
   CategoryTree CT_g0(VS().a("gamT0"), "", "#gamma-", kX_sup, false);
   CategoryTree CT_g1(VS().a("gamT1"), "", "#gamma+", kX_sup, false);
@@ -1445,9 +1445,183 @@ CategoryTree CategoryTreeTool::GetCategories_Fakes3L() const {
   return CT_3L;
 }
 
-CategoryTree CategoryTreeTool::GetCategories_QCD() const {
+CategoryTree CategoryTreeTool::GetCategories_QCD1L() const {
+  CategoryTree CT_0b(VS().a("j0bS"), "0 b #in S", "0b", kJ_sub, true);
+  CategoryTree CT_1b(VS().a("j1bS"), "1 b #in S", "1b", kJ_sub, true);
+  CategoryTree CT_ge1b(VS().a("ge1bS"), "geq 1 b #in S", "1b", kJ_sub, true);
+  CategoryTree CT_2b(VS().a("2bS"), "#geq 2 b #in S", "2b", kJ_sub, true);
+ 
+  CategoryTree CT_0bISR_1j(VS().a("0bISR"), "0 b #in ISR", "0b", kX_sub, false);
+  CategoryTree CT_1bISR_1j(VS().a("ge1bISR"), "#geq 1 b #in ISR", "1b", kX_sub, false);
 
-//look at QCD regions
+  CategoryTree CT_0bISR_0j(VS().a("0bISR"), "0 b #in ISR", "0b", kX_sub, false);
+  CategoryTree CT_1bISR_0j(VS().a("ge1bISR"), "#geq 1 b #in ISR", "1b", kX_sub, false);
+  
+  CategoryTree CT_0bISR_0jsv(VS().a("0bISR"), "0 b #in ISR", "0b", kX_sub, false);
+  CategoryTree CT_1bISR_0jsv(VS().a("ge1bISR"), "#geq 1 b #in ISR", "1b", kX_sub, false);
+  
+  CategoryTree CT_etaC(VS().a("SVeta0"), "|#eta^{SV}| #leq 1.5", "svc", kX_sup, true);
+  CategoryTree CT_etaF(VS().a("SVeta1"), "|#eta^{SV}| > 1.5", "svf", kX_sup, true);
+
+  CategoryTree CT_p0(VS().a("PTISR0"), "", "p-", kX_sup, true);
+  CategoryTree CT_p1(VS().a("PTISR1"), "", "p+", kX_sup, true);
+  
+  CategoryTree CT_gamT0(VS().a("gamT0"), "", "#gamma -", kX_sup, false);
+  CategoryTree CT_gamT1(VS().a("gamT1"), "", "#gamma +", kX_sup, false);
+
+
+  CT_0bISR_0jsv.AddSubCategory(CT_etaF);
+  CT_0bISR_0jsv.AddSubCategory(CT_etaC);
+  CT_1bISR_0jsv.AddSubCategory(CT_etaF);
+  CT_1bISR_0jsv.AddSubCategory(CT_etaC);
+  
+  CT_0bISR_0j.AddSubCategory(CT_p0);
+  CT_0bISR_0j.AddSubCategory(CT_p1);
+  CT_1bISR_0j.AddSubCategory(CT_p0);
+  CT_1bISR_0j.AddSubCategory(CT_p1);
+
+  CT_0bISR_1j.AddSubCategory(CT_0b);
+  CT_0bISR_1j.AddSubCategory(CT_1b);
+  CT_1bISR_1j.AddSubCategory(CT_0b);
+  CT_1bISR_1j.AddSubCategory(CT_1b);
+
+
+
+ // CT_p0.AddSubCategory(CT_gamT0);
+ // CT_p1.AddSubCategory(CT_gamT0);
+ // CT_p0.AddSubCategory(CT_gamT1);
+ // CT_p1.AddSubCategory(CT_gamT1);
+  
+  
+  CT_gamT0.AddSubCategory(CT_p0);
+  CT_gamT0.AddSubCategory(CT_p1);
+  CT_gamT1.AddSubCategory(CT_p0);
+  CT_gamT1.AddSubCategory(CT_p1);
+
+  CT_0b.AddSubCategory(CT_gamT0);
+  CT_0b.AddSubCategory(CT_gamT1);
+  CT_1b.AddSubCategory(CT_gamT0);
+  CT_1b.AddSubCategory(CT_gamT1);
+  CT_ge1b.AddSubCategory(CT_gamT0);
+  CT_ge1b.AddSubCategory(CT_gamT1);
+  CT_2b.AddSubCategory(CT_gamT0);
+  CT_2b.AddSubCategory(CT_gamT1);
+ 
+
+  CategoryTree CT_0sv_0j(VS().a("0svS"), "0 sv #in S", "0sv", kJ_sup, true);
+  CategoryTree CT_ge1sv_0j(VS().a("ge1svS"), "#geq 1 sv #in S", "1sv", kJ_sup, true);
+  CategoryTree CT_0sv_1j(VS().a("0svS"), "0 sv #in S", "0sv", kJ_sup, true);
+  CategoryTree CT_ge1sv_1j(VS().a("ge1svS"), "#geq 1 sv #in S", "1sv", kJ_sup, true);
+  
+ 
+
+  CT_0sv_0j.AddSubCategory(CT_0bISR_0j);
+  CT_0sv_0j.AddSubCategory(CT_1bISR_0j);
+  CT_0sv_1j.AddSubCategory(CT_0bISR_1j);
+  CT_0sv_1j.AddSubCategory(CT_1bISR_1j);
+  CT_ge1sv_0j.AddSubCategory(CT_0bISR_0jsv);
+  CT_ge1sv_0j.AddSubCategory(CT_1bISR_0jsv);
+  CT_ge1sv_1j.AddSubCategory(CT_etaC);
+  CT_ge1sv_1j.AddSubCategory(CT_etaF);
+
+
+//depth = 4 - splits by bS multiplicity
+
+  CategoryTree CT_gold_0j(VS().a("elG").a("muG"), "gold #it{l}", "1L0jG", kL_sub, true);
+  CategoryTree CT_gold_1j(VS().a("elG").a("muG"), "gold #it{l}", "1L1jG", kL_sub, true);
+  CategoryTree CT_gold_2j(VS().a("elG").a("muG"), "gold #it{l}", "1L2jG", kL_sub, true);
+  CategoryTree CT_gold_3j(VS().a("elG").a("muG"), "gold #it{l}", "1L3jG", kL_sub, true);
+  CategoryTree CT_gold_ge4j(VS().a("elG").a("muG"), "gold #it{l}", "1Lge4jG", kL_sub, true);
+  CategoryTree CT_silver_0j(VS().a("elS").a("muS"), "silver #it{l}", "1L0jS", kL_sub, true);
+  CategoryTree CT_silver_1j(VS().a("elS").a("muS"), "silver #it{l}", "1L1jS", kL_sub, true);
+  CategoryTree CT_silver_2j(VS().a("elS").a("muS"), "silver #it{l}", "1L2jS", kL_sub, true);
+  CategoryTree CT_silver_3j(VS().a("elS").a("muS"), "silver #it{l}", "1L3jS", kL_sub, true);
+  CategoryTree CT_silver_ge4j(VS().a("elS").a("muS"), "silver #it{l}", "1Lge4jS", kL_sub, true);
+  CategoryTree CT_bronze_0j(VS().a("elB").a("muB"), "bronze #it{l}", "1L0jB", kL_sub, true);
+  CategoryTree CT_bronze_1j(VS().a("elB").a("muB"), "bronze #it{l}", "1L1jB", kL_sub, true);
+  CategoryTree CT_bronze_2j(VS().a("elB").a("muB"), "bronze #it{l}", "1L2jB", kL_sub, true);
+  CategoryTree CT_bronze_3j(VS().a("elB").a("muB"), "bronze #it{l}", "1L3jB", kL_sub, true);
+  CategoryTree CT_bronze_ge4j(VS().a("elB").a("muB"), "bronze #it{l}", "1Lge4jB", kL_sub, true);
+  
+
+  CT_gold_0j.AddSubCategory(CT_0sv_0j);
+  CT_gold_0j.AddSubCategory(CT_ge1sv_0j);
+  CT_gold_1j.AddSubCategory(CT_0sv_1j);
+  CT_gold_1j.AddSubCategory(CT_ge1sv_1j);
+  CT_gold_2j.AddSubCategory(CT_0b);
+  CT_gold_2j.AddSubCategory(CT_1b);
+  CT_gold_2j.AddSubCategory(CT_2b);
+  CT_gold_3j.AddSubCategory(CT_0b);
+  CT_gold_3j.AddSubCategory(CT_1b);
+  CT_gold_3j.AddSubCategory(CT_2b);
+  CT_gold_ge4j.AddSubCategory(CT_0b);
+  CT_gold_ge4j.AddSubCategory(CT_ge1b);
+
+  CT_silver_0j.AddSubCategory(CT_0sv_0j);
+  CT_silver_0j.AddSubCategory(CT_ge1sv_0j);
+  CT_silver_1j.AddSubCategory(CT_0sv_1j);
+  CT_silver_1j.AddSubCategory(CT_ge1sv_1j);
+  CT_silver_2j.AddSubCategory(CT_0b);
+  CT_silver_2j.AddSubCategory(CT_1b);
+  CT_silver_2j.AddSubCategory(CT_2b);
+  CT_silver_3j.AddSubCategory(CT_0b);
+  CT_silver_3j.AddSubCategory(CT_1b);
+  CT_silver_3j.AddSubCategory(CT_2b);
+  CT_silver_ge4j.AddSubCategory(CT_0b);
+  CT_silver_ge4j.AddSubCategory(CT_ge1b);
+  
+
+  CT_bronze_0j.AddSubCategory(CT_0sv_0j);
+  CT_bronze_0j.AddSubCategory(CT_ge1sv_0j);
+  CT_bronze_1j.AddSubCategory(CT_0sv_1j);
+  CT_bronze_1j.AddSubCategory(CT_ge1sv_1j);
+  CT_bronze_2j.AddSubCategory(CT_0b);
+  CT_bronze_2j.AddSubCategory(CT_1b);
+  CT_bronze_2j.AddSubCategory(CT_2b);
+  CT_bronze_3j.AddSubCategory(CT_0b);
+  CT_bronze_3j.AddSubCategory(CT_1b);
+  CT_bronze_3j.AddSubCategory(CT_2b);
+  CT_bronze_ge4j.AddSubCategory(CT_0b);
+  CT_bronze_ge4j.AddSubCategory(CT_ge1b);
+
+
+  CategoryTree CT_0j(VS().a("-0j"), "", "1L0J", kJ, true);
+  CategoryTree CT_1j(VS().a("-1j"), "", "1L1J", kJ, true);
+  CategoryTree CT_2j(VS().a("-2j"), "2 j #in S", "1L2J", kJ, true);
+  CategoryTree CT_3j(VS().a("-3j"), "3 j #in S", "1L3J", kJ, true);
+  CategoryTree CT_ge4j(VS().a("-ge4j"), "#geq 4 j #in S", "1L4J", kJ, true);
+
+  
+  CT_0j.AddSubCategory(CT_gold_0j);
+  CT_0j.AddSubCategory(CT_silver_0j);
+  CT_0j.AddSubCategory(CT_bronze_0j);
+  CT_1j.AddSubCategory(CT_gold_1j);
+  CT_1j.AddSubCategory(CT_silver_1j);
+  CT_1j.AddSubCategory(CT_bronze_1j);
+  CT_2j.AddSubCategory(CT_gold_2j);
+  CT_2j.AddSubCategory(CT_silver_2j);
+  CT_2j.AddSubCategory(CT_bronze_2j);
+  CT_3j.AddSubCategory(CT_gold_3j);
+  CT_3j.AddSubCategory(CT_silver_3j);
+  CT_3j.AddSubCategory(CT_bronze_3j);
+  CT_ge4j.AddSubCategory(CT_gold_ge4j);
+  CT_ge4j.AddSubCategory(CT_silver_ge4j);
+  CT_ge4j.AddSubCategory(CT_bronze_ge4j);
+  
+  CategoryTree CT_1L(VS().a("Ch1L"), "1L", "1L", kL, true);
+ 
+  CT_1L.AddSubCategory(CT_0j);
+  CT_1L.AddSubCategory(CT_1j);
+  CT_1L.AddSubCategory(CT_2j);
+  CT_1L.AddSubCategory(CT_3j);
+  CT_1L.AddSubCategory(CT_ge4j);
+  
+
+  return CT_1L;
 }
+
+
+
+
 
 
