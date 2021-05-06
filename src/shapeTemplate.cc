@@ -314,28 +314,26 @@ for(int i = 0; i < nProc; i++){
     else
       vproc += m_proc[i];
     for(int p = 0; p < int(vproc.size()); p++){
-      //skip if rare
-      if(vproc[p].find("DB") == string::npos || vproc[p].find("TB") == string::npos || vproc[p].find("ST") == string::npos) continue;
       int index = fitReader.GetProcesses().Find(vproc[p]);
       if(index < 0) continue;
       Process pp = fitReader.GetProcesses()[index];
+   //cout << pp.Name() << endl;
       vector<int> ridxs;
       for(int r = 0; r < m_domToRare[vproc[p]].size(); r++)
       ridxs.push_back(fitReader.GetProcesses().Find(m_domToRare[vproc[p]][r]));
-//   cout << pp.Name() << endl;
       for(int list = 0; list < depth; list++){
-//	cout << "list #" << list << endl;
    CategoryList cats = catList.Filter(*catTrees[list]);
 //	cats.Print();
 	//cout << "\n" << endl;
 	nCat = cats.GetN();
        	ProcessList ppp;
-	ppp += pp; 
+	ppp += pp;
 	//if process pp == ST or TB or DB, combine with another background (ST with ttbar, TB+DB with Wjets)
 	if(ridxs.size() > 0) {
         	for(int r = 0; r < ridxs.size(); r++){
 			if(ridxs[r] < 0) continue;
-	 		ppp += fitReader.GetProcesses()[ridxs[r]];
+ 			ppp += fitReader.GetProcesses()[ridxs[r]];
+	
 		}
 	
 	}	
@@ -351,6 +349,11 @@ for(int i = 0; i < nProc; i++){
 		if(!fitReader.IsFilled(cats[c],pp)) continue;
 		TH1D* oldHist = (TH1D*)fitReader.GetHistogram(cats[c],pp);
 		TH1D* newHist;
+      //skip if rare
+      	if(vproc[p].find("DB") != string::npos || vproc[p].find("TB") != string::npos || vproc[p].find("ST") != string::npos){
+		oldHist->SetName((pp.Name()+"_raw").c_str());
+	 	continue;
+	}
 	//cout << cats[c].Label() << "_" << cats[c].GetLabel() << endl;
 		//m_listToHist[list]->Scale(oldHist->Integral()/m_listToHist[list]->Integral());
 		if(oldHist->Integral() > 1e-6){ 

@@ -180,6 +180,8 @@ void shapeVariationTool::doVariations(){
 		else
 			vproc += m_proc[i];
 		for(int p = 0; p < int(vproc.size()); p++){
+			//skip if rare
+			if(vproc[p].find("DB") != string::npos || vproc[p].find("TB") != string::npos || vproc[p].find("ST") != string::npos) continue;
 			int index = m_fr->GetProcesses().Find(vproc[p]);
 			if(index < 0) continue;
 			Process pp = m_fr->GetProcesses()[index];
