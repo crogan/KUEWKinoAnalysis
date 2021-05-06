@@ -91,13 +91,13 @@ void plotShapeComparison::getRatioPlots(){
   int nBins = histTotal->GetNbinsX();
   for(int i = 1; i < m_nHists; i++) histTotal->Add(m_hists[i]);
  // cout << "histogram 0 has " << m_hists[0]->GetNbinsX() << " bins"  << endl;
-  for(int i = 0; i < m_nHists; i++){
- cout << m_hists[i]->GetTitle() << endl;
-  for(int b = 0; b < m_hists[i]->GetNbinsX()+2; b++){ 
-  cout << "histogram #" << i << " bin #" << b << " value:" << m_hists[i]->GetBinContent(b) << endl;
-  }
-  }
-for(int b = 0; b < histTotal->GetNbinsX()+2; b++) cout << "histTotal bin #" << b << " value: " << histTotal->GetBinContent(b) << endl;
+ // for(int i = 0; i < m_nHists; i++){
+ //cout << m_hists[i]->GetTitle() << endl;
+ // for(int b = 0; b < m_hists[i]->GetNbinsX()+2; b++){ 
+ // cout << "histogram #" << i << " bin #" << b << " value:" << m_hists[i]->GetBinContent(b) << endl;
+ // }
+ // }
+ //for(int b = 0; b < histTotal->GetNbinsX()+2; b++) cout << "histTotal bin #" << b << " value: " << histTotal->GetBinContent(b) << endl;
 
   for(int gr = 0; gr < m_nHists; gr++){
 	//set underflow and overflow bin contents to 0
