@@ -399,7 +399,6 @@ void FitBin::WriteHistogram(const string& name,
 	m_hist1D->SetBinError(b+1, 0.);
       }
   }
-
   
   file.cd();
   file.cd(fold.c_str());
