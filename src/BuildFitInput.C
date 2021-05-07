@@ -51,6 +51,9 @@ int main(int argc, char* argv[]) {
   bool addSig  = false;
   bool addData = false;
   bool extrahist = false;
+  bool cat1L = false;
+  bool cat2L = false;
+  bool cat3L = false;
   vector<string> proc_to_add;
   float PTvar;
   CategoryTool CT;
@@ -108,12 +111,15 @@ int main(int argc, char* argv[]) {
     }
     if(strncmp(argv[i],"+cat1L", 6) == 0){
       Categories += CT.GetCategories_1L();
+      cat1L = true;
     }
     if(strncmp(argv[i],"+cat2L", 6) == 0){
       Categories += CT.GetCategories_2L();
+      cat2L = true;
     }
     if(strncmp(argv[i],"+cat3L", 6) == 0){
       Categories += CT.GetCategories_3L();
+      cat3L = true;
     }
     if(strncmp(argv[i],"-lumi", 5) == 0){
       i++;
@@ -182,7 +188,13 @@ int main(int argc, char* argv[]) {
 
   if(Categories.GetN() == 0)
     Categories += CT.GetCategories();
-  
+//if a lepton region wasn't specified, turn them all on 
+  if(!cat1L && !cat2L && !cat3L){
+    cat1L = true;
+    cat2L = true;
+    cat3L = true;
+  } 
+ 
   // cout << "Categories:" << endl;
   // Categories.Print();
 
@@ -300,7 +312,7 @@ int main(int argc, char* argv[]) {
 // 	double etaMean = absEta/nLep; 
 //  double sip3dMean = *d.Mean("SIP3D_lep");
 
-      int Nentry = 1e5;//base->fChain->GetEntries();
+      int Nentry = base->fChain->GetEntries();
       
       int SKIP = 1;
 
@@ -309,11 +321,13 @@ int main(int argc, char* argv[]) {
 	base->GetEntry(e);
 
 	if((e/SKIP)%(std::max(1, int(Nentry/SKIP/10))) == 0)
-	  cout << "      event " << e << " | " << Nentry << endl;
+	  cout << "      event " << e << " | " << Nentry  << endl;
 
-	if(!base->EventFilter)
-	  continue;
-	
+
+	//if(!base->EventFilter)	  
+	//	continue;
+	// cout << "passed event filter" << endl;
+
 	if(do_FilterDilepton)
 	  if(SF.DileptonEvent(base))
 	    continue;
@@ -507,7 +521,6 @@ int main(int argc, char* argv[]) {
 	
 	  double RISR  = base->RISR;
 	double rlow;
-//cout << "event #: " << e << " passed RISR+Mperp assignment" << endl;	
 	  if(Fakes.GetN() > 0 && is_bkg){
 	    vector<string> flabels = Fakes.GetFakeLabels();
 	    int Nf = flabels.size();
@@ -535,18 +548,18 @@ if(RISR < rlow){ underflow += 1.;}
     }
   }
   FITBuilder.WriteFit(OutFile);
-VS fakeProcs;
 ProcessList fakeProcList;
-for(int i = 0; i < int(proc_to_add.size()); i++){
-	fakeProcs += proc_to_add[i]+"_Fakes_elf0";
-	fakeProcs += proc_to_add[i]+"_Fakes_elf1";
-	fakeProcs += proc_to_add[i]+"_Fakes_muf0";
-	fakeProcs += proc_to_add[i]+"_Fakes_muf1";
-	
-	
-	
-}
+ProcessList fakeProcList_QCD;
 for(int i = 0; i < samples.GetN(); i++){
+//skip QCD here - add to separate processList
+	if(samples[i].Name().find("QCD") != string::npos){
+		fakeProcList_QCD += samples[i];
+		fakeProcList_QCD += samples[i].FakeProcess("Fakes_elf0");
+		fakeProcList_QCD += samples[i].FakeProcess("Fakes_elf1");
+		fakeProcList_QCD += samples[i].FakeProcess("Fakes_muf0");
+		fakeProcList_QCD += samples[i].FakeProcess("Fakes_muf1");
+		continue;
+	}
 	if(samples[i].Type() == kBkg){
 		fakeProcList += samples[i].FakeProcess("Fakes_elf0");
 		fakeProcList += samples[i].FakeProcess("Fakes_elf1");
@@ -554,23 +567,49 @@ for(int i = 0; i < samples.GetN(); i++){
 		fakeProcList += samples[i].FakeProcess("Fakes_muf1");
 	}
 }
-CategoryTree CT_Fakes1L = CTTool.GetCategories_Fakes1L();
-CategoryTree CT_Fakes2L = CTTool.GetCategories_Fakes2L();
-CategoryTree CT_Fakes3L = CTTool.GetCategories_Fakes3L();
+cout << "QCD processes" << endl;
+for(int i = 0; i < fakeProcList_QCD.GetN(); i++){
+cout << fakeProcList_QCD[i].Name() << endl;
+}
+cout << "not QCD processes" << endl;
+for(int i = 0; i < fakeProcList.GetN(); i++){
+cout << fakeProcList[i].Name() << endl;
+}
+cout << "cat1L: " << cat1L << " cat2L: " << cat2L << " cat3L: " << cat3L << endl;
+if(fakeProcList_QCD.GetN() > 0){
+	cout << "do QCD fakes" << endl;
+	CategoryTree CT_QCD1L = CTTool.GetCategories_QCD1L();
+	shapeTemplateTool STT_QCD1L(CT_QCD1L,fakeProcList_QCD,OutFile);
+	STT_QCD1L.createTemplates();
+	shapeVariationTool SVT_QCD1L(CT_QCD1L,fakeProcList_QCD,OutFile);
+	SVT_QCD1L.doVariations();
+}
 
-//shapeTemplateTool STT1L(OutFile,CT_Fakes1L,fakeProcList);
-//STT1L.createTemplates();
-// 
-//shapeVariationTool SVT1L(CT_Fakes1L, fakeProcList, OutFile);
-//SVT1L.doVariations();
-//
-//shapeTemplateTool STT2L(OutFile,CT_Fakes2L,fakeProcList);
-//STT2L.createTemplates();
-// 
-//shapeVariationTool SVT2L(CT_Fakes2L, fakeProcList, OutFile);
-//SVT2L.doVariations();
-// 
-//shapeTemplateTool STT3L(OutFile,CT_Fakes3L,fakeProcList);
-//STT3L.createTemplates();
+if(cat1L){
+cout << "do 1L fakes" << endl;
+   CategoryTree CT_Fakes1L = CTTool.GetCategories_Fakes1L();
+   shapeTemplateTool STT1L(CT_Fakes1L,fakeProcList, OutFile);
+   STT1L.createTemplates();
+   shapeVariationTool SVT1L(CT_Fakes1L, fakeProcList, OutFile);
+   SVT1L.doVariations();
+}
+if(cat2L){
+cout << "do 2L fakes" << endl;
+   CategoryTree CT_Fakes2L = CTTool.GetCategories_Fakes2L();
+   shapeTemplateTool STT2L(CT_Fakes2L,fakeProcList, OutFile);
+   STT2L.createTemplates();
+   shapeVariationTool SVT2L(CT_Fakes2L, fakeProcList, OutFile);
+   SVT2L.doVariations();
+}
+if(cat3L){
+cout << "do 3L fakes" << endl;
+   CategoryTree CT_Fakes3L = CTTool.GetCategories_Fakes3L();
+   shapeTemplateTool STT3L(CT_Fakes3L,fakeProcList,OutFile);
+   STT3L.createTemplates();
+   shapeVariationTool SVT3L(CT_Fakes3L, fakeProcList, OutFile);
+   SVT3L.doVariations();
+}
+ 
+ 
  
 }
