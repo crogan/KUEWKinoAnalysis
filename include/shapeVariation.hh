@@ -24,6 +24,7 @@ class shapeVariationTool{
 		void makeCatMaps();
 		CategoryTree m_ct;
 		map<Category,string> m_Cats;
+		map<Process,string> m_domToRareLabels;
 		//vector<const CategoryTree*> m_CTs;
 		CategoryList m_catList;
 		int m_nProc;
@@ -37,7 +38,7 @@ class shapeVariation {
 		void doVariationRISR(TH1D* hist,const FitBin& fb, bool isUp=true);
 		void doVariationMperp(TH1D* hist, const FitBin& fb, bool isUp=true);
 		void doVariationDown();
-		void doVariations(Process pp, map<Category,string> labels);
+		void doVariations(Process pp, map<Category,string> catLabels, map<string,string> procLabels);
 	private:
 		double maxVar = 50;
 		CategoryList m_cats;

@@ -22,7 +22,7 @@ shapeVariation::~shapeVariation(){
 
 
 
-void shapeVariation::doVariations(Process pp,map<Category,string> labels){
+void shapeVariation::doVariations(Process pp,map<Category,string> catLabels, map<string,string> procLabels){
 	const FitBin& fitBin = m_cats[0].GetFitBin();
 	//cout << "nBins" << endl;	
 	//nBins = fitBin.NBins();
@@ -34,10 +34,13 @@ void shapeVariation::doVariations(Process pp,map<Category,string> labels){
 		string dirName = m_cats[c].Label()+"_"+m_cats[c].GetLabel();
 		
 		string histName = pp.Name();
+		string fakeName;
+		if(histName.find("f0") != string::npos) fakeName = "f0";
+		else if(histName.find("f1") != string::npos) fakeName = "f1";
 
 		TH1D* hist = (TH1D*)file->Get((dirName+"/"+histName).c_str());
 		if(hist == NULL) continue;
-		string sysName = histName+"_"+labels[m_cats[c]];
+		string sysName = histName+"_"+procLabels[pp]+"_"+catLabels[m_cats[c]]+fakeName;
 		TH1D* histRISRUp = (TH1D*)hist->Clone(Form("%s_RISRUp",sysName.c_str()));
 		doVariationRISR(histRISRUp,fitBin);
 		
@@ -162,6 +165,7 @@ shapeVariationTool::shapeVariationTool(CategoryTree ct, ProcessList procs, strin
 	m_file = file;
 	for(int i = 0; i < m_nProc; i++) m_proc += procs[i].Name();
 	makeCatMaps();
+	makeProcessMaps();
 }
 
 
@@ -180,8 +184,6 @@ void shapeVariationTool::doVariations(){
 		else
 			vproc += m_proc[i];
 		for(int p = 0; p < int(vproc.size()); p++){
-			//skip if rare
-			if(vproc[p].find("DB") != string::npos || vproc[p].find("TB") != string::npos || vproc[p].find("ST") != string::npos) continue;
 			int index = m_fr->GetProcesses().Find(vproc[p]);
 			if(index < 0) continue;
 			Process pp = m_fr->GetProcesses()[index];
@@ -194,12 +196,24 @@ void shapeVariationTool::doVariations(){
 	}
 }
 
+
+
+void shapeVariationTool::makeProcessMaps(){
+	ProcessList procList = m_fr->GetProcesses();
+	int nProc = procList.GetN();
+	for(int p = 0; p < nProc; p++){
+		if(pp.Name().find("ttbar") != string::npos || pp.Name().find("ST") != string::npos) m_domToRareLabels[procList[p]] = "ttbarST";
+		if(pp.Name().find("Wjets") != string::npos || pp.Name().find("TB") != string::npos || pp.Name.find("DB") != string::npos) m_domToRareLabels[procList[p]] = "WjetsDBTB";
+	}
+}
+
+
 void shapeVariationTool::makeCatMaps(){
         vector<const CategoryTree*> catTrees;
         m_ct.GetListDepth(catTrees,1);
-        FitReader fr(m_file);
+ //       FitReader fr(m_file);
         int nCatTrees = catTrees.size();
-        CategoryList allCats = fr.GetCategories(); 
+        CategoryList allCats = m_fr->GetCategories(); 
         for(int list = 0; list < nCatTrees; list++){
                 CategoryList cats = allCats.Filter(*catTrees[list]);
                 int nCats = cats.GetN();

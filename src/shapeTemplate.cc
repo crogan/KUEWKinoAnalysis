@@ -349,8 +349,6 @@ for(int i = 0; i < nProc; i++){
 		if(!fitReader.IsFilled(cats[c],pp)) continue;
 		TH1D* oldHist = (TH1D*)fitReader.GetHistogram(cats[c],pp);
 		TH1D* newHist;
-      //skip if rare
-      	if(vproc[p].find("DB") != string::npos || vproc[p].find("TB") != string::npos || vproc[p].find("ST") != string::npos){
 		oldHist->SetName((pp.Name()+"_raw").c_str());
 	 	continue;
 	}
