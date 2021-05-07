@@ -8,11 +8,8 @@
 #include "Process.hh"
 #include "Systematics.hh"
 
-//this class should vary Mperp + RISR (separately) according to some formula (see lepton systematics class)
-//go through, grab histograms for one group (ie one categoryList), vary Mperp OR RISR, save new histograms with systematic tag (created by bookkeepingClass, "_group#proc#RISRUP")
 class shapeVariationTool{
 	public:
-//		shapeVariationTool();
 		shapeVariationTool(CategoryTree ct, ProcessList procs, string file);
 		virtual ~shapeVariationTool();
 		void doVariations();
@@ -22,13 +19,14 @@ class shapeVariationTool{
 	
 	private:
 		void makeCatMaps();
+		void makeProcessMaps();
 		CategoryTree m_ct;
 		map<Category,string> m_Cats;
 		map<Process,string> m_domToRareLabels;
-		//vector<const CategoryTree*> m_CTs;
 		CategoryList m_catList;
 		int m_nProc;
 		VS m_proc;
+		ProcessList m_procList;
 };
 
 class shapeVariation {
@@ -38,7 +36,7 @@ class shapeVariation {
 		void doVariationRISR(TH1D* hist,const FitBin& fb, bool isUp=true);
 		void doVariationMperp(TH1D* hist, const FitBin& fb, bool isUp=true);
 		void doVariationDown();
-		void doVariations(Process pp, map<Category,string> catLabels, map<string,string> procLabels);
+		void doVariations(Process pp, string procLabel, map<Category,string> catLabels);
 	private:
 		double maxVar = 50;
 		CategoryList m_cats;

@@ -40,9 +40,6 @@ class shapeTemplate{
 		double m_minVal = 10.;
 		vector<pair<int,double>> m_binsSorted;
 		vector<pair<int,double>> m_binsSorted_cons;
-		// string m_fileName;
-		// string m_dirName;
-		//Category m_cat;
 		
 		void normalizeHistogram(TH1D* hist);
 		void unweightHistogram(TH1D* hist);
@@ -56,11 +53,10 @@ class shapeTemplate{
 
 class shapeTemplateTool{
 public:
-	shapeTemplateTool(const string &inputfile, const CategoryTree& CT, const VS& proc);
-	shapeTemplateTool(const string &inputfile, const CategoryTree& CT, ProcessList proc);
+	shapeTemplateTool(const CategoryTree& CT, ProcessList proc, const string &inputfile);
 	virtual ~shapeTemplateTool();
 
-	void createTemplates();
+	void createTemplates(bool smooth=false);
 	CategoryTree getCategoryTree();
 	VS getProcess();
 
