@@ -125,6 +125,7 @@ public:
   CategoryTree GetCategories_Fakes1L() const;
   CategoryTree GetCategories_Fakes2L() const;
   CategoryTree GetCategories_Fakes3L() const;
+  CategoryTree GetCategories_QCD0L() const;
   CategoryTree GetCategories_QCD1L() const;
 };
 

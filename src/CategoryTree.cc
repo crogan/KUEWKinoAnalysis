@@ -1488,6 +1488,127 @@ CategoryTree CategoryTreeTool::GetCategories_Fakes3L() const {
   return CT_3L;
 }
 
+CategoryTree CategoryTreeTool::GetCategories_QCD0L() const {
+  CategoryTree CT_0b(VS().a("j0bS"), "0 b #in S", "0b", kJ_sub, true);
+  CategoryTree CT_1b(VS().a("j1bS"), "1 b #in S", "1b", kJ_sub, true);
+  CategoryTree CT_ge1b(VS().a("ge1bS"), "geq 1 b #in S", "1b", kJ_sub, true);
+  CategoryTree CT_2b(VS().a("2bS"), "#geq 2 b #in S", "2b", kJ_sub, true);
+ 
+  CategoryTree CT_0bISR_1j(VS().a("0bISR"), "0 b #in ISR", "0b", kX_sub, false);
+  CategoryTree CT_1bISR_1j(VS().a("ge1bISR"), "#geq 1 b #in ISR", "1b", kX_sub, false);
+
+  CategoryTree CT_0bISR_0j(VS().a("0bISR"), "0 b #in ISR", "0b", kX_sub, false);
+  CategoryTree CT_1bISR_0j(VS().a("ge1bISR"), "#geq 1 b #in ISR", "1b", kX_sub, false);
+  
+  CategoryTree CT_0bISR_0jsv(VS().a("0bISR"), "0 b #in ISR", "0b", kX_sub, false);
+  CategoryTree CT_1bISR_0jsv(VS().a("ge1bISR"), "#geq 1 b #in ISR", "1b", kX_sub, false);
+  
+  CategoryTree CT_etaC(VS().a("SVeta0"), "|#eta^{SV}| #leq 1.5", "svc", kX_sup, true);
+  CategoryTree CT_etaF(VS().a("SVeta1"), "|#eta^{SV}| > 1.5", "svf", kX_sup, true);
+
+  CategoryTree CT_p0(VS().a("PTISR0"), "", "p-", kX_sup, true);
+  CategoryTree CT_p1(VS().a("PTISR1"), "", "p+", kX_sup, true);
+  
+  CategoryTree CT_gamT0(VS().a("gamT0"), "", "#gamma -", kX_sup, false);
+  CategoryTree CT_gamT1(VS().a("gamT1"), "", "#gamma +", kX_sup, false);
+
+
+  CT_0bISR_0jsv.AddSubCategory(CT_etaF);
+  CT_0bISR_0jsv.AddSubCategory(CT_etaC);
+  CT_1bISR_0jsv.AddSubCategory(CT_etaF);
+  CT_1bISR_0jsv.AddSubCategory(CT_etaC);
+  
+  CT_0bISR_0j.AddSubCategory(CT_p0);
+  CT_0bISR_0j.AddSubCategory(CT_p1);
+  CT_1bISR_0j.AddSubCategory(CT_p0);
+  CT_1bISR_0j.AddSubCategory(CT_p1);
+
+  CT_0bISR_1j.AddSubCategory(CT_0b);
+  CT_0bISR_1j.AddSubCategory(CT_1b);
+  CT_1bISR_1j.AddSubCategory(CT_0b);
+  CT_1bISR_1j.AddSubCategory(CT_1b);
+
+
+
+ // CT_p0.AddSubCategory(CT_gamT0);
+ // CT_p1.AddSubCategory(CT_gamT0);
+ // CT_p0.AddSubCategory(CT_gamT1);
+ // CT_p1.AddSubCategory(CT_gamT1);
+  
+  
+  CT_gamT0.AddSubCategory(CT_p0);
+  CT_gamT0.AddSubCategory(CT_p1);
+  CT_gamT1.AddSubCategory(CT_p0);
+  CT_gamT1.AddSubCategory(CT_p1);
+
+  CT_0b.AddSubCategory(CT_gamT0);
+  CT_0b.AddSubCategory(CT_gamT1);
+  CT_1b.AddSubCategory(CT_gamT0);
+  CT_1b.AddSubCategory(CT_gamT1);
+  CT_ge1b.AddSubCategory(CT_gamT0);
+  CT_ge1b.AddSubCategory(CT_gamT1);
+  CT_2b.AddSubCategory(CT_gamT0);
+  CT_2b.AddSubCategory(CT_gamT1);
+ 
+
+  CategoryTree CT_0sv_0j(VS().a("0svS"), "0 sv #in S", "0sv", kJ_sup, true);
+  CategoryTree CT_ge1sv_0j(VS().a("ge1svS"), "#geq 1 sv #in S", "1sv", kJ_sup, true);
+  CategoryTree CT_0sv_1j(VS().a("0svS"), "0 sv #in S", "0sv", kJ_sup, true);
+  CategoryTree CT_ge1sv_1j(VS().a("ge1svS"), "#geq 1 sv #in S", "1sv", kJ_sup, true);
+
+  CT_0sv_0j.AddSubCategory(CT_0bISR_0j);
+  CT_0sv_0j.AddSubCategory(CT_1bISR_0j);
+  CT_0sv_1j.AddSubCategory(CT_0bISR_1j);
+  CT_0sv_1j.AddSubCategory(CT_1bISR_1j);
+  CT_ge1sv_0j.AddSubCategory(CT_0bISR_0jsv);
+  CT_ge1sv_0j.AddSubCategory(CT_1bISR_0jsv);
+  CT_ge1sv_1j.AddSubCategory(CT_etaC);
+  CT_ge1sv_1j.AddSubCategory(CT_etaF);
+
+
+//depth = 4 - splits by bS multiplicity
+
+  
+  CategoryTree CT_0j(VS().a("-0j"), "", "1L0J", kJ, true);
+  CategoryTree CT_1j(VS().a("-1j"), "", "1L1J", kJ, true);
+  CategoryTree CT_2j(VS().a("-2j"), "2 j #in S", "1L2J", kJ, true);
+  CategoryTree CT_3j(VS().a("-3j"), "3 j #in S", "1L3J", kJ, true);
+  CategoryTree CT_4j(VS().a("-4j"), "4 j #in S", "1L4J", kJ, true);
+  CategoryTree CT_ge5j(VS().a("-ge5j"), "#geq 5 j #in S", "1L5J", kJ, true);
+
+  
+  CT_0j.AddSubCategory(CT_0sv_0j);
+  CT_0j.AddSubCategory(CT_ge1sv_0j);
+  CT_1j.AddSubCategory(CT_0sv_1j);
+  CT_1j.AddSubCategory(CT_ge1sv_1j);
+  CT_2j.AddSubCategory(CT_0b);
+  CT_2j.AddSubCategory(CT_1b);
+  CT_2j.AddSubCategory(CT_2b);
+  CT_3j.AddSubCategory(CT_0b);
+  CT_3j.AddSubCategory(CT_1b);
+  CT_3j.AddSubCategory(CT_2b);
+  CT_4j.AddSubCategory(CT_0b);
+  CT_4j.AddSubCategory(CT_1b);
+  CT_4j.AddSubCategory(CT_2b);
+  CT_ge5j.AddSubCategory(CT_0b);
+  CT_ge5j.AddSubCategory(CT_1b);
+  CT_ge5j.AddSubCategory(CT_2b);
+ 
+  
+  CategoryTree CT_0L(VS().a("Ch0L"), "0L", "0L", kL, true);
+ 
+  CT_0L.AddSubCategory(CT_0j);
+  CT_0L.AddSubCategory(CT_1j);
+  CT_0L.AddSubCategory(CT_2j);
+  CT_0L.AddSubCategory(CT_3j);
+  CT_0L.AddSubCategory(CT_4j);
+  CT_0L.AddSubCategory(CT_ge5j);
+  
+
+  return CT_0L;
+}
+
+
 CategoryTree CategoryTreeTool::GetCategories_QCD1L() const {
   CategoryTree CT_0b(VS().a("j0bS"), "0 b #in S", "0b", kJ_sub, true);
   CategoryTree CT_1b(VS().a("j1bS"), "1 b #in S", "1b", kJ_sub, true);
