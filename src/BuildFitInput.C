@@ -51,6 +51,7 @@ int main(int argc, char* argv[]) {
   bool addSig  = false;
   bool addData = false;
   bool extrahist = false;
+  bool cat0L = false;
   bool cat1L = false;
   bool cat2L = false;
   bool cat3L = false;
@@ -108,6 +109,7 @@ int main(int argc, char* argv[]) {
     }
     if(strncmp(argv[i],"+cat0L", 6) == 0){
       Categories += CT.GetCategories_0L();
+      cat0L = true;
     }
     if(strncmp(argv[i],"+cat1L", 6) == 0){
       Categories += CT.GetCategories_1L();
@@ -189,7 +191,8 @@ int main(int argc, char* argv[]) {
   if(Categories.GetN() == 0)
     Categories += CT.GetCategories();
 //if a lepton region wasn't specified, turn them all on 
-  if(!cat1L && !cat2L && !cat3L){
+  if(!cat0L && !cat1L && !cat2L && !cat3L){
+    cat0L = true;
     cat1L = true;
     cat2L = true;
     cat3L = true;
@@ -312,7 +315,7 @@ int main(int argc, char* argv[]) {
 // 	double etaMean = absEta/nLep; 
 //  double sip3dMean = *d.Mean("SIP3D_lep");
 
-      int Nentry = base->fChain->GetEntries();
+      int Nentry = 1e5;//base->fChain->GetEntries();
       
       int SKIP = 1;
 
@@ -567,23 +570,25 @@ for(int i = 0; i < samples.GetN(); i++){
 		fakeProcList += samples[i].FakeProcess("Fakes_muf1");
 	}
 }
-cout << "QCD processes" << endl;
-for(int i = 0; i < fakeProcList_QCD.GetN(); i++){
-cout << fakeProcList_QCD[i].Name() << endl;
-}
-cout << "not QCD processes" << endl;
-for(int i = 0; i < fakeProcList.GetN(); i++){
-cout << fakeProcList[i].Name() << endl;
-}
-cout << "cat1L: " << cat1L << " cat2L: " << cat2L << " cat3L: " << cat3L << endl;
 if(fakeProcList_QCD.GetN() > 0){
-	cout << "do QCD fakes" << endl;
+	if(cat1L){
+	cout << "do 1L QCD fakes" << endl;
 	CategoryTree CT_QCD1L = CTTool.GetCategories_QCD1L();
 	shapeTemplateTool STT_QCD1L(CT_QCD1L,fakeProcList_QCD,OutFile);
 	STT_QCD1L.createTemplates();
 	shapeVariationTool SVT_QCD1L(CT_QCD1L,fakeProcList_QCD,OutFile);
 	SVT_QCD1L.doVariations();
+	}
+	if(cat0L){
+	cout << "do 0L QCD fakes" << endl;
+	CategoryTree CT_QCD0L = CTTool.GetCategories_QCD0L();
+	shapeTemplateTool STT_QCD0L(CT_QCD0L,fakeProcList_QCD,OutFile);
+	STT_QCD0L.createTemplates();
+	shapeVariationTool SVT_QCD0L(CT_QCD0L,fakeProcList_QCD,OutFile);
+	SVT_QCD0L.doVariations();
+	}
 }
+
 
 if(cat1L){
 cout << "do 1L fakes" << endl;
