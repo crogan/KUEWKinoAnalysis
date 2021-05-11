@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
   bool doSigFile = false;
   string SigFile = "";
   
-  string NtuplePath = "/home/t3-ku/crogan/NANO/NTUPLES/NEW_21_09_20/";//"/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_21_09_20/";
+  string NtuplePath = "/home/t3-ku/crogan/NTUPLES/NANO/NEW_21_09_20/";//"/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_21_09_20/";
   string OutFile    = "BuildFitInput_output.root";
 
   bool bprint = false;
