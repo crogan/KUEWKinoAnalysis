@@ -315,7 +315,7 @@ int main(int argc, char* argv[]) {
 // 	double etaMean = absEta/nLep; 
 //  double sip3dMean = *d.Mean("SIP3D_lep");
 
-      int Nentry = 1e5;//base->fChain->GetEntries();
+      int Nentry = base->fChain->GetEntries();
       
       int SKIP = 1;
 

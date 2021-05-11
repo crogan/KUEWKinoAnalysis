@@ -11,16 +11,18 @@ FitReader* FITReader = new FitReader(inputfile, a2, a3);
 
   CategoryTreeTool CTTool;
   CategoryTree CT_Fakes1L = CTTool.GetCategories_Fakes1L();
- // CategoryTree CT_0L = CTTool.GetCategories_0L();
+  CategoryTree CT_0L = CTTool.GetCategories_0L();
   CategoryTree CT_1L = CTTool.GetCategories_1L();
+  CategoryTree CT_QCD0L = CTTool.GetCategories_QCD0L();
+  CategoryTree CT_QCD1L = CTTool.GetCategories_QCD1L();
   CategoryTree CT_2L = CTTool.GetCategories_2L();
   CategoryTree CT_Fakes2L = CTTool.GetCategories_Fakes2L();
   CategoryTree CT_3L = CTTool.GetCategories_3L();
   CategoryTree CT_Fakes3L = CTTool.GetCategories_Fakes3L();
 //FITReader->PrintCategories();
-FITReader->PrintProcesses();
-  CategoryTree CT_test = CT_Fakes3L;
-CT_test.Print(); 
+//FITReader->PrintProcesses();
+  CategoryTree CT_test = CT_QCD1L;
+//CT_test.Print(); 
 vector<const CategoryTree*> catTrees;
 CT_test.GetListDepth(catTrees,1);
 CategoryList catList = FITReader->GetCategories();
@@ -52,12 +54,11 @@ cats.Print();
 //   			 .a("Wjets").a("Fakes").a("T2bW_50000490").a("T2bW_50000480").a("T2bW_50000470"),
   // FITReader->Plot1Dstack(SL().a("ttbar").a("ST").a("DB").a("ZDY").a("TB")
   // 			 .a("Wjets").a("Fakes").a("T2bW_50000490").a("T2bW_50000480").a("T2bW_50000470"),
-  // FITReader->Plot1Dstack(VS().a("ttbar").a("ST").a("DB").a("ZDY").a("TB")
-  // 			 .a("Wjets").a("Fake").a("HF").a("LF").a("T2tt_5000470").a("T2tt_5000450").a("T2tt_5000420"),
-  // 			 VS().a("1L"),
-  // 			 VS().a("2j1bS"),
-  // 			 VS().a("0bjetISR"),
-  // 			 "canvas0");
+   //FITReader->Plot1Dstack(VS().a("Wjets").a("QCD"),
+   //			 VS().a("1Lmu"),
+   //			 VS().a("2jS"),
+   //			 VS().a("ge1jISR"),
+   //			 "canvas0");
   // FITReader->Plot2D(VS().a("ttbar").a("ST").a("DB").a("ZDY").a("TB")
   // 			 .a("Wjets").a("Fake").a("HF").a("LF"),
   // 			 VS().a("1L"),
@@ -76,18 +77,18 @@ cats.Print();
   // 			 VS().a("ge1jISR"),
   // 			 "canvas3");
 //the args with multiple entries are the ones that go into the total for the ratio
-const string& proc = "ttbar_HF"; 
+const string& proc = "QCD"; 
 const string& source = "LF";
 const string& numSource = "0";
 const string& lep = "el";
-const string& hadS = "0jS";
+const string& hadS = "2jS";
 const string& hadI = "ge1jISR";
 
-const string& lep1 = "3Lelgold";
-const string& lep2 = "3Lelsilver";
-const string& lep3 = "3Lelbronze";
+const string& lep1 = "1Lel";
+const string& lep2 = "1Lmu";
+const string& lep3 = "1Lelbronze";
 const string& lep4 = "3Lelbronze";
-const string& hadS1 = "2j0bS";
+const string& hadS1 = "ge4jS";
 const string& hadS2 = "2j1bS";
 const string& hadS3 = "2j2bS";
   //  TCanvas* cv1 = FITReader->Plot1Dstraight(proc,
@@ -96,12 +97,12 @@ const string& hadS3 = "2j2bS";
   //      		 VS().a(hadI),
   //      		 "canvas2",
   //      		 VS());
-//    TCanvas* cv = FITReader->Plot1Dratio(proc,
-//        		 VS().a(lep1).a(lep2).a(lep3),
-//        		 VS().a(hadS),
-// 	     		 VS().a(hadI),
-//  			 "canvas3",
-// 			 VS());
+ //   TCanvas* cv = FITReader->Plot1Dratio(proc,
+ //       		 VS().a(lep1).a(lep2),
+ //       		 VS().a(hadS1),
+ //	     		 VS().a(hadI),
+ // 			 "canvas3",
+ //			 VS());
   //  TCanvas* cv = FITReader->Plot1DratioProc(VS().a("DB_Fakes_"+lep+"f"+numSource).a("ttbar_Fakes_"+lep+"f"+numSource),
   //      		 "1L",
   //      		 hadS,		
@@ -117,21 +118,22 @@ const string& hadS3 = "2j2bS";
  // //signals.a("T2tt_5000450").a("T2bW_5000420").a("T2tt_5000375").a("T2bW_5000325");
  // //signals.a("T2bb_5000475").a("T2bb_5000450").a("T2bb_5000400").a("T2bb_5000350");
  // VS all = signals;
- // all.a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD").a("Wjets").a("Fakes");
+    VS all;
+   all.a("QCD").a("Wjets");
 
  // FITReader->PlotYields("0Lyields",
  // 			all,
  // 			CT_0L);
- // FITReader->PlotYields("1Lyields",
- // 			all,
- // 			CT_1L);
+  //FITReader->PlotYields("1Lyields",
+  //			all,
+  //			CT_1L);
  // FITReader->PlotYields("2Lyields",
  // 			all,
  // 			CT_2L);
- // FITReader->PlotYields("3Lyields",
- // 			all,
- // 			CT_3L);
- // 
+  //FITReader->PlotYields("3Lyields",
+  //			all,
+  //			CT_3L);
+  
  // int depth0 = CT_1L.GetDepth();
  // vector<const CategoryTree*> CTs;
  // CT_1L.GetListDepth(CTs, depth0-2);

@@ -1338,7 +1338,7 @@ TMultiGraph* mg = new TMultiGraph();
    NhadI == 0)
   return nullptr;
 
-int catTest = 0;
+int catTest = 1;
 
   CategoryList cat = GetCategories();
   vector<CategoryList> cats;
@@ -3837,9 +3837,9 @@ void FitReader::InitializeRecipes(){
 
   m_Title["QCD"] = "QCD multi-jets";
   m_Color["QCD"] = 7023;
-  m_Strings["QCD"] = VS().a("QCD_Fakes_elf0").a("QCD_Fakes_elf1").a("QCD_Fakes_elf2")
-    .a("QCD_Fakes_muf0").a("QCD_Fakes_muf1").a("QCD_Fakes_muf2").a("QCD");
+  m_Strings["QCD"] = VS().a("QCD_Fakes_elf0").a("QCD_Fakes_elf1").a("QCD_Fakes_muf0").a("QCD_Fakes_muf1").a("QCD");
 
+  
   m_Title["Fakes"] = "fake leptons";
   m_Color["Fakes"] = 7021;
   m_Strings["Fakes"] = VS().a("Fakes_elf0").a("Fakes_elf1").a("Fakes_elf2").a("Fakes_muf0").a("Fakes_muf1").a("Fakes_muf2");
@@ -3864,6 +3864,10 @@ void FitReader::InitializeRecipes(){
   m_Color["Wjets_HF"] = 7022;
   m_Strings["Wjets_HF"] = VS().a("Wjets_Fakes_elf0").a("Wjets_Fakes_muf0");
   
+  m_Title["QCD_HF"] = "QCD fakes, heavy flavor";
+  m_Color["QCD_HF"] = 7022;
+  m_Strings["ttbar_HF"] = VS().a("QCD_Fakes_elf0").a("QCD_Fakes_muf0");
+  
   m_Title["LF"] = "light flavor";
   m_Color["LF"] = 7021;
   m_Strings["LF"] = VS().a("Fakes_elf1").a("Fakes_muf1");
@@ -3876,6 +3880,10 @@ void FitReader::InitializeRecipes(){
   m_Color["Wjets_LF"] = 7021;
   m_Strings["Wjets_LF"] = VS().a("Wjets_Fakes_elf1").a("Wjets_Fakes_muf1");
   
+  m_Title["QCD_LF"] = "QCD fakes, light flavor + unm.";
+  m_Color["QCD_LF"] = 7021;
+  m_Strings["QCD_LF"] = VS().a("QCD_Fakes_elf1").a("QCD_Fakes_muf1");
+
   m_Title["ZDY_LF_el"] = "Z+DY, light flavor + unm.";
   m_Color["ZDY_LF_el"] = 7021;
   m_Strings["ZDY_LF_el"] = VS().a("ZDY_Fakes_elf1");
@@ -3956,14 +3964,14 @@ void FitReader::InitializeRecipes(){
   m_Strings["1Lelgold"] = VS().a("1L_elp-elG").a("1L_elm-elG").a("1L_elpm-elG");
   
   m_Title["1Lelsilver"] = "#scale[1.2]{single silver e}";
-  m_Strings["1Lelsilver"] = VS().a("1L_elp-elS").a("1L_elm-elS");
+  m_Strings["1Lelsilver"] = VS().a("1L_elp-elS").a("1L_elm-elS").a("1L_elpm-elS");
   
   m_Title["1Lmusilver"] = "#scale[1.2]{single silver #mu}";
   m_Strings["1Lmusilver"] = VS().a("1L_mup-muS").a("1L_mum-muS");
 
   
   m_Title["1Lelbronze"] = "#scale[1.2]{single bronze e}";
-  m_Strings["1Lelbronze"] = VS().a("1L_elp-elB").a("1L_elm-elB");
+  m_Strings["1Lelbronze"] = VS().a("1L_elp-elB").a("1L_elm-elB").a("1L_elpm-elB");
   
   m_Title["1Lmubronze"] = "#scale[1.2]{single bronze #mu}";
   m_Strings["1Lmubonze"] = VS().a("1L_mup-muB").a("1L_mum-muB");
@@ -4095,7 +4103,7 @@ void FitReader::InitializeRecipes(){
 
   m_Title["3j1bS"] = "#splitline{3 jets}{1 b-tags} #scale[1.2]{#in S}";
 
-  m_Title["3j2bS"] = "#splitline{3 jets}{#geq 2 b-tags} #scale[1.2]{#in S}";
+  m_Title["3jge2bS"] = "#splitline{3 jets}{#geq 2 b-tags} #scale[1.2]{#in S}";
   
   m_Title["3jS"] = "#splitline{3 jet}{incl. b-tags} #scale[1.2]{#in S}";
   m_Strings["3jS"] = VS().a("3jS").a("3j0bS").a("3j1bS").a("3jge2bS");
