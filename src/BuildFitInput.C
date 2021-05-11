@@ -302,6 +302,9 @@ d.Foreach([&absEta, &nLep](vector<double> Eta_lep) {for(int iLep = 0; iLep < Eta
 	if((e/SKIP)%(std::max(1, int(Nentry/SKIP/10))) == 0)
 	  cout << "      event " << e << " | " << Nentry << endl;
 
+	if(!base->EventFilter)
+	  continue;
+	
 	if(do_FilterDilepton)
 	  if(SF.DileptonEvent(base))
 	    continue;
@@ -455,7 +458,15 @@ d.Foreach([&absEta, &nLep](vector<double> Eta_lep) {for(int iLep = 0; iLep < Eta
 	      else
 		weight *= SF.GetMETSF(base->MET);
 	    
-	    if(sys == Systematic("BTAG_SF"))
+	    if(sys == Systematic("BTAGHF_SF"))
+	      if(sys.IsUp())
+		weight *= base->BtagSFweight_up;
+	      else
+		weight *= base->BtagSFweight_down;
+	    else 
+	      weight *= base->BtagSFweight;
+
+	     if(sys == Systematic("BTAGLF_SF"))
 	      if(sys.IsUp())
 		weight *= base->BtagSFweight_up;
 	 else

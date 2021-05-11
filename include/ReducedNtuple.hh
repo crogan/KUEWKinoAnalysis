@@ -29,9 +29,15 @@ private:
   double m_PUweight;
   double m_PUweight_up;
   double m_PUweight_down;
-  double m_BtagSFweight;
-  double m_BtagSFweight_up;
-  double m_BtagSFweight_down;
+  double m_BtagHFSFweight;
+  double m_BtagHFSFweight_up;
+  double m_BtagHFSFweight_down;
+  double m_BtagLFSFweight;
+  double m_BtagLFSFweight_up;
+  double m_BtagLFSFweight_down;
+  double m_MetTrigSFweight;
+  double m_MetTrigSFweight_up;
+  double m_MetTrigSFweight_down;
 
   int m_runnum;
   int m_luminum;
@@ -43,16 +49,36 @@ private:
   double m_MET;
   double m_MET_phi;
 
+  double m_altMET;
+  double m_altMET_phi;
+
   double m_genMET;
   double m_genMET_phi;
 
-  double m_HT;
-
+  double m_HT_eta24;
+  double m_HT_eta24_id;
+  double m_HT_eta3;
+  double m_HT_eta3_id;
+  double m_HT_eta5;
+  double m_HT_eta5_id;
+  
   bool m_EventFilter;
+
+  bool m_EventFlag_FailJetID;
+  bool m_EventFlag_JetInHEM;
+  bool m_EventFlag_JetInHEM_Pt20;
+  bool m_EventFlag_JetInHEM_Pt20_JetID;
+  bool m_HEM_Veto;
   
   bool m_METtrigger;
   bool m_METHTtrigger;
   bool m_METORtrigger;
+
+  bool m_SingleElectrontrigger;
+  bool m_SingleMuontrigger;
+  bool m_DoubleElectrontrigger;
+  bool m_DoubleMuontrigger;
+  bool m_EMutrigger;  
   
   int m_Nele;
   int m_Nmu;

@@ -362,8 +362,9 @@ FitBin& FitBin::InitializeHistogram(const string& label, bool extrahist){
 void FitBin::Fill(double weight, double M, double R){
   if(m_hist1D == nullptr)
     return;
-  m_hist1D->Fill(GetBin(R, M), weight);
-//cout << "bin: " << R << " " << M << " has weight " << weight << endl;
+  int ibin = GetBin(R, M);
+  if(ibin >= 0)
+    m_hist1D->Fill(ibin, weight);
   if(m_hist2D != nullptr)
     m_hist2D->Fill(M, R, weight);
 

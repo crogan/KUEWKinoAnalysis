@@ -402,8 +402,8 @@ CategoryTree CategoryTreeTool::GetCategories_0L() const {
   CategoryTree CT_etaF(VS().a("SVeta1"), "|#eta^{SV}| > 1.5", "svf", kX_sup, true);
   
   CategoryTree CT_0sv(VS().a("0svS"), "0sv", "0sv", kJ_sup, false);
-  CategoryTree CT_1sv(VS().a("1svS"), "1sv", "1sv", kJ_sup, false);
-  CategoryTree CT_2sv(VS().a("ge2svS"), "#geq 2 sv #in S", "2sv", kJ_sup, false);
+  CategoryTree CT_1sv(VS().a("1svS"), "1sv", "1sv", kJ_sup, true);
+  CategoryTree CT_2sv(VS().a("ge2svS"), "#geq 2 sv #in S", "2sv", kJ_sup, true);
   
   CT_1sv.AddSubCategory(CT_etaC);
   CT_1sv.AddSubCategory(CT_etaF);
@@ -490,18 +490,20 @@ CategoryTree CategoryTreeTool::GetCategories_1L() const {
   
   CategoryTree CT_0bISR(VS().a("0bISR"), "0 b #in ISR", "0b", kX_sub, true);
   CategoryTree CT_1bISR(VS().a("ge1bISR"), "#geq 1 b #in ISR", "1b", kX_sub, true);
+  CategoryTree CT_inclbISR(VS().a("ge1jISR"), "", "", kX_sub, true);
 
   CT_0b.AddSubCategory(CT_0bISR);
   CT_0b.AddSubCategory(CT_1bISR);
   CT_1b.AddSubCategory(CT_0bISR);
   CT_1b.AddSubCategory(CT_1bISR);
+  CT_2b.AddSubCategory(CT_inclbISR);
   
   CategoryTree CT_etaC(VS().a("SVeta0"), "|#eta^{SV}| #leq 1.5", "svc", kX_sup, true);
   CategoryTree CT_etaF(VS().a("SVeta1"), "|#eta^{SV}| > 1.5", "svf", kX_sup, true);
   
   CategoryTree CT_0sv_0(VS().a("0svS"), "0sv", "0sv", kJ_sup, false);
   CategoryTree CT_0sv_1(VS().a("0svS"), "0sv", "0sv", kJ_sup, false);
-  CategoryTree CT_1sv(VS().a("1svS"), "1sv", "1sv", kJ_sup, true);
+  CategoryTree CT_1sv(VS().a("1svS"), "1sv", "1sv", kJ_sup, false);
   
   CT_1sv.AddSubCategory(CT_etaC);
   CT_1sv.AddSubCategory(CT_etaF);
@@ -537,7 +539,7 @@ CategoryTree CategoryTreeTool::GetCategories_1L() const {
 
   CT_0sv_0.AddSubCategory(CT_0bISR);
   CT_0sv_0.AddSubCategory(CT_1bISR);
-  CT_0sv_1.AddSubCategory(CT_k0_1);
+  //CT_0sv_1.AddSubCategory(CT_k0_1);
   CT_0sv_1.AddSubCategory(CT_k1_1);
   
   CategoryTree CT_0j(VS().a("-0j"), "", "0J", kJ, true);
@@ -550,11 +552,11 @@ CategoryTree CategoryTreeTool::GetCategories_1L() const {
   CT_0j.AddSubCategory(CT_1sv);
   CT_1j.AddSubCategory(CT_0sv_1);
   CT_1j.AddSubCategory(CT_1sv);
-  CT_2j.AddSubCategory(CT_k0);
+  //CT_2j.AddSubCategory(CT_k0);
   CT_2j.AddSubCategory(CT_k1);
-  CT_3j.AddSubCategory(CT_k0);
+  //CT_3j.AddSubCategory(CT_k0);
   CT_3j.AddSubCategory(CT_k1);
-  CT_ge4j.AddSubCategory(CT_k0);
+  //CT_ge4j.AddSubCategory(CT_k0);
   CT_ge4j.AddSubCategory(CT_k1);
   
   CategoryTree CT_gold(VS().a("elG").a("muG"), "gold", "G", kL_sub, false);
