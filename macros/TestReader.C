@@ -138,8 +138,7 @@ const string& hadS3 = "2j2bS";
  // vector<const CategoryTree*> CTs;
  // CT_1L.GetListDepth(CTs, depth0-2);
 
- // vector<const CategoryTree*> CTs_deep;
- // CT_1L.GetListDepth(CTs_deep, depth0-2);
+  
 
  // int iCT = 2;
  // int iCTd = 2;

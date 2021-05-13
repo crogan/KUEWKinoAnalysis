@@ -33,8 +33,6 @@
 #include "FitReader.hh"
 #include "shapeTemplate.hh"
 #include "shapeVariation.hh"
-//#include "varWeights.hh"
-//#include "testClass.hh"
 
 using ROOT::RDataFrame;
 using namespace std;
@@ -61,8 +59,15 @@ int main(int argc, char* argv[]) {
   CategoryTool CT;
   CategoryList Categories;
 
+  bool cat0L = false;
+  bool cat1L = false;
+  bool cat2L = false;
+  bool cat3L = false;
+
   bool setLumi = false;
   double lumi;
+
+  bool doSys = false;
   
   for(int i = 0; i < argc; i++){
     if(strncmp(argv[i],"--help", 6) == 0){
@@ -124,6 +129,9 @@ int main(int argc, char* argv[]) {
       Categories += CT.GetCategories_3L();
       cat3L = true;
     }
+    if(strncmp(argv[i],"++sys", 5) == 0){
+      doSys = true;
+    }
     if(strncmp(argv[i],"-lumi", 5) == 0){
       i++;
       setLumi = true;
@@ -161,6 +169,7 @@ int main(int argc, char* argv[]) {
     cout << "   +cat1L              add 1L categories" << endl;
     cout << "   +cat2L              add 2L categories" << endl;
     cout << "   +cat3L              add 3L categories" << endl;
+    cout << "   ++sys               turn on available systematics" << endl;
     cout << "   +hist               book 2D histograms also" << endl;
     cout << "   -lumi [lumi]        set luminosity to lumi" << endl;
     cout << "   -sigfile            signal filename must match this string to be included" << endl;
@@ -202,14 +211,14 @@ int main(int argc, char* argv[]) {
     cat2L = true;
     cat3L = true;
   } 
- 
   // cout << "Categories:" << endl;
   // Categories.Print();
 
   SystematicsTool SYS;
 
   Systematics systematics(1);
-  //systematics += SYS.GetWeightSystematics();
+  if(doSys)
+    systematics += SYS.GetWeightSystematics();
 
   FitInputBuilder FITBuilder(extrahist);
 
@@ -487,7 +496,7 @@ int main(int argc, char* argv[]) {
 	    else 
 	      weight *= base->BtagSFweight;
 
-	     if(sys == Systematic("BTAGLF_SF"))
+	    if(sys == Systematic("BTAGLF_SF"))
 	      if(sys.IsUp())
 		weight *= base->BtagSFweight_up;
 	 else
@@ -533,9 +542,9 @@ int main(int argc, char* argv[]) {
 	    vector<string> flabels = Fakes.GetFakeLabels();
 	    int Nf = flabels.size();
 	    for(int fl = 0; fl < Nf; fl++){
-	      if(title.find("QCD") == string::npos)
-		rlow = FITBuilder.AddEvent(weight/double(Nf), Mperp, RISR,
-				    Categories[eindex], FITBuilder.FakeProcess(flabels[fl]), sys);
+	      // if(title.find("QCD") == string::npos)
+	      // 	FITBuilder.AddEvent(weight/double(Nf), Mperp, RISR,
+	      // 			    Categories[eindex], FITBuilder.FakeProcess(flabels[fl]), sys);
 	      
 	      rlow = FITBuilder.AddEvent(weight/double(Nf), Mperp, RISR,
 				  Categories[eindex], proc.FakeProcess(flabels[fl]), sys);
@@ -545,8 +554,8 @@ int main(int argc, char* argv[]) {
 				Categories[eindex], proc, sys);
 	  }
 	  // dummy data
-	  if(!addData && is_bkg && (title.find("QCD") == string::npos))
-	   double rlowData = FITBuilder.AddEvent(weight, Mperp, RISR,
+	  if(!addData && is_bkg && (title.find("QCD") == string::npos) && !sys)
+	    FITBuilder.AddEvent(weight, Mperp, RISR,
 				Categories[eindex], data_obs, sys);
 if(RISR < rlow){ underflow += 1.;}
 	}
@@ -556,71 +565,80 @@ if(RISR < rlow){ underflow += 1.;}
     }
   }
   FITBuilder.WriteFit(OutFile);
-ProcessList fakeProcList;
-ProcessList fakeProcList_QCD;
-for(int i = 0; i < samples.GetN(); i++){
-//skip QCD here - add to separate processList
-	if(samples[i].Name().find("QCD") != string::npos){
-		fakeProcList_QCD += samples[i];
-		fakeProcList_QCD += samples[i].FakeProcess("Fakes_elf0");
-		fakeProcList_QCD += samples[i].FakeProcess("Fakes_elf1");
-		fakeProcList_QCD += samples[i].FakeProcess("Fakes_muf0");
-		fakeProcList_QCD += samples[i].FakeProcess("Fakes_muf1");
-		continue;
-	}
-	if(samples[i].Type() == kBkg){
-		fakeProcList += samples[i].FakeProcess("Fakes_elf0");
-		fakeProcList += samples[i].FakeProcess("Fakes_elf1");
-		fakeProcList += samples[i].FakeProcess("Fakes_muf0");
-		fakeProcList += samples[i].FakeProcess("Fakes_muf1");
-	}
-}
-if(fakes){
-if(fakeProcList_QCD.GetN() > 0){
-	if(cat1L){
-	cout << "do 1L QCD fakes" << endl;
-	CategoryTree CT_QCD1L = CTTool.GetCategories_QCD1L();
-	shapeTemplateTool STT_QCD1L(CT_QCD1L,fakeProcList_QCD,OutFile);
-	STT_QCD1L.createTemplates();
+
+
+  ProcessList fakeProcList;
+  ProcessList fakeProcList_QCD;
+  for(int i = 0; i < samples.GetN(); i++){
+    //skip QCD here - add to separate processList
+    if(samples[i].Name().find("QCD") != string::npos){
+      fakeProcList_QCD += samples[i];
+      fakeProcList_QCD += samples[i].FakeProcess("Fakes_elf0");
+      fakeProcList_QCD += samples[i].FakeProcess("Fakes_elf1");
+      fakeProcList_QCD += samples[i].FakeProcess("Fakes_muf0");
+      fakeProcList_QCD += samples[i].FakeProcess("Fakes_muf1");
+      continue;
+    }
+    if(samples[i].Type() == kBkg){
+      fakeProcList += samples[i].FakeProcess("Fakes_elf0");
+      fakeProcList += samples[i].FakeProcess("Fakes_elf1");
+      fakeProcList += samples[i].FakeProcess("Fakes_muf0");
+      fakeProcList += samples[i].FakeProcess("Fakes_muf1");
+    }
+  }
+  if(fakeProcList_QCD.GetN() > 0){
+    if(cat1L){
+      cout << "do 1L QCD fakes" << endl;
+      CategoryTree CT_QCD1L = CTTool.GetCategories_QCD1L();
+      shapeTemplateTool STT_QCD1L(CT_QCD1L,fakeProcList_QCD,OutFile);
+      STT_QCD1L.createTemplates();
+      if(doSys){
 	shapeVariationTool SVT_QCD1L(CT_QCD1L,fakeProcList_QCD,OutFile);
 	SVT_QCD1L.doVariations();
-	}
-	if(cat0L){
-	cout << "do 0L QCD fakes" << endl;
-	CategoryTree CT_QCD0L = CTTool.GetCategories_QCD0L();
-	shapeTemplateTool STT_QCD0L(CT_QCD0L,fakeProcList_QCD,OutFile);
-	STT_QCD0L.createTemplates();
+      }
+    }
+    if(cat0L){
+      cout << "do 0L QCD fakes" << endl;
+      CategoryTree CT_QCD0L = CTTool.GetCategories_QCD0L();
+      shapeTemplateTool STT_QCD0L(CT_QCD0L,fakeProcList_QCD,OutFile);
+      STT_QCD0L.createTemplates();
+      if(doSys){
 	shapeVariationTool SVT_QCD0L(CT_QCD0L,fakeProcList_QCD,OutFile);
 	SVT_QCD0L.doVariations();
-	}
-}
+      }
+    }
+  }
 
 
-if(cat1L){
-cout << "do 1L fakes" << endl;
-   CategoryTree CT_Fakes1L = CTTool.GetCategories_Fakes1L();
-   shapeTemplateTool STT1L(CT_Fakes1L,fakeProcList, OutFile);
-   STT1L.createTemplates();
-   shapeVariationTool SVT1L(CT_Fakes1L, fakeProcList, OutFile);
-   SVT1L.doVariations();
-}
-if(cat2L){
-cout << "do 2L fakes" << endl;
-   CategoryTree CT_Fakes2L = CTTool.GetCategories_Fakes2L();
-   shapeTemplateTool STT2L(CT_Fakes2L,fakeProcList, OutFile);
-   STT2L.createTemplates();
-   shapeVariationTool SVT2L(CT_Fakes2L, fakeProcList, OutFile);
-   SVT2L.doVariations();
-}
-if(cat3L){
-cout << "do 3L fakes" << endl;
-   CategoryTree CT_Fakes3L = CTTool.GetCategories_Fakes3L();
-   shapeTemplateTool STT3L(CT_Fakes3L,fakeProcList,OutFile);
-   STT3L.createTemplates();
-   shapeVariationTool SVT3L(CT_Fakes3L, fakeProcList, OutFile);
-   SVT3L.doVariations();
-}
-}
- 
- 
+  if(cat1L){
+    cout << "do 1L fakes" << endl;
+    CategoryTree CT_Fakes1L = CTTool.GetCategories_Fakes1L();
+    shapeTemplateTool STT1L(CT_Fakes1L,fakeProcList, OutFile);
+    STT1L.createTemplates();
+    if(doSys){
+      shapeVariationTool SVT1L(CT_Fakes1L, fakeProcList, OutFile);
+      SVT1L.doVariations();
+    }
+  }
+  if(cat2L){
+    cout << "do 2L fakes" << endl;
+    CategoryTree CT_Fakes2L = CTTool.GetCategories_Fakes2L();
+    shapeTemplateTool STT2L(CT_Fakes2L,fakeProcList, OutFile);
+    STT2L.createTemplates();
+    if(doSys){
+      shapeVariationTool SVT2L(CT_Fakes2L, fakeProcList, OutFile);
+      SVT2L.doVariations();
+    }
+  }
+  if(cat3L){
+    cout << "do 3L fakes" << endl;
+    CategoryTree CT_Fakes3L = CTTool.GetCategories_Fakes3L();
+    shapeTemplateTool STT3L(CT_Fakes3L,fakeProcList,OutFile);
+    STT3L.createTemplates();
+    if(doSys){
+      shapeVariationTool SVT3L(CT_Fakes3L, fakeProcList, OutFile);
+      SVT3L.doVariations();
+    }
+  }
+  
 }

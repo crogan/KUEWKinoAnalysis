@@ -366,11 +366,9 @@ vector<RBin*> FitBin::RBins(){
 void FitBin::Fill(double weight, double M, double R){
   if(m_hist1D == nullptr)
     return;
-
   int ibin = GetBin(R, M);
   if(ibin >= 0)
     m_hist1D->Fill(ibin, weight);
-
   if(m_hist2D != nullptr)
     m_hist2D->Fill(M, R, weight);
 

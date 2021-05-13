@@ -838,8 +838,19 @@ CategoryTree CategoryTreeTool::GetCategories_3L() const {
   return CT_3L;
 }
 
+CategoryTree CategoryTreeTool::GetCategoriesFakes() const {
 
+  CategoryTree CT_Fakes1L = GetCategories_Fakes1L();
+  CategoryTree CT_Fakes2L = GetCategories_Fakes2L();
+  CategoryTree CT_Fakes3L = GetCategories_Fakes3L();
 
+  CategoryTree CT_all(VS().a("Ch"), "", "", kNorm, false);
+  CT_all.AddSubCategory(CT_Fakes1L);
+  CT_all.AddSubCategory(CT_Fakes2L);
+  CT_all.AddSubCategory(CT_Fakes3L);
+
+  return CT_all;
+}
 
 CategoryTree CategoryTreeTool::GetCategories_Fakes1L() const {
   CategoryTree CT_0b(VS().a("j0bS"), "0 b #in S", "0b", kJ_sub, true);
@@ -1783,9 +1794,3 @@ CategoryTree CategoryTreeTool::GetCategories_QCD1L() const {
 
   return CT_1L;
 }
-
-
-
-
-
-

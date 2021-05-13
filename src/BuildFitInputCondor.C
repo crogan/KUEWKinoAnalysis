@@ -110,6 +110,9 @@ int main(int argc, char* argv[]) {
       Categories += CT.GetCategories_3L();
       BuildFitInputCmd += "+cat3L ";
     }
+    if(strncmp(argv[i],"++sys", 5) == 0){
+      BuildFitInputCmd += "++sys ";
+    }
     if(strncmp(argv[i],"-lumi", 5) == 0){
       i++;
       setLumi = true;
@@ -160,6 +163,7 @@ int main(int argc, char* argv[]) {
     cout << "   +cat1L              add 1L categories" << endl;
     cout << "   +cat2L              add 2L categories" << endl;
     cout << "   +cat3L              add 3L categories" << endl;
+    cout << "   ++sys               turn on available systematics" << endl;
     cout << "   +hist               book 2D histograms also" << endl;
     cout << "   -lumi [lumi]        set luminosity to lumi" << endl;
     cout << "   -fakes              flag for adding fake+QCD treatment" << endl;
@@ -268,7 +272,7 @@ void WriteScript(const string& src_name,
   file << "output = " << log_name << ".out" << endl;
   file << "error = "  << log_name << ".err" << endl;
   file << "log = "    << log_name << ".log" << endl;
-  file << "Requirements = (Machine != \"16597184.000.unl.edu\") && (Machine != \"red-c2325.unl.edu\")" << endl;
+  file << "Requirements = (Machine != \"red-node000.unl.edu\") && (Machine != \"16597184.000.unl.edu\") && (Machine != \"red-c2325.unl.edu\")" << endl;
   file << "request_memory = 4 GB" << endl;
   file << "queue " << endl;
   file.close();  
