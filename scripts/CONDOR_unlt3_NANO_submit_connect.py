@@ -231,7 +231,7 @@ if __name__ == "__main__":
     METFILE = "./config/METTrigger/Parameters.csv"
 
     # copy SV NN model
-    os.system("cat json/lwtnn/nano_plus_pt20_model.json > "+config+"NNmodel.json")
+    os.system("cat json/lwtnn/nano_train_model.json > "+config+"NNmodel.json")
     SVFILE = "./config/NNmodel.json"
     
     os.system("cp "+EXE+" "+config+".")
