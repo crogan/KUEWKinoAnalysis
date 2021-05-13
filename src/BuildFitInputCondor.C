@@ -42,6 +42,7 @@ int main(int argc, char* argv[]) {
   CategoryList Categories;
 
   bool setLumi = false;
+  bool fakes = false;
   double lumi;
 
   string BuildFitInputCmd;
@@ -115,6 +116,10 @@ int main(int argc, char* argv[]) {
       lumi = std::stof(argv[i]);
       BuildFitInputCmd += "-lumi " + string(argv[i]) + " ";
     }
+    if(strncmp(argv[i],"-fakes", 6) == 0){
+      fakes = true;
+      BuildFitInputCmd += "-fakes  ";
+    }
     if(strncmp(argv[i],"-maxN", 5) == 0){
       i++;
       maxN = std::max(1, std::stoi(argv[i]));
@@ -157,6 +162,7 @@ int main(int argc, char* argv[]) {
     cout << "   +cat3L              add 3L categories" << endl;
     cout << "   +hist               book 2D histograms also" << endl;
     cout << "   -lumi [lumi]        set luminosity to lumi" << endl;
+    cout << "   -fakes              flag for adding fake+QCD treatment" << endl;
 
     return 0;
   }
@@ -262,7 +268,7 @@ void WriteScript(const string& src_name,
   file << "output = " << log_name << ".out" << endl;
   file << "error = "  << log_name << ".err" << endl;
   file << "log = "    << log_name << ".log" << endl;
-  file << "Requirements = (Machine != \"16597184.000.unl.edu\")" << endl;
+  file << "Requirements = (Machine != \"16597184.000.unl.edu\") && (Machine != \"red-c2325.unl.edu\")" << endl;
   file << "request_memory = 4 GB" << endl;
   file << "queue " << endl;
   file.close();  

@@ -55,6 +55,7 @@ int main(int argc, char* argv[]) {
   bool cat1L = false;
   bool cat2L = false;
   bool cat3L = false;
+  bool fakes = false;
   vector<string> proc_to_add;
   float PTvar;
   CategoryTool CT;
@@ -133,6 +134,9 @@ int main(int argc, char* argv[]) {
       doSigFile = true;
       SigFile = argv[i];
     }
+    if(strncmp(argv[i],"-fakes", 6) == 0){
+      fakes = true;
+    }
   }
       
   if((proc_to_add.size() == 0) &&
@@ -160,6 +164,7 @@ int main(int argc, char* argv[]) {
     cout << "   +hist               book 2D histograms also" << endl;
     cout << "   -lumi [lumi]        set luminosity to lumi" << endl;
     cout << "   -sigfile            signal filename must match this string to be included" << endl;
+    cout << "   -fakes              flag for adding fake+QCD treatment" << endl;
 
     return 0;
   }
@@ -570,6 +575,7 @@ for(int i = 0; i < samples.GetN(); i++){
 		fakeProcList += samples[i].FakeProcess("Fakes_muf1");
 	}
 }
+if(fakes){
 if(fakeProcList_QCD.GetN() > 0){
 	if(cat1L){
 	cout << "do 1L QCD fakes" << endl;
@@ -614,7 +620,7 @@ cout << "do 3L fakes" << endl;
    shapeVariationTool SVT3L(CT_Fakes3L, fakeProcList, OutFile);
    SVT3L.doVariations();
 }
- 
+}
  
  
 }
