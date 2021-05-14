@@ -117,7 +117,6 @@ public:
   virtual ~CategoryTreeTool();
 
   CategoryTree GetCategories() const;
-  CategoryTree GetCategoriesFakes() const;
   CategoryTree GetCategories_0L() const;
   CategoryTree GetCategories_1L() const;
   CategoryTree GetCategories_2L() const;
