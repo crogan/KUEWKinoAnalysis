@@ -653,7 +653,7 @@ CategoryList CategoryTool::GetCategories_0L() const {
   vector<double> gamT0;
   gamT0.push_back(0.);
   vector<double> gamT;
-  gamT.push_back(0.);
+  gamT.push_back(0.2);//Change lower cut on gammaT (originally 0)
   gamT.push_back(0.5);
 
   ///////////////////////////////////////////////

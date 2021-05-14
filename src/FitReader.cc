@@ -2394,3 +2394,374 @@ void FitReader::InitializeRecipes(){
 
   m_CMSLabel = "#bf{#it{CMS}} work-in-progress";
 }
+
+TCanvas* FitReader::ProcessYields(const string& can_name,
+			       const VS& proc,
+			       const CategoryTree& CT){
+
+  RestFrames::SetStyle();
+
+  int Nproc = proc.size();
+  if(Nproc == 0)
+    return nullptr;
+
+  int Nvis = CT.GetNVisible();
+  if(Nvis < 1)
+    return nullptr;
+
+  vector<const CategoryTree*> CatTrees;
+  CT.GetListVisible(CatTrees);
+  
+  CategoryList CatList = GetCategories();
+
+  if(CatList.GetN() < 1)
+    return nullptr;
+
+  // Processes
+  VS                  labels;
+  vector<int>         colors;
+  vector<TH1D*>       hists[Nvis];
+  vector<double>      total;
+  
+  VS                  labels_sig;
+  vector<TH1D*>       hists_sig[Nvis];
+
+  TH1D* hist_data[Nvis];
+  double total_data = 0.;
+
+  for(int i = 0; i < Nproc; i++){
+    VS vproc;
+    if(m_Strings.count(proc[i]) != 0)
+      vproc = m_Strings[proc[i]];
+    else
+      vproc += proc[i];
+
+    double itot = 0.;
+    
+    ProcessList procs;
+    
+    ProcessType type = kBkg;
+    TH1D* hist[Nvis];
+    for(int p = 0; p < int(vproc.size()); p++){
+      
+      int index = GetProcesses().Find(vproc[p]);
+      if(index < 0)
+	continue;
+      
+      Process pp = GetProcesses()[index];
+
+      procs += pp;
+
+      if(pp.Type() == kSig){
+	type = kSig;
+      }
+      
+      if(pp.Type() == kData){
+	type = kData;
+      }
+    }
+
+    for(int v = 0; v < Nvis; v++){
+      CategoryList cat = CatList.Filter(*CatTrees[v]);
+      
+      TH1D* h = GetIntegralHist(Form("plothist_%d_%d_%s", i, v, can_name.c_str()), cat, procs);
+      if(h)
+	itot += h->Integral();
+      
+      hist[v] = h;
+    }
+    
+    if(itot <= 1e-4)
+      continue;
+    
+    if(type == kData){
+      for(int v = 0; v < Nvis; v++)
+	hist_data[v] = hist[v];
+      total_data = itot;
+    }
+    
+    if(type == kSig){
+      labels_sig.push_back(GetSignalTitle(proc[i]));
+      for(int v = 0; v < Nvis; v++)
+	hists_sig[v].push_back(hist[v]);
+    }
+    
+    if(type == kBkg){
+      if(m_Title.count(proc[i]) != 0)
+	labels += m_Title[proc[i]];
+      else
+	labels += proc[i];
+      
+      if(m_Color.count(proc[i]) != 0)
+	colors.push_back(m_Color[proc[i]]);
+      else
+	colors.push_back(m_ColorDefault[i]);
+      
+      for(int v = 0; v < Nvis; v++)
+	hists[v].push_back(hist[v]);
+      total.push_back(itot);
+    } 
+  }
+  
+  int Nsig = hists_sig[0].size();
+  
+  // sort the histograms by integral (N^2/2 brute force)
+  int Nbkg = total.size();
+  VS             vlabels;
+  vector<int>    vcolors;
+  vector<TH1D*>  vhists[Nvis];
+  vector<double> vtotal;
+  string stemp;
+  int    itemp;
+  TH1D*  htemp[Nvis];
+  double ttemp;
+  
+  for(int i = 0; i < Nbkg; i++){
+    vlabels.push_back(labels[i]);
+    vcolors.push_back(colors[i]);
+    for(int v = 0; v < Nvis; v++)
+      vhists[v].push_back(hists[v][i]);
+    vtotal.push_back(total[i]);
+    for(int j = vtotal.size()-2; j >= 0; j--){
+      if(vtotal[j] < vtotal[j+1]){
+	stemp = vlabels[j+1];
+	itemp = vcolors[j+1];
+	for(int v = 0; v < Nvis; v++)
+	  htemp[v] = vhists[v][j+1];
+	ttemp = vtotal[j+1];
+	vlabels[j+1] = vlabels[j];
+	vcolors[j+1] = vcolors[j];
+	for(int v = 0; v < Nvis; v++)
+	  vhists[v][j+1]  = vhists[v][j];
+	vtotal[j+1]  = vtotal[j];
+	vlabels[j] = stemp;
+	vcolors[j] = itemp;
+	for(int v = 0; v < Nvis; v++)
+	  vhists[v][j]  = htemp[v];
+	vtotal[j] = ttemp;
+      } else {
+	break;
+      }
+    }
+  }
+  
+  vector<TH1D*> fhists;
+  vector<TH1D*> fhists_sig;
+  TH1D*         fhist_data = nullptr;
+
+  for(int i = 0; i < Nsig; i++){
+    fhists_sig.push_back(new TH1D(Form("fhistsig_%d_%s", i, can_name.c_str()),
+				  Form("fhistsig_%d_%s", i, can_name.c_str()),
+				  Nvis, 0., Nvis));
+    for(int v = 0; v < Nvis; v++){
+      if(hists_sig[v][i]){
+	fhists_sig[i]->SetBinContent(v+1, hists_sig[v][i]->GetBinContent(1));
+	fhists_sig[i]->SetBinError(v+1, hists_sig[v][i]->GetBinError(1));
+      }
+    }
+  }
+ 
+  if(total_data > 0.){
+    fhist_data = new TH1D(Form("fhistdata_%s", can_name.c_str()),
+			  Form("fhistdata_%s", can_name.c_str()),
+			  Nvis, 0., Nvis);
+    for(int v = 0; v < Nvis; v++){
+      if(hist_data[v]){
+	fhist_data->SetBinContent(v+1, hist_data[v]->GetBinContent(1));
+	fhist_data->SetBinError(v+1, hist_data[v]->GetBinError(1));
+      }
+    }
+  }
+
+  for(int i = 0; i < Nbkg; i++){
+    for(int v = 0; v < Nvis; v++){
+      if(vhists[v][i]){
+	for(int j = i+1; j < Nbkg; j++)
+	  if(vhists[v][j])
+	    vhists[v][i]->Add(vhists[v][j]);
+      }
+    }
+  }
+
+  for(int i = 0; i < Nbkg; i++){
+    fhists.push_back(new TH1D(Form("fhistsbkg_%d_%s", i, can_name.c_str()),
+			      Form("fhistsbkg_%d_%s", i, can_name.c_str()),
+			      Nvis, 0., Nvis));
+    for(int v = 0; v < Nvis; v++){
+      int j = i;
+      TH1D* hptr = nullptr;
+      while(j < Nbkg && hptr == nullptr){
+	hptr = vhists[v][j];
+	j++;
+      }
+      if(hptr){
+	fhists[i]->SetBinContent(v+1, hptr->GetBinContent(1));
+	fhists[i]->SetBinError(v+1, hptr->GetBinError(1));
+      }
+    }
+  }
+
+  labels = vlabels;
+  colors = vcolors;
+
+  for(int b = 0; b < Nvis; b++){
+    fhists[0]->GetXaxis()->SetBinLabel(b+1, CatTrees[b]->GetSpectroscopicLabel().c_str());
+  }
+  
+  // for(int b = 0; b < NB; b++){
+  //   if(b%2 == 1)
+  //     hists[0]->GetXaxis()->SetBinLabel(b+1, (blabels[b]+space).c_str());
+  //   else
+  //     hists[0]->GetXaxis()->SetBinLabel(b+1, blabels[b].c_str());
+  // }
+
+  fhists[0]->LabelsOption("v","X");
+  
+  gStyle->SetOptTitle(0);
+  gStyle->SetOptStat(0);
+  gStyle->SetOptFit(11111111);
+  TCanvas* can = new TCanvas(Form("can_%s", can_name.c_str()),
+			     Form("can_%s", can_name.c_str()),
+			     1200, 700);
+  double hlo = 0.09;
+  double hhi = 0.2;
+  double hbo = 0.19;
+  double hto = 0.07;
+  can->SetLeftMargin(hlo);
+  can->SetRightMargin(hhi);
+  can->SetBottomMargin(hbo);
+  can->SetTopMargin(hto);
+  can->SetGridy();
+  can->SetLogy();
+  can->Draw();
+  can->cd();
+
+  double hmax = fhists[0]->GetMaximum();
+  double hmin = std::max(0.1, fhists[Nbkg-1]->GetMinimum());
+  
+  fhists[0]->Draw("hist");
+  fhists[0]->GetXaxis()->CenterTitle();
+  fhists[0]->GetXaxis()->SetTitleFont(42);
+  fhists[0]->GetXaxis()->SetTitleSize(0.05);
+  fhists[0]->GetXaxis()->SetTitleOffset(1.0);
+  fhists[0]->GetXaxis()->SetLabelFont(42);
+  fhists[0]->GetXaxis()->SetLabelSize(std::min(2./double(Nvis), 0.04));
+  fhists[0]->GetXaxis()->SetTitle("");
+  fhists[0]->GetXaxis()->SetTickSize(0.);
+  fhists[0]->GetYaxis()->CenterTitle();
+  fhists[0]->GetYaxis()->SetTitleFont(42);
+  fhists[0]->GetYaxis()->SetTitleSize(0.04);
+  fhists[0]->GetYaxis()->SetTitleOffset(0.85);
+  fhists[0]->GetYaxis()->SetLabelFont(42);
+  fhists[0]->GetYaxis()->SetLabelSize(0.035);
+  fhists[0]->GetYaxis()->SetTitle("number of events");
+   
+  for(int i = 0; i < Nbkg; i++){
+    fhists[i]->SetLineColor(kBlack);
+    fhists[i]->SetLineWidth(1.0);
+    fhists[i]->SetFillColor(colors[i]);
+    fhists[i]->SetFillStyle(1001);
+    fhists[i]->Draw("SAME HIST");
+  }
+
+  TGraphErrors* gr = nullptr;
+  if(true){// !m_FilePtr
+    vector<double> X;
+    vector<double> Xerr;
+    vector<double> Y;
+    vector<double> Yerr;
+    for(int i = 0; i < Nvis; i++){
+      X.push_back(fhists[0]->GetXaxis()->GetBinCenter(i+1));
+      Xerr.push_back(0.5);
+      Y.push_back(fhists[0]->GetBinContent(i+1));
+      Yerr.push_back(fhists[0]->GetBinError(i+1));
+    }
+    gr = (TGraphErrors*) new TGraphErrors(Nvis, &X[0], &Y[0],  &Xerr[0], &Yerr[0]);
+  } else {
+    // cout << "here " << gr << endl;
+    // gr = (TGraphErrors*) GetTotalBackground(cat);
+    // cout << "here " << gr << endl;
+  }
+    
+  gr->SetMarkerSize(0);
+  gr->SetLineColor(kBlack);
+  gr->SetFillColor(kBlack);
+  gr->SetFillStyle(3244);
+  gr->Draw("same p2");
+  
+  for(int i = 0; i < Nsig; i++){
+    fhists_sig[i]->SetLineColor(m_SignalColor[i]);
+    fhists_sig[i]->SetLineWidth(8);
+    fhists_sig[i]->SetFillColor(kWhite);
+    fhists_sig[i]->Draw("SAME HIST");
+    if(fhists_sig[i]->GetMaximum() > hmax)
+      hmax = fhists_sig[i]->GetMaximum();
+  }
+
+  if(fhist_data){
+    fhist_data->SetLineColor(kBlack);
+    fhist_data->SetFillColor(kWhite);
+    fhist_data->SetMarkerStyle(8);
+    fhist_data->SetMarkerSize(1.);
+    fhist_data->SetLineWidth(2);
+    fhist_data->Draw("SAME ep");
+    if(fhist_data->GetMaximum() > hmax)
+      hmax = fhist_data->GetMaximum();
+  }
+
+  double logrange = log(hmax) - log(hmin);
+  hmax = exp(log(hmax) + logrange*0.3);
+  fhists[0]->GetYaxis()->SetRangeUser(hmin/1.5, hmax);
+
+  TLegend* leg = new TLegend(1.-hhi+0.007, 1.- (Nbkg+Nsig+1)*(1.-0.49)/9., 0.98, 1.-hto-0.005);
+  leg->SetTextFont(42);
+  leg->SetTextSize(0.035);
+  leg->SetFillColor(kWhite);
+  leg->SetLineColor(kWhite);
+  leg->SetShadowColor(kWhite);
+
+  if(fhist_data)
+    leg->AddEntry(fhist_data, "data");
+  leg->AddEntry(gr, "total uncertainty","F");
+  for(int i = 0; i < Nbkg; i++)
+    leg->AddEntry(fhists[i], labels[i].c_str(), "F");
+  for(int i = 0; i < Nsig; i++)
+    leg->AddEntry(fhists_sig[i], labels_sig[i].c_str(), "L");
+  leg->Draw("SAME");
+
+  DrawCatTree(CT, can);
+  
+  
+  double eps = 0.0015;
+  
+  TLatex l;
+  l.SetTextFont(42);
+  l.SetNDC();
+
+  TLine* line = new TLine();
+  line->SetLineWidth(2);
+  line->SetLineColor(kBlack);
+
+  // line->DrawLineNDC(hlo, hbo-0.024*lmax, 1-hhi, hbo-0.0235*lmax);
+ 
+  l.SetTextSize(0.025);
+  l.SetTextFont(42);
+  l.SetTextAlign(23);
+  line->SetLineWidth(1);
+  double lo = hlo;
+  double hi = hlo;
+ 
+ 
+  l.SetTextAlign(31);
+  l.SetTextSize(0.04);
+  l.SetTextFont(42);
+  l.DrawLatex(1.-hhi-eps*4, 1.-hto+0.02, string("Regions "+CT.GetSpectroscopicLabel()).c_str());
+  l.SetTextAlign(11);
+  l.SetTextSize(0.04);
+  l.SetTextFont(42);
+  l.DrawLatex(hlo+eps*4, 1.-hto+0.02, m_CMSLabel.c_str());
+  l.SetTextSize(0.05);
+  
+  return can;
+
+}
