@@ -308,6 +308,8 @@ Systematics SystematicsTool::GetWeightSystematics() const {
   Systematics list;
   
   //list += "PU_SF"; // turn off for now
+  //add fake shape systematics here
+  //list += "WjetsDBTB_1Lel0Jf0_RISR"; //grouped by process, #L, lep flav, #jS, fake source, RISR/Mperp 
   list += "BTAGHF_SF";
   list += "BTAGLF_SF";
   list += "MET_TRIG";
