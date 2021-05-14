@@ -128,7 +128,8 @@ void shapeVariation::doVariationMperp(TH1D* hist, const FitBin& fb, bool isUp){
 		} 
 	
 	}	
-
+	//if one Mperp bin, don't do anything
+	if(bins.size() < 2) return;
 
 	int midpoint = int(bins.size()/2) + 1;
 	for(int r = 0; r < int(bins.size()); r++){
