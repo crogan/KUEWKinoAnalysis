@@ -203,7 +203,7 @@ void shapeVariationTool::makeProcessMaps(){
 		Process pp = m_procList[p];
 		if(pp.Name().find("ttbar") != string::npos || pp.Name().find("ST") != string::npos) m_domToRareLabels[pp] = "ttbarST";
 		else if(pp.Name().find("Wjets") != string::npos || pp.Name().find("TB") != string::npos || pp.Name().find("DB") != string::npos) m_domToRareLabels[pp] = "WjetsDBTB";
-		else m_domToRareLabels[pp] = "";
+		else m_domToRareLabels[pp] = pp.Name();
 	}
 }
 
