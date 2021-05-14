@@ -99,6 +99,8 @@ public:
   const ProcessList&  GetProcesses() const;
   const CategoryList& GetCategories(const string& channel = "") const;         
   const Systematics&  GetSystematics() const;
+
+  map<string,VS> m_Strings;
   
 private:
   mutable TFile  m_File;
@@ -130,7 +132,7 @@ private:
   map<string,int>             m_Color;
   vector<int>                 m_ColorDefault;
   vector<int>                 m_SignalColor;
-  map<string,VS> m_Strings;
+  
   void InitializeRecipes();
   string GetSignalTitle(const string& label);
 

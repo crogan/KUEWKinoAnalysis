@@ -75,7 +75,7 @@ def write_sh(srcfile,ifile,ofile,lfile,dataset,filetag,i,n):
     fsrc.write('output = '+lfile+"_out.log \n")
     fsrc.write('error = '+lfile+"_err.log \n")
     fsrc.write('log = '+lfile+"_log.log \n")
-    fsrc.write('Requirements = (Machine != "red-node000.unl.edu")\n')
+    fsrc.write('Requirements = (Machine != "red-node000.unl.edu") && (Machine != "red-c2325.unl.edu") \n')
     fsrc.write('request_memory = 4 GB \n')
     fsrc.write('queue \n')
     #fsrc.write('cd '+RUN_DIR+" \n")

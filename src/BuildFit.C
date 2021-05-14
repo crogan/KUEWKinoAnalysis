@@ -487,7 +487,12 @@ int main(int argc, char* argv[]) {
       }
   */
   cmd = "combineTool.py -M T2W -i "+OutputFold+"/*/*/*/datacard.txt -o workspace.root --parallel 4";
-  string cmd_condor = "combineTool.py -M T2W -i "+OutputFold+"/*/*/*/datacard.txt -o workspace.root --job-mode condor --sub-opts='+JobFlavour=\"espresso\" \\n request_memory = 4 GB'";
+
+  string cmd_condor = "combineTool.py -M T2W -i "+OutputFold+"/*/*/*/datacard.txt -o workspace.root --job-mode condor ";
+
+  string cmd_condor_CERN = "--sub-opts='+JobFlavour=\"espresso\" \\n request_memory = 4 GB'";
+  string cmd_condor_T3 = "--sub-opts='Requirements = (Machine != \"red-node000.unl.edu\") && (Machine != \"red-c2325.unl.edu\") \\n request_memory = 4 GB'";
+  
   if(workspace)
     gSystem->Exec(cmd.c_str());
   else {
@@ -495,6 +500,10 @@ int main(int argc, char* argv[]) {
     cout << "    " << cmd << endl << endl;
     cout << "Or, to run using condor, something like:" << endl << endl;
     cout << "    " << cmd_condor << endl << endl;
+    cout << "   with options for CERN:" << endl << endl;
+    cout << "    " << cmd_condor_CERN << endl << endl;
+    cout << "   or options for UNL T3:" << endl << endl;
+    cout << "    " << cmd_condor_T3 << endl << endl;
   }
 
 }
