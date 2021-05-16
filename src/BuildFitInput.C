@@ -49,10 +49,6 @@ int main(int argc, char* argv[]) {
   bool addSig  = false;
   bool addData = false;
   bool extrahist = false;
-  bool cat0L = false;
-  bool cat1L = false;
-  bool cat2L = false;
-  bool cat3L = false;
   bool fakes = false;
   vector<string> proc_to_add;
   float PTvar;
@@ -173,7 +169,7 @@ int main(int argc, char* argv[]) {
     cout << "   +hist               book 2D histograms also" << endl;
     cout << "   -lumi [lumi]        set luminosity to lumi" << endl;
     cout << "   -sigfile            signal filename must match this string to be included" << endl;
-    cout << "   -fakes              flag for adding fake+QCD treatment" << endl;
+    cout << "   -fakes              flag for adding fake treatment" << endl;
 
     return 0;
   }
@@ -215,12 +211,56 @@ int main(int argc, char* argv[]) {
   // Categories.Print();
 
   SystematicsTool SYS;
-
   Systematics systematics(1);
   if(doSys)
     systematics += SYS.GetWeightSystematics();
-
-  FitInputBuilder FITBuilder(extrahist);
+cout << "did regular systs" << endl;
+//  vector<CategoryTree> CT_Fakes;
+//  vector<CategoryTree> CT_QCD;
+//add fake shape systematics to SystematicTool 
+// if(doSys && fakes){ 
+//  if(cat1L){
+//    CategoryTree CT_Fakes1L = CTTool.GetCategories_Fakes1L();
+//    CT_Fakes.push_back(CT_Fakes1L);
+//   }
+//  if(cat2L){
+//    CategoryTree CT_Fakes2L = CTTool.GetCategories_Fakes2L();
+//    CT_Fakes.push_back(CT_Fakes2L);
+//   }
+//  if(cat3L){
+//    CategoryTree CT_Fakes3L = CTTool.GetCategories_Fakes3L();
+//    CT_Fakes.push_back(CT_Fakes3L);
+//   }
+//  cout << "Fakes category Tree size " << CT_Fakes.size() <<  endl;
+// for(int c = 0; c < CT_Fakes.size(); c++)
+//   systematics += SYS.GetFakeShapeSystematics(CT_Fakes[c],samples.GetProcesses());
+//}
+//cout << "did fake shape systs" << endl;
+////if systs are turned on and QCD is in the background
+//cout << "doSys: " << doSys << endl;
+//cout << "nprocs: " << samples.GetProcesses().size() << endl;
+//string qcd = "QCD";
+//vector<string> sprocs = samples.GetProcesses();
+//cout << " count QCD " << std::count(sprocs.begin(),sprocs.end(),"QCD") << endl;
+//if(doSys && std::count(sprocs.begin(),sprocs.end(),"QCD")){
+//cout << "doing QCD systs" << endl;
+//	if(cat0L){
+//		CategoryTree CT_QCD0L = CTTool.GetCategories_QCD0L();
+//		CT_QCD.push_back(CT_QCD0L);
+//	}
+//cout << "did 0L QCD" << endl;
+//	if(cat1L){
+//		CategoryTree CT_QCD1L = CTTool.GetCategories_QCD1L();
+//		CT_QCD.push_back(CT_QCD1L);
+//	}
+//cout << "did 1L QCD" << endl;
+//  cout << "QCD category Tree size " << CT_QCD.size() <<  endl;
+//  for(int c = 0; c < CT_QCD.size(); c++) 
+//	systematics += SYS.GetFakeShapeSystematics(CT_QCD[c],VS().a("QCD"));
+//}
+//
+//cout << "did QCD shape systs" << endl;
+ FitInputBuilder FITBuilder(extrahist);
 
   int underflow = 0.;
 
@@ -329,7 +369,7 @@ int main(int argc, char* argv[]) {
 // 	double etaMean = absEta/nLep; 
 //  double sip3dMean = *d.Mean("SIP3D_lep");
 
-      int Nentry = base->fChain->GetEntries();
+      int Nentry = 1e3;//base->fChain->GetEntries();
       
       int SKIP = 1;
 
@@ -579,7 +619,8 @@ if(RISR < rlow){ underflow += 1.;}
       fakeProcList_QCD += samples[i].FakeProcess("Fakes_muf1");
       continue;
     }
-    if(samples[i].Type() == kBkg){
+    //non QCD backgrounds
+    if(samples[i].Type() == kBkg && samples[i].Name().find("QCD") == string::npos){
       fakeProcList += samples[i].FakeProcess("Fakes_elf0");
       fakeProcList += samples[i].FakeProcess("Fakes_elf1");
       fakeProcList += samples[i].FakeProcess("Fakes_muf0");
@@ -593,8 +634,8 @@ if(RISR < rlow){ underflow += 1.;}
       shapeTemplateTool STT_QCD1L(CT_QCD1L,fakeProcList_QCD,OutFile);
       STT_QCD1L.createTemplates();
       if(doSys){
-	shapeVariationTool SVT_QCD1L(CT_QCD1L,fakeProcList_QCD,OutFile);
-	SVT_QCD1L.doVariations();
+        shapeVariationTool SVT_QCD1L(CT_QCD1L,fakeProcList_QCD,OutFile);
+        SVT_QCD1L.doVariations();
       }
     }
     if(cat0L){
@@ -603,13 +644,34 @@ if(RISR < rlow){ underflow += 1.;}
       shapeTemplateTool STT_QCD0L(CT_QCD0L,fakeProcList_QCD,OutFile);
       STT_QCD0L.createTemplates();
       if(doSys){
-	shapeVariationTool SVT_QCD0L(CT_QCD0L,fakeProcList_QCD,OutFile);
-	SVT_QCD0L.doVariations();
+        shapeVariationTool SVT_QCD0L(CT_QCD0L,fakeProcList_QCD,OutFile);
+        SVT_QCD0L.doVariations();
       }
     }
   }
 
 
+//if there is at least 1 categoryTree for fakes
+//if(CT_Fakes.size() > 0){
+//	for(int f = 0; f < CT_Fakes.size(); f++){
+//		shapeTemplateTool STT(CT_Fakes[f],fakeProcList,OutFile);
+//		STT.createTemplates();
+//		shapeVariationTool SVT(CT_Fakes[f],fakeProcList, OutFile);
+//		SVT.doVariations();
+//	}	
+//}
+//if there is at least 1 categoryTree for QCD
+//if(CT_QCD.size() > 0){
+//	for(int f = 0; f < CT_QCD.size(); f++){
+//		shapeTemplateTool STT(CT_QCD[f],fakeProcList_QCD,OutFile);
+//		STT.createTemplates();
+//		shapeVariationTool SVT(CT_QCD[f],fakeProcList_QCD, OutFile);
+//		SVT.doVariations();
+//	}	
+//}
+
+
+if(fakes){
   if(cat1L){
     cout << "do 1L fakes" << endl;
     CategoryTree CT_Fakes1L = CTTool.GetCategories_Fakes1L();
@@ -640,5 +702,6 @@ if(RISR < rlow){ underflow += 1.;}
       SVT3L.doVariations();
     }
   }
+}
   
 }
