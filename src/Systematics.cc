@@ -1,5 +1,5 @@
 #include "Systematics.hh"
-
+#include "CategoryTree.hh"
 ///////////////////////////////////////////
 ////////// Systematic class
 ///////////////////////////////////////////
@@ -313,6 +313,33 @@ Systematics SystematicsTool::GetWeightSystematics() const {
   list += "BTAGHF_SF";
   list += "BTAGLF_SF";
   list += "MET_TRIG";
+
+  return list;
+}
+
+//pass this list of real procs ie ttbar, Wjets
+Systematics SystematicsTool::GetFakeShapeSystematics(CategoryTree CT, VS procs) const {
+        Systematics list;
+	vector<const CategoryTree*> catTrees;
+	CT.GetListDepth(catTrees,1);
+
+	VS procGroups;
+	if(std::count(procs.begin(),procs.end(),"ttbar") || std::count(procs.begin(),procs.end(),"ST")) procGroups += "ttbarST";
+	if(std::count(procs.begin(),procs.end(),"Wjets") || std::count(procs.begin(),procs.end(),"TB") || std::count(procs.begin(),procs.end(),"DB")) procGroups += "WjetsDBTB";
+	if(std::count(procs.begin(),procs.end(),"ZDY")) procGroups += "ZDY";
+	if(std::count(procs.begin(),procs.end(),"QCD")) procGroups += "QCD";
+
+
+	for(int c = 0; c < int(catTrees.size()); c++){
+		for(int p = 0; p < procGroups.size(); p++){
+			list += procGroups[p]+"_"+catTrees[c]->GetSpecLabel()+"f0_RISR";
+			list += procGroups[p]+"_"+catTrees[c]->GetSpecLabel()+"f1_RISR";
+			list += procGroups[p]+"_"+catTrees[c]->GetSpecLabel()+"f0_Mperp";
+			list += procGroups[p]+"_"+catTrees[c]->GetSpecLabel()+"f1_Mperp";
+		}
+	}
+for(int i = 0; i < list.GetN(); i++) cout << list[i].Label() << endl;	
+  
 
   return list;
 }
