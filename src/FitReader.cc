@@ -2396,13 +2396,14 @@ void FitReader::InitializeRecipes(){
 }
 
 TCanvas* FitReader::ProcessYields(const string& can_name,
-			       const VS& proc,
-			       const CategoryTree& CT){
+				  const VS& proc_bkg,
+				  const VS& proc_sig,
+				  const CategoryTree& CT){
 
   RestFrames::SetStyle();
 
-  int Nproc = proc.size();
-  if(Nproc == 0)
+  int Nproc_bkg = proc_bkg.size();
+  if(Nproc_bkg == 0)
     return nullptr;
 
   int Nvis = CT.GetNVisible();
@@ -2468,9 +2469,10 @@ TCanvas* FitReader::ProcessYields(const string& can_name,
       if(h)
 	itot += h->Integral();
       
-      hist[v] = h;
-    }
-    
+      //yield: h->Integral()
+      hist[v] = h; 
+   }
+    /*
     if(itot <= 1e-4)
       continue;
     
@@ -2761,7 +2763,8 @@ TCanvas* FitReader::ProcessYields(const string& can_name,
   l.SetTextFont(42);
   l.DrawLatex(hlo+eps*4, 1.-hto+0.02, m_CMSLabel.c_str());
   l.SetTextSize(0.05);
-  
+    
   return can;
-
+    */
+    return nullptr;
 }
