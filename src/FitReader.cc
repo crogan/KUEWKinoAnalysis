@@ -1908,9 +1908,9 @@ TCanvas* FitReader::Plot1Dstack(const string& can_name,
     // if(colors[Nbkg-1]%1000 >=3)
     //   l.SetTextColor(7000 + 10*((b%Nvis)%8));
     // else
-      l.SetTextColor(7004 + 10*((b%Nvis)%8));
+    l.SetTextColor(7004 + 10*((b%Nvis)%8));
     l.DrawLatex(hlo+(1.-hhi-hlo)/double(Nvis*Nbin)*(0.5+b), hbo + 4*eps,
-		 CatTrees[b%Nvis]->GetPlainLabel(Depth).c_str());
+		CatTrees[b%Nvis]->GetPlainLabel(Depth).c_str());
   }
 
   l.SetTextAngle(0);

@@ -25,28 +25,28 @@ double METTriggerTool::Get_SF(double MET, double HT, int year,
 			       bool data, int updown){
   string data_name, bkg_name;
 
-  if(!mu)
-    el = true;
+  double SF;
   
   if(!el && !mu){
-    data_name = Get_Name(HT, year, el, mu, false); 
+    data_name = Get_Name(HT, year, true, mu, true); 
+    bkg_name = Get_Name(HT, year, true, mu, false);
+    SF = Get_EFF(data_name, MET)/Get_EFF(bkg_name, MET);
+    data_name = Get_Name(HT, year, el, mu, true);
     bkg_name = Get_Name(HT, year, el, mu, false);
   } else {
     data_name = Get_Name(HT, year, el, mu, true); 
     bkg_name = Get_Name(HT, year, el, mu, false);
+    SF = Get_EFF(data_name, MET)/Get_EFF(bkg_name, MET);
   }
-  
-  double SF = Get_EFF(data_name, MET)/Get_EFF(bkg_name, MET);
   
   if(updown == 0)
     return SF; 
   else if(updown > 0)
-    return SF*(m_map[data_name][4] + (MET < m_map[data_name][2] ? m_map[data_name][0]*(MET-m_map[data_name][2])*(MET-m_map[data_name][2]) : 0.)); 
+    return SF*(m_map[bkg_name][4] + (MET < m_map[bkg_name][2] ? m_map[bkg_name][0]*(MET-m_map[bkg_name][2])*(MET-m_map[bkg_name][2]) : 0.)); 
   else
-    return SF*(m_map[data_name][5] + (MET < m_map[data_name][3] ? m_map[data_name][1]*(MET-m_map[data_name][3])*(MET-m_map[data_name][3]) : 0.)); 
-  
-  return 1.;
-  
+    return SF*(m_map[bkg_name][5] + (MET < m_map[bkg_name][3] ? m_map[bkg_name][1]*(MET-m_map[bkg_name][3])*(MET-m_map[bkg_name][3]) : 0.));
+
+  return 1.;  
 }
 
 void METTriggerTool::SetCSV(const string& csv){
@@ -98,8 +98,7 @@ string METTriggerTool::Get_Name(double HT, int year, bool el, bool mu, bool data
     else if(mu)
       name+="SingleMuon_"+std::to_string(year)+"_Muon"; 
     else {
-      std::cout << "Check Booleans!" << std::endl << "Trying to use data for 0 leptons!" << std::endl << "Using electrons for now..." << std::endl;
-      name+="Bkg_"+std::to_string(year)+"_Electron";
+      name+="SingleElectron_"+std::to_string(year)+"_ZeroLepton"; //
     }
   } else {
     name+="Bkg_"+std::to_string(year)+"_";
