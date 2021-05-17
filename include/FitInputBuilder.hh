@@ -32,16 +32,17 @@ public:
   const Process& FakeProcess(const string& label);
   
   void WriteFit(const string& outputroot);
-  
+  void AddFakeShapeSystematics(Process proc, Systematics systs); 
 private:
   map<string,Process*>  m_Proc;
   map<string,Category*> m_Cat;  
-  
+ 
   TFile* m_OutFile;
 
   TTree* m_ProcTree;
   ProcessBranch m_ProcBranch;
   void WriteProc();
+  
   
   TTree* m_CatTree;
   CategoryBranch m_CatBranch;
