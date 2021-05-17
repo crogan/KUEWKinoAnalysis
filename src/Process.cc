@@ -117,6 +117,17 @@ SM Process::GetSM() const {
   return sm;
 }
 
+
+void Process::AddShapeSysts(Systematics systs) {
+  for(int s = 0; s < systs.GetN(); s++){
+     string plabel = Name()+"_"+systs[s].Label();
+     if(m_ProcBins.count(plabel) == 0)
+      m_ProcBins[plabel] = map<string,FitBin*>();
+   }
+  }
+
+
+
 ///////////////////////////////////////////
 ////////// ProcessList class
 ///////////////////////////////////////////
@@ -356,7 +367,13 @@ void ProcessBranch::FillProcess(Process& proc, TFile& file){
   auto p = proc.m_ProcBins.begin();
   while(p != proc.m_ProcBins.end()){
     m_SubProc = p->first;
-	// loop through all categories for a given subprocess
+//cout << "ProcessBranch::FillProcess m_SubProc: " << m_SubProc << endl;
+    if(p->second.empty()){
+      if(m_Tree) m_Tree->Fill();
+      p++;
+      continue;
+    }	
+     // loop through all categories for a given subprocess
     auto c = p->second.begin();
     while(c != p->second.end()){
       // write FitBin to output file for each subprocess/category

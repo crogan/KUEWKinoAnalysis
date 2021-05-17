@@ -35,6 +35,8 @@ public:
 		bool extrahist = false);
 
   Process FakeProcess(const string& label) const;
+  
+  void AddShapeSysts(Systematics systs);
 
   bool operator <  (const Process&) const;
   bool operator >  (const Process&) const;
