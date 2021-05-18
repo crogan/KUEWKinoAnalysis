@@ -234,9 +234,9 @@ int main(int argc, char* argv[]) {
     systematics = FIT.GetSystematics().FilterOR(sys_to_add);
   if(systematics.GetN() > 0)
     systematics = systematics.RemoveOR(sys_to_rem);
-cout << "systematics" << endl;
-  for(int s = 0; s < systematics.GetN(); s++)
-    cout << systematics[s].Label() << endl;
+//cout << "systematics" << endl;
+//  for(int s = 0; s < systematics.GetN(); s++)
+//    cout << systematics[s].Label() << endl;
 
 CategoryTree CT_Fakes1L;
 vector<const CategoryTree*> catTrees;
