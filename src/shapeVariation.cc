@@ -11,34 +11,52 @@
 
 
 
-shapeVariation::shapeVariation(CategoryList cats,  string f){
+shapeVariation::shapeVariation(CategoryList cats,  TFile* f){
+//shapeVariation::shapeVariation(CategoryList cats){
 	m_cats = cats;
 	m_file = f;
 }
 
 shapeVariation::~shapeVariation(){
-	m_file = "";
 }
 
 
 
+//void shapeVariation::doVariations(Process pp,string procLabel,map<Category,string> catLabels, string file){
 void shapeVariation::doVariations(Process pp,string procLabel,map<Category,string> catLabels){
+	//cout << "shapeVariation::doVariations" << endl;
+	string file = m_file->GetName();
+	m_file->Close();
+	m_file = new TFile(file.c_str(),"UPDATE");
+	if(!m_file->IsOpen()){
+		cout << "file is not open" << endl;
+		m_file = nullptr;
+		return;
+	}
+//cout << "nCats: " << m_cats.GetN() << endl;
+	if(m_cats.GetN() < 1) return;
 	const FitBin& fitBin = m_cats[0].GetFitBin();
 	//nBins = fitBin.NBins();
-	TFile* file;
-	if(!gSystem->AccessPathName(m_file.c_str())) file = TFile::Open(m_file.c_str(),"UPDATE");
-	else file = new TFile(m_file.c_str(),"RECREATE"); 
+	//TFile* file;
+	//if(!gSystem->AccessPathName(m_file.c_str())) file = TFile::Open(m_file.c_str(),"UPDATE");
+	//else file = new TFile(m_file.c_str(),"RECREATE"); 
 	for(int c = 0; c < m_cats.GetN(); c++){
+//cout << "cat #" << c << endl;
 		string dirName = m_cats[c].Label()+"_"+m_cats[c].GetLabel();
 		string histName = pp.Name();
+		if(histName == "data_obs" || histName.find("_Fakes_") == string::npos) continue;
 		string fakeName;
 		if(histName.find("f0") != string::npos) fakeName = "f0";
 		else if(histName.find("f1") != string::npos) fakeName = "f1";
-		TH1D* hist = (TH1D*)file->Get((dirName+"/"+histName).c_str());
+		TH1D* hist = (TH1D*)m_file->Get((dirName+"/"+histName).c_str());
 		if(hist == NULL) continue;
+//cout << "got histogram" << endl;
 		string sysName;
 		if(procLabel.empty()) sysName = histName+"_"+catLabels[m_cats[c]]+fakeName;
 		else sysName = histName+"_"+procLabel+"_"+catLabels[m_cats[c]]+fakeName;
+		//cout << "name of original histogram: " << dirName+"/"+histName <<endl;
+		//cout << "name of systematic histogram: " << sysName << endl;
+
 		TH1D* histRISRUp = (TH1D*)hist->Clone(Form("%s_RISRUp",sysName.c_str()));
 		doVariationRISR(histRISRUp,fitBin);
 	
@@ -50,14 +68,16 @@ void shapeVariation::doVariations(Process pp,string procLabel,map<Category,strin
 		
 		TH1D* histMperpDown = (TH1D*)hist->Clone(Form("%s_MperpDown",sysName.c_str()));
 		doVariationMperp(histMperpUp,fitBin,false);
+//cout << "did variations" << endl;
 		
-		file->cd(dirName.c_str());	
+		m_file->cd(dirName.c_str());	
 		histRISRUp->Write();
 		histRISRDown->Write();
 		histMperpUp->Write();
 		histMperpDown->Write();
+//cout << "write hist variations for: " << dirName+"/"+histName << endl;
 	}
-	file->Close();
+	m_file->Close();
 }
 
 void shapeVariation::doVariationRISR(TH1D* hist, const FitBin& fb, bool isUp){
@@ -155,9 +175,12 @@ void shapeVariation::doVariationMperp(TH1D* hist, const FitBin& fb, bool isUp){
 /////////////////////////////
 
 
-shapeVariationTool::shapeVariationTool(CategoryTree ct, ProcessList procs, string file){
+shapeVariationTool::shapeVariationTool(CategoryTree ct, ProcessList procs, TFile* file){
+//shapeVariationTool::shapeVariationTool(CategoryTree ct, ProcessList procs, string file){
 	m_ct = ct;
-	m_fr = new FitReader(file);
+	string filename = file->GetName();
+	//file->Close();
+	m_fr = new FitReader(filename);
 	m_catList = m_fr->GetCategories();
 	m_nProc = procs.GetN();
 	m_file = file;
@@ -188,7 +211,10 @@ void shapeVariationTool::doVariations(){
 			Process pp = m_fr->GetProcesses()[index];
 			for(int list = 0; list < int(CTs.size()); list++){
 				CategoryList cats = m_catList.Filter(*CTs[list]);
-				shapeVariation sv(cats, m_file);
+//				cout << "SVT::doVariations category " << CTs[list]->GetSpecLabel() << " nCats: " << cats.GetN() << endl;
+				//shapeVariation sv(cats);
+				//sv.doVariations(pp,m_domToRareLabels[pp],m_Cats,m_file);				
+				shapeVariation sv(cats,m_file);
 				sv.doVariations(pp,m_domToRareLabels[pp],m_Cats);				
 			}
 		}

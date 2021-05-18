@@ -53,7 +53,7 @@ class shapeTemplate{
 
 class shapeTemplateTool{
 public:
-	shapeTemplateTool(const CategoryTree& CT, ProcessList proc, const string &inputfile);
+	shapeTemplateTool(const CategoryTree& CT, ProcessList proc, TFile* inputfile);
 	virtual ~shapeTemplateTool();
 
 	void createTemplates(bool smooth=false);
@@ -62,6 +62,7 @@ public:
 
 
 private:
+	TFile* m_OutFile;
 	string m_file;
 	VS m_proc;
 	VS ST_fakes;

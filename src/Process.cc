@@ -120,7 +120,7 @@ SM Process::GetSM() const {
 
 void Process::AddShapeSysts(Systematics systs) {
   for(int s = 0; s < systs.GetN(); s++){
-     string plabel = Name()+"_"+systs[s].Label();
+     string plabel = systs[s].TreeName(Name());//Name()+"_"+systs[s].Label();
      if(m_ProcBins.count(plabel) == 0)
       m_ProcBins[plabel] = map<string,FitBin*>();
    }

@@ -182,8 +182,8 @@ void shapeTemplate::sortBins(vector<pair<int,double>>& array){
 
 
 
-shapeTemplateTool::shapeTemplateTool(const CategoryTree& CT, ProcessList procs, const string& inputfile){
-	m_file = inputfile;
+shapeTemplateTool::shapeTemplateTool(const CategoryTree& CT, ProcessList procs, TFile* inputfile){
+	m_OutFile = inputfile;
 	m_CT = CT;
 	for(int i = 0; i < procs.GetN(); i++) m_proc += procs[i].Name();
 
@@ -197,6 +197,7 @@ shapeTemplateTool::shapeTemplateTool(const CategoryTree& CT, ProcessList procs, 
 	m_domToRare["Wjets_Fakes_muf0"] = VS().a("TB_Fakes_muf0").a("DB_Fakes_muf0"); 
 	m_domToRare["Wjets_Fakes_muf1"] = VS().a("TB_Fakes_muf1").a("DB_Fakes_muf1"); 
 	//m_proc = proc;
+//	m_OutFile = nullptr;
 
 }
 
@@ -217,17 +218,30 @@ CategoryTree shapeTemplateTool::getCategoryTree(){
 
 
 void shapeTemplateTool::createTemplates(bool smooth){
-FitReader fitReader(m_file);
+string file = m_OutFile->GetName();
+m_OutFile->Close();
+FitReader fitReader(file);
 vector<const CategoryTree*> catTrees;
 m_CT.GetListDepth(catTrees,1);
 //PrintCategories();
-TFile* f = nullptr;
   CategoryList catList = fitReader.GetCategories();
-  if(!gSystem->AccessPathName(m_file.c_str()))
-     f = TFile::Open(m_file.c_str(),"UPDATE");
-  else
-     f = new TFile(m_file.c_str(),"RECREATE");
-//f->ls();
+//  if(!gSystem->AccessPathName(m_file.c_str()))
+//     f = TFile::Open(m_file.c_str(),"UPDATE");
+//  else
+//     f = new TFile(m_file.c_str(),"RECREATE");
+//if(m_OutFile){
+//    if(m_OutFile->IsOpen()){
+//      m_OutFile->Close();
+//}
+//    delete m_OutFile;
+//  }
+
+  m_OutFile = new TFile(file.c_str(), "UPDATE");
+ if(!m_OutFile->IsOpen()){
+	cout << "outfile is not open" << endl;  
+  m_OutFile = nullptr;
+    return;
+  }
   int depth = (int)catTrees.size();
   int nCat;
   int nProc = m_proc.size();
@@ -247,8 +261,9 @@ for(int i = 0; i < nProc; i++){
       for(int r = 0; r < m_domToRare[vproc[p]].size(); r++)
       ridxs.push_back(fitReader.GetProcesses().Find(m_domToRare[vproc[p]][r]));
       for(int list = 0; list < depth; list++){
-   CategoryList cats = catList.Filter(*catTrees[list]);
+ CategoryList cats = catList.Filter(*catTrees[list]);
 	nCat = cats.GetN();
+//cout << "shapeTemplate category " << catTrees[list]->GetSpecLabel()  << " nCats: " << nCat<< endl;  
        	ProcessList ppp;
 	ppp += pp;
 
@@ -270,32 +285,38 @@ for(int i = 0; i < nProc; i++){
 	m_listToHist[list]->SetName((pp.Name()+"_smoothed").c_str());
 	//scale hists once all summed
 	for(int c = 0; c < nCat; c++){
+	//cout << "cat #" << c << endl;
 		if(!fitReader.IsFilled(cats[c],pp)) continue;
 		TH1D* oldHist = (TH1D*)fitReader.GetHistogram(cats[c],pp);
+		if(oldHist->GetName() == "data_obs") continue;
 		TH1D* newHist;
 		oldHist->SetName((pp.Name()+"_raw").c_str());
-	 	continue;
+	 	//continue;
 		if(oldHist->Integral() > 1e-6){ 
 			shapeTemplate st(oldHist,m_listToHist[list]); 
 			newHist = (TH1D*)st.replaceHistogram();
 			st.compareShapes();
 			newHist->SetName((pp.Name()).c_str());
 			oldHist->SetName((pp.Name()+"_raw").c_str());
-			f->cd((cats[c].Label()+"_"+cats[c].GetLabel()).c_str());
+			m_OutFile->cd((cats[c].Label()+"_"+cats[c].GetLabel()).c_str());
 			newHist->Write();
 			oldHist->Write();
+//cout << "write new hist and rename old hist cat: " << cats[c].Label()+"_"+cats[c].GetLabel()+"/"+pp.Name() << endl;
 		}	
 		else{
 			newHist = oldHist; 
 			if(newHist == NULL) { cout << "newHist null" << endl; return;}
 			newHist->SetName((pp.Name()).c_str());
 			oldHist->SetName((pp.Name()+"_raw").c_str());
-			f->cd((cats[c].Label()+"_"+cats[c].GetLabel()).c_str());
+			m_OutFile->cd((cats[c].Label()+"_"+cats[c].GetLabel()).c_str());
 			newHist->Write();
 			oldHist->Write();
+//cout << "write new hist and rename old hist cat: " << cats[c].Label()+"_"+cats[c].GetLabel()+"/"+pp.Name() << endl;
         	}
-		f->cd((cats[c].Label()+"_"+cats[c].GetLabel()).c_str());
-		if(smooth) m_listToHist[list]->Write();
+		if(smooth){
+			m_OutFile->cd((cats[c].Label()+"_"+cats[c].GetLabel()).c_str());
+			m_listToHist[list]->Write();
+		}
 	}
     }
 
@@ -305,6 +326,7 @@ for(int i = 0; i < nProc; i++){
     }
   }
 
-  f->Close();
+//cout << "shapeTemplate::createTemplates end" << endl;
+ m_OutFile->Close();
 
 }

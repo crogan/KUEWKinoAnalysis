@@ -63,7 +63,8 @@ void FitReader::ReadProcesses(){
     tree->GetEntry(i);
     
     Process p = m_ProcBranch.GetProcess();
-    if((p.Name().find("Up") != std::string::npos) ||
+	//cout << "ProcSys name: " << p.Name() << endl;    
+ if((p.Name().find("Up") != std::string::npos) ||
        (p.Name().find("Down") != std::string::npos))
       ProcSys += p;
     else
@@ -77,9 +78,11 @@ void FitReader::ReadProcesses(){
   for(int p = 0; p < Nproc; p++){
     Systematics sys;
     string proc = m_Proc[p].Name();
+//if(proc.find("Fakes") != std::string::npos) continue;
+cout << "proc #" << p << ": " << proc << endl;
     for(int s = 0; s < Nsys; s++){
       string label = ProcSys[s].Name();
-      if((proc.find("Fakes") == std::string::npos) &&
+      if((proc.find("Fakes") != std::string::npos) &&
 	 (label.find("Fakes") != std::string::npos))
 	continue;
       if(label.find(proc) == 0){
@@ -93,7 +96,6 @@ void FitReader::ReadProcesses(){
     }
     if(sys.GetN() > 0)
       m_ProcSys[m_Proc[p]] = sys;
-
     m_Sys += sys;
   }
 }

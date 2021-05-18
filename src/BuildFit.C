@@ -234,6 +234,20 @@ int main(int argc, char* argv[]) {
     systematics = FIT.GetSystematics().FilterOR(sys_to_add);
   if(systematics.GetN() > 0)
     systematics = systematics.RemoveOR(sys_to_rem);
+cout << "systematics" << endl;
+  for(int s = 0; s < systematics.GetN(); s++)
+    cout << systematics[s].Label() << endl;
+
+CategoryTree CT_Fakes1L;
+vector<const CategoryTree*> catTrees;
+CT_Fakes1L.GetListDepth(catTrees,1);
+vector<string> catLabels;
+map<string,VC> catBins;
+//for(int i = 0; i < int(catTrees.size()); i++) catBins[catTrees[i]->GetSpecLabel()] = categories.Filter(*catTrees[i]).GetCategories();
+//if(catBins.count("1Lel1J") > 0) cout << catBins["1Lel1J"].size() << endl;
+
+
+
 
   ////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////

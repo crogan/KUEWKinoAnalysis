@@ -332,13 +332,12 @@ Systematics SystematicsTool::GetFakeShapeSystematics(CategoryTree CT, VS procs) 
 
 	for(int c = 0; c < int(catTrees.size()); c++){
 		for(int p = 0; p < procGroups.size(); p++){
-			list += procGroups[p]+"_"+catTrees[c]->GetSpecLabel()+"f0_RISR";
-			list += procGroups[p]+"_"+catTrees[c]->GetSpecLabel()+"f1_RISR";
-			list += procGroups[p]+"_"+catTrees[c]->GetSpecLabel()+"f0_Mperp";
-			list += procGroups[p]+"_"+catTrees[c]->GetSpecLabel()+"f1_Mperp";
+			list += Systematic(procGroups[p]+"_"+catTrees[c]->GetSpecLabel()+"f0_RISR").Up();
+			list += Systematic(procGroups[p]+"_"+catTrees[c]->GetSpecLabel()+"f1_RISR").Down();
+			list += Systematic(procGroups[p]+"_"+catTrees[c]->GetSpecLabel()+"f0_Mperp").Up();
+			list += Systematic(procGroups[p]+"_"+catTrees[c]->GetSpecLabel()+"f1_Mperp").Down();
 		}
 	}
-for(int i = 0; i < list.GetN(); i++) cout << list[i].Label() << endl;	
   
 
   return list;

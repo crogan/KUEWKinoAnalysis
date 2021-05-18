@@ -10,11 +10,13 @@
 
 class shapeVariationTool{
 	public:
-		shapeVariationTool(CategoryTree ct, ProcessList procs, string file);
+		shapeVariationTool(CategoryTree ct, ProcessList procs, TFile* file);
+		//shapeVariationTool(CategoryTree ct, ProcessList procs, string file);
 		virtual ~shapeVariationTool();
 		void doVariations();
 	protected:
-		string m_file;
+		TFile* m_file;
+		//string m_file;
 		FitReader* m_fr;
 	
 	private:
@@ -31,16 +33,18 @@ class shapeVariationTool{
 
 class shapeVariation {
 	public:
-		shapeVariation(CategoryList cats,  string f);
+		shapeVariation(CategoryList cats, TFile* f);
+		//shapeVariation(CategoryList cats);
 		virtual ~shapeVariation();
 		void doVariationRISR(TH1D* hist,const FitBin& fb, bool isUp=true);
 		void doVariationMperp(TH1D* hist, const FitBin& fb, bool isUp=true);
 		void doVariationDown();
+		//void doVariations(Process pp, string procLabel, map<Category,string> catLabels, string file);
 		void doVariations(Process pp, string procLabel, map<Category,string> catLabels);
 	private:
 		double maxVar = 50;
 		CategoryList m_cats;
-		string m_file;
+		TFile* m_file;
 };
 
 

@@ -215,51 +215,6 @@ int main(int argc, char* argv[]) {
   if(doSys)
     systematics += SYS.GetWeightSystematics();
 cout << "did regular systs" << endl;
-//  vector<CategoryTree> CT_Fakes;
-//  vector<CategoryTree> CT_QCD;
-//add fake shape systematics to SystematicTool 
-// if(doSys && fakes){ 
-//  if(cat1L){
-//    CategoryTree CT_Fakes1L = CTTool.GetCategories_Fakes1L();
-//    CT_Fakes.push_back(CT_Fakes1L);
-//   }
-//  if(cat2L){
-//    CategoryTree CT_Fakes2L = CTTool.GetCategories_Fakes2L();
-//    CT_Fakes.push_back(CT_Fakes2L);
-//   }
-//  if(cat3L){
-//    CategoryTree CT_Fakes3L = CTTool.GetCategories_Fakes3L();
-//    CT_Fakes.push_back(CT_Fakes3L);
-//   }
-//  cout << "Fakes category Tree size " << CT_Fakes.size() <<  endl;
-// for(int c = 0; c < CT_Fakes.size(); c++)
-//   systematics += SYS.GetFakeShapeSystematics(CT_Fakes[c],samples.GetProcesses());
-//}
-//cout << "did fake shape systs" << endl;
-////if systs are turned on and QCD is in the background
-//cout << "doSys: " << doSys << endl;
-//cout << "nprocs: " << samples.GetProcesses().size() << endl;
-//string qcd = "QCD";
-//vector<string> sprocs = samples.GetProcesses();
-//cout << " count QCD " << std::count(sprocs.begin(),sprocs.end(),"QCD") << endl;
-//if(doSys && std::count(sprocs.begin(),sprocs.end(),"QCD")){
-//cout << "doing QCD systs" << endl;
-//	if(cat0L){
-//		CategoryTree CT_QCD0L = CTTool.GetCategories_QCD0L();
-//		CT_QCD.push_back(CT_QCD0L);
-//	}
-//cout << "did 0L QCD" << endl;
-//	if(cat1L){
-//		CategoryTree CT_QCD1L = CTTool.GetCategories_QCD1L();
-//		CT_QCD.push_back(CT_QCD1L);
-//	}
-//cout << "did 1L QCD" << endl;
-//  cout << "QCD category Tree size " << CT_QCD.size() <<  endl;
-//  for(int c = 0; c < CT_QCD.size(); c++) 
-//	systematics += SYS.GetFakeShapeSystematics(CT_QCD[c],VS().a("QCD"));
-//}
-//
-//cout << "did QCD shape systs" << endl;
  FitInputBuilder FITBuilder(extrahist);
 
   int underflow = 0.;
@@ -342,34 +297,8 @@ cout << "did regular systs" << endl;
     
       TChain* chain = ST.Tree(proc, f);
       ReducedBase* base = new ReducedBase(chain);
-      
-//variation stuff - not necessary for the time being
-//       ROOT::RDataFrame d(*base->fChain);
-//       double absEta = 0;
-// 	int nLep = 0;
-// //cout << "leading lep pt" << endl;
-// //for(int i = 0; i < 10; i++){
-// //	cout << "a" << endl;
-// //	base->GetEntry(i);
-// //	cout << i << endl;
-// //	if(base->Nlep < 1) continue;
-// //	cout << "leading lep pt: " << base->PT_lep->at(0) << endl;
-// //}     
-// //cout << "a" << endl;
-// 	double ptMean = *d.Mean("PT_lep");
-// //cout << "Met mean: " << *d.Mean("MET") << endl;
-// //cout << "pt mean" << endl;
-// //for(int i = 0; i < 10; i++){
-// //	base->GetEntry(i);
-// //	if(base->Nlep < 1) continue;
-// //	cout << "Mini Iso: " << base->MiniIso_lep->at(0) << endl;
-// //}     
-//  double isoMean = *d.Mean("MiniIso_lep");
-// d.Foreach([&absEta, &nLep](vector<double> Eta_lep) {for(int iLep = 0; iLep < Eta_lep.size(); iLep++){if(Eta_lep.at(iLep) < 0) absEta += -(Eta_lep.at(iLep)); else absEta += Eta_lep.at(iLep); nLep += Eta_lep.size();}}, {"Eta_lep"});
-// 	double etaMean = absEta/nLep; 
-//  double sip3dMean = *d.Mean("SIP3D_lep");
 
-      int Nentry = 1e3;//base->fChain->GetEntries();
+      int Nentry = base->fChain->GetEntries();
       
       int SKIP = 1;
 
@@ -603,105 +532,50 @@ if(RISR < rlow){ underflow += 1.;}
       delete base;
       delete chain;
     }
-  }
-  FITBuilder.WriteFit(OutFile);
+ } //end of sample loop
 
 
-  ProcessList fakeProcList;
-  ProcessList fakeProcList_QCD;
-  for(int i = 0; i < samples.GetN(); i++){
-    //skip QCD here - add to separate processList
-    if(samples[i].Name().find("QCD") != string::npos){
-      fakeProcList_QCD += samples[i];
-      fakeProcList_QCD += samples[i].FakeProcess("Fakes_elf0");
-      fakeProcList_QCD += samples[i].FakeProcess("Fakes_elf1");
-      fakeProcList_QCD += samples[i].FakeProcess("Fakes_muf0");
-      fakeProcList_QCD += samples[i].FakeProcess("Fakes_muf1");
-      continue;
-    }
-    //non QCD backgrounds
-    if(samples[i].Type() == kBkg && samples[i].Name().find("QCD") == string::npos){
-      fakeProcList += samples[i].FakeProcess("Fakes_elf0");
-      fakeProcList += samples[i].FakeProcess("Fakes_elf1");
-      fakeProcList += samples[i].FakeProcess("Fakes_muf0");
-      fakeProcList += samples[i].FakeProcess("Fakes_muf1");
-    }
-  }
-  if(fakeProcList_QCD.GetN() > 0){
-    if(cat1L){
-      cout << "do 1L QCD fakes" << endl;
-      CategoryTree CT_QCD1L = CTTool.GetCategories_QCD1L();
-      shapeTemplateTool STT_QCD1L(CT_QCD1L,fakeProcList_QCD,OutFile);
-      STT_QCD1L.createTemplates();
-      if(doSys){
-        shapeVariationTool SVT_QCD1L(CT_QCD1L,fakeProcList_QCD,OutFile);
-        SVT_QCD1L.doVariations();
-      }
-    }
-    if(cat0L){
-      cout << "do 0L QCD fakes" << endl;
-      CategoryTree CT_QCD0L = CTTool.GetCategories_QCD0L();
-      shapeTemplateTool STT_QCD0L(CT_QCD0L,fakeProcList_QCD,OutFile);
-      STT_QCD0L.createTemplates();
-      if(doSys){
-        shapeVariationTool SVT_QCD0L(CT_QCD0L,fakeProcList_QCD,OutFile);
-        SVT_QCD0L.doVariations();
-      }
-    }
-  }
-
-
-//if there is at least 1 categoryTree for fakes
-//if(CT_Fakes.size() > 0){
-//	for(int f = 0; f < CT_Fakes.size(); f++){
-//		shapeTemplateTool STT(CT_Fakes[f],fakeProcList,OutFile);
-//		STT.createTemplates();
-//		shapeVariationTool SVT(CT_Fakes[f],fakeProcList, OutFile);
-//		SVT.doVariations();
-//	}	
-//}
-//if there is at least 1 categoryTree for QCD
-//if(CT_QCD.size() > 0){
-//	for(int f = 0; f < CT_QCD.size(); f++){
-//		shapeTemplateTool STT(CT_QCD[f],fakeProcList_QCD,OutFile);
-//		STT.createTemplates();
-//		shapeVariationTool SVT(CT_QCD[f],fakeProcList_QCD, OutFile);
-//		SVT.doVariations();
-//	}	
-//}
-
-
-if(fakes){
+vector<CategoryTree> CT_Fakes;
+  vector<CategoryTree> CT_QCD;
+  vector<string> sprocs = samples.GetProcesses();
+ if(doSys && fakes ){ 
   if(cat1L){
-    cout << "do 1L fakes" << endl;
     CategoryTree CT_Fakes1L = CTTool.GetCategories_Fakes1L();
-    shapeTemplateTool STT1L(CT_Fakes1L,fakeProcList, OutFile);
-    STT1L.createTemplates();
-    if(doSys){
-      shapeVariationTool SVT1L(CT_Fakes1L, fakeProcList, OutFile);
-      SVT1L.doVariations();
-    }
-  }
+    CT_Fakes.push_back(CT_Fakes1L);
+   }
   if(cat2L){
-    cout << "do 2L fakes" << endl;
     CategoryTree CT_Fakes2L = CTTool.GetCategories_Fakes2L();
-    shapeTemplateTool STT2L(CT_Fakes2L,fakeProcList, OutFile);
-    STT2L.createTemplates();
-    if(doSys){
-      shapeVariationTool SVT2L(CT_Fakes2L, fakeProcList, OutFile);
-      SVT2L.doVariations();
-    }
-  }
+    CT_Fakes.push_back(CT_Fakes2L);
+   }
   if(cat3L){
-    cout << "do 3L fakes" << endl;
     CategoryTree CT_Fakes3L = CTTool.GetCategories_Fakes3L();
-    shapeTemplateTool STT3L(CT_Fakes3L,fakeProcList,OutFile);
-    STT3L.createTemplates();
-    if(doSys){
-      shapeVariationTool SVT3L(CT_Fakes3L, fakeProcList, OutFile);
-      SVT3L.doVariations();
-    }
-  }
-}
+    CT_Fakes.push_back(CT_Fakes3L);
+   }
+ for(int c = 0; c < CT_Fakes.size(); c++)
+   systematics += SYS.GetFakeShapeSystematics(CT_Fakes[c],samples.GetProcesses());
+if(std::count(sprocs.begin(),sprocs.end(),"QCD")){
+  	if(cat0L){
+  		CategoryTree CT_QCD0L = CTTool.GetCategories_QCD0L();
+  		CT_QCD.push_back(CT_QCD0L);
+  	}
+  	if(cat1L){
+  		CategoryTree CT_QCD1L = CTTool.GetCategories_QCD1L();
+  		CT_QCD.push_back(CT_QCD1L);
+  	}
+  for(int c = 0; c < CT_QCD.size(); c++) 
+	systematics += SYS.GetFakeShapeSystematics(CT_QCD[c],VS().a("QCD"));
+ }
+ }
+
+FITBuilder.SetFakeCategories(CT_Fakes);
+FITBuilder.SetQCDCategories(CT_QCD);
+for(int f = 0; f < samples.GetN(); f++){
+FITBuilder.AddFakeShapeSystematics(samples[f],systematics);
+
+} 
+cout << "finished samples loop" << endl; 
+
+FITBuilder.WriteFit(OutFile);
+
   
 }
