@@ -298,7 +298,7 @@ cout << "did regular systs" << endl;
       TChain* chain = ST.Tree(proc, f);
       ReducedBase* base = new ReducedBase(chain);
 
-      int Nentry = base->fChain->GetEntries();
+      int Nentry = 1e3;//base->fChain->GetEntries();
       
       int SKIP = 1;
 

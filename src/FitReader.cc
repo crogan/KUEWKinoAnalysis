@@ -79,10 +79,10 @@ void FitReader::ReadProcesses(){
     Systematics sys;
     string proc = m_Proc[p].Name();
 //if(proc.find("Fakes") != std::string::npos) continue;
-cout << "proc #" << p << ": " << proc << endl;
+//cout << "proc #" << p << ": " << proc << endl;
     for(int s = 0; s < Nsys; s++){
       string label = ProcSys[s].Name();
-      if((proc.find("Fakes") != std::string::npos) &&
+      if((proc.find("Fakes") == std::string::npos) &&
 	 (label.find("Fakes") != std::string::npos))
 	continue;
       if(label.find(proc) == 0){
