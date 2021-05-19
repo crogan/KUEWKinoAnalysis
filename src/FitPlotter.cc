@@ -5,6 +5,7 @@
 #include <TLatex.h>
 #include <TGraphErrors.h>
 #include <TLine.h>
+#include <TMultiGraph.h>
 
 #include "FitPlotter.hh"
 #include "shapeComparison.hh"
@@ -1873,7 +1874,7 @@ TCanvas* FitPlotter::Plot2D(const string& can_name,
 
 ///////
 
-TCanvas* FitReader::Plot1Dratio(const string& proc,
+TCanvas* FitPlotter::Plot1Dratio(const string& proc,
            const VS& lep_cat,
            const VS& hadS_cat,
            const VS& hadI_cat,
@@ -2435,7 +2436,7 @@ pRatio->cd();
 
   }
 ////////////
-TCanvas* FitReader::Plot1DratioProc(const VS& proc,
+TCanvas* FitPlotter::Plot1DratioProc(const VS& proc,
            const string& lep_cat,
            const string& hadS_cat,
            const string& hadI_cat,
