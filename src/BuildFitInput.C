@@ -29,10 +29,6 @@
 #include "ScaleFactorTool.hh"
 #include "Leptonic.hh"
 #include "Hadronic.hh"
-#include "CategoryTree.hh"
-#include "FitReader.hh"
-#include "shapeTemplate.hh"
-#include "shapeVariation.hh"
 
 using ROOT::RDataFrame;
 using namespace std;
@@ -49,7 +45,6 @@ int main(int argc, char* argv[]) {
   bool addSig  = false;
   bool addData = false;
   bool extrahist = false;
-  bool fakes = false;
   vector<string> proc_to_add;
   float PTvar;
   CategoryTool CT;
@@ -64,6 +59,8 @@ int main(int argc, char* argv[]) {
   double lumi;
 
   bool doSys = false;
+
+  bool maskSR = false;
   
   for(int i = 0; i < argc; i++){
     if(strncmp(argv[i],"--help", 6) == 0){
@@ -110,19 +107,15 @@ int main(int argc, char* argv[]) {
       extrahist  = true;
     }
     if(strncmp(argv[i],"+cat0L", 6) == 0){
-      Categories += CT.GetCategories_0L();
       cat0L = true;
     }
     if(strncmp(argv[i],"+cat1L", 6) == 0){
-      Categories += CT.GetCategories_1L();
       cat1L = true;
     }
     if(strncmp(argv[i],"+cat2L", 6) == 0){
-      Categories += CT.GetCategories_2L();
       cat2L = true;
     }
     if(strncmp(argv[i],"+cat3L", 6) == 0){
-      Categories += CT.GetCategories_3L();
       cat3L = true;
     }
     if(strncmp(argv[i],"++sys", 5) == 0){
@@ -138,8 +131,8 @@ int main(int argc, char* argv[]) {
       doSigFile = true;
       SigFile = argv[i];
     }
-    if(strncmp(argv[i],"-fakes", 6) == 0){
-      fakes = true;
+    if(strncmp(argv[i],"-maskSR", 7) == 0){
+      maskSR = true;
     }
   }
       
@@ -169,17 +162,24 @@ int main(int argc, char* argv[]) {
     cout << "   +hist               book 2D histograms also" << endl;
     cout << "   -lumi [lumi]        set luminosity to lumi" << endl;
     cout << "   -sigfile            signal filename must match this string to be included" << endl;
-    cout << "   -fakes              flag for adding fake treatment" << endl;
-
+    cout << "   -maskSR             mask high RISR bins" << endl;
+   
     return 0;
   }
 
+  if(cat0L)
+    Categories += CT.GetCategories_0L(maskSR);
+  if(cat1L)
+    Categories += CT.GetCategories_1L(maskSR);
+  if(cat2L)
+    Categories += CT.GetCategories_2L(maskSR);
+  if(cat3L)
+    Categories += CT.GetCategories_3L(maskSR);
+  
   cout << "Initializing sample maps from path " << NtuplePath << " for year " << year << endl;
   SampleTool ST(NtuplePath, year);
 
   ScaleFactorTool SF;
-  CategoryTreeTool CTTool;
-  FitReader FITReader(OutFile);
   ProcessList samples;
   if(addBkg){
     cout << "Adding all background processes" << endl;
@@ -199,8 +199,7 @@ int main(int argc, char* argv[]) {
   }
 
   if(Categories.GetN() == 0)
-    Categories += CT.GetCategories();
-//if a lepton region wasn't specified, turn them all on 
+    Categories += CT.GetCategories(maskSR);
   if(!cat0L && !cat1L && !cat2L && !cat3L){
     cat0L = true;
     cat1L = true;
@@ -523,59 +522,16 @@ cout << "did regular systs" << endl;
 				Categories[eindex], proc, sys);
 	  }
 	  // dummy data
-	  if(!addData && is_bkg && (title.find("QCD") == string::npos) && !sys)
-	    FITBuilder.AddEvent(weight, Mperp, RISR,
-				Categories[eindex], data_obs, sys);
-if(RISR < rlow){ underflow += 1.;}
+	  // if(!addData && is_bkg && (title.find("QCD") == string::npos) && !sys)
+	  //   FITBuilder.AddEvent(weight, Mperp, RISR,
+	  // 			Categories[eindex], data_obs, sys);
 	}
       }
       delete base;
       delete chain;
     }
- } //end of sample loop
+  }
 
-
-vector<CategoryTree> CT_Fakes;
-  vector<CategoryTree> CT_QCD;
-  vector<string> sprocs = samples.GetProcesses();
- if(doSys && fakes ){ 
-  if(cat1L){
-    CategoryTree CT_Fakes1L = CTTool.GetCategories_Fakes1L();
-    CT_Fakes.push_back(CT_Fakes1L);
-   }
-  if(cat2L){
-    CategoryTree CT_Fakes2L = CTTool.GetCategories_Fakes2L();
-    CT_Fakes.push_back(CT_Fakes2L);
-   }
-  if(cat3L){
-    CategoryTree CT_Fakes3L = CTTool.GetCategories_Fakes3L();
-    CT_Fakes.push_back(CT_Fakes3L);
-   }
- for(int c = 0; c < CT_Fakes.size(); c++)
-   systematics += SYS.GetFakeShapeSystematics(CT_Fakes[c],samples.GetProcesses());
-if(std::count(sprocs.begin(),sprocs.end(),"QCD")){
-  	if(cat0L){
-  		CategoryTree CT_QCD0L = CTTool.GetCategories_QCD0L();
-  		CT_QCD.push_back(CT_QCD0L);
-  	}
-  	if(cat1L){
-  		CategoryTree CT_QCD1L = CTTool.GetCategories_QCD1L();
-  		CT_QCD.push_back(CT_QCD1L);
-  	}
-  for(int c = 0; c < CT_QCD.size(); c++) 
-	systematics += SYS.GetFakeShapeSystematics(CT_QCD[c],VS().a("QCD"));
- }
- }
-
-FITBuilder.SetFakeCategories(CT_Fakes);
-FITBuilder.SetQCDCategories(CT_QCD);
-for(int f = 0; f < samples.GetN(); f++){
-FITBuilder.AddFakeShapeSystematics(samples[f],systematics);
-
-} 
-cout << "finished samples loop" << endl; 
-
-FITBuilder.WriteFit(OutFile);
-
+  FITBuilder.WriteFit(OutFile);
   
 }

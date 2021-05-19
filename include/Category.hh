@@ -130,7 +130,7 @@ public:
   virtual ~CategoryBranch();
 
   void InitFill(TTree* tree);
-  void FillCategory(Category& cat);
+  void FillCategory(const Category& cat);
   
   void InitGet(TTree* tree);
   Category GetCategory();

@@ -1,13 +1,12 @@
 #include "TSystem.h"
 
-#include "../include/FitReader.hh"
+#include "../include/FitPlotter.hh"
 
 void TestReader(const string& inputfile = "croganBFI_bkgs.root", const string& a2 = "", const string& a3 = ""){
 	gSystem->Load("/home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/lib/libKUEWKino.so");
 FitReader* FITReader = new FitReader(inputfile, a2, a3);
-//void TestReader(const string& inputfile = "test/FitInput_test.root", const string& a2 = "", const string& a3 = ""){
-//  void TestReader(const string& inputfile = "test/FitInput_test.root", const string& a2 = "", const string& a3 = ""){
-  
+  //FITReader->PrintCategories();
+  //FITReader->PrintProcesses();
 
   CategoryTreeTool CTTool;
   CategoryTree CT_Fakes1L = CTTool.GetCategories_Fakes1L();

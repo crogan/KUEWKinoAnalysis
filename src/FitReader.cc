@@ -11,9 +11,6 @@
 #include <TEfficiency.h>
 
 #include "FitReader.hh"
-#include "shapeComparison.hh"
-#include "plotShapeComparison.hh"
-#include "RestFrames/RestFrames.hh"
 
 ///////////////////////////////////////////
 ////////// FitReader class
@@ -24,14 +21,6 @@ FitReader::FitReader(const string& inputfile,
 		     const string& otherfold)
   : m_File(inputfile.c_str(), "READ") {
 
-  InitializeRecipes();
-  
-  ReadProcesses();
-  
-  ReadCategories();
-
-  m_inputfile = inputfile;
-
   if(otherfile != ""){
     m_FilePtr = new TFile(otherfile.c_str(), "READ");
     if(!m_FilePtr || !m_FilePtr->IsOpen())
@@ -40,6 +29,10 @@ FitReader::FitReader(const string& inputfile,
   } else {
     m_FilePtr = nullptr;
   }
+  
+  ReadProcesses();
+  
+  ReadCategories();
 }
 
 FitReader::~FitReader(){
@@ -70,7 +63,7 @@ void FitReader::ReadProcesses(){
     else
       m_Proc += p;
   }
-
+  
   delete tree;
 
   int Nproc = m_Proc.GetN();
@@ -230,37 +223,6 @@ const TH2D* FitReader::GetHistogram2D(const Category&   cat,
     return (sys.IsUp() ? m_ProcHistSys_2D[proc][sys][cat].first :
 	    m_ProcHistSys_2D[proc][sys][cat].second);
   }
-}
-
-TGraphErrors* FitReader::GetTotalBackground(const CategoryList& cat){
-  TH1D* hist = nullptr;
-  int Ncat = cat.GetN();
-  for(int i = 0; i < Ncat; i++){
-    string shist = m_FileFold+cat[i].Label()+"_"+cat[i].GetLabel()+"/total_background";
-    cout << shist << endl;
-    if(hist == nullptr)
-      hist = (TH1D*) m_FilePtr->Get((m_FileFold+"/"+shist).c_str())->Clone((shist+"_total").c_str());
-    else
-      hist->Add((TH1D*) m_FilePtr->Get((m_FileFold+"/"+shist).c_str()));
-  }
-
-  int NB = hist->GetNbinsX();
-  
-  vector<double> X;
-  vector<double> Xerr;
-  vector<double> Y;
-  vector<double> Yerr;
-  for(int i = 0; i < NB; i++){
-    X.push_back(0.5 + i);
-    Xerr.push_back(0.5);
-    Y.push_back(hist->GetBinContent(i+1));
-    Yerr.push_back(hist->GetBinError(i+1));
-  }
-   
-  TGraphErrors* gr = new TGraphErrors(NB, &X[0], &Y[0],  &Xerr[0], &Yerr[0]);
-
-  return gr;
-   
 }
 
 bool FitReader::IsFilled(const Category&   cat,

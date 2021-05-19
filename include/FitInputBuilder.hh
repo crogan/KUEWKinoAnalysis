@@ -38,11 +38,8 @@ public:
   void AddFakeShapeSystematics(Process proc, Systematics systs); 
 private:
   map<string,Process*>  m_Proc;
-  map<string,Category*> m_Cat;  
-
-  vector<CategoryTree> m_CT_Fakes;
-  vector<CategoryTree> m_CT_QCD;
- 
+  map<string,Category*> m_Cat;
+  
   TFile* m_OutFile;
 
   TTree* m_ProcTree;

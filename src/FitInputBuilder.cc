@@ -1,10 +1,7 @@
 #include <iostream>
 #include <map>
 
-#include "../include/FitInputBuilder.hh"
-#include "../include/shapeVariation.hh"
-#include "../include/shapeTemplate.hh"
-#include "../include/CategoryTree.hh"
+#include "FitInputBuilder.hh"
 
 using std::cout;
 using std::endl;
@@ -43,11 +40,10 @@ FitInputBuilder::~FitInputBuilder(){
     delete m_CatTree;
 }
 
-
-double FitInputBuilder::AddEvent(double weight, double Mperp, double RISR,
-			  const Category&   cat,
-			  const Process&    proc,
-			  const Systematic& sys){
+void FitInputBuilder::AddEvent(double weight, double Mperp, double RISR,
+			       const Category&   cat,
+			       const Process&    proc,
+			       const Systematic& sys){
   
   string scat  = cat.Label()+"-"+cat.GetLabel();
   string sproc = proc.Name();
@@ -224,16 +220,7 @@ if(m_OutFile){
   std::cout << "writing Categories to output" << std::endl;
   WriteCat();
   std::cout << "...done" << std::endl;
-
-  std::cout << "writing fake shape systematics to output" << std::endl;
-  WriteFakeShapeSysts(m_OutFile);
-  std::cout << "...done" << std::endl;
-
-  std::cout << "writing QCD shape systematics to output" << std::endl;
-  WriteQCDShapeSysts(m_OutFile);
-  std::cout << "...done" << std::endl;
-  if(m_OutFile->IsOpen())
-  	m_OutFile->Close();
+  m_OutFile->Close();
   delete m_OutFile;
   m_OutFile = nullptr;
 }
