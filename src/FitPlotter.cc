@@ -1894,7 +1894,7 @@ TCanvas* FitPlotter::Plot1Dratio(const string& proc,
    NhadI == 0)
   return nullptr;
 
-int catTest = 1;
+int catTest = 0;
 
   CategoryList cat = GetCategories();
   vector<CategoryList> cats;
@@ -2186,7 +2186,6 @@ gLHs[0]->GetHistogram()->GetXaxis()->Set(NB,ax_x1,ax_x2);
   for(int r = 0; r < NR; r++)
   blabels_Mperp += bin[r].GetMBinLabels();
 
-for(int i = 0; i < blabels_Mperp.size(); i++) cout << "Mperp bin #: " << i << " bin label: " << blabels_Mperp[i] << endl;
 
   int lmax = 0;
   for(int b = 0; b < NB; b++){
@@ -2271,7 +2270,7 @@ TMultiGraph* mg = new TMultiGraph("ratios","ratios");
    graphs[i]->SetLineColor(colors[i]);
    graphs[i]->SetMarkerColor(colors[i]);
    graphs[i]->SetLineWidth(1.0);
-   graphs[i]->SetMarkerStyle(20);
+   graphs[i]->SetMarkerStyle(20+i);
    graphs[i]->SetLineStyle(i+1);
    mg->Add(graphs[i]);
    }
@@ -2319,7 +2318,7 @@ for(int i = 0; i < gLHs.size(); i++){
    gLHs[i]->SetLineColor(colors[i]);
    gLHs[i]->SetMarkerColor(colors[i]);
    gLHs[i]->SetLineWidth(1.0);
-   gLHs[i]->SetMarkerStyle(20);
+   gLHs[i]->SetMarkerStyle(20+i);
    gLHs[i]->SetLineStyle(i+1);
    mgLH->Add(gLHs[i]);
  //gLHs[i]->Draw("AP same");
@@ -2424,7 +2423,8 @@ pRatio->cd();
     plotlabel += "#color[7024]{"+hadI_labels[0]+"} + ";
   if(Nextra == 1)
     plotlabel += "#color[7024]{"+extra_labels[0]+"} + ";
-  plotlabel += "p_{T}^{ISR} > 300 GeV, "+m_Title[proc];
+  if(!m_Title[proc].empty()) plotlabel += "p_{T}^{ISR} > 300 GeV, "+m_Title[proc];
+  plotlabel += "p_{T}^{ISR} > 300 GeV, "+proc;
   l.SetTextColor(kBlack);
   l.SetTextAlign(13);
   l.SetTextSize(0.035);
@@ -2966,6 +2966,9 @@ void FitPlotter::InitializeRecipes(){
   m_Color["LF"] = 7021;
   m_Strings["LF"] = VS().a("Fakes_elf1").a("Fakes_muf1");
 
+  m_Title["ttbar_Fakes_elf0"] = "HF t #bar{t}";
+  m_Title["ttbar_Fakes_elf1"] = "LF+unm. t #bar{t}";
+
   m_Title["Total"] = "total background";
   m_Color["Total"] = 7000;
   m_Strings["Total"] = VS().a("ttbar").a("ST").a("DB").a("ZDY").a("Wjets").a("Fakes_elf0").a("Fakes_elf1").
@@ -2975,10 +2978,10 @@ void FitPlotter::InitializeRecipes(){
   m_Title["1L"] = "#scale[1.2]{single #it{l}}";
   m_Strings["1L"] = VS().a("1L_elm_elG").a("1L_elp_elG").a("1L_elpm_elG").a("1L_mupm_muG").a("1L_mup_muG").a("1L_mum_muG");
   
-  m_Title["1Lel"] = "#scale[1.2]{single e}";
-  m_Strings["1Lel"] = VS().a("1L_elp_elG").a("1L_elm_elG");
+  m_Title["1Lel"] = "#scale[1.2]{single gold e}";
+  m_Strings["1Lel"] = VS().a("1L_elp_elG").a("1L_elm_elG").a("1L_elpm_elG").a("1L_elp-elG").a("1L_elm-elG").a("1L_elpm-elG");
 
-  m_Title["1Lmu"] = "#scale[1.2]{single #mu}";
+  m_Title["1Lmu"] = "#scale[1.2]{single gold #mu}";
   m_Strings["1Lmu"] = VS().a("1L_mup_muG").a("1L_mum_mG");
 
   m_Title["1Lelp"] = "#scale[1.2]{single e^{+}}";
@@ -3003,7 +3006,7 @@ void FitPlotter::InitializeRecipes(){
   m_Strings["1Lsilver"] = VS().a("1L_elp_elS").a("1L_elm_elS").a("1L_mup_muS").a("1L_mum_muS");
   
   m_Title["1Lelsilver"] = "#scale[1.2]{single silver e}";
-  m_Strings["1Lelsilver"] = VS().a("1L_elp_elS").a("1L_elm_elS");
+  m_Strings["1Lelsilver"] = VS().a("1L_elp_elS").a("1L_elm_elS").a("1L_elpm_elS").a("1L_elp-elS").a("1L_elm-elS").a("1L_elpm-elS");
   
   m_Title["1Lmusilver"] = "#scale[1.2]{single silver #mu}";
   m_Strings["1Lmusilver"] = VS().a("1L_mup_muS").a("1L_mum_muS");
@@ -3012,7 +3015,7 @@ void FitPlotter::InitializeRecipes(){
   m_Strings["1Lbronze"] = VS().a("1L_elp_elB").a("1L_elm_el2").a("1L_mup_muB").a("1L_mum_muB");
   
   m_Title["1Lelbronze"] = "#scale[1.2]{single bronze e}";
-  m_Strings["1Lelbronze"] = VS().a("1L_elp_elB").a("1L_elm_elB");
+  m_Strings["1Lelbronze"] = VS().a("1L_elp_elB").a("1L_elm_elB").a("1L_elpm_elB").a("1L_elp-elB").a("1L_elm-elB").a("1L_elpm-elB");
   
   m_Title["1Lmubronze"] = "#scale[1.2]{single bronze #mu}";
   m_Strings["1Lmubonze"] = VS().a("1L_mup_muB").a("1L_mum_muB");
@@ -3080,6 +3083,9 @@ void FitPlotter::InitializeRecipes(){
 
   m_Title["1j0bge1svS"] = "#splitline{1 jet, 0 b-tags}{#geq 1 SV-tag} #scale[1.2]{#in S}";
 
+  m_Title["2jS"] = "#splitline{2 jets}{incl. b-tags} #scale[1.2]{#in S}";
+  m_Strings["2jS"] = VS().a("2jS").a("2j0bS").a("2j1bS").a("2j2bS");
+
   m_Title["2j0bS"] = "#splitline{2 jets}{0 b-tags} #scale[1.2]{#in S}";
 
   m_Title["2j1bS"] = "#splitline{2 jets}{1 b-tags} #scale[1.2]{#in S}";
@@ -3097,6 +3103,8 @@ void FitPlotter::InitializeRecipes(){
   m_Title["ge1jge1bISR"] = "#splitline{#geq 1 jet}{#geq 1 b-tags} #scale[1.2]{#in ISR}";
 
   m_Title["ge1jISR"] = "#splitline{#geq 1 jet}{incl. b-tags} #scale[1.2]{#in ISR}";
+  m_Strings["ge1jISR"] = VS().a("ge1jISR").a("ge1j0bISR").a("ge1jge1bISR");
+
 
   m_Title["ge1j0bS"] = "#splitline{#geq 1 jet}{0 b-tags} #scale[1.2]{#in S}";
 

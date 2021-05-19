@@ -4,7 +4,7 @@
 
 void TestReader(const string& inputfile = "croganBFI_bkgs.root", const string& a2 = "", const string& a3 = ""){
 	gSystem->Load("/home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/lib/libKUEWKino.so");
-FitReader* FITReader = new FitReader(inputfile, a2, a3);
+FitPlotter* FITPlotter = new FitPlotter(inputfile, a2, a3);
   //FITReader->PrintCategories();
   //FITReader->PrintProcesses();
 
@@ -22,14 +22,14 @@ FitReader* FITReader = new FitReader(inputfile, a2, a3);
 //FITReader->PrintProcesses();
   CategoryTree CT_test = CT_QCD0L;
 //CT_test.Print(); 
-vector<const CategoryTree*> catTrees;
-CT_test.GetListDepth(catTrees,1);
-CategoryList catList = FITReader->GetCategories();
-for(int i = 0; i < int(catTrees.size()); i++){
-cout << "list #" << i << " " << catTrees[i]->GetSpecLabel() << endl;
-CategoryList cats = catList.Filter(*catTrees[i]);
-cats.Print();
-}
+//vector<const CategoryTree*> catTrees;
+//CT_test.GetListDepth(catTrees,1);
+//CategoryList catList = FITReader->GetCategories();
+//for(int i = 0; i < int(catTrees.size()); i++){
+//cout << "list #" << i << " " << catTrees[i]->GetSpecLabel() << endl;
+//CategoryList cats = catList.Filter(*catTrees[i]);
+//cats.Print();
+//}
 //  FITReader->PlotYields("0Lyields",
 //			VS().a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD")
 //			.a("Wjets").a("Fakes").a("T2tt_5000490").a("T2tt_5000480").a("T2tt_5000375"),
@@ -76,7 +76,7 @@ cats.Print();
   // 			 VS().a("ge1jISR"),
   // 			 "canvas3");
 //the args with multiple entries are the ones that go into the total for the ratio
-const string& proc = "QCD"; 
+const string& proc = "ttbar_Fakes_elf0"; 
 const string& source = "LF";
 const string& numSource = "0";
 const string& lep = "el";
@@ -84,10 +84,10 @@ const string& hadS = "2jS";
 const string& hadI = "ge1jISR";
 
 const string& lep1 = "1Lel";
-const string& lep2 = "1Lmu";
+const string& lep2 = "1Lelsilver";
 const string& lep3 = "1Lelbronze";
 const string& lep4 = "3Lelbronze";
-const string& hadS1 = "ge4jS";
+const string& hadS1 = "2jS";
 const string& hadS2 = "2j1bS";
 const string& hadS3 = "2j2bS";
   //  TCanvas* cv1 = FITReader->Plot1Dstraight(proc,
@@ -96,12 +96,12 @@ const string& hadS3 = "2j2bS";
   //      		 VS().a(hadI),
   //      		 "canvas2",
   //      		 VS());
- //   TCanvas* cv = FITReader->Plot1Dratio(proc,
- //       		 VS().a(lep1).a(lep2),
- //       		 VS().a(hadS1),
- //	     		 VS().a(hadI),
- // 			 "canvas3",
- //			 VS());
+    TCanvas* cv = FITPlotter->Plot1Dratio(proc,
+        		 VS().a(lep1).a(lep2).a(lep3),
+        		 VS().a(hadS1),
+ 	     		 VS().a(hadI),
+  			 "canvas3",
+ 			 VS());
   //  TCanvas* cv = FITReader->Plot1DratioProc(VS().a("DB_Fakes_"+lep+"f"+numSource).a("ttbar_Fakes_"+lep+"f"+numSource),
   //      		 "1L",
   //      		 hadS,		

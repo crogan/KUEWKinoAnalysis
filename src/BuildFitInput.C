@@ -21,7 +21,7 @@
 
 
 
-//#include "ReducedBase_slim.hh"
+#include "ReducedBase_slim.hh"
 #include "FitInputBuilder.hh"
 #include "Systematics.hh"
 #include "SampleTool.hh"
@@ -213,7 +213,6 @@ int main(int argc, char* argv[]) {
   Systematics systematics(1);
   if(doSys)
     systematics += SYS.GetWeightSystematics();
-cout << "did regular systs" << endl;
  FitInputBuilder FITBuilder(extrahist);
 
   int underflow = 0.;
@@ -296,7 +295,6 @@ cout << "did regular systs" << endl;
     
       TChain* chain = ST.Tree(proc, f);
       ReducedBase* base = new ReducedBase(chain);
-
       int Nentry = base->fChain->GetEntries();
       
       int SKIP = 1;
@@ -307,11 +305,8 @@ cout << "did regular systs" << endl;
 
 	if((e/SKIP)%(std::max(1, int(Nentry/SKIP/10))) == 0)
 	  cout << "      event " << e << " | " << Nentry  << endl;
-
-
-	//if(!base->EventFilter)	  
-	//	continue;
-	// cout << "passed event filter" << endl;
+	if(!base->EventFilter)	  
+		continue;
 
 	if(do_FilterDilepton)
 	  if(SF.DileptonEvent(base))
@@ -505,7 +500,7 @@ cout << "did regular systs" << endl;
 	  
 	
 	  double RISR  = base->RISR;
-	double rlow;
+	//double rlow;
 	  if(Fakes.GetN() > 0 && is_bkg){
 	    vector<string> flabels = Fakes.GetFakeLabels();
 	    int Nf = flabels.size();
@@ -514,11 +509,11 @@ cout << "did regular systs" << endl;
 	      // 	FITBuilder.AddEvent(weight/double(Nf), Mperp, RISR,
 	      // 			    Categories[eindex], FITBuilder.FakeProcess(flabels[fl]), sys);
 	      
-	      rlow = FITBuilder.AddEvent(weight/double(Nf), Mperp, RISR,
+	      FITBuilder.AddEvent(weight/double(Nf), Mperp, RISR,
 				  Categories[eindex], proc.FakeProcess(flabels[fl]), sys);
 	    }
 	  } else {
-	    rlow = FITBuilder.AddEvent(weight, Mperp, RISR,
+	    FITBuilder.AddEvent(weight, Mperp, RISR,
 				Categories[eindex], proc, sys);
 	  }
 	  // dummy data

@@ -316,7 +316,7 @@ void WriteScript(const string& src_name,
   file << "output = " << log_name << ".out" << endl;
   file << "error = "  << log_name << ".err" << endl;
   file << "log = "    << log_name << ".log" << endl;
-  file << "Requirements = (Machine != \"16631984.000.unl.edu\") && (Machine != \"red-node000.unl.edu\") && (Machine != \"red-c2325.unl.edu\")" << endl;
+  file << "Requirements = (Machine != \"red-node000.unl.edu\") && (Machine != \"red-c2325.unl.edu\")" << endl;
   file << "request_memory = 4 GB" << endl;
   file << "queue " << endl;
   file.close();  
