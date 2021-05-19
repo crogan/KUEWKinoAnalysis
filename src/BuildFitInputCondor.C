@@ -112,6 +112,9 @@ int main(int argc, char* argv[]) {
     if(strncmp(argv[i],"++sys", 5) == 0){
       BuildFitInputCmd += "++sys ";
     }
+    if(strncmp(argv[i],"-maskSR", 7) == 0){
+      BuildFitInputCmd += "-maskSR ";
+    }
     if(strncmp(argv[i],"-lumi", 5) == 0){
       i++;
       setLumi = true;
