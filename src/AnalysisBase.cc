@@ -1137,11 +1137,14 @@ double AnalysisBase<SUSYNANOBase>::GetMETTriggerSFWeight(double MET, double HT, 
     year = 2018;
 
   if(IsFastSim()){
-    return m_METTriggerTool.Get_EFF(MET, HT, year = 2017,
+    return m_METTriggerTool.Get_EFF(MET, HT, year,
 				    (Nele > 0), (Nmu > 0),
-				    false, updown);
+				    false, updown)*
+      m_METTriggerTool.Get_SF(MET, HT, year,
+			      (Nele > 0), (Nmu > 0),
+			      false, updown);
   } else {
-    return m_METTriggerTool.Get_SF(MET, HT, year = 2017,
+    return m_METTriggerTool.Get_SF(MET, HT, year,
 				   (Nele > 0), (Nmu > 0),
 				   false, updown);
   }

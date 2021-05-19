@@ -6,342 +6,58 @@
 #include <TGraphErrors.h>
 #include <TLine.h>
 
-#include "FitReader.hh"
+#include "FitPlotter.hh"
+
+#include "RestFrames/RestFrames.hh"
 
 ///////////////////////////////////////////
-////////// FitReader class
+////////// FitPlotter class
 ///////////////////////////////////////////
 
-FitReader::FitReader(const string& inputfile,
-		     const string& otherfile,
-		     const string& otherfold)
-  : m_File(inputfile.c_str(), "READ") {
+FitPlotter::FitPlotter(const string& inputfile,
+		       const string& otherfile,
+		       const string& otherfold)
+  : FitReader(inputfile) {
 
-  if(otherfile != ""){
-    m_FilePtr = new TFile(otherfile.c_str(), "READ");
-    if(!m_FilePtr || !m_FilePtr->IsOpen())
-      m_FilePtr = nullptr;
-    m_FileFold = otherfold+"/";
-  } else {
-    m_FilePtr = nullptr;
-  }
-  
-  ReadProcesses();
-  
-  ReadCategories();
+  InitializeRecipes();
 }
 
-FitReader::~FitReader(){
-  m_File.Close();
-}
-
-void FitReader::ReadProcesses(){
-  if(!m_File.IsOpen())
-    return;
+FitPlotter::~FitPlotter(){
   
-  TTree* tree = (TTree*)m_File.Get("Process");
-  if(!tree)
-    return;
-
-  m_ProcBranch.InitGet(tree);
-
-  ProcessList ProcSys;
-
-  int N = tree->GetEntries();
-  for(int i = 0; i < N; i++){
-    tree->GetEntry(i);
-    
-    Process p = m_ProcBranch.GetProcess();
-    if((p.Name().find("Up") != std::string::npos) ||
-       (p.Name().find("Down") != std::string::npos))
-      ProcSys += p;
-    else
-      m_Proc += p;
-  }
-  
-  delete tree;
-
-  int Nproc = m_Proc.GetN();
-  int Nsys  = ProcSys.GetN();
-  for(int p = 0; p < Nproc; p++){
-    Systematics sys;
-    string proc = m_Proc[p].Name();
-    for(int s = 0; s < Nsys; s++){
-      string label = ProcSys[s].Name();
-      if((proc.find("Fakes") == std::string::npos) &&
-	 (label.find("Fakes") != std::string::npos))
-	continue;
-      if(label.find(proc) == 0){
-	label.replace(0,proc.length()+1,"");
-	if(label.find("Up") != std::string::npos)
-	  label.replace(label.find("Up"),2,"");
-	if(label.find("Down") != std::string::npos)
-	  label.replace(label.find("Down"),4,"");
-	sys += Systematic(label);
-      }
-    }
-    if(sys.GetN() > 0)
-      m_ProcSys[m_Proc[p]] = sys;
-
-    m_Sys += sys;
-  }
 }
 
-void FitReader::ReadCategories(){
-  if(!m_File.IsOpen())
-    return;
-  
-  TTree* tree = (TTree*)m_File.Get("Category");
-  if(!tree)
-    return;
-  
-  m_CatBranch.InitGet(tree);
-
-  int N = tree->GetEntries();
-  for(int i = 0; i < N; i++){
-    tree->GetEntry(i);
-    Category cat = m_CatBranch.GetCategory();
-    if(m_CatLabel.count(cat.GetLabel()) == 0)
-      m_CatLabel[cat.GetLabel()] = true;
-    else
-      continue;
-    m_Cat += cat;
-    if(m_Chan.count(cat.Label()) == 0)
-      m_Chan[cat.Label()] = CategoryList();
-    m_Chan[cat.Label()] += cat;
-  }
-
-  delete tree;
-}
-
-bool FitReader::HasSystematic(const Process& proc, const Systematic& sys) const {
-  if(m_ProcSys.count(proc) == 0)
-    return false;
-
-  return m_ProcSys[proc].Contains(sys);
-}
-
-double FitReader::Integral(const Category&   cat,
-			   const Process&    proc,
-			   const Systematic& sys) const {
-  const TH1D* hist = GetHistogram(cat, proc, sys);
-  if(!hist)
-    return 0.;
-
-  return hist->Integral();
-}
-
-TH1D* FitReader::GetIntegralHist(const string& name,
-				 const CategoryList& cats,
-				 const ProcessList&  procs,
-				 const Systematic&   sys) const {
-  int Np = procs.GetN();
-  int Nc = cats.GetN();
-
+TGraphErrors* FitPlotter::GetTotalBackground(const CategoryList& cat){
   TH1D* hist = nullptr;
-  TH1D* histd = nullptr;
+  int Ncat = cat.GetN();
+  for(int i = 0; i < Ncat; i++){
+    string shist = m_FileFold+cat[i].Label()+"_"+cat[i].GetLabel()+"/total_background";
+    cout << shist << endl;
+    if(hist == nullptr)
+      hist = (TH1D*) m_FilePtr->Get((m_FileFold+"/"+shist).c_str())->Clone((shist+"_total").c_str());
+    else
+      hist->Add((TH1D*) m_FilePtr->Get((m_FileFold+"/"+shist).c_str()));
+  }
 
-  for(int p = 0; p < Np; p++){
-    for(int c = 0; c < Nc; c++){
-      if(!IsFilled(cats[c], procs[p], sys))
-	continue;
-    
-      if(!hist){
-	histd = (TH1D*) GetHistogram(cats[c], procs[p], sys)->Clone("dum");
-	histd->Rebin(histd->GetNbinsX());
-	hist = (TH1D*) new TH1D(name.c_str(),name.c_str(), 1, 0., 1.);
-	hist->SetBinContent(1, histd->GetBinContent(1));
-	hist->SetBinError(1, histd->GetBinError(1));
-	delete histd;
-      } else {
-	TH1D* dum = (TH1D*) GetHistogram(cats[c], procs[p], sys)->Clone("dum");
-	dum->Rebin(dum->GetNbinsX());
-	hist->SetBinContent(1, hist->GetBinContent(1)+dum->GetBinContent(1));
-	hist->SetBinError(1, sqrt(hist->GetBinError(1)*hist->GetBinError(1)+dum->GetBinError(1)*dum->GetBinError(1)));
-	delete dum;
-      }
-    }
+  int NB = hist->GetNbinsX();
+  
+  vector<double> X;
+  vector<double> Xerr;
+  vector<double> Y;
+  vector<double> Yerr;
+  for(int i = 0; i < NB; i++){
+    X.push_back(0.5 + i);
+    Xerr.push_back(0.5);
+    Y.push_back(hist->GetBinContent(i+1));
+    Yerr.push_back(hist->GetBinError(i+1));
   }
    
-  return hist;
-}
+  TGraphErrors* gr = new TGraphErrors(NB, &X[0], &Y[0],  &Xerr[0], &Yerr[0]);
 
-TH1D* FitReader::GetAddedHist(const string&       name,
-			      const CategoryList& cats,
-			      const ProcessList&  procs,
-			      const Systematic&   sys) const {
-  int Np = procs.GetN();
-  int Nc = cats.GetN();
-  
-  TH1D* hist = nullptr;
-
-  for(int p = 0; p < Np; p++){
-    for(int c = 0; c < Nc; c++){
-      if(!IsFilled(cats[c], procs[p], sys))
-	continue;
-    
-      if(!hist){
-	hist = (TH1D*) GetHistogram(cats[c], procs[p], sys)->Clone(name.c_str());
-      } else {
-	hist->Add(GetHistogram(cats[c], procs[p], sys));
-      }
-    }
-  }
+  return gr;
    
-  return hist;
 }
 
-const TH1D* FitReader::GetHistogram(const Category&   cat,
-				    const Process&    proc,
-				    const Systematic& sys) const {
-  if(!IsFilled(cat, proc, sys))
-    return nullptr;
-
-  if(!sys){
-    return m_ProcHist[proc][cat];
-  } else {
-    return (sys.IsUp() ? m_ProcHistSys[proc][sys][cat].first :
-	    m_ProcHistSys[proc][sys][cat].second);
-  }
-}
-
-const TH2D* FitReader::GetHistogram2D(const Category&   cat,
-				      const Process&    proc,
-				      const Systematic& sys) const {
-  if(!IsFilled2D(cat, proc, sys))
-    return nullptr;
- cout << cat.GetLabel() << " " << proc.Name() << " hist integral: " << m_ProcHist_2D[proc][cat]->Integral() << endl;   
-  if(!sys){
-    return m_ProcHist_2D[proc][cat];
-  } else {
-    return (sys.IsUp() ? m_ProcHistSys_2D[proc][sys][cat].first :
-	    m_ProcHistSys_2D[proc][sys][cat].second);
-  }
-}
-
-bool FitReader::IsFilled(const Category&   cat,
-			 const Process&    proc,
-			 const Systematic& sys) const {
- 
-  if(!sys){
-    if(m_ProcHist.count(proc) == 0)
-      m_ProcHist[proc] = map<Category,TH1D*>();
-    if(m_ProcHist[proc].count(cat) == 0){
-      string shist = cat.Label()+"_"+cat.GetLabel()+"/"+proc.Name();
-      if(proc.Type() == kData || !m_FilePtr)
-	m_ProcHist[proc][cat] = (TH1D*) m_File.Get(shist.c_str());
-      else
-	m_ProcHist[proc][cat] = (TH1D*) m_FilePtr->Get((m_FileFold+shist).c_str());
-    }
-    
-    return m_ProcHist[proc][cat];
-    
-  } else {
-    if(m_ProcHistSys.count(proc) == 0)
-      m_ProcHistSys[proc] = map<Systematic,map<Category,pair<TH1D*,TH1D*> > >();
-    if(m_ProcHistSys[proc].count(sys) == 0)
-      m_ProcHistSys[proc][sys] = map<Category,pair<TH1D*,TH1D*> >();
-    if(m_ProcHistSys[proc][sys].count(cat) == 0){
-      m_ProcHistSys[proc][sys][cat] = pair<TH1D*,TH1D*>(nullptr,nullptr);
-       
-      string label = cat.Label()+"_"+cat.GetLabel();
-      string shistUp   = label+"/"+proc.Name()+"_"+sys.Label()+"Up";
-      string shistDown = label+"/"+proc.Name()+"_"+sys.Label()+"Down";
-       
-      m_ProcHistSys[proc][sys][cat].first  = (TH1D*) m_File.Get(shistUp.c_str());
-      m_ProcHistSys[proc][sys][cat].second = (TH1D*) m_File.Get(shistDown.c_str());
-    }
-     
-    return (sys.IsUp() ? m_ProcHistSys[proc][sys][cat].first :
-	    m_ProcHistSys[proc][sys][cat].second);
-  }    
-}
-
-bool FitReader::IsFilled2D(const Category&   cat,
-			   const Process&    proc,
-			   const Systematic& sys) const {
-  
-  if(!sys){
-    if(m_ProcHist_2D.count(proc) == 0)
-      m_ProcHist_2D[proc] = map<Category,TH2D*>();
-    if(m_ProcHist_2D[proc].count(cat) == 0){
-      string shist = cat.Label()+"_"+cat.GetLabel()+"/"+proc.Name()+"_2D";
-      if(proc.Type() == kData || !m_FilePtr)
-	m_ProcHist_2D[proc][cat] = (TH2D*) m_File.Get(shist.c_str());
-      else
-	m_ProcHist_2D[proc][cat] = (TH2D*) m_FilePtr->Get((m_FileFold+shist).c_str());
-    }
-    
-    return m_ProcHist_2D[proc][cat];
-    
-  } else {
-    if(m_ProcHistSys_2D.count(proc) == 0)
-      m_ProcHistSys_2D[proc] = map<Systematic,map<Category,pair<TH2D*,TH2D*> > >();
-    if(m_ProcHistSys_2D[proc].count(sys) == 0)
-      m_ProcHistSys_2D[proc][sys] = map<Category,pair<TH2D*,TH2D*> >();
-    if(m_ProcHistSys_2D[proc][sys].count(cat) == 0){
-      m_ProcHistSys_2D[proc][sys][cat] = pair<TH2D*,TH2D*>(nullptr,nullptr);
-       
-      string label = cat.Label()+"_"+cat.GetLabel();
-      string shistUp   = label+"/"+proc.Name()+"_"+sys.Label()+"Up_2D";
-      string shistDown = label+"/"+proc.Name()+"_"+sys.Label()+"Down_2D";
-       
-      m_ProcHistSys_2D[proc][sys][cat].first  = (TH2D*) m_File.Get(shistUp.c_str());
-      m_ProcHistSys_2D[proc][sys][cat].second = (TH2D*) m_File.Get(shistDown.c_str());
-    }
-     
-    return (sys.IsUp() ? m_ProcHistSys[proc][sys][cat].first :
-	    m_ProcHistSys[proc][sys][cat].second);
-  }    
-}
-
-void FitReader::PrintCategories(bool verbose){
-  cout << "*** Fit Categories ***" << endl;
-  int N = m_Cat.GetN();
-  for(int i = 0; i < N; i++)
-    cout << m_Cat[i].Label()+"_"+m_Cat[i].GetLabel() << endl;
-  cout << endl;
-}
-
-void FitReader::PrintProcesses(bool verbose){
-  cout << "*** Fit Processes ***" << endl;
-  int N = m_Proc.GetN();
-  for(int i = 0; i < N; i++){
-    cout << m_Proc[i].Name() << endl;
-    if(m_ProcSys.count(m_Proc[i]) == 0 || !verbose)
-      continue;
-    cout << "  Sys:  " << m_ProcSys[m_Proc[i]][0].Label() << endl;
-    int Nsys = m_ProcSys[m_Proc[i]].GetN();
-    for(int s = 1; s < Nsys; s++)
-      cout << "        " << m_ProcSys[m_Proc[i]][s].Label() << endl;
-  }
-  cout << endl;
-}
-
-const ProcessList&  FitReader::GetProcesses() const {
-  return m_Proc;
-}
-
-const CategoryList& FitReader::GetCategories(const string& channel) const {
-  if(m_Chan.count(channel) > 0)
-    return m_Chan[channel];
-  
-  return m_Cat;
-}
-
-VS FitReader::GetChannels() const {
-  VS list;
-  for(auto c : m_Chan)
-    list += c.first;
-  
-  return list;
-}
-
-const Systematics& FitReader::GetSystematics() const {
-  return m_Sys;
-}
-
-string FitReader::GetSignalTitle(const string& label){
+string FitPlotter::GetSignalTitle(const string& label){
   size_t p = label.rfind("_");
   if(p == std::string::npos)
     return label;
@@ -351,7 +67,7 @@ string FitReader::GetSignalTitle(const string& label){
   return title+" "+std::to_string(mass/10000)+" "+std::to_string(mass%100000);
 }
 
-TCanvas* FitReader::Plot1Dstack(const VS& proc,
+TCanvas* FitPlotter::Plot1Dstack(const VS& proc,
 				const VS& lep_cat,
 				const VS& hadS_cat,
 				const VS& hadI_cat,
@@ -370,7 +86,7 @@ TCanvas* FitReader::Plot1Dstack(const VS& proc,
     return nullptr;
 
   CategoryList cat = GetCategories();
-  //cat.Print();
+  cat.Print();
   
   // Leptonic
   VS lep_labels;
@@ -774,13 +490,14 @@ TCanvas* FitReader::Plot1Dstack(const VS& proc,
   
 }
 
-TCanvas* FitReader::Plot2D(const VS& proc,
+TCanvas* FitPlotter::Plot2D(const VS& proc,
 			   const VS& lep_cat,
 			   const VS& hadS_cat,
 			   const VS& hadI_cat,
 			   const string& name,
 			   const string& extra){
   RestFrames::SetStyle();
+
   
   int Nproc = proc.size();
   int Nlep  = lep_cat.size();
@@ -793,7 +510,8 @@ TCanvas* FitReader::Plot2D(const VS& proc,
     return nullptr;
 
   CategoryList cat = GetCategories();
-  //cat.Print();
+  cat.Print();
+  
   // Leptonic
   VS lep_labels;
   VS vlep;
@@ -814,6 +532,7 @@ TCanvas* FitReader::Plot2D(const VS& proc,
   }
 
   cat = cat.FilterOR(vlep);
+
   // Hadronic S
   VS hadS_labels;
   VS vhadS;
@@ -833,6 +552,7 @@ TCanvas* FitReader::Plot2D(const VS& proc,
   }
 
   cat = cat.FilterOR(vhadS);
+
   // Hadronic ISR
   VS hadI_labels;
   VS vhadI;
@@ -860,10 +580,11 @@ TCanvas* FitReader::Plot2D(const VS& proc,
   
   if(Ncat < 1)
     return nullptr;
+  
   // Processes
   string label;
   TH2D* hist = nullptr;
- GetProcesses().Print(); 
+  
   for(int i = 0; i < Nproc; i++){
     VS vproc;
     if(m_Strings.count(proc[i]) != 0)
@@ -875,8 +596,7 @@ TCanvas* FitReader::Plot2D(const VS& proc,
     for(int p = 0; p < int(vproc.size()); p++){
       
       int index = GetProcesses().Find(vproc[p]);
-	cout << "index: " << index << endl;
-	if(index < 0)
+      if(index < 0)
 	continue;
       
       Process pp = GetProcesses()[index];
@@ -891,7 +611,7 @@ TCanvas* FitReader::Plot2D(const VS& proc,
 	if(!IsFilled(cat[c], pp))
 	  continue;
 
-	cout << "filled " << cat[c].GetLabel() << " " << pp.Name() << endl;
+	//cout << "filled " << cat[c].GetLabel() << " " << pp.Name() << endl;
 	
 	if(!hist){
 	  hist = (TH2D*) GetHistogram2D(cat[c], pp)->Clone(Form("plothist_%dhis_%s_2D", i, name.c_str()));
@@ -901,7 +621,7 @@ TCanvas* FitReader::Plot2D(const VS& proc,
       }
     }
 
-    if(hist == nullptr || hist->Integral() == 0)
+    if(hist == nullptr)
       continue;
     
     if(type == kData){
@@ -953,7 +673,7 @@ TCanvas* FitReader::Plot2D(const VS& proc,
   //   blabels += bin[r].GetRBinLabel();
   
   // hists[0]->LabelsOption("v","X");
-if(hist == NULL) return NULL; 
+  
   gStyle->SetOptTitle(0);
   gStyle->SetOptStat(0);
   gStyle->SetOptFit(11111111);
@@ -970,10 +690,9 @@ if(hist == NULL) return NULL;
   can->SetRightMargin(hhi);
   can->SetBottomMargin(hbo);
   can->SetTopMargin(hto);
-  can->SetLogz();
   can->Draw();
   can->cd();
-if(hist == NULL) {cout << "null hist" << endl; return can;}  
+  
   hist->Draw("colz");
   hist->GetXaxis()->SetTitle("M_{#perp}   [GeV]");
   hist->GetYaxis()->SetTitle("R_{ISR}");
@@ -1050,6 +769,7 @@ if(hist == NULL) {cout << "null hist" << endl; return can;}
     // l.DrawLatex((hi+lo)/2., yline - 8*eps, blabels[r].c_str());
   }
  
+ 
   l.SetTextAlign(31);
   l.SetTextSize(0.04);
   l.SetTextFont(42);
@@ -1077,7 +797,7 @@ if(hist == NULL) {cout << "null hist" << endl; return can;}
   
 }
 
-TCanvas* FitReader::PlotYields(const string& can_name,
+TCanvas* FitPlotter::PlotYields(const string& can_name,
 			       const VS& proc,
 			       const CategoryTree& CT){
 
@@ -1448,7 +1168,7 @@ TCanvas* FitReader::PlotYields(const string& can_name,
 
 }
 
-void FitReader::DrawCatTree(const CategoryTree& CT, TCanvas* can){
+void FitPlotter::DrawCatTree(const CategoryTree& CT, TCanvas* can){
   if(!can)
     return;
 
@@ -1513,7 +1233,7 @@ void FitReader::DrawCatTree(const CategoryTree& CT, TCanvas* can){
 }
 //////////////////////////////////////////////////
 
-TCanvas* FitReader::Plot1Dstack(const string& can_name,
+TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
 				const VS& proc,
 				const CategoryTree& CT){
   RestFrames::SetStyle();
@@ -1869,9 +1589,9 @@ TCanvas* FitReader::Plot1Dstack(const string& can_name,
     // if(colors[Nbkg-1]%1000 >=3)
     //   l.SetTextColor(7000 + 10*((b%Nvis)%8));
     // else
-      l.SetTextColor(7004 + 10*((b%Nvis)%8));
+    l.SetTextColor(7004 + 10*((b%Nvis)%8));
     l.DrawLatex(hlo+(1.-hhi-hlo)/double(Nvis*Nbin)*(0.5+b), hbo + 4*eps,
-		 CatTrees[b%Nvis]->GetPlainLabel(Depth).c_str());
+		CatTrees[b%Nvis]->GetPlainLabel(Depth).c_str());
   }
 
   l.SetTextAngle(0);
@@ -1885,7 +1605,7 @@ TCanvas* FitReader::Plot1Dstack(const string& can_name,
   return can;
 }
 
-void FitReader::DrawMR(const FitBin& fitbin, TCanvas* can){
+void FitPlotter::DrawMR(const FitBin& fitbin, TCanvas* can){
   double eps = 0.0015;
 
   double hlo = can->GetLeftMargin();
@@ -1969,7 +1689,7 @@ void FitReader::DrawMR(const FitBin& fitbin, TCanvas* can){
 }
 
 
-TCanvas* FitReader::Plot2D(const string& can_name,
+TCanvas* FitPlotter::Plot2D(const string& can_name,
 			   const VS& proc,
 			   const CategoryTree& CT){
   RestFrames::SetStyle();
@@ -2146,17 +1866,13 @@ TCanvas* FitReader::Plot2D(const string& can_name,
   l.SetTextAlign(33);
   l.DrawLatex(1.-hhi-eps*6, 1.-hto-0.02, label.c_str());
   
- 
-  
   return can;
-
-
 }
 
 
 
 
-void FitReader::InitializeRecipes(){
+void FitPlotter::InitializeRecipes(){
   // Processes
 
   m_Strings["Data"] = VS().a("data_obs");
@@ -2207,101 +1923,101 @@ void FitReader::InitializeRecipes(){
   
   // leptonic categories
   m_Title["1L"] = "#scale[1.2]{single #it{l}}";
-  m_Strings["1L"] = VS().a("1L_elm-elG").a("1L_elp-elG").a("1L_elpm-elG").a("1L_mupm-muG").a("1L_mup-muG").a("1L_mum-muG");
+  m_Strings["1L"] = VS().a("1L_elm_elG").a("1L_elp_elG").a("1L_elpm_elG").a("1L_mupm_muG").a("1L_mup_muG").a("1L_mum_muG");
   
   m_Title["1Lel"] = "#scale[1.2]{single e}";
-  m_Strings["1Lel"] = VS().a("1L_elp-elG").a("1L_elm-elG");
+  m_Strings["1Lel"] = VS().a("1L_elp_elG").a("1L_elm_elG");
 
   m_Title["1Lmu"] = "#scale[1.2]{single #mu}";
-  m_Strings["1Lmu"] = VS().a("1L_mup-muG").a("1L_mum-mG");
+  m_Strings["1Lmu"] = VS().a("1L_mup_muG").a("1L_mum_mG");
 
   m_Title["1Lelp"] = "#scale[1.2]{single e^{+}}";
-  m_Strings["1Lelp"] = VS().a("1L_elp-elG");
+  m_Strings["1Lelp"] = VS().a("1L_elp_elG");
 
   m_Title["1Lelm"] = "#scale[1.2]{single e^{-}}";
-  m_Strings["1Lelm"] = VS().a("1L_elm-elG");
+  m_Strings["1Lelm"] = VS().a("1L_elm_elG");
 
   m_Title["1Lmup"] = "#scale[1.2]{single #mu^{+}}";
-  m_Strings["1Lmup"] = VS().a("1L_mup-muG");
+  m_Strings["1Lmup"] = VS().a("1L_mup_muG");
 
   m_Title["1Lmum"] = "#scale[1.2]{single #mu^{-}}";
-  m_Strings["1Lmum"] = VS().a("1L_mum-muG");
+  m_Strings["1Lmum"] = VS().a("1L_mum_muG");
 
   m_Title["1Lp"] = "#scale[1.2]{single #it{l}^{+}}";
-  m_Strings["1Lp"] = VS().a("1L_elp-elG").a("1L_mup-muG");
+  m_Strings["1Lp"] = VS().a("1L_elp_elG").a("1L_mup_muG");
 
   m_Title["1Lm"] = "#scale[1.2]{single #it{l}^{-}}";
-  m_Strings["1Lm"] = VS().a("1L_elm-elG").a("1L_mum-muG");
+  m_Strings["1Lm"] = VS().a("1L_elm_elG").a("1L_mum_muG");
 
   m_Title["1Lsilver"] = "#scale[1.2]{single silver #it{l}}";
-  m_Strings["1Lsilver"] = VS().a("1L_elp-elS").a("1L_elm-elS").a("1L_mup-muS").a("1L_mum-muS");
+  m_Strings["1Lsilver"] = VS().a("1L_elp_elS").a("1L_elm_elS").a("1L_mup_muS").a("1L_mum_muS");
   
   m_Title["1Lelsilver"] = "#scale[1.2]{single silver e}";
-  m_Strings["1Lelsilver"] = VS().a("1L_elp-elS").a("1L_elm-elS");
+  m_Strings["1Lelsilver"] = VS().a("1L_elp_elS").a("1L_elm_elS");
   
   m_Title["1Lmusilver"] = "#scale[1.2]{single silver #mu}";
-  m_Strings["1Lmusilver"] = VS().a("1L_mup-muS").a("1L_mum-muS");
+  m_Strings["1Lmusilver"] = VS().a("1L_mup_muS").a("1L_mum_muS");
 
   m_Title["1Lbronze"] = "#scale[1.2]{single bronze #it{l}}";
-  m_Strings["1Lbronze"] = VS().a("1L_elp-elB").a("1L_elm-el2").a("1L_mup-muB").a("1L_mum-muB");
+  m_Strings["1Lbronze"] = VS().a("1L_elp_elB").a("1L_elm_el2").a("1L_mup_muB").a("1L_mum_muB");
   
   m_Title["1Lelbronze"] = "#scale[1.2]{single bronze e}";
-  m_Strings["1Lelbronze"] = VS().a("1L_elp-elB").a("1L_elm-elB");
+  m_Strings["1Lelbronze"] = VS().a("1L_elp_elB").a("1L_elm_elB");
   
   m_Title["1Lmubronze"] = "#scale[1.2]{single bronze #mu}";
-  m_Strings["1Lmubonze"] = VS().a("1L_mup-muB").a("1L_mum-muB");
+  m_Strings["1Lmubonze"] = VS().a("1L_mup_muB").a("1L_mum_muB");
 
   m_Title["2LOSSF"] = "#scale[1.2]{e^{#pm} e^{#mp} or #mu^{#pm} #mu^{#mp}}";
-  m_Strings["2LOSSF"] = VS().a("2LOS_el^el-elGelG").a("2LOS_mu^mu-muGmuG").a("2LOS_elel^0-elGelG").a("2LOS_mumu^0-muGmuG");
+  m_Strings["2LOSSF"] = VS().a("2LOS_el^el_elGelG").a("2LOS_mu^mu_muGmuG").a("2LOS_elel^0_elGelG").a("2LOS_mumu^0_muGmuG");
   
   m_Title["2LOSOF"] = "#scale[1.2]{e^{#pm} #mu^{#mp}}";
-  m_Strings["2LOSOF"] = VS().a("2LOS_el^mu-elGmuG").a("2LOS_elmu^0-elGmuG");
+  m_Strings["2LOSOF"] = VS().a("2LOS_el^mu_elGmuG").a("2LOS_elmu^0_elGmuG");
 
   m_Title["2LSSSF"] = "#scale[1.2]{e^{#pm} e^{#pm} or #mu^{#pm} #mu^{#pm}}";
-  m_Strings["2LSSSF"] = VS().a("2LOS_el^el-elGelG").a("2LOS_mu^mu-muGmuG").a("2LOS_elel^0-elGelG").a("2LOS_mumu^0-muGmuG");
+  m_Strings["2LSSSF"] = VS().a("2LOS_el^el_elGelG").a("2LOS_mu^mu_muGmuG").a("2LOS_elel^0_elGelG").a("2LOS_mumu^0_muGmuG");
   
   m_Title["2LSSOF"] = "#scale[1.2]{e^{#pm} #mu^{#pm}}";
-  m_Strings["2LSSOF"] = VS().a("2LSS_el^mu-elGmuG").a("2LSS_elmu^0-elGmuG");
+  m_Strings["2LSSOF"] = VS().a("2LSS_el^mu_elGmuG").a("2LSS_elmu^0_elGmuG");
 
   m_Title["2LOSSFsilver"] = "#scale[1.2]{e^{#pm} e^{#mp} or #mu^{#pm} #mu^{#mp}, #geq 1 silver #it{l}}";
-  m_Strings["2LOSSFsilver"] = VS().a("2LOS_el^el-el0el1").a("2LOS_mu^mu-mu0mu1").a("2LOS_elel^0-el0el1").a("2LOS_mumu^0-mu0mu1")
-    .a("2LOS_el^el-el1el1").a("2LOS_mu^mu-mu1mu1").a("2LOS_elel^0-el1el1").a("2LOS_mumu^0-mu1mu1")
-    .a("2LOS_el^el-el1el2").a("2LOS_mu^mu-mu1mu2").a("2LOS_elel^0-el1el2").a("2LOS_mumu^0-mu1mu2");
+  m_Strings["2LOSSFsilver"] = VS().a("2LOS_el^el_el0el1").a("2LOS_mu^mu_mu0mu1").a("2LOS_elel^0_el0el1").a("2LOS_mumu^0_mu0mu1")
+    .a("2LOS_el^el_el1el1").a("2LOS_mu^mu_mu1mu1").a("2LOS_elel^0_el1el1").a("2LOS_mumu^0_mu1mu1")
+    .a("2LOS_el^el_el1el2").a("2LOS_mu^mu_mu1mu2").a("2LOS_elel^0_el1el2").a("2LOS_mumu^0_mu1mu2");
   
   m_Title["2LOSOFsilver"] = "#scale[1.2]{e^{#pm} #mu^{#mp}, #geq 1 silver #it{l}}";
-  m_Strings["2LOSOFsilver"] = VS().a("2LOS_el^mu-el0mu1").a("2LOS_elmu^0-el0mu1").a("2LOS_el^mu-mu0el1").a("2LOS_elmu^0-mu0el1")
-    .a("2LOS_el^mu-el1mu1").a("2LOS_elmu^0-el1mu1").a("2LOS_el^mu-mu1el2").a("2LOS_elmu^0-mu1el2")
-    .a("2LOS_el^mu-el1mu2").a("2LOS_elmu^1-el1mu2");
+  m_Strings["2LOSOFsilver"] = VS().a("2LOS_el^mu_el0mu1").a("2LOS_elmu^0_el0mu1").a("2LOS_el^mu_mu0el1").a("2LOS_elmu^0_mu0el1")
+    .a("2LOS_el^mu_el1mu1").a("2LOS_elmu^0_el1mu1").a("2LOS_el^mu_mu1el2").a("2LOS_elmu^0_mu1el2")
+    .a("2LOS_el^mu_el1mu2").a("2LOS_elmu^1_el1mu2");
 
   m_Title["2LSSSFsilver"] = "#scale[1.2]{e^{#pm} e^{#pm} or #mu^{#pm} #mu^{#pm}, #geq 1 silver #it{l}}";
-  m_Strings["2LSSSFsilver"] = VS().a("2LSS_el^el-el0el1").a("2LSS_mu^mu-mu0mu1").a("2LSS_elel^0-el0el1").a("2LSS_mumu^0-mu0mu1")
-    .a("2LSS_el^el-el1el1").a("2LSS_mu^mu-mu1mu1").a("2LSS_elel^0-el1el1").a("2LSS_mumu^0-mu1mu1")
-    .a("2LSS_el^el-el1el2").a("2LSS_mu^mu-mu1mu2").a("2LSS_elel^0-el1el2").a("2LSS_mumu^0-mu1mu2");
+  m_Strings["2LSSSFsilver"] = VS().a("2LSS_el^el_el0el1").a("2LSS_mu^mu_mu0mu1").a("2LSS_elel^0_el0el1").a("2LSS_mumu^0_mu0mu1")
+    .a("2LSS_el^el_el1el1").a("2LSS_mu^mu_mu1mu1").a("2LSS_elel^0_el1el1").a("2LSS_mumu^0_mu1mu1")
+    .a("2LSS_el^el_el1el2").a("2LSS_mu^mu_mu1mu2").a("2LSS_elel^0_el1el2").a("2LSS_mumu^0_mu1mu2");
   
   m_Title["2LSSOFsilver"] = "#scale[1.2]{e^{#pm} #mu^{#pm}, #geq 1 silver #it{l}}";
-  m_Strings["2LSSOFsilver"] = VS().a("2LSS_el^mu-el0mu1").a("2LSS_elmu^0-el0mu1").a("2LSS_el^mu-mu0el1").a("2LSS_elmu^0-mu0el1")
-    .a("2LSS_el^mu-el1mu1").a("2LSS_elmu^0-el1mu1").a("2LSS_el^mu-mu1el2").a("2LSS_elmu^0-mu1el2")
-    .a("2LSS_el^mu-el1mu2").a("2LSS_elmu^1-el1mu2");
+  m_Strings["2LSSOFsilver"] = VS().a("2LSS_el^mu_el0mu1").a("2LSS_elmu^0_el0mu1").a("2LSS_el^mu_mu0el1").a("2LSS_elmu^0_mu0el1")
+    .a("2LSS_el^mu_el1mu1").a("2LSS_elmu^0_el1mu1").a("2LSS_el^mu_mu1el2").a("2LSS_elmu^0_mu1el2")
+    .a("2LSS_el^mu_el1mu2").a("2LSS_elmu^1_el1mu2");
 
   m_Title["2LOSSFbronze"] = "#scale[1.2]{e^{#pm} e^{#mp} or #mu^{#pm} #mu^{#mp}, #geq 1 bronze #it{l}}";
-  m_Strings["2LOSSFbronze"] = VS().a("2LOS_el^el-el0el2").a("2LOS_mu^mu-mu0mu2").a("2LOS_elel^0-el0el2").a("2LOS_mumu^0-mu0mu2")
-    .a("2LOS_el^el-el1el2").a("2LOS_mu^mu-mu1mu2").a("2LOS_elel^0-el1el2").a("2LOS_mumu^0-mu1mu2")
-    .a("2LOS_el^el-el2el2").a("2LOS_mu^mu-mu2mu2").a("2LOS_elel^0-el2el2").a("2LOS_mumu^0-mu2mu2");
+  m_Strings["2LOSSFbronze"] = VS().a("2LOS_el^el_el0el2").a("2LOS_mu^mu_mu0mu2").a("2LOS_elel^0_el0el2").a("2LOS_mumu^0_mu0mu2")
+    .a("2LOS_el^el_el1el2").a("2LOS_mu^mu_mu1mu2").a("2LOS_elel^0_el1el2").a("2LOS_mumu^0_mu1mu2")
+    .a("2LOS_el^el_el2el2").a("2LOS_mu^mu_mu2mu2").a("2LOS_elel^0_el2el2").a("2LOS_mumu^0_mu2mu2");
   
   m_Title["2LOSOFbronze"] = "#scale[1.2]{e^{#pm} #mu^{#mp}, #geq 1 bronze #it{l}}";
-  m_Strings["2LOSOFbronze"] = VS().a("2LOS_el^mu-el0mu2").a("2LOS_elmu^0-el0mu2").a("2LOS_el^mu-mu0el2").a("2LOS_elmu^0-mu0el2")
-    .a("2LOS_el^mu-el1mu2").a("2LOS_elmu^0-el1mu2").a("2LOS_el^mu-mu1el2").a("2LOS_elmu^0-mu1el2")
-    .a("2LOS_el^mu-el2mu2").a("2LOS_elmu^1-el2mu2");
+  m_Strings["2LOSOFbronze"] = VS().a("2LOS_el^mu_el0mu2").a("2LOS_elmu^0_el0mu2").a("2LOS_el^mu_mu0el2").a("2LOS_elmu^0_mu0el2")
+    .a("2LOS_el^mu_el1mu2").a("2LOS_elmu^0_el1mu2").a("2LOS_el^mu_mu1el2").a("2LOS_elmu^0_mu1el2")
+    .a("2LOS_el^mu_el2mu2").a("2LOS_elmu^1_el2mu2");
 
   m_Title["2LSSSFbronze"] = "#scale[1.2]{e^{#pm} e^{#pm} or #mu^{#pm} #mu^{#pm}, #geq 1 bronze #it{l}}";
-  m_Strings["2LSSSFbronze"] = VS().a("2LSS_el^el-el0el2").a("2LSS_mu^mu-mu0mu2").a("2LSS_elel^0-el0el2").a("2LSS_mumu^0-mu0mu2")
-    .a("2LSS_el^el-el1el2").a("2LSS_mu^mu-mu1mu2").a("2LSS_elel^0-el1el2").a("2LSS_mumu^0-mu1mu2")
-    .a("2LSS_el^el-el2el2").a("2LSS_mu^mu-mu2mu2").a("2LSS_elel^0-el2el2").a("2LSS_mumu^0-mu2mu2");
+  m_Strings["2LSSSFbronze"] = VS().a("2LSS_el^el_el0el2").a("2LSS_mu^mu_mu0mu2").a("2LSS_elel^0_el0el2").a("2LSS_mumu^0_mu0mu2")
+    .a("2LSS_el^el_el1el2").a("2LSS_mu^mu_mu1mu2").a("2LSS_elel^0_el1el2").a("2LSS_mumu^0_mu1mu2")
+    .a("2LSS_el^el_el2el2").a("2LSS_mu^mu_mu2mu2").a("2LSS_elel^0_el2el2").a("2LSS_mumu^0_mu2mu2");
   
   m_Title["2LSSOFbronze"] = "#scale[1.2]{e^{#pm} #mu^{#pm}, #geq 1 bronze #it{l}}";
-  m_Strings["2LSSOFbronze"] = VS().a("2LSS_el^mu-el0mu2").a("2LSS_elmu^0-el0mu2").a("2LSS_el^mu-mu0el2").a("2LSS_elmu^0-mu0el2")
-    .a("2LSS_el^mu-el1mu2").a("2LSS_elmu^0-el1mu2").a("2LSS_el^mu-mu1el2").a("2LSS_elmu^0-mu1el2")
-    .a("2LSS_el^mu-el2mu2").a("2LSS_elmu^1-el2mu2");
+  m_Strings["2LSSOFbronze"] = VS().a("2LSS_el^mu_el0mu2").a("2LSS_elmu^0_el0mu2").a("2LSS_el^mu_mu0el2").a("2LSS_elmu^0_mu0el2")
+    .a("2LSS_el^mu_el1mu2").a("2LSS_elmu^0_el1mu2").a("2LSS_el^mu_mu1el2").a("2LSS_elmu^0_mu1el2")
+    .a("2LSS_el^mu_el2mu2").a("2LSS_elmu^1_el2mu2");
 
   // hadronic categories
   m_Title["0j0svS"] = "#splitline{0 jets}{0 SV-tags} #scale[1.2]{#in S}";

@@ -22,14 +22,14 @@ public:
   CategoryTool();
   virtual ~CategoryTool();
 
-  CategoryList GetCategories() const;
-  CategoryList GetCategories_0L() const;
-  CategoryList GetCategories_1L() const;
-  CategoryList GetCategories_2L() const;
-  CategoryList GetCategories_3L() const;
+  CategoryList GetCategories(bool maskSR = false) const;
+  CategoryList GetCategories_0L(bool maskSR = false) const;
+  CategoryList GetCategories_1L(bool maskSR = false) const;
+  CategoryList GetCategories_2L(bool maskSR = false) const;
+  CategoryList GetCategories_3L(bool maskSR = false) const;
 
 protected:
-  FitBin   GetFitBin(int Nlep, int index) const;
+  FitBin   GetFitBin(int Nlep, int index, bool maskSR = false) const;
   Hadronic GetHadronicRegion(int Njet, int index) const;
   
 };
