@@ -21,7 +21,7 @@ FitReader* FITReader = new FitReader(inputfile, a2, a3);
   CategoryTree CT_Fakes3L = CTTool.GetCategories_Fakes3L();
 //FITReader->PrintCategories();
 //FITReader->PrintProcesses();
-  CategoryTree CT_test = CT_QCD1L;
+  CategoryTree CT_test = CT_QCD0L;
 //CT_test.Print(); 
 vector<const CategoryTree*> catTrees;
 CT_test.GetListDepth(catTrees,1);
