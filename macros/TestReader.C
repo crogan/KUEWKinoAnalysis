@@ -1,10 +1,10 @@
 #include "TSystem.h"
 
-#include "../include/FitReader.hh"
+#include "../include/FitPlotter.hh"
 
 void TestReader(const string& inputfile = "test/FitInput_test.root", const string& a2 = "", const string& a3 = ""){
-  
-  FitReader* FITReader = new FitReader(inputfile, a2, a3);
+
+  FitPlotter* FITReader = new FitPlotter(inputfile, a2, a3);
   //FITReader->PrintCategories();
   //FITReader->PrintProcesses();
 
