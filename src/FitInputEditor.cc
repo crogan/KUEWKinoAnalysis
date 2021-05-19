@@ -499,7 +499,7 @@ void FitInputEditor::AddShapeSysFakes(){
 
   // loop through lepton multiplicity
   for(int i = 0; i < 3; i++){
-    string sgroup = Form("%dL", i);
+    string sgroup = Form("%dL", i+1);
 
     CT_groups.clear();
     CTs[i].GetListDepth(CT_groups,1);
