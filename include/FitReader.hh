@@ -68,12 +68,7 @@ public:
   const ProcessList&  GetProcesses() const;
   const CategoryList& GetCategories(const string& channel = "") const;         
   const Systematics&  GetSystematics() const;
-TCanvas* Plot1DratioProc(const VS& proc,
-           const string& lep_cat,
-           const string& hadS_cat,
-           const string& hadI_cat,
-           const string& name,
-           const string& extra);
+
 map<string,VS> m_Strings;
 
 protected:
