@@ -368,7 +368,7 @@ int main(int argc, char* argv[]) {
 	    for(int c = 0; c < Ncat; c++){
 	      const Category& cat = chanMap[ch][c];
 	      if(FIT.IsFilled(cat, proc, sys.Up()) &&
-		 FITIsFilled(cat, proc, sys.Down())){
+		 FIT.IsFilled(cat, proc, sys.Down())){
 		cb.cp().process(VS().a(proc.Name())).bin(VS().a(cat.GetLabel())).PrintObs();
 		cb.cp().process(VS().a(proc.Name())).bin(VS().a(cat.GetLabel()))
 		  .AddSyst(cb, sys.Label(), "shape", SystMap<>::init(1.00));
