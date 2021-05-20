@@ -42,6 +42,7 @@ public:
   virtual ~Category();
 
   std::string GetLabel() const;
+  std::string FullLabel() const;
  
   int GetN() const;
   const Criteria& operator [] (int i) const;
