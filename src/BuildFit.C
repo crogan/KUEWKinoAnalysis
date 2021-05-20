@@ -316,7 +316,7 @@ int main(int argc, char* argv[]) {
         cout << "    + Checking channel " << ch << " :" << endl;
       for(int c = 0; c < Ncat; c++){
         const Category& cat = chanMap[ch][c];
-        if(FIT.Integral(cat, proc) > 0.){
+        if(FIT.Integral(cat, proc) > 1e-6){
           filled += cat;
           if(verbose)
             cout << "      + " << cat.GetLabel() << endl;
@@ -358,13 +358,29 @@ int main(int argc, char* argv[]) {
 
       if(proc_sys.GetN() > 0){
 	cout << "  + " << sys.Label() << endl;
-	cb.cp().process(proc_sys.GetProcesses())
-	  .AddSyst(cb, sys.Label(), "shape", SystMap<>::init(1.00));
+
+	int Nproc = proc_sys.GetN();
+	for(int p = 0; p < Nproc; p++){
+	  Process proc = proc_sys[p];
+	  // looping through categories to check that process/sys/cat is filled 
+	  for(auto ch : channels){
+	    int Ncat = chanMap[ch].GetN();
+	    for(int c = 0; c < Ncat; c++){
+	      const Category& cat = chanMap[ch][c];
+	      if(FIT.IsFilled(cat, proc, sys.Up()) &&
+		 FIT.IsFilled(cat, proc, sys.Down())){
+		cb.cp().process(VS().a(proc.Name())).bin(VS().a(cat.GetLabel())).PrintObs();
+		cb.cp().process(VS().a(proc.Name())).bin(VS().a(cat.GetLabel()))
+		  .AddSyst(cb, sys.Label(), "shape", SystMap<>::init(1.00));
+		
+	      }
+	    }
+	  }
+	}
       }
     }
   }
 
-  
   cb.cp().backgrounds().ExtractShapes(InputFile,
 				      "$BIN/$PROCESS",
 				      "$BIN/$PROCESS_$SYSTEMATIC");
@@ -376,27 +392,27 @@ int main(int argc, char* argv[]) {
     cb.cp().SetAutoMCStats(cb, -1.);
   
   /*
-  auto bbb = ch::BinByBinFactory()
+    auto bbb = ch::BinByBinFactory()
     .SetAddThreshold(0.1)
     .SetFixNorm(true);
 
-  bbb.AddBinByBin(cb.cp().backgrounds(), cb);
+    bbb.AddBinByBin(cb.cp().backgrounds(), cb);
 
-  // This function modifies every entry to have a standardised bin name of
-  // the form: {analysis}_{channel}_{bin_id}_{era}
-  // which is commonly used in the htt analyses
-  ch::SetStandardBinNames(cb);
-  //! [part8]
+    // This function modifies every entry to have a standardised bin name of
+    // the form: {analysis}_{channel}_{bin_id}_{era}
+    // which is commonly used in the htt analyses
+    ch::SetStandardBinNames(cb);
+    //! [part8]
 
-  //! [part9]
-  // First we generate a set of bin names:
-  set<string> bins = cb.bin_set();
-  // This method will produce a set of unique bin names by considering all
-  // Observation, Process and Systematic entries in the CombineHarvester
-  // instance.
+    //! [part9]
+    // First we generate a set of bin names:
+    set<string> bins = cb.bin_set();
+    // This method will produce a set of unique bin names by considering all
+    // Observation, Process and Systematic entries in the CombineHarvester
+    // instance.
 
-  // We create the output root file that will contain all the shapes.
-  TFile output("htt_mt.input.root", "RECREATE");
+    // We create the output root file that will contain all the shapes.
+    TFile output("htt_mt.input.root", "RECREATE");
 
   */
 
@@ -474,17 +490,17 @@ int main(int argc, char* argv[]) {
   string icmd;
 
   /*
-  channels += "all";
-  for(auto ch : channels)
+    channels += "all";
+    for(auto ch : channels)
     for(auto sm : masses)
-      for(auto m : sm.second){
-	if(verbose)
-	  cout << "    * " << ch << " " << sm.first+"_"+m<< endl;
+    for(auto m : sm.second){
+    if(verbose)
+    cout << "    * " << ch << " " << sm.first+"_"+m<< endl;
 
-	icmd = cmd + OutputFold+"/"+ch+"/"+sm.first+"/"+m+"/datacard.txt ";
-	icmd += "-m "+m;
-	gSystem->Exec(icmd.c_str());
-      }
+    icmd = cmd + OutputFold+"/"+ch+"/"+sm.first+"/"+m+"/datacard.txt ";
+    icmd += "-m "+m;
+    gSystem->Exec(icmd.c_str());
+    }
   */
   cmd = "combineTool.py -M T2W -i "+OutputFold+"/*/*/*/datacard.txt -o workspace.root --parallel 4";
 

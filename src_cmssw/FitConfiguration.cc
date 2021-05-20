@@ -24,14 +24,18 @@ void FitConfiguration::Configure(ch::CombineHarvester& cb, ProcessList& processe
   bkg_rate += "Wjets";
   bkg_rate += "DB";
   bkg_rate += "ZDY";
+  bkg_rate += "QCD";
   
   bkg_rare += "ST";
   bkg_rare += "TB";
+
+  cb.SetFlag("filters-use-regex", true);
 
   for(auto p : bkg_rate){
     ProcessList plist = backgrounds.Filter(p);
     cb.cp().process(plist.GetProcesses())
       .AddSyst(cb, "scale_"+p, "rateParam", SystMap<>::init(1.0));
+    //cb.cp().process(plist.GetProcesses()).PrintProcs();
   }
   
   for(auto p : bkg_rare){
@@ -56,18 +60,10 @@ void FitConfiguration::Configure(ch::CombineHarvester& cb, ProcessList& processe
   cb.cp().signals()
     .AddSyst(cb, "sig_xsec", "lnN", SystMap<>::init(1.05));
   
-  //want to add PTISR systematic - just bkgs in every region that matches string "PTISR1"
-//  auto all_bins = cb.cp().channel({"*1L*"}).bin_set(); //need to define individual bin_sets for channels separately?
-// //cb.cp().backgrounds().PrintObs();
-//for(auto bin : all_bins){
-//cout << "bin" << endl;
-//    cout << bin << endl;
-//
-//}
-//cb.cp().backgrounds().bin(bin).AddSyst(cb,"PTISR","lnN",SystMap<>::init(1.1));
-  //cb.cp().backgrounds().bin(bin).AddSyst(cb,"gamT"","lnN",SystMap<>::init
 
-
+  // TEST
+  //cb.cp().backgrounds().bin(VS().a("Ch2L.*muG.*")).process(VS().a("DB")).PrintProcs();
+  //cb.cp().backgrounds().PrintObs();
 
 
 }

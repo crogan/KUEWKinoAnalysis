@@ -54,6 +54,10 @@ Category::Category(const string& label,
 
 Category::~Category(){ }
 
+std::string Category::FullLabel() const {
+  return Label()+"_"+GetLabel();
+}
+
 std::string Category::GetLabel() const {
   int N = m_Criteria.GetN();
 
