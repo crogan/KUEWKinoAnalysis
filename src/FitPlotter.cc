@@ -2423,8 +2423,8 @@ pRatio->cd();
     plotlabel += "#color[7024]{"+hadI_labels[0]+"} + ";
   if(Nextra == 1)
     plotlabel += "#color[7024]{"+extra_labels[0]+"} + ";
-  if(!m_Title[proc].empty()) plotlabel += "p_{T}^{ISR} > 300 GeV, "+m_Title[proc];
-  plotlabel += "p_{T}^{ISR} > 300 GeV, "+proc;
+  plotlabel += "p_{T}^{ISR} > 300 GeV, "+m_Title[proc];
+
   l.SetTextColor(kBlack);
   l.SetTextAlign(13);
   l.SetTextSize(0.035);
@@ -2966,8 +2966,8 @@ void FitPlotter::InitializeRecipes(){
   m_Color["LF"] = 7021;
   m_Strings["LF"] = VS().a("Fakes_elf1").a("Fakes_muf1");
 
-  m_Title["ttbar_Fakes_elf0"] = "HF t #bar{t}";
-  m_Title["ttbar_Fakes_elf1"] = "LF+unm. t #bar{t}";
+  m_Title["ttbar_Fakes_elf0"] = "HF t #bar{t} + jets";
+  m_Title["ttbar_Fakes_elf1"] = "LF+unm. t #bar{t} + jets";
 
   m_Title["Total"] = "total background";
   m_Color["Total"] = 7000;
