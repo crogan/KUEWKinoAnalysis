@@ -379,149 +379,149 @@ int main(int argc, char* argv[]) {
 	}
       }
     }
+  }
 
+  cb.cp().backgrounds().ExtractShapes(InputFile,
+				      "$BIN/$PROCESS",
+				      "$BIN/$PROCESS_$SYSTEMATIC");
+  cb.cp().signals().ExtractShapes(InputFile,
+				  "$BIN/$PROCESS$MASS",
+				  "$BIN/$PROCESS$MASS_$SYSTEMATIC");
+  // autoMCStats
+  if(doMCstats)
+    cb.cp().SetAutoMCStats(cb, -1.);
   
-    cb.cp().backgrounds().ExtractShapes(InputFile,
-					"$BIN/$PROCESS",
-					"$BIN/$PROCESS_$SYSTEMATIC");
-    cb.cp().signals().ExtractShapes(InputFile,
-				    "$BIN/$PROCESS$MASS",
-				    "$BIN/$PROCESS$MASS_$SYSTEMATIC");
-    // autoMCStats
-    if(doMCstats)
-      cb.cp().SetAutoMCStats(cb, -1.);
+  /*
+    auto bbb = ch::BinByBinFactory()
+    .SetAddThreshold(0.1)
+    .SetFixNorm(true);
+
+    bbb.AddBinByBin(cb.cp().backgrounds(), cb);
+
+    // This function modifies every entry to have a standardised bin name of
+    // the form: {analysis}_{channel}_{bin_id}_{era}
+    // which is commonly used in the htt analyses
+    ch::SetStandardBinNames(cb);
+    //! [part8]
+
+    //! [part9]
+    // First we generate a set of bin names:
+    set<string> bins = cb.bin_set();
+    // This method will produce a set of unique bin names by considering all
+    // Observation, Process and Systematic entries in the CombineHarvester
+    // instance.
+
+    // We create the output root file that will contain all the shapes.
+    TFile output("htt_mt.input.root", "RECREATE");
+
+  */
+
+  // Loop through all signals and write a datacard, create output
   
-    /*
-      auto bbb = ch::BinByBinFactory()
-      .SetAddThreshold(0.1)
-      .SetFixNorm(true);
+  VC cats = categories.GetCategories();
 
-      bbb.AddBinByBin(cb.cp().backgrounds(), cb);
+  cout << "* Writing ouput to " << OutputFold << endl;
+  string OutputFile = OutputFold+"/FitInput_"+Ana+"_"+Era+".root";
 
-      // This function modifies every entry to have a standardised bin name of
-      // the form: {analysis}_{channel}_{bin_id}_{era}
-      // which is commonly used in the htt analyses
-      ch::SetStandardBinNames(cb);
-      //! [part8]
-
-      //! [part9]
-      // First we generate a set of bin names:
-      set<string> bins = cb.bin_set();
-      // This method will produce a set of unique bin names by considering all
-      // Observation, Process and Systematic entries in the CombineHarvester
-      // instance.
-
-      // We create the output root file that will contain all the shapes.
-      TFile output("htt_mt.input.root", "RECREATE");
-
-    */
-
-    // Loop through all signals and write a datacard, create output
+  if(!batch){
+    gSystem->Exec(("mkdir -p "+OutputFold).c_str());
   
-    VC cats = categories.GetCategories();
-
-    cout << "* Writing ouput to " << OutputFold << endl;
-    string OutputFile = OutputFold+"/FitInput_"+Ana+"_"+Era+".root";
-
-    if(!batch){
-      gSystem->Exec(("mkdir -p "+OutputFold).c_str());
+    string copy_cmd = "cp "+InputFile+" "+OutputFile;
+    cout << "COPY cmd:" << endl;
+    cout << "   " << copy_cmd << endl;
+    gSystem->Exec(copy_cmd.c_str());  
+  }
   
-      string copy_cmd = "cp "+InputFile+" "+OutputFile;
-      cout << "COPY cmd:" << endl;
-      cout << "   " << copy_cmd << endl;
-      gSystem->Exec(copy_cmd.c_str());  
-    }
-  
-    TFile output(OutputFile.c_str(), "UPDATE"); 
+  TFile output(OutputFile.c_str(), "UPDATE"); 
 
-    cout << "  * Creating datacards" << endl;
+  cout << "  * Creating datacards" << endl;
 	       	       
-    // datacard/workspace with all categories
-    string fold = OutputFold+"/all";
+  // datacard/workspace with all categories
+  string fold = OutputFold+"/all";
+  gSystem->Exec(("mkdir -p "+fold).c_str());
+  
+  VSM masses = signals.GetSignalMasses();
+  
+  for(auto sm : masses){
+    fold = OutputFold+"/all/"+sm.first;
     gSystem->Exec(("mkdir -p "+fold).c_str());
-  
-    VSM masses = signals.GetSignalMasses();
-  
-    for(auto sm : masses){
-      fold = OutputFold+"/all/"+sm.first;
-      gSystem->Exec(("mkdir -p "+fold).c_str());
     
-      for(auto m : sm.second){
-	fold = OutputFold+"/all/"+sm.first+"/"+m;
-	gSystem->Exec(("mkdir -p "+fold).c_str());
+    for(auto m : sm.second){
+      fold = OutputFold+"/all/"+sm.first+"/"+m;
+      gSystem->Exec(("mkdir -p "+fold).c_str());
       
-	if(verbose)
-	  cout << "    * all channels " << sm.first+"_"+m << endl;
+      if(verbose)
+	cout << "    * all channels " << sm.first+"_"+m << endl;
 
-	cb.cp().mass({m, "*"})
-	  .WriteDatacard(fold+"/datacard.txt", output);
-      }
+      cb.cp().mass({m, "*"})
+	.WriteDatacard(fold+"/datacard.txt", output);
     }
+  }
 
-    // datacard/workspace for each channel
-    if(doSepChan){
-      for(auto ch : channels){
-	fold = OutputFold+"/"+ch;
-	gSystem->Exec(("mkdir -p "+fold).c_str());
+  // datacard/workspace for each channel
+  if(doSepChan){
+    for(auto ch : channels){
+      fold = OutputFold+"/"+ch;
+      gSystem->Exec(("mkdir -p "+fold).c_str());
       
-	for(auto sm : masses){
-	  fold = OutputFold+"/"+ch+"/"+sm.first;
-	  gSystem->Exec(("mkdir -p "+fold).c_str());
+      for(auto sm : masses){
+	fold = OutputFold+"/"+ch+"/"+sm.first;
+	gSystem->Exec(("mkdir -p "+fold).c_str());
 	
-	  for(auto m : sm.second){
-	    fold = OutputFold+"/"+ch+"/"+sm.first+"/"+m;
-	    gSystem->Exec(("mkdir -p "+fold).c_str());
+	for(auto m : sm.second){
+	  fold = OutputFold+"/"+ch+"/"+sm.first+"/"+m;
+	  gSystem->Exec(("mkdir -p "+fold).c_str());
 	  
-	    if(verbose)
-	      cout << "    * " << ch << " " << sm.first+"_"+m<< endl;
+	  if(verbose)
+	    cout << "    * " << ch << " " << sm.first+"_"+m<< endl;
 	  
-	    cb.cp().channel({ch}).mass({m, "*"})
-	      .WriteDatacard(fold+"/datacard.txt", output);
-	  }
+	  cb.cp().channel({ch}).mass({m, "*"})
+	    .WriteDatacard(fold+"/datacard.txt", output);
 	}
       }
     }
-
-    output.Close();
- 
-    cout << "  * Creating workspaces" << endl;
-  
-    string cmd = "combineTool.py -M T2W -o workspace.root -i ";
-    string icmd;
-
-    /*
-      channels += "all";
-      for(auto ch : channels)
-      for(auto sm : masses)
-      for(auto m : sm.second){
-      if(verbose)
-      cout << "    * " << ch << " " << sm.first+"_"+m<< endl;
-
-      icmd = cmd + OutputFold+"/"+ch+"/"+sm.first+"/"+m+"/datacard.txt ";
-      icmd += "-m "+m;
-      gSystem->Exec(icmd.c_str());
-      }
-    */
-    cmd = "combineTool.py -M T2W -i "+OutputFold+"/*/*/*/datacard.txt -o workspace.root --parallel 4";
-
-    string cmd_condor = "combineTool.py -M T2W -i "+OutputFold+"/*/*/*/datacard.txt -o workspace.root --job-mode condor ";
-
-    string cmd_condor_CERN = "--sub-opts='+JobFlavour=\"espresso\" \\n request_memory = 4 GB'";
-    string cmd_condor_T3 = "--sub-opts='Requirements = (Machine != \"red-node000.unl.edu\") && (Machine != \"red-c2325.unl.edu\") \\n request_memory = 4 GB'";
-  
-    if(workspace)
-      gSystem->Exec(cmd.c_str());
-    else {
-      cout << "To build workspaces type:" << endl << endl;
-      cout << "    " << cmd << endl << endl;
-      cout << "Or, to run using condor, something like:" << endl << endl;
-      cout << "    " << cmd_condor << endl << endl;
-      cout << "   with options for CERN:" << endl << endl;
-      cout << "    " << cmd_condor_CERN << endl << endl;
-      cout << "   or options for UNL T3:" << endl << endl;
-      cout << "    " << cmd_condor_T3 << endl << endl;
-    }
-
   }
+
+  output.Close();
+ 
+  cout << "  * Creating workspaces" << endl;
+  
+  string cmd = "combineTool.py -M T2W -o workspace.root -i ";
+  string icmd;
+
+  /*
+    channels += "all";
+    for(auto ch : channels)
+    for(auto sm : masses)
+    for(auto m : sm.second){
+    if(verbose)
+    cout << "    * " << ch << " " << sm.first+"_"+m<< endl;
+
+    icmd = cmd + OutputFold+"/"+ch+"/"+sm.first+"/"+m+"/datacard.txt ";
+    icmd += "-m "+m;
+    gSystem->Exec(icmd.c_str());
+    }
+  */
+  cmd = "combineTool.py -M T2W -i "+OutputFold+"/*/*/*/datacard.txt -o workspace.root --parallel 4";
+
+  string cmd_condor = "combineTool.py -M T2W -i "+OutputFold+"/*/*/*/datacard.txt -o workspace.root --job-mode condor ";
+
+  string cmd_condor_CERN = "--sub-opts='+JobFlavour=\"espresso\" \\n request_memory = 4 GB'";
+  string cmd_condor_T3 = "--sub-opts='Requirements = (Machine != \"red-node000.unl.edu\") && (Machine != \"red-c2325.unl.edu\") \\n request_memory = 4 GB'";
+  
+  if(workspace)
+    gSystem->Exec(cmd.c_str());
+  else {
+    cout << "To build workspaces type:" << endl << endl;
+    cout << "    " << cmd << endl << endl;
+    cout << "Or, to run using condor, something like:" << endl << endl;
+    cout << "    " << cmd_condor << endl << endl;
+    cout << "   with options for CERN:" << endl << endl;
+    cout << "    " << cmd_condor_CERN << endl << endl;
+    cout << "   or options for UNL T3:" << endl << endl;
+    cout << "    " << cmd_condor_T3 << endl << endl;
+  }
+
+}
 	       
 	     
