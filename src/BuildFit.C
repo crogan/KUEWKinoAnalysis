@@ -316,7 +316,7 @@ int main(int argc, char* argv[]) {
         cout << "    + Checking channel " << ch << " :" << endl;
       for(int c = 0; c < Ncat; c++){
         const Category& cat = chanMap[ch][c];
-        if(FIT.Integral(cat, proc) > 0.){
+        if(FIT.Integral(cat, proc) > 1e-6){
           filled += cat;
           if(verbose)
             cout << "      + " << cat.GetLabel() << endl;
@@ -367,10 +367,10 @@ int main(int argc, char* argv[]) {
 	    int Ncat = chanMap[ch].GetN();
 	    for(int c = 0; c < Ncat; c++){
 	      const Category& cat = chanMap[ch][c];
-	      if(IsFilled(cat, proc, sys.Up()) &&
-		 IsFilled(cat, proc, sys.Down())){
-		cb.cp().process(VS().a(proc.Name())).bin(VS.a(cat.GetLabel())).PrintObs();
-		cb.cp().process(VS().a(proc.Name())).bin(VS.a(cat.GetLabel()))
+	      if(FIT.IsFilled(cat, proc, sys.Up()) &&
+		 FITIsFilled(cat, proc, sys.Down())){
+		cb.cp().process(VS().a(proc.Name())).bin(VS().a(cat.GetLabel())).PrintObs();
+		cb.cp().process(VS().a(proc.Name())).bin(VS().a(cat.GetLabel()))
 		  .AddSyst(cb, sys.Label(), "shape", SystMap<>::init(1.00));
 		
 	      }
