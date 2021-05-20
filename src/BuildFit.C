@@ -362,19 +362,19 @@ int main(int argc, char* argv[]) {
 	int Nproc = proc_sys.GetN();
 	for(int p = 0; p < Nproc; p++){
 	  Process proc = proc_sys[p];
-	  // looping through categories to check that process/sys/cat is filled 
+	  // looping through categories to check that process/sys/cat is filled
+	  VS cat_names;
 	  for(auto ch : channels){
 	    int Ncat = chanMap[ch].GetN();
 	    for(int c = 0; c < Ncat; c++){
 	      const Category& cat = chanMap[ch][c];
 	      if(FIT.IsThere(cat, proc, sys)){
-		//cout << proc.Name() << " " << cat.FullLabel() << " " << sys.Label() << endl;
-		cb.cp().process(VS().a(proc.Name())).bin(VS().a(cat.FullLabel()))
-		  .AddSyst(cb, sys.Label(), "shape", SystMap<>::init(1.00));
-		
+		cat_names += cat.FullLabel();	
 	      }
 	    }
 	  }
+	  cb.cp().process(VS().a(proc.Name())).bin(cat_names)
+		  .AddSyst(cb, sys.Label(), "shape", SystMap<>::init(1.00));
 	}
       }
     }
