@@ -49,26 +49,14 @@ FitPlotter* FITPlotter = new FitPlotter(inputfile, a2, a3);
 //			.a("Wjets").a("Fakes").a("T2tt_5000490").a("T2tt_5000480").a("T2tt_5000375"),
 //			CT_3L);
 
-//   FITReader->Plot1Dstack(VS().a("ttbar").a("ST").a("DB").a("ZDY").a("TB")
-//   			 .a("Wjets").a("Fakes").a("T2bW_50000490").a("T2bW_50000480").a("T2bW_50000470"),
-  // FITReader->Plot1Dstack(SL().a("ttbar").a("ST").a("DB").a("ZDY").a("TB")
-  // 			 .a("Wjets").a("Fakes").a("T2bW_50000490").a("T2bW_50000480").a("T2bW_50000470"),
-   //FITReader->Plot1Dstack(VS().a("Wjets").a("QCD"),
-   //			 VS().a("1Lmu"),
-   //			 VS().a("2jS"),
-   //			 VS().a("ge1jISR"),
-   //			 "canvas0");
-  // FITReader->Plot2D(VS().a("ttbar").a("ST").a("DB").a("ZDY").a("TB")
-  // 			 .a("Wjets").a("Fake").a("HF").a("LF"),
-  // 			 VS().a("1L"),
-  // 			 VS().a("2j1bS"),
-  // 			 VS().a("0bjetISR"),
-  // 			 "canvas1");
-  // FITReader->Plot2D(VS().a("T2tt_5000470"),
-  // 			 VS().a("1L"),
-  // 			 VS().a("2j1bS"),
-  // 			 VS().a("0bjetISR"),
-  // 			 "canvas2");
+  VS signals;
+  //signals.a("TChiWZ_2500240").a("TChiWZ_2500220").a("TChiWZ_2500200").a("TChiWZ_2500160");
+  signals.a("T2tt_5000490").a("T2bW_5000490").a("T2tt_5000480").a("T2bW_5000480");
+  //signals.a("T2tt_5000450").a("T2bW_5000450").a("T2tt_5000420").a("T2bW_5000420");
+  //signals.a("T2tt_5000450").a("T2bW_5000420").a("T2tt_5000375").a("T2bW_5000325");
+  //signals.a("T2bb_5000475").a("T2bb_5000450").a("T2bb_5000400").a("T2bb_5000350");
+  VS all = signals;
+  all.a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD").a("Wjets").a("HF_Fakes").a("LF_Fakes");
 
   // TCanvas* cv = FITReader->Plot2D(VS().a(proc),
   // 			 VS().a("1L"),

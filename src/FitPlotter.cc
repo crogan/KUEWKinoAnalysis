@@ -2950,6 +2950,18 @@ void FitPlotter::InitializeRecipes(){
   m_Strings["QCD"] = VS().a("QCD_Fakes_elf0").a("QCD_Fakes_elf1").a("QCD_Fakes_elf2")
     .a("QCD_Fakes_muf0").a("QCD_Fakes_muf1").a("QCD_Fakes_muf2").a("QCD");
 
+  m_Title["HF_Fakes"] = "HF leptons";
+  m_Color["HF_Fakes"] = 7022;
+  m_Strings["HF_Fakes"] = VS().a("ttbar_Fakes_elf0").a("ttbar_Fakes_muf0").a("ST_Fakes_elf0").a("ST_Fakes_muf0")
+    .a("DB_Fakes_elf0").a("DB_Fakes_muf0").a("TB_Fakes_elf0").a("TB_Fakes_muf0").a("ZDY_Fakes_elf0")
+    .a("ZDY_Fakes_muf0").a("Wjets_Fakes_elf0").a("Wjets_Fakes_muf0");
+
+  m_Title["LF_Fakes"] = "LF/fake leptons";
+  m_Color["LF_Fakes"] = 7021;
+  m_Strings["LF_Fakes"] = VS().a("ttbar_Fakes_elf1").a("ttbar_Fakes_muf1").a("ST_Fakes_elf1").a("ST_Fakes_muf1")
+    .a("DB_Fakes_elf1").a("DB_Fakes_muf1").a("TB_Fakes_elf1").a("TB_Fakes_muf1").a("ZDY_Fakes_elf1")
+    .a("ZDY_Fakes_muf1").a("Wjets_Fakes_elf1").a("Wjets_Fakes_muf1");
+  
   m_Title["Fakes"] = "fake leptons";
   m_Color["Fakes"] = 7021;
   m_Strings["Fakes"] = VS().a("Fakes_elf0").a("Fakes_elf1").a("Fakes_elf2").a("Fakes_muf0").a("Fakes_muf1").a("Fakes_muf2");

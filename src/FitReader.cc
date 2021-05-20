@@ -263,6 +263,62 @@ bool FitReader::IsFilled(const Category&   cat,
   }    
 }
 
+bool FitReader::IsThere(const Category&   cat,
+			const Process&    proc,
+			const Systematic& sys) const {
+  TH1D* hist = nullptr;
+  TH1D* hist2 = nullptr;
+  if(!sys){
+    if(m_ProcHist.count(proc) == 0)
+      m_ProcHist[proc] = map<Category,TH1D*>();
+    if(m_ProcHist[proc].count(cat) == 0){
+      string shist = cat.Label()+"_"+cat.GetLabel()+"/"+proc.Name();
+      if(proc.Type() == kData || !m_FilePtr)
+	hist = (TH1D*) m_File.Get(shist.c_str());
+      else
+	hist = (TH1D*) m_FilePtr->Get((m_FileFold+shist).c_str());
+
+      if(hist){
+	delete hist;
+	return true;
+      } else
+	return false;
+    }
+
+    return m_ProcHist[proc][cat];
+    
+  } else {
+    if(m_ProcHistSys.count(proc) == 0)
+      m_ProcHistSys[proc] = map<Systematic,map<Category,pair<TH1D*,TH1D*> > >();
+    if(m_ProcHistSys[proc].count(sys) == 0)
+      m_ProcHistSys[proc][sys] = map<Category,pair<TH1D*,TH1D*> >();
+    if(m_ProcHistSys[proc][sys].count(cat) == 0){
+      m_ProcHistSys[proc][sys][cat] = pair<TH1D*,TH1D*>(nullptr,nullptr);
+       
+      string label = cat.Label()+"_"+cat.GetLabel();
+      string shistUp   = label+"/"+proc.Name()+"_"+sys.Label()+"Up";
+      string shistDown = label+"/"+proc.Name()+"_"+sys.Label()+"Down";
+       
+      hist  = m_ProcHistSys[proc][sys][cat].first  = (TH1D*) m_File.Get(shistUp.c_str());
+      hist2 = m_ProcHistSys[proc][sys][cat].second = (TH1D*) m_File.Get(shistDown.c_str());
+
+      bool there = true;
+      if(hist)
+	delete hist;
+      else
+	there = false;
+      if(hist2)
+	delete hist2;
+      else
+	there = false;
+      return there;
+    }
+     
+    return (sys.IsUp() ? m_ProcHistSys[proc][sys][cat].first :
+	    m_ProcHistSys[proc][sys][cat].second);
+  }    
+}
+
 bool FitReader::IsFilled2D(const Category&   cat,
 			   const Process&    proc,
 			   const Systematic& sys) const {
