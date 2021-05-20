@@ -30,9 +30,15 @@ public:
   void PrintCategories(bool verbose = false);
   void PrintProcesses(bool verbose = false);
 
+  // checks if filled, loads histogram for use
   bool IsFilled(const Category&   cat,
 		const Process&    proc,
 		const Systematic& sys = Systematic::Default()) const;
+
+  // checks if filled, deletes histogram after check
+  bool IsThere(const Category&   cat,
+	       const Process&    proc,
+	       const Systematic& sys = Systematic::Default()) const;
 
   const TH1D* GetHistogram(const Category&   cat,
 			   const Process&    proc,
