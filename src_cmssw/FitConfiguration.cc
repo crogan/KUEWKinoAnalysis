@@ -65,6 +65,8 @@ void FitConfiguration::Configure(ch::CombineHarvester& cb, ProcessList& processe
   //cb.cp().backgrounds().bin(VS().a("Ch2L.*muG.*")).process(VS().a("DB")).PrintProcs();
   //cb.cp().backgrounds().PrintObs();
 
+  cb.SetFlag("filters-use-regex", false);
+  
 
 }
 
