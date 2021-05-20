@@ -29,10 +29,13 @@ void FitConfiguration::Configure(ch::CombineHarvester& cb, ProcessList& processe
   bkg_rare += "ST";
   bkg_rare += "TB";
 
+  cb.SetFlag("filters-use-regex", true);
+
   for(auto p : bkg_rate){
     ProcessList plist = backgrounds.Filter(p);
     cb.cp().process(plist.GetProcesses())
       .AddSyst(cb, "scale_"+p, "rateParam", SystMap<>::init(1.0));
+    //cb.cp().process(plist.GetProcesses()).PrintProcs();
   }
   
   for(auto p : bkg_rare){
@@ -57,5 +60,11 @@ void FitConfiguration::Configure(ch::CombineHarvester& cb, ProcessList& processe
   cb.cp().signals()
     .AddSyst(cb, "sig_xsec", "lnN", SystMap<>::init(1.05));
   
+
+  // TEST
+  //cb.cp().backgrounds().bin(VS().a("Ch2L.*muG.*")).process(VS().a("DB")).PrintProcs();
+  //cb.cp().backgrounds().PrintObs();
+
+
 }
 
