@@ -288,7 +288,7 @@ int main(int argc, char* argv[]) {
 	cout << "    + Checking channel " << ch << " :" << endl;
       for(int c = 0; c < Ncat; c++){
 	const Category& cat = chanMap[ch][c];
-	if(FIT.Integral(cat, proc) > 0.){
+	if(FIT.IsThere(cat, proc)){
 	  filled += cat;
 	  if(verbose)
 	    cout << "      + " << cat.GetLabel() << endl;
