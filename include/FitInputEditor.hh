@@ -26,6 +26,7 @@ public:
   void AddShapeSysQCD();
 
   void AddFakeData();
+  void AddEmptyData();
   
 private:
   TFile* m_OutFile;

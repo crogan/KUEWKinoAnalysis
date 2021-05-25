@@ -834,3 +834,36 @@ void FitInputEditor::AddFakeData(){
   if(added)
     m_Proc += data_obs;
 }
+
+void FitInputEditor::AddEmptyData(){
+  Process data_obs("data_obs", kData);
+  bool added = false;
+  int Nproc = m_Proc.GetN(); 
+  int Ncat = m_Cat.GetN();
+  for(int c = 0; c < Ncat; c++){
+    Category cat = m_Cat[c];
+    TH1D* hist    = nullptr;
+    if(!IsThere(cat,data_obs)){
+	for(int p = 0; p < Nproc; p++){
+		Process proc = m_Proc[p];
+		if(IsFilled(cat,proc)){ 
+			hist = (TH1D*) GetHistogram(cat,proc)->Clone(("h_data_"+cat.GetLabel()).c_str());
+		 	break;
+		}
+	}
+	hist->SetBinContent(0,0.);
+	hist->SetBinContent(hist->GetNbinsX()+1,0.);
+	for(int i = 0; i < hist->GetNbinsX(); i++){ hist->SetBinContent(i+1,1e-8); hist->SetBinError(i+1,0.); }
+	if(m_ProcHist.count(data_obs) == 0) 
+		m_ProcHist[data_obs] = map<Category,TH1D*>();
+	if(m_ProcHist[data_obs].count(cat) == 0 || !m_ProcHist[data_obs][cat]) 
+		m_ProcHist[data_obs][cat] = hist;
+
+	added = true;
+    }
+
+  }
+
+  if(added)
+    m_Proc += data_obs;
+}
