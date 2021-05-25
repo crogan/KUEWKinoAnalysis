@@ -17,11 +17,13 @@
 #include <string>
 #include <algorithm>
 #include <string>
+#include "TSystem.h"
 
 #include "RestFrames/RestFrames.hh"
 
 #include "../include/XsecTool.hh"
 
+//gSystem->Load("/home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/lib/libKUEWKino.so");
 using namespace std;
 using namespace RestFrames;
 
@@ -107,7 +109,6 @@ public:
 	cout << "MP = " << m_MP[mass] << " MC = " << m_MC[mass] << endl;
 	continue;
       }
-    
       if(line.find("exp0") != string::npos){
 	popstring(line);
 	double r = popdouble(line);
@@ -244,7 +245,7 @@ public:
   }
   
   TH2D* Get2DHist_MCvMP(const string& name, LimitType type = kExp){
-     bool b_inv = true;
+	bool b_inv = true;
     
     vector<pair<int,double> > vec;
 
@@ -259,21 +260,18 @@ public:
 
     int N = vec.size();
     TGraph2D* gr = new TGraph2D();
-
     for(int i = 0; i < N; i++){
       if(b_inv && vec[i].second > 0)
 	gr->SetPoint(i, m_MP[vec[i].first], m_MC[vec[i].first], 1./vec[i].second);
       else
 	gr->SetPoint(i, m_MP[vec[i].first], m_MC[vec[i].first], vec[i].second);
-    }
-
+	}
     int Nx = m_max_MP+1 - m_min_MP;
     int Ny = m_max_MP+1 - m_min_MC;
     double xmin = m_min_MP+1;
     double xmax = m_max_MP+1;
     double ymin = m_min_MC+1;
     double ymax = m_max_MC+1;
-  
     TH2D* hist = new TH2D(name.c_str(),name.c_str(),
 			  Nx, xmin, xmax,
 			  Ny, ymin, ymax);
@@ -282,9 +280,9 @@ public:
       double mp = hist->GetXaxis()->GetBinCenter(x+1);
       for(int y = 0; y < Ny; y++){
 	double mc = hist->GetYaxis()->GetBinCenter(y+1);
+	bool doBreak = mp-mc < m_min_dM;
 	if(mp-mc < m_min_dM)
 	  break;
-      
 	hist->SetBinContent(x+1,y+1,gr->Interpolate(mp,mc));
       }
     }
@@ -438,11 +436,11 @@ private:
 
 
 
-void ParseLimitJSON(const string& json, PlotType ptype = kT2tt){
+void ParseLimitJSON(const string& json, bool inclObs = false, PlotType ptype = kT2tt){
   RestFrames::SetStyle();
   
   Limit* limit_def = new Limit(json);
-  
+  if(limit_def == NULL) return;
   TLatex l;
   l.SetTextFont(42);
   l.SetNDC();
@@ -451,14 +449,14 @@ void ParseLimitJSON(const string& json, PlotType ptype = kT2tt){
   /////////////
   // MC vs. MP
   /////////////
-  TH2D*   hist_exp_MC = limit_def->Get2DHist_MCvMP("h_exp", kExp);
+  TH2D*   hist_exp_MC = limit_def->Get2DHist_MCvMP("h_exp_MC", kExp);
   TGraph* gr_exp_MC   = limit_def->Get2DContour_MCvMP(kExp);
   TGraph* gr_exp_MC_up   = limit_def->Get2DContour_MCvMP(kExpUp);
   TGraph* gr_exp_MC_dn   = limit_def->Get2DContour_MCvMP(kExpDn);
+  TGraph* gr_exp_MC_obs   = limit_def->Get2DContour_MCvMP(kObs);
   
   TCanvas* can_MC = Plot2DHist_MCvMP("can_MC", hist_exp_MC, ptype);
   can_MC->cd();
-  
   gr_exp_MC->SetLineColor(7043);
   gr_exp_MC->SetLineWidth(5);
   gr_exp_MC->SetLineStyle(1);
@@ -475,6 +473,12 @@ void ParseLimitJSON(const string& json, PlotType ptype = kT2tt){
   gr_exp_MC_dn->SetLineStyle(7);
   gr_exp_MC_dn->Draw("same C");
 
+  gr_exp_MC_obs->SetMarkerColor(kWhite);
+  gr_exp_MC_obs->SetLineColor(kBlack);
+  gr_exp_MC_obs->SetLineWidth(4);
+  gr_exp_MC_obs->SetLineStyle(1);
+ if(inclObs) gr_exp_MC_obs->Draw("same C");
+
   l.SetTextAlign(12);
   l.SetTextSize(0.035);
   l.SetTextFont(42);
@@ -487,14 +491,20 @@ void ParseLimitJSON(const string& json, PlotType ptype = kT2tt){
   line->DrawLineNDC(0.18, 0.842, 0.22, 0.842);
   line->DrawLineNDC(0.18, 0.818, 0.22, 0.818);
 		    
+  l.DrawLatex(0.23, 0.78,"observed");
+  line->SetLineColor(kBlack);
+  line->SetLineWidth(2);
+  line->SetLineStyle(1);
+  line->DrawLineNDC(0.18, 0.78, 0.22, 0.78);
 
   /////////////
   // dM vs. MP
   /////////////
-  TH2D*   hist_exp_dM = limit_def->Get2DHist_dMvMP("h_exp", kExp);
+  TH2D*   hist_exp_dM = limit_def->Get2DHist_dMvMP("h_exp_dM", kExp);
   TGraph* gr_exp_dM   = limit_def->Get2DContour_dMvMP(kExp);
   TGraph* gr_exp_dM_up   = limit_def->Get2DContour_dMvMP(kExpUp);
   TGraph* gr_exp_dM_dn   = limit_def->Get2DContour_dMvMP(kExpDn);
+  TGraph* gr_exp_dM_obs   = limit_def->Get2DContour_dMvMP(kObs);
   
   TCanvas* can_dM = Plot2DHist_dMvMP("can_dM", hist_exp_dM, ptype);
   can_dM->cd();
@@ -514,6 +524,11 @@ void ParseLimitJSON(const string& json, PlotType ptype = kT2tt){
   gr_exp_dM_dn->SetLineWidth(4);
   gr_exp_dM_dn->SetLineStyle(7);
   gr_exp_dM_dn->Draw("same C");
+  gr_exp_dM_obs->SetMarkerColor(kWhite);
+  gr_exp_dM_obs->SetLineColor(kBlack);
+  gr_exp_dM_obs->SetLineWidth(4);
+  gr_exp_dM_obs->SetLineStyle(1);
+  if(inclObs) gr_exp_dM_obs->Draw("same C");
 
   l.SetTextAlign(12);
   l.SetTextSize(0.035);
@@ -527,7 +542,11 @@ void ParseLimitJSON(const string& json, PlotType ptype = kT2tt){
   line->DrawLineNDC(0.18, 0.842, 0.22, 0.842);
   line->DrawLineNDC(0.18, 0.818, 0.22, 0.818);
   
- 
+  l.DrawLatex(0.23, 0.78,"observed");
+  line->SetLineColor(kBlack);
+  line->SetLineWidth(2);
+  line->SetLineStyle(1);
+  line->DrawLineNDC(0.18, 0.78, 0.22, 0.78);
   
 }
 
@@ -583,6 +602,7 @@ void Invert2DHist(TH2D* hist){
 }
 
 TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist, PlotType ptype){
+//gSystem->Load("/home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/lib/libKUEWKino.so");
   TCanvas* can = (TCanvas*) new TCanvas(name.c_str(),name.c_str(),700.,600);
 
   string xlabel = "m_{P} [GeV]";
@@ -709,6 +729,7 @@ TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist, PlotType ptype){
 }
 
 TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
+//gSystem->Load("/home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/lib/libKUEWKino.so");
   TCanvas* can = (TCanvas*) new TCanvas(name.c_str(),name.c_str(),700.,600);
 
   string xlabel = "m_{P} [GeV]";
