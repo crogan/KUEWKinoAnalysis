@@ -42,6 +42,7 @@ public:
   virtual ~Category();
 
   std::string GetLabel() const;
+  std::string FullLabel() const;
  
   int GetN() const;
   const Criteria& operator [] (int i) const;
@@ -130,7 +131,7 @@ public:
   virtual ~CategoryBranch();
 
   void InitFill(TTree* tree);
-  void FillCategory(Category& cat);
+  void FillCategory(const Category& cat);
   
   void InitGet(TTree* tree);
   Category GetCategory();

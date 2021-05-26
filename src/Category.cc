@@ -54,6 +54,10 @@ Category::Category(const string& label,
 
 Category::~Category(){ }
 
+std::string Category::FullLabel() const {
+  return Label()+"_"+GetLabel();
+}
+
 std::string Category::GetLabel() const {
   int N = m_Criteria.GetN();
 
@@ -65,7 +69,7 @@ std::string Category::GetLabel() const {
     if(i == 2)
       label += "ISR";
     if(i < N-1 && N > 1)
-      label += "-";
+      label += "_";
   }
 
   return label;
@@ -269,7 +273,7 @@ CategoryList Category::CreateLeptonIDRegions(std::vector<LepID>& IDs, int NlowQ)
   while(ilep != label_to_Leptonic.end()){
     string    ilabel = ilep->first;
     Leptonic& ileptonic = *ilep->second;
-    ileptonic.SetLabel(label+"-"+ilabel);
+    ileptonic.SetLabel(label+"_"+ilabel);
     Category icat(ileptonic, had_S, had_ISR, Label());
     for(int i = 3; i < Nc; i++)
       icat.AddGenericBin(dynamic_cast<const GenericBin&>(m_Criteria[i]));
@@ -646,7 +650,7 @@ void CategoryBranch::InitFill(TTree* tree){
   m_Tree = tree;
 }
   
-void CategoryBranch::FillCategory(Category& cat){
+void CategoryBranch::FillCategory(const Category& cat){
   m_Cat = cat.Label();
   m_Bin = cat.GetLabel();
 

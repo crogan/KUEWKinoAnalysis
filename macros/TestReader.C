@@ -1,10 +1,10 @@
 #include "TSystem.h"
 
-#include "../include/FitReader.hh"
+#include "../include/FitPlotter.hh"
 
 void TestReader(const string& inputfile = "test/FitInput_test.root", const string& a2 = "", const string& a3 = ""){
-  
-  FitReader* FITReader = new FitReader(inputfile, a2, a3);
+
+  FitPlotter* FITReader = new FitPlotter(inputfile, a2, a3);
   //FITReader->PrintCategories();
   //FITReader->PrintProcesses();
 
@@ -22,7 +22,7 @@ void TestReader(const string& inputfile = "test/FitInput_test.root", const strin
   //signals.a("T2tt_5000450").a("T2bW_5000420").a("T2tt_5000375").a("T2bW_5000325");
   //signals.a("T2bb_5000475").a("T2bb_5000450").a("T2bb_5000400").a("T2bb_5000350");
   VS all = signals;
-  all.a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD").a("Wjets").a("Fakes");
+  all.a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD").a("Wjets").a("HF_Fakes").a("LF_Fakes");
 
   FITReader->PlotYields("0Lyields",
   			all,

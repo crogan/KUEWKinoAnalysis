@@ -4,11 +4,9 @@
 #include <TH1D.h>
 #include <TH2D.h>
 #include <TFile.h>
-#include <TCanvas.h>
 #include <TTree.h>
 #include <iostream>
 #include <vector>
-#include <TGraphErrors.h>
 
 #include "Category.hh"
 #include "Process.hh"
@@ -32,9 +30,15 @@ public:
   void PrintCategories(bool verbose = false);
   void PrintProcesses(bool verbose = false);
 
+  // checks if filled, loads histogram for use
   bool IsFilled(const Category&   cat,
 		const Process&    proc,
 		const Systematic& sys = Systematic::Default()) const;
+
+  // checks if filled, deletes histogram after check
+  bool IsThere(const Category&   cat,
+	       const Process&    proc,
+	       const Systematic& sys = Systematic::Default()) const;
 
   const TH1D* GetHistogram(const Category&   cat,
 			   const Process&    proc,
@@ -65,51 +69,16 @@ public:
 		  const Systematic& sys = Systematic::Default()) const;
 
   bool HasSystematic(const Process& proc, const Systematic& sys) const;
-  
-  TCanvas* Plot1Dstack(const VS& proc,
-		       const VS& lep_cat,
-		       const VS& hadS_cat,
-		       const VS& hadI_cat,
-		       const string& canvas);
-
-  TCanvas* Plot2D(const VS& proc,
-		  const VS& lep_cat,
-		  const VS& hadS_cat,
-		  const VS& hadI_cat,
-		  const string& canvas,
-		  const string& extra = "");
-
-  TCanvas* PlotYields(const string& can_name,
-		      const VS& proc,
-		      const CategoryTree& CT);
-
-  TCanvas* ProcessYields(const string& can_name,
-			 const VS& proc_bkg,
-			 const VS& proc_sig,
-			 const CategoryTree& CT);
-
-  TCanvas* Plot1Dstack(const string& can_name,
-		       const VS& proc,
-		       const CategoryTree& CT);
-
-  TCanvas* Plot2D(const string& can_name,
-		  const VS& proc,
-		  const CategoryTree& CT);
 
   VS GetChannels() const;  
   const ProcessList&  GetProcesses() const;
   const CategoryList& GetCategories(const string& channel = "") const;         
   const Systematics&  GetSystematics() const;
 
-  map<string,VS> m_Strings;
-  
-private:
+protected:
   mutable TFile  m_File;
-  
   mutable TFile* m_FilePtr;
   string         m_FileFold;
-
-  string m_CMSLabel;
 
   mutable map<Process,Systematics> m_ProcSys;
   mutable map<Process,map<Category,TH1D*> > m_ProcHist;
@@ -128,19 +97,6 @@ private:
   
   CategoryBranch m_CatBranch;
   void ReadCategories();
-
-  map<string,string>          m_Title;
-  map<string,int>             m_Color;
-  vector<int>                 m_ColorDefault;
-  vector<int>                 m_SignalColor;
-  
-  void InitializeRecipes();
-  string GetSignalTitle(const string& label);
-
-  TGraphErrors* GetTotalBackground(const CategoryList& cat);
-
-  void DrawCatTree(const CategoryTree& CT, TCanvas* can);
-  void DrawMR(const FitBin& fitbin, TCanvas* can);
   
 };
 

@@ -66,6 +66,16 @@ void Process::AddEvent(double weight, double Mperp, double RISR,
   m_ProcBins[plabel][clabel]->Fill(weight, Mperp, RISR);
 }
 
+////// CHECK systs includes up and down? where is map filled
+void Process::AddShapeSysts(const Systematics& systs) {
+  for(int s = 0; s < systs.GetN(); s++){
+    string plabel = systs[s].TreeName(Name());
+    
+    if(m_ProcBins.count(plabel) == 0)
+      m_ProcBins[plabel] = map<string,FitBin*>();
+  }
+}
+
 Process Process::FakeProcess(const string& label) const {
   return Process(Name()+"_"+label, m_Type);
 }
@@ -319,7 +329,25 @@ void ProcessBranch::InitFill(TTree* tree){
 
   m_Tree = tree;
 }
-  
+
+void ProcessBranch::FillProcess(const Process& proc, const Systematic& sys){
+  if(!m_Tree)
+    return;
+
+  m_Proc     = proc.Name();
+  m_ProcType = proc.Type();
+
+  if(sys.IsDefault()){
+    m_SubProc  = proc.Name();
+    m_Tree->Fill();
+  } else {
+    m_SubProc  = proc.Name()+"_"+sys.Label()+"Down";
+    m_Tree->Fill();
+    m_SubProc  = proc.Name()+"_"+sys.Label()+"Up";
+    m_Tree->Fill();
+  }
+}
+
 void ProcessBranch::FillProcess(Process& proc, TFile& file){
   if(!file.IsOpen())
     return;
@@ -372,8 +400,9 @@ void ProcessBranch::InitGet(TTree* tree){
 Process ProcessBranch::GetProcess(){
   if(!m_ProcPtr || !m_SubProcPtr)
     return Process(m_SubProc, ProcessType(m_ProcType));
-  else
+  else {
     return Process(*m_SubProcPtr, ProcessType(m_ProcType));
+  }
 }
 
 
