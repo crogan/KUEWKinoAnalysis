@@ -84,8 +84,9 @@ public:
 		      const CategoryTree& CT);
 
   TCanvas* ProcessYields(const string& can_name,
-                      const VS& proc,
-                      const CategoryTree& CT);
+			 const VS& proc_bkg,
+			 const VS& proc_sig,
+			 const CategoryTree& CT);
 
   TCanvas* Plot1Dstack(const string& can_name,
 		       const VS& proc,

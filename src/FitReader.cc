@@ -2402,10 +2402,140 @@ TCanvas* FitReader::ProcessYields(const string& can_name,
 
   RestFrames::SetStyle();
 
+  ProcessList bkgs;
+  ProcessList sigs;
+
   int Nproc_bkg = proc_bkg.size();
   if(Nproc_bkg == 0)
     return nullptr;
 
+  int Nproc_sig = proc_sig.size();
+  if(Nproc_sig == 0)
+    return nullptr;
+
+  int Nvis = CT.GetNVisible();
+  if(Nvis < 1)
+    return nullptr;                                                                                                                           
+
+  vector<const CategoryTree*> CatTrees;
+  CT.GetListVisible(CatTrees);
+
+  CategoryList CatList = GetCategories();  
+
+  for(int b = 0; b < Nproc_bkg; b++){
+    
+    int index = GetProcesses().Find(proc_bkg[b]);
+    if(index < 0)
+      continue; 
+
+    Process pp = GetProcesses()[index];
+    bkgs += pp;
+  }
+
+  for(int s = 0; s < Nproc_sig; s++){
+
+    int index = GetProcesses().Find(proc_sig[s]);
+    if(index < 0)
+      continue;
+
+    Process pp = GetProcesses()[index];
+    sigs +=pp;
+  }
+
+  int Nbkg = bkgs.GetN();
+  int Nsig = sigs.GetN();
+  int Ncat = 0;
+
+  vector<double> nBkgEvts; // vector over groups of categories
+  vector<double> nSigEvts[Nsig];
+  vector<double> X;
+
+  for(int v = 0; v < Nvis; v++){
+    CategoryList cat = CatList.Filter(*CatTrees[v]);
+     
+    Ncat = cat.GetN();
+
+    X.push_back(v);
+
+    nBkgEvts.push_back(0.);
+    for(int s = 0; s < Nsig; s++)
+      nSigEvts[s].push_back(0.);
+
+    for(int c = 0; c < Ncat; c++){
+
+      // bkg loop
+      for(int b = 0; b < Nbkg; b++){
+	nBkgEvts[v] += Integral(cat[c], bkgs[b]);
+      }
+      
+      // sig loop
+      for(int s = 0; s < Nsig; s++){
+	nSigEvts[s][v] += Integral(cat[c], sigs[s]);
+      } 
+    }
+  }
+
+  vector<double> sOverB;
+
+  for(int v = 0; v < Nvis; v++){
+    cout << "bin: " << v << endl;
+
+    CategoryList cat = CatList.Filter(*CatTrees[v]);
+    Ncat = cat.GetN();
+
+    for(int c = 0; c < Ncat; c++){
+      cout << "Category Label: " << cat[c].GetLabel() << endl;
+    }
+    for(int s = 0; s < Nsig; s++){
+      cout << "     " << sigs[s].Name() << endl;
+      cout << "     Significance: " << nSigEvts[s][v]/nBkgEvts[v] << endl; 
+      sOverB.push_back(nSigEvts[s][v]/nBkgEvts[v]);
+    }
+  }
+
+  gStyle->SetOptTitle(0);
+  gStyle->SetOptStat(0);
+  gStyle->SetOptFit(11111111);
+  TCanvas* can = new TCanvas(Form("can_%s", can_name.c_str()),
+			     Form("can_%s", can_name.c_str()),
+			     1200, 700);
+  double hlo = 0.09;
+  double hhi = 0.2;
+  double hbo = 0.19;
+  double hto = 0.07;
+  can->SetLeftMargin(hlo);
+  can->SetRightMargin(hhi);
+  can->SetBottomMargin(hbo);
+  can->SetTopMargin(hto);
+  can->SetGridy();
+  can->SetGridx();  
+//can->SetLogy();
+  can->Draw();
+  can->cd();
+
+  TGraph* gr_SB = (TGraph*) new TGraph(Nvis, &X[0], &sOverB[0]);
+  TH1F* th1;
+
+  gr_SB->SetMarkerSize(2);
+  gr_SB->SetMarkerColor(kBlack);
+  //gr_SB->SetLineColor(kBlack);
+  //gr_SB->SetFillColor(kBlack);
+  //gr_SB->SetFillStyle(3244);
+  //gr_SB->Draw("same p2");
+
+  //th1 = (TH1F*)gr_SB->GetHistogram();
+  //th1->Draw("AP0");
+  gr_SB->Draw("AP0");
+  //th1 = (TH1F*)gr_SB->GetHistogram();
+  //th1->Draw("AP0");
+  can->Update();
+  can->SaveAs("test.pdf");
+
+  return can;
+
+}
+
+  /*
   int Nvis = CT.GetNVisible();
   if(Nvis < 1)
     return nullptr;
@@ -2469,10 +2599,10 @@ TCanvas* FitReader::ProcessYields(const string& can_name,
       if(h)
 	itot += h->Integral();
       
-      //yield: h->Integral()
+      //Nevents: h->Integral()
       hist[v] = h; 
    }
-    /*
+    
     if(itot <= 1e-4)
       continue;
     
@@ -2765,6 +2895,6 @@ TCanvas* FitReader::ProcessYields(const string& can_name,
   l.SetTextSize(0.05);
     
   return can;
-    */
+    
     return nullptr;
-}
+    }*/

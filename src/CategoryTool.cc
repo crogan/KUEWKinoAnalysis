@@ -899,7 +899,7 @@ CategoryList CategoryTool::GetCategories_1L() const {
   vector<double> gamT0;
   gamT0.push_back(0.);
   vector<double> gamT;
-  gamT.push_back(0.);
+  gamT.push_back(0.2);
   gamT.push_back(0.5);
 
   // Get Lep ID vectors
@@ -1399,7 +1399,7 @@ CategoryList CategoryTool::GetCategories_2L() const {
   vector<double> gamT0;
   gamT0.push_back(0.);
   vector<double> gamT;
-  gamT.push_back(0.);
+  gamT.push_back(0.2);
   gamT.push_back(0.5);
 
   // Get Lep ID vectors
@@ -1930,7 +1930,7 @@ CategoryList CategoryTool::GetCategories_3L() const {
   vector<double> gamT0;
   gamT0.push_back(0.);
   vector<double> gamT;
-  gamT.push_back(0.);
+  gamT.push_back(0.2);
   gamT.push_back(0.5);
 
   // Get Lep ID vectors
