@@ -25,6 +25,8 @@ void FitConfiguration::Configure(ch::CombineHarvester& cb, ProcessList& processe
   bkg_rate += "DB";
   bkg_rate += "ZDY";
   bkg_rate += "QCD";
+  bkg_rate += "ST";
+  bkg_rate += "TB";
   
   bkg_rare += "ST";
   bkg_rare += "TB";
@@ -46,8 +48,8 @@ void FitConfiguration::Configure(ch::CombineHarvester& cb, ProcessList& processe
 	       ({"2016"}, 1.022)
 	       ({"2017"}, 1.022)
 	       ({"2018"}, 1.022));
-     cb.cp().process(plist.GetProcesses())
-       .AddSyst(cb, "scale_"+p, "lnN", SystMap<>::init(1.2));
+    // cb.cp().process(plist.GetProcesses())
+      // .AddSyst(cb, "scale_"+p, "lnN", SystMap<>::init(1.2));
   }
   
   // signal luminosity uncertainty
@@ -126,10 +128,10 @@ void FitConfiguration::Configure(ch::CombineHarvester& cb, ProcessList& processe
   ///////////////////////
   //cb.cp().backgrounds().bin(VS().a(".*gamT1.*")).PrintObs();
   cb.cp().backgrounds().bin(VS().a(".*gamT1.*"))
-    .AddSyst(cb, "SV_eff", "lnN", SystMap<>::init(1.05));
+    .AddSyst(cb, "gamT", "lnN", SystMap<>::init(1.05));
 
   cb.cp().backgrounds().bin(VS().a(".*PTISR1.*"))
-    .AddSyst(cb, "SV_eff", "lnN", SystMap<>::init(1.05));
+    .AddSyst(cb, "PTISR", "lnN", SystMap<>::init(1.05));
 
   // turn off regex filtering
   cb.SetFlag("filters-use-regex", false)
