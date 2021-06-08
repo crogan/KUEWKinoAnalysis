@@ -330,5 +330,6 @@ void WriteScript(const string& src_name,
   file << "request_memory = 4 GB" << endl;
   if(CERNqueue != "")
     file << "+JobFlavour=\"" << CERNqueue << "\"" << endl;
+						     
   file.close();  
 }
