@@ -4,11 +4,9 @@
 #include <TH1D.h>
 #include <TH2D.h>
 #include <TFile.h>
-#include <TCanvas.h>
 #include <TTree.h>
 #include <iostream>
 #include <vector>
-#include <TGraphErrors.h>
 
 #include "Category.hh"
 #include "Process.hh"
@@ -32,9 +30,15 @@ public:
   void PrintCategories(bool verbose = false);
   void PrintProcesses(bool verbose = false);
 
+  // checks if filled, loads histogram for use
   bool IsFilled(const Category&   cat,
 		const Process&    proc,
 		const Systematic& sys = Systematic::Default()) const;
+
+  // checks if filled, deletes histogram after check
+  bool IsThere(const Category&   cat,
+	       const Process&    proc,
+	       const Systematic& sys = Systematic::Default()) const;
 
   const TH1D* GetHistogram(const Category&   cat,
 			   const Process&    proc,
@@ -104,11 +108,14 @@ public:
   TCanvas* Plot2D(const string& can_name,
 		  const VS& proc,
 		  const CategoryTree& CT);
+=======
+>>>>>>> 9b2fa49be7df2e50e46bea896d98082be2848a86
 
   VS GetChannels() const;  
   const ProcessList&  GetProcesses() const;
   const CategoryList& GetCategories(const string& channel = "") const;         
   const Systematics&  GetSystematics() const;
+<<<<<<< HEAD
   // void SmoothHistograms(const VS& proc, const CategoryTree& CT,  const string& name = "name"); 
 TCanvas* Plot1DratioProc(const VS& proc,
            const string& lep_cat,
@@ -123,8 +130,6 @@ private:
   string	 m_inputfile; 
   mutable TFile* m_FilePtr;
   string         m_FileFold;
-
-  string m_CMSLabel;
 
   mutable map<Process,Systematics> m_ProcSys;
   mutable map<Process,map<Category,TH1D*> > m_ProcHist;

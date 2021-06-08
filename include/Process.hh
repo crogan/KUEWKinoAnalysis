@@ -34,6 +34,8 @@ public:
 		const Systematic& sys = Systematic::Default(),
 		bool extrahist = false);
 
+  void AddShapeSysts(const Systematics& systs);
+
   Process FakeProcess(const string& label) const;
 
   bool operator <  (const Process&) const;
@@ -108,6 +110,7 @@ public:
 
   void InitFill(TTree* tree);
   void FillProcess(Process& proc, TFile& file);
+  void FillProcess(const Process& proc, const Systematic& sys = Systematic::Default());
   
   void InitGet(TTree* tree);
   Process GetProcess();

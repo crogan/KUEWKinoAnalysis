@@ -35,7 +35,7 @@ public:
   
 private:
   map<string,Process*>  m_Proc;
-  map<string,Category*> m_Cat;  
+  map<string,Category*> m_Cat;
   
   TFile* m_OutFile;
 

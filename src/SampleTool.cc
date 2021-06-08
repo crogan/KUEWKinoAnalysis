@@ -361,7 +361,7 @@ void SampleTool::InitProcMap(){
     //InitSMS("T2tt", m_Path+"Fall17_102X_SMS/Fall17_102X_SMS/SMS-T2tt_3J-LH_xqcut-20_top-corridorRefMasses_2Lfilter_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root", (3.*0.1086)*(3.*0.1086), false, true);
     
     InitSMS("TChiWZ", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true, true);
-    InitSMS("TChiWZ", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_dM-90to100_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true, true);
+    //InitSMS("TChiWZ", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_dM-90to100_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true, true);
     InitSMS("TChiWZ", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., false, true);
     InitSMS("TChiWZ", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_mC1-325to1000_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., false, true);
     InitSMS("TChiWZ", m_Path+"Fall17_102X_SMS/TChiWZ_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
@@ -387,12 +387,55 @@ void SampleTool::InitProcMap(){
 
     Process data_obs("data_obs", kData);
     list.clear();
-    list += m_Path + "Fall17_102X_Data/MET_Run2017B-Nano25Oct2019-v1_2017_Fall17_102X.root";
-    list += m_Path + "Fall17_102X_Data/MET_Run2017C-Nano25Oct2019-v1_2017_Fall17_102X.root";
-    list += m_Path + "Fall17_102X_Data/MET_Run2017D-Nano25Oct2019-v1_2017_Fall17_102X.root";
-    list += m_Path + "Fall17_102X_Data/MET_Run2017E-Nano25Oct2019-v1_2017_Fall17_102X.root";
-    list += m_Path + "Fall17_102X_Data/MET_Run2017F-Nano25Oct2019-v1_2017_Fall17_102X.root";
-    m_Proc[m_iYear][data_obs] = pair<vector<string>,string>(list, "KUAnalysis");
+    //list += m_Path + "Fall17_102X_Data/MET_Run2017B-Nano25Oct2019-v1_2017_Fall17_102X.root";
+    //list += m_Path + "Fall17_102X_Data/MET_Run2017C-Nano25Oct2019-v1_2017_Fall17_102X.root";
+    //list += m_Path + "Fall17_102X_Data/MET_Run2017D-Nano25Oct2019-v1_2017_Fall17_102X.root";
+    //list += m_Path + "Fall17_102X_Data/MET_Run2017E-Nano25Oct2019-v1_2017_Fall17_102X.root";
+    //list += m_Path + "Fall17_102X_Data/MET_Run2017F-Nano25Oct2019-v1_2017_Fall17_102X.root";
+     // list += m_Path + "DoubleEG_Run2017B-02Apr2020-v1_2017_Fall17_102X.root";    
+     // list += m_Path + "DoubleEG_Run2017C-02Apr2020-v1_2017_Fall17_102X.root"; 
+     // list += m_Path + "DoubleEG_Run2017D-02Apr2020-v1_2017_Fall17_102X.root";
+     // list += m_Path + "DoubleEG_Run2017D-02Apr2020-v1_2017_Fall17_102X.root"; 
+     // list += m_Path + "DoubleEG_Run2017D-02Apr2020-v1_2017_Fall17_102X.root"; 
+     // list += m_Path + "DoubleEG_Run2017D-02Apr2020-v1_2017_Fall17_102X.root";
+     // list += m_Path + "DoubleEG_Run2017E-02Apr2020-v1_2017_Fall17_102X.root";
+     // list += m_Path + "DoubleEG_Run2017F-02Apr2020-v1_2017_Fall17_102X.root";  
+      
+      list += m_Path + "Fall17_102X_Data/MET_Run2017B-02Apr2020-v1_2017_Fall17_102X.root";
+      list += m_Path + "Fall17_102X_Data/MET_Run2017C-02Apr2020-v1_2017_Fall17_102X.root";
+      list += m_Path + "Fall17_102X_Data/MET_Run2017D-02Apr2020-v1_2017_Fall17_102X.root";
+      list += m_Path + "Fall17_102X_Data/MET_Run2017E-02Apr2020-v1_2017_Fall17_102X.root";
+      list += m_Path + "Fall17_102X_Data/MET_Run2017F-02Apr2020-v1_2017_Fall17_102X.root";
+
+     // list += m_Path + "DoubleMuon_Run2017B-02Apr2020-v1_2017_Fall17_102X.root"; 
+     // list += m_Path + "DoubleMuon_Run2017D-02Apr2020-v1_2017_Fall17_102X.root";  
+     // list += m_Path + "DoubleMuon_Run2017E-02Apr2020-v1_2017_Fall17_102X.root"; 
+     // list += m_Path + "DoubleMuon_Run2017F-02Apr2020-v1_2017_Fall17_102X.root";  
+
+     // list += m_Path + "SingleElectron_Run2017B-02Apr2020-v1_2017_Fall17_102X.root";
+     // list += m_Path + "SingleElectron_Run2017C-02Apr2020-v1_2017_Fall17_102X.root";
+     // list += m_Path + "SingleElectron_Run2017D-02Apr2020-v1_2017_Fall17_102X.root";
+     // list += m_Path + "SingleElectron_Run2017E-02Apr2020-v1_2017_Fall17_102X.root";
+     // list += m_Path + "SingleElectron_Run2017F-02Apr2020-v1_2017_Fall17_102X.root";
+
+     // list += m_Path + "JetHT_Run2017B-02Apr2020-v1_2017_Fall17_102X.root";
+     // list += m_Path + "JetHT_Run2017C-02Apr2020-v1_2017_Fall17_102X.root";       
+     // list += m_Path + "JetHT_Run2017D-02Apr2020-v1_2017_Fall17_102X.root";       
+     // list += m_Path + "JetHT_Run2017E-02Apr2020-v1_2017_Fall17_102X.root";
+     // list += m_Path + "JetHT_Run2017F-02Apr2020-v1_2017_Fall17_102X.root";  
+
+     // list += m_Path + "SingleMuon_Run2017B-02Apr2020-v1_2017_Fall17_102X.root";
+     // list += m_Path + "SingleMuon_Run2017C-02Apr2020-v1_2017_Fall17_102X.root";
+     // list += m_Path + "SingleMuon_Run2017D-02Apr2020-v1_2017_Fall17_102X.root";
+     // list += m_Path + "SingleMuon_Run2017E-02Apr2020-v1_2017_Fall17_102X.root";
+     // list += m_Path + "SingleMuon_Run2017F-02Apr2020-v1_2017_Fall17_102X.root";
+      
+   
+
+
+
+
+m_Proc[m_iYear][data_obs] = pair<vector<string>,string>(list, "KUAnalysis");
 
   }
   

@@ -15,7 +15,8 @@ using namespace std;
 
 void WriteScript(const string& src_name,
 		 const string& log_name,
-		 const string& command);
+		 const string& command,
+		 const string& CERNqueue = "");
 
 int main(int argc, char* argv[]) {
   int  maxN = 10;
@@ -23,6 +24,8 @@ int main(int argc, char* argv[]) {
   
   string InputFile = "test/FitInput_test.root";
   string OutputFold = "BuildFit_output";
+
+  string CERNqueue = "";
 
   bool addSig = false; // all signals
   bool addBkg = false; // all backgrounds
@@ -77,6 +80,10 @@ int main(int argc, char* argv[]) {
     if(strncmp(argv[i],"--input", 7) == 0){
       i++;
       InputFile = string(argv[i]);
+    }
+    if(strncmp(argv[i],"-CERN", 7) == 0){
+      i++;
+      CERNqueue = string(argv[i]);
     }
     if(strncmp(argv[i],"-year", 5) == 0){
       i++;
@@ -158,6 +165,7 @@ int main(int argc, char* argv[]) {
     cout << "  Condor submission options:" << endl;
     cout << "   -maxN [number]      maximum number of processes per job" << endl;
     cout << "   --dry-run           create output folders and scripts but don't submit" << endl;
+    cout << "   -CERN [queue]       specify queue name for running at CERN" << endl;
     cout << "  BuildFit.x options:" << endl;
     cout << "   --help(-h)          print options" << endl;
     cout << "   --verbose(-v)       increase verbosity" << endl;
@@ -282,7 +290,8 @@ int main(int argc, char* argv[]) {
     if(procs.size() >= maxN || p == Nproc-1){
       WriteScript(SrcFold+Form("submit_%d",Njob)+".sh",
 		  LogFold+Form("job_%d",Njob)+".log",
-		  BuildFitCmd+iBFCmd);
+		  BuildFitCmd+iBFCmd,
+		  CERNqueue);
       condorsubmit << "condor_submit " << SrcFold << "submit_" << Njob << +".sh" << endl;
 
       procs.clear();
@@ -304,7 +313,8 @@ int main(int argc, char* argv[]) {
 	     
 void WriteScript(const string& src_name,
 		 const string& log_name,
-		 const string& command){
+		 const string& command,
+		 const string& CERNqueue){
   ofstream file;
   file.open(src_name);
   
@@ -316,8 +326,10 @@ void WriteScript(const string& src_name,
   file << "output = " << log_name << ".out" << endl;
   file << "error = "  << log_name << ".err" << endl;
   file << "log = "    << log_name << ".log" << endl;
-  file << "Requirements = (Machine != \"red-node000.unl.edu\")" << endl;
+  file << "Requirements = (Machine != \"red-node000.unl.edu\") && (Machine != \"red-c2325.unl.edu\")" << endl;
   file << "request_memory = 4 GB" << endl;
-  file << "queue " << endl;
+  if(CERNqueue != "")
+    file << "+JobFlavour=\"" << CERNqueue << "\"" << endl;
+						     
   file.close();  
 }

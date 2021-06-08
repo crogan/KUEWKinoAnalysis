@@ -31,7 +31,6 @@ FitReader::FitReader(const string& inputfile,
   ReadCategories();
 
   m_inputfile = inputfile;
-
   if(otherfile != ""){
     m_FilePtr = new TFile(otherfile.c_str(), "READ");
     if(!m_FilePtr || !m_FilePtr->IsOpen())
@@ -40,6 +39,10 @@ FitReader::FitReader(const string& inputfile,
   } else {
     m_FilePtr = nullptr;
   }
+  
+  ReadProcesses();
+  
+  ReadCategories();
 }
 
 FitReader::~FitReader(){
@@ -69,7 +72,7 @@ void FitReader::ReadProcesses(){
     else
       m_Proc += p;
   }
-
+  
   delete tree;
 
   int Nproc = m_Proc.GetN();
@@ -230,37 +233,6 @@ const TH2D* FitReader::GetHistogram2D(const Category&   cat,
   }
 }
 
-TGraphErrors* FitReader::GetTotalBackground(const CategoryList& cat){
-  TH1D* hist = nullptr;
-  int Ncat = cat.GetN();
-  for(int i = 0; i < Ncat; i++){
-    string shist = m_FileFold+cat[i].Label()+"_"+cat[i].GetLabel()+"/total_background";
-    cout << shist << endl;
-    if(hist == nullptr)
-      hist = (TH1D*) m_FilePtr->Get((m_FileFold+"/"+shist).c_str())->Clone((shist+"_total").c_str());
-    else
-      hist->Add((TH1D*) m_FilePtr->Get((m_FileFold+"/"+shist).c_str()));
-  }
-
-  int NB = hist->GetNbinsX();
-  
-  vector<double> X;
-  vector<double> Xerr;
-  vector<double> Y;
-  vector<double> Yerr;
-  for(int i = 0; i < NB; i++){
-    X.push_back(0.5 + i);
-    Xerr.push_back(0.5);
-    Y.push_back(hist->GetBinContent(i+1));
-    Yerr.push_back(hist->GetBinError(i+1));
-  }
-   
-  TGraphErrors* gr = new TGraphErrors(NB, &X[0], &Y[0],  &Xerr[0], &Yerr[0]);
-
-  return gr;
-   
-}
-
 bool FitReader::IsFilled(const Category&   cat,
 			 const Process&    proc,
 			 const Systematic& sys) const {
@@ -292,6 +264,62 @@ bool FitReader::IsFilled(const Category&   cat,
        
       m_ProcHistSys[proc][sys][cat].first  = (TH1D*) m_File.Get(shistUp.c_str());
       m_ProcHistSys[proc][sys][cat].second = (TH1D*) m_File.Get(shistDown.c_str());
+    }
+     
+    return (sys.IsUp() ? m_ProcHistSys[proc][sys][cat].first :
+	    m_ProcHistSys[proc][sys][cat].second);
+  }    
+}
+
+bool FitReader::IsThere(const Category&   cat,
+			const Process&    proc,
+			const Systematic& sys) const {
+  TH1D* hist = nullptr;
+  TH1D* hist2 = nullptr;
+  if(!sys){
+    if(m_ProcHist.count(proc) == 0)
+      m_ProcHist[proc] = map<Category,TH1D*>();
+    if(m_ProcHist[proc].count(cat) == 0){
+      string shist = cat.Label()+"_"+cat.GetLabel()+"/"+proc.Name();
+      if(proc.Type() == kData || !m_FilePtr)
+	hist = (TH1D*) m_File.Get(shist.c_str());
+      else
+	hist = (TH1D*) m_FilePtr->Get((m_FileFold+shist).c_str());
+
+      if(hist){
+	delete hist;
+	return true;
+      } else
+	return false;
+    }
+
+    return m_ProcHist[proc][cat];
+    
+  } else {
+    if(m_ProcHistSys.count(proc) == 0)
+      m_ProcHistSys[proc] = map<Systematic,map<Category,pair<TH1D*,TH1D*> > >();
+    if(m_ProcHistSys[proc].count(sys) == 0)
+      m_ProcHistSys[proc][sys] = map<Category,pair<TH1D*,TH1D*> >();
+    if(m_ProcHistSys[proc][sys].count(cat) == 0){
+      m_ProcHistSys[proc][sys][cat] = pair<TH1D*,TH1D*>(nullptr,nullptr);
+       
+      string label = cat.Label()+"_"+cat.GetLabel();
+      string shistUp   = label+"/"+proc.Name()+"_"+sys.Label()+"Up";
+      string shistDown = label+"/"+proc.Name()+"_"+sys.Label()+"Down";
+       
+      hist  = m_ProcHistSys[proc][sys][cat].first  = (TH1D*) m_File.Get(shistUp.c_str());
+      hist2 = m_ProcHistSys[proc][sys][cat].second = (TH1D*) m_File.Get(shistDown.c_str());
+
+      bool there = true;
+      if(hist)
+	delete hist;
+      else
+	there = false;
+      if(hist2)
+	delete hist2;
+      else
+	there = false;
+      return there;
     }
      
     return (sys.IsUp() ? m_ProcHistSys[proc][sys][cat].first :

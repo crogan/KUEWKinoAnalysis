@@ -51,13 +51,23 @@ int main(int argc, char* argv[]) {
   bool addSig  = false;
   bool addData = false;
   bool extrahist = false;
+  
   vector<string> proc_to_add;
   float PTvar;
   CategoryTool CT;
   CategoryList Categories;
 
+  bool cat0L = false;
+  bool cat1L = false;
+  bool cat2L = false;
+  bool cat3L = false;
+
   bool setLumi = false;
   double lumi;
+
+  bool doSys = false;
+
+  bool maskSR = false;
   
   for(int i = 0; i < argc; i++){
     if(strncmp(argv[i],"--help", 6) == 0){
@@ -104,16 +114,19 @@ int main(int argc, char* argv[]) {
       extrahist  = true;
     }
     if(strncmp(argv[i],"+cat0L", 6) == 0){
-      Categories += CT.GetCategories_0L();
+      cat0L = true;
     }
     if(strncmp(argv[i],"+cat1L", 6) == 0){
-      Categories += CT.GetCategories_1L();
+      cat1L = true;
     }
     if(strncmp(argv[i],"+cat2L", 6) == 0){
-      Categories += CT.GetCategories_2L();
+      cat2L = true;
     }
     if(strncmp(argv[i],"+cat3L", 6) == 0){
-      Categories += CT.GetCategories_3L();
+      cat3L = true;
+    }
+    if(strncmp(argv[i],"++sys", 5) == 0){
+      doSys = true;
     }
     if(strncmp(argv[i],"-lumi", 5) == 0){
       i++;
@@ -124,6 +137,9 @@ int main(int argc, char* argv[]) {
       i++;
       doSigFile = true;
       SigFile = argv[i];
+    }
+    if(strncmp(argv[i],"-maskSR", 7) == 0){
+      maskSR = true;
     }
   }
       
@@ -149,13 +165,24 @@ int main(int argc, char* argv[]) {
     cout << "   +cat1L              add 1L categories" << endl;
     cout << "   +cat2L              add 2L categories" << endl;
     cout << "   +cat3L              add 3L categories" << endl;
+    cout << "   ++sys               turn on available systematics" << endl;
     cout << "   +hist               book 2D histograms also" << endl;
     cout << "   -lumi [lumi]        set luminosity to lumi" << endl;
     cout << "   -sigfile            signal filename must match this string to be included" << endl;
-
+    cout << "   -maskSR             mask high RISR bins" << endl;
+   
     return 0;
   }
 
+  if(cat0L)
+    Categories += CT.GetCategories_0L(maskSR);
+  if(cat1L)
+    Categories += CT.GetCategories_1L(maskSR);
+  if(cat2L)
+    Categories += CT.GetCategories_2L(maskSR);
+  if(cat3L)
+    Categories += CT.GetCategories_3L(maskSR);
+  
   cout << "Initializing sample maps from path " << NtuplePath << " for year " << year << endl;
   SampleTool ST(NtuplePath, year);
 
@@ -181,7 +208,15 @@ int main(int argc, char* argv[]) {
   }
 
   if(Categories.GetN() == 0)
-    Categories += CT.GetCategories();
+    Categories += CT.GetCategories(maskSR);
+
+  //if a lepton region wasn't specified, turn them all on 
+  if(!cat0L && !cat1L && !cat2L && !cat3L){
+    cat0L = true;
+    cat1L = true;
+    cat2L = true;
+    cat3L = true;
+  } 
   
   // cout << "Categories:" << endl;
   // Categories.Print();
@@ -189,7 +224,8 @@ int main(int argc, char* argv[]) {
   SystematicsTool SYS;
 
   Systematics systematics(1);
-  //systematics += SYS.GetWeightSystematics();
+  if(doSys)
+    systematics += SYS.GetWeightSystematics();
 
   FitInputBuilder FITBuilder(extrahist);
 
@@ -465,7 +501,7 @@ int main(int argc, char* argv[]) {
 	    else 
 	      weight *= base->BtagSFweight;
 
-	     if(sys == Systematic("BTAGLF_SF"))
+	    if(sys == Systematic("BTAGLF_SF"))
 	      if(sys.IsUp())
 		weight *= base->BtagSFweight_up;
 	 else
@@ -512,9 +548,9 @@ int main(int argc, char* argv[]) {
 	    vector<string> flabels = Fakes.GetFakeLabels();
 	    int Nf = flabels.size();
 	    for(int fl = 0; fl < Nf; fl++){
-	      if(title.find("QCD") == string::npos)
-		rlow = FITBuilder.AddEvent(weight/double(Nf), Mperp, RISR,
-				    Categories[eindex], FITBuilder.FakeProcess(flabels[fl]), sys);
+	      // if(title.find("QCD") == string::npos)
+	      // 	FITBuilder.AddEvent(weight/double(Nf), Mperp, RISR,
+	      // 			    Categories[eindex], FITBuilder.FakeProcess(flabels[fl]), sys);
 	      
 	      rlow = FITBuilder.AddEvent(weight/double(Nf), Mperp, RISR,
 				  Categories[eindex], proc.FakeProcess(flabels[fl]), sys);
@@ -524,10 +560,9 @@ int main(int argc, char* argv[]) {
 				Categories[eindex], proc, sys);
 	  }
 	  // dummy data
-	  if(!addData && is_bkg && (title.find("QCD") == string::npos))
-	   double rlowData = FITBuilder.AddEvent(weight, Mperp, RISR,
-				Categories[eindex], data_obs, sys);
-if(RISR < rlow){ underflow += 1.;}
+	  // if(!addData && is_bkg && (title.find("QCD") == string::npos) && !sys)
+	  //   FITBuilder.AddEvent(weight, Mperp, RISR,
+	  // 			Categories[eindex], data_obs, sys);
 	}
       }
       delete base;
