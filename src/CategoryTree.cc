@@ -463,13 +463,13 @@ CategoryTree CategoryTreeTool::GetCategories_0L() const {
   CT_0j.AddSubCategory(CT_2sv);
   CT_1j.AddSubCategory(CT_0sv);
   CT_1j.AddSubCategory(CT_1sv);
-  CT_2j.AddSubCategory(CT_k0);
+  //CT_2j.AddSubCategory(CT_k0);
   CT_2j.AddSubCategory(CT_k1);
-  CT_3j.AddSubCategory(CT_k0);
+  //CT_3j.AddSubCategory(CT_k0);
   CT_3j.AddSubCategory(CT_k1);
-  CT_4j.AddSubCategory(CT_k0);
+  //CT_4j.AddSubCategory(CT_k0);
   CT_4j.AddSubCategory(CT_k1);
-  CT_ge5j.AddSubCategory(CT_k0);
+  //CT_ge5j.AddSubCategory(CT_k0);
   CT_ge5j.AddSubCategory(CT_k1);
   
   CategoryTree CT_0L(VS().a("Ch0L"), "0L", "0L", kL, false);
@@ -638,14 +638,14 @@ CategoryTree CategoryTreeTool::GetCategories_2L() const {
   CT_1sv.AddSubCategory(CT_etaC);
   CT_1sv.AddSubCategory(CT_etaF);
   
-  CT_Z_0.AddSubCategory(CT_k0_0);
+  //CT_Z_0.AddSubCategory(CT_k0_0);
   CT_Z_0.AddSubCategory(CT_k1_0);
-  CT_noZ_0.AddSubCategory(CT_k0_0);
+  //CT_noZ_0.AddSubCategory(CT_k0_0);
   CT_noZ_0.AddSubCategory(CT_k1_0);
 
-  CT_Z.AddSubCategory(CT_k0);
+  //CT_Z.AddSubCategory(CT_k0);
   CT_Z.AddSubCategory(CT_k1);
-  CT_noZ.AddSubCategory(CT_k0);
+  //CT_noZ.AddSubCategory(CT_k0);
   CT_noZ.AddSubCategory(CT_k1);
 
   CT_0sv.AddSubCategory(CT_Z_0);
