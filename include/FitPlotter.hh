@@ -61,13 +61,13 @@ public:
            const string& name,
            const VS& extra);
 
-  TCanvas* Plot1DratioSyst(const string& proc,
-	   const Systematic& syst,
-           const VS& lep_cat,
-           const VS& hadS_cat,
-           const VS& hadI_cat,
+  TCanvas* FitPlotter::Plot1DratioSyst(const VS& proc,
+     const vector<Systematic&> syst,
+           const string& lep_cat,
+           const string& hadS_cat,
+           const string& hadI_cat,
            const string& name,
-           const VS& extra);
+           const string& extra);
 
   map<string,VS> m_Strings;
   
