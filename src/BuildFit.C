@@ -50,6 +50,7 @@ int main(int argc, char* argv[]) {
   bool doSepChan = false;
 
   bool batch = false;
+  bool connect = false;
     
   for(int i = 0; i < argc; i++){
     if(strncmp(argv[i],"--workspace", 11) == 0){
@@ -146,6 +147,10 @@ int main(int argc, char* argv[]) {
     if(strncmp(argv[i],"--batch", 7) == 0){
       batch = true;
     }
+    if(strncmp(argv[i],"--connect", 9) == 0){
+      batch = true;
+      connect = true;
+    }
      
   }
     
@@ -183,6 +188,7 @@ int main(int argc, char* argv[]) {
     cout << "   -sepchan            make datacards for each group of channels separately" << endl;
     cout << "   --workspace(-w)     also build workspaces (note: faster not to, and run message)" << endl;
     cout << "   --batch             for running inside a batch job" << endl;
+    cout << "   --connect           for running inside a batch job on CMS connect" << endl;
 
     return 0;
   }
@@ -420,33 +426,44 @@ int main(int argc, char* argv[]) {
   VC cats = categories.GetCategories();
 
   cout << "* Writing ouput to " << OutputFold << endl;
-  string OutputFile = OutputFold+"/FitInput_"+Ana+"_"+Era+".root";
+  string OutputFile = "";
+  if(connect)
+    OutputFile = "FitInput_"+Ana+"_"+Era+".root";
+  else
+    OutputFile = OutputFold+"/FitInput_"+Ana+"_"+Era+".root";
 
   if(!batch){
     gSystem->Exec(("mkdir -p "+OutputFold).c_str());
   
     string copy_cmd = "cp "+InputFile+" "+OutputFile;
+    if(InputFile.find("xrootd") != std::string::npos)
+      copy_cmd = "xrdcp "+InputFile+" "+OutputFile;
     cout << "COPY cmd:" << endl;
     cout << "   " << copy_cmd << endl;
     gSystem->Exec(copy_cmd.c_str());  
   }
-  
   TFile output(OutputFile.c_str(), "UPDATE"); 
 
   cout << "  * Creating datacards" << endl;
 	       	       
   // datacard/workspace with all categories
   string fold = OutputFold+"/all";
+  if(connect)
+    fold = "datacards/all/";
   gSystem->Exec(("mkdir -p "+fold).c_str());
   
   VSM masses = signals.GetSignalMasses();
   
   for(auto sm : masses){
     fold = OutputFold+"/all/"+sm.first;
+    if(connect)
+      fold = "datacards/all/"+sm.first;
     gSystem->Exec(("mkdir -p "+fold).c_str());
     
     for(auto m : sm.second){
       fold = OutputFold+"/all/"+sm.first+"/"+m;
+      if(connect)
+        fold = "datacards/all/"+sm.first+"/"+m;
       gSystem->Exec(("mkdir -p "+fold).c_str());
       
       if(verbose)
@@ -461,14 +478,20 @@ int main(int argc, char* argv[]) {
   if(doSepChan){
     for(auto ch : channels){
       fold = OutputFold+"/"+ch;
+      if(connect)
+        fold = "datacards/"+ch;
       gSystem->Exec(("mkdir -p "+fold).c_str());
       
       for(auto sm : masses){
 	fold = OutputFold+"/"+ch+"/"+sm.first;
+        if(connect)
+          fold = "datacards/"+ch+"/"+sm.first;
 	gSystem->Exec(("mkdir -p "+fold).c_str());
 	
 	for(auto m : sm.second){
 	  fold = OutputFold+"/"+ch+"/"+sm.first+"/"+m;
+          if(connect)
+            fold = "datacards/"+ch+"/"+sm.first+"/"+m;
 	  gSystem->Exec(("mkdir -p "+fold).c_str());
 	  
 	  if(verbose)
@@ -501,9 +524,15 @@ int main(int argc, char* argv[]) {
     gSystem->Exec(icmd.c_str());
     }
   */
-  cmd = "combineTool.py -M T2W -i "+OutputFold+"/*/*/*/datacard.txt -o workspace.root --parallel 4";
+  cmd = "combineTool.py -M T2W -i "+OutputFold+"*/*/*/datacard.txt -o workspace.root --parallel 4";
 
-  string cmd_condor = "combineTool.py -M T2W -i "+OutputFold+"/*/*/*/datacard.txt -o workspace.root --job-mode condor ";
+  string cmd_condor = "combineTool.py -M T2W -i "+OutputFold+"*/*/*/datacard.txt -o workspace.root --job-mode condor ";
+  if(connect)
+  {
+   cmd = "combineTool.py -M T2W -i "+OutputFold+"datacards/*/*/*/datacard.txt -o workspace.root --parallel 4";
+
+   string cmd_condor = "combineTool.py -M T2W -i "+OutputFold+"datacards/*/*/*/datacard.txt -o workspace.root --job-mode condor ";
+  }
 
   string cmd_condor_CERN = "--sub-opts='+JobFlavour=\"espresso\" \\n request_memory = 4 GB'";
   string cmd_condor_T3 = "--sub-opts='Requirements = (Machine != \"red-node000.unl.edu\") && (Machine != \"red-c2325.unl.edu\") \\n request_memory = 4 GB'";
