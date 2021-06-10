@@ -1872,13 +1872,13 @@ TCanvas* FitPlotter::Plot2D(const string& can_name,
   return can;
 }
 
-TCanvas* FitPlotter::Plot1DratioSyst(const string& proc,
- 	   const Systematic& syst,
-           const VS& lep_cat,
-           const VS& hadS_cat,
-           const VS& hadI_cat,
+TCanvas* FitPlotter::Plot1DratioSyst(const VS& proc,
+ 	   const vector<Systematic&> syst,
+           const string& lep_cat,
+           const string& hadS_cat,
+           const string& hadI_cat,
            const string& name,
-           const VS& extra){
+           const string& extra){
 
   //RestFrames::SetStyle();
 
@@ -1890,7 +1890,7 @@ TCanvas* FitPlotter::Plot1DratioSyst(const string& proc,
   if(!extra.empty()) Nextra = extra.size();
   if(Nlep  == 0 ||
    NhadS == 0 ||
-   NhadI == 0)
+   NhadI == 0 || syst.size() < 1)
   return nullptr;
 
 int catTest = 0;
@@ -1905,8 +1905,8 @@ int catTest = 0;
   else if(Nextra > 1) Ncats = Nextra;
   if(Nlep  < 2 &&
    NhadS < 2 &&
-   NhadI < 2){
-    cout << "Need multiple categories for either process, lepton ID, hadS, hadI, or extra argument to create ratios" << endl;
+   NhadI < 2 && syst.size() < 2){
+    cout << "Need multiple categories for either process, lepton ID, hadS, hadI, extra argument, or systematics to create ratios" << endl;
     return nullptr;
   }
 
@@ -1953,6 +1953,8 @@ if(Nlep == 1)
     cats[i] = cats[i].FilterOR(vlep);
 cout << cats[catTest].GetN() << endl;
 cout << "leptonic cuts passed" << endl;
+
+
 // Hadronic S
   VS hadS_labels;
   vector<VS> vhadSs;
@@ -2001,7 +2003,9 @@ else vhadS.push_back(m_Strings[hadS_cat[i]][j]);
   }
   
 }
-//cat = cat.FilterOR(vhadS);
+
+
+
 cout << cats[catTest].GetN() << endl;
  
 cout << "hadronic S cuts passed" << endl;
@@ -2108,15 +2112,31 @@ cout << cats[catTest].GetN() << endl;
   vector<TH1D*> hists;
 
 
+
+  
+
+  for(int s = 0; s < syst.size(); s++){
+  	Systematic& sys = syst[s];
+  	if(!(!sys)){
+  		if(sys.IsUp()){
+  			sys.Down();
+  			s--;
+  		}
+  		else sys.Up();
+  	}
   CategoryList cat1;
   for(int cc = 0; cc < Ncats; cc++){
     cat1 = cats[cc];
     int Ncat = cat1.GetN();
 VS vproc;
-    if(m_Strings.count(proc) != 0)
-      vproc = m_Strings[proc];
-    else
-      vproc += proc;
+//sum over fakes
+for(int i = 0; i < proc.size(); i++){
+	if(m_Strings.count(proc[i]) != 0)
+	  vproc += m_Strings[proc[i]];
+	else
+	  vproc += proc[i];
+}
+    TH1D* histNom = nullptr;
     TH1D* hist = nullptr;
     for(int p = 0; p < int(vproc.size()); p++){
       cout << "vprocess: " << vproc[p] << endl;
@@ -2132,14 +2152,18 @@ VS vproc;
         continue;
 
   cout << "filled " << cat1[c].GetLabel() << " " << pp.Name() << endl;
+  if(!histNom)
+    histNom = (TH1D*) GetHistogram(cat1[c], pp)->Clone(Form("plothist_%d_%s", 0, name.c_str()));
+   else 
+    histNom->Add(GetHistogram(cat1[c], pp));  
 
-  if(!hist){
-    hist = (TH1D*) GetHistogram(cat1[c], pp)->Clone(Form("plothist_%d_%s", 0, name.c_str()));
-  //  if(hist->GetBinContent(0) != 0) cout << hist->GetTitle() << " has bin #0 filled with " << hist->GetBinContent(0) << endl;
-  } else {
-    hist = (TH1D*) GetHistogram(cat1[c], pp,syst)->Clone(Form("plothist_%d_%s", 0, name.c_str()));
-    //if(hist->GetBinContent(0) != 0) cout << GetHistogram(cat1[c], pp)->GetTitle() << " has bin #0 filled with " << GetHistogram(cat1[c], pp)->GetBinContent(0) << endl;
-  }
+  if(!syst[s].IsDefault()){
+  	if(!hist)
+    hist = (TH1D*) GetHistogram(cat1[c], pp,sys)->Clone(Form("plothist_%d_%s", 0, name.c_str()));
+  else 
+    hist->Add(GetHistogram(cat1[c], pp,sys));
+	}
+
     }
   }
 
@@ -2157,10 +2181,23 @@ VS vproc;
     labels += hadI_cat[cc];
   else if(Nextra > 1)
     labels += extra[cc];
+	else if(systs.size() > 1)
+		if(sys.IsUp())
+		labels += sys.Label()+"Up";
+		else
+			labels += sys.Label()+"Down";
+		// else labels += "nominal";
+
+	//do ratio
+	hist->Divide(histNom);
+	//do normalizations here
+	//int systNorm = hist->Integral();
+	//int nomNorm =
     
   colors.push_back(m_ColorDefault[cc]);
-  hists.push_back(hist); //one hist per cat group
+  hists.push_back(hist); 
  } 
+}
 int Nhist = hists.size();
 
 int nBins;
@@ -2169,27 +2206,26 @@ int gBin;
   const FitBin& bin = cats[0][0].GetFitBin();
   int NR = bin.NRBins();
   int NB = bin.NBins();
-  plotShapeComparison* psc = new plotShapeComparison(hists,colors,labels);
+  // plotShapeComparison* psc = new plotShapeComparison(hists,colors,labels);
   //TCanvas* can = psc->formatPlots(name);
-vector<TGraphAsymmErrors*> graphs = psc->m_graphs;
-vector<TGraphAsymmErrors*> gLHs = psc->m_gLHs;
-vector<double> pvals = psc->m_pvals;
+// vector<TGraphAsymmErrors*> graphs = psc->m_graphs;
+// vector<TGraphAsymmErrors*> gLHs = psc->m_gLHs;
+// vector<double> pvals = psc->m_pvals;
 
-TAxis* ax = gLHs[0]->GetHistogram()->GetXaxis();
-double ax_x1 = ax->GetBinLowEdge(1);
-double ax_x2 = ax->GetBinUpEdge(ax->GetNbins());
-gLHs[0]->GetHistogram()->GetXaxis()->Set(NB,ax_x1,ax_x2);
+// TAxis* ax = gLHs[0]->GetHistogram()->GetXaxis();
+// double ax_x1 = ax->GetBinLowEdge(1);
+// double ax_x2 = ax->GetBinUpEdge(ax->GetNbins());
+// gLHs[0]->GetHistogram()->GetXaxis()->Set(NB,ax_x1,ax_x2);
 
-  VS blabels_RISR;
-  VS blabels_Mperp;
+  VS blabels;
   for(int r = 0; r < NR; r++)
   blabels_Mperp += bin[r].GetMBinLabels();
 
 
   int lmax = 0;
   for(int b = 0; b < NB; b++){
-  int len = blabels_Mperp[b].length();
-  if(blabels_Mperp[b].find("#infty") != std::string::npos)
+  int len = blabels[b].length();
+  if(blabels[b].find("#infty") != std::string::npos)
     len -= 5;
   if(len > lmax)
     lmax = len;
@@ -2198,12 +2234,19 @@ gLHs[0]->GetHistogram()->GetXaxis()->Set(NB,ax_x1,ax_x2);
   for(int l = 0; l < 1.2*lmax; l++)
   space += " ";
 
+  for(int b = 0; b < NB; b++){
+    if(b%2 == 1)
+      hists[0]->GetXaxis()->SetBinLabel(b+1, (blabels[b]+space).c_str());
+    else
+      hists[0]->GetXaxis()->SetBinLabel(b+1, blabels[b].c_str());
+  }
+	blabels.clear();
   for(int r = 0; r < NR; r++)
-  blabels_RISR += bin[r].GetRBinLabel();
+  blabels += bin[r].GetRBinLabel();
 
-  //gLHs[0]->GetHistogram()->LabelsOption("v","X");
+  hists[0]->LabelsOption("v","X");
 
-double x; double y;
+// double x; double y;
 //for(int i = 0; i < graphs[0]->GetN(); i++) { graphs[0]->GetPoint(i,x,y); cout << "point #" << i << "| x: " << x << " y: " << y << endl;}
 
   gStyle->SetPadTopMargin(0.09);
@@ -2216,201 +2259,131 @@ double x; double y;
    TCanvas* can = new TCanvas(Form("can_%s", name.c_str()),
             Form("can_%s", name.c_str()),
             0,45,1337, 738);
-   double hlo = 0.15;
-   double hhi = 0.22;
-   double hbo = 0.27;
-   double hto = 0.07;
+   // double hlo = 0.15;
+   // double hhi = 0.22;
+   // double hbo = 0.27;
+   // double hto = 0.07;
+	double hlo = 0.09;
+	double hhi = 0.22;
+	double hbo = 0.27;
+	double hto = 0.07;
    can->SetLeftMargin(hlo);
    can->SetRightMargin(hhi);
    can->SetBottomMargin(hbo);
    can->SetTopMargin(hto);
-   //can->SetGridy();
+   can->SetGridy();
    can->Draw();
    can->cd();
- TPad* pRatio = new TPad("pRatio","pRatio",0,0.3,1.,1.);
-  pRatio->SetGridy();
-  pRatio->SetGridx();
-  pRatio->SetBottomMargin(0.02);
-  pRatio->Draw();
-  pRatio->cd();
-  can->Update();
 
 
-  pRatio->cd();
 
-
-   double hmax = graphs[0]->GetMaximum();
-TMultiGraph* mg = new TMultiGraph("ratios","ratios");
-   mg->GetYaxis()->SetRangeUser(0.0, 1.1*hmax);
-   //mg->Draw("AP");
-   mg->GetXaxis()->CenterTitle();
-   mg->GetXaxis()->SetTitleFont(42);
-   mg->GetXaxis()->SetTitleSize(0.05);
-   mg->GetXaxis()->SetTitleOffset(1.0);
-   mg->GetXaxis()->SetLabelFont(42);
-   mg->GetXaxis()->SetLabelSize(0.04);
-   mg->GetXaxis()->SetTitle("");
-   mg->GetXaxis()->SetTickSize(0.);
-   mg->GetYaxis()->CenterTitle();
-   mg->GetYaxis()->SetTitleFont(42);
-   mg->GetYaxis()->SetTitleSize(0.04);
-   mg->GetYaxis()->SetTitleOffset(0.85);
-   mg->GetYaxis()->SetLabelFont(42);
-   mg->GetYaxis()->SetTickLength(0.02);
-   mg->GetYaxis()->SetLabelSize(0.03);
-   mg->GetYaxis()->SetTitle("Ratio to total");
-   mg->GetXaxis()->SetLabelOffset(999);
-   mg->GetXaxis()->SetLabelSize(0);
-   mg->GetXaxis()->SetTickLength(0);
-   gStyle->SetTickLength(0.);
-   gStyle->SetLabelOffset(999);
-   gStyle->SetLabelSize(0.);
-   for(int i = 0; i < Nhist; i++){
-   graphs[i]->SetLineColor(colors[i]);
-   graphs[i]->SetMarkerColor(colors[i]);
-   graphs[i]->SetLineWidth(1.0);
-   graphs[i]->SetMarkerStyle(20+i);
-   graphs[i]->SetLineStyle(i+1);
-   mg->Add(graphs[i]);
-   }
-mg->Draw("AP");
-can->Modified();
-can->Update();
-can->cd();
-  TPad* pLH = new TPad("pLikelihood","pLikelihood",0,0,1,0.3);
-  pLH->SetGridy();
-  pLH->SetGridx();
-  pLH->SetTopMargin(0.);
-  pLH->Draw();
-  pLH->cd();
-  pLH->Update();
-  can->Update();
-TMultiGraph* mgLH = new TMultiGraph("LH","LH");
-//gLHs[0]->Draw("AP");
-   mgLH->GetXaxis()->CenterTitle();
-//   gLHs[0]->GetYaxis()->SetRangeUser(0.0, 1.1*gLHs[0]->GetMaximum());
-   mgLH->GetXaxis()->SetTitleFont(42);
-   mgLH->GetXaxis()->SetTitleSize(0.3);
-   mgLH->GetXaxis()->SetTitleOffset(1.0);
-   mgLH->GetXaxis()->SetLabelFont(42);
-   mgLH->GetXaxis()->SetLabelSize(0.3);
-   mgLH->GetXaxis()->SetTitle("Bin Number");
-   mgLH->GetXaxis()->SetTickSize(0.03);
-   mgLH->GetYaxis()->SetTickSize(0.02);
-   mgLH->GetYaxis()->CenterTitle();
-   mgLH->GetYaxis()->SetTitleFont(42);
-   mgLH->GetYaxis()->SetTitleSize(0.3);
-   mgLH->GetYaxis()->SetTitleOffset(0.37);
-   mgLH->GetYaxis()->SetLabelFont(42);
-   mgLH->GetYaxis()->SetLabelSize(0.07);
-   mgLH->GetYaxis()->SetTitle("Sigma");
-   gStyle->SetTickLength(0.02,"X");
-   gStyle->SetTickLength(0.02,"Y");
-   gStyle->SetTitleOffset(0.5,"Y");
-   gStyle->SetTitleOffset(0.9,"X");
-   gStyle->SetLabelOffset(0.01,"X");
-   gStyle->SetLabelSize(0.07,"X");
-   gStyle->SetLabelSize(0.07,"Y");
-   gStyle->SetTitleSize(0.07,"X");
-   gStyle->SetTitleSize(0.07,"Y");
-for(int i = 0; i < gLHs.size(); i++){
-   gLHs[i]->SetLineColor(colors[i]);
-   gLHs[i]->SetMarkerColor(colors[i]);
-   gLHs[i]->SetLineWidth(1.0);
-   gLHs[i]->SetMarkerStyle(20+i);
-   gLHs[i]->SetLineStyle(i+1);
-   mgLH->Add(gLHs[i]);
- //gLHs[i]->Draw("AP same");
+double hmax = hists[0]>GetMaximum();
+hists[0]->GetXaxis()->CenterTitle();
+hists[0]->GetXaxis()->SetTitleFont(42);
+hists[0]->GetXaxis()->SetTitleSize(0.05);
+hists[0]->GetXaxis()->SetTitleOffset(1.0);
+hists[0]->GetXaxis()->SetLabelFont(42);
+hists[0]->GetXaxis()->SetLabelSize(0.04);
+hists[0]->GetXaxis()->SetTitle("");
+hists[0]->GetXaxis()->SetTickSize(0.);
+hists[0]->GetYaxis()->CenterTitle();
+hists[0]->GetYaxis()->SetTitleFont(42);
+hists[0]->GetYaxis()->SetTitleSize(0.04);
+hists[0]->GetYaxis()->SetTitleOffset(0.85);
+hists[0]->GetYaxis()->SetLabelFont(42);
+hists[0]->GetYaxis()->SetTickLength(0.02);
+hists[0]->GetYaxis()->SetLabelSize(0.03);
+hists[0]->GetYaxis()->SetTitle("Ratio");
+hists[0]->GetXaxis()->SetLabelOffset(999);
+hists[0]->GetXaxis()->SetLabelSize(0);
+hists[0]->GetXaxis()->SetTickLength(0);
+gStyle->SetTickLength(0.);
+gStyle->SetLabelOffset(999);
+gStyle->SetLabelSize(0.);
+for(int i = 0; i < Nhist; i++){
+	hists[i]->SetLineColor(colors[i]);
+	hists[i]->SetMarkerColor(colors[i]);
+	hists[i]->SetLineWidth(1.0);
+	hists[i]->SetMarkerStyle(20+i);
+	hists[i]->SetLineStyle(i+1);
+	hists[i]->Draw("SAME HIST");
 }
-mgLH->Draw("AP");
-can->Modified();
-can->Update();
-can->cd();
-pRatio->cd();
-   TLegend* leg = new TLegend(1.-hhi+0.03, 1.- (Nhist+1)*(1.-0.49)/9.-0.15, 0.98, 1.-hto);
-   leg->SetTextFont(132);
-   leg->SetTextSize(0.035);
-   leg->SetFillColor(kWhite);
-   leg->SetLineColor(kWhite);
-   leg->SetShadowColor(kWhite);
-   // if(hist_data)
-   // leg->AddEntry(hist_data, "data");
-   // leg->AddEntry(gr, "total uncertainty","F");
-   for(int i = 0; i < Nhist; i++)
-   leg->AddEntry(graphs[i], ("#splitline{"+labels[i]+"}{Integral: "+std::to_string(hists[i]->Integral(1,hists[i]->GetNbinsX()))+"}").c_str(), "LP");
-  leg->Draw("SAME");
-  double eps = 0.0015;
+
+TLegend* leg = new TLegend(1.-hhi+0.03, 1.- (Nhist+1)*(1.-0.49)/9.-0.15, 0.98, 1.-hto);
+leg->SetTextFont(132);
+leg->SetTextSize(0.035);
+leg->SetFillColor(kWhite);
+leg->SetLineColor(kWhite);
+leg->SetShadowColor(kWhite);
+
+for(int i = 0; i < Nhist; i++)
+leg->AddEntry(hists[i], ("#splitline{"+labels[i]+"}{Integral: "+std::to_string(hists[i]->Integral(1,hists[i]->GetNbinsX()))+"}").c_str(), "LP");
+leg->Draw("SAME");
+double eps = 0.0015;
 
 can->Modified();
 can->Update();
-can->cd();
-pLH->cd();
-   TLegend* legLH = new TLegend(1.-hhi-0.01, 1.- (Nhist+1)*(1.-0.49)/9.-0.4, 0.98, 1.-hto);
-   legLH->SetTextFont(132);
-   legLH->SetTextSize(0.06);
-   legLH->SetFillColor(kWhite);
-   legLH->SetLineColor(kWhite);
-   legLH->SetShadowColor(kWhite);
-   for(int i = 0; i < gLHs.size(); i++)
-   legLH->AddEntry(gLHs[i], psc->m_LHlabels[i].c_str(), "LP");
-  legLH->Draw("same");
 
-  TLatex l;
-  l.SetTextFont(42);
-  l.SetNDC();
 
-  TLine* line = new TLine();
-  line->SetLineWidth(2);
-  line->SetLineColor(kBlack);
-can->Modified();
-can->Update();
-can->cd();
-pLH->cd();  
+TLatex l;
+l.SetTextFont(42);
+l.SetNDC();
+
+TLine* line = new TLine();
+line->SetLineWidth(2);
+line->SetLineColor(kBlack);
+ 
 // line->DrawLineNDC(hlo, hbo-0.024*lmax, 1-hhi, hbo-0.0235*lmax);
-  l.SetTextSize(0.03);
-  l.SetTextFont(132);
-  l.SetTextAlign(13);
-//  line->SetLineWidth(1);
+  l.SetTextSize(0.025);
+  l.SetTextFont(42);
+  l.SetTextAlign(23);
+ line->SetLineWidth(1);
   double lo = hlo;
   double hi = hlo;
   double yline = hbo-0.024*lmax;
-
-can->Modified();
-can->Update();
-can->cd();
-pRatio->cd();
 int ib = 0;
 for(int r = 0; r < NR; r++){
-int NM = bin[r].NBins();
-  for(int m = 0; m < NM; m++){
-  string binLabel = "Bin #"+std::to_string(ib)+" | RISR: "+blabels_RISR[r]+" | M_{#perp}  : "+bin[r].GetMBinLabels()[m]; 
-  //string binLabel = "Bin #"+std::to_string(ib)+" | RISR: "+blabels_RISR[r]+" | M_{#perp}  : "+blabels_Mperp[m]; 
-  l.DrawLatex(1.-hhi+0.01, 1.- (Nhist+1)*(1.-0.49)/9. - 0.23- 0.05*ib,binLabel.c_str());
-   //TLegend* leg = new TLegend(1.-hhi+0.03, 1.- (Nhist+1)*(1.-0.49)/9.-0.2, 0.98, 1.-hto);
-  //1.-hhi+0.01, 1.- (Nhist+1)*(1.-0.49)/9., 0.98, 1.-hto-0.005
-  ib++;
-  } 
+	int NM = bin[r].NBins();
+    lo = hi;
+    hi = double(NM)/double(NB)*(1.-hhi-hlo) + lo;
+    
+    line->SetLineStyle(1);
+    line->DrawLineNDC(lo + eps, yline,
+                      lo + eps, yline + 6*eps);
+    line->DrawLineNDC(hi - eps, yline,
+                      hi - eps, yline + 6*eps);
+    line->DrawLineNDC(lo + eps, yline,
+                      hi - eps, yline);
+    line->SetLineStyle(5);
+    line->DrawLineNDC(hi, hbo, hi, 1.-hto);
+    line->SetLineStyle(3);
+    for(int b = 0; b < NM; b++){
+      if(ib%2 == 1)
+        line->DrawLineNDC(lo + (hi-lo)*(b+0.5)/double(NM), hbo,
+                          lo + (hi-lo)*(b+0.5)/double(NM), (hbo+yline)/2.+eps);
+      ib++;
+    }
+    
+    l.DrawLatex((hi+lo)/2., yline - 8*eps, blabels[r].c_str());
 }      
-can->Modified();
-can->Update();
-can->cd();
-pLH->cd();
+	l.SetTextAlign(32);
+	l.SetTextSize(0.03);
+	l.SetTextFont(42);
+	l.DrawLatex(hlo, (hbo+yline)/2.+eps, "M_{#perp}   [GeV] #in");
 
+	l.SetTextSize(0.03);
+	l.SetTextFont(42);
+	l.DrawLatex(hlo, yline - 15*eps, "#scale[1.15]{R_{ISR}} #in");
 
-can->Modified();
-can->Update();
-can->cd();
-pRatio->cd();
-
-  l.SetTextAlign(31);
-  l.SetTextSize(0.04);
-  l.SetTextFont(42);
-  l.DrawLatex(1.-hhi-eps*4, 1.-hto+0.02, "2017 MC KUEWKino");
-  l.SetTextAlign(11);
-  l.SetTextSize(0.04);
-  l.SetTextFont(42);
-  l.DrawLatex(hlo+eps*4, 1.-hto+0.02,"#bf{#it{CMS}} work-in-progress");
-  l.SetTextSize(0.05);
+	l.SetTextAlign(31);
+	l.SetTextSize(0.04);
+	l.SetTextFont(42);
+	l.DrawLatex(1.-hhi-eps*4, 1.-hto+0.02, "2017 MC KUEWKino");
+	l.SetTextAlign(11);
+	l.SetTextSize(0.04);
+	l.SetTextFont(42);
+	l.DrawLatex(hlo+eps*4, 1.-hto+0.02,"#bf{#it{CMS}} work-in-progress");
+	l.SetTextSize(0.05);
 
 
   string plotlabel;
@@ -2422,13 +2395,15 @@ pRatio->cd();
     plotlabel += "#color[7024]{"+hadI_labels[0]+"} + ";
   if(Nextra == 1)
     plotlabel += "#color[7024]{"+extra_labels[0]+"} + ";
-  plotlabel += "p_{T}^{ISR} > 300 GeV, "+m_Title[proc];
+  plotlabel += "p_{T}^{ISR} > 300 GeV, "+m_Title[proc[0]];
 
-  l.SetTextColor(kBlack);
-  l.SetTextAlign(13);
-  l.SetTextSize(0.035);
-  l.SetTextFont(42);
-  l.DrawLatex(0.177796, 0.890436, plotlabel.c_str());
+	l.SetTextColor(kBlack);
+	l.SetTextAlign(13);
+	l.SetTextSize(0.035);
+	l.SetTextFont(42);
+	l.DrawLatex(hlo+0.02, 1-hto-0.012, plotlabel.c_str());
+
+  // l.DrawLatex(0.177796, 0.890436, plotlabel.c_str());
 
   return can;
   
