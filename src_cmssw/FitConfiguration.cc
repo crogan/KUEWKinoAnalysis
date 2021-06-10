@@ -132,8 +132,7 @@ void FitConfiguration::Configure(ch::CombineHarvester& cb, ProcessList& processe
     .AddSyst(cb, "PTISR", "lnN", SystMap<>::init(1.05));
 
   // turn off regex filtering
-  cb.SetFlag("filters-use-regex", false)
-    ;
+  cb.SetFlag("filters-use-regex", false);
 
 }
 
