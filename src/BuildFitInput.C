@@ -163,6 +163,7 @@ int main(int argc, char* argv[]) {
     cout << "   -lumi [lumi]        set luminosity to lumi" << endl;
     cout << "   -sigfile            signal filename must match this string to be included" << endl;
     cout << "   -maskSR             mask high RISR bins" << endl;
+    cout << "Example: ./BuildFitInput.x ++bkg +proc T2tt +cat1L ++sys" << endl;
    
     return 0;
   }
