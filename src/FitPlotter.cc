@@ -1873,12 +1873,12 @@ TCanvas* FitPlotter::Plot2D(const string& can_name,
 }
 
 TCanvas* FitPlotter::Plot1DratioSyst(const VS& proc,
- 	   const vector<Systematic&> syst,
-           const string& lep_cat,
-           const string& hadS_cat,
-           const string& hadI_cat,
+ 	   const Systematic& syst,
+           const VS& lep_cat,
+           const VS& hadS_cat,
+           const VS& hadI_cat,
            const string& name,
-           const string& extra){
+           const VS& extra){
 
   //RestFrames::SetStyle();
 
@@ -1890,7 +1890,7 @@ TCanvas* FitPlotter::Plot1DratioSyst(const VS& proc,
   if(!extra.empty()) Nextra = extra.size();
   if(Nlep  == 0 ||
    NhadS == 0 ||
-   NhadI == 0 || syst.size() < 1)
+   NhadI == 0)
   return nullptr;
 
 int catTest = 0;
@@ -1905,7 +1905,7 @@ int catTest = 0;
   else if(Nextra > 1) Ncats = Nextra;
   if(Nlep  < 2 &&
    NhadS < 2 &&
-   NhadI < 2 && syst.size() < 2){
+   NhadI < 2  ){
     cout << "Need multiple categories for either process, lepton ID, hadS, hadI, extra argument, or systematics to create ratios" << endl;
     return nullptr;
   }
@@ -1965,7 +1965,7 @@ cout << "leptonic cuts passed" << endl;
     hadS_labels.push_back(m_Title[hadS_cat[i]]);
   else
     hadS_labels.push_back(hadS_cat[i]);
-
+cout << hadS_labels[i] << endl;
   if(m_Strings.count(hadS_cat[i]) != 0){
     int N = m_Strings[hadS_cat[i]].size();
     for(int j = 0; j < N; j++){
@@ -2112,17 +2112,16 @@ cout << cats[catTest].GetN() << endl;
   vector<TH1D*> hists;
 
 
-
+int colorIdx = 0;
   
 
-  for(int s = 0; s < syst.size(); s++){
-  	Systematic& sys = syst[s];
-  	if(!(!sys)){
-  		if(sys.IsUp()){
-  			sys.Down();
+  for(int s = 0; s < 1; s++){
+  	if(!(!syst)){
+  		if(syst.IsUp()){
+  			syst.Down();
   			s--;
   		}
-  		else sys.Up();
+  		else syst.Up();
   	}
   CategoryList cat1;
   for(int cc = 0; cc < Ncats; cc++){
@@ -2148,7 +2147,7 @@ for(int i = 0; i < proc.size(); i++){
 
     for(int c = 0; c < Ncat; c++){
       // cout << cat1[c].GetLabel() << " " << pp.Name() << endl;
-      if(!IsFilled(cat1[c], pp))
+      if(!IsFilled(cat1[c], pp,syst))
         continue;
 
   cout << "filled " << cat1[c].GetLabel() << " " << pp.Name() << endl;
@@ -2156,50 +2155,58 @@ for(int i = 0; i < proc.size(); i++){
     histNom = (TH1D*) GetHistogram(cat1[c], pp)->Clone(Form("plothist_%d_%s", 0, name.c_str()));
    else 
     histNom->Add(GetHistogram(cat1[c], pp));  
-
-  if(!syst[s].IsDefault()){
+  if(!syst.IsDefault()){
   	if(!hist)
-    hist = (TH1D*) GetHistogram(cat1[c], pp,sys)->Clone(Form("plothist_%d_%s", 0, name.c_str()));
-  else 
-    hist->Add(GetHistogram(cat1[c], pp,sys));
+    hist = (TH1D*) GetHistogram(cat1[c], pp,syst)->Clone(Form("plothist_%d_%s", 0, name.c_str()));
+ else 
+    hist->Add(GetHistogram(cat1[c], pp,syst));
 	}
-
     }
   }
 
   if(hist == nullptr){
-    cout << "hist not found" << endl;
+    cout << "hist not found for systematic: "<< syst.Label() << endl;
+    continue;
+  }
+  if(histNom == nullptr){
+    cout << "nominal hist not found" << endl;
     continue;
   }
 
-
-  else if(Nlep > 1)
-    labels += m_Title[lep_cat[cc]];
+if(syst.IsUp()){
+  if(Nlep > 1)
+    labels += "#splitline{"+m_Title[lep_cat[cc]]+"}{"+syst.Label()+"Up}";
   else if(NhadS > 1)
-    labels += hadS_cat[cc];
+    labels += "#splitline{"+hadS_cat[cc]+"}{"+syst.Label()+"Up}";
   else if(NhadI > 1)
-    labels += hadI_cat[cc];
+    labels += "#splitline{"+hadI_cat[cc]+"}{"+syst.Label()+"Up}";
   else if(Nextra > 1)
-    labels += extra[cc];
-	else if(systs.size() > 1)
-		if(sys.IsUp())
-		labels += sys.Label()+"Up";
-		else
-			labels += sys.Label()+"Down";
+    labels += "#splitline{"+extra[cc]+"}{"+syst.Label()+"Up}";
+}
+else{
+   if(Nlep > 1)
+    labels += "#splitline{"+m_Title[lep_cat[cc]]+"}{"+syst.Label()+"Down}";
+  else if(NhadS > 1)
+    labels += "#splitline{"+hadS_cat[cc]+"}{"+syst.Label()+"Down}";
+  else if(NhadI > 1)
+    labels += "#splitline{"+hadI_cat[cc]+"}{"+syst.Label()+"Down}";
+  else if(Nextra > 1)
+    labels += "#splitline{"+extra[cc]+"}{"+syst.Label()+"Down}";
+}
 		// else labels += "nominal";
-
 	//do ratio
 	hist->Divide(histNom);
 	//do normalizations here
 	//int systNorm = hist->Integral();
 	//int nomNorm =
     
-  colors.push_back(m_ColorDefault[cc]);
+  colors.push_back(m_ColorDefault[colorIdx]);
+  colorIdx++;
   hists.push_back(hist); 
  } 
 }
+if(hists.size() < 1) return nullptr;
 int Nhist = hists.size();
-
 int nBins;
 int gBin; 
 
@@ -2219,7 +2226,7 @@ int gBin;
 
   VS blabels;
   for(int r = 0; r < NR; r++)
-  blabels_Mperp += bin[r].GetMBinLabels();
+  blabels += bin[r].GetMBinLabels();
 
 
   int lmax = 0;
@@ -2247,18 +2254,17 @@ int gBin;
   hists[0]->LabelsOption("v","X");
 
 // double x; double y;
-//for(int i = 0; i < graphs[0]->GetN(); i++) { graphs[0]->GetPoint(i,x,y); cout << "point #" << i << "| x: " << x << " y: " << y << endl;}
 
-  gStyle->SetPadTopMargin(0.09);
-    gStyle->SetPadRightMargin(0.25);
-    gStyle->SetPadBottomMargin(0.18);
-    gStyle->SetPadLeftMargin(0.15);
+//  gStyle->SetPadTopMargin(0.09);
+//    gStyle->SetPadRightMargin(0.25);
+//    gStyle->SetPadBottomMargin(0.18);
+//    gStyle->SetPadLeftMargin(0.15);
    gStyle->SetOptTitle(0);
    gStyle->SetOptStat(0);
    gStyle->SetOptFit(11111111);
    TCanvas* can = new TCanvas(Form("can_%s", name.c_str()),
             Form("can_%s", name.c_str()),
-            0,45,1337, 738);
+            1200,700);
    // double hlo = 0.15;
    // double hhi = 0.22;
    // double hbo = 0.27;
@@ -2277,7 +2283,8 @@ int gBin;
 
 
 
-double hmax = hists[0]>GetMaximum();
+double hmax = hists[0]->GetMaximum();
+hists[0]->Draw("hist");
 hists[0]->GetXaxis()->CenterTitle();
 hists[0]->GetXaxis()->SetTitleFont(42);
 hists[0]->GetXaxis()->SetTitleSize(0.05);
@@ -2294,22 +2301,29 @@ hists[0]->GetYaxis()->SetLabelFont(42);
 hists[0]->GetYaxis()->SetTickLength(0.02);
 hists[0]->GetYaxis()->SetLabelSize(0.03);
 hists[0]->GetYaxis()->SetTitle("Ratio");
-hists[0]->GetXaxis()->SetLabelOffset(999);
-hists[0]->GetXaxis()->SetLabelSize(0);
-hists[0]->GetXaxis()->SetTickLength(0);
-gStyle->SetTickLength(0.);
-gStyle->SetLabelOffset(999);
-gStyle->SetLabelSize(0.);
+hists[0]->GetYaxis()->SetRangeUser(0.8, 1.1*hmax);
+//hists[0]->GetXaxis()->SetLabelOffset(999);
+//hists[0]->GetXaxis()->SetLabelSize(0);
+//hists[0]->GetXaxis()->SetTickLength(0);
+//gStyle->SetTickLength(0.);
+//gStyle->SetLabelOffset(999);
+//gStyle->SetLabelSize(0.);
 for(int i = 0; i < Nhist; i++){
-	hists[i]->SetLineColor(colors[i]);
-	hists[i]->SetMarkerColor(colors[i]);
-	hists[i]->SetLineWidth(1.0);
-	hists[i]->SetMarkerStyle(20+i);
-	hists[i]->SetLineStyle(i+1);
+	if(i < Nhist/2){
+	hists[i]->SetMarkerStyle(20);
+	hists[i]->SetLineStyle(1);
+	}
+	else{
+	hists[i]->SetMarkerStyle(21);
+	hists[i]->SetLineStyle(2);
+	}
+	hists[i]->SetLineColor(colors[i%3]);
+	hists[i]->SetMarkerColor(colors[i%3]);
+	hists[i]->SetLineWidth(2);
 	hists[i]->Draw("SAME HIST");
 }
 
-TLegend* leg = new TLegend(1.-hhi+0.03, 1.- (Nhist+1)*(1.-0.49)/9.-0.15, 0.98, 1.-hto);
+TLegend* leg = new TLegend(1.-hhi+0.01, 1.- (Nhist+1)*(1.-0.49)/9.-0.15, 0.98, 1.-hto);
 leg->SetTextFont(132);
 leg->SetTextSize(0.035);
 leg->SetFillColor(kWhite);
@@ -2317,7 +2331,7 @@ leg->SetLineColor(kWhite);
 leg->SetShadowColor(kWhite);
 
 for(int i = 0; i < Nhist; i++)
-leg->AddEntry(hists[i], ("#splitline{"+labels[i]+"}{Integral: "+std::to_string(hists[i]->Integral(1,hists[i]->GetNbinsX()))+"}").c_str(), "LP");
+leg->AddEntry(hists[i], (labels[i]).c_str(), "L");
 leg->Draw("SAME");
 double eps = 0.0015;
 
@@ -3503,9 +3517,6 @@ void FitPlotter::InitializeRecipes(){
   m_Color["Fakes"] = 7021;
   m_Strings["Fakes"] = VS().a("Fakes_elf0").a("Fakes_elf1").a("Fakes_elf2").a("Fakes_muf0").a("Fakes_muf1").a("Fakes_muf2");
   
-  m_Title["Fake"] = "fake";
-  m_Color["Fake"] = 7020;
-  m_Strings["Fake"] = VS().a("Fakes_elf2").a("Fakes_muf2");
 
   m_Title["HF"] = "heavy flavor";
   m_Color["HF"] = 7022;
@@ -3514,6 +3525,13 @@ void FitPlotter::InitializeRecipes(){
   m_Title["LF"] = "light flavor";
   m_Color["LF"] = 7021;
   m_Strings["LF"] = VS().a("Fakes_elf1").a("Fakes_muf1");
+
+  m_Title["ttbar_Fakes"] = "t #bar{t} fakes";
+  m_Strings["ttbar_Fakes"] = VS().a("ttbar_Fakes_elf0").a("ttbar_Fakes_elf1").a("ttbar_Fakes_muf0").a("ttbar_Fakes_muf1");
+  m_Color["ttbar_Fakes"] = 7020;
+  
+  m_Title["Wjets_Fakes"] = "W+jets fakes";
+  m_Strings["Wjets_Fakes"] = VS().a("Wjets_Fakes_elf0").a("Wjets_Fakes_elf1").a("Wjets_Fakes_muf0").a("Wjets_Fakes_muf1");
 
   m_Title["ttbar_Fakes_elf0"] = "HF t #bar{t} + jets";
   m_Title["ttbar_Fakes_elf1"] = "LF+unm. t #bar{t} + jets";
@@ -3528,7 +3546,7 @@ void FitPlotter::InitializeRecipes(){
   m_Strings["1L"] = VS().a("1L_elm_elG").a("1L_elp_elG").a("1L_elpm_elG").a("1L_mupm_muG").a("1L_mup_muG").a("1L_mum_muG");
   
   m_Title["1Lel"] = "#scale[1.2]{single gold e}";
-  m_Strings["1Lel"] = VS().a("1L_elp_elG").a("1L_elm_elG").a("1L_elpm_elG").a("1L_elp-elG").a("1L_elm-elG").a("1L_elpm-elG");
+  m_Strings["1Lel"] = VS().a("1L_elp_elG").a("1L_elm_elG").a("1L_elpm_elG").a("1L_elp_elG").a("1L_elm_elG").a("1L_elpm_elG");
 
   m_Title["1Lmu"] = "#scale[1.2]{single gold #mu}";
   m_Strings["1Lmu"] = VS().a("1L_mup_muG").a("1L_mum_mG");
