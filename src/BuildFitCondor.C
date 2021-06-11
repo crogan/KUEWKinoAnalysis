@@ -18,9 +18,15 @@ void WriteScript(const string& src_name,
 		 const string& command,
 		 const string& CERNqueue = "");
 
+void WriteScriptConnect(const string& src_name,
+		 const string& log_name,
+		 const string& command,
+		 const string& CERNqueue = "");
+
 int main(int argc, char* argv[]) {
   int  maxN = 10;
   bool dryRun = false;
+  bool connect = false;
   
   string InputFile = "test/FitInput_test.root";
   string OutputFold = "BuildFit_output";
@@ -149,6 +155,9 @@ int main(int argc, char* argv[]) {
     if(strncmp(argv[i],"--dry-run", 9) == 0){
       dryRun = true;
     } 
+    if(strncmp(argv[i],"--connect", 9) == 0){
+      connect = true;
+    } 
   }
     
   if(!addBkg && !addSig && (proc_to_add.size() == 0))
@@ -166,6 +175,7 @@ int main(int argc, char* argv[]) {
     cout << "   -maxN [number]      maximum number of processes per job" << endl;
     cout << "   --dry-run           create output folders and scripts but don't submit" << endl;
     cout << "   -CERN [queue]       specify queue name for running at CERN" << endl;
+    cout << "   --connect           for running inside a batch job on CMS connect" << endl;
     cout << "  BuildFit.x options:" << endl;
     cout << "   --help(-h)          print options" << endl;
     cout << "   --verbose(-v)       increase verbosity" << endl;
@@ -188,6 +198,7 @@ int main(int argc, char* argv[]) {
     cout << "   +MCstats            adds autoMCStats uncertainties" << endl;
     cout << "   -sepchan            make datacards for each group of channels separately" << endl;
     cout << "   --workspace(-w)     also build workspaces (note: faster not to, and run message)" << endl;
+    cout << "Example: ./BuildFitCondor.x ++bkg +proc T2tt ++cat ++chan --connect -o /stash/user/zflowers/FIT_REPO/CMSSW_10_6_5/src/KUEWKinoAnalysis/test_BuildFit/ -i root://xrootd.unl.edu//store/user/malazaro/BuildFitInputs/BFIShapes_0_fakeData.root " << endl;
 
     return 0;
   }
@@ -234,6 +245,8 @@ int main(int argc, char* argv[]) {
   
   string OutputFile = OutputFold+"/FitInput_"+Ana+"_"+Era+".root";
   string copy_cmd = "cp "+InputFile+" "+OutputFile;
+  if(InputFile.find("xrootd") != std::string::npos)
+    copy_cmd = "xrdcp "+InputFile+" "+OutputFile;
   cout << "COPY cmd:" << endl;
   cout << "   " << copy_cmd << endl;
   gSystem->Exec(copy_cmd.c_str());
@@ -242,7 +255,8 @@ int main(int argc, char* argv[]) {
   if(verbose)
     BuildFitCmd += "--verbose ";
   BuildFitCmd += "--output " + OutputFold + " ";
-  BuildFitCmd += "--input " + OutputFile + " ";
+  BuildFitCmd += "--input " + InputFile + " ";
+  //BuildFitCmd += "--input " + OutputFile + " ";
   BuildFitCmd += Form("-year %d ", year);
   if(addChan)
     BuildFitCmd += "++chan ";
@@ -266,6 +280,8 @@ int main(int argc, char* argv[]) {
     BuildFitCmd += "+MCstats ";
   if(doSepChan)
     BuildFitCmd += "-sepchan ";
+  if(connect)
+    BuildFitCmd += "--connect ";
   
   string SrcFold = OutputFold+"/src/";
   string LogFold = OutputFold+"/log/";
@@ -292,6 +308,13 @@ int main(int argc, char* argv[]) {
 		  LogFold+Form("job_%d",Njob)+".log",
 		  BuildFitCmd+iBFCmd,
 		  CERNqueue);
+      if(connect)
+      {
+        WriteScriptConnect(SrcFold+Form("submit_%d",Njob)+".sh",
+		  LogFold+Form("job_%d",Njob)+".log",
+		  BuildFitCmd+iBFCmd,
+		  CERNqueue);
+      }
       condorsubmit << "condor_submit " << SrcFold << "submit_" << Njob << +".sh" << endl;
 
       procs.clear();
@@ -311,6 +334,51 @@ int main(int argc, char* argv[]) {
 }
 	       
 	     
+void WriteScriptConnect(const string& src_name,
+		 const string& log_name,
+		 const string& command,
+		 const string& CERNqueue){
+
+  string tar = command.substr(command.find("output ")+7,command.find("input")-10-command.find("output "))+"config_BuildFit.tgz";
+  if(gSystem->AccessPathName(tar.c_str()))
+  {
+   gSystem->Exec("mkdir -p config_BuildFit");
+   gSystem->Exec("cp BuildFit.x config_BuildFit/");
+   gSystem->Exec("cp scripts/cmssw_setup_connect.sh config_BuildFit/");
+   gSystem->Exec("cp scripts/setup_RestFrames_connect.sh config_BuildFit/");
+   string input_file = command.substr(command.find("input")+5,command.find(".root")-command.find("input"));
+   gSystem->Exec(("cp"+input_file+" config_BuildFit/").c_str());
+   gSystem->Exec(("tar -czf "+tar+" config_BuildFit/").c_str());
+   gSystem->Exec("rm -r config_BuildFit/");
+  }
+  ofstream file;
+  file.open(src_name);
+ 
+  string pwd = gSystem->pwd();
+  file << "universe = vanilla" << endl;
+  file << "executable = execute_script_BuildFit.sh" << endl;
+  file << "getenv = True" << endl;
+  file << "use_x509userproxy = true" << endl;
+  file << "Arguments = " << command << endl;
+  file << "output = " << log_name << ".out" << endl;
+  file << "error = "  << log_name << ".err" << endl;
+  file << "log = "    << log_name << ".log" << endl;
+  file << "Requirements = (Machine != \"red-node000.unl.edu\") && (Machine != \"red-c2325.unl.edu\")" << endl;
+  file << "request_memory = 4 GB" << endl;
+  file << "transfer_input_files = "+tar << endl;
+  file << "should_transfer_files = YES" << endl;
+  file << "when_to_transfer_output = ON_EXIT" << endl;
+  file << "transfer_output_files = datacards" << endl;
+  file << "transfer_output_remaps = \"datacards = "+command.substr(command.find("output ")+7,command.find("input")-10-command.find("output "))+"datacards"+"\"" << endl;
+  file << "+ProjectName=\"cms.org.ku\""<< endl;
+  file << "+REQUIRED_OS=\"rhel7\"" << endl;
+  file << "+RequiresCVMFS=True" << endl;
+  if(CERNqueue != "")
+    file << "+JobFlavour=\"" << CERNqueue << "\"" << endl;
+  file << "queue " << endl;
+  file.close();  
+}
+
 void WriteScript(const string& src_name,
 		 const string& log_name,
 		 const string& command,
@@ -330,5 +398,6 @@ void WriteScript(const string& src_name,
   file << "request_memory = 4 GB" << endl;
   if(CERNqueue != "")
     file << "+JobFlavour=\"" << CERNqueue << "\"" << endl;
+						     
   file.close();  
 }
