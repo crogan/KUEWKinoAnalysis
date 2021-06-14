@@ -61,6 +61,14 @@ public:
            const string& name,
            const VS& extra);
 
+  TCanvas* Plot1DratioSyst(const VS& proc,
+     const Systematic& syst,
+           const VS& lep_cat,
+           const VS& hadS_cat,
+           const VS& hadI_cat,
+           const string& name,
+           const VS& extra);
+
   map<string,VS> m_Strings;
   
 private:

@@ -309,7 +309,6 @@ Systematics SystematicsTool::GetWeightSystematics() const {
   
   //list += "PU_SF"; // turn off for now
   //add fake shape systematics here
-  //list += "WjetsDBTB_1Lel0Jf0_RISR"; //grouped by process, #L, lep flav, #jS, fake source, RISR/Mperp 
   list += "BTAGHF_SF";
   list += "BTAGLF_SF";
   list += "MET_TRIG";
@@ -318,30 +317,30 @@ Systematics SystematicsTool::GetWeightSystematics() const {
 }
 
 //pass this list of real procs ie ttbar, Wjets
-Systematics SystematicsTool::GetFakeShapeSystematics(CategoryTree CT, VS procs) const {
-        Systematics list;
-	vector<const CategoryTree*> catTrees;
-	CT.GetListDepth(catTrees,1);
-
-	VS procGroups;
-	if(std::count(procs.begin(),procs.end(),"ttbar") || std::count(procs.begin(),procs.end(),"ST")) procGroups += "ttbarST";
-	if(std::count(procs.begin(),procs.end(),"Wjets") || std::count(procs.begin(),procs.end(),"TB") || std::count(procs.begin(),procs.end(),"DB")) procGroups += "WjetsDBTB";
-	if(std::count(procs.begin(),procs.end(),"ZDY")) procGroups += "ZDY";
-	if(std::count(procs.begin(),procs.end(),"QCD")) procGroups += "QCD";
-
-
-	for(int c = 0; c < int(catTrees.size()); c++){
-		for(int p = 0; p < procGroups.size(); p++){
-			list += Systematic(procGroups[p]+"_"+catTrees[c]->GetSpecLabel()+"f0_RISR").Up();
-			list += Systematic(procGroups[p]+"_"+catTrees[c]->GetSpecLabel()+"f1_RISR").Down();
-			list += Systematic(procGroups[p]+"_"+catTrees[c]->GetSpecLabel()+"f0_Mperp").Up();
-			list += Systematic(procGroups[p]+"_"+catTrees[c]->GetSpecLabel()+"f1_Mperp").Down();
-		}
-	}
-  
-
-  return list;
-}
+//Systematics SystematicsTool::GetFakeShapeSystematics(CategoryTree CT, VS procs) const {
+//        Systematics list;
+//	vector<const CategoryTree*> catTrees;
+//	CT.GetListDepth(catTrees,1);
+//
+//	VS procGroups;
+//	if(std::count(procs.begin(),procs.end(),"ttbar") || std::count(procs.begin(),procs.end(),"ST")) procGroups += "ttbarST";
+//	if(std::count(procs.begin(),procs.end(),"Wjets") || std::count(procs.begin(),procs.end(),"TB") || std::count(procs.begin(),procs.end(),"DB")) procGroups += "WjetsDBTB";
+//	if(std::count(procs.begin(),procs.end(),"ZDY")) procGroups += "ZDY";
+//	if(std::count(procs.begin(),procs.end(),"QCD")) procGroups += "QCD";
+//
+//
+//	for(int c = 0; c < int(catTrees.size()); c++){
+//		for(int p = 0; p < procGroups.size(); p++){
+//			list += Systematic(procGroups[p]+"_"+catTrees[c]->GetSpecLabel()+"f0_RISR").Up();
+//			list += Systematic(procGroups[p]+"_"+catTrees[c]->GetSpecLabel()+"f1_RISR").Down();
+//			list += Systematic(procGroups[p]+"_"+catTrees[c]->GetSpecLabel()+"f0_Mperp").Up();
+//			list += Systematic(procGroups[p]+"_"+catTrees[c]->GetSpecLabel()+"f1_Mperp").Down();
+//		}
+//	}
+//  
+//
+//  return list;
+//}
 
 // Default alternative tree systematics
 Systematics SystematicsTool::GetTreeSystematics() const {
