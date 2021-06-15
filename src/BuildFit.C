@@ -531,7 +531,7 @@ int main(int argc, char* argv[]) {
   {
    cmd = "combineTool.py -M T2W -i "+OutputFold+"datacards/*/*/*/datacard.txt -o workspace.root --parallel 4";
 
-   string cmd_condor = "combineTool.py -M T2W -i "+OutputFold+"datacards/*/*/*/datacard.txt -o workspace.root --job-mode condor ";
+   string cmd_condor = "combineTool.py -M T2W -i "+OutputFold+"datacards/*/*/*/datacard.txt -o workspace.root --job-mode connect --input-file "+OutputFold+InputFile+" --sub-opts='+ProjectName=\"cms.org.ku\" \n request_memory = 8 GB \n' ";
   }
 
   string cmd_condor_CERN = "--sub-opts='+JobFlavour=\"espresso\" \\n request_memory = 4 GB'";
