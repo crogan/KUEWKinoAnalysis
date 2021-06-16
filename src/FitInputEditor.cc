@@ -518,10 +518,9 @@ void FitInputEditor::AddShapeSysFakes(){
       while(pr != m_FakeGroupLists.end()){
 	ProcessList procs = pr->second;
 	int Nproc = procs.GetN();
-
 	bool b_addSys_RISR  = false;
 	bool b_addSys_Mperp = false;
-	string sys_name = sgroup+"_"+pr->first;
+	string sys_name = pr->first+"_"+sgroup;
 	Systematic sys_RISR(sys_name+"_RISR");
 	Systematic sys_Mperp(sys_name+"_Mperp");
 
