@@ -339,7 +339,7 @@ void WriteScriptConnect(const string& src_name,
 		 const string& command,
 		 const string& CERNqueue){
 
-  string tar = command.substr(command.find("output ")+7,command.find("input")-10-command.find("output "))+"config_BuildFit.tgz";
+  string tar = command.substr(command.find("output ")+7,command.find("input")-10-command.find("output "))+"/config_BuildFit.tgz";
   if(gSystem->AccessPathName(tar.c_str()))
   {
    gSystem->Exec("mkdir -p config_BuildFit");
@@ -348,12 +348,13 @@ void WriteScriptConnect(const string& src_name,
    gSystem->Exec("cp scripts/setup_RestFrames_connect.sh config_BuildFit/");
    string input_file = command.substr(command.find("input")+5,command.find(".root")-command.find("input"));
    gSystem->Exec(("cp"+input_file+" config_BuildFit/").c_str());
-   gSystem->Exec(("tar -czf "+tar+" config_BuildFit/").c_str());
+   gSystem->Exec("tar -czf config_BuildFit.tgz config_BuildFit/");
+   gSystem->Exec(("mv config_BuildFit.tgz "+command.substr(command.find("output ")+7,command.find("input")-10-command.find("output "))).c_str());
    gSystem->Exec("rm -r config_BuildFit/");
   }
+
   ofstream file;
-  file.open(src_name);
- 
+  file.open(src_name); 
   string pwd = gSystem->pwd();
   file << "universe = vanilla" << endl;
   file << "executable = execute_script_BuildFit.sh" << endl;
@@ -365,11 +366,11 @@ void WriteScriptConnect(const string& src_name,
   file << "log = "    << log_name << ".log" << endl;
   file << "Requirements = (Machine != \"red-node000.unl.edu\") && (Machine != \"red-c2325.unl.edu\")" << endl;
   file << "request_memory = 4 GB" << endl;
-  file << "transfer_input_files = "+tar << endl;
+  file << "transfer_input_files = "+command.substr(command.find("output ")+7,command.find("input")-10-command.find("output "))+"/config_BuildFit.tgz" << endl;
   file << "should_transfer_files = YES" << endl;
   file << "when_to_transfer_output = ON_EXIT" << endl;
   file << "transfer_output_files = datacards" << endl;
-  file << "transfer_output_remaps = \"datacards = "+command.substr(command.find("output ")+7,command.find("input")-10-command.find("output "))+"datacards"+"\"" << endl;
+  file << "transfer_output_remaps = \"datacards = "+command.substr(command.find("output ")+7,command.find("input")-10-command.find("output "))+"/datacards"+"\"" << endl;
   file << "+ProjectName=\"cms.org.ku\""<< endl;
   file << "+REQUIRED_OS=\"rhel7\"" << endl;
   file << "+RequiresCVMFS=True" << endl;
