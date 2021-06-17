@@ -17,7 +17,6 @@
 #include <TLorentzVector.h>
 //#include <TIter.h>
 #include <TKey.h>
-#include <ROOT/RDataFrame.hxx>
 
 
 
@@ -30,11 +29,12 @@
 #include "Leptonic.hh"
 #include "Hadronic.hh"
 
-using ROOT::RDataFrame;
 using namespace std;
 int main(int argc, char* argv[]) {
-  string NtuplePath = "/home/t3-ku/crogan/NTUPLES/NANO/NEW_21_09_20/";//"/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_21_09_20/";
-  string OutFile    = "BuildFitInput_output.root";
+//  string NtuplePath = "/home/t3-ku/crogan/NTUPLES/NANO/NEW_21_09_20/";//"/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_21_09_20/";
+ //for connect:
+   string NtuplePath = "root://xrootd.unl.edu//store/user/zflowers/crogan/";
+   string OutFile    = "BuildFitInput_output.root";
 
   bool doSigFile = false;
   string SigFile = "";
@@ -452,29 +452,21 @@ int main(int argc, char* argv[]) {
 	      else
 		weight *= SF.GetMETSF(base->MET);
 	    
-	    if(sys == Systematic("BTAGHF_SF"))
-	      if(sys.IsUp())
-		weight *= base->BtagSFweight_up;
-	      else
-		weight *= base->BtagSFweight_down;
-	    else 
-	      weight *= base->BtagSFweight;
+	 //   if(sys == Systematic("BTAGHF_SF"))
+	 //     if(sys.IsUp())
+	 //       weight *= base->BtagSFweight_up;
+	 //     else
+	 //       weight *= base->BtagSFweight_down;
+	 //   else 
+	 //     weight *= base->BtagSFweight;
 
-	    if(sys == Systematic("BTAGLF_SF"))
+	    if(sys == Systematic("BTAG_SF"))
 	      if(sys.IsUp())
 		weight *= base->BtagSFweight_up;
 	 else
 		weight *= base->BtagSFweight_down;
 	    else 
 	      weight *= base->BtagSFweight;
-	//   if(sys == Systematic("lepPT_weight"))
-	//   	weight *= vw.expWeight(base,ptMean,base->PT_lep,sys);
-	//   if(sys == Systematic("lepIso_weight"))
-	//   	weight *= vw.expWeight(base,isoMean,base->MiniIso_lep,sys);
-	//   if(sys == Systematic("lepEta_weight"))
-	//   	weight *= vw.expWeight(base,etaMean, base->Eta_lep,sys);
-	// if(sys == Systematic("lepSIP3D_weight"))
-	//   	weight *= vw.expWeight(base,sip3dMean,base->SIP3D_lep,sys);
 
 	    // turn off PU systematics for now
 	    // if(sys == Systematic("PU_SF"))
