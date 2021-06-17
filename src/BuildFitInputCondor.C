@@ -275,11 +275,20 @@ void WriteScriptConnect(const string& src_name,
   ofstream file;
   file.open(src_name);
   string pwd = gSystem->pwd();
+  string root_output = command.substr(command.find("-o")+2);
+  string OutputFold = root_output;
+  if(root_output.find("/") != string::npos){
+   int pos = root_output.find_last_of("/")+1;
+   root_output = root_output.substr(pos, root_output.length()-pos);
+   OutputFold = OutputFold.substr(0,pos);
+   OutputFold.erase(remove_if(OutputFold.begin(), OutputFold.end(), ::isspace),OutputFold.end());
+  }
   gSystem->Exec("mkdir -p config_BuildFitInput");
   gSystem->Exec("cp BuildFitInput.x config_BuildFitInput/");
   gSystem->Exec("cp scripts/cmssw_setup_connect.sh config_BuildFitInput/");
   gSystem->Exec("cp scripts/setup_RestFrames_connect.sh config_BuildFitInput/");
   gSystem->Exec("tar -czf config_BuildFitInput.tgz config_BuildFitInput/");
+  gSystem->Exec(("mv config_BuildFitInput.tgz "+OutputFold+"/../").c_str());
   gSystem->Exec("rm -r config_BuildFitInput/");
   file << "universe = vanilla" << endl;
   file << "executable = execute_script_BuildFitInput.sh" << endl;
@@ -291,11 +300,11 @@ void WriteScriptConnect(const string& src_name,
   file << "log = "    << log_name << ".log" << endl;
   file << "Requirements = (Machine != \"red-node000.unl.edu\") && (Machine != \"red-c2325.unl.edu\")" << endl;
   file << "request_memory = 4 GB" << endl;
-  file << "transfer_input_files = "+pwd+"/config_BuildFitInput.tgz" << endl;
+  file << "transfer_input_files = "+pwd+"/"+OutputFold+"/../config_BuildFitInput.tgz" << endl;
   file << "should_transfer_files = YES" << endl;
   file << "when_to_transfer_output = ON_EXIT" << endl;
-  file << "transfer_output_files = "+command.substr(command.find("BFI")) << endl;
-  file << "transfer_output_remaps = \""+command.substr(command.find("BFI"))+"="+command.substr(command.find("-o ")+2)+"\"" << endl;
+  file << "transfer_output_files = "+root_output << endl;
+  file << "transfer_output_remaps = \""+root_output+"="+command.substr(command.find("-o ")+2)+"\"" << endl;
   file << "+ProjectName=\"cms.org.ku\""<< endl;
   file << "+REQUIRED_OS=\"rhel7\"" << endl;
   file << "+RequiresCVMFS=True" << endl;
