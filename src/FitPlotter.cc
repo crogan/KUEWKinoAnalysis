@@ -2195,10 +2195,9 @@ else{
 }
 		// else labels += "nominal";
 	//do ratio
+	float norm = histNom->Integral()/hist->Integral();
 	hist->Divide(histNom);
-	//do normalizations here
-	//int systNorm = hist->Integral();
-	//int nomNorm =
+	hist->Scale(norm);
     
   colors.push_back(m_ColorDefault[colorIdx]);
   colorIdx++;
@@ -2300,7 +2299,7 @@ hists[0]->GetYaxis()->SetTitleOffset(0.85);
 hists[0]->GetYaxis()->SetLabelFont(42);
 hists[0]->GetYaxis()->SetTickLength(0.02);
 hists[0]->GetYaxis()->SetLabelSize(0.03);
-hists[0]->GetYaxis()->SetTitle("Ratio");
+hists[0]->GetYaxis()->SetTitle("Ratio to nominal");
 hists[0]->GetYaxis()->SetRangeUser(0.8, 1.1*hmax);
 //hists[0]->GetXaxis()->SetLabelOffset(999);
 //hists[0]->GetXaxis()->SetLabelSize(0);
@@ -2317,8 +2316,8 @@ for(int i = 0; i < Nhist; i++){
 	hists[i]->SetMarkerStyle(21);
 	hists[i]->SetLineStyle(2);
 	}
-	hists[i]->SetLineColor(colors[i%3]);
-	hists[i]->SetMarkerColor(colors[i%3]);
+	hists[i]->SetLineColor(colors[i%(Nhist/2)]);
+	hists[i]->SetMarkerColor(colors[i%(Nhist/2)]);
 	hists[i]->SetLineWidth(2);
 	hists[i]->Draw("SAME HIST");
 }
@@ -2425,6 +2424,234 @@ for(int r = 0; r < NR; r++){
   }
 ///////
 
+
+TCanvas* FitPlotter::PlotRatioSystDist(const VS& proc,
+		const Systematic& syst,
+		const VS& lep_cat,
+		const VS& matchString,
+		const string& name){
+	CategoryList cat = GetCategories();
+	vector<CategoryList> cats;
+	int Ncats = 0;
+	vector<vector<CategoryList>> cats2D;
+	for(int i = 0; i < lep_cat.size(); i++){
+	cout << "i: " << i << endl;
+		vector<CategoryList> cat_tmp;
+		for(int j = 0; j < matchString.size(); j++){ 
+			cout << "j :" << j << endl; 
+			cat_tmp.push_back(GetCategories());
+			Ncats++;
+		}
+		cats2D.push_back(cat_tmp);
+	}
+	VS labels;
+	vector<VS> filterStrings;
+	for(int i = 0; i < matchString.size(); i++){
+		filterStrings.push_back(VS());
+		string lbl = matchString[i].substr(0,2)+"S";
+		if(count(labels.begin(),labels.end(), lbl) == 0) labels.push_back(lbl);
+		if(m_Strings.count(matchString[i]) != 0){
+			int N = m_Strings[matchString[i]].size();
+			for(int j = 0; j < N; j++){
+				filterStrings[i].push_back(m_Strings[matchString[i]][j]);
+			}
+		}
+		else{
+			filterStrings[i].push_back(matchString[i]);
+		}
+		
+	}
+int Nlep = lep_cat.size();
+ VS lep_labels;
+  vector<VS> vleps;
+  VS vlep;
+  for(int i = 0; i < Nlep; i++){
+    vleps.push_back(VS());
+  if(m_Title.count(lep_cat[i]) != 0)
+    lep_labels.push_back(m_Title[lep_cat[i]]);
+  else
+    lep_labels.push_back(lep_cat[i]);
+
+  if(m_Strings.count(lep_cat[i]) != 0){
+    int N = m_Strings[lep_cat[i]].size();
+     cout << "number of strings in lep tag: " << N << endl;
+  for(int j = 0; j < N; j++){
+    if(Nlep > 1){
+      vleps[i].push_back(m_Strings[lep_cat[i]][j]);
+  }else
+    vlep.push_back(m_Strings[lep_cat[i]][j]);
+     cout << m_Strings[lep_cat[i]][j] << endl;
+  }
+  } else {
+    if(Nlep > 1)
+    vleps[i].push_back(lep_cat[i]);
+  else 
+    vlep.push_back(lep_cat[i]);
+  }
+  if(Nlep > 1){
+    for(int j = 0; j < cats2D[i].size(); j++) cats2D[i][j] = cats2D[i][j].FilterOR(vleps[i]);
+  }
+  }
+if(Nlep == 1)
+  for(int i = 0; i < cats2D.size(); i++)
+    for(int j = 0; j < cats2D[i].size(); j++) cats2D[i][j] = cats2D[i][j].FilterOR(vlep);
+cout << "leptonic cuts passed" << endl;
+
+
+
+
+
+for(int i = 0; i < cats2D.size(); i++){
+	for(int j = 0; j < cats2D[i].size(); j++){
+		cats2D[i][j] = cats2D[i][j].FilterOR(filterStrings[j]);
+	}
+}
+
+//cout << "cats2D size: " << cats2D.size() << endl;
+//cout << "flatten vector" << endl;
+for(int i = 0; i < cats2D.size(); i++){
+	for(int j = 0; j < cats2D[i].size(); j++){
+		cats.push_back(cats2D[i][j]);
+	}
+}
+//cout << "a" << endl;
+//	//int Ncats = cats.size();
+//cout << cats.size() << endl;
+//cout << "b" << endl;
+	double hmax = 0.;
+	double hmin = 1.;
+	vector<TH1D*> hists;
+for(int s = 0; s < 1; s++){
+if(!(!syst)){
+	if(syst.IsUp()){
+		syst.Down();
+		s--;
+	}
+	else syst.Up();
+}
+CategoryList cat1;
+for(int cc = 0; cc < Ncats; cc++){
+cat1 = cats[cc];
+int Ncat = cat1.GetN();
+VS vproc;
+//sum over fakes
+for(int i = 0; i < proc.size(); i++){
+if(m_Strings.count(proc[i]) != 0)
+vproc += m_Strings[proc[i]];
+else
+vproc += proc[i];
+}
+TH1D* histNom = nullptr;
+TH1D* hist = nullptr;
+for(int p = 0; p < int(vproc.size()); p++){
+cout << "vprocess: " << vproc[p] << endl;
+int index = GetProcesses().Find(vproc[p]);
+if(index < 0)
+continue;
+Process pp = GetProcesses()[index];
+for(int c = 0; c < Ncat; c++){
+if(!IsFilled(cat1[c], pp,syst))
+continue;
+cout << "filled " << cat1[c].GetLabel() << " " << pp.Name() << endl;
+if(!histNom)
+histNom = (TH1D*) GetHistogram(cat1[c], pp)->Clone(Form("plothist_%d_%s", 0, name.c_str()));
+else histNom->Add(GetHistogram(cat1[c], pp));  
+if(!syst.IsDefault()){
+if(!hist)
+hist = (TH1D*) GetHistogram(cat1[c], pp,syst)->Clone(Form("plothist_%d_%s", 0, name.c_str()));
+else 
+hist->Add(GetHistogram(cat1[c], pp,syst));
+}
+}
+}
+if(hist == nullptr){
+	cout << "hist not found for systematic: "<< syst.Label() << endl;
+	continue;
+}
+if(histNom == nullptr){
+	cout << "nominal hist not found" << endl;
+	continue;
+}
+	//do ratio
+	float norm = histNom->Integral()/hist->Integral();
+	hist->Divide(histNom);
+	hist->Scale(norm);
+			    
+hists.push_back(hist); 
+if(hist->GetMaximum() > hmax) hmax = hist->GetMaximum();
+if(hist->GetMinimum() < hmin) hmin = hist->GetMinimum();
+} 
+}
+TH1D* dist = new TH1D(syst.Label().c_str(),syst.Label().c_str(),80,hmin-0.05,hmax+0.05);
+int Nhist = hists.size();
+for(int h = 0; h < Nhist; h++){
+	for(int b = 0; b < hists[h]->GetNbinsX(); b++){
+		dist->Fill(hists[h]->GetBinContent(b+1));
+	}
+
+
+}
+double eps = 0.0015;
+
+
+   gStyle->SetOptTitle(0);
+   //gStyle->SetOptStat(0);
+   gStyle->SetOptFit(11111111);
+   TCanvas* can = new TCanvas(Form("can_%s", name.c_str()),
+            Form("can_%s", name.c_str()),
+            1200,700);
+double hlo = 0.09;
+double hhi = 0.22;
+double hbo = 0.17;
+double hto = 0.07;
+//can->SetLeftMargin(hlo);
+//can->SetRightMargin(hhi);
+can->SetBottomMargin(hbo);
+//can->SetTopMargin(hto);
+can->SetGridy();
+can->Draw();
+can->cd();
+dist->GetXaxis()->CenterTitle();
+dist->GetXaxis()->SetTitleFont(42);
+dist->GetXaxis()->SetTitleSize(0.05);
+dist->GetXaxis()->SetTitleOffset(1.0);
+dist->GetXaxis()->SetLabelFont(42);
+dist->GetXaxis()->SetLabelSize(0.04);
+dist->GetXaxis()->SetTitle("Ratio to nominal");
+dist->Draw("hist");
+
+TLatex l;
+l.SetTextAlign(31);
+l.SetTextSize(0.04);
+l.SetTextFont(42);
+double x = hmin;//1.-hhi-eps*4;
+double y = dist->GetMaximum();//1.-hto+0.02;
+cout << "x: " << x << " y: " << y << endl;
+l.DrawLatex(x+0.03, y*1.1, "2017 MC KUEWKino");
+l.SetTextAlign(11);
+l.SetTextSize(0.04);
+l.SetTextFont(42);
+l.DrawLatex(x+eps+0.03, y*1.1,"#bf{#it{CMS}} work-in-progress");
+l.SetTextSize(0.05);
+
+ string plotlabel;
+  for(int i = 0; i < lep_cat.size(); i++)
+    plotlabel += "#color[7014]{"+lep_labels[i]+"} + ";
+  for(int i = 0; i < labels.size(); i++)
+    plotlabel += "#color[7004]{"+labels[i]+"} + ";
+  plotlabel += "p_{T}^{ISR} > 300 GeV, "+m_Title[proc[0]];
+l.SetTextColor(kBlack);
+	l.SetTextAlign(11);
+	l.SetTextSize(0.035);
+	l.SetTextFont(42);
+	l.DrawLatex(x-0.05, y, plotlabel.c_str());
+return can;
+}
+
+
+
+////////////////////////////////
+////////////////////////////////
 TCanvas* FitPlotter::Plot1Dratio(const string& proc,
            const VS& lep_cat,
            const VS& hadS_cat,
@@ -3543,7 +3770,10 @@ void FitPlotter::InitializeRecipes(){
   
   // leptonic categories
   m_Title["1L"] = "#scale[1.2]{single #it{l}}";
-  m_Strings["1L"] = VS().a("1L_elm_elG").a("1L_elp_elG").a("1L_elpm_elG").a("1L_mupm_muG").a("1L_mup_muG").a("1L_mum_muG");
+  m_Strings["1L"] = VS().a("1L_elm_elG").a("1L_elp_elG").a("1L_elpm_elG").a("1L_mupm_muG").a("1L_mup_muG").a("1L_mum_muG").a("1L_elm_elS").a("1L_elp_elS").a("1L_mup_muS").a("1L_mum_muS").a("1L_elp_elB").a("1L_elm_elB").a("1L_mup_muB").a("1L_mum_muB");
+  
+  m_Title["1Lgold"] = "#scale[1.2]{single #it{l}}";
+  m_Strings["1goldL"] = VS().a("1L_elm_elG").a("1L_elp_elG").a("1L_elpm_elG").a("1L_mupm_muG").a("1L_mup_muG").a("1L_mum_muG");
   
   m_Title["1Lel"] = "#scale[1.2]{single gold e}";
   m_Strings["1Lel"] = VS().a("1L_elp_elG").a("1L_elm_elG").a("1L_elpm_elG").a("1L_elp_elG").a("1L_elm_elG").a("1L_elpm_elG");
@@ -3649,6 +3879,9 @@ void FitPlotter::InitializeRecipes(){
   m_Title["0jge2svS"] = "#splitline{0 jets}{#geq 2 SV-tags} #scale[1.2]{#in S}";
 
   m_Title["1j0bge1svS"] = "#splitline{1 jet, 0 b-tags}{#geq 1 SV-tag} #scale[1.2]{#in S}";
+  
+  m_Title["1j0b0svS"] = "#splitline{1 jet, 0 b-tags}{0 SV-tag} #scale[1.2]{#in S}";
+
 
   m_Title["2jS"] = "#splitline{2 jets}{incl. b-tags} #scale[1.2]{#in S}";
   m_Strings["2jS"] = VS().a("2jS").a("2j0bS").a("2j1bS").a("2j2bS");
