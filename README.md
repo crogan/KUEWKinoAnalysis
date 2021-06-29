@@ -30,19 +30,23 @@ T3 that get called at terminal startup
 	>$ export SCRAM_ARCH=slc7_amd64_gcc700
 	
 ### Setting up CMSSW area
-You will probably need CMSSW_10_2_X or later
+You will need CMSSW_10_6_5
 
-	>$ scram project CMSSW CMSSW_Z_Y_X
-	>$ cd CMSSW_Z_Y_X/src
+	>$ scram project CMSSW CMSSW_10_6_5
+	>$ cd CMSSW_10_6_5/src
 	>$ cmsenv
 	
 ### Checking out required packages
-	>$ git clone https://github.com/cms-analysis/HiggsAnalysis-CombinedLimit.git HiggsAnalysis/CombinedLimit
-	>$ git clone https://github.com/cms-analysis/CombineHarvester.git CombineHarvester
+	>$ git clone https://github.com/zflowers/HiggsAnalysis-CombinedLimit.git HiggsAnalysis/CombinedLimit
+	>$ git clone https://github.com/zflowers/CombineHarvester.git CombineHarvester
 	>$ git clone https://github.com/crogan/KUEWKinoAnalysis.git KUEWKinoAnalysis
-	
+Switch to the KU branch in HiggsAnalysis and the connect branch in CombineHarvester
+	>$ git checkout KU	
+	>$ git checkout connect
+
+
 ### Build/compile  everything
-Build the CMSSW packages (*Note: We're still in the* `CMSSW_Z_Y_X/src` *directory*)
+Build the CMSSW packages (*Note: We're still in the* `CMSSW_10_6_5/src` *directory*)
 
 	>$ scram b
 Build **KUEWKinoAnalysis** (with the `BuildFit.x` executable). (*Note:
@@ -51,3 +55,26 @@ environmental varables set, i.e. have done* `source setup_RestFrames.sh`)
 
 	>$ cd KUEWKinoAnalysis
 	>$ make cmssw
+
+
+### Running combineTool.py on cms connect syntax
+To run text2workspace (T2W):
+Go to the directory with the datacard for a given mass point
+
+	>$ combineTool.py -M T2W -i datacard.txt -m MASS_Value --job-mode connect -o workspace.root --input-file ../../../FitInput_KUEWKino_2017.root --sub-opts='+ProjectName=cms.org.ku" \n request_memory = 8 GB \n'
+
+Note that mass value will typically be the name of the directory that the datacard is in (ex: 5000325) and the input file is the path to the output root file from BuildFit.x
+
+To run AsymptoticLimits:
+Go to the directory that was the output of BuildFit.x 
+
+	>$ combineTool.py -M AsymptoticLimits -d */*/*/datacard.txt --job-mode connect --input-file FitInput_KUEWKino_2017.root --sub-opts='+ProjectName="cms.org.ku" \n request_memory = 8 GB \n'
+
+To run impacts:
+Go to the directory that the workspace (and datacard) live in
+
+	>$ combineTool.py -M Impacts -d workspace.root -m MASS_Value --doInitialFit --robustFit 1 --job-mode connect --sub-opts='+ProjectName="cms.org.ku" \n request_memory = 8 GB \n'
+	>$ combineTool.py -M Impacts -d workspace.root -m 5000325 --input-file ../ --job-mode connect --sub-opts='+ProjectName="cms.org.ku" \n request_memory = 8 GB \n' 
+
+Note that the second step only should be ran after the jobs in the first step finish
+The input file is just the entire directory that the workspace lives in

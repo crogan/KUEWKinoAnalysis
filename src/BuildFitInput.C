@@ -17,7 +17,6 @@
 #include <TLorentzVector.h>
 //#include <TIter.h>
 #include <TKey.h>
-#include <ROOT/RDataFrame.hxx>
 
 
 
@@ -30,11 +29,12 @@
 #include "Leptonic.hh"
 #include "Hadronic.hh"
 
-using ROOT::RDataFrame;
 using namespace std;
 int main(int argc, char* argv[]) {
-  string NtuplePath = "/home/t3-ku/crogan/NTUPLES/NANO/NEW_21_09_20/";//"/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_21_09_20/";
-  string OutFile    = "BuildFitInput_output.root";
+//  string NtuplePath = "/home/t3-ku/crogan/NTUPLES/NANO/NEW_21_09_20/";//"/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_21_09_20/";
+ //for connect:
+   string NtuplePath = "root://xrootd.unl.edu//store/user/zflowers/crogan/";
+   string OutFile    = "BuildFitInput_output.root";
 
   bool doSigFile = false;
   string SigFile = "";
@@ -163,6 +163,7 @@ int main(int argc, char* argv[]) {
     cout << "   -lumi [lumi]        set luminosity to lumi" << endl;
     cout << "   -sigfile            signal filename must match this string to be included" << endl;
     cout << "   -maskSR             mask high RISR bins" << endl;
+    cout << "Example: ./BuildFitInput.x ++bkg +proc T2tt +cat1L ++sys" << endl;
    
     return 0;
   }
@@ -271,14 +272,13 @@ int main(int argc, char* argv[]) {
     int Nfile = ST.NTrees(proc);
 
     cout << "Processing " << Nfile << " files for process " << title << endl;
-    for(int f = 0; f < Nfile; f++){ 
+   int attempt = 0;
+   bool processed = false; 
+   for(int f = 0; f < Nfile; f++){ 
+      cout << "Attempt: " << attempt << endl; 
       string file = ST.FileName(proc, f);
       string tree = ST.TreeName(proc, f);
 
-	//skip lowest HT slices for Wjets and Znunu
-//	if(strstr(file.c_str(),"WJetsToLNu_HT-70To100_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root")) continue;
-//	if(strstr(file.c_str(),"WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root")) continue;      
-//	if(strstr(file.c_str(),"ZJetsToNuNu_HT-100To200_13TeV-madgraph_Fall17_102X.root")) continue;      
       bool is_FastSim = ST.IsFastSim(proc, f);
       bool do_FilterDilepton = ST.FilterDilepton(proc, f);
       double sample_weight = ST.GetSampleWeight(proc, f);
@@ -302,7 +302,7 @@ int main(int argc, char* argv[]) {
       // event loop
       for(int e = 0; e < Nentry; e += SKIP){
 	base->GetEntry(e);
-
+processed = true;
 	if((e/SKIP)%(std::max(1, int(Nentry/SKIP/10))) == 0)
 	  cout << "      event " << e << " | " << Nentry  << endl;
 	if(!base->EventFilter)	  
@@ -393,7 +393,6 @@ int main(int argc, char* argv[]) {
 	  list_b += Lep(flavor, charge, id, source);
 	}
 
-//cout << "event #: " << e << " passed lep selection" << endl;	
 	// SV eta
 	double SVmaxeta = 1.; // 1 is fine b/c less than 1.5 cutoff
 	for(int ie = 0; ie < base->NSV_S; ie++)
@@ -416,7 +415,6 @@ int main(int argc, char* argv[]) {
 	  continue;
 	}
 		
-//cout << "event #: " << e << " passed SV selection" << endl;	
 	// systematics loop
 	
 	for(int is = 0; is < Nsys; is++){
@@ -476,12 +474,10 @@ int main(int argc, char* argv[]) {
 	    // else
 	    //   weight *= base->PUweight;
 	  }
-//cout << "event #: " << e << " passed systematics" << endl;	
 	  LepList Fakes  = list_a.GetFakes();
 	  Fakes         += list_b.GetFakes();
 	  
 	  double Mperp = base->Mperp;
-//	 cout << "event #: " << e <<  ", weight: " << weight << endl; 
 	  // use Eperp
 	  if((Nlep == 1) && (NjetS == 0) && (NSV == 0))
 	    Mperp = 2.*base->EL_BoostT;
@@ -516,7 +512,14 @@ int main(int argc, char* argv[]) {
       }
       delete base;
       delete chain;
-    }
+      if(!processed && attempt < 10 && !(file.find("TTTT") != string::npos)){
+	f--;
+	attempt++;
+	}
+	else{ processed = false; attempt = 0; }
+	
+ 
+   }
   }
 
   FITBuilder.WriteFit(OutFile);

@@ -518,10 +518,9 @@ void FitInputEditor::AddShapeSysFakes(){
       while(pr != m_FakeGroupLists.end()){
 	ProcessList procs = pr->second;
 	int Nproc = procs.GetN();
-
 	bool b_addSys_RISR  = false;
 	bool b_addSys_Mperp = false;
-	string sys_name = sgroup+"_"+pr->first;
+	string sys_name = pr->first+"_"+sgroup;
 	Systematic sys_RISR(sys_name+"_RISR");
 	Systematic sys_Mperp(sys_name+"_Mperp");
 
@@ -543,8 +542,8 @@ void FitInputEditor::AddShapeSysFakes(){
 	    TH1D* hist_RISRUp = getVariation_RISR(hname+"_RISRUp", hist, cat, 0.2);
 	    TH1D* hist_RISRDn = getVariation_RISR(hname+"_RISRDn", hist, cat, -0.2);
 
-	    TH1D* hist_MperpUp = getVariation_Mperp(hname+"_MperpUp", hist, cat, 0.2);
-	    TH1D* hist_MperpDn = getVariation_Mperp(hname+"_MperpDn", hist, cat, -0.2);
+	    TH1D* hist_MperpUp = getVariation_Mperp(hname+"_MperpUp", hist, cat, 0.05);
+	    TH1D* hist_MperpDn = getVariation_Mperp(hname+"_MperpDn", hist, cat, -0.05);
 
 	    // add systematic histograms to editor
 	    if(m_ProcHistSys.count(proc) == 0)

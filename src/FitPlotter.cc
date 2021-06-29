@@ -3926,6 +3926,7 @@ void FitPlotter::InitializeRecipes(){
   m_SignalColor.push_back(7041);
   m_SignalColor.push_back(7061);
   m_SignalColor.push_back(7040);
+  m_SignalColor.push_back(7072);
 
   m_CMSLabel = "#bf{#it{CMS}} work-in-progress";
 }

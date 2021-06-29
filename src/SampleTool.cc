@@ -1,4 +1,5 @@
 #include "../include/SampleTool.hh"
+#include <TSystem.h>
 
 ///////////////////////////////////////////
 ////////// SampleTool class
@@ -190,7 +191,8 @@ int SampleTool::YearMap(int year){
 
 void SampleTool::InitSMS(const string& prefix, const string& filename, double weight, bool FS, bool DL){
 
-  TFile file(filename.c_str(), "READ");
+  TFile file;
+  file.Open(filename.c_str(), "READ"); //
   if(!file.IsOpen())
     return;
  

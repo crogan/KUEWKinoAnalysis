@@ -21,9 +21,14 @@ void WriteScript(const string& src_name,
 		 const string& log_name,
 		 const string& command);
 
+void WriteScriptConnect(const string& src_name,
+		 const string& log_name,
+		 const string& command);
+
 int main(int argc, char* argv[]) {
   int  maxN = 10;
   bool dryRun = false;
+  bool connect = false;
   bool doSigFile = false;
   string SigFile = "";
   
@@ -133,6 +138,9 @@ int main(int argc, char* argv[]) {
     if(strncmp(argv[i],"--dry-run", 9) == 0){
       dryRun = true;
     } 
+    if(strncmp(argv[i],"--connect", 9) == 0){
+      connect = true;
+    } 
   }
       
   if((proc_to_add.size() == 0) &&
@@ -146,6 +154,7 @@ int main(int argc, char* argv[]) {
     cout << "  Condor submission options:" << endl;
     cout << "   -maxN [number]      maximum number of processes per job" << endl;
     cout << "   -sigfile            signal filename must match this string to be included" << endl;
+    cout << "   --connect           for running inside a batch job on CMS connect" << endl;
     cout << "   --dry-run           create output folders and scripts but don't submit" << endl;
     cout << "  options:" << endl;
     cout << "   --help(-h)          print options" << endl;
@@ -164,6 +173,7 @@ int main(int argc, char* argv[]) {
     cout << "   ++sys               turn on available systematics" << endl;
     cout << "   +hist               book 2D histograms also" << endl;
     cout << "   -lumi [lumi]        set luminosity to lumi" << endl;
+    cout << "Example: ./BuildFitInputCondor.x -maxN 5 ++bkg +proc T2tt +cat1L -lumi 137 --connect -o /stash/user/zflowers/FIT_REPO/CMSSW_10_6_5/src/KUEWKinoAnalysis/test_BuildFitInput/ -path root://xrootd.unl.edu//store/user/zflowers/ " << endl;
 
     return 0;
   }
@@ -236,6 +246,10 @@ int main(int argc, char* argv[]) {
       WriteScript(SrcFold+Form("submit_%d",Njob)+".sh",
 		  LogFold+Form("job_%d",Njob)+".log",
 		  BuildFitInputCmd+iBFICmd+" -o "+RootFold+Form("BFI_%d.root ", Njob));
+      if(connect)
+        WriteScriptConnect(SrcFold+Form("submit_%d",Njob)+".sh",
+		  LogFold+Form("job_%d",Njob)+".log",
+		  BuildFitInputCmd+iBFICmd+" -o "+RootFold+Form("BFI_%d.root ", Njob));
       condorsubmit << "condor_submit " << SrcFold << "submit_" << Njob << +".sh" << endl;
 
       procs.clear();
@@ -253,6 +267,49 @@ int main(int argc, char* argv[]) {
     gSystem->Exec(("source "+OutputFold+"/condor_submit.sh").c_str());
   }
   
+}
+
+void WriteScriptConnect(const string& src_name,
+		 const string& log_name,
+		 const string& command){
+  ofstream file;
+  file.open(src_name);
+  string pwd = gSystem->pwd();
+  string root_output = command.substr(command.find("-o")+2);
+  string OutputFold = root_output;
+  if(root_output.find("/") != string::npos){
+   int pos = root_output.find_last_of("/")+1;
+   root_output = root_output.substr(pos, root_output.length()-pos);
+   OutputFold = OutputFold.substr(0,pos);
+   OutputFold.erase(remove_if(OutputFold.begin(), OutputFold.end(), ::isspace),OutputFold.end());
+  }
+  gSystem->Exec("mkdir -p config_BuildFitInput");
+  gSystem->Exec("cp BuildFitInput.x config_BuildFitInput/");
+  gSystem->Exec("cp scripts/cmssw_setup_connect.sh config_BuildFitInput/");
+  gSystem->Exec("cp scripts/setup_RestFrames_connect.sh config_BuildFitInput/");
+  gSystem->Exec("tar -czf config_BuildFitInput.tgz config_BuildFitInput/");
+  gSystem->Exec(("mv config_BuildFitInput.tgz "+OutputFold+"/../").c_str());
+  gSystem->Exec("rm -r config_BuildFitInput/");
+  file << "universe = vanilla" << endl;
+  file << "executable = execute_script_BuildFitInput.sh" << endl;
+  file << "getenv = True" << endl;
+  file << "use_x509userproxy = true" << endl;
+  file << "Arguments = " << command << endl;
+  file << "output = " << log_name << ".out" << endl;
+  file << "error = "  << log_name << ".err" << endl;
+  file << "log = "    << log_name << ".log" << endl;
+  file << "Requirements = (Machine != \"red-node000.unl.edu\") && (Machine != \"red-c2325.unl.edu\")" << endl;
+  file << "request_memory = 4 GB" << endl;
+  file << "transfer_input_files = "+pwd+"/"+OutputFold+"/../config_BuildFitInput.tgz" << endl;
+  file << "should_transfer_files = YES" << endl;
+  file << "when_to_transfer_output = ON_EXIT" << endl;
+  file << "transfer_output_files = "+root_output << endl;
+  file << "transfer_output_remaps = \""+root_output+"="+command.substr(command.find("-o ")+2)+"\"" << endl;
+  file << "+ProjectName=\"cms.org.ku\""<< endl;
+  file << "+REQUIRED_OS=\"rhel7\"" << endl;
+  file << "+RequiresCVMFS=True" << endl;
+  file << "queue " << endl;
+  file.close();  
 }
 
 void WriteScript(const string& src_name,
