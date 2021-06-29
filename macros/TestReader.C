@@ -2,7 +2,7 @@
 
 #include "../include/FitPlotter.hh"
 
-void TestReader(const string& inputfile = "croganBFI_bkgs.root", const string& a2 = "", const string& a3 = ""){
+void TestReader(const string& inputfile = "BFI_allBkgs17_shapeNoFakeSysts/root/BFI_0.root", const string& a2 = "", const string& a3 = ""){
 	gSystem->Load("/home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/lib/libKUEWKino.so");
 FitPlotter* FITPlotter = new FitPlotter(inputfile, a2, a3);
   //FITReader->PrintCategories();
@@ -64,32 +64,41 @@ FitPlotter* FITPlotter = new FitPlotter(inputfile, a2, a3);
   // 			 VS().a("ge1jISR"),
   // 			 "canvas3");
 //the args with multiple entries are the ones that go into the total for the ratio
-const string& proc = "ttbar_Fakes_elf0"; 
+const string& proc = "Wjets"; 
 const string& source = "LF";
 const string& numSource = "0";
 const string& lep = "el";
 const string& hadS = "2jS";
 const string& hadI = "ge1jISR";
 
-const string& lep1 = "1Lel";
+const string& lep1 = "0L";
 const string& lep2 = "1Lelsilver";
 const string& lep3 = "1Lelbronze";
 const string& lep4 = "3Lelbronze";
-const string& hadS1 = "2jS";
-const string& hadS2 = "2j1bS";
+const string& hadS1 = "1j0b0svS";
+const string& hadS2 = "1j1b0svS";
 const string& hadS3 = "2j2bS";
-  //  TCanvas* cv1 = FITReader->Plot1Dstraight(proc,
-  //      		 VS().a(lep1).a(lep2).a(lep3),
-  //      		 VS().a(hadS),
-  //      		 VS().a(hadI),
-  //      		 "canvas2",
-  //      		 VS());
-    TCanvas* cv = FITPlotter->Plot1Dratio(proc,
-        		 VS().a(lep1).a(lep2).a(lep3),
-        		 VS().a(hadS1),
- 	     		 VS().a(hadI),
-  			 "canvas3",
- 			 VS());
+Systematic sys = Systematic("BTAGLF_SF");
+   // TCanvas* cv1 = FITPlotter->Plot1DratioSyst(VS().a("ttbar").a("ttbar_Fakes"),
+   //     		 sys,
+   //     		 VS().a(lep1),
+   //     		 VS().a(hadS1).a(hadS2),
+   //     		 VS().a(hadI),
+   //     		 "canvas2",
+   //     		 VS());
+TCanvas* cv = FITPlotter->PlotRatioSystDist(VS().a(proc).a(proc+"_Fakes"),
+		sys,
+		VS().a("0L").a("1L"),
+//		VS().a("1j0b0svS").a("1j1b0svS").a("2j0bS").a("2j1bS").a("2j2bS"),	
+	VS().a("1j0bsvS").a("1j1b0svS").a("2j0bS").a("2j1bS").a("2j2bS").a("3j0bS").a("3j1bS").a("3jge2bS").a("4j0bS").a("4j1bS").a("4jge2bS").a("5j0bS").a("5j1bS").a("5jge2bS"),
+		"canvas2");
+
+ //   TCanvas* cv = FITPlotter->Plot1Dratio(proc,
+ //       		 VS().a(lep1).a(lep2).a(lep3),
+ //       		 VS().a(hadS1),
+ //	     		 VS().a(hadI),
+ // 			 "canvas3",
+ //			 VS());
   //  TCanvas* cv = FITReader->Plot1DratioProc(VS().a("DB_Fakes_"+lep+"f"+numSource).a("ttbar_Fakes_"+lep+"f"+numSource),
   //      		 "1L",
   //      		 hadS,		
@@ -105,8 +114,6 @@ const string& hadS3 = "2j2bS";
  // //signals.a("T2tt_5000450").a("T2bW_5000420").a("T2tt_5000375").a("T2bW_5000325");
  // //signals.a("T2bb_5000475").a("T2bb_5000450").a("T2bb_5000400").a("T2bb_5000350");
  // VS all = signals;
-    VS all;
-   all.a("QCD").a("Wjets");
 
  // FITReader->PlotYields("0Lyields",
  // 			all,
