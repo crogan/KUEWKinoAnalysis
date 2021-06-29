@@ -76,13 +76,13 @@ public:
   const Systematics&  GetSystematics() const;
 
 map<string,VS> m_Strings;
+  mutable map<Process,Systematics> m_ProcSys;
 
 protected:
   mutable TFile  m_File;
   mutable TFile* m_FilePtr;
   string         m_FileFold;
 
-  mutable map<Process,Systematics> m_ProcSys;
   mutable map<Process,map<Category,TH1D*> > m_ProcHist;
   mutable map<Process,map<Systematic,map<Category,pair<TH1D*,TH1D*> > > >m_ProcHistSys;
   mutable map<Process,map<Category,TH2D*> > m_ProcHist_2D;

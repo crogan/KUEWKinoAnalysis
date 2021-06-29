@@ -68,6 +68,11 @@ public:
            const VS& hadI_cat,
            const string& name,
            const VS& extra);
+  TCanvas* PlotRatioSystDist(const VS& proc,
+     const Systematic& syst,
+           const VS& lep_cat,
+           const VS& matchString,
+           const string& name);
 
   map<string,VS> m_Strings;
   
