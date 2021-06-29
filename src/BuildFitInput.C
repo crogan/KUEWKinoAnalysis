@@ -164,6 +164,7 @@ int main(int argc, char* argv[]) {
     cout << "   -lumi [lumi]        set luminosity to lumi" << endl;
     cout << "   -sigfile            signal filename must match this string to be included" << endl;
     cout << "   -maskSR             mask high RISR bins" << endl;
+    cout << "Example: ./BuildFitInput.x ++bkg +proc T2tt +cat1L ++sys" << endl;
    
     return 0;
   }
@@ -569,6 +570,9 @@ d.Foreach([&absEta, &nLep](vector<double> Eta_lep) {for(int iLep = 0; iLep < Eta
       }
       delete base;
       delete chain;
+      TFile file_to_close;
+      file_to_close.Open(file.c_str());
+      file_to_close.Close();
     }
   }
 
