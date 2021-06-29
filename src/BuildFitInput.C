@@ -297,7 +297,7 @@ int main(int argc, char* argv[]) {
       ReducedBase* base = new ReducedBase(chain);
       int Nentry = base->fChain->GetEntries();
       
-      int SKIP = 1;
+      int SKIP = 1e6;
 
       // event loop
       for(int e = 0; e < Nentry; e += SKIP){
@@ -451,13 +451,13 @@ int main(int argc, char* argv[]) {
 	      else
 		weight *= SF.GetMETSF(base->MET);
 	    
-	    if(sys == Systematic("BTAGHF_SF"))
-	      if(sys.IsUp())
-		weight *= base->BtagSFweight_up;
-	      else
-		weight *= base->BtagSFweight_down;
-	    else 
-	      weight *= base->BtagSFweight;
+//	    if(sys == Systematic("BTAGHF_SF"))
+//	      if(sys.IsUp())
+//		weight *= base->BtagSFweight_up;
+//	      else
+//		weight *= base->BtagSFweight_down;
+//	    else 
+//	      weight *= base->BtagSFweight;
 
 	    if(sys == Systematic("BTAGLF_SF"))
 	      if(sys.IsUp())
@@ -466,14 +466,6 @@ int main(int argc, char* argv[]) {
 		weight *= base->BtagSFweight_down;
 	    else 
 	      weight *= base->BtagSFweight;
-	//   if(sys == Systematic("lepPT_weight"))
-	//   	weight *= vw.expWeight(base,ptMean,base->PT_lep,sys);
-	//   if(sys == Systematic("lepIso_weight"))
-	//   	weight *= vw.expWeight(base,isoMean,base->MiniIso_lep,sys);
-	//   if(sys == Systematic("lepEta_weight"))
-	//   	weight *= vw.expWeight(base,etaMean, base->Eta_lep,sys);
-	// if(sys == Systematic("lepSIP3D_weight"))
-	//   	weight *= vw.expWeight(base,sip3dMean,base->SIP3D_lep,sys);
 
 	    // turn off PU systematics for now
 	    // if(sys == Systematic("PU_SF"))
