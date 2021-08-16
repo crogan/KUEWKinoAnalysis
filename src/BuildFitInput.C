@@ -31,9 +31,9 @@
 
 using namespace std;
 int main(int argc, char* argv[]) {
-//  string NtuplePath = "/home/t3-ku/crogan/NTUPLES/NANO/NEW_21_09_20/";//"/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_21_09_20/";
+  string NtuplePath = "/home/t3-ku/crogan/NTUPLES/NANO/NEW_21_09_20/";//"/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_21_09_20/";
  //for connect:
-   string NtuplePath = "root://xrootd.unl.edu//store/user/zflowers/crogan/";
+//   string NtuplePath = "root://xrootd.unl.edu//store/user/zflowers/crogan/";
    string OutFile    = "BuildFitInput_output.root";
 
   bool doSigFile = false;
@@ -198,7 +198,7 @@ int main(int argc, char* argv[]) {
     cout << "Adding processes that match \"" << proc_to_add[p] << "\"" << endl;
     samples += ST.Get(proc_to_add[p]);
   }
-
+cout << "# processes: " << samples.GetN() << endl;
   if(Categories.GetN() == 0)
     Categories += CT.GetCategories(maskSR);
   if(!cat0L && !cat1L && !cat2L && !cat3L){
@@ -244,7 +244,6 @@ int main(int argc, char* argv[]) {
       if(!keep)
 	continue;
     }
-    cout << "processing sample " << proc.Name() << endl;
   }
   
   for(int s = 0; s < Nsample; s++){

@@ -25,14 +25,16 @@ if __name__ == "__main__":
     print "Output Directory: %s" % (OUT_DIR)
         
     # create and organize output folders
-    os.system("rm -rf "+OUT_DIR)
-    os.system("mkdir -p "+OUT_DIR)
+   # os.system("rm -rf "+OUT_DIR)
+    if not os.path.isdir(OUT_DIR): os.system("mkdir -p "+OUT_DIR)
 
     for dirs in os.walk(IN_DIR):
         target = dirs[0].split("/")
         target = target[-1]
-        print target
-        haddcmd = "hadd "+OUT_DIR+"/"+target+".root "
-        haddcmd += IN_DIR+"/"+target+"/*.root"
+        print "target:",target,"\n"
+        print "IN_DIR",IN_DIR
+	haddcmd = "hadd "+OUT_DIR+"/"+target+".root "
+        haddcmd += IN_DIR+"/*.root"
+        #haddcmd += IN_DIR+"/"+target+"/*.root"
         print haddcmd
         os.system(haddcmd)

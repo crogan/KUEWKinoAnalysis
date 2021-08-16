@@ -2,25 +2,26 @@
 
 #include "../include/FitPlotter.hh"
 
-void TestReader(const string& inputfile = "BFI_allBkgs17_shapeNoFakeSysts/root/BFI_0.root", const string& a2 = "", const string& a3 = ""){
+//void TestReader(const string& inputfile = "BFI_allBkgs17_shapeNoFakeSysts/root/BFI_0.root", const string& a2 = "", const string& a3 = ""){
+void TestReader(const string& inputfile = "BuildFitInputs/BFI_allBkgs17T2tt_0L/root/BFIShapes.root", const string& a2 = "", const string& a3 = ""){
 	gSystem->Load("/home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/lib/libKUEWKino.so");
 FitPlotter* FITPlotter = new FitPlotter(inputfile, a2, a3);
   //FITReader->PrintCategories();
   //FITReader->PrintProcesses();
 
-  CategoryTreeTool CTTool;
-  CategoryTree CT_Fakes1L = CTTool.GetCategories_Fakes1L();
-  CategoryTree CT_0L = CTTool.GetCategories_0L();
-  CategoryTree CT_1L = CTTool.GetCategories_1L();
-  CategoryTree CT_QCD0L = CTTool.GetCategories_QCD0L();
-  CategoryTree CT_QCD1L = CTTool.GetCategories_QCD1L();
-  CategoryTree CT_2L = CTTool.GetCategories_2L();
-  CategoryTree CT_Fakes2L = CTTool.GetCategories_Fakes2L();
-  CategoryTree CT_3L = CTTool.GetCategories_3L();
-  CategoryTree CT_Fakes3L = CTTool.GetCategories_Fakes3L();
-//FITReader->PrintCategories();
-//FITReader->PrintProcesses();
-  CategoryTree CT_test = CT_QCD0L;
+//  CategoryTreeTool CTTool;
+//  CategoryTree CT_Fakes1L = CTTool.GetCategories_Fakes1L();
+//  CategoryTree CT_0L = CTTool.GetCategories_0L();
+//  CategoryTree CT_1L = CTTool.GetCategories_1L();
+//  CategoryTree CT_QCD0L = CTTool.GetCategories_QCD0L();
+//  CategoryTree CT_QCD1L = CTTool.GetCategories_QCD1L();
+//  CategoryTree CT_2L = CTTool.GetCategories_2L();
+//  CategoryTree CT_Fakes2L = CTTool.GetCategories_Fakes2L();
+//  CategoryTree CT_3L = CTTool.GetCategories_3L();
+//  CategoryTree CT_Fakes3L = CTTool.GetCategories_Fakes3L();
+////FITReader->PrintCategories();
+////FITReader->PrintProcesses();
+//  CategoryTree CT_test = CT_QCD0L;
 //CT_test.Print(); 
 //vector<const CategoryTree*> catTrees;
 //CT_test.GetListDepth(catTrees,1);
@@ -30,6 +31,8 @@ FitPlotter* FITPlotter = new FitPlotter(inputfile, a2, a3);
 //CategoryList cats = catList.Filter(*catTrees[i]);
 //cats.Print();
 //}
+
+
 //  FITReader->PlotYields("0Lyields",
 //			VS().a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD")
 //			.a("Wjets").a("Fakes").a("T2tt_5000490").a("T2tt_5000480").a("T2tt_5000375"),
@@ -49,12 +52,6 @@ FitPlotter* FITPlotter = new FitPlotter(inputfile, a2, a3);
 //			.a("Wjets").a("Fakes").a("T2tt_5000490").a("T2tt_5000480").a("T2tt_5000375"),
 //			CT_3L);
 
-
-  // TCanvas* cv = FITReader->Plot2D(VS().a(proc),
-  // 			 VS().a("1L"),
-  // 			 VS().a("3j0bS"),
-  // 			 VS().a("ge1jISR"),
-  // 			 "canvas3");
 //the args with multiple entries are the ones that go into the total for the ratio
 const string& proc = "Wjets"; 
 const string& source = "LF";
@@ -71,6 +68,17 @@ const string& hadS1 = "1j0b0svS";
 const string& hadS2 = "1j1b0svS";
 const string& hadS3 = "2j2bS";
 Systematic sys = Systematic("BTAGLF_SF");
+//  FITPlotter->Plot1Dstack(VS().a("ttbar").a("ZDY").a("ST").a("TB").a("DB").a("Fakes").a("T2tt_5000490").a("Wjets").a("QCD"),
+//			VS().a("1L"),
+//			VS().a("2jS"),
+//			VS().a("ge1jISR"),
+//			"canvas3");
+
+  TCanvas* cv = FITPlotter->Plot2D(VS().a("Total"),
+   			 VS().a("0L"),
+   			 VS().a("5jS"),
+   			 VS().a("ge1jISR"),
+   			 "canvas3");
    // TCanvas* cv1 = FITPlotter->Plot1DratioSyst(VS().a("ttbar").a("ttbar_Fakes"),
    //     		 sys,
    //     		 VS().a(lep1),
@@ -78,13 +86,13 @@ Systematic sys = Systematic("BTAGLF_SF");
    //     		 VS().a(hadI),
    //     		 "canvas2",
    //     		 VS());
-TCanvas* cv = FITPlotter->PlotRatioSystDist(VS().a(proc).a(proc+"_Fakes"),
-		sys,
-		VS().a("0L").a("1L"),
-//		VS().a("1j0b0svS").a("1j1b0svS").a("2j0bS").a("2j1bS").a("2j2bS"),	
-	VS().a("1j0bsvS").a("1j1b0svS").a("2j0bS").a("2j1bS").a("2j2bS").a("3j0bS").a("3j1bS").a("3jge2bS").a("4j0bS").a("4j1bS").a("4jge2bS").a("5j0bS").a("5j1bS").a("5jge2bS"),
-		"canvas2");
-
+//TCanvas* cv = FITPlotter->PlotRatioSystDist(VS().a(proc).a(proc+"_Fakes"),
+//		sys,
+//		VS().a("0L").a("1L"),
+////		VS().a("1j0b0svS").a("1j1b0svS").a("2j0bS").a("2j1bS").a("2j2bS"),	
+//	VS().a("1j0bsvS").a("1j1b0svS").a("2j0bS").a("2j1bS").a("2j2bS").a("3j0bS").a("3j1bS").a("3jge2bS").a("4j0bS").a("4j1bS").a("4jge2bS").a("5j0bS").a("5j1bS").a("5jge2bS"),
+//		"canvas2");
+//
  //   TCanvas* cv = FITPlotter->Plot1Dratio(proc,
  //       		 VS().a(lep1).a(lep2).a(lep3),
  //       		 VS().a(hadS1),

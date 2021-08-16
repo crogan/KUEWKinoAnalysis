@@ -513,7 +513,7 @@ TCanvas* FitPlotter::Plot2D(const VS& proc,
     return nullptr;
 
   CategoryList cat = GetCategories();
-  cat.Print();
+  //cat.Print();
   
   // Leptonic
   VS lep_labels;
@@ -614,7 +614,7 @@ TCanvas* FitPlotter::Plot2D(const VS& proc,
 	if(!IsFilled(cat[c], pp))
 	  continue;
 
-	//cout << "filled " << cat[c].GetLabel() << " " << pp.Name() << endl;
+	cout << "filled " << cat[c].GetLabel() << " " << pp.Name() << endl;
 	
 	if(!hist){
 	  hist = (TH2D*) GetHistogram2D(cat[c], pp)->Clone(Form("plothist_%dhis_%s_2D", i, name.c_str()));
@@ -3766,7 +3766,7 @@ void FitPlotter::InitializeRecipes(){
   m_Title["Total"] = "total background";
   m_Color["Total"] = 7000;
   m_Strings["Total"] = VS().a("ttbar").a("ST").a("DB").a("ZDY").a("Wjets").a("Fakes_elf0").a("Fakes_elf1").
-    a("Fakes_elf2").a("Fakes_muf0").a("Fakes_muf1").a("Fakes_muf2");
+    a("Fakes_muf0").a("Fakes_muf1");
   
   // leptonic categories
   m_Title["1L"] = "#scale[1.2]{single #it{l}}";
@@ -3897,6 +3897,9 @@ void FitPlotter::InitializeRecipes(){
   m_Title["3j1bS"] = "#splitline{3 jets}{1 b-tags} #scale[1.2]{#in S}";
 
   m_Title["3j2bS"] = "#splitline{3 jets}{#geq 2 b-tags} #scale[1.2]{#in S}";
+
+  m_Title["5jS"] = "#splitline{5 jets}{incl. b-tags} #scale[1.2]{#in S}";
+  m_Strings["5jS"] = VS().a("ge5j0bS").a("ge5j1bS").a("ge5ge2bS");
   
   m_Title["ge1j0bISR"] = "#splitline{#geq 1 jet}{0 b-tags} #scale[1.2]{#in ISR}";
 

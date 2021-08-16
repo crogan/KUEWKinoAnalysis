@@ -17,7 +17,7 @@
 #include <string>
 #include <algorithm>
 #include <string>
-#include "TSystem.h"
+#include <TSystem.h>
 
 #include "RestFrames/RestFrames.hh"
 
@@ -490,13 +490,14 @@ void ParseLimitJSON(const string& json, bool inclObs = false, PlotType ptype = k
   line->SetLineStyle(3);
   line->DrawLineNDC(0.18, 0.842, 0.22, 0.842);
   line->DrawLineNDC(0.18, 0.818, 0.22, 0.818);
-		    
+
+if(inclObs){		    
   l.DrawLatex(0.23, 0.78,"observed");
   line->SetLineColor(kBlack);
   line->SetLineWidth(2);
   line->SetLineStyle(1);
   line->DrawLineNDC(0.18, 0.78, 0.22, 0.78);
-
+}
   /////////////
   // dM vs. MP
   /////////////
@@ -541,13 +542,14 @@ void ParseLimitJSON(const string& json, bool inclObs = false, PlotType ptype = k
   line->SetLineStyle(3);
   line->DrawLineNDC(0.18, 0.842, 0.22, 0.842);
   line->DrawLineNDC(0.18, 0.818, 0.22, 0.818);
-  
+ 
+if(inclObs){ 
   l.DrawLatex(0.23, 0.78,"observed");
   line->SetLineColor(kBlack);
   line->SetLineWidth(2);
   line->SetLineStyle(1);
   line->DrawLineNDC(0.18, 0.78, 0.22, 0.78);
-  
+ } 
 }
 
 
@@ -625,8 +627,8 @@ TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist, PlotType ptype){
   can->SetRightMargin(0.2);
   can->SetBottomMargin(0.15);
   can->SetTopMargin(0.07);
-  //can->SetGridx();
-  //can->SetGridy();
+  can->SetGridx();
+  can->SetGridy();
   can->SetLogz();
   can->Draw();
   can->cd();
@@ -817,7 +819,7 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
   l.SetTextAlign(31);
   l.SetTextSize(0.04);
   l.SetTextFont(42);
-  l.DrawLatex(0.8, 0.95, "137 fb^{-1} (13 TeV)");
+  l.DrawLatex(0.8, 0.95, "45.7 fb^{-1} (13 TeV)");
   l.SetTextAlign(11);
   l.SetTextSize(0.04);
   l.SetTextFont(42);

@@ -539,11 +539,11 @@ void FitInputEditor::AddShapeSysFakes(){
 	    string hname = "h_"+proc.Name()+"_"+cat.GetLabel()+"_"+sys_name;
 	    TH1D* hist = (TH1D*) GetHistogram(cat, proc)->Clone(hname.c_str());
 
-	    TH1D* hist_RISRUp = getVariation_RISR(hname+"_RISRUp", hist, cat, 0.2);
-	    TH1D* hist_RISRDn = getVariation_RISR(hname+"_RISRDn", hist, cat, -0.2);
+	    TH1D* hist_RISRUp = getVariation_RISR(hname+"_RISRUp", hist, cat, 0.35);
+	    TH1D* hist_RISRDn = getVariation_RISR(hname+"_RISRDn", hist, cat, -0.35);
 
-	    TH1D* hist_MperpUp = getVariation_Mperp(hname+"_MperpUp", hist, cat, 0.05);
-	    TH1D* hist_MperpDn = getVariation_Mperp(hname+"_MperpDn", hist, cat, -0.05);
+	    TH1D* hist_MperpUp = getVariation_Mperp(hname+"_MperpUp", hist, cat, 0.35);
+	    TH1D* hist_MperpDn = getVariation_Mperp(hname+"_MperpDn", hist, cat, -0.35);
 
 	    // add systematic histograms to editor
 	    if(m_ProcHistSys.count(proc) == 0)
@@ -657,11 +657,11 @@ void FitInputEditor::AddShapeSysQCD(){
 	string hname = "h_"+proc.Name()+"_"+cat.GetLabel()+"_QCD";
 	TH1D* hist = (TH1D*) GetHistogram(cat, proc)->Clone(hname.c_str());
 
-	TH1D* hist_RISRUp = getVariation_RISR(hname+"_RISRUp", hist, cat, 0.2);
-	TH1D* hist_RISRDn = getVariation_RISR(hname+"_RISRDn", hist, cat, -0.2);
+	TH1D* hist_RISRUp = getVariation_RISR(hname+"_RISRUp", hist, cat, 0.35);
+	TH1D* hist_RISRDn = getVariation_RISR(hname+"_RISRDn", hist, cat, -0.35);
 
-	TH1D* hist_MperpUp = getVariation_Mperp(hname+"_MperpUp", hist, cat, 0.2);
-	TH1D* hist_MperpDn = getVariation_Mperp(hname+"_MperpDn", hist, cat, -0.2);
+	TH1D* hist_MperpUp = getVariation_Mperp(hname+"_MperpUp", hist, cat, 0.35);
+	TH1D* hist_MperpDn = getVariation_Mperp(hname+"_MperpDn", hist, cat, -0.35);
 
 	// add systematic histograms to editor
 	if(m_ProcHistSys.count(proc) == 0)
