@@ -21,6 +21,12 @@ public:
 	     const string& otherfold = "");
 
   virtual ~FitPlotter();
+
+  TH1D* Plot1D(const string& proc,
+        const VS& lep_cat,
+        const VS& hadS_cat,
+        const VS& hadI_cat,
+        const string& name);
   
   TCanvas* Plot1Dstack(const VS& proc,
 		       const VS& lep_cat,
