@@ -3,6 +3,224 @@
 
 #include "../include/Leptonic.hh"
 
+LepIDs::LepIDs() {}
+
+LepIDs::~LepIDs() {}
+
+int LepIDs::GetN() const {
+  return m_IDs.size();
+}
+
+LepID LepIDs::Get(int i) const {
+  if(i < 0 || i >= GetN())
+    return m_IDs[0];
+
+  return m_IDs[i];
+}
+
+LepID LepIDs::operator [] (int i) const {
+  if(i < 0 || i >= GetN())
+    return m_IDs[0];
+
+  return m_IDs[i];
+}
+
+void LepIDs::Add(LepID id){
+  m_IDs.push_back(id);
+}
+
+void LepIDs::operator += (LepID id){
+  m_IDs.push_back(id);
+}
+
+LepIDs& LepIDs::a(LepID id){
+  m_IDs.push_back(id);
+
+  return *this;
+}
+
+bool LepIDs::IsEqual(const LepIDs& ids) const {
+  if(GetN() != ids.GetN())
+    return false;
+
+  int N = GetN();
+  for(int i = 0; i < N; i++)
+    if(m_IDs[i] != ids[i])
+      return false;
+
+  return true;
+}
+
+bool LepIDs::operator == (const LepIDs& ids) const {
+  return IsEqual(ids);
+}
+
+void LepIDs::swap(int index_a, int index_b){
+  int N = GetN();
+  if(index_a < 0   || index_b < 0 ||
+     index_a > N-1 || index_b > N-1)
+    return;
+
+  LepID temp = m_IDs[index_a];
+  m_IDs[index_a] = m_IDs[index_b];
+  m_IDs[index_b] = temp;
+}
+
+///////////////////////////////////////////
+////////// LepIDsList class
+///////////////////////////////////////////
+
+LepIDsList::LepIDsList(const string& label){
+  m_Label = label;
+}
+
+LepIDsList::~LepIDsList(){ }
+
+string LepIDsList::Label() const {
+  return m_Label;
+}
+
+void LepIDsList::Add(const LepIDs& ids){
+  if(!Contains(ids))
+     m_IDs.push_back(ids);
+}
+
+void LepIDsList::operator += (const LepIDs& ids){
+  Add(ids);
+}
+
+void LepIDsList::Add(const LepIDsList& ids){
+  int N = ids.GetN();
+  for(int i = 0; i < N; i++)
+    Add(ids[i]);
+}
+
+void LepIDsList::operator += (const LepIDsList& ids){
+  Add(ids);
+}
+
+int LepIDsList::GetN() const {
+  return m_IDs.size();
+}
+
+const LepIDs& LepIDsList::Get(int i) const {
+  if(i < 0 || i >= GetN())
+    return m_IDs[0];
+
+  return m_IDs[i];
+}
+
+const LepIDs& LepIDsList::operator [] (int i) const {
+  if(i < 0 || i >= GetN())
+    return m_IDs[0];
+
+  return m_IDs[i];
+}
+
+bool LepIDsList::IsEqual(const LepIDsList& ids) const {
+  if(GetN() != ids.GetN())
+    return false;
+
+  int N = GetN();
+  for(int i = 0; i < N; i++)
+    if(!Contains(ids[i]))
+       return false;
+
+  return true;
+}
+
+bool LepIDsList::operator == (const LepIDsList& ids) const {
+  return IsEqual(ids);
+}
+
+bool LepIDsList::Contains(const LepIDs& ids) const {
+  int N = GetN();
+
+  for(int i = 0; i < N; i++)
+    if(m_IDs[i] == ids)
+      return true;
+
+  return false;
+}
+
+bool LepIDsList::operator >= (const LepIDs& ids) const {
+  return Contains(ids);
+}
+
+bool LepIDsList::Contains(const LepIDsList& ids) const {
+  int N = ids.GetN();
+  if(N > GetN())
+    return false;
+
+  for(int i = 0; i < N; i++)
+    if(!Contains(ids[i]))
+       return false;
+
+  return true;
+}
+bool LepIDsList::operator >= (const LepIDsList& ids) const {
+  return Contains(ids);
+}
+
+bool LepIDsList::operator <= (const LepIDsList& ids) const {
+  int N = GetN();
+  if(N > ids.GetN())
+    return false;
+
+  for(int i = 0; i < N; i++)
+    if(!ids.Contains(Get(i)))
+      return false;
+
+  return true;
+}
+
+LepIDsList LepIDsList::Combinatorics(int Nlep) const {
+  LepIDsList comb(Label());
+
+  int N = GetN();
+  for(int i = 0; i < N; i++)
+    comb += Combinatorics(Nlep, i);
+  
+  return comb;
+}
+
+LepIDsList LepIDsList::Combinatorics(int Nlep, int index) const {
+  LepIDsList comb(Label());
+
+  LepIDs id = m_IDs[index];
+  int N = id.GetN(); 
+
+  while(N < Nlep){
+    id += kGold;
+    N++;
+  }
+
+  heapPermutation(id, N, N, comb);
+
+  return comb;
+}
+
+void LepIDsList::heapPermutation(LepIDs& id, int size, int N, LepIDsList& comb) const {
+  if(size == 1){
+    comb += id;
+    // int N = id.GetN();
+    // cout << "Adding" << endl;
+    // for(int i = 0; i < N; i++)
+    //   cout << id[i] << " ";
+    // cout << endl;
+    // return;
+  }
+
+  for(int i = 0; i < size; i++){
+    heapPermutation(id, size - 1, N, comb);
+
+    if(size % 2 == 1)
+      id.swap(0, size-1);
+    else
+      id.swap(i, size-1);
+  }
+}
+
 ///////////////////////////////////////////
 ////////// Lep class
 ///////////////////////////////////////////
@@ -26,14 +244,14 @@ Lep::~Lep(){ }
 
 // for sorting leptons in category
 bool Lep::operator < (const Lep& lep) const {
-  if(m_ID < lep.ID())
-    return true;
-  if(m_ID > lep.ID())
-    return false;
-
   if(m_Flavor < lep.Flavor())
     return true;
   if(m_Flavor > lep.Flavor())
+    return false;
+
+  if(m_ID < lep.ID())
+    return true;
+  if(m_ID > lep.ID())
     return false;
 
   if(m_Charge < lep.Charge())
@@ -258,7 +476,7 @@ std::string LepList::GetIDLabel() const {
   return label;
 }
 
-vector<std::string> LepList::GetFakeLabels() const {
+VS LepList::GetFakeLabels(int Nfake) const {
   std::string label0 = "Fakes_";
   std::string label;
   vector<std::string> labels;
@@ -266,21 +484,58 @@ vector<std::string> LepList::GetFakeLabels() const {
   for(int i = 0; i < m_N; i++){
     LepSource source = (*this)[i].Source();
     if(source > kTau){
-      label = label0;
-      label += ((*this)[i].Flavor() == kElectron ? "elf" : "muf");
+      label = ((*this)[i].Flavor() == kElectron ? "elf" : "muf");
       if(source == kHFB || source == kHFC)
 	label += "0";
       else
 	label += "1";
-      // if(source == kLF)
-      // 	label += "1";
-      // if(source == kFake)
-      // 	label += "2";
+      if( (*this)[i].ID() == kBronze )
+	label += "B";
+      else if( (*this)[i].ID() == kSilver)
+	label += "S";
+      else
+	label += "G";
+      
       labels.push_back(label);
     }
   }
 
+  if(Nfake > 1)
+    labels = Combinatorics(labels, Nfake);
+
+  Nfake = labels.size();
+  for(int i = 0; i < Nfake; i++)
+    labels[i] = label0 + labels[i];
+  
   return labels;
+}
+
+VS LepList::Combinatorics(const VS& labels, int N) const {
+  if(N <= 1)
+    return labels;
+
+  VS labels_ret;
+  VS labels_m1;
+  int Nl = labels.size();
+  
+  if(Nl <= N){
+    string lab = labels[0];
+    for(int i = 1; i < Nl; i++)
+      lab += "_" + labels[i];
+    labels_ret += lab;
+    return labels_ret;
+  }
+    
+  for(int i = 0; i < Nl; i++){
+    labels_m1.clear();
+    for(int j = i+1; j < Nl; j++)
+      labels_m1 += labels[j];
+    labels_m1 = Combinatorics(labels_m1, N-1);
+    for(auto l : labels_m1)
+      labels_ret += labels[i] + "_" + l;
+  }
+
+  return labels_ret;
 }
 
 LepList LepList::GetFakes() const {
@@ -288,7 +543,7 @@ LepList LepList::GetFakes() const {
   for(int i = 0; i < m_N; i++){
     if((*this)[i].Source() > kTau){
       Lep lep = (*this)[i];
-      lep.SetID(kGold);
+      //lep.SetID(kGold);
       lep.SetCharge(kPos);
       list += lep;
     }

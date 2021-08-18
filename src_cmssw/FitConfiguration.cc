@@ -126,14 +126,13 @@ void FitConfiguration::Configure(ch::CombineHarvester& cb, ProcessList& processe
   ///////////////////////
   //cb.cp().backgrounds().bin(VS().a(".*gamT1.*")).PrintObs();
   cb.cp().backgrounds().bin(VS().a(".*gamT1.*"))
-    .AddSyst(cb, "SV_eff", "lnN", SystMap<>::init(1.05));
+    .AddSyst(cb, "gamT", "lnN", SystMap<>::init(1.05));
 
   cb.cp().backgrounds().bin(VS().a(".*PTISR1.*"))
-    .AddSyst(cb, "SV_eff", "lnN", SystMap<>::init(1.05));
+    .AddSyst(cb, "PTISR", "lnN", SystMap<>::init(1.05));
 
   // turn off regex filtering
-  cb.SetFlag("filters-use-regex", false)
-    ;
+  cb.SetFlag("filters-use-regex", false);
 
 }
 
