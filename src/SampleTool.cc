@@ -37,7 +37,7 @@ ProcessList SampleTool::Get(const string& name) const {
 
   for(auto p = m_Proc[m_iYear].begin(); p != m_Proc[m_iYear].end(); p++){
     if(p->first.Name().find(name) != std::string::npos)
-      list += p->first;
+	list += p->first;
   }
 
   return list;
@@ -190,13 +190,15 @@ int SampleTool::YearMap(int year){
 }
 
 void SampleTool::InitSMS(const string& prefix, const string& filename, double weight, bool FS, bool DL){
-
-  TFile file;
-  file.Open(filename.c_str(), "READ"); //
-  if(!file.IsOpen())
+  //TFile file;
+  //file.Open(filename.c_str(), "READ"); //
+if(gSystem->AccessPathName(filename.c_str())) return;
+TFile* file = TFile::Open(filename.c_str(), "READ");  
+//cout << "is " << filename << " open? " << file->IsOpen() << endl;
+  if(!file->IsOpen())
     return;
  
-  TIter list(file.GetListOfKeys());
+  TIter list(file->GetListOfKeys());
   TKey* key;
   int M0, M1;
   string name;
@@ -208,12 +210,11 @@ void SampleTool::InitSMS(const string& prefix, const string& filename, double we
     sscanf(name.c_str(), "SMS_%d_%d", &M0, &M1);
 
     Process proc(Form("%s_%d", prefix.c_str(), 10000*M0+M1), kSig);
-
     files.clear();
     if(m_Proc[m_iYear].count(proc) == 0){
       files += filename;
       m_Proc[m_iYear][proc] = pair<vector<string>,string>(files, name);
-      m_SProcInit[m_iYear][proc] = false;
+	m_SProcInit[m_iYear][proc] = false;
       m_SProcFS[m_iYear][proc] = std::map<string,bool>();
       m_SProcDL[m_iYear][proc] = std::map<string,bool>();
       m_SProcW[m_iYear][proc] = std::map<string,double>();
@@ -229,7 +230,7 @@ void SampleTool::InitSMS(const string& prefix, const string& filename, double we
     
    
   }
-  file.Close();
+  file->Close();
 }
 
 void SampleTool::InitProcMap(){
@@ -323,7 +324,7 @@ void SampleTool::InitProcMap(){
     list += m_Path + "Summer16_102X/TTZToQQ_TuneCUETP8M1_13TeV-amcatnlo-pythia8_Summer16_102X.root";
     list += m_Path + "Summer16_102X/ttHToNonbb_M125_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8_Summer16_102X.root";
     list += m_Path + "Summer16_102X/ttHTobb_M125_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8_Summer16_102X.root";
-    //list += m_Path + "Summer16_102X/WZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8_Summer16_102X.root";
+    list += m_Path + "Summer16_102X/WZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8_Summer16_102X.root";
     list += m_Path + "Summer16_102X/WZG_TuneCUETP8M1_13TeV-amcatnlo-pythia8_Summer16_102X.root";
     list += m_Path + "Summer16_102X/WWZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8_Summer16_102X.root";
     list += m_Path + "Summer16_102X/WWG_TuneCUETP8M1_13TeV-amcatnlo-pythia8_Summer16_102X.root";
@@ -358,6 +359,7 @@ void SampleTool::InitProcMap(){
 
 
 
+>>>>>>> 69f63fecb52d2ebb17f36aa2515c6ea1df8914c3
 m_Proc[m_iYear][data_obs] = pair<vector<string>,string>(list, "KUAnalysis");
 
 }
@@ -569,7 +571,7 @@ m_Proc[m_iYear][data_obs] = pair<vector<string>,string>(list, "KUAnalysis");
     list.clear();
     list += m_Path + "Autumn18_102X/ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/ST_t-channel_antitop_4f_InclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8_Autumn18_102X.root";
-    //list += m_Path + "Autumn18_102X/ST_t-channel_top_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/ST_t-channel_top_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/ST_tW_top_5f_inclusiveDecays_TuneCP5_PSweights_13TeV-powheg-pythia8_Autumn18_102X.root";
     m_Proc[m_iYear][ST] = pair<vector<string>,string>(list, "KUAnalysis");
@@ -588,31 +590,31 @@ m_Proc[m_iYear][data_obs] = pair<vector<string>,string>(list, "KUAnalysis");
     list += m_Path + "Autumn18_102X/DYJetsToLL_M-50_HT-600to800_TuneCP5_13TeV-madgraphMLM-pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/DYJetsToLL_M-50_HT-70to100_TuneCP5_13TeV-madgraphMLM-pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/DYJetsToLL_M-50_HT-800to1200_TuneCP5_13TeV-madgraphMLM-pythia8_Autumn18_102X.root";
-   // list += m_Path + "Autumn18_102X/ZJetsToNuNu_HT-100To200_13TeV-madgraph_Autumn18_102X.root";
-   // list += m_Path + "Autumn18_102X/ZJetsToNuNu_HT-1200To2500_13TeV-madgraph_Autumn18_102X.root";
-   // list += m_Path + "Autumn18_102X/ZJetsToNuNu_HT-200To400_13TeV-madgraph_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/ZJetsToNuNu_HT-100To200_13TeV-madgraph_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/ZJetsToNuNu_HT-1200To2500_13TeV-madgraph_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/ZJetsToNuNu_HT-200To400_13TeV-madgraph_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/ZJetsToNuNu_HT-2500ToInf_13TeV-madgraph_Autumn18_102X.root";
-   // list += m_Path + "Autumn18_102X/ZJetsToNuNu_HT-400To600_13TeV-madgraph_Autumn18_102X.root";
-   // list += m_Path + "Autumn18_102X/ZJetsToNuNu_HT-600To800_13TeV-madgraph_Autumn18_102X.root";
-   // list += m_Path + "Autumn18_102X/ZJetsToNuNu_HT-800To1200_13TeV-madgraph_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/ZJetsToNuNu_HT-400To600_13TeV-madgraph_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/ZJetsToNuNu_HT-600To800_13TeV-madgraph_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/ZJetsToNuNu_HT-800To1200_13TeV-madgraph_Autumn18_102X.root";
     m_Proc[m_iYear][ZDY] = pair<vector<string>,string>(list, "KUAnalysis");
 
     Process DB("DB", kBkg);
     list.clear();
-   // list += m_Path + "Autumn18_102X/WWTo2L2Nu_NNPDF31_TuneCP5_13TeV-powheg-pythia8_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/WWTo2L2Nu_NNPDF31_TuneCP5_13TeV-powheg-pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/WWTo4Q_NNPDF31_TuneCP5_13TeV-powheg-pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/WWToLNuQQ_NNPDF31_TuneCP5_13TeV-powheg-pythia8_Autumn18_102X.root";
-   // list += m_Path + "Autumn18_102X/WZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/WZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/WZTo1L3Nu_13TeV_amcatnloFXFX_madspin_pythia8_v2_Autumn18_102X.root";
-   // list += m_Path + "Autumn18_102X/WZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/WZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8_Autumn18_102X.root";
-   // list += m_Path + "Autumn18_102X/ZZTo2L2Nu_13TeV_powheg_pythia8_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/ZZTo2L2Nu_13TeV_powheg_pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/ZZTo2Q2Nu_TuneCP5_13TeV_amcatnloFXFX_madspin_pythia8_Autumn18_102X.root";
-    //list += m_Path + "Autumn18_102X/ZZTo4L_13TeV_powheg_pythia8_Autumn18_102X.root";
-    //list += m_Path + "Autumn18_102X/GluGluHToZZTo4L_M125_13TeV_powheg2_JHUGenV7011_pythia8_Autumn18_102X.root";
-    //list += m_Path + "Autumn18_102X/VHToGG_M125_13TeV_amcatnloFXFX_madspin_pythia8_Autumn18_102X.root";
-    //list += m_Path + "Autumn18_102X/VHToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/ZZTo4L_13TeV_powheg_pythia8_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/GluGluHToZZTo4L_M125_13TeV_powheg2_JHUGenV7011_pythia8_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/VHToGG_M125_13TeV_amcatnloFXFX_madspin_pythia8_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/VHToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_Autumn18_102X.root";
     m_Proc[m_iYear][DB] = pair<vector<string>,string>(list, "KUAnalysis");
 
     Process Wjets("Wjets", kBkg);
@@ -621,8 +623,8 @@ m_Proc[m_iYear][data_obs] = pair<vector<string>,string>(list, "KUAnalysis");
     list += m_Path + "Autumn18_102X/WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8_Autumn18_102X.root";
-    //list += m_Path + "Autumn18_102X/WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8_Autumn18_102X.root";
-    //list += m_Path + "Autumn18_102X/WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/WJetsToLNu_HT-70To100_TuneCP5_13TeV-madgraphMLM-pythia8_Autumn18_102X.root";
     m_Proc[m_iYear][Wjets] = pair<vector<string>,string>(list, "KUAnalysis");
@@ -632,10 +634,10 @@ m_Proc[m_iYear][data_obs] = pair<vector<string>,string>(list, "KUAnalysis");
     list += m_Path + "Autumn18_102X/TTGJets_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/TTTT_TuneCP5_13TeV-amcatnlo-pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8_Autumn18_102X.root";
-    //list += m_Path + "Autumn18_102X/TTWJetsToQQ_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/TTWJetsToQQ_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/TTZToLLNuNu_M-10_TuneCP5_13TeV-amcatnlo-pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/TTZToQQ_TuneCP5_13TeV-amcatnlo-pythia8_Autumn18_102X.root";
-   // list += m_Path + "Autumn18_102X/ttHToNonbb_M125_TuneCP5_13TeV-powheg-pythia8_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/ttHToNonbb_M125_TuneCP5_13TeV-powheg-pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/ttHTobb_M125_TuneCP5_13TeV-powheg-pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/ZZZ_TuneCP5_13TeV-amcatnlo-pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/WZZ_TuneCP5_13TeV-amcatnlo-pythia8_Autumn18_102X.root";
@@ -649,15 +651,14 @@ m_Proc[m_iYear][data_obs] = pair<vector<string>,string>(list, "KUAnalysis");
     list.clear();
     list += m_Path + "Autumn18_102X/QCD_HT1000to1500_TuneCP5_13TeV-madgraph-pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/QCD_HT100to200_TuneCP5_13TeV-madgraph-pythia8_Autumn18_102X.root";
-   // list += m_Path + "Autumn18_102X/QCD_HT1500to2000_TuneCP5_13TeV-madgraph-pythia8_Autumn18_102X.root";
-   // list += m_Path + "Autumn18_102X/QCD_HT2000toInf_TuneCP5_13TeV-madgraph-pythia8_Autumn18_102X.root";
-   // list += m_Path + "Autumn18_102X/QCD_HT200to300_TuneCP5_13TeV-madgraph-pythia8_Autumn18_102X.root";
-   // list += m_Path + "Autumn18_102X/QCD_HT300to500_TuneCP5_13TeV-madgraph-pythia8_Autumn18_102X.root";
-   // list += m_Path + "Autumn18_102X/QCD_HT500to700_TuneCP5_13TeV-madgraph-pythia8_Autumn18_102X.root";
-   // list += m_Path + "Autumn18_102X/QCD_HT700to1000_TuneCP5_13TeV-madgraph-pythia8_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/QCD_HT1500to2000_TuneCP5_13TeV-madgraph-pythia8_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/QCD_HT2000toInf_TuneCP5_13TeV-madgraph-pythia8_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/QCD_HT200to300_TuneCP5_13TeV-madgraph-pythia8_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/QCD_HT300to500_TuneCP5_13TeV-madgraph-pythia8_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/QCD_HT500to700_TuneCP5_13TeV-madgraph-pythia8_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/QCD_HT700to1000_TuneCP5_13TeV-madgraph-pythia8_Autumn18_102X.root";
     m_Proc[m_iYear][QCD] = pair<vector<string>,string>(list, "KUAnalysis");
 
-     //i think this first one should be here: /home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/T2tt18Hadd
      //InitSMS("T2tt", m_Path+"Autumn18_102X_SMS/SMS-T2tt_dM-10to80_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
     //InitSMS("T2tt", m_Path+"Autumn18_102X_SMS/SMS-T2tt_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
     //InitSMS("T2tt", m_Path+"Autumn18_102X_SMS/SMS-T2tt_mStop-400to1200_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);

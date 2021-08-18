@@ -25,14 +25,13 @@ FitInputEditor::~FitInputEditor(){
 }
 
 void FitInputEditor::InitShapeGroups(){
-  m_FakeGroups["ttbar"] = "ttbarST";
-  m_FakeGroups["ST"]    = "ttbarST";
+  m_FakeGroups["ttbar"] = "top";
+  m_FakeGroups["ST"]    = "top";
 
-  m_FakeGroups["Wjets"] = "WjetsDBTB";
-  m_FakeGroups["TB"]    = "WjetsDBTB";
-  m_FakeGroups["DB"]    = "WjetsDBTB";
-
-  m_FakeGroups["ZDY"]   = "ZDY";
+  m_FakeGroups["Wjets"] = "boson";
+  m_FakeGroups["TB"]    = "boson";
+  m_FakeGroups["DB"]    = "boson";
+  m_FakeGroups["ZDY"]   = "boson";
 
   ProcessList processes = GetProcesses();
   int Nproc = processes.GetN();
@@ -51,8 +50,21 @@ void FitInputEditor::InitShapeGroups(){
     if(m_FakeGroups.count(sproc) == 0)
       continue;
 
-    string sgroup = m_FakeGroups[sproc]+"_"+sfake;
-
+    string sgroup;
+   
+    // order sets hierachy of assignments for Nfake > 1 (2L/3L)
+    m_FakeSources.push_back("muf1");
+    m_FakeSources.push_back("elf1");
+    m_FakeSources.push_back("elf0");
+    m_FakeSources.push_back("muf0");
+    
+    for(auto s : m_FakeSources){
+      if(sfake.find(s) != string::npos){
+	sgroup = m_FakeGroups[sproc]+"_"+s;
+	break;
+      }
+    }
+    
     if(m_FakeGroupLists.count(sgroup) == 0)
       m_FakeGroupLists[sgroup] = ProcessList();
 
@@ -195,10 +207,18 @@ void FitInputEditor::SmoothFakes(){
 
   int NCT = CT_groups.size();
 
+  cout << m_Cat.GetN() << " Categories total" << endl;
+  int icat = 0;
+  
   // loop through category groups
   for(int g = 0; g < NCT; g++){
     CategoryList cats = m_Cat.Filter(*CT_groups[g]);
     int Ncat = cats.GetN();
+    
+    icat += Ncat;
+    //cout << CT_groups[g]->GetNVisible() << endl;
+    //cats.Print();
+    
     if(Ncat == 0)
       continue;
 
@@ -260,6 +280,8 @@ void FitInputEditor::SmoothFakes(){
       pr++;
     }
   }
+
+  //cout << icat << " Categories found" << endl;
   
   CTs.clear();
 }
@@ -499,7 +521,7 @@ void FitInputEditor::AddShapeSysFakes(){
 
   // loop through lepton multiplicity
   for(int i = 0; i < 3; i++){
-    string sgroup = Form("%dL", i+1);
+    string sgroup = Form("Fake_%dL", i+1);
 
     CT_groups.clear();
     CTs[i].GetListDepth(CT_groups,1);

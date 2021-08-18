@@ -139,13 +139,13 @@ FitBin* Category::GetNewFitBin(const std::string& process, bool extrahist) const
   return bin;
 }
 
-CategoryList Category::CreateLeptonIDRegions(std::vector<LepID>& IDs, int NlowQ){
+CategoryList Category::CreateLeptonIDRegions(std::vector<LepIDsList>& IDs){
   CategoryList list;
 
   if(m_Criteria.GetN() < 3)
     return list;
 
-  int NID = IDs.size();
+  int NIDs = IDs.size();
 
   std::map<std::string, Leptonic*> label_to_Leptonic;
 
@@ -172,97 +172,35 @@ CategoryList Category::CreateLeptonIDRegions(std::vector<LepID>& IDs, int NlowQ)
     
     LepList nlist_a;
     LepList nlist_b;
-    LepList nlist;
 
-    if(NlowQ == 1){
-      for(int f = 0; f < N; f++){
-	for(int i = 0; i < NID; i++){
-	  nlist_a.Clear();
-	  nlist_b.Clear();
-	  nlist.Clear();
+    for(int i = 0; i < NIDs; i++){
+      // get all orderings of lepton quality
+      LepIDsList ID = IDs[i].Combinatorics(N);
+      
+      int NID = ID.GetN();
+      for(int j = 0; j < NID; j++){
+	nlist_a.Clear();
+	nlist_b.Clear();
+	for(int f = 0; f < N; f++){
 	  Lep* lep = nullptr; 
-	  if(f < Na)
+	  if(f < Na){
 	    lep = new Lep(list_a[f]);
-	  else
+	    lep->SetID(ID[j][f]);
+	    nlist_a += *lep;
+	  } else {
 	    lep = new Lep(list_b[f-Na]);
-	  
-	  lep->SetID(IDs[i]);
-	  
-	  for(int j = 0; j < N; j++){
-	    if(j < Na)
-	      if(j != f)
-		nlist_a += list_a[j];
-	      else
-		nlist_a += *lep;
-	    else
-	      if(j != f)
-		nlist_b += list_b[j-Na];
-	      else
-		nlist_b += *lep;
+	    lep->SetID(ID[j][f]);
+	    nlist_b += *lep;
 	  }
-	  nlist += nlist_a;
-	  nlist += nlist_b;
-	  
-	  llabel = nlist.GetIDLabel();
-	  if(label_to_Leptonic.count(llabel) == 0)
-	    label_to_Leptonic[llabel] = new Leptonic(nlist_a, nlist_b);
-	  else
-	    (*label_to_Leptonic[llabel]) += Leptonic(nlist_a, nlist_b);
-	} 
-      }
-    }
-
-    if(NlowQ >= 2){
-      for(int f0 = 0; f0 < N-1; f0++){
-	for(int f1 = f0+1; f1 < N; f1++){	  
-	  for(int i0 = 0; i0 < NID; i0++){
-	    for(int i1 = 0; i1 < NID; i1++){
-	      Lep* lep0 = nullptr; 
-	      if(f0 < Na)
-		lep0 = new Lep(list_a[f0]);
-	      else
-		lep0 = new Lep(list_b[f0-Na]);
-	      Lep* lep1 = nullptr; 
-	      if(f1 < Na)
-		lep1 = new Lep(list_a[f1]);
-	      else
-		lep1 = new Lep(list_b[f1-Na]);
-	      lep0->SetID(LepID(i0));
-	      lep1->SetID(LepID(i1));
-	      
-	      nlist_a.Clear();
-	      nlist_b.Clear();
-	      nlist.Clear();
-	      for(int j = 0; j < N; j++){
-		if(j < Na){
-		  if(j != f0 && j != f1)
-		    nlist_a += list_a[j];
-		  if(j == f0)
-		    nlist_a += *lep0;
-		  if(j == f1)
-		    nlist_a += *lep1;
-		} else {
-		  if(j != f0 && j != f1)
-		    nlist_b += list_b[j-Na];
-		  if(j == f0)
-		    nlist_b += *lep0;
-		  if(j == f1)
-		    nlist_b += *lep1;
-		}
-	      }
-	      nlist += nlist_a;
-	      nlist += nlist_b;
-	      
-	      llabel = nlist.GetIDLabel();
-	      if(label_to_Leptonic.count(llabel) == 0)
-		label_to_Leptonic[llabel] = new Leptonic(nlist_a, nlist_b);
-	      else
-		(*label_to_Leptonic[llabel]) += Leptonic(nlist_a, nlist_b);
-	    }
-	  }
-	} 
+	}
+	
+	llabel = IDs[i].Label();
+	if(label_to_Leptonic.count(llabel) == 0)
+	  label_to_Leptonic[llabel] = new Leptonic(nlist_a, nlist_b);
+	else
+	  (*label_to_Leptonic[llabel]) += Leptonic(nlist_a, nlist_b);
       } 
-    }   
+    }    
   }
 
   int Nc = m_Criteria.GetN();
@@ -577,10 +515,10 @@ CategoryList CategoryList::CreateFitBinRegions(const FitBin& bin) const {
   return list;
 }
 
-CategoryList CategoryList::CreateLeptonIDRegions(std::vector<LepID>& IDs, int NlowQ) const {
+CategoryList CategoryList::CreateLeptonIDRegions(std::vector<LepIDsList>& IDs) const {
   CategoryList list;
   for(int i = 0; i < m_N; i++)
-    list += m_Cat[i]->CreateLeptonIDRegions(IDs, NlowQ);
+    list += m_Cat[i]->CreateLeptonIDRegions(IDs);
 
   return list;
 }
