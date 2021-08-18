@@ -83,11 +83,11 @@ void FitInputBuilder::WriteFit(const string& outputroot){
     return;
   }
 
-  std::cout << "writing Processes to ouput..." << std::endl;
+  std::cout << "writing Processes to output..." << std::endl;
   WriteProc();
   std::cout << "...done" << std::endl;
 
-  std::cout << "writing Categories to ouput" << std::endl;
+  std::cout << "writing Categories to output" << std::endl;
   WriteCat();
   std::cout << "...done" << std::endl;
   

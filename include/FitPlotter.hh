@@ -10,6 +10,7 @@ using std::map;
 using std::string;
 using std::pair;
 
+enum SignificanceType {kSB, kSrootB, kZbin};
 ///////////////////////////////////////////
 ////////// FitPlotter class
 ///////////////////////////////////////////
@@ -39,6 +40,24 @@ public:
 		      const VS& proc,
 		      const CategoryTree& CT);
 
+  TCanvas* PlotCatSignificance(const string& can_name,
+			       const VS& proc_bkg,
+			       const VS& proc_sig,
+			       const CategoryTree& CT,
+			       SignificanceType sType = kSB);
+
+  TCanvas* PlotRegionSignificance(const string& can_name,
+				  const VS& proc_bkg,
+				  const VS& proc_sig,
+				  const CategoryTree& CT,
+				  SignificanceType sType = kSB);
+
+  void FindBkgZeros(const VS& proc_bkg);
+
+  void FindBkgRare();
+
+  void zeroBkgTest();
+
   TCanvas* Plot1Dstack(const string& can_name,
 		       const VS& proc,
 		       const CategoryTree& CT);
@@ -64,6 +83,8 @@ private:
 
   void DrawCatTree(const CategoryTree& CT, TCanvas* can);
   void DrawMR(const FitBin& fitbin, TCanvas* can);
+
+  double calculateZbi(double Nsig, double Nbkg, double deltaNbkg = 0.2);
   
 };
 

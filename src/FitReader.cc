@@ -191,6 +191,48 @@ TH1D* FitReader::GetAddedHist(const string&       name,
   return hist;
 }
 
+vector<double> FitReader::GetAddedHistValues(const CategoryList& cats,
+					     const ProcessList&  procs,
+					     const Systematic&   sys) const {
+
+  vector<double> histValues;
+
+  int Np = procs.GetN();
+  int Nc = cats.GetN();
+
+  TH1D* hist = nullptr;
+  TString name = "dummy";
+
+  for(int p = 0; p < Np; p++){
+    for(int c = 0; c < Nc; c++){
+      if(!IsThere(cats[c], procs[p], sys))
+        continue;
+
+      if(!hist){
+        hist = (TH1D*) GetHistogram(cats[c], procs[p], sys)->Clone(name);
+      } else {
+        hist->Add(GetHistogram(cats[c], procs[p], sys));
+      }
+    }
+  }
+
+  if(hist){
+    int bins = hist->GetNbinsX();
+    
+    for(int b = 0; b < bins; b++){
+      histValues.push_back(hist->GetBinContent(b+1));
+    } 
+
+    delete hist;
+  }
+  else{
+    histValues.push_back(0.);
+  }
+
+
+  return histValues;
+}
+
 const TH1D* FitReader::GetHistogram(const Category&   cat,
 				    const Process&    proc,
 				    const Systematic& sys) const {
