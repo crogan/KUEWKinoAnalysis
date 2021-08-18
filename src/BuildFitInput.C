@@ -428,8 +428,8 @@ int main(int argc, char* argv[]) {
 	
 	int eindex = Categories.Find(Event);
 
-	if(eindex < 0 && false){
-	  //continue;
+	if(eindex < 0){
+	  continue;
 	  if(Nlep > 3)
 	    continue;
 	  if(base->PTISR < 250. && Nlep >= 2)
