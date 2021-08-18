@@ -72,11 +72,11 @@ string FitPlotter::GetSignalTitle(const string& label){
 
 
 
-TH1D* FitPlotter::Plot1D(const string& proc,
+TCanvas* FitPlotter::Plot1DShape(const string& proc,
         const VS& lep_cat,
         const VS& hadS_cat,
         const VS& hadI_cat,
-        const string& name){
+	const string& name){
   RestFrames::SetStyle();
 
   
@@ -170,7 +170,7 @@ TH1D* FitPlotter::Plot1D(const string& proc,
   // TH1D* hist_data = nullptr;
   
   // for(int i = 0; i < Nproc; i++){
-    // VS vproc;
+     VS vproc;
     if(m_Strings.count(proc) != 0)
       vproc = m_Strings[proc];
     else
@@ -199,7 +199,7 @@ TH1D* FitPlotter::Plot1D(const string& proc,
   cout << "filled " << cat[c].GetLabel() << " " << pp.Name() << endl;
   
   if(!hist){
-    hist = (TH1D*) GetHistogram(cat[c], pp)->Clone(Form("plothist_%d_%s", i, name.c_str()));
+    hist = (TH1D*) GetHistogram(cat[c], pp)->Clone(Form("plothist_%d_%s", 0, name.c_str()));
   } else {
     hist->Add(GetHistogram(cat[c], pp));
   }
@@ -208,7 +208,7 @@ TH1D* FitPlotter::Plot1D(const string& proc,
 
     if(hist == nullptr){
       cout << "null hist" << endl;
-      break;
+      return NULL;
     }
     
     // if(type == kData){
@@ -222,60 +222,21 @@ TH1D* FitPlotter::Plot1D(const string& proc,
     // }
 
     if(type == kBkg){
-      if(m_Title.count(proc[i]) != 0)
-  labels += m_Title[proc[i]];
+      if(m_Title.count(proc) != 0)
+  labels += m_Title[proc];
       else
-  labels += proc[i];
+  labels += proc;
       
-      if(m_Color.count(proc[i]) != 0)
-  colors.push_back(m_Color[proc[i]]);
+      if(m_Color.count(proc) != 0)
+  colors.push_back(m_Color[proc]);
       else
-  colors.push_back(m_ColorDefault[i]);
+  colors.push_back(m_ColorDefault[0]);
       
       // hists.push_back(hist);
     } 
   // }
-
-  // int Nsig = hists_sig.size();
-  
-  // sort the histograms by integral (N^2/2 brute force)
-  // int Nbkg = hists.size();
-  // VS             vlabels;
-  // vector<int>    vcolors;
-  // vector<TH1D*>  vhists;
-  // string stemp;
-  // int    itemp;
-  // TH1D*  htemp;
-  
-  // for(int i = 0; i < Nbkg; i++){
-  //   vlabels.push_back(labels[i]);
-  //   vcolors.push_back(colors[i]);
-  //   vhists.push_back(hists[i]);
-  //   for(int j = vhists.size()-2; j >= 0; j--){
-  //     if(vhists[j]->Integral() < vhists[j+1]->Integral()){
-  // stemp = vlabels[j+1];
-  // itemp = vcolors[j+1];
-  // htemp = vhists[j+1];
-  // vlabels[j+1] = vlabels[j];
-  // vcolors[j+1] = vcolors[j];
-  // vhists[j+1]  = vhists[j];
-  // vlabels[j] = stemp;
-  // vcolors[j] = itemp;
-  // vhists[j]  = htemp;
-  //     } else {
-  // break;
-  //     }
-  //   }
-  // }
-  
-  // "stack" the histograms by adding
-  // for(int i = Nbkg-2; i >= 0; i--)
-    // vhists[i]->Add(vhists[i+1]);
-
-  // hists  = vhists;
-  // labels = vlabels;
-  // colors = vcolors;
-
+  //normalize histogram
+  hist->Scale(1/hist->Integral());
   const FitBin& bin = cat[0].GetFitBin();
 
   int NR = bin.NRBins();
@@ -293,7 +254,7 @@ TH1D* FitPlotter::Plot1D(const string& proc,
       lmax = len;
   }
   string space = "";
-  for(int l = 0; l < 1.6*lmax; l++)
+  for(int l = 0; l < 1.2*lmax; l++)
     space += " ";
   
   for(int b = 0; b < NB; b++){
@@ -330,7 +291,11 @@ TH1D* FitPlotter::Plot1D(const string& proc,
 
   double hmax = hist->GetMaximum();
   
-  hist->Draw("hist");
+  hist->Draw("p");
+  hist->SetMarkerSize(3);
+  hist->SetMarkerStyle(8);
+  hist->SetMarkerColor(kRed);
+  hist->SetLineColor(kRed);
   hist->GetXaxis()->CenterTitle();
   hist->GetXaxis()->SetTitleFont(42);
   hist->GetXaxis()->SetTitleSize(0.05);
@@ -345,7 +310,7 @@ TH1D* FitPlotter::Plot1D(const string& proc,
   hist->GetYaxis()->SetTitleOffset(0.85);
   hist->GetYaxis()->SetLabelFont(42);
   hist->GetYaxis()->SetLabelSize(0.035);
-  hist->GetYaxis()->SetTitle("number of events");
+  hist->GetYaxis()->SetTitle("a.u.");
    
   // for(int i = 0; i < Nbkg; i++){
   //   hists[i]->SetLineColor(kBlack);
@@ -355,30 +320,30 @@ TH1D* FitPlotter::Plot1D(const string& proc,
   //   hists[i]->Draw("SAME HIST");
   // }
 
-  TGraphErrors* gr = nullptr;
-  if(!m_FilePtr){
-    vector<double> X;
-    vector<double> Xerr;
-    vector<double> Y;
-    vector<double> Yerr;
-    for(int i = 0; i < NB; i++){
-      X.push_back(hists[0]->GetXaxis()->GetBinCenter(i+1));
-      Xerr.push_back(0.5);
-      Y.push_back(hists[0]->GetBinContent(i+1));
-      Yerr.push_back(hists[0]->GetBinError(i+1));
-    }
-    gr = (TGraphErrors*) new TGraphErrors(NB, &X[0], &Y[0],  &Xerr[0], &Yerr[0]);
-  } else {
-    cout << "here " << gr << endl;
-    gr = (TGraphErrors*) GetTotalBackground(cat);
-    cout << "here " << gr << endl;
-  }
-    
-  gr->SetMarkerSize(0);
-  gr->SetLineColor(kBlack);
-  gr->SetFillColor(kBlack);
-  gr->SetFillStyle(3244);
-  gr->Draw("same p2");
+  //TGraphErrors* gr = nullptr;
+  //if(!m_FilePtr){
+  //  vector<double> X;
+  //  vector<double> Xerr;
+  //  vector<double> Y;
+  //  vector<double> Yerr;
+  //  for(int i = 0; i < NB; i++){
+  //    X.push_back(hist->GetXaxis()->GetBinCenter(i+1));
+  //    Xerr.push_back(0.5);
+  //    Y.push_back(hist->GetBinContent(i+1));
+  //    Yerr.push_back(hist->GetBinError(i+1));
+  //  }
+  //  gr = (TGraphErrors*) new TGraphErrors(NB, &X[0], &Y[0],  &Xerr[0], &Yerr[0]);
+  //} else {
+  //  cout << "here " << gr << endl;
+  //  gr = (TGraphErrors*) GetTotalBackground(cat);
+  //  cout << "here " << gr << endl;
+  //}
+  //  
+  //gr->SetMarkerSize(0);
+  //gr->SetLineColor(kBlack);
+  //gr->SetFillColor(kBlack);
+  //gr->SetFillStyle(3244);
+  //gr->Draw("same p2");
 
   // for(int i = 0; i < Nsig; i++){
   //   hists_sig[i]->SetLineColor(7030+i*10);
@@ -402,100 +367,102 @@ TH1D* FitPlotter::Plot1D(const string& proc,
 
   hist->GetYaxis()->SetRangeUser(0.05, 1.1*hmax);
 
-  // TLegend* leg = new TLegend(1.-hhi+0.01, 1.- (Nbkg+Nsig+1)*(1.-0.49)/9., 0.98, 1.-hto-0.005);
-  // leg->SetTextFont(42);
-  // leg->SetTextSize(0.035);
-  // leg->SetFillColor(kWhite);
-  // leg->SetLineColor(kWhite);
-  // leg->SetShadowColor(kWhite);
+//   TLegend* leg = new TLegend(1.-hhi+0.01, 1.- (2)*(1.-0.49)/9., 0.98, 1.-hto-0.005);
+//   leg->SetName("legend");
+//   leg->SetTextFont(42);
+//   leg->SetTextSize(0.035);
+//   leg->SetFillColor(kWhite);
+//   leg->SetLineColor(kWhite);
+//   leg->SetShadowColor(kWhite);
 
   // if(hist_data)
   //   leg->AddEntry(hist_data, "data");
   // leg->AddEntry(gr, "total uncertainty","F");
   // for(int i = 0; i < Nbkg; i++)
-  //   leg->AddEntry(hists[i], labels[i].c_str(), "F");
-  // for(int i = 0; i < Nsig; i++)
-  //   leg->AddEntry(hists_sig[i], labels_sig[i].c_str(), "L");
+//     leg->AddEntry(hist, labels[0].c_str(), "F");
+ //  for(int i = 0; i < Nsig; i++)
+ //    leg->AddEntry(hists_sig[i], labels_sig[i].c_str(), "L");
   // leg->Draw("SAME");
 
 
 //CANVAS FORMATTING
-  // double eps = 0.0015;
+   double eps = 0.0015;
   
-  // TLatex l;
-  // l.SetTextFont(42);
-  // l.SetNDC();
+   TLatex l;
+   l.SetTextFont(42);
+   l.SetNDC();
 
-  // TLine* line = new TLine();
-  // line->SetLineWidth(2);
-  // line->SetLineColor(kBlack);
+   TLine* line = new TLine();
+   line->SetLineWidth(2);
+   line->SetLineColor(kBlack);
 
-  // // line->DrawLineNDC(hlo, hbo-0.024*lmax, 1-hhi, hbo-0.0235*lmax);
+   // line->DrawLineNDC(hlo, hbo-0.024*lmax, 1-hhi, hbo-0.0235*lmax);
  
-  // l.SetTextSize(0.025);
-  // l.SetTextFont(42);
-  // l.SetTextAlign(23);
-  // line->SetLineWidth(1);
-  // double lo = hlo;
-  // double hi = hlo;
-  // double yline = hbo-0.024*lmax;
-  // int ib = 0;
-  // for(int r = 0; r < NR; r++){
-  //   int NM = bin[r].NBins();
-  //   lo = hi;
-  //   hi = double(NM)/double(NB)*(1.-hhi-hlo) + lo;
-    
-  //   line->SetLineStyle(1);
-  //   line->DrawLineNDC(lo + eps, yline,
-  //           lo + eps, yline + 6*eps);
-  //   line->DrawLineNDC(hi - eps, yline,
-  //           hi - eps, yline + 6*eps);
-  //   line->DrawLineNDC(lo + eps, yline,
-  //           hi - eps, yline);
-  //   line->SetLineStyle(5);
-  //   line->DrawLineNDC(hi, hbo, hi, 1.-hto);
-  //   line->SetLineStyle(3);
-  //   for(int b = 0; b < NM; b++){
-  //     if(ib%2 == 1)
-  //   line->DrawLineNDC(lo + (hi-lo)*(b+0.5)/double(NM), hbo,
-  //         lo + (hi-lo)*(b+0.5)/double(NM), (hbo+yline)/2.+eps);
-  //     ib++;
-  //   }
-    
-  //   l.DrawLatex((hi+lo)/2., yline - 8*eps, blabels[r].c_str());
-  // }
-       
-  // l.SetTextAlign(32);
-  // l.SetTextSize(0.03);
-  // l.SetTextFont(42);
-  // l.DrawLatex(hlo, (hbo+yline)/2.+eps, "M_{#perp}   [GeV] #in");
+   l.SetTextSize(0.025);
+   l.SetTextFont(42);
+   l.SetTextAlign(23);
+   line->SetLineWidth(1);
+   double lo = hlo;
+   double hi = hlo;
+   double yline = hbo-0.024*lmax;
+   int ib = 0;
+   for(int r = 0; r < NR; r++){
+     int NM = bin[r].NBins();
+     lo = hi;
+     hi = double(NM)/double(NB)*(1.-hhi-hlo) + lo;
+  
+     line->SetLineStyle(1);
+     line->DrawLineNDC(lo + eps, yline,
+             lo + eps, yline + 6*eps);
+     line->DrawLineNDC(hi - eps, yline,
+             hi - eps, yline + 6*eps);
+     line->DrawLineNDC(lo + eps, yline,
+             hi - eps, yline);
+     line->SetLineStyle(5);
+     line->DrawLineNDC(hi, hbo, hi, 1.-hto);
+     line->SetLineStyle(3);
+     for(int b = 0; b < NM; b++){
+       if(ib%2 == 1)
+     line->DrawLineNDC(lo + (hi-lo)*(b+0.5)/double(NM), hbo,
+           lo + (hi-lo)*(b+0.5)/double(NM), (hbo+yline)/2.+eps);
+       ib++;
+     }
+  
+     l.DrawLatex((hi+lo)/2., yline - 8*eps, blabels[r].c_str());
+   }
+     
+   l.SetTextAlign(32);
+   l.SetTextSize(0.03);
+   l.SetTextFont(42);
+   l.DrawLatex(hlo, (hbo+yline)/2.+eps, "M_{#perp}   [GeV] #in");
 
-  // l.SetTextSize(0.03);
-  // l.SetTextFont(42);
-  // l.DrawLatex(hlo, yline - 15*eps, "#scale[1.15]{R_{ISR}} #in");
+   l.SetTextSize(0.03);
+   l.SetTextFont(42);
+   l.DrawLatex(hlo, yline - 15*eps, "#scale[1.15]{R_{ISR}} #in");
  
-  // l.SetTextAlign(31);
-  // l.SetTextSize(0.04);
-  // l.SetTextFont(42);
-  // l.DrawLatex(1.-hhi-eps*4, 1.-hto+0.02, "2017 MC KUEWKino");
-  // l.SetTextAlign(11);
-  // l.SetTextSize(0.04);
-  // l.SetTextFont(42);
-  // l.DrawLatex(hlo+eps*4, 1.-hto+0.02,"#bf{#it{CMS}} work-in-progress");
-  // l.SetTextSize(0.05);
+   l.SetTextAlign(31);
+   l.SetTextSize(0.04);
+   l.SetTextFont(42);
+   l.DrawLatex(1.-hhi-eps*4, 1.-hto+0.02, "2017 MC KUEWKino");
+   l.SetTextAlign(11);
+   l.SetTextSize(0.04);
+   l.SetTextFont(42);
+   l.DrawLatex(hlo+eps*4, 1.-hto+0.02,"#bf{#it{CMS}} work-in-progress");
+   l.SetTextSize(0.05);
 
-  // string plotlabel = "#color[7014]{"+lep_labels[0]+"} + ";
-  // plotlabel += "#color[7004]{"+hadS_labels[0]+"} + ";
-  // plotlabel += "#color[7024]{"+hadI_labels[0]+"} + ";
-  // plotlabel += "p_{T}^{ISR} > 300 GeV";
+   string plotlabel = "#scale[1.2]{"+labels[0]+"}"; 
+   plotlabel += " #color[7014]{"+lep_labels[0]+"} + ";
+   plotlabel += "#color[7004]{"+hadS_labels[0]+"} + ";
+   plotlabel += "#color[7024]{"+hadI_labels[0]+"} + ";
+   plotlabel += "p_{T}^{ISR} > 300 GeV";
   
-  // l.SetTextColor(kBlack);
-  // l.SetTextAlign(13);
-  // l.SetTextSize(0.035);
-  // l.SetTextFont(42);
-  // l.DrawLatex(hlo+0.02, 1-hto-0.012, plotlabel.c_str());
+   l.SetTextColor(kBlack);
+   l.SetTextAlign(13);
+   l.SetTextSize(0.035);
+   l.SetTextFont(42);
+   l.DrawLatex(hlo+0.02, 1-hto-0.012, plotlabel.c_str());
   
-  return hist;
+  return can;
   
 }
 
@@ -830,6 +797,7 @@ TCanvas* FitPlotter::Plot1Dstack(const VS& proc,
   hists[0]->GetYaxis()->SetRangeUser(0.05, 1.1*hmax);
 
   TLegend* leg = new TLegend(1.-hhi+0.01, 1.- (Nbkg+Nsig+1)*(1.-0.49)/9., 0.98, 1.-hto-0.005);
+  leg->SetName("legend");
   leg->SetTextFont(42);
   leg->SetTextSize(0.035);
   leg->SetFillColor(kWhite);
@@ -848,6 +816,7 @@ TCanvas* FitPlotter::Plot1Dstack(const VS& proc,
   double eps = 0.0015;
   
   TLatex l;
+  l.SetName("latex");
   l.SetTextFont(42);
   l.SetNDC();
 
@@ -4191,8 +4160,14 @@ void FitPlotter::InitializeRecipes(){
   m_Title["Wjets_Fakes"] = "W+jets fakes";
   m_Strings["Wjets_Fakes"] = VS().a("Wjets_Fakes_elf0").a("Wjets_Fakes_elf1").a("Wjets_Fakes_muf0").a("Wjets_Fakes_muf1");
 
-  m_Title["ttbar_Fakes_elf0"] = "HF t #bar{t} + jets";
-  m_Title["ttbar_Fakes_elf1"] = "LF+unm. t #bar{t} + jets";
+  m_Title["ttbar_Fakes_elf0"] = "HF el t #bar{t} + jets";
+  m_Title["ttbar_Fakes_elf1"] = "LF+unm. el t #bar{t} + jets";
+  m_Title["Wjets_Fakes_elf0"] = "HF el W + jets";
+  m_Title["Wjets_Fakes_elf1"] = "LF+unm. el  W + jets";
+  m_Title["ttbar_Fakes_muf0"] = "HF mu t #bar{t} + jets";
+  m_Title["ttbar_Fakes_muf1"] = "LF+unm. mu t #bar{t} + jets";
+  m_Title["Wjets_Fakes_muf0"] = "HF mu W + jets";
+  m_Title["Wjets_Fakes_muf1"] = "LF+unm. mu  W + jets";
 
   m_Title["Total"] = "total background";
   m_Color["Total"] = 7000;
@@ -4204,13 +4179,16 @@ void FitPlotter::InitializeRecipes(){
   m_Strings["1L"] = VS().a("1L_elm_elG").a("1L_elp_elG").a("1L_elpm_elG").a("1L_mupm_muG").a("1L_mup_muG").a("1L_mum_muG").a("1L_elm_elS").a("1L_elp_elS").a("1L_mup_muS").a("1L_mum_muS").a("1L_elp_elB").a("1L_elm_elB").a("1L_mup_muB").a("1L_mum_muB");
   
   m_Title["1Lgold"] = "#scale[1.2]{single #it{l}}";
-  m_Strings["1goldL"] = VS().a("1L_elm_elG").a("1L_elp_elG").a("1L_elpm_elG").a("1L_mupm_muG").a("1L_mup_muG").a("1L_mum_muG");
+  m_Strings["1Lgold"] = VS().a("1L_elm_elG").a("1L_elp_elG").a("1L_elpm_elG").a("1L_mupm_muG").a("1L_mup_muG").a("1L_mum_muG");
   
-  m_Title["1Lel"] = "#scale[1.2]{single gold e}";
-  m_Strings["1Lel"] = VS().a("1L_elp_elG").a("1L_elm_elG").a("1L_elpm_elG").a("1L_elp_elG").a("1L_elm_elG").a("1L_elpm_elG");
+  m_Title["1Lel"] = "#scale[1.2]{single e}";
+  m_Strings["1Lel"] = VS().a("1L_elp_elG").a("1L_elm_elG").a("1L_elpm_elG").a("1L_elp_elS").a("1L_elm_elS").a("1L_elpm_elS").a("1L_elp_elB").a("1L_elm_elB").a("1L_elpm_elB");
 
-  m_Title["1Lmu"] = "#scale[1.2]{single gold #mu}";
-  m_Strings["1Lmu"] = VS().a("1L_mup_muG").a("1L_mum_mG");
+  m_Title["1Lmu"] = "#scale[1.2]{single #mu}";
+  m_Strings["1Lmu"] = VS().a("1L_mup_muG").a("1L_mum_muG").a("1L_mupm_muG").a("1L_mup_muS").a("1L_mum_muS").a("1L_mupm_muS").a("1L_mup_muB").a("1L_mum_muB").a("1L_mupm_muB");
+  
+  m_Title["1Lmugold"] = "#scale[1.2]{single gold #mu}";
+  m_Strings["1Lmugold"] = VS().a("1L_mup_muG").a("1L_mum_mG");
 
   m_Title["1Lelp"] = "#scale[1.2]{single e^{+}}";
   m_Strings["1Lelp"] = VS().a("1L_elp_elG");
@@ -4313,6 +4291,8 @@ void FitPlotter::InitializeRecipes(){
   
   m_Title["1j0b0svS"] = "#splitline{1 jet, 0 b-tags}{0 SV-tag} #scale[1.2]{#in S}";
 
+  m_Title["1jS"] = "#splitline{1 jet}{incl. b-tags} #scale[1.2]{#in S}";
+  m_Strings["1jS"] = VS().a("1jS").a("1j0bge1svS").a("1j0b0svS").a("1j1b0svS").a("1j1bge1svS");
 
   m_Title["2jS"] = "#splitline{2 jets}{incl. b-tags} #scale[1.2]{#in S}";
   m_Strings["2jS"] = VS().a("2jS").a("2j0bS").a("2j1bS").a("2j2bS");
