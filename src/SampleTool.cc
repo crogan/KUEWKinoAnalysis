@@ -359,7 +359,6 @@ void SampleTool::InitProcMap(){
 
 
 
->>>>>>> 69f63fecb52d2ebb17f36aa2515c6ea1df8914c3
 m_Proc[m_iYear][data_obs] = pair<vector<string>,string>(list, "KUAnalysis");
 
 }
@@ -659,6 +658,7 @@ m_Proc[m_iYear][data_obs] = pair<vector<string>,string>(list, "KUAnalysis");
     list += m_Path + "Autumn18_102X/QCD_HT700to1000_TuneCP5_13TeV-madgraph-pythia8_Autumn18_102X.root";
     m_Proc[m_iYear][QCD] = pair<vector<string>,string>(list, "KUAnalysis");
 
+     //i think this first one should be here: /home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/T2tt18Hadd
      //InitSMS("T2tt", m_Path+"Autumn18_102X_SMS/SMS-T2tt_dM-10to80_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
     //InitSMS("T2tt", m_Path+"Autumn18_102X_SMS/SMS-T2tt_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
     //InitSMS("T2tt", m_Path+"Autumn18_102X_SMS/SMS-T2tt_mStop-400to1200_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);

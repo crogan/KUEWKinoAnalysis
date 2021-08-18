@@ -226,7 +226,7 @@ int main(int argc, char* argv[]) {
   int Njob = 0;
   for(int p = 0; p < Nsample; p++){
     Process proc = samples[p];
-
+//cout << "adding process " << proc.Name() << " to arguments" << endl;
     if(doSigFile && proc.Type() == kSig){
       bool keep = false;
       int Nfile = ST.NTrees(proc);
