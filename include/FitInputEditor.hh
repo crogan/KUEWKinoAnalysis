@@ -35,6 +35,7 @@ private:
   void WriteCat();
 
   // shape smoothing
+  VS m_FakeSources;
   map<string, string> m_FakeGroups;
   map<string, ProcessList> m_FakeGroupLists;
   void InitShapeGroups();

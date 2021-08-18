@@ -91,6 +91,8 @@ private:
 
   void DrawCatTree(const CategoryTree& CT, TCanvas* can);
   void DrawMR(const FitBin& fitbin, TCanvas* can);
+
+  VS AddPrefix(const string& pre, const VS& post) const;
   
 };
 
