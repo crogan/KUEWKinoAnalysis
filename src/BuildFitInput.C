@@ -201,12 +201,15 @@ int main(int argc, char* argv[]) {
 cout << "# processes: " << samples.GetN() << endl;
   if(Categories.GetN() == 0)
     Categories += CT.GetCategories(maskSR);
+  
+  //if a lepton region wasn't specified, turn them all on 
   if(!cat0L && !cat1L && !cat2L && !cat3L){
     cat0L = true;
     cat1L = true;
     cat2L = true;
     cat3L = true;
-  } 
+  }
+  
   // cout << "Categories:" << endl;
   // Categories.Print();
 
@@ -315,7 +318,11 @@ processed = true;
 	  continue;
 	if(base->MET < 150)
 	  continue;
-	if(base->PTISR < 200.)
+	  
+	if(base->PTISR < 250.)
+	  continue;
+
+	if(base->RISR < 0.45)
 	  continue;
 	double x = fabs(base->dphiCMI);
 	
@@ -365,7 +372,9 @@ processed = true;
 	  else
 	    flavor = kMuon;
 	  LepCharge charge = (base->Charge_lep->at(index) > 0 ? kPos : kNeg);
-	  LepSource source = LepSource(base->ID_lep->at(2*index+1));
+	  //LepSource source = LepSource(base->SourceID_lep->at(index));
+	  LepSource source = LepSource(base->ID_lep->at(index*2+1)); // fix for current ntuple version
+	    
 	  list_a += Lep(flavor, charge, id, source);
 	}
 	for(int i = 0; i < base->Nlep_b; i++){
@@ -387,7 +396,7 @@ processed = true;
 	    flavor = kMuon;
 	  LepCharge charge = (base->Charge_lep->at(index) > 0 ? kPos : kNeg);
 	  //LepSource source = LepSource(base->SourceID_lep->at(index));
-	  LepSource source = LepSource(base->ID_lep->at(index*2+1));
+	  LepSource source = LepSource(base->ID_lep->at(index*2+1)); // fix for current ntuple version
 	  
 	  list_b += Lep(flavor, charge, id, source);
 	}
@@ -410,10 +419,55 @@ processed = true;
 	Event.AddGenericVal(gammaT);
 	Event.AddGenericVal(SVmaxeta);
 	int eindex = Categories.Find(Event);
+
 	if(eindex < 0){
 	  continue;
+	  if(Nlep > 3)
+	    continue;
+	  if(base->PTISR < 250. && Nlep >= 2)
+	     continue;
+	  if(base->PTISR < 400. && Nlep < 2)
+	     continue;
+
+	  int Nbron = 0;
+	  int Nslvr = 0;
+	  for(int i = 0; i < Nlep; i++){
+	    if(i < base->Nlep_a){
+	      if(list_a[i].ID() == kBronze)
+		Nbron++;
+	      if(list_a[i].ID() == kSilver)
+		Nslvr++;
+	    } else {
+	      if(list_b[i-base->Nlep_a].ID() == kBronze)
+		Nbron++;
+	      if(list_b[i-base->Nlep_a].ID() == kSilver)
+		Nslvr++;
+	    }
+	  }
+	  if(Nbron >= 2)
+	    continue;
+	  if(Nbron+Nslvr >= 3)
+	    continue;
+	  
+	  cout << "Nlep = " << Nlep << " PTISR = " << base->PTISR << " NjetS = " << NjetS << " NSV = " << NSV << endl;
+	  for(int i = 0; i < Nlep; i++){
+	    if(i < base->Nlep_a)
+	      cout << list_a[i].ID() << " " << list_a[i].IDLabel() << " " << list_a[i].Charge() << " a" << endl;
+	    else
+	      cout << list_b[i-base->Nlep_a].ID() << " " << list_b[i-base->Nlep_a].IDLabel() << " " << list_b[i-base->Nlep_a].Charge() << " b" << endl;
+	//     int Nlep     = base->Nlep;
+	// int NjetS    = base->Njet_S;
+	// int NbjetS   = base->Nbjet_S;
+	// int NjetISR  = base->Njet_ISR;
+	// int NbjetISR = base->Nbjet_ISR;
+	// int NSV      = base->NSV_S;
+	  }
+   	  
+	  continue;
 	}
-		
+
+	
+	
 	// systematics loop
 	
 	for(int is = 0; is < Nsys; is++){
@@ -483,14 +537,15 @@ processed = true;
 	  if((Nlep == 0) && (NjetS == 0) && (NSV == 1))
 	    Mperp = 2.*base->EJ_BoostT;
 	  if((Nlep == 0) && (NjetS == 1) && (NSV == 0))
-	    Mperp = base->EJ_BoostT;
+	    Mperp = 2.*base->EJ_BoostT;
 	  
 	
 	  double RISR  = base->RISR;
 	//double rlow;
 	  if(Fakes.GetN() > 0 && is_bkg){
-	    vector<string> flabels = Fakes.GetFakeLabels();
+	    VS flabels = Fakes.GetFakeLabels(2); // processes w/ up to 2 "fake" leps
 	    int Nf = flabels.size();
+	  
 	    for(int fl = 0; fl < Nf; fl++){
 	      // if(title.find("QCD") == string::npos)
 	      // 	FITBuilder.AddEvent(weight/double(Nf), Mperp, RISR,

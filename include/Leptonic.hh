@@ -17,6 +17,66 @@ enum LepCharge { kPos, kNeg };
 enum LepID { kGold, kSilver, kBronze };
 enum LepSource { kSignal, kTau, kHFB, kHFC, kLF, kFake };
 
+class LepIDs {
+public:
+  LepIDs();
+  virtual ~LepIDs();
+
+  int GetN() const;
+  LepID Get(int i) const;
+  LepID operator [] (int i) const;
+  
+  void Add(LepID id);
+  void operator += (LepID id);
+  LepIDs& a(LepID id);
+
+  bool IsEqual(const LepIDs& ids) const;
+  bool operator == (const LepIDs& ids) const;
+
+  void swap(int index_a, int index_b);
+  
+private:
+  std::vector<LepID> m_IDs;
+  
+};
+
+class LepIDsList {
+public:
+  LepIDsList(const string& label);
+  virtual ~LepIDsList();
+
+  string Label() const;
+  
+  void Add(const LepIDs& ids);
+  void operator += (const LepIDs& ids);
+
+  void Add(const LepIDsList& ids);
+  void operator += (const LepIDsList& ids);
+
+  int GetN() const;
+  const LepIDs& Get(int i) const;
+  const LepIDs& operator [] (int i) const;
+
+  bool IsEqual(const LepIDsList& ids) const;
+  bool operator == (const LepIDsList& ids) const;
+  
+  bool Contains(const LepIDs& ids) const;
+  bool operator >= (const LepIDs& ids) const;
+
+  bool Contains(const LepIDsList& ids) const;
+  bool operator >= (const LepIDsList& ids) const;
+  bool operator <= (const LepIDsList& ids) const;
+
+  LepIDsList Combinatorics(int Nlep) const;
+  
+private:
+  std::vector<LepIDs> m_IDs;
+  string m_Label;
+
+  LepIDsList Combinatorics(int Nlep, int index) const;
+  void heapPermutation(LepIDs& id, int size, int N, LepIDsList& comb) const; 
+};
+
 ///////////////////////////////////////////
 ////////// Lep class
 ///////////////////////////////////////////
@@ -83,13 +143,15 @@ public:
   bool operator < (const LepList& leps) const;
 
   std::string GetIDLabel() const;
-  vector<std::string> GetFakeLabels() const;
+  VS GetFakeLabels(int Nfake = 1) const;
 
   LepList GetFakes() const;
   
 private:
   int m_N;
   vector<Lep*> m_Lep;
+
+  VS Combinatorics(const VS& labels, int N) const;
 };
 
 ///////////////////////////////////////////
