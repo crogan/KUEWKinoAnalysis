@@ -1895,43 +1895,104 @@ void FitPlotter::InitializeRecipes(){
   m_Title["Wjets"] = "W + jets";
   m_Color["Wjets"] = 7001;
 
+  VS s_Fakes_HF;
+  s_Fakes_HF.a("Fakes_elf1G").a("Fakes_muf1G").a("Fakes_elf1S")
+    .a("Fakes_muf1S").a("Fakes_elf1B").a("Fakes_muf1B")
+    .a("Fakes_elf1G_elf1G").a("Fakes_muf1G_muf1G").a("Fakes_elf1G_elf1S").a("Fakes_muf1G_muf1S")
+    .a("Fakes_elf1G_elf1B").a("Fakes_muf1G_muf1B").a("Fakes_elf1S_elf1S").a("Fakes_muf1S_muf1S")
+    .a("Fakes_elf1S_elf1B").a("Fakes_muf1S_muf1B")
+    .a("Fakes_elf0G_elf1G").a("Fakes_muf0G_muf1G").a("Fakes_elf0G_elf1S").a("Fakes_muf0G_muf1S")
+    .a("Fakes_elf1G_elf0S").a("Fakes_muf1G_muf0S").a("Fakes_elf0G_elf1B").a("Fakes_muf0G_muf1B")
+    .a("Fakes_elf1G_elf0B").a("Fakes_muf1G_muf0B").a("Fakes_elf0S_elf1S").a("Fakes_muf0S_muf1S")
+    .a("Fakes_elf0S_elf1B").a("Fakes_muf0S_muf1B").a("Fakes_elf1S_elf0B").a("Fakes_muf1S_muf0B")
+    .a("Fakes_elf1G_muf1G").a("Fakes_elf1G_muf1S").a("Fakes_elf1S_muf1G").a("Fakes_elf1G_muf1B")
+    .a("Fakes_elf1B_muf1G").a("Fakes_elf1S_muf1S").a("Fakes_elf1S_muf1B").a("Fakes_elf1B_muf1S")
+    .a("Fakes_elf1G_muf0G").a("Fakes_elf1G_muf0S").a("Fakes_elf1S_muf0G").a("Fakes_elf1G_muf0B")
+    .a("Fakes_elf1B_muf0G").a("Fakes_elf1S_muf0S").a("Fakes_elf1S_muf0B").a("Fakes_elf1B_muf0S")
+    .a("Fakes_elf0G_muf1G").a("Fakes_elf0G_muf1S").a("Fakes_elf0S_muf1G").a("Fakes_elf0G_muf1B")
+    .a("Fakes_elf0B_muf1G").a("Fakes_elf0S_muf1S").a("Fakes_elf0S_muf1B").a("Fakes_elf0B_muf1S");
+  
+  VS s_Fakes_LF;
+  s_Fakes_LF.a("Fakes_elf0G").a("Fakes_muf0G").a("Fakes_elf0S")
+    .a("Fakes_muf0S").a("Fakes_elf0B").a("Fakes_muf0B")
+    .a("Fakes_elf0G_elf0G").a("Fakes_muf0G_muf0G").a("Fakes_elf0G_elf0S").a("Fakes_muf0G_muf0S")
+    .a("Fakes_elf0G_elf0B").a("Fakes_muf0G_muf0B").a("Fakes_elf0S_elf0S").a("Fakes_muf0S_muf0S")
+    .a("Fakes_elf0S_elf0B").a("Fakes_muf0S_muf0B")
+    .a("Fakes_elf0G_muf0G").a("Fakes_elf0G_muf0S").a("Fakes_elf0S_muf0G").a("Fakes_elf0G_muf0B")
+    .a("Fakes_elf0B_muf0G").a("Fakes_elf0S_muf0S").a("Fakes_elf0S_muf0B").a("Fakes_elf0B_muf0S");
+  
   m_Title["QCD"] = "QCD multi-jets";
   m_Color["QCD"] = 7023;
-  m_Strings["QCD"] = VS().a("QCD_Fakes_elf0").a("QCD_Fakes_elf1").a("QCD_Fakes_elf2")
-    .a("QCD_Fakes_muf0").a("QCD_Fakes_muf1").a("QCD_Fakes_muf2").a("QCD");
+  m_Strings["QCD"] = VS().a("QCD");
+  m_Strings["QCD"] += AddPrefix("QCD", s_Fakes_HF);
+  m_Strings["QCD"] += AddPrefix("QCD", s_Fakes_LF);
 
   m_Title["HF_Fakes"] = "HF leptons";
   m_Color["HF_Fakes"] = 7022;
-  m_Strings["HF_Fakes"] = VS().a("ttbar_Fakes_elf0").a("ttbar_Fakes_muf0").a("ST_Fakes_elf0").a("ST_Fakes_muf0")
-    .a("DB_Fakes_elf0").a("DB_Fakes_muf0").a("TB_Fakes_elf0").a("TB_Fakes_muf0").a("ZDY_Fakes_elf0")
-    .a("ZDY_Fakes_muf0").a("Wjets_Fakes_elf0").a("Wjets_Fakes_muf0");
+  m_Strings["HF_Fakes"] = VS();
+  m_Strings["HF_Fakes"] += AddPrefix("ttbar", s_Fakes_HF);
+  m_Strings["HF_Fakes"] += AddPrefix("Wjets", s_Fakes_HF);
+  m_Strings["HF_Fakes"] += AddPrefix("ZDY", s_Fakes_HF);
+  m_Strings["HF_Fakes"] += AddPrefix("DB", s_Fakes_HF);
+  m_Strings["HF_Fakes"] += AddPrefix("ST", s_Fakes_HF);
+  m_Strings["HF_Fakes"] += AddPrefix("TB", s_Fakes_HF);
 
   m_Title["LF_Fakes"] = "LF/fake leptons";
   m_Color["LF_Fakes"] = 7021;
-  m_Strings["LF_Fakes"] = VS().a("ttbar_Fakes_elf1").a("ttbar_Fakes_muf1").a("ST_Fakes_elf1").a("ST_Fakes_muf1")
-    .a("DB_Fakes_elf1").a("DB_Fakes_muf1").a("TB_Fakes_elf1").a("TB_Fakes_muf1").a("ZDY_Fakes_elf1")
-    .a("ZDY_Fakes_muf1").a("Wjets_Fakes_elf1").a("Wjets_Fakes_muf1");
+  m_Strings["LF_Fakes"] = VS();
+  m_Strings["LF_Fakes"] += AddPrefix("ttbar", s_Fakes_LF);
+  m_Strings["LF_Fakes"] += AddPrefix("Wjets", s_Fakes_LF);
+  m_Strings["LF_Fakes"] += AddPrefix("ZDY", s_Fakes_LF);
+  m_Strings["LF_Fakes"] += AddPrefix("DB", s_Fakes_LF);
+  m_Strings["LF_Fakes"] += AddPrefix("ST", s_Fakes_LF);
+  m_Strings["LF_Fakes"] += AddPrefix("TB", s_Fakes_LF);
   
   m_Title["Fakes"] = "fake leptons";
   m_Color["Fakes"] = 7021;
-  m_Strings["Fakes"] = VS().a("Fakes_elf0").a("Fakes_elf1").a("Fakes_elf2").a("Fakes_muf0").a("Fakes_muf1").a("Fakes_muf2");
-  
-  m_Title["Fake"] = "fake";
-  m_Color["Fake"] = 7020;
-  m_Strings["Fake"] = VS().a("Fakes_elf2").a("Fakes_muf2");
+  m_Strings["Fakes"] = VS();
+  m_Strings["Fakes"] += m_Strings["HF_Fakes"];
+  m_Strings["Fakes"] += m_Strings["LF_Fakes"];
 
-  m_Title["HF"] = "heavy flavor";
-  m_Color["HF"] = 7022;
-  m_Strings["HF"] = VS().a("Fakes_elf0").a("Fakes_muf0");
+  m_Title["ttbar_all"] = "t #bar{t} + jets";
+  m_Color["ttbar_all"] = 7011;
+  m_Strings["ttbar_all"] = VS().a("ttbar");
+  m_Strings["ttbar_all"] += AddPrefix("ttbar", s_Fakes_HF);
+  m_Strings["ttbar_all"] += AddPrefix("ttbar", s_Fakes_LF);
 
-  m_Title["LF"] = "light flavor";
-  m_Color["LF"] = 7021;
-  m_Strings["LF"] = VS().a("Fakes_elf1").a("Fakes_muf1");
+  m_Title["ST_all"] = "single top";
+  m_Color["ST_all"] = 7010;
+  m_Strings["ST_all"] = VS().a("ST");
+  m_Strings["ST_all"] += AddPrefix("ST", s_Fakes_HF);
+  m_Strings["ST_all"] += AddPrefix("ST", s_Fakes_LF);
 
-  m_Title["Total"] = "total background";
-  m_Color["Total"] = 7000;
-  m_Strings["Total"] = VS().a("ttbar").a("ST").a("DB").a("ZDY").a("Wjets").a("Fakes_elf0").a("Fakes_elf1").
-    a("Fakes_elf2").a("Fakes_muf0").a("Fakes_muf1").a("Fakes_muf2");
+  m_Title["DB_all"] = "di-bosons";
+  m_Color["DB_all"] = 7051;
+  m_Strings["DB_all"] = VS().a("DB");
+  m_Strings["DB_all"] += AddPrefix("DB", s_Fakes_HF);
+  m_Strings["DB_all"] += AddPrefix("DB", s_Fakes_LF);
+
+  m_Title["TB_all"] = "tri-bosons / t #bar{t} + V";
+  m_Color["TB_all"] = 7050;
+  m_Strings["TB_all"] = VS().a("TB");
+  m_Strings["TB_all"] += AddPrefix("TB", s_Fakes_HF);
+  m_Strings["TB_all"] += AddPrefix("TB", s_Fakes_LF);
+
+  m_Title["ZDY_all"] = "Z / #gamma* + jets";
+  m_Color["ZDY_all"] = 7000;
+  m_Strings["ZDY_all"] = VS().a("ZDY");
+  m_Strings["ZDY_all"] += AddPrefix("ZDY", s_Fakes_HF);
+  m_Strings["ZDY_all"] += AddPrefix("ZDY", s_Fakes_LF);
+
+  m_Title["Wjets_all"] = "W + jets";
+  m_Color["Wjets_all"] = 7001;
+  m_Strings["Wjets_all"] = VS().a("Wjets");
+  m_Strings["Wjets_all"] += AddPrefix("Wjets", s_Fakes_HF);
+  m_Strings["Wjets_all"] += AddPrefix("Wjets", s_Fakes_LF);
+
+  // m_Title["Total"] = "total background";
+  // m_Color["Total"] = 7000;
+  // m_Strings["Total"] = VS().a("ttbar").a("ST").a("DB").a("ZDY").a("Wjets").a("Fakes_elf0").a("Fakes_elf1").
+  //   a("Fakes_elf2").a("Fakes_muf0").a("Fakes_muf1").a("Fakes_muf2");
   
   // leptonic categories
   m_Title["1L"] = "#scale[1.2]{single #it{l}}";
@@ -2083,4 +2144,13 @@ void FitPlotter::InitializeRecipes(){
   m_SignalColor.push_back(7072);
 
   m_CMSLabel = "#bf{#it{CMS}} work-in-progress";
+}
+
+VS FitPlotter::AddPrefix(const string& pre, const VS& post) const {
+  VS ret;
+
+  for(auto s : post)
+    ret += pre+"_"+s;
+
+  return ret;
 }

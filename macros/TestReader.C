@@ -31,9 +31,9 @@ FitReader* FITReader = new FitReader(inputfile, a2, a3);
   VS all = signals;
   all.a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD").a("Wjets").a("HF_Fakes").a("LF_Fakes");
 
-  // FITReader->PlotYields("0Lyields",
-  // 			all,
-  // 			CT_0L);
+  FITReader->PlotYields("0Lyields",
+  			all,
+  			CT_0L);
   // FITReader->PlotYields("1Lyields",
   // 			all,
   // 			CT_1L);
@@ -44,6 +44,8 @@ FitReader* FITReader = new FitReader(inputfile, a2, a3);
   // 			all,
   // 			CT_3L);
 
+  return;
+  
   int depth0 = CT_0L.GetDepth();
   vector<const CategoryTree*> CTs;
   CT_0L.GetListDepth(CTs, depth0-3);
