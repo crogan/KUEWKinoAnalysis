@@ -16,7 +16,8 @@ CategoryTool::~CategoryTool() {}
 
 // Get all 0L,1L,2L,3L categories
 CategoryList CategoryTool::GetCategories(bool maskSR) const {
-  CategoryList Categories;
+cout << "CategoryTool::GetCategories" << endl;  
+CategoryList Categories;
   Categories += GetCategories_0L(maskSR);
   Categories += GetCategories_1L(maskSR);
   Categories += GetCategories_2L(maskSR);
@@ -884,7 +885,8 @@ CategoryList CategoryTool::GetCategories_0L(bool maskSR) const {
 }
 
 CategoryList CategoryTool::GetCategories_1L(bool maskSR) const {
-  CategoryList Cats_1L;
+cout << "CategoryTool::GetCategories_1L" << endl;  
+CategoryList Cats_1L;
   cout << "Creating 1L Categories" << endl;
 
   // define leptons

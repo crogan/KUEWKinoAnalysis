@@ -1,9 +1,11 @@
 #include "TSystem.h"
+#include "TLatex.h"
+#include "TLegend.h"
 
 #include "../include/FitPlotter.hh"
 
 //void TestReader(const string& inputfile = "BFI_allBkgs17_shapeNoFakeSysts/root/BFI_0.root", const string& a2 = "", const string& a3 = ""){
-void TestReader(const string& inputfile = "BuildFitInputs/BFI_allBkgs17T2tt_0L/root/BFIShapes.root", const string& a2 = "", const string& a3 = ""){
+void TestReader(const string& inputfile = "BuildFitInputs/BFI_allBkgsT2ttData_maskedSR_fakeShapesOnly_0p05allVariations/BFIShapes.root", const string& a2 = "", const string& a3 = ""){
 	gSystem->Load("/home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/lib/libKUEWKino.so");
 FitPlotter* FITPlotter = new FitPlotter(inputfile, a2, a3);
   //FITReader->PrintCategories();
@@ -68,17 +70,22 @@ const string& hadS1 = "1j0b0svS";
 const string& hadS2 = "1j1b0svS";
 const string& hadS3 = "2j2bS";
 Systematic sys = Systematic("BTAGLF_SF");
-//  FITPlotter->Plot1Dstack(VS().a("ttbar").a("ZDY").a("ST").a("TB").a("DB").a("Fakes").a("T2tt_5000490").a("Wjets").a("QCD"),
-//			VS().a("1L"),
-//			VS().a("2jS"),
-//			VS().a("ge1jISR"),
-//			"canvas3");
-
-  TCanvas* cv = FITPlotter->Plot2D(VS().a("Total"),
-   			 VS().a("0L"),
-   			 VS().a("5jS"),
-   			 VS().a("ge1jISR"),
-   			 "canvas3");
+TCanvas* cv = FITPlotter->Plot1Dstack(VS().a("ttbar").a("ZDY").a("ST").a("TB").a("DB").a("Fakes").a("T2tt_5000490").a("Wjets").a("QCD"),
+			VS().a("1L"),
+			VS().a("2jS"),
+			VS().a("ge1jISR"),
+			"canvas1");
+//cout << "did ttbar" << endl;
+	TCanvas* cv2 = FITPlotter->Plot1Dstack(VS().a("Wjets"),
+			VS().a("1L"),
+			VS().a("2jS"),
+			VS().a("ge1jISR"),
+			"canvas2");
+//TCanvas* cv = FITPlotter->Plot2D(VS().a("Total"),
+  // 			 VS().a("0L"),
+  // 			 VS().a("5jS"),
+  // 			 VS().a("ge1jISR"),
+  // 			 "canvas3");
    // TCanvas* cv1 = FITPlotter->Plot1DratioSyst(VS().a("ttbar").a("ttbar_Fakes"),
    //     		 sys,
    //     		 VS().a(lep1),
