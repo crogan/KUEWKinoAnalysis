@@ -20,8 +20,7 @@
 FitPlotter::FitPlotter(const string& inputfile,
 		       const string& otherfile,
 		       const string& otherfold)
-  : FitReader(inputfile) {
-
+  : FitReader(inputfile, otherfile, otherfold) {
   InitializeRecipes();
 }
 
@@ -34,7 +33,7 @@ TGraphErrors* FitPlotter::GetTotalBackground(const CategoryList& cat){
   int Ncat = cat.GetN();
   for(int i = 0; i < Ncat; i++){
     string shist = m_FileFold+cat[i].Label()+"_"+cat[i].GetLabel()+"/total_background";
-    cout << shist << endl;
+    //cout << shist << endl;
     if(hist == nullptr)
       hist = (TH1D*) m_FilePtr->Get((m_FileFold+"/"+shist).c_str())->Clone((shist+"_total").c_str());
     else
@@ -48,7 +47,9 @@ TGraphErrors* FitPlotter::GetTotalBackground(const CategoryList& cat){
   vector<double> Y;
   vector<double> Yerr;
   for(int i = 0; i < NB; i++){
-    X.push_back(0.5 + i);
+    cout << "bin #: " << i+1 << " total_background: " << hist->GetBinContent(i+1) << endl;
+	//X.push_back(0.5 + i);
+    X.push_back(hist->GetXaxis()->GetBinCenter(i+1));
     Xerr.push_back(0.5);
     Y.push_back(hist->GetBinContent(i+1));
     Yerr.push_back(hist->GetBinError(i+1));
@@ -192,11 +193,11 @@ TCanvas* FitPlotter::Plot1DShape(const string& proc,
   type = kData;
       
       for(int c = 0; c < Ncat; c++){
-  cout << cat[c].GetLabel() << " " << pp.Name() << endl;
+  //cout << cat[c].GetLabel() << " " << pp.Name() << endl;
   if(!IsFilled(cat[c], pp))
     continue;
 
-  cout << "filled " << cat[c].GetLabel() << " " << pp.Name() << endl;
+  //cout << "filled " << cat[c].GetLabel() << " " << pp.Name() << endl;
   
   if(!hist){
     hist = (TH1D*) GetHistogram(cat[c], pp)->Clone(Form("plothist_%d_%s", 0, name.c_str()));
@@ -237,6 +238,11 @@ TCanvas* FitPlotter::Plot1DShape(const string& proc,
   // }
   //normalize histogram
   hist->Scale(1/hist->Integral());
+
+  for(int i=0; i < hist->GetNbinsX(); i++){
+	cout << "Bin #" << i+1 << ": " << hist->GetBinContent(i+1) << endl;
+}
+
   const FitBin& bin = cat[0].GetFitBin();
 
   int NR = bin.NRBins();
@@ -474,7 +480,6 @@ TCanvas* FitPlotter::Plot1Dstack(const VS& proc,
 				const VS& hadI_cat,
 				const string& name){
   RestFrames::SetStyle();
-
   
   int Nproc = proc.size();
   int Nlep  = lep_cat.size();
@@ -485,10 +490,8 @@ TCanvas* FitPlotter::Plot1Dstack(const VS& proc,
      NhadS == 0 ||
      NhadI == 0)
     return nullptr;
-
   CategoryList cat = GetCategories();
-  cat.Print();
-  
+ // cat.Print();
   // Leptonic
   VS lep_labels;
   VS vlep;
@@ -507,9 +510,9 @@ TCanvas* FitPlotter::Plot1Dstack(const VS& proc,
       vlep.push_back(lep_cat[i]);
     }
   }
-
+for(int i = 0; i < vlep.size(); i++) cout << vlep[i] << endl;
   cat = cat.FilterOR(vlep);
-
+cout << "# cats after lep filter: " << cat.GetN() << endl;
   // Hadronic S
   VS hadS_labels;
   VS vhadS;
@@ -530,6 +533,7 @@ TCanvas* FitPlotter::Plot1Dstack(const VS& proc,
 
   cat = cat.FilterOR(vhadS);
 
+cout << "# cats after s jet filter: " << cat.GetN() << endl;
   // Hadronic ISR
   VS hadI_labels;
   VS vhadI;
@@ -550,11 +554,13 @@ TCanvas* FitPlotter::Plot1Dstack(const VS& proc,
 
   cat = cat.FilterOR(vhadI);
 
+cout << "# cats after ISR jet filter: " << cat.GetN() << endl;
   int Ncat = cat.GetN();
   
-  if(Ncat < 1)
-    return nullptr;
-  
+  if(Ncat < 1){
+   cout << "no cats found" << endl;
+	 return nullptr;
+  }
   // Processes
   VS            labels;
   vector<int>   colors;
@@ -577,22 +583,29 @@ TCanvas* FitPlotter::Plot1Dstack(const VS& proc,
     for(int p = 0; p < int(vproc.size()); p++){
       
       int index = GetProcesses().Find(vproc[p]);
-      if(index < 0)
+      //cout << vproc[p] << " " << index << endl;
+	if(index < 0)
 	continue;
       
       Process pp = GetProcesses()[index];
 
-      if(pp.Type() == kSig)
+      if(pp.Type() == kSig){
 	type = kSig;
+	if(m_FileFold != nullptr){
+		string name = pp.Name();
+		name = name.substr(0,name.find("_")+1);
+		pp = Process(name,kSig);
+	}
+	}
       if(pp.Type() == kData)
 	type = kData;
       
       for(int c = 0; c < Ncat; c++){
-	cout << cat[c].GetLabel() << " " << pp.Name() << endl;
+//	cout << cat[c].GetLabel() << " " << pp.Name() << endl;
 	if(!IsFilled(cat[c], pp))
 	  continue;
 
-	cout << "filled " << cat[c].GetLabel() << " " << pp.Name() << endl;
+//	cout << "filled " << cat[c].GetLabel() << " " << pp.Name() << endl;
 	
 	if(!hist){
 	  hist = (TH1D*) GetHistogram(cat[c], pp)->Clone(Form("plothist_%d_%s", i, name.c_str()));
@@ -640,7 +653,11 @@ TCanvas* FitPlotter::Plot1Dstack(const VS& proc,
   string stemp;
   int    itemp;
   TH1D*  htemp;
-  
+  int nBins = hists[0]->GetNbinsX();
+
+
+
+
   for(int i = 0; i < Nbkg; i++){
     vlabels.push_back(labels[i]);
     vcolors.push_back(colors[i]);
@@ -740,7 +757,6 @@ TCanvas* FitPlotter::Plot1Dstack(const VS& proc,
   hists[0]->GetYaxis()->SetLabelFont(42);
   hists[0]->GetYaxis()->SetLabelSize(0.035);
   hists[0]->GetYaxis()->SetTitle("number of events");
-   
   for(int i = 0; i < Nbkg; i++){
     hists[i]->SetLineColor(kBlack);
     hists[i]->SetLineWidth(1.0);
@@ -763,10 +779,11 @@ TCanvas* FitPlotter::Plot1Dstack(const VS& proc,
     }
     gr = (TGraphErrors*) new TGraphErrors(NB, &X[0], &Y[0],  &Xerr[0], &Yerr[0]);
   } else {
-    cout << "here " << gr << endl;
+    //cout << "here " << gr << endl;
     gr = (TGraphErrors*) GetTotalBackground(cat);
-    cout << "here " << gr << endl;
+    //cout << "here " << gr << endl;
   }
+
     
   gr->SetMarkerSize(0);
   gr->SetLineColor(kBlack);
@@ -4177,7 +4194,9 @@ void FitPlotter::InitializeRecipes(){
   
   m_Title["Fakes"] = "fake leptons";
   m_Color["Fakes"] = 7021;
-  m_Strings["Fakes"] = VS().a("Fakes_elf0").a("Fakes_elf1").a("Fakes_elf2").a("Fakes_muf0").a("Fakes_muf1").a("Fakes_muf2");
+  m_Strings["Fakes"] = VS().a("ttbar_Fakes_elf0").a("ttbar_Fakes_elf1").a("ttbar_Fakes_muf0").a("ttbar_Fakes_muf1").a("Wjets_Fakes_elf0").a("Wjets_Fakes_elf1").a("Wjets_Fakes_muf0").a("Wjets_Fakes_muf1");
+
+//VS().a("Fakes_elf0").a("Fakes_elf1").a("Fakes_elf2").a("Fakes_muf0").a("Fakes_muf1").a("Fakes_muf2");
   
 
   m_Title["HF"] = "heavy flavor";
@@ -4211,37 +4230,37 @@ void FitPlotter::InitializeRecipes(){
   m_Strings["Fakes"] += m_Strings["HF_Fakes"];
   m_Strings["Fakes"] += m_Strings["LF_Fakes"];
 
-  m_Title["ttbar_all"] = "t #bar{t} + jets";
+  m_Title["ttbar_all"] = "t #bar{t} + jets + fakes";
   m_Color["ttbar_all"] = 7011;
   m_Strings["ttbar_all"] = VS().a("ttbar");
   m_Strings["ttbar_all"] += AddPrefix("ttbar", s_Fakes_HF);
   m_Strings["ttbar_all"] += AddPrefix("ttbar", s_Fakes_LF);
 
-  m_Title["ST_all"] = "single top";
+  m_Title["ST_all"] = "single top + fakes";
   m_Color["ST_all"] = 7010;
   m_Strings["ST_all"] = VS().a("ST");
   m_Strings["ST_all"] += AddPrefix("ST", s_Fakes_HF);
   m_Strings["ST_all"] += AddPrefix("ST", s_Fakes_LF);
 
-  m_Title["DB_all"] = "di-bosons";
+  m_Title["DB_all"] = "di-bosons + fakes";
   m_Color["DB_all"] = 7051;
   m_Strings["DB_all"] = VS().a("DB");
   m_Strings["DB_all"] += AddPrefix("DB", s_Fakes_HF);
   m_Strings["DB_all"] += AddPrefix("DB", s_Fakes_LF);
 
-  m_Title["TB_all"] = "tri-bosons / t #bar{t} + V";
+  m_Title["TB_all"] = "tri-bosons / t #bar{t} + V + fakes";
   m_Color["TB_all"] = 7050;
   m_Strings["TB_all"] = VS().a("TB");
   m_Strings["TB_all"] += AddPrefix("TB", s_Fakes_HF);
   m_Strings["TB_all"] += AddPrefix("TB", s_Fakes_LF);
 
-  m_Title["ZDY_all"] = "Z / #gamma* + jets";
+  m_Title["ZDY_all"] = "Z / #gamma* + jets + fakes";
   m_Color["ZDY_all"] = 7000;
   m_Strings["ZDY_all"] = VS().a("ZDY");
   m_Strings["ZDY_all"] += AddPrefix("ZDY", s_Fakes_HF);
   m_Strings["ZDY_all"] += AddPrefix("ZDY", s_Fakes_LF);
 
-  m_Title["Wjets_all"] = "W + jets";
+  m_Title["Wjets_all"] = "W + jets + fakes";
   m_Color["Wjets_all"] = 7001;
   m_Strings["Wjets_all"] = VS().a("Wjets");
   m_Strings["Wjets_all"] += AddPrefix("Wjets", s_Fakes_HF);
@@ -4254,7 +4273,7 @@ void FitPlotter::InitializeRecipes(){
   
   // leptonic categories
   m_Title["1L"] = "#scale[1.2]{single #it{l}}";
-  m_Strings["1L"] = VS().a("1L_elm_elG").a("1L_elp_elG").a("1L_elpm_elG").a("1L_mupm_muG").a("1L_mup_muG").a("1L_mum_muG").a("1L_elm_elS").a("1L_elp_elS").a("1L_mup_muS").a("1L_mum_muS").a("1L_elp_elB").a("1L_elm_elB").a("1L_mup_muB").a("1L_mum_muB");
+  m_Strings["1L"] = VS().a("Ch1L");//VS().a("1L_elm_elG").a("1L_elp_elG").a("1L_elpm_elG").a("1L_mupm_muG").a("1L_mup_muG").a("1L_mum_muG").a("1L_elm_elS").a("1L_elp_elS").a("1L_mup_muS").a("1L_mum_muS").a("1L_elp_elB").a("1L_elm_elB").a("1L_mup_muB").a("1L_mum_muB");
   
   m_Title["1Lgold"] = "#scale[1.2]{single #it{l}}";
   m_Strings["1Lgold"] = VS().a("1L_elm_elG").a("1L_elp_elG").a("1L_elpm_elG").a("1L_mupm_muG").a("1L_mup_muG").a("1L_mum_muG");

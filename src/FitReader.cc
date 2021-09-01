@@ -29,7 +29,6 @@ FitReader::FitReader(const string& inputfile,
   } else {
     m_FilePtr = nullptr;
   }
-  
   ReadProcesses();
   
   ReadCategories();
@@ -63,8 +62,9 @@ void FitReader::ReadProcesses(){
     else
       m_Proc += p;
   }
-  
-  delete tree;
+ if(m_FilePtr) m_Proc += Process("total_background",kBkg); 
+ 
+ delete tree;
 
   int Nproc = m_Proc.GetN();
   int Nsys  = ProcSys.GetN();
@@ -228,14 +228,34 @@ const TH2D* FitReader::GetHistogram2D(const Category&   cat,
 bool FitReader::IsFilled(const Category&   cat,
 			 const Process&    proc,
 			 const Systematic& sys) const {
- 
   if(!sys){
     if(m_ProcHist.count(proc) == 0)
       m_ProcHist[proc] = map<Category,TH1D*>();
     if(m_ProcHist[proc].count(cat) == 0){
       string shist = cat.Label()+"_"+cat.GetLabel()+"/"+proc.Name();
-      if(proc.Type() == kData || !m_FilePtr)
+      //if there is no file pointer, just take histogram from original file
+      if(!m_FilePtr)
 	m_ProcHist[proc][cat] = (TH1D*) m_File.Get(shist.c_str());
+      //if there is another file, and the histogram is data, get the info from the TGraphAsymmErrors
+      else if(m_FilePtr && proc.Type() == kData){
+	TGraphAsymmErrors* gr = (TGraphAsymmErrors*)m_FilePtr->Get((m_FileFold+cat.Label()+"_"+cat.GetLabel()+"/data").c_str());
+	if(gr == nullptr){ 
+		cout << "gr null" << endl;
+		m_ProcHist[proc][cat] = (TH1D*) m_FilePtr->Get((m_FileFold+shist).c_str());
+	}
+     //else if TGraphAsymmErrors is found	
+     else{
+	double x, y;
+	m_ProcHist[proc][cat] = new TH1D((m_FileFold+cat.Label()+"_"+cat.GetLabel()+"/data").c_str(),"data",(int)gr->GetN(),0.,(double)gr->GetN());
+	for(int i = 0; i < gr->GetN(); i++){
+	 gr->GetPoint(i,x,y);
+	 m_ProcHist[proc][cat]->SetBinContent(i+1,y);
+	 m_ProcHist[proc][cat]->SetBinError(i+1,gr->GetErrorY(i));
+	}
+	}
+
+	}
+      //else if there is another file but it's not data, just get the histogram
       else
 	m_ProcHist[proc][cat] = (TH1D*) m_FilePtr->Get((m_FileFold+shist).c_str());
     }
