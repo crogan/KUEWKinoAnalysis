@@ -374,7 +374,6 @@ processed = true;
 	  LepCharge charge = (base->Charge_lep->at(index) > 0 ? kPos : kNeg);
 	  //LepSource source = LepSource(base->SourceID_lep->at(index));
 	  LepSource source = LepSource(base->ID_lep->at(index*2+1)); // fix for current ntuple version
-	    
 	  list_a += Lep(flavor, charge, id, source);
 	}
 	for(int i = 0; i < base->Nlep_b; i++){
