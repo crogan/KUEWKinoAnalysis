@@ -1272,12 +1272,17 @@ TCanvas* FitPlotter::PlotYields(const string& can_name,
       
       Process pp = GetProcesses()[index];
 
-      procs += pp;
 
       if(pp.Type() == kSig){
 	type = kSig;
-      }
+	if(m_FileFold != nullptr){
+		string name = pp.Name();
+		name = name.substr(0,name.find("_")+1);
+		pp = Process(name,kSig);
+	}
+	}
       
+      procs += pp;
       if(pp.Type() == kData){
 	type = kData;
       }
