@@ -70,6 +70,8 @@ public:
 
   bool HasSystematic(const Process& proc, const Systematic& sys) const;
 
+  string GetSignalTitle(const string&);
+
   VS GetChannels() const;  
   const ProcessList&  GetProcesses() const;
   const CategoryList& GetCategories(const string& channel = "") const;         
