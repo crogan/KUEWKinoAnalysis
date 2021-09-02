@@ -11,10 +11,10 @@ FitPlotter* FITPlotter = new FitPlotter(inputfile, a2, a3);
   //FITReader->PrintCategories();
   //FITReader->PrintProcesses();
 
-//  CategoryTreeTool CTTool;
+  CategoryTreeTool CTTool;
 //  CategoryTree CT_Fakes1L = CTTool.GetCategories_Fakes1L();
 //  CategoryTree CT_0L = CTTool.GetCategories_0L();
-//  CategoryTree CT_1L = CTTool.GetCategories_1L();
+  CategoryTree CT_1L = CTTool.GetCategories_1L();
 //  CategoryTree CT_QCD0L = CTTool.GetCategories_QCD0L();
 //  CategoryTree CT_QCD1L = CTTool.GetCategories_QCD1L();
 //  CategoryTree CT_2L = CTTool.GetCategories_2L();
@@ -39,9 +39,10 @@ FitPlotter* FITPlotter = new FitPlotter(inputfile, a2, a3);
 //			VS().a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD")
 //			.a("Wjets").a("Fakes").a("T2tt_5000490").a("T2tt_5000480").a("T2tt_5000375"),
 //			CT_0L);
-//  FITReader->PlotYields("1Lyields",
+  FITPlotter->PlotYields("1Lyields",
+			VS().a("Wjets"),
 //			VS().a("QCD").a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("Wjets").a("Fakes"),
-//			CT_1L);
+			CT_1L);
 //  FITReader->PlotYields("1Lyields_HF",
 //			VS().a("ttbar_HF").a("ST_HF").a("DB_HF").a("ZDY_HF").a("TB_HF").a("Wjets_HF").a("HF"),
 //			CT_1L);
@@ -70,17 +71,17 @@ const string& hadS1 = "1j0b0svS";
 const string& hadS2 = "1j1b0svS";
 const string& hadS3 = "2j2bS";
 Systematic sys = Systematic("BTAGLF_SF");
-TCanvas* cv = FITPlotter->Plot1Dstack(VS().a("ttbar").a("ZDY").a("ST").a("TB").a("DB").a("Fakes").a("T2tt_5000490").a("Wjets").a("QCD"),
-			VS().a("1L"),
-			VS().a("2jS"),
-			VS().a("ge1jISR"),
-			"canvas1");
+//TCanvas* cv = FITPlotter->Plot1Dstack(VS().a("ttbar").a("ZDY").a("ST").a("TB").a("DB").a("Fakes").a("T2tt_5000490").a("Wjets").a("QCD"),
+//			VS().a("1L"),
+//			VS().a("2jS"),
+//			VS().a("ge1jISR"),
+//			"canvas1");
 //cout << "did ttbar" << endl;
-	TCanvas* cv2 = FITPlotter->Plot1Dstack(VS().a("Wjets"),
-			VS().a("1L"),
-			VS().a("2jS"),
-			VS().a("ge1jISR"),
-			"canvas2");
+//	TCanvas* cv2 = FITPlotter->Plot1Dstack(VS().a("Wjets"),
+//			VS().a("1L"),
+//			VS().a("2jS"),
+//			VS().a("ge1jISR"),
+//			"canvas2");
 //TCanvas* cv = FITPlotter->Plot2D(VS().a("Total"),
   // 			 VS().a("0L"),
   // 			 VS().a("5jS"),
