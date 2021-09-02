@@ -591,9 +591,9 @@ CategoryTree CategoryTreeTool::GetCategories_1L() const {
   //CT_ge4j.AddSubCategory(CT_k0);
   CT_ge4j.AddSubCategory(CT_k1);
   
-  CategoryTree CT_gold(VS().a("elG").a("muG"), "gold", "G", kL_sub, false);
-  CategoryTree CT_silver(VS().a("elS").a("muS"), "silver", "S", kL_sub, false);
-  CategoryTree CT_bronze(VS().a("elB").a("muB"), "bronze", "B", kL_sub, false);
+  CategoryTree CT_gold(VS().a("gold"), "gold", "G", kL_sub, false);
+  CategoryTree CT_silver(VS().a("slvr"), "silver", "S", kL_sub, false);
+  CategoryTree CT_bronze(VS().a("bron"), "bronze", "B", kL_sub, false);
   
   CT_gold.AddSubCategory(CT_0j);
   CT_gold.AddSubCategory(CT_1j);
