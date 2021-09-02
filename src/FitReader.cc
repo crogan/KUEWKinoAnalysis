@@ -422,7 +422,6 @@ const Systematics& FitReader::GetSystematics() const {
   return m_Sys;
 }
 
-<<<<<<< HEAD
 string FitReader::GetSignalTitle(const string& label){
   size_t p = label.rfind("_");
   if(p == std::string::npos)

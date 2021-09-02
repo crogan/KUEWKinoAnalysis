@@ -512,6 +512,7 @@ TCanvas* FitPlotter::Plot1Dstack(const VS& proc,
   }
 for(int i = 0; i < vlep.size(); i++) cout << vlep[i] << endl;
   cat = cat.FilterOR(vlep);
+cout << "# cats after lep filter: " << cat.GetN() << endl;
   // Hadronic S
   VS hadS_labels;
   VS vhadS;
@@ -532,6 +533,7 @@ for(int i = 0; i < vlep.size(); i++) cout << vlep[i] << endl;
 
   cat = cat.FilterOR(vhadS);
 
+cout << "# cats after s jet filter: " << cat.GetN() << endl;
   // Hadronic ISR
   VS hadI_labels;
   VS vhadI;
@@ -552,6 +554,7 @@ for(int i = 0; i < vlep.size(); i++) cout << vlep[i] << endl;
 
   cat = cat.FilterOR(vhadI);
 
+cout << "# cats after ISR jet filter: " << cat.GetN() << endl;
   int Ncat = cat.GetN();
   
   if(Ncat < 1){
@@ -598,11 +601,11 @@ for(int i = 0; i < vlep.size(); i++) cout << vlep[i] << endl;
 	type = kData;
       
       for(int c = 0; c < Ncat; c++){
-	cout << cat[c].GetLabel() << " " << pp.Name() << endl;
+//	cout << cat[c].GetLabel() << " " << pp.Name() << endl;
 	if(!IsFilled(cat[c], pp))
 	  continue;
 
-	cout << "filled " << cat[c].GetLabel() << " " << pp.Name() << endl;
+//	cout << "filled " << cat[c].GetLabel() << " " << pp.Name() << endl;
 	
 	if(!hist){
 	  hist = (TH1D*) GetHistogram(cat[c], pp)->Clone(Form("plothist_%d_%s", i, name.c_str()));
@@ -1282,12 +1285,11 @@ TCanvas* FitPlotter::PlotYields(const string& can_name,
 
     for(int v = 0; v < Nvis; v++){
       CategoryList cat = CatList.Filter(*CatTrees[v]);
-      
       TH1D* h = GetIntegralHist(Form("plothist_%d_%d_%s", i, v, can_name.c_str()), cat, procs);
-      if(h)
+      if(h){
 	itot += h->Integral();
-      
-      hist[v] = h;
+      }
+	hist[v] = h;
     }
     
     if(itot <= 1e-4)
@@ -2306,7 +2308,6 @@ TCanvas* FitPlotter::Plot1DratioSyst(const VS& proc,
    NhadS == 0 ||
    NhadI == 0)
   return nullptr;
-
 int catTest = 0;
 
   CategoryList cat = GetCategories();
@@ -4113,7 +4114,6 @@ pRatio->cd();
 
 
 
-
 void FitPlotter::InitializeRecipes(){
   // Processes
 
@@ -4380,6 +4380,9 @@ void FitPlotter::InitializeRecipes(){
   m_Title["0jge1svS"] = "#splitline{0 jets}{#geq 1 SV-tag} #scale[1.2]{#in S}";
 
   m_Title["0jge2svS"] = "#splitline{0 jets}{#geq 2 SV-tags} #scale[1.2]{#in S}";
+
+  m_Title["0jS"] = "#splitline{0 jets}{incl. SV-tags} #scale[1.2]{#in S}";
+  m_Strings["0jS"] = VS().a("0j0svS").a("0jge1svS").a("0jS");
 
   m_Title["1j0bge1svS"] = "#splitline{1 jet, 0 b-tags}{#geq 1 SV-tag} #scale[1.2]{#in S}";
   
