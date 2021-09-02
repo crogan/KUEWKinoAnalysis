@@ -1285,12 +1285,11 @@ TCanvas* FitPlotter::PlotYields(const string& can_name,
 
     for(int v = 0; v < Nvis; v++){
       CategoryList cat = CatList.Filter(*CatTrees[v]);
-      
       TH1D* h = GetIntegralHist(Form("plothist_%d_%d_%s", i, v, can_name.c_str()), cat, procs);
-      if(h)
+      if(h){
 	itot += h->Integral();
-      
-      hist[v] = h;
+      }
+	hist[v] = h;
     }
     
     if(itot <= 1e-4)
@@ -4381,6 +4380,9 @@ void FitPlotter::InitializeRecipes(){
   m_Title["0jge1svS"] = "#splitline{0 jets}{#geq 1 SV-tag} #scale[1.2]{#in S}";
 
   m_Title["0jge2svS"] = "#splitline{0 jets}{#geq 2 SV-tags} #scale[1.2]{#in S}";
+
+  m_Title["0jS"] = "#splitline{0 jets}{incl. SV-tags} #scale[1.2]{#in S}";
+  m_Strings["0jS"] = VS().a("0j0svS").a("0jge1svS").a("0jS");
 
   m_Title["1j0bge1svS"] = "#splitline{1 jet, 0 b-tags}{#geq 1 SV-tag} #scale[1.2]{#in S}";
   
