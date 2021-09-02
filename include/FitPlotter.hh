@@ -21,6 +21,12 @@ public:
 	     const string& otherfold = "");
 
   virtual ~FitPlotter();
+
+  TCanvas* Plot1DShape(const string& proc,
+        const VS& lep_cat,
+        const VS& hadS_cat,
+        const VS& hadI_cat,
+	const string& name);
   
   TCanvas* Plot1Dstack(const VS& proc,
 		       const VS& lep_cat,
@@ -46,6 +52,33 @@ public:
   TCanvas* Plot2D(const string& can_name,
 		  const VS& proc,
 		  const CategoryTree& CT);
+
+  TCanvas* Plot1DratioProc(const VS& proc,
+           const string& lep_cat,
+           const string& hadS_cat,
+           const string& hadI_cat,
+           const string& name,
+           const string& extra);
+
+  TCanvas* Plot1Dratio(const string& proc,
+           const VS& lep_cat,
+           const VS& hadS_cat,
+           const VS& hadI_cat,
+           const string& name,
+           const VS& extra);
+
+  TCanvas* Plot1DratioSyst(const VS& proc,
+     const Systematic& syst,
+           const VS& lep_cat,
+           const VS& hadS_cat,
+           const VS& hadI_cat,
+           const string& name,
+           const VS& extra);
+  TCanvas* PlotRatioSystDist(const VS& proc,
+     const Systematic& syst,
+           const VS& lep_cat,
+           const VS& matchString,
+           const string& name);
 
   map<string,VS> m_Strings;
   

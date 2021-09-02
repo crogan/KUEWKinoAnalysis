@@ -422,6 +422,15 @@ const Systematics& FitReader::GetSystematics() const {
   return m_Sys;
 }
 
+string FitReader::GetSignalTitle(const string& label){
+  size_t p = label.rfind("_");
+  if(p == std::string::npos)
+    return label;
+
+  string title = label.substr(0, p);
+  int    mass  = stoi(label.substr(p+1,label.length()-p));
+  return title+" "+std::to_string(mass/10000)+" "+std::to_string(mass%100000);
+}
 
   
 
