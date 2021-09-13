@@ -490,7 +490,8 @@ TCanvas* FitPlotter::Plot1Dstack(const VS& proc,
      NhadS == 0 ||
      NhadI == 0)
     return nullptr;
-  CategoryList cat = GetCategories();
+  
+CategoryList cat = GetCategories();
  // cat.Print();
   // Leptonic
   VS lep_labels;
@@ -510,7 +511,7 @@ TCanvas* FitPlotter::Plot1Dstack(const VS& proc,
       vlep.push_back(lep_cat[i]);
     }
   }
-for(int i = 0; i < vlep.size(); i++) cout << vlep[i] << endl;
+//for(int i = 0; i < vlep.size(); i++) cout << vlep[i] << endl;
   cat = cat.FilterOR(vlep);
 cout << "# cats after lep filter: " << cat.GetN() << endl;
   // Hadronic S
@@ -602,9 +603,9 @@ cout << "# cats after ISR jet filter: " << cat.GetN() << endl;
       
       for(int c = 0; c < Ncat; c++){
 //	cout << cat[c].GetLabel() << " " << pp.Name() << endl;
-	if(!IsFilled(cat[c], pp))
+	if(!IsFilled(cat[c], pp)){
 	  continue;
-
+}
 //	cout << "filled " << cat[c].GetLabel() << " " << pp.Name() << endl;
 	
 	if(!hist){
@@ -642,7 +643,7 @@ cout << "# cats after ISR jet filter: " << cat.GetN() << endl;
       hists.push_back(hist);
     } 
   }
-
+if(hists.size() < 1) return nullptr;
   int Nsig = hists_sig.size();
   
   // sort the histograms by integral (N^2/2 brute force)
@@ -741,6 +742,7 @@ cout << "# cats after ISR jet filter: " << cat.GetN() << endl;
 
   double hmax = hists[0]->GetMaximum();
   
+  hists[0]->SetTitle("");
   hists[0]->Draw("hist");
   hists[0]->GetXaxis()->CenterTitle();
   hists[0]->GetXaxis()->SetTitleFont(42);
@@ -4409,8 +4411,25 @@ void FitPlotter::InitializeRecipes(){
 
   m_Title["3j1bS"] = "#splitline{3 jets}{1 b-tags} #scale[1.2]{#in S}";
 
-  m_Title["3j2bS"] = "#splitline{3 jets}{#geq 2 b-tags} #scale[1.2]{#in S}";
+  m_Title["3jge2bS"] = "#splitline{3 jets}{#geq 2 b-tags} #scale[1.2]{#in S}";
 
+  m_Title["4j0bS"] = "#splitline{4 jets}{0 b-tags} #scale[1.2]{#in S}";
+
+  m_Title["4j1bS"] = "#splitline{4 jets}{1 b-tags} #scale[1.2]{#in S}";
+
+  m_Title["4jge2bS"] = "#splitline{4 jets}{#geq 2 b-tags} #scale[1.2]{#in S}";
+
+  m_Title["5j0bS"] = "#splitline{5 jets}{0 b-tags} #scale[1.2]{#in S}";
+
+  m_Title["5j1bS"] = "#splitline{5 jets}{1 b-tags} #scale[1.2]{#in S}";
+
+  m_Title["5jge2bS"] = "#splitline{5 jets}{#geq 2 b-tags} #scale[1.2]{#in S}";
+  m_Title["3jS"] = "#splitline{3 jets}{incl. b-tags} #scale[1.2]{#in S}";
+  m_Strings["3jS"] = VS().a("3j0bS").a("3j1bS").a("3ge2bS");
+  
+  m_Title["4jS"] = "#splitline{4 jets}{incl. b-tags} #scale[1.2]{#in S}";
+  m_Strings["4jS"] = VS().a("4j0bS").a("4j1bS").a("4ge2bS");
+  
   m_Title["5jS"] = "#splitline{5 jets}{incl. b-tags} #scale[1.2]{#in S}";
   m_Strings["5jS"] = VS().a("ge5j0bS").a("ge5j1bS").a("ge5ge2bS");
   

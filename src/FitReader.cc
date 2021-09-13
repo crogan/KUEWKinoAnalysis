@@ -240,7 +240,6 @@ bool FitReader::IsFilled(const Category&   cat,
       else if(m_FilePtr && proc.Type() == kData){
 	TGraphAsymmErrors* gr = (TGraphAsymmErrors*)m_FilePtr->Get((m_FileFold+cat.Label()+"_"+cat.GetLabel()+"/data").c_str());
 	if(gr == nullptr){ 
-		cout << "gr null" << endl;
 		m_ProcHist[proc][cat] = (TH1D*) m_FilePtr->Get((m_FileFold+shist).c_str());
 	}
      //else if TGraphAsymmErrors is found	
