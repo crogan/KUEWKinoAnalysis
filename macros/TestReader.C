@@ -15,24 +15,24 @@ FitPlotter* FITPlotter = new FitPlotter(inputfile, a2, a3);
 //  CategoryTree CT_Fakes1L = CTTool.GetCategories_Fakes1L();
 //  CategoryTree CT_0L = CTTool.GetCategories_0L();
   CategoryTree CT_1L = CTTool.GetCategories_1L();
-//  CategoryTree CT_QCD0L = CTTool.GetCategories_QCD0L();
-//  CategoryTree CT_QCD1L = CTTool.GetCategories_QCD1L();
+  CategoryTree CT_QCD0L = CTTool.GetCategories_QCD0L();
+  CategoryTree CT_QCD1L = CTTool.GetCategories_QCD1L();
 //  CategoryTree CT_2L = CTTool.GetCategories_2L();
 //  CategoryTree CT_Fakes2L = CTTool.GetCategories_Fakes2L();
 //  CategoryTree CT_3L = CTTool.GetCategories_3L();
 //  CategoryTree CT_Fakes3L = CTTool.GetCategories_Fakes3L();
 ////FITReader->PrintCategories();
 ////FITReader->PrintProcesses();
-//  CategoryTree CT_test = CT_QCD0L;
+CategoryTree CT_test = CT_QCD0L;
 //CT_test.Print(); 
-//vector<const CategoryTree*> catTrees;
-//CT_test.GetListDepth(catTrees,1);
-//CategoryList catList = FITReader->GetCategories();
-//for(int i = 0; i < int(catTrees.size()); i++){
-//cout << "list #" << i << " " << catTrees[i]->GetSpecLabel() << endl;
-//CategoryList cats = catList.Filter(*catTrees[i]);
-//cats.Print();
-//}
+vector<const CategoryTree*> catTrees;
+CT_test.GetListDepth(catTrees,1);
+CategoryList catList = FITPlotter->GetCategories();
+for(int i = 0; i < int(catTrees.size()); i++){
+cout << "list #" << i << " " << catTrees[i]->GetSpecLabel() << endl;
+CategoryList cats = catList.Filter(*catTrees[i]);
+cats.Print();
+}
 
 
 //  FITReader->PlotYields("0Lyields",

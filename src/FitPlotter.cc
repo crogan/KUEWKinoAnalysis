@@ -478,13 +478,16 @@ TCanvas* FitPlotter::Plot1Dstack(const VS& proc,
 				const VS& lep_cat,
 				const VS& hadS_cat,
 				const VS& hadI_cat,
-				const string& name){
+				const string& name,
+				const VS& extra){
   RestFrames::SetStyle();
   
   int Nproc = proc.size();
   int Nlep  = lep_cat.size();
   int NhadS = hadS_cat.size();
   int NhadI = hadI_cat.size();
+  int Nextra = -999;
+  if(!extra.empty()) Nextra = extra.size();
   if(Nproc == 0 ||
      Nlep  == 0 ||
      NhadS == 0 ||
@@ -556,6 +559,27 @@ cout << "# cats after s jet filter: " << cat.GetN() << endl;
   cat = cat.FilterOR(vhadI);
 
 cout << "# cats after ISR jet filter: " << cat.GetN() << endl;
+  VS extra_labels;
+  vector<VS> vextras;
+  VS vextra;
+  for(int i = 0; i < Nextra; i++){
+  if(m_Title.count(extra[i]) != 0)
+    extra_labels.push_back(m_Title[extra[i]]);
+  else
+    extra_labels.push_back(extra[i]);
+
+  if(m_Strings.count(extra[i]) != 0){
+    int N = m_Strings[extra[i]].size();
+    for(int j = 0; j < N; j++)
+	vextra.push_back(m_Strings[extra[i]][j]);
+  }
+  else {
+    vextra.push_back(extra[i]);
+  }
+  }
+  cat = cat.FilterOR(vextra);
+
+cout << "# cats after extra filter: " << cat.GetN() << endl;
   int Ncat = cat.GetN();
   
   if(Ncat < 1){
@@ -900,6 +924,7 @@ if(hists.size() < 1) return nullptr;
   string plotlabel = "#color[7014]{"+lep_labels[0]+"} + ";
   plotlabel += "#color[7004]{"+hadS_labels[0]+"} + ";
   plotlabel += "#color[7024]{"+hadI_labels[0]+"} + ";
+  if(extra_labels[0] != "") plotlabel += "#color[7024]{"+extra_labels[0]+"} + ";
   plotlabel += "p_{T}^{ISR} > 300 GeV";
   
   l.SetTextColor(kBlack);
@@ -4395,8 +4420,12 @@ void FitPlotter::InitializeRecipes(){
   
   m_Title["1j0b0svS"] = "#splitline{1 jet, 0 b-tags}{0 SV-tag} #scale[1.2]{#in S}";
 
+  m_Title["1jge1svS"] = "#splitline{1 jet, incl. b-tags}{#geq 1 SV-tag} #scale[1.2]{#in S}";
+
+  m_Title["1j0svS"] = "#splitline{1 jet, incl. b-tags}{0 SV-tags} #scale[1.2]{#in S}";
+
   m_Title["1jS"] = "#splitline{1 jet}{incl. b-tags} #scale[1.2]{#in S}";
-  m_Strings["1jS"] = VS().a("1jS").a("1j0bge1svS").a("1j0b0svS").a("1j1b0svS").a("1j1bge1svS");
+  m_Strings["1jS"] = VS().a("1jS").a("1j0bge1svS").a("1j0svS").a("1jge1svS").a("1j0b0svS").a("1j1b0svS").a("1j1bge1svS");
 
   m_Title["2jS"] = "#splitline{2 jets}{incl. b-tags} #scale[1.2]{#in S}";
   m_Strings["2jS"] = VS().a("2jS").a("2j0bS").a("2j1bS").a("2j2bS");
