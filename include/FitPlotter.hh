@@ -32,7 +32,8 @@ public:
 		       const VS& lep_cat,
 		       const VS& hadS_cat,
 		       const VS& hadI_cat,
-		       const string& canvas);
+		       const string& name,
+		       const VS& extra = VS());
 
   TCanvas* Plot2D(const VS& proc,
 		  const VS& lep_cat,
