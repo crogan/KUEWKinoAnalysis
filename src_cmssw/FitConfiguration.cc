@@ -13,6 +13,9 @@ void FitConfiguration::Configure(ch::CombineHarvester& cb, ProcessList& processe
   using ch::syst::bin_id;
   using ch::syst::process;
 
+  bool QCDnorms = true;
+  bool WJetsnorms = false;
+  bool WJetsnorms_highLow = false;
   ProcessList signals = processes.Filter(kSig);
   ProcessList backgrounds = processes.Filter(kBkg); 
 
@@ -38,7 +41,7 @@ void FitConfiguration::Configure(ch::CombineHarvester& cb, ProcessList& processe
     ProcessList plist = backgrounds.Filter(p);
     cb.cp().process(plist.GetProcesses())
       .AddSyst(cb, "scale_"+p, "rateParam", SystMap<>::init(1.0));
-    //cb.cp().process(plist.GetProcesses()).PrintProcs();
+   //cb.cp().process(plist.GetProcesses()).PrintProcs();
   }
   
   for(auto p : bkg_rare){
@@ -127,11 +130,216 @@ void FitConfiguration::Configure(ch::CombineHarvester& cb, ProcessList& processe
   // kinematic factors
   ///////////////////////
   //cb.cp().backgrounds().bin(VS().a(".*gamT1.*")).PrintObs();
-  cb.cp().backgrounds().bin(VS().a(".*gamT1.*"))
-  .AddSyst(cb, "gamT", "lnN", SystMap<>::init(1.05));
+//  cb.cp().backgrounds().bin(VS().a(".*gamT1.*"))
+//  .AddSyst(cb, "gamT", "lnN", SystMap<>::init(1.05));
+//
+//  cb.cp().backgrounds().bin(VS().a(".*PTISR1.*"))
+//    .AddSyst(cb, "PTISR", "lnN", SystMap<>::init(1.05));
 
-  cb.cp().backgrounds().bin(VS().a(".*PTISR1.*"))
-    .AddSyst(cb, "PTISR", "lnN", SystMap<>::init(1.05));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*.*0j.*S.*.*gamT1.*").a(".*0L.*.*1j.*S.*.*gamT1.*"))
+    .AddSyst(cb, "gamT_0L_01jS", "lnN", SystMap<>::init(1.1));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*.*2j.*S.*.*gamT1.*").a(".*0L.*.*3j.*S.*.*gamT1.*").a(".*0L.*.*4j.*S.*.*gamT1.*").a(".*0L.*.*5j.*S.*.*gamT1.*"))
+    .AddSyst(cb, "gamT_0L_2345jS", "lnN", SystMap<>::init(1.1));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*.*0j.*S.*.*gamT1.*").a(".*1L.*.*1j.*S.*.*gamT1.*"))
+    .AddSyst(cb, "gamT_1L_01jS", "lnN", SystMap<>::init(1.1));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*.*2j.*S.*.*gamT1.*").a(".*1L.*.*3j.*S.*.*gamT1.*").a(".*1L.*.*4j.*S.*.*gamT1.*"))
+    .AddSyst(cb, "gamT_1L_234jS", "lnN", SystMap<>::init(1.1));
+
+  cb.cp().backgrounds().bin(VS().a(".*2L.*.*0j.*S.*.*gamT1.*").a(".*2L.*.*1j.*S.*.*gamT1.*"))
+    .AddSyst(cb, "gamT_2L_01jS", "lnN", SystMap<>::init(1.1));
+
+  cb.cp().backgrounds().bin(VS().a(".*2L.*.*2j.*S.*.*gamT1.*").a(".*2L.*.*3j.*S.*.*gamT1.*"))
+    .AddSyst(cb, "gamT_2L_23jS", "lnN", SystMap<>::init(1.1));
+
+  cb.cp().backgrounds().bin(VS().a(".*3L.*.*0j.*S.*.*gamT1.*").a(".*3L.*.*1j.*S.*.*gamT1.*"))
+    .AddSyst(cb, "gamT_3L_01jS", "lnN", SystMap<>::init(1.1));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*.*0j.*S.*.*PTISR1.*"))
+    .AddSyst(cb, "PTISR_0L_0jS", "lnN", SystMap<>::init(1.1));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*.*1j.*S.*.*PTISR1.*"))
+    .AddSyst(cb, "PTISR_0L_1jS", "lnN", SystMap<>::init(1.1));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*.*2j.*S.*.*PTISR1.*"))
+    .AddSyst(cb, "PTISR_0L_2jS", "lnN", SystMap<>::init(1.1));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*.*3j.*S.*.*PTISR1.*"))
+    .AddSyst(cb, "PTISR_0L_3jS", "lnN", SystMap<>::init(1.1));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*.*4j.*S.*.*PTISR1.*"))
+    .AddSyst(cb, "PTISR_0L_4jS", "lnN", SystMap<>::init(1.1));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*.*5j.*S.*.*PTISR1.*"))
+    .AddSyst(cb, "PTISR_0L_5jS", "lnN", SystMap<>::init(1.1));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*.*0j.*S.*.*PTISR1.*"))
+    .AddSyst(cb, "PTISR_1L_0jS", "lnN", SystMap<>::init(1.1));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*.*1j.*S.*.*PTISR1.*"))
+    .AddSyst(cb, "PTISR_1L_1jS", "lnN", SystMap<>::init(1.1));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*.*2j.*S.*.*PTISR1.*"))
+    .AddSyst(cb, "PTISR_1L_2jS", "lnN", SystMap<>::init(1.1));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*.*3j.*S.*.*PTISR1.*"))
+    .AddSyst(cb, "PTISR_1L_3jS", "lnN", SystMap<>::init(1.1));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*.*4j.*S.*.*PTISR1.*"))
+    .AddSyst(cb, "PTISR_1L_4jS", "lnN", SystMap<>::init(1.1));
+
+  cb.cp().backgrounds().bin(VS().a(".*2L.*.*0j.*S.*.*PTISR1.*"))
+    .AddSyst(cb, "PTISR_2L_0jS", "lnN", SystMap<>::init(1.1));
+
+  cb.cp().backgrounds().bin(VS().a(".*2L.*.*1j.*S.*.*PTISR1.*"))
+    .AddSyst(cb, "PTISR_2L_1jS", "lnN", SystMap<>::init(1.1));
+
+  cb.cp().backgrounds().bin(VS().a(".*2L.*.*2j.*S.*.*PTISR1.*"))
+    .AddSyst(cb, "PTISR_2L_2jS", "lnN", SystMap<>::init(1.1));
+
+  cb.cp().backgrounds().bin(VS().a(".*2L.*.*3j.*S.*.*PTISR1.*"))
+    .AddSyst(cb, "PTISR_2L_3jS", "lnN", SystMap<>::init(1.1));
+
+  cb.cp().backgrounds().bin(VS().a(".*3L.*.*0j.*S.*.*PTISR1.*"))
+    .AddSyst(cb, "PTISR_3L_0jS", "lnN", SystMap<>::init(1.1));
+
+  cb.cp().backgrounds().bin(VS().a(".*3L.*.*1j.*S.*.*PTISR1.*"))
+    .AddSyst(cb, "PTISR_3L_1jS", "lnN", SystMap<>::init(1.1));
+
+  if(WJetsnorms_highLow){
+  cb.cp().process({"Wjets"}).bin(VS().a(".*0L.*.*0j.*S.*").a(".*0L.*.*1j.*S.*"))
+    .AddSyst(cb, "norm_Wjets_0L_01jS", "lnN", SystMap<>::init(1.8));
+  
+  cb.cp().process({"Wjets"}).bin(VS().a(".*0L.*.*2j.*S.*").a(".*0L.*.*3j.*S.*").a(".*0L.*.*4j.*S.*").a(".*0L.*.*5j.*S.*"))
+    .AddSyst(cb, "norm_Wjets_0L_2345jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().process({"Wjets"}).bin(VS().a(".*1L.*.*0j.*S.*").a(".*1L.*.*1j.*S.*"))
+    .AddSyst(cb, "norm_Wjets_1L_01jS", "lnN", SystMap<>::init(1.8));
+  
+  cb.cp().process({"Wjets"}).bin(VS().a(".*1L.*.*2j.*S.*").a(".*1L.*.*3j.*S.*").a(".*1L.*.*4j.*S.*"))
+    .AddSyst(cb, "norm_Wjets_1L_234jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().process({"Wjets"}).bin(VS().a(".*2L.*.*0j.*S.*").a(".*2L.*.*1j.*S.*"))
+    .AddSyst(cb, "norm_Wjets_2L_01jS", "lnN", SystMap<>::init(1.8));
+  
+  cb.cp().process({"Wjets"}).bin(VS().a(".*2L.*.*2j.*S.*").a(".*2L.*.*3j.*S.*"))
+    .AddSyst(cb, "norm_Wjets_2L_23jS", "lnN", SystMap<>::init(1.8));
+  
+  cb.cp().process({"Wjets"}).bin(VS().a(".*3L.*.*0j.*S.*").a(".*3L.*.*1j.*S.*"))
+    .AddSyst(cb, "norm_Wjets_3L_01jS", "lnN", SystMap<>::init(1.8));
+  }
+  if(WJetsnorms){
+  cb.cp().process({"Wjets"}).bin(VS().a(".*0L.*.*0j.*S.*"))
+    .AddSyst(cb, "norm_Wjets_0L_0jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().process({"Wjets"}).bin(VS().a(".*0L.*.*1j.*S.*"))
+    .AddSyst(cb, "norm_Wjets_0L_1jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().process({"Wjets"}).bin(VS().a(".*0L.*.*2j.*S.*"))
+    .AddSyst(cb, "norm_Wjets_0L_2jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().process({"Wjets"}).bin(VS().a(".*0L.*.*3j.*S.*"))
+    .AddSyst(cb, "norm_Wjets_0L_3jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().process({"Wjets"}).bin(VS().a(".*0L.*.*4j.*S.*"))
+    .AddSyst(cb, "norm_Wjets_0L_4jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().process({"Wjets"}).bin(VS().a(".*0L.*.*5j.*S.*"))
+    .AddSyst(cb, "norm_Wjets_0L_5jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().process({"Wjets"}).bin(VS().a(".*1L.*.*0j.*S.*"))
+    .AddSyst(cb, "norm_Wjets_1L_0jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().process({"Wjets"}).bin(VS().a(".*1L.*.*1j.*S.*"))
+    .AddSyst(cb, "norm_Wjets_1L_1jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().process({"Wjets"}).bin(VS().a(".*1L.*.*2j.*S.*"))
+    .AddSyst(cb, "norm_Wjets_1L_2jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().process({"Wjets"}).bin(VS().a(".*1L.*.*3j.*S.*"))
+    .AddSyst(cb, "norm_Wjets_1L_3jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().process({"Wjets"}).bin(VS().a(".*1L.*.*4j.*S.*"))
+    .AddSyst(cb, "norm_Wjets_1L_4jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().process({"Wjets"}).bin(VS().a(".*2L.*.*0j.*S.*"))
+    .AddSyst(cb, "norm_Wjets_2L_0jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().process({"Wjets"}).bin(VS().a(".*2L.*.*1j.*S.*"))
+    .AddSyst(cb, "norm_Wjets_2L_1jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().process({"Wjets"}).bin(VS().a(".*2L.*.*2j.*S.*"))
+    .AddSyst(cb, "norm_Wjets_2L_2jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().process({"Wjets"}).bin(VS().a(".*2L.*.*3j.*S.*"))
+    .AddSyst(cb, "norm_Wjets_2L_3jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().process({"Wjets"}).bin(VS().a(".*3L.*.*0j.*S.*"))
+    .AddSyst(cb, "norm_Wjets_3L_0jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().process({"Wjets"}).bin(VS().a(".*3L.*.*1j.*S.*"))
+    .AddSyst(cb, "norm_Wjets_3L_1jS", "lnN", SystMap<>::init(1.8));
+  }
+  if(QCDnorms){
+  cb.cp().process({"QCD"}).bin(VS().a(".*0L.*.*0j.*S.*"))
+    .AddSyst(cb, "norm_QCD_0L_0jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().process({"QCD"}).bin(VS().a(".*0L.*.*1j.*S.*"))
+    .AddSyst(cb, "norm_QCD_0L_1jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().process({"QCD"}).bin(VS().a(".*0L.*.*2j.*S.*"))
+    .AddSyst(cb, "norm_QCD_0L_2jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().process({"QCD"}).bin(VS().a(".*0L.*.*3j.*S.*"))
+    .AddSyst(cb, "norm_QCD_0L_3jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().process({"QCD"}).bin(VS().a(".*0L.*.*4j.*S.*"))
+    .AddSyst(cb, "norm_QCD_0L_4jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().process({"QCD"}).bin(VS().a(".*0L.*.*5j.*S.*"))
+    .AddSyst(cb, "norm_QCD_0L_5jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().process({"QCD"}).bin(VS().a(".*1L.*.*0j.*S.*"))
+    .AddSyst(cb, "norm_QCD_1L_0jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().process({"QCD"}).bin(VS().a(".*1L.*.*1j.*S.*"))
+    .AddSyst(cb, "norm_QCD_1L_1jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().process({"QCD"}).bin(VS().a(".*1L.*.*2j.*S.*"))
+    .AddSyst(cb, "norm_QCD_1L_2jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().process({"QCD"}).bin(VS().a(".*1L.*.*3j.*S.*"))
+    .AddSyst(cb, "norm_QCD_1L_3jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().process({"QCD"}).bin(VS().a(".*1L.*.*4j.*S.*"))
+    .AddSyst(cb, "norm_QCD_1L_4jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().process({"QCD"}).bin(VS().a(".*2L.*.*0j.*S.*"))
+    .AddSyst(cb, "norm_QCD_2L_0jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().process({"QCD"}).bin(VS().a(".*2L.*.*1j.*S.*"))
+    .AddSyst(cb, "norm_QCD_2L_1jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().process({"QCD"}).bin(VS().a(".*2L.*.*2j.*S.*"))
+    .AddSyst(cb, "norm_QCD_2L_2jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().process({"QCD"}).bin(VS().a(".*2L.*.*3j.*S.*"))
+    .AddSyst(cb, "norm_QCD_2L_3jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().process({"QCD"}).bin(VS().a(".*3L.*.*0j.*S.*"))
+    .AddSyst(cb, "norm_QCD_3L_0jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().process({"QCD"}).bin(VS().a(".*3L.*.*1j.*S.*"))
+    .AddSyst(cb, "norm_QCD_3L_1jS", "lnN", SystMap<>::init(1.8));
+  }
+
+
+
+
+
 
   // turn off regex filtering
   cb.SetFlag("filters-use-regex", false);
