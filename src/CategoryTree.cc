@@ -1279,12 +1279,12 @@ CategoryTree CategoryTreeTool::GetCategories_QCD0L() const {
 //depth = 4 - splits by bS multiplicity
 
   
-  CategoryTree CT_0j(VS().a("_0j"), "", "1L0J", kJ, true);
-  CategoryTree CT_1j(VS().a("_1j"), "", "1L1J", kJ, true);
-  CategoryTree CT_2j(VS().a("_2j"), "2 j #in S", "1L2J", kJ, true);
-  CategoryTree CT_3j(VS().a("_3j"), "3 j #in S", "1L3J", kJ, true);
-  CategoryTree CT_4j(VS().a("_4j"), "4 j #in S", "1L4J", kJ, true);
-  CategoryTree CT_ge5j(VS().a("_ge5j"), "#geq 5 j #in S", "1L5J", kJ, true);
+  CategoryTree CT_0j(VS().a("_0j"), "", "0L0J", kJ, true);
+  CategoryTree CT_1j(VS().a("_1j"), "", "0L1J", kJ, true);
+  CategoryTree CT_2j(VS().a("_2j"), "2 j #in S", "0L2J", kJ, true);
+  CategoryTree CT_3j(VS().a("_3j"), "3 j #in S", "0L3J", kJ, true);
+  CategoryTree CT_4j(VS().a("_4j"), "4 j #in S", "0L4J", kJ, true);
+  CategoryTree CT_ge5j(VS().a("_ge5j"), "#geq 5 j #in S", "0L5J", kJ, true);
 
   
   CT_0j.AddSubCategory(CT_0sv_0j);
