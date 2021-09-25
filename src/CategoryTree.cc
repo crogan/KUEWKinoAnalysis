@@ -87,6 +87,20 @@ string SpectroscopicLabel::GetSpectroscopicLabel() const {
     label += "^{#scale[0.8]{" + m_Xsup + "}}";
   if(m_Xsub != "")
     label += "_{#scale[0.8]{" + m_Xsub + "}}";
+//  if(m_Lsup != "")
+//    label += "^{{" + m_Lsup + "}}";
+//  if(m_Lsub != "")
+//    label += "_{{" + m_Lsub + "}}";
+//  label += " " + m_J;
+//  if(m_Jsup != "")
+//    label += "^{{" + m_Jsup + "}}";
+//  if(m_Jsub != "")
+//    label += "_{{" + m_Jsub + "}}";
+//  label += " X";
+//  if(m_Xsup != "")
+//    label += "^{{" + m_Xsup + "}}";
+//  if(m_Xsub != "")
+//    label += "_{{" + m_Xsub + "}}";
 
   return label;
 }
@@ -385,6 +399,24 @@ CategoryTree CategoryTreeTool::GetCategories() const {
   return CT_all;
 }
 
+CategoryTree CategoryTreeTool::GetCategoriesFakes() const {
+
+  CategoryTree CT_Fakes1L = GetCategories_Fakes1L();
+  CategoryTree CT_Fakes2L = GetCategories_Fakes2L();
+  CategoryTree CT_Fakes3L = GetCategories_Fakes3L();
+
+  CategoryTree CT_all(VS().a("Ch"), "", "", kNorm, false);
+  CT_all.AddSubCategory(CT_Fakes1L);
+  CT_all.AddSubCategory(CT_Fakes2L);
+  CT_all.AddSubCategory(CT_Fakes3L);
+
+  return CT_all;
+}
+
+
+
+
+
 CategoryTree CategoryTreeTool::GetCategories_0L() const {
   CategoryTree CT_0b(VS().a("j0b"), "0b", "0b", kJ_sub, true);
   CategoryTree CT_1b(VS().a("1bS").a("j1b"), "1b", "1b", kJ_sub, true);
@@ -488,9 +520,9 @@ CategoryTree CategoryTreeTool::GetCategories_1L() const {
   CategoryTree CT_1b(VS().a("1bS").a("j1b"), "1b", "1b", kJ_sub, false);
   CategoryTree CT_2b(VS().a("2bS"), "2b", "2b", kJ_sub, false);
   
-  CategoryTree CT_0bISR(VS().a("0bISR"), "0 b #in ISR", "0b", kX_sub, true);
-  CategoryTree CT_1bISR(VS().a("ge1bISR"), "#geq 1 b #in ISR", "1b", kX_sub, true);
-  CategoryTree CT_inclbISR(VS().a("ge1jISR"), "", "", kX_sub, true);
+  CategoryTree CT_0bISR(VS().a("0bISR"), "0 b #in ISR", "0b", kX_sub, false);
+  CategoryTree CT_1bISR(VS().a("ge1bISR"), "#geq 1 b #in ISR", "1b", kX_sub, false);
+  CategoryTree CT_inclbISR(VS().a("ge1jISR"), "", "", kX_sub, false);
 
   CT_0b.AddSubCategory(CT_0bISR);
   CT_0b.AddSubCategory(CT_1bISR);
@@ -498,8 +530,8 @@ CategoryTree CategoryTreeTool::GetCategories_1L() const {
   CT_1b.AddSubCategory(CT_1bISR);
   CT_2b.AddSubCategory(CT_inclbISR);
   
-  CategoryTree CT_etaC(VS().a("SVeta0"), "|#eta^{SV}| #leq 1.5", "svc", kX_sup, true);
-  CategoryTree CT_etaF(VS().a("SVeta1"), "|#eta^{SV}| > 1.5", "svf", kX_sup, true);
+  CategoryTree CT_etaC(VS().a("SVeta0"), "|#eta^{SV}| #leq 1.5", "svc", kX_sup, false);
+  CategoryTree CT_etaF(VS().a("SVeta1"), "|#eta^{SV}| > 1.5", "svf", kX_sup, false);
   
   CategoryTree CT_0sv_0(VS().a("0svS"), "0sv", "0sv", kJ_sup, false);
   CategoryTree CT_0sv_1(VS().a("0svS"), "0sv", "0sv", kJ_sup, false);
@@ -508,8 +540,8 @@ CategoryTree CategoryTreeTool::GetCategories_1L() const {
   CT_1sv.AddSubCategory(CT_etaC);
   CT_1sv.AddSubCategory(CT_etaF);
 
-  CategoryTree CT_p0(VS().a("PTISR0"), "", "p-", kX_sup, true);
-  CategoryTree CT_p1(VS().a("PTISR1"), "", "p+", kX_sup, true);
+  CategoryTree CT_p0(VS().a("PTISR0"), "", "p-", kX_sup, false);
+  CategoryTree CT_p1(VS().a("PTISR1"), "", "p+", kX_sup, false);
 
   CategoryTree CT_g0(VS().a("gamT0"), "", "#gamma-", kX_sup, false);
   CategoryTree CT_g1(VS().a("gamT1"), "", "#gamma+", kX_sup, false);
@@ -569,9 +601,21 @@ CategoryTree CategoryTreeTool::GetCategories_1L() const {
   CT_gold.AddSubCategory(CT_3j);
   CT_gold.AddSubCategory(CT_ge4j);
   
-  CategoryTree CT_1L(VS().a("Ch1L"), "1L", "1L", kL, false);
-  //CT_1L.AddSubCategory(CT_bronze);
-  //CT_1L.AddSubCategory(CT_silver);
+  CT_silver.AddSubCategory(CT_0j);
+  CT_silver.AddSubCategory(CT_1j);
+  CT_silver.AddSubCategory(CT_2j);
+  CT_silver.AddSubCategory(CT_3j);
+  CT_silver.AddSubCategory(CT_ge4j);
+  
+  CT_bronze.AddSubCategory(CT_0j);
+  CT_bronze.AddSubCategory(CT_1j);
+  CT_bronze.AddSubCategory(CT_2j);
+  CT_bronze.AddSubCategory(CT_3j);
+  CT_bronze.AddSubCategory(CT_ge4j);
+  
+  CategoryTree CT_1L(VS().a("Ch1L"), "1L", "1L", kL, true);
+  CT_1L.AddSubCategory(CT_bronze);
+  CT_1L.AddSubCategory(CT_silver);
   CT_1L.AddSubCategory(CT_gold);
 
   //CT_1L.AddSubCategory(CT_0j);
@@ -582,6 +626,7 @@ CategoryTree CategoryTreeTool::GetCategories_1L() const {
 
   return CT_1L;
 }
+
 
 CategoryTree CategoryTreeTool::GetCategories_2L() const {
   CategoryTree CT_0b(VS().a("j0b"), "0b", "0b", kJ_sub, false);
@@ -690,6 +735,8 @@ CategoryTree CategoryTreeTool::GetCategories_2L() const {
   
 }
 
+
+
 CategoryTree CategoryTreeTool::GetCategories_3L() const {
   CategoryTree CT_0b(VS().a("0bS"), "0 b #in S", "0b", kJ_sub, true);
   CategoryTree CT_ge1b(VS().a("ge1bS"), "geq 1 b #in S", "1b", kJ_sub, true);
@@ -791,19 +838,6 @@ CategoryTree CategoryTreeTool::GetCategories_3L() const {
   return CT_3L;
 }
 
-CategoryTree CategoryTreeTool::GetCategoriesFakes() const {
-
-  CategoryTree CT_Fakes1L = GetCategories_Fakes1L();
-  CategoryTree CT_Fakes2L = GetCategories_Fakes2L();
-  CategoryTree CT_Fakes3L = GetCategories_Fakes3L();
-
-  CategoryTree CT_all(VS().a("Ch"), "", "", kNorm, false);
-  CT_all.AddSubCategory(CT_Fakes1L);
-  CT_all.AddSubCategory(CT_Fakes2L);
-  CT_all.AddSubCategory(CT_Fakes3L);
-
-  return CT_all;
-}
 
 CategoryTree CategoryTreeTool::GetCategories_Fakes1L() const {
   
@@ -1245,12 +1279,12 @@ CategoryTree CategoryTreeTool::GetCategories_QCD0L() const {
 //depth = 4 - splits by bS multiplicity
 
   
-  CategoryTree CT_0j(VS().a("_0j"), "", "1L0J", kJ, true);
-  CategoryTree CT_1j(VS().a("_1j"), "", "1L1J", kJ, true);
-  CategoryTree CT_2j(VS().a("_2j"), "2 j #in S", "1L2J", kJ, true);
-  CategoryTree CT_3j(VS().a("_3j"), "3 j #in S", "1L3J", kJ, true);
-  CategoryTree CT_4j(VS().a("_4j"), "4 j #in S", "1L4J", kJ, true);
-  CategoryTree CT_ge5j(VS().a("_ge5j"), "#geq 5 j #in S", "1L5J", kJ, true);
+  CategoryTree CT_0j(VS().a("_0j"), "", "0L0J", kJ, true);
+  CategoryTree CT_1j(VS().a("_1j"), "", "0L1J", kJ, true);
+  CategoryTree CT_2j(VS().a("_2j"), "2 j #in S", "0L2J", kJ, true);
+  CategoryTree CT_3j(VS().a("_3j"), "3 j #in S", "0L3J", kJ, true);
+  CategoryTree CT_4j(VS().a("_4j"), "4 j #in S", "0L4J", kJ, true);
+  CategoryTree CT_ge5j(VS().a("_ge5j"), "#geq 5 j #in S", "0L5J", kJ, true);
 
   
   CT_0j.AddSubCategory(CT_0sv_0j);
