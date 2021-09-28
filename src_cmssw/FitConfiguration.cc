@@ -16,12 +16,18 @@ void FitConfiguration::Configure(ch::CombineHarvester& cb, ProcessList& processe
   bool QCDnorms = true;
   bool WJetsnorms = false;
   bool WJetsnorms_highLow = false;
+  bool bkgNorms = false;
+  bool bkgNorms_bosonTopSplit = false;
   ProcessList signals = processes.Filter(kSig);
   ProcessList backgrounds = processes.Filter(kBkg); 
 
   // normalizations
   VS bkg_rate;
   VS bkg_rare;
+  VS bkg_boson;
+  VS bkg_top;
+  VS bkg_QCD;
+  VS bkg_Wjets;
 
   bkg_rate += "ttbar";
   bkg_rate += "Wjets";
@@ -33,6 +39,15 @@ void FitConfiguration::Configure(ch::CombineHarvester& cb, ProcessList& processe
   bkg_rare += "ST";
   bkg_rare += "DB";
   bkg_rare += "TB";
+
+  bkg_boson += "Wjets";
+  bkg_boson += "ZDY";
+  bkg_boson += "TB";
+  bkg_boson += "DB";
+
+  bkg_top += "ttbar";
+  bkg_top += "ST";
+
 
   // allow for regex filtering
   cb.SetFlag("filters-use-regex", true);
@@ -284,8 +299,9 @@ void FitConfiguration::Configure(ch::CombineHarvester& cb, ProcessList& processe
     .AddSyst(cb, "norm_Wjets_3L_1jS", "lnN", SystMap<>::init(1.8));
   }
   if(QCDnorms){
-  cb.cp().process({"QCD"}).bin(VS().a(".*0L.*.*0j.*S.*"))
-    .AddSyst(cb, "norm_QCD_0L_0jS", "lnN", SystMap<>::init(1.8));
+      ProcessList plist = backgrounds.Filter("QCD");
+    cb.cp().process(plist.GetProcesses()).bin(VS().a(".*0L.*.*0j.*S.*"))
+      .AddSyst(cb, "norm_QCD_0L_0jS", "lnN", SystMap<>::init(1.5));
 
   cb.cp().process({"QCD"}).bin(VS().a(".*0L.*.*1j.*S.*"))
     .AddSyst(cb, "norm_QCD_0L_1jS", "lnN", SystMap<>::init(1.8));
@@ -334,6 +350,168 @@ void FitConfiguration::Configure(ch::CombineHarvester& cb, ProcessList& processe
 
   cb.cp().process({"QCD"}).bin(VS().a(".*3L.*.*1j.*S.*"))
     .AddSyst(cb, "norm_QCD_3L_1jS", "lnN", SystMap<>::init(1.8));
+  }
+  if(bkgNorms){
+  cb.cp().backgrounds().bin(VS().a(".*0L.*.*0j.*S.*"))
+    .AddSyst(cb, "norm_bkgs_0L_0jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*.*1j.*S.*"))
+    .AddSyst(cb, "norm_bkgs_0L_1jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*.*2j.*S.*"))
+    .AddSyst(cb, "norm_bkgs_0L_2jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*.*3j.*S.*"))
+    .AddSyst(cb, "norm_bkgs_0L_3jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*.*4j.*S.*"))
+    .AddSyst(cb, "norm_bkgs_0L_4jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*.*5j.*S.*"))
+    .AddSyst(cb, "norm_bkgs_0L_5jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*.*0j.*S.*"))
+    .AddSyst(cb, "norm_bkgs_1L_0jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*.*1j.*S.*"))
+    .AddSyst(cb, "norm_bkgs_1L_1jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*.*2j.*S.*"))
+    .AddSyst(cb, "norm_bkgs_1L_2jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*.*3j.*S.*"))
+    .AddSyst(cb, "norm_bkgs_1L_3jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*.*4j.*S.*"))
+    .AddSyst(cb, "norm_bkgs_1L_4jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().backgrounds().bin(VS().a(".*2L.*.*0j.*S.*"))
+    .AddSyst(cb, "norm_bkgs_2L_0jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().backgrounds().bin(VS().a(".*2L.*.*1j.*S.*"))
+    .AddSyst(cb, "norm_bkgs_2L_1jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().backgrounds().bin(VS().a(".*2L.*.*2j.*S.*"))
+    .AddSyst(cb, "norm_bkgs_2L_2jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().backgrounds().bin(VS().a(".*2L.*.*3j.*S.*"))
+    .AddSyst(cb, "norm_bkgs_2L_3jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().backgrounds().bin(VS().a(".*3L.*.*0j.*S.*"))
+    .AddSyst(cb, "norm_bkgs_3L_0jS", "lnN", SystMap<>::init(1.8));
+
+  cb.cp().backgrounds().bin(VS().a(".*3L.*.*1j.*S.*"))
+    .AddSyst(cb, "norm_bkgs_3L_1jS", "lnN", SystMap<>::init(1.8));
+  }
+  if(bkgNorms_bosonTopSplit){
+    for(auto p : bkg_boson){
+      ProcessList plist = backgrounds.Filter(p);
+    cb.cp().process(plist.GetProcesses()).bin(VS().a(".*0L.*.*0j.*S.*"))
+      .AddSyst(cb, "norm_bkgs_boson_0L_0jS", "lnN", SystMap<>::init(1.8));
+  
+    cb.cp().process(plist.GetProcesses()).bin(VS().a(".*0L.*.*1j.*S.*"))
+      .AddSyst(cb, "norm_bkgs_boson_0L_1jS", "lnN", SystMap<>::init(1.8));
+
+    cb.cp().process(plist.GetProcesses()).bin(VS().a(".*0L.*.*2j.*S.*"))
+      .AddSyst(cb, "norm_bkgs_boson_0L_2jS", "lnN", SystMap<>::init(1.8));
+
+    cb.cp().process(plist.GetProcesses()).bin(VS().a(".*0L.*.*3j.*S.*"))
+      .AddSyst(cb, "norm_bkgs_boson_0L_3jS", "lnN", SystMap<>::init(1.8));
+
+    cb.cp().process(plist.GetProcesses()).bin(VS().a(".*0L.*.*4j.*S.*"))
+      .AddSyst(cb, "norm_bkgs_boson_0L_4jS", "lnN", SystMap<>::init(1.8));
+
+    cb.cp().process(plist.GetProcesses()).bin(VS().a(".*0L.*.*5j.*S.*"))
+      .AddSyst(cb, "norm_bkgs_boson_0L_5jS", "lnN", SystMap<>::init(1.8));
+
+    cb.cp().process(plist.GetProcesses()).bin(VS().a(".*1L.*.*0j.*S.*"))
+      .AddSyst(cb, "norm_bkgs_boson_1L_0jS", "lnN", SystMap<>::init(1.8));
+
+    cb.cp().process(plist.GetProcesses()).bin(VS().a(".*1L.*.*1j.*S.*"))
+      .AddSyst(cb, "norm_bkgs_boson_1L_1jS", "lnN", SystMap<>::init(1.8));
+
+    cb.cp().process(plist.GetProcesses()).bin(VS().a(".*1L.*.*2j.*S.*"))
+      .AddSyst(cb, "norm_bkgs_boson_1L_2jS", "lnN", SystMap<>::init(1.8));
+
+    cb.cp().process(plist.GetProcesses()).bin(VS().a(".*1L.*.*3j.*S.*"))
+      .AddSyst(cb, "norm_bkgs_boson_1L_3jS", "lnN", SystMap<>::init(1.8));
+    
+    cb.cp().backgrounds().bin(VS().a(".*1L.*.*4j.*S.*"))
+      .AddSyst(cb, "norm_bkgs_boson_1L_4jS", "lnN", SystMap<>::init(1.8));
+
+    cb.cp().backgrounds().bin(VS().a(".*2L.*.*0j.*S.*"))
+      .AddSyst(cb, "norm_bkgs_boson_2L_0jS", "lnN", SystMap<>::init(1.8));
+
+    cb.cp().backgrounds().bin(VS().a(".*2L.*.*1j.*S.*"))
+      .AddSyst(cb, "norm_bkgs_boson_2L_1jS", "lnN", SystMap<>::init(1.8));
+
+    cb.cp().backgrounds().bin(VS().a(".*2L.*.*2j.*S.*"))
+      .AddSyst(cb, "norm_bkgs_boson_2L_2jS", "lnN", SystMap<>::init(1.8));
+
+    cb.cp().backgrounds().bin(VS().a(".*2L.*.*3j.*S.*"))
+      .AddSyst(cb, "norm_bkgs_boson_2L_3jS", "lnN", SystMap<>::init(1.8));
+
+    cb.cp().backgrounds().bin(VS().a(".*3L.*.*0j.*S.*"))
+      .AddSyst(cb, "norm_bkgs_boson_3L_0jS", "lnN", SystMap<>::init(1.8));
+
+    cb.cp().backgrounds().bin(VS().a(".*3L.*.*1j.*S.*"))
+      .AddSyst(cb, "norm_bkgs_boson_3L_1jS", "lnN", SystMap<>::init(1.8));
+
+    }
+    for(auto p : bkg_top){
+      ProcessList plist = backgrounds.Filter(p);
+    cb.cp().process(plist.GetProcesses()).bin(VS().a(".*0L.*.*0j.*S.*"))
+      .AddSyst(cb, "norm_bkgs_top_0L_0jS", "lnN", SystMap<>::init(1.8));
+  
+    cb.cp().process(plist.GetProcesses()).bin(VS().a(".*0L.*.*1j.*S.*"))
+      .AddSyst(cb, "norm_bkgs_top_0L_1jS", "lnN", SystMap<>::init(1.8));
+
+    cb.cp().process(plist.GetProcesses()).bin(VS().a(".*0L.*.*2j.*S.*"))
+      .AddSyst(cb, "norm_bkgs_top_0L_2jS", "lnN", SystMap<>::init(1.8));
+
+    cb.cp().process(plist.GetProcesses()).bin(VS().a(".*0L.*.*3j.*S.*"))
+      .AddSyst(cb, "norm_bkgs_top_0L_3jS", "lnN", SystMap<>::init(1.8));
+
+    cb.cp().process(plist.GetProcesses()).bin(VS().a(".*0L.*.*4j.*S.*"))
+      .AddSyst(cb, "norm_bkgs_top_0L_4jS", "lnN", SystMap<>::init(1.8));
+
+    cb.cp().process(plist.GetProcesses()).bin(VS().a(".*0L.*.*5j.*S.*"))
+      .AddSyst(cb, "norm_bkgs_top_0L_5jS", "lnN", SystMap<>::init(1.8));
+
+    cb.cp().process(plist.GetProcesses()).bin(VS().a(".*1L.*.*0j.*S.*"))
+      .AddSyst(cb, "norm_bkgs_top_1L_0jS", "lnN", SystMap<>::init(1.8));
+
+    cb.cp().process(plist.GetProcesses()).bin(VS().a(".*1L.*.*1j.*S.*"))
+      .AddSyst(cb, "norm_bkgs_top_1L_1jS", "lnN", SystMap<>::init(1.8));
+
+    cb.cp().process(plist.GetProcesses()).bin(VS().a(".*1L.*.*2j.*S.*"))
+      .AddSyst(cb, "norm_bkgs_top_1L_2jS", "lnN", SystMap<>::init(1.8));
+
+    cb.cp().process(plist.GetProcesses()).bin(VS().a(".*1L.*.*3j.*S.*"))
+      .AddSyst(cb, "norm_bkgs_top_1L_3jS", "lnN", SystMap<>::init(1.8));
+    
+    cb.cp().backgrounds().bin(VS().a(".*1L.*.*4j.*S.*"))
+      .AddSyst(cb, "norm_bkgs_top_1L_4jS", "lnN", SystMap<>::init(1.8));
+
+    cb.cp().backgrounds().bin(VS().a(".*2L.*.*0j.*S.*"))
+      .AddSyst(cb, "norm_bkgs_top_2L_0jS", "lnN", SystMap<>::init(1.8));
+
+    cb.cp().backgrounds().bin(VS().a(".*2L.*.*1j.*S.*"))
+      .AddSyst(cb, "norm_bkgs_top_2L_1jS", "lnN", SystMap<>::init(1.8));
+
+    cb.cp().backgrounds().bin(VS().a(".*2L.*.*2j.*S.*"))
+      .AddSyst(cb, "norm_bkgs_top_2L_2jS", "lnN", SystMap<>::init(1.8));
+
+    cb.cp().backgrounds().bin(VS().a(".*2L.*.*3j.*S.*"))
+      .AddSyst(cb, "norm_bkgs_top_2L_3jS", "lnN", SystMap<>::init(1.8));
+
+    cb.cp().backgrounds().bin(VS().a(".*3L.*.*0j.*S.*"))
+      .AddSyst(cb, "norm_bkgs_top_3L_0jS", "lnN", SystMap<>::init(1.8));
+
+    cb.cp().backgrounds().bin(VS().a(".*3L.*.*1j.*S.*"))
+      .AddSyst(cb, "norm_bkgs_top_3L_1jS", "lnN", SystMap<>::init(1.8));
+
+    }
   }
 
 
