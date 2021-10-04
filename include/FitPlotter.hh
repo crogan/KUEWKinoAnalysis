@@ -47,7 +47,8 @@ public:
 
   TCanvas* Plot1Dstack(const string& can_name,
 		       const VS& proc,
-		       const CategoryTree& CT);
+		       const CategoryTree& CT,
+		       bool do_ratio = false);
 
   TCanvas* Plot2D(const string& can_name,
 		  const VS& proc,
@@ -96,7 +97,7 @@ private:
   TGraphErrors* GetTotalBackground(const CategoryList& cat);
 
   void DrawCatTree(const CategoryTree& CT, TCanvas* can);
-  void DrawMR(const FitBin& fitbin, TCanvas* can);
+  void DrawMR(const FitBin& fitbin, TCanvas* can, TPad* pad, TPad* pad_ratio = nullptr);
 
   VS AddPrefix(const string& pre, const VS& post) const;
   
