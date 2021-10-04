@@ -13,8 +13,8 @@ void FitConfiguration::Configure(ch::CombineHarvester& cb, ProcessList& processe
   using ch::syst::bin_id;
   using ch::syst::process;
 
-  bool QCDnorms = true;
-  bool WJetsnorms = false;
+  bool QCDnorms = false;
+  bool WJetsnorms = true;
   bool WJetsnorms_highLow = false;
   bool bkgNorms_noQCD_noWjets = false;
   bool bkgNorms_bosonTopSplit = false;
@@ -354,55 +354,55 @@ void FitConfiguration::Configure(ch::CombineHarvester& cb, ProcessList& processe
     ProcessList plist = backgrounds.Remove("QCD");
     plist = plist.Remove("Wjets");
   cb.cp().process(plist.GetProcesses()).bin(VS().a(".*0L.*.*0j.*S.*"))
-    .AddSyst(cb, "norm_bkgs_0L_0jS", "lnN", SystMap<>::init(1.8));
+    .AddSyst(cb, "norm_bkgs_0L_0jS", "lnN", SystMap<>::init(1.2));
 
   cb.cp().process(plist.GetProcesses()).bin(VS().a(".*0L.*.*1j.*S.*"))
-    .AddSyst(cb, "norm_bkgs_0L_1jS", "lnN", SystMap<>::init(1.8));
+    .AddSyst(cb, "norm_bkgs_0L_1jS", "lnN", SystMap<>::init(1.2));
 
   cb.cp().process(plist.GetProcesses()).bin(VS().a(".*0L.*.*2j.*S.*"))
-    .AddSyst(cb, "norm_bkgs_0L_2jS", "lnN", SystMap<>::init(1.8));
+    .AddSyst(cb, "norm_bkgs_0L_2jS", "lnN", SystMap<>::init(1.2));
 
   cb.cp().process(plist.GetProcesses()).bin(VS().a(".*0L.*.*3j.*S.*"))
-    .AddSyst(cb, "norm_bkgs_0L_3jS", "lnN", SystMap<>::init(1.8));
+    .AddSyst(cb, "norm_bkgs_0L_3jS", "lnN", SystMap<>::init(1.2));
 
   cb.cp().process(plist.GetProcesses()).bin(VS().a(".*0L.*.*4j.*S.*"))
-    .AddSyst(cb, "norm_bkgs_0L_4jS", "lnN", SystMap<>::init(1.8));
+    .AddSyst(cb, "norm_bkgs_0L_4jS", "lnN", SystMap<>::init(1.2));
 
   cb.cp().process(plist.GetProcesses()).bin(VS().a(".*0L.*.*5j.*S.*"))
-    .AddSyst(cb, "norm_bkgs_0L_5jS", "lnN", SystMap<>::init(1.8));
+    .AddSyst(cb, "norm_bkgs_0L_5jS", "lnN", SystMap<>::init(1.2));
 
   cb.cp().process(plist.GetProcesses()).bin(VS().a(".*1L.*.*0j.*S.*"))
-    .AddSyst(cb, "norm_bkgs_1L_0jS", "lnN", SystMap<>::init(1.8));
+    .AddSyst(cb, "norm_bkgs_1L_0jS", "lnN", SystMap<>::init(1.2));
 
   cb.cp().process(plist.GetProcesses()).bin(VS().a(".*1L.*.*1j.*S.*"))
-    .AddSyst(cb, "norm_bkgs_1L_1jS", "lnN", SystMap<>::init(1.8));
+    .AddSyst(cb, "norm_bkgs_1L_1jS", "lnN", SystMap<>::init(1.2));
 
   cb.cp().process(plist.GetProcesses()).bin(VS().a(".*1L.*.*2j.*S.*"))
-    .AddSyst(cb, "norm_bkgs_1L_2jS", "lnN", SystMap<>::init(1.8));
+    .AddSyst(cb, "norm_bkgs_1L_2jS", "lnN", SystMap<>::init(1.2));
 
   cb.cp().process(plist.GetProcesses()).bin(VS().a(".*1L.*.*3j.*S.*"))
-    .AddSyst(cb, "norm_bkgs_1L_3jS", "lnN", SystMap<>::init(1.8));
+    .AddSyst(cb, "norm_bkgs_1L_3jS", "lnN", SystMap<>::init(1.2));
 
   cb.cp().process(plist.GetProcesses()).bin(VS().a(".*1L.*.*4j.*S.*"))
-    .AddSyst(cb, "norm_bkgs_1L_4jS", "lnN", SystMap<>::init(1.8));
+    .AddSyst(cb, "norm_bkgs_1L_4jS", "lnN", SystMap<>::init(1.2));
 
   cb.cp().process(plist.GetProcesses()).bin(VS().a(".*2L.*.*0j.*S.*"))
-    .AddSyst(cb, "norm_bkgs_2L_0jS", "lnN", SystMap<>::init(1.8));
+    .AddSyst(cb, "norm_bkgs_2L_0jS", "lnN", SystMap<>::init(1.2));
 
   cb.cp().process(plist.GetProcesses()).bin(VS().a(".*2L.*.*1j.*S.*"))
-    .AddSyst(cb, "norm_bkgs_2L_1jS", "lnN", SystMap<>::init(1.8));
+    .AddSyst(cb, "norm_bkgs_2L_1jS", "lnN", SystMap<>::init(1.2));
 
   cb.cp().process(plist.GetProcesses()).bin(VS().a(".*2L.*.*2j.*S.*"))
-    .AddSyst(cb, "norm_bkgs_2L_2jS", "lnN", SystMap<>::init(1.8));
+    .AddSyst(cb, "norm_bkgs_2L_2jS", "lnN", SystMap<>::init(1.2));
 
   cb.cp().process(plist.GetProcesses()).bin(VS().a(".*2L.*.*3j.*S.*"))
-    .AddSyst(cb, "norm_bkgs_2L_3jS", "lnN", SystMap<>::init(1.8));
+    .AddSyst(cb, "norm_bkgs_2L_3jS", "lnN", SystMap<>::init(1.2));
 
   cb.cp().process(plist.GetProcesses()).bin(VS().a(".*3L.*.*0j.*S.*"))
-    .AddSyst(cb, "norm_bkgs_3L_0jS", "lnN", SystMap<>::init(1.8));
+    .AddSyst(cb, "norm_bkgs_3L_0jS", "lnN", SystMap<>::init(1.2));
 
   cb.cp().process(plist.GetProcesses()).bin(VS().a(".*3L.*.*1j.*S.*"))
-    .AddSyst(cb, "norm_bkgs_3L_1jS", "lnN", SystMap<>::init(1.8));
+    .AddSyst(cb, "norm_bkgs_3L_1jS", "lnN", SystMap<>::init(1.2));
   }
   if(bkgNorms_bosonTopSplit){
     for(auto p : bkg_boson){
