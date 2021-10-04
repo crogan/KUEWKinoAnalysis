@@ -449,7 +449,8 @@ CategoryTree CategoryTreeTool::GetCategories_0L() const {
   CategoryTree CT_g1(VS().a("gamT1"), "", "#gamma+", kX_sup, false);
 
   CategoryTree CT_k0(VS().a("PTISR0_gamT0").a("PTISR0_gamT1").a("PTISR1_gamT0"), "", "k-", kX_sup, false);
-  CategoryTree CT_k1(VS().a("PTISR1_gamT1"), "", "k+", kX_sup, false);
+  CategoryTree CT_k1(VS().a("PTISR1_gamT1"), "", "", kX_sup, false);
+  CategoryTree CT_k1_5j(VS().a("PTISR1_gamT0"), "", "", kX_sup, false);
 
   CT_g0.AddSubCategory(CT_p0);
   CT_g0.AddSubCategory(CT_p1);
@@ -462,6 +463,9 @@ CategoryTree CategoryTreeTool::GetCategories_0L() const {
   CT_k1.AddSubCategory(CT_0bISR);
   CT_k1.AddSubCategory(CT_1bISR);
   CT_k1.AddSubCategory(CT_2b);
+  CT_k1_5j.AddSubCategory(CT_0bISR);
+  CT_k1_5j.AddSubCategory(CT_1bISR);
+  CT_k1_5j.AddSubCategory(CT_2b);
   
   CT_0sv.AddSubCategory(CT_0bISR);
   CT_0sv.AddSubCategory(CT_1bISR);
@@ -502,7 +506,7 @@ CategoryTree CategoryTreeTool::GetCategories_0L() const {
   //CT_4j.AddSubCategory(CT_k0);
   CT_4j.AddSubCategory(CT_k1);
   //CT_ge5j.AddSubCategory(CT_k0);
-  CT_ge5j.AddSubCategory(CT_k1);
+  CT_ge5j.AddSubCategory(CT_k1_5j);
   
   CategoryTree CT_0L(VS().a("Ch0L"), "0L", "0L", kL, false);
   CT_0L.AddSubCategory(CT_0j);
@@ -547,13 +551,13 @@ CategoryTree CategoryTreeTool::GetCategories_1L() const {
   CategoryTree CT_g1(VS().a("gamT1"), "", "#gamma+", kX_sup, false);
 
   CategoryTree CT_k0(VS().a("PTISR0_gamT0").a("PTISR0_gamT1").a("PTISR1_gamT0"), "", "k-", kX_sup, false);
-  CategoryTree CT_k1(VS().a("PTISR1_gamT1"), "", "k+", kX_sup, false);
+  CategoryTree CT_k1(VS().a("PTISR1_gamT1"), "", "", kX_sup, false);
 
   CategoryTree CT_k0_0(VS().a("PTISR0_gamT0").a("PTISR0_gamT1").a("PTISR1_gamT0"), "", "k-", kX_sup, false);
-  CategoryTree CT_k1_0(VS().a("PTISR1_gamT1"), "", "k+", kX_sup, false);
+  CategoryTree CT_k1_0(VS().a("PTISR1_gamT1"), "", "", kX_sup, false);
 
   CategoryTree CT_k0_1(VS().a("PTISR0_gamT0").a("PTISR0_gamT1").a("PTISR1_gamT0"), "", "k-", kX_sup, false);
-  CategoryTree CT_k1_1(VS().a("PTISR1_gamT1"), "", "k+", kX_sup, false);
+  CategoryTree CT_k1_1(VS().a("PTISR1_gamT1"), "", "", kX_sup, false);
 
   CT_g0.AddSubCategory(CT_p0);
   CT_g0.AddSubCategory(CT_p1);
@@ -614,8 +618,8 @@ CategoryTree CategoryTreeTool::GetCategories_1L() const {
   CT_bronze.AddSubCategory(CT_ge4j);
   
   CategoryTree CT_1L(VS().a("Ch1L"), "1L", "1L", kL, true);
-  CT_1L.AddSubCategory(CT_bronze);
-  CT_1L.AddSubCategory(CT_silver);
+  //CT_1L.AddSubCategory(CT_bronze);
+  //CT_1L.AddSubCategory(CT_silver);
   CT_1L.AddSubCategory(CT_gold);
 
   //CT_1L.AddSubCategory(CT_0j);

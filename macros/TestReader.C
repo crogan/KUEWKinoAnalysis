@@ -29,11 +29,11 @@ void TestReader(const string& inputfile = "test/FitInput_test.root", const strin
   //signals.a("TChiWZ_2500247").a("T2bW_5000490").a("TChiWZ_2500240").a("T2bW_5000480"); // 2L
   //signals.a("TChiWZ_2500240").a("TChiWZ_2500220").a("TChiWZ_2500200").a("TChiWZ_2500160"); // 3L
   VS all = signals;
-  all.a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD").a("Wjets").a("HF_Fakes").a("LF_Fakes");
+  all.a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD").a("Wjets").a("HF_Fakes").a("LF_Fakes").a("Data");
 
-  FITReader->PlotYields("0Lyields",
-  			all,
-  			CT_0L);
+  // FITReader->PlotYields("0Lyields",
+  // 			all,
+  // 			CT_0L);
   // FITReader->PlotYields("1Lyields",
   // 			all,
   // 			CT_1L);
@@ -43,22 +43,20 @@ void TestReader(const string& inputfile = "test/FitInput_test.root", const strin
   // FITReader->PlotYields("3Lyields",
   // 			all,
   // 			CT_3L);
-
-  return;
   
-  int depth0 = CT_0L.GetDepth();
-  vector<const CategoryTree*> CTs;
-  CT_0L.GetListDepth(CTs, depth0-3);
-
-  vector<const CategoryTree*> CTs_deep;
-  CT_0L.GetListDepth(CTs_deep, depth0-3);
-  
-  // int depth0 = CT_1L.GetDepth();
+  // int depth0 = CT_0L.GetDepth();
   // vector<const CategoryTree*> CTs;
-  // CT_1L.GetListDepth(CTs, depth0-2);
+  // CT_0L.GetListDepth(CTs, depth0-3);
 
   // vector<const CategoryTree*> CTs_deep;
-  // CT_1L.GetListDepth(CTs_deep, depth0-2);
+  // CT_0L.GetListDepth(CTs_deep, depth0-3);
+  
+  int depth0 = CT_1L.GetDepth();
+  vector<const CategoryTree*> CTs;
+  CT_1L.GetListDepth(CTs, depth0-1);
+
+  vector<const CategoryTree*> CTs_deep;
+  CT_1L.GetListDepth(CTs_deep, depth0-2);
 
   // int depth0 = CT_2L.GetDepth();
   // vector<const CategoryTree*> CTs;
@@ -74,19 +72,25 @@ void TestReader(const string& inputfile = "test/FitInput_test.root", const strin
   // vector<const CategoryTree*> CTs_deep;
   // CT_3L.GetListDepth(CTs_deep, depth0-2);
 
-  int iCT = 5;
-  int iCTd = 5;
+  int iCT = 1;
+  int iCTd = 0;
   
   FITReader->Plot1Dstack("0Lstack2",
   			 all,
-  			 *CTs[iCT]);
-  FITReader->Plot2D("2D0",
-  		    VS().a("data_obs"),
-  		    *CTs_deep[iCTd]);
-  for(int s = 0; s < signals.size(); s++){
-    FITReader->Plot2D(Form("2D%d",s+1),
-  		      VS().a(signals[s]),
-  		      *CTs_deep[iCTd]);
-  }
+  			 *CTs[iCT], true);
+  // FITReader->Plot2D("2D0",
+  // 		    VS().a("data_obs"),
+  // 		    *CTs_deep[iCTd]);
+  // for(int s = 0; s < signals.size(); s++){
+  //   FITReader->Plot2D(Form("2D%d",s+1),
+  // 		      VS().a(signals[s]),
+  // 		      *CTs_deep[iCTd]);
+  // }
+
+  FITReader->Plot1Dstack(all,
+			 VS().a("1L"),
+			 VS().a("1j1b0svS"),
+			 VS().a("ge1jISR").a("ge1j0bISR").a("ge1jge1bISR"),
+			 "pre_stack");
   
 }

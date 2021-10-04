@@ -592,11 +592,11 @@ cout << "# cats after ISR jet filter: " << cat.GetN() << endl;
       if(pp.Type() == kSig){
 	type = kSig;
 	if(m_FileFold != nullptr){
-		string name = pp.Name();
-		name = name.substr(0,name.find("_")+1);
-		pp = Process(name,kSig);
+	  string name = pp.Name();
+	  name = name.substr(0,name.find("_")+1);
+	  pp = Process(name, kSig);
 	}
-	}
+      }
       if(pp.Type() == kData)
 	type = kData;
       
@@ -1429,12 +1429,10 @@ TCanvas* FitPlotter::PlotYields(const string& can_name,
     fhists[0]->GetXaxis()->SetBinLabel(b+1, CatTrees[b]->GetSpectroscopicLabel().c_str());
   }
   
-  // for(int b = 0; b < NB; b++){
-  //   if(b%2 == 1)
-  //     hists[0]->GetXaxis()->SetBinLabel(b+1, (blabels[b]+space).c_str());
-  //   else
-  //     hists[0]->GetXaxis()->SetBinLabel(b+1, blabels[b].c_str());
-  // }
+  double hlo = 0.09;
+  double hhi = 0.2;
+  double hbo = 0.19;
+  double hto = 0.07;
 
   fhists[0]->LabelsOption("v","X");
   
@@ -1443,11 +1441,7 @@ TCanvas* FitPlotter::PlotYields(const string& can_name,
   gStyle->SetOptFit(11111111);
   TCanvas* can = new TCanvas(Form("can_%s", can_name.c_str()),
 			     Form("can_%s", can_name.c_str()),
-			     1200, 700);
-  double hlo = 0.09;
-  double hhi = 0.2;
-  double hbo = 0.19;
-  double hto = 0.07;
+			     1200, 700); 
   can->SetLeftMargin(hlo);
   can->SetRightMargin(hhi);
   can->SetBottomMargin(hbo);
@@ -1653,9 +1647,12 @@ void FitPlotter::DrawCatTree(const CategoryTree& CT, TCanvas* can){
 //////////////////////////////////////////////////
 
 TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
-				const VS& proc,
-				const CategoryTree& CT){
+				 const VS& proc,
+				 const CategoryTree& CT,
+				 bool do_ratio){
   RestFrames::SetStyle();
+
+  bool b_ratio = false;
 
   int Nproc = proc.size();
   if(Nproc == 0)
@@ -1682,9 +1679,12 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
   
   VS                  labels_sig;
   vector<TH1D*>       hists_sig[Nvis];
-
+  
   TH1D* hist_data[Nvis];
   double total_data = 0.;
+
+  TH1D* hist_totbkg[Nvis];
+  double total_totbkg = 0.;
   
   for(int i = 0; i < Nproc; i++){
     VS vproc;
@@ -1716,9 +1716,11 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
       
       if(pp.Type() == kData){
 	type = kData;
+	if(do_ratio)
+	  b_ratio = true;
       }
     }
-
+    
     for(int v = 0; v < Nvis; v++){
       CategoryList cat = CatList.Filter(*CatTrees[v]);
       
@@ -1759,6 +1761,20 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
 	hists[v].push_back(hist[v]);
       total.push_back(itot);
     } 
+  }
+
+  if(m_FilePtr){
+    Process totbkg("total_background", kBkg);
+    ProcessList totbkgs;
+    totbkgs += totbkg;
+    for(int v = 0; v < Nvis; v++){
+      CategoryList cat = CatList.Filter(*CatTrees[v]);
+      
+      TH1D* h = GetAddedHist(Form("plothist_tot_%d_%s", v, can_name.c_str()), cat, totbkgs);
+      hist_totbkg[v] = h;
+      if(h)
+	total_totbkg += h->Integral();
+    }
   }
   
   int Nsig = hists_sig[0].size();
@@ -1805,9 +1821,11 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
   
   vector<TH1D*> fhists;
   vector<TH1D*> fhists_sig;
-  TH1D*         fhist_data = nullptr;
+  TH1D*         fhist_data   = nullptr;
+  TH1D*         fhist_totbkg = nullptr;
 
   CategoryList dumcat = CatList.Filter(*CatTrees[0]);
+  
   const FitBin& fitbin = dumcat[0].GetFitBin();
   int Nbin = fitbin.NBins();
   
@@ -1824,7 +1842,7 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
       }
     }
   }
- 
+  
   if(total_data > 0.){
     fhist_data = new TH1D(Form("fhistdata_%s", can_name.c_str()),
 			  Form("fhistdata_%s", can_name.c_str()),
@@ -1839,6 +1857,20 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
     }
   }
 
+  if(total_totbkg > 0.){
+    fhist_totbkg = new TH1D(Form("fhisttotbkg_%s", can_name.c_str()),
+			  Form("fhisttotbkg_%s", can_name.c_str()),
+			  Nbin*Nvis, 0., Nbin*Nvis);
+    for(int b = 0; b < Nbin; b++){
+      for(int v = 0; v < Nvis; v++){
+	if(hist_totbkg[v]){
+	  fhist_totbkg->SetBinContent(b*Nvis+v+1, hist_totbkg[v]->GetBinContent(b+1));
+	  fhist_totbkg->SetBinError(b*Nvis+v+1, hist_totbkg[v]->GetBinError(b+1));
+	}
+      }
+    }
+  }
+
   for(int i = 0; i < Nbkg; i++){
     for(int v = 0; v < Nvis; v++){
       if(vhists[v][i]){
@@ -1848,7 +1880,7 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
       }
     }
   }
-  
+   
   for(int i = 0; i < Nbkg; i++){
     fhists.push_back(new TH1D(Form("fhistsbkg_%d_%s", i, can_name.c_str()),
 			      Form("fhistsbkg_%d_%s", i, can_name.c_str()),
@@ -1868,10 +1900,10 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
       }
     }
   }
- 
+  
   labels = vlabels;
   colors = vcolors;
-
+  
   for(int b = 0; b < Nbin*Nvis; b++)
     fhists[0]->GetXaxis()->SetBinLabel(b+1, "");
   
@@ -1887,6 +1919,9 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
   double hhi = 0.2;
   double hbo = 0.19;
   double hto = 0.07;
+
+  double ratio_h = 0.18;
+  
   can->SetLeftMargin(hlo);
   can->SetRightMargin(hhi);
   can->SetBottomMargin(hbo);
@@ -1896,10 +1931,28 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
   can->Draw();
   can->cd();
 
+  TPad* pad = new TPad(Form("pad_%s", can_name.c_str()),
+  		       Form("pad_%s", can_name.c_str()),
+		       0.0, 0.0, 1., 1.);
+
+  if(b_ratio)
+    pad->SetBottomMargin(hbo+ratio_h);
+  else
+    pad->SetBottomMargin(hbo);
+  pad->SetLeftMargin(hlo);
+  pad->SetRightMargin(hhi);
+  pad->SetTopMargin(hto);
+  pad->SetGridy();
+  pad->SetGridx();
+  pad->SetLogy();
+  pad->Draw();
+  pad->cd();
+  
   double hmax = fhists[0]->GetMaximum();
-  double hmin = std::max(0.1, fhists[Nbkg-1]->GetMinimum());
+  double hmin = std::min(0.5, fhists[0]->GetMinimum());
   
   fhists[0]->Draw("hist");
+  fhists[0]->GetXaxis()->SetNdivisions(30, 0, 0);
   fhists[0]->GetXaxis()->CenterTitle();
   fhists[0]->GetXaxis()->SetTitleFont(42);
   fhists[0]->GetXaxis()->SetTitleSize(0.045);
@@ -1923,31 +1976,41 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
     fhists[i]->SetFillStyle(1001);
     fhists[i]->Draw("SAME HIST");
   }
+
+  TH1D* htot = nullptr;
+  if(fhist_totbkg)
+    htot = fhist_totbkg;
+  else
+    htot = fhists[0];
   
-  TGraphErrors* gr = nullptr;
-  if(true){// !m_FilePtr
-    vector<double> X;
-    vector<double> Xerr;
-    vector<double> Y;
-    vector<double> Yerr;
-    for(int i = 0; i < Nvis*Nbin; i++){
-      X.push_back(fhists[0]->GetXaxis()->GetBinCenter(i+1));
-      Xerr.push_back(0.5);
-      Y.push_back(fhists[0]->GetBinContent(i+1));
-      Yerr.push_back(fhists[0]->GetBinError(i+1));
-    }
-    gr = (TGraphErrors*) new TGraphErrors(Nvis*Nbin, &X[0], &Y[0],  &Xerr[0], &Yerr[0]);
-  } else {
-    // cout << "here " << gr << endl;
-    // gr = (TGraphErrors*) GetTotalBackground(cat);
-    // cout << "here " << gr << endl;
+  vector<double> X;
+  vector<double> Xerr;
+  vector<double> Y;
+  vector<double> Yerr;
+  vector<double> Y_bkg_ratio;
+  vector<double> Yerr_bkg_ratio;
+  for(int i = 0; i < Nvis*Nbin; i++){
+    X.push_back(htot->GetXaxis()->GetBinCenter(i+1));
+    Xerr.push_back(0.5);
+    Y.push_back(htot->GetBinContent(i+1));
+    Yerr.push_back(htot->GetBinError(i+1));
+    Y_bkg_ratio.push_back(1.);
+    Yerr_bkg_ratio.push_back(htot->GetBinError(i+1)/htot->GetBinContent(i+1));
   }
-    
+  
+  TGraphErrors* gr = (TGraphErrors*) new TGraphErrors(Nvis*Nbin, &X[0], &Y[0],  &Xerr[0], &Yerr[0]);  
   gr->SetMarkerSize(0);
   gr->SetLineColor(kBlack);
   gr->SetFillColor(kBlack);
   gr->SetFillStyle(3244);
   gr->Draw("same p2");
+
+  TGraphErrors* gr_bkg_ratio = (TGraphErrors*) new TGraphErrors(Nvis*Nbin, &X[0],
+								&Y_bkg_ratio[0],  &Xerr[0], &Yerr_bkg_ratio[0]);  
+  gr_bkg_ratio->SetMarkerSize(0);
+  gr_bkg_ratio->SetLineColor(kBlack);
+  gr_bkg_ratio->SetFillColor(kBlack);
+  gr_bkg_ratio->SetFillStyle(3244);
   
   for(int i = 0; i < Nsig; i++){
     fhists_sig[i]->SetLineColor(m_SignalColor[i]);
@@ -1960,6 +2023,8 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
       hmax = fhists_sig[i]->GetMaximum();
   }
 
+  TH1D* fhist_data_ratio = nullptr;
+  
   if(fhist_data){
     fhist_data->SetLineColor(kBlack);
     fhist_data->SetFillColor(kWhite);
@@ -1969,12 +2034,43 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
     fhist_data->Draw("SAME ep");
     if(fhist_data->GetMaximum() > hmax)
       hmax = fhist_data->GetMaximum();
+
+    fhist_data_ratio = (TH1D*) fhist_data->Clone(Form("data_ratio_%s", can_name.c_str()));
+    for(int i = 0; i < Nvis*Nbin; i++){
+      fhist_data_ratio->SetBinContent(i+1, fhist_data_ratio->GetBinContent(i+1)/htot->GetBinContent(i+1));
+      if(fhist_data_ratio->GetBinContent(i+1) > 0.)
+	fhist_data_ratio->SetBinError(i+1, fhist_data_ratio->GetBinError(i+1)/htot->GetBinContent(i+1));
+      else
+	fhist_data_ratio->SetBinError(i+1, 0.);
+    }
   }
 
   double logrange = log(hmax) - log(hmin);
-  hmin = exp(log(hmin) - logrange*0.2);
+  hmax = exp(log(hmax) + logrange*0.32);
   fhists[0]->GetYaxis()->SetRangeUser(hmin, hmax*1.5);
 
+  double eps = 0.0015;
+  
+  TLatex l;
+  l.SetTextFont(42);
+  l.SetNDC();
+
+  l.SetTextSize(std::min(0.03, 1.5/double(Nvis*Nbin)));
+  l.SetTextFont(42);
+  l.SetTextAlign(32);
+  l.SetTextAngle(90);
+  int Depth = CT.GetDepth();
+  for(int b = 0; b < Nvis*Nbin; b++){
+    // if(colors[Nbkg-1]%1000 >=3)
+    //   l.SetTextColor(7000 + 10*((b%Nvis)%8));
+    // else
+    l.SetTextColor(7004 + 10*((b%Nvis)%8));
+    // l.DrawLatex(hlo+(1.-hhi-hlo)/double(Nvis*Nbin)*(0.5+b), hbo + 4*eps,
+    // 		CatTrees[b%Nvis]->GetPlainLabel(Depth).c_str());
+    l.DrawLatex(hlo+(1.-hhi-hlo)/double(Nvis*Nbin)*(0.5+b), 1.-hto - 4*eps,
+		CatTrees[b%Nvis]->GetPlainLabel(Depth).c_str());
+  }
+  
   TLegend* leg = new TLegend(1.-hhi+0.007, 1.- (Nbkg+Nsig+1)*(1.-0.49)/9., 0.98, 1.-hto-0.005);
   leg->SetTextFont(42);
   leg->SetTextSize(0.035);
@@ -1991,27 +2087,39 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
     leg->AddEntry(fhists_sig[i], labels_sig[i].c_str(), "L");
   leg->Draw("SAME");
 
-  DrawMR(fitbin, can);
-  
-  double eps = 0.0015;
-  
-  TLatex l;
-  l.SetTextFont(42);
-  l.SetNDC();
+  TPad* pad_ratio = nullptr;
+  if(b_ratio){
+    can->cd();
+    pad_ratio = new TPad(Form("pad_%s", can_name.c_str()),
+			 Form("pad_%s", can_name.c_str()),
+			 0.0, hbo, 1.-hhi, hbo+ratio_h);
 
-  l.SetTextSize(std::min(0.03, 1.5/double(Nvis*Nbin)));
-  l.SetTextFont(42);
-  l.SetTextAlign(12);
-  l.SetTextAngle(90);
-  int Depth = CT.GetDepth();
-  for(int b = 0; b < Nvis*Nbin; b++){
-    // if(colors[Nbkg-1]%1000 >=3)
-    //   l.SetTextColor(7000 + 10*((b%Nvis)%8));
-    // else
-    l.SetTextColor(7004 + 10*((b%Nvis)%8));
-    l.DrawLatex(hlo+(1.-hhi-hlo)/double(Nvis*Nbin)*(0.5+b), hbo + 4*eps,
-		CatTrees[b%Nvis]->GetPlainLabel(Depth).c_str());
+    pad_ratio->SetBottomMargin(0.);
+    pad_ratio->SetLeftMargin(hlo*1.25);
+    pad_ratio->SetRightMargin(0.);
+    pad_ratio->SetTopMargin(0.);
+    pad_ratio->SetGridy();
+    pad_ratio->SetGridx();
+    pad_ratio->Draw();
+    pad_ratio->cd();
+
+    fhist_data_ratio->Draw("ep");
+    fhist_data_ratio->GetXaxis()->SetNdivisions(30, 0, 0);
+    fhist_data_ratio->GetYaxis()->SetNdivisions(6, 5, 0);
+    fhist_data_ratio->GetYaxis()->CenterTitle();
+    fhist_data_ratio->GetYaxis()->SetTitleFont(42);
+    fhist_data_ratio->GetYaxis()->SetTitleSize(0.21);
+    fhist_data_ratio->GetYaxis()->SetTitleOffset(0.22);
+    fhist_data_ratio->GetYaxis()->SetLabelFont(42);
+    fhist_data_ratio->GetYaxis()->SetLabelSize(0.2);
+    fhist_data_ratio->GetYaxis()->SetTitle("#frac{data}{bkg model}");
+
+    gr_bkg_ratio->Draw("same p2");
+    fhist_data_ratio->Draw("same ep");
+    
   }
+  
+  DrawMR(fitbin, can, pad, pad_ratio);
 
   l.SetTextAngle(0);
   l.SetTextColor(kBlack);
@@ -2024,13 +2132,22 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
   return can;
 }
 
-void FitPlotter::DrawMR(const FitBin& fitbin, TCanvas* can){
+void FitPlotter::DrawMR(const FitBin& fitbin, TCanvas* can, TPad* pad, TPad* pad_ratio){
+  pad->cd();
+
   double eps = 0.0015;
 
   double hlo = can->GetLeftMargin();
   double hhi = can->GetRightMargin();
   double hbo = can->GetBottomMargin();
   double hto = can->GetTopMargin();
+
+  double hlo_rat = 0.;
+  double hhi_rat = 0.;
+  if(pad_ratio){
+    hlo_rat = pad_ratio->GetLeftMargin();
+    hhi_rat = pad_ratio->GetRightMargin();
+  }
   
   TLatex l;
   l.SetTextFont(42);
@@ -2070,12 +2187,16 @@ void FitPlotter::DrawMR(const FitBin& fitbin, TCanvas* can){
   line->SetLineWidth(2);
   double lo = hlo;
   double hi = hlo;
+  double lo_ratio = hlo_rat;
+  double hi_ratio = hlo_rat;
   double yline = hbo-0.018*lmax;
   int ib = 0;
   for(int r = 0; r < NR; r++){
     int NM = fitbin[r].NBins();
     lo = hi;
+    lo_ratio = hi_ratio;
     hi = double(NM)/double(NB)*(1.-hhi-hlo) + lo;
+    hi_ratio = double(NM)/double(NB)*(1.-hhi_rat-hlo_rat) + lo_ratio;
     
     line->SetLineStyle(1);
     line->DrawLineNDC(lo + eps, yline,
@@ -2085,9 +2206,16 @@ void FitPlotter::DrawMR(const FitBin& fitbin, TCanvas* can){
    
     line->DrawLineNDC(lo + eps, yline,
   		      hi - eps, yline);
+  
     line->SetLineStyle(1);
-    if(r < NR-1)
+    if(r < NR-1){
       line->DrawLineNDC(hi, yline + 10*eps , hi, 1.-hto);
+      if(pad_ratio){
+	pad_ratio->cd();
+	line->DrawLineNDC(hi_ratio, 0., hi_ratio, 1.);
+	pad->cd();
+      }
+    }
     l.DrawLatex((hi+lo)/2., yline - 8*eps, rlabels[r].c_str());
   }
 
@@ -2096,8 +2224,15 @@ void FitPlotter::DrawMR(const FitBin& fitbin, TCanvas* can){
   l.SetTextAlign(32);
   for(int b = 0; b < NB; b++){
     l.DrawLatex(hlo + (1.-hhi-hlo)*(0.5+b)/double(NB), hbo - 4*eps, mlabels[b].c_str());
-    if(b > 0)
+    if(b > 0){
       line->DrawLineNDC(hlo + (1.-hhi-hlo)/double(NB)*b , hbo , hlo + (1.-hhi-hlo)/double(NB)*b, 1.-hto);
+      if(pad_ratio){
+	pad_ratio->cd();
+	line->DrawLineNDC(hlo_rat + (1.-hhi_rat-hlo_rat)/double(NB)*b, 0.,
+			  hlo_rat + (1.-hhi_rat-hlo_rat)/double(NB)*b, 1.);
+	pad->cd();
+      }
+    }
   }
 
   l.SetTextAngle(0);
