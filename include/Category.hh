@@ -56,7 +56,7 @@ public:
   bool operator > (const Category&) const;
   
   CategoryList CreateLeptonIDRegions(std::vector<LepIDsList>& IDs);
-  CategoryList CreateGenericRegions(const string& label, const VD& bin_edges);
+  CategoryList CreateGenericRegions(const string& label, const VD& bin_edges, bool upperEdge=false);
   CategoryList CreateHadronicSRegions(const vector<const Hadronic*>& had) const;
   CategoryList CreateHadronicISRRegions(const vector<const Hadronic*>& had) const;
 
@@ -107,7 +107,7 @@ public:
 
   CategoryList CreateFitBinRegions(const FitBin& bin) const;
   CategoryList CreateLeptonIDRegions(std::vector<LepIDsList>& IDs) const;
-  CategoryList CreateGenericRegions(const string& label, const VD& bin_edges) const;
+  CategoryList CreateGenericRegions(const string& label, const VD& bin_edges, bool upperEdge=false) const;
   CategoryList CreateHadronicSRegions(vector<Hadronic>& had) const;
   CategoryList CreateHadronicISRRegions(vector<Hadronic>& had) const;
 
