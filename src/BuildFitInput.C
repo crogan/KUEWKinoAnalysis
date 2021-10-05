@@ -465,11 +465,6 @@ processed = true;
 	  continue;
 	}
 
-<<<<<<< HEAD
-	
-	
-=======
->>>>>>> crogan-master
 	// systematics loop
 	
 	for(int is = 0; is < Nsys; is++){

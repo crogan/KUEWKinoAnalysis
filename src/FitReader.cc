@@ -11,12 +11,9 @@
 #include <TEfficiency.h>
 
 #include "FitReader.hh"
-<<<<<<< HEAD
-=======
 #include "shapeComparison.hh"
 #include "plotShapeComparison.hh"
 #include "RestFrames/RestFrames.hh"
->>>>>>> crogan-master
 
 ///////////////////////////////////////////
 ////////// FitReader class
@@ -27,16 +24,12 @@ FitReader::FitReader(const string& inputfile,
 		     const string& otherfold)
   : m_File(inputfile.c_str(), "READ") {
 
-<<<<<<< HEAD
-=======
-  InitializeRecipes();
   
   ReadProcesses();
   
   ReadCategories();
 
   m_inputfile = inputfile;
->>>>>>> crogan-master
   if(otherfile != ""){
     m_FilePtr = new TFile(otherfile.c_str(), "READ");
     if(!m_FilePtr || !m_FilePtr->IsOpen())
