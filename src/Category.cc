@@ -228,7 +228,7 @@ CategoryList Category::CreateLeptonIDRegions(std::vector<LepIDsList>& IDs){
   
 }
 
-CategoryList Category::CreateGenericRegions(const string& label, const VD& bin_edges){
+CategoryList Category::CreateGenericRegions(const string& label, const VD& bin_edges, bool upperEdge){
   CategoryList list;
 
   if(m_Criteria.GetN() < 3)
@@ -241,17 +241,28 @@ CategoryList Category::CreateGenericRegions(const string& label, const VD& bin_e
     return list;
   }
 
+ // int binRange = -1;
+ // if(upperEdge){ binRange = Nbin; }   
+ // if(!upperEdge){ binRange = Nbin-1; }
+  int binRange = Nbin-1;
+  //if upperEdge loop over full bin range and create an upper limit
+  //if not upper edge loop over n-1 range then add a final bin edge less than previous edge -> will be interpreted as inclusive no upper limit
   vector<GenericBin*> Bins;
-  for(int i = 0; i < Nbin-1; i++)
+  for(int i = 0; i < binRange; i++)
     Bins.push_back(new GenericBin(bin_edges[i], bin_edges[i+1], label+Form("%d",i)));
-  Bins.push_back(new GenericBin(bin_edges[Nbin-1], bin_edges[Nbin-1]-1., label+Form("%d",Nbin-1)));
+  if(!upperEdge){
+    Bins.push_back(new GenericBin(bin_edges[Nbin-1], bin_edges[Nbin-1]-1., label+Form("%d",Nbin-1)));
+  }
 
   int Nc = m_Criteria.GetN();
   const Leptonic& lep     = dynamic_cast<const Leptonic&>(m_Criteria[0]);
   const Hadronic& had_S   = dynamic_cast<const Hadronic&>(m_Criteria[1]);
   const Hadronic& had_ISR = dynamic_cast<const Hadronic&>(m_Criteria[2]);
 
-  for(int i = 0; i < Nbin; i++){
+  //do we need to restrict this loop range here as well?
+  if(upperEdge){binRange = Nbin-1;}
+  if(!upperEdge){binRange = Nbin;}
+  for(int i = 0; i < binRange; i++){
     Category icat(lep, had_S, had_ISR, Label());
     for(int i = 3; i < Nc; i++)
       icat.AddGenericBin(dynamic_cast<const GenericBin&>(m_Criteria[i]));
@@ -261,7 +272,7 @@ CategoryList Category::CreateGenericRegions(const string& label, const VD& bin_e
     list += icat;
   }
   
-  for(int i = 0; i < Nbin; i++)
+  for(int i = 0; i < binRange; i++)
     delete Bins[i];
   
   return list;
@@ -523,10 +534,10 @@ CategoryList CategoryList::CreateLeptonIDRegions(std::vector<LepIDsList>& IDs) c
   return list;
 }
 
-CategoryList CategoryList::CreateGenericRegions(const string& label, const VD& bin_edges) const {
+CategoryList CategoryList::CreateGenericRegions(const string& label, const VD& bin_edges,bool upperEdge) const {
   CategoryList list;
   for(int i = 0; i < m_N; i++)
-    list += m_Cat[i]->CreateGenericRegions(label, bin_edges);
+    list += m_Cat[i]->CreateGenericRegions(label, bin_edges, upperEdge);
 
   return list;
 }
