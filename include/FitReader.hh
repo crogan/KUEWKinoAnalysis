@@ -108,14 +108,13 @@ public:
   TCanvas* Plot2D(const string& can_name,
 		  const VS& proc,
 		  const CategoryTree& CT);
-=======
->>>>>>> 9b2fa49be7df2e50e46bea896d98082be2848a86
+
+  string GetSignalTitle(const string&);
 
   VS GetChannels() const;  
   const ProcessList&  GetProcesses() const;
   const CategoryList& GetCategories(const string& channel = "") const;         
   const Systematics&  GetSystematics() const;
-<<<<<<< HEAD
   // void SmoothHistograms(const VS& proc, const CategoryTree& CT,  const string& name = "name"); 
 TCanvas* Plot1DratioProc(const VS& proc,
            const string& lep_cat,
@@ -126,12 +125,16 @@ TCanvas* Plot1DratioProc(const VS& proc,
 map<string,VS> m_Strings;
 
 private:
+
+map<string,VS> m_Strings;
+  mutable map<Process,Systematics> m_ProcSys;
+
+protected:
   mutable TFile  m_File;
   string	 m_inputfile; 
   mutable TFile* m_FilePtr;
   string         m_FileFold;
 
-  mutable map<Process,Systematics> m_ProcSys;
   mutable map<Process,map<Category,TH1D*> > m_ProcHist;
   mutable map<Process,map<Systematic,map<Category,pair<TH1D*,TH1D*> > > >m_ProcHistSys;
   mutable map<Process,map<Category,TH2D*> > m_ProcHist_2D;

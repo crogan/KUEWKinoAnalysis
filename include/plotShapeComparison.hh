@@ -1,4 +1,6 @@
 #include <vector>
+#include "TGraphAsymmErrors.h"
+
 #include "Category.hh"
 #include "Process.hh"
 

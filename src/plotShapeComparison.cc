@@ -92,13 +92,17 @@ void plotShapeComparison::getRatioPlots(){
   for(int i = 1; i < m_nHists; i++) histTotal->Add(m_hists[i]);
  // cout << "histogram 0 has " << m_hists[0]->GetNbinsX() << " bins"  << endl;
  // for(int i = 0; i < m_nHists; i++){
+ //cout << m_hists[i]->GetTitle() << endl;
  // for(int b = 0; b < m_hists[i]->GetNbinsX()+2; b++){ 
  // cout << "histogram #" << i << " bin #" << b << " value:" << m_hists[i]->GetBinContent(b) << endl;
  // }
  // }
-//for(int b = 0; b < histTotal->GetNbinsX()+2; b++) cout << "histTotal bin #" << b << " value: " << histTotal->GetBinContent(b) << endl;
+ //for(int b = 0; b < histTotal->GetNbinsX()+2; b++) cout << "histTotal bin #" << b << " value: " << histTotal->GetBinContent(b) << endl;
 
   for(int gr = 0; gr < m_nHists; gr++){
+	//set underflow and overflow bin contents to 0
+	m_hists[gr]->SetBinContent(0,0.);
+	m_hists[gr]->SetBinContent(m_hists[gr]->GetNbinsX()+1,0);
     TEfficiency* eff = new TEfficiency(*m_hists[gr],*histTotal);
     if(eff == NULL){ cout << "efficiency null" << endl; return;}
     eff->Draw("goff");
@@ -110,7 +114,12 @@ void plotShapeComparison::getRatioPlots(){
   tmp_y = 0; tmp_x = 0;
   for(int b = 0; b < assymGraph->GetN(); b++){
   assymGraph->GetPoint(b,tmp_x,tmp_y);
-  //cout << "graph #" << gr <<" point #" << b << " x:"<< tmp_x << " y:" << tmp_y << " scaled y:" << tmp_y*scale << " scale: " << scale << endl;
+  if(histTotal->GetBinContent(b+1) < 1e-5){ 
+	assymGraph->SetPoint(b,tmp_x,0.);
+	continue;
+  }
+  
+	//cout << "graph #" << gr <<" point #" << b << " x:"<< tmp_x << " y:" << tmp_y << " scaled y:" << tmp_y*scale << " scale: " << scale << endl;
   tmp_y *= scale;//*m_histToFudgeFactor[m_hists[gr]->GetTitle()];
   //cout << "scaled y: " << tmp_y << endl;
   assymGraph->SetPoint(b,tmp_x,tmp_y);
@@ -125,7 +134,6 @@ assymGraph->Draw();
 
 void plotShapeComparison::getLHplots(){
   for(int gr = 0; gr < m_nHists; gr++){
-cout << "graph #" << gr << " mLHs size: " << m_LHs[gr].size() << endl;
 if(m_LHs[gr].size() < 1) continue;
     TGraphAsymmErrors* gLH = new TGraphAsymmErrors(m_graphs[gr]->GetN());
     for(int i = 0; i < m_graphs[gr]->GetN(); i++){

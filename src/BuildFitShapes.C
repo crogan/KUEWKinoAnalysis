@@ -11,7 +11,7 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-  string InputFile  = "FitInput.root";
+  string InputFile  = "";
   string OutputFile = "FitInput_new.root";
 
   bool smoothFakes = false;
@@ -79,11 +79,12 @@ int main(int argc, char* argv[]) {
     }
   }
     
-  if(!smoothFakes &&
-     !smoothQCD &&
-     !shapeFakes &&
-     !shapeQCD &&
-     !addFakeData)
+ // if(!smoothFakes &&
+ //    !smoothQCD &&
+ //    !shapeFakes &&
+ //    !shapeQCD &&
+ //    !addFakeData)
+    if(InputFile.empty())
     bprint = true;
   
   if(bprint){
@@ -129,6 +130,8 @@ int main(int argc, char* argv[]) {
 
   if(addFakeData)
     FIT.AddFakeData();
+  else
+    FIT.AddEmptyData();
   
   FIT.WriteFit(OutputFile);
 }
