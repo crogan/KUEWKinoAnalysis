@@ -69,6 +69,48 @@ public:
 		  const Systematic& sys = Systematic::Default()) const;
 
   bool HasSystematic(const Process& proc, const Systematic& sys) const;
+<<<<<<< HEAD
+=======
+  
+  TCanvas* Plot1Dstack(const VS& proc,
+		       const VS& lep_cat,
+		       const VS& hadS_cat,
+		       const VS& hadI_cat,
+		       const string& canvas);
+
+    TCanvas* Plot1Dstraight(const string& proc,
+           const VS& lep_cat,
+           const VS& hadS_cat,
+           const VS& hadI_cat,
+           const string& name,
+           const VS& extra);
+
+  TCanvas* Plot1Dratio(const string& proc,
+           const VS& lep_cat,
+           const VS& hadS_cat,
+           const VS& hadI_cat,
+           const string& name,
+           const VS& extra);
+
+  TCanvas* Plot2D(const VS& proc,
+		  const VS& lep_cat,
+		  const VS& hadS_cat,
+		  const VS& hadI_cat,
+		  const string& canvas,
+		  const string& extra = "");
+
+  TCanvas* PlotYields(const string& can_name,
+		      const VS& proc,
+		      const CategoryTree& CT);
+
+  TCanvas* Plot1Dstack(const string& can_name,
+		       const VS& proc,
+		       const CategoryTree& CT);
+
+  TCanvas* Plot2D(const string& can_name,
+		  const VS& proc,
+		  const CategoryTree& CT);
+>>>>>>> crogan-master
 
   string GetSignalTitle(const string&);
 
@@ -82,6 +124,7 @@ map<string,VS> m_Strings;
 
 protected:
   mutable TFile  m_File;
+  string	 m_inputfile; 
   mutable TFile* m_FilePtr;
   string         m_FileFold;
 
@@ -101,7 +144,6 @@ protected:
   
   CategoryBranch m_CatBranch;
   void ReadCategories();
-  
 };
 
 #endif

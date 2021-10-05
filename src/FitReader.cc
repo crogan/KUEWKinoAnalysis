@@ -11,6 +11,12 @@
 #include <TEfficiency.h>
 
 #include "FitReader.hh"
+<<<<<<< HEAD
+=======
+#include "shapeComparison.hh"
+#include "plotShapeComparison.hh"
+#include "RestFrames/RestFrames.hh"
+>>>>>>> crogan-master
 
 ///////////////////////////////////////////
 ////////// FitReader class
@@ -21,6 +27,16 @@ FitReader::FitReader(const string& inputfile,
 		     const string& otherfold)
   : m_File(inputfile.c_str(), "READ") {
 
+<<<<<<< HEAD
+=======
+  InitializeRecipes();
+  
+  ReadProcesses();
+  
+  ReadCategories();
+
+  m_inputfile = inputfile;
+>>>>>>> crogan-master
   if(otherfile != ""){
     m_FilePtr = new TFile(otherfile.c_str(), "READ");
     if(!m_FilePtr || !m_FilePtr->IsOpen())
@@ -427,13 +443,4 @@ string FitReader::GetSignalTitle(const string& label){
   int    mass  = stoi(label.substr(p+1,label.length()-p));
   return title+" "+std::to_string(mass/10000)+" "+std::to_string(mass%100000);
 }
-
-  
-
-
-
-
-
-
-
 

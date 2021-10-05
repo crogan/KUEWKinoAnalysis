@@ -64,6 +64,7 @@ locallib: lib
 lib: lib/libKUEWKino.so
 
 alltargets: MakeReducedNtuple_NANO.x MakeEventCount_NANO.x BuildFitInput.x BuildFitShapes.x BuildFitInputCondor.x BuildFitCondor.x
+
 BuildFit.x:  $(SRCDIR)BuildFit.C $(OBJ_FILES) $(OBJ_FILES_CMSSW) $(HH_FILES)
 	$(CXX) $(CXXFLAGS) -o BuildFit.x $(OUTOBJ)/*.o $(OUTOBJ_CMSSW)/*.o $(GLIBS) $ $<
 	touch BuildFit.x
