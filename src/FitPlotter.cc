@@ -4266,7 +4266,7 @@ void FitPlotter::InitializeRecipes(){
 
   m_Strings["Data"] = VS().a("data_obs");
   
-  m_Title["ttbar"] = "t #bar{t} + jets";
+  m_Title["ttbar"] = "t #bar{t} + X";
   m_Color["ttbar"] = 7011;
 
   m_Title["ST"] = "single top";
@@ -4275,7 +4275,7 @@ void FitPlotter::InitializeRecipes(){
   m_Title["DB"] = "di-bosons";
   m_Color["DB"] = 7051;
 
-  m_Title["TB"] = "tri-bosons / t #bar{t} + V";
+  m_Title["TB"] = "tri-bosons";
   m_Color["TB"] = 7050;
 
   m_Title["ZDY"] = "Z / #gamma* + jets";
