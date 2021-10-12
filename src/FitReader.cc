@@ -195,8 +195,7 @@ TH1D* FitReader::GetAddedHist(const string&       name,
     for(int c = 0; c < Nc; c++){
       if(!IsFilled(cats[c], procs[p], sys))
 	continue;
-      
-      if(!hist){
+    if(!hist){
 	hist = (TH1D*) GetHistogram(cats[c], procs[p], sys)->Clone(name.c_str());
       } else {
 	hist->Add(GetHistogram(cats[c], procs[p], sys));
