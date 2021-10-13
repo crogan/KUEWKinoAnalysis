@@ -478,19 +478,23 @@ TCanvas* FitPlotter::Plot1Dstack(const VS& proc,
 				const VS& lep_cat,
 				const VS& hadS_cat,
 				const VS& hadI_cat,
-				const string& name){
+				const string& name,
+				const VS& extra){
   RestFrames::SetStyle();
   
   int Nproc = proc.size();
   int Nlep  = lep_cat.size();
   int NhadS = hadS_cat.size();
   int NhadI = hadI_cat.size();
+  int Nextra = -999;
+  if(!extra.empty()) Nextra = extra.size();
   if(Nproc == 0 ||
      Nlep  == 0 ||
      NhadS == 0 ||
      NhadI == 0)
     return nullptr;
-  CategoryList cat = GetCategories();
+  
+CategoryList cat = GetCategories();
  // cat.Print();
   // Leptonic
   VS lep_labels;
@@ -510,9 +514,8 @@ TCanvas* FitPlotter::Plot1Dstack(const VS& proc,
       vlep.push_back(lep_cat[i]);
     }
   }
-for(int i = 0; i < vlep.size(); i++) cout << vlep[i] << endl;
+//for(int i = 0; i < vlep.size(); i++) cout << vlep[i] << endl;
   cat = cat.FilterOR(vlep);
-cout << "# cats after lep filter: " << cat.GetN() << endl;
   // Hadronic S
   VS hadS_labels;
   VS vhadS;
@@ -533,7 +536,6 @@ cout << "# cats after lep filter: " << cat.GetN() << endl;
 
   cat = cat.FilterOR(vhadS);
 
-cout << "# cats after s jet filter: " << cat.GetN() << endl;
   // Hadronic ISR
   VS hadI_labels;
   VS vhadI;
@@ -553,8 +555,25 @@ cout << "# cats after s jet filter: " << cat.GetN() << endl;
   }
 
   cat = cat.FilterOR(vhadI);
+  VS extra_labels;
+  vector<VS> vextras;
+  VS vextra;
+  for(int i = 0; i < Nextra; i++){
+  if(m_Title.count(extra[i]) != 0)
+    extra_labels.push_back(m_Title[extra[i]]);
+  else
+    extra_labels.push_back(extra[i]);
 
-cout << "# cats after ISR jet filter: " << cat.GetN() << endl;
+  if(m_Strings.count(extra[i]) != 0){
+    int N = m_Strings[extra[i]].size();
+    for(int j = 0; j < N; j++)
+	vextra.push_back(m_Strings[extra[i]][j]);
+  }
+  else {
+    vextra.push_back(extra[i]);
+  }
+  }
+  cat = cat.FilterOR(vextra);
   int Ncat = cat.GetN();
   
   if(Ncat < 1){
@@ -583,7 +602,6 @@ cout << "# cats after ISR jet filter: " << cat.GetN() << endl;
     for(int p = 0; p < int(vproc.size()); p++){
       
       int index = GetProcesses().Find(vproc[p]);
-      //cout << vproc[p] << " " << index << endl;
 	if(index < 0)
 	continue;
       
@@ -601,12 +619,9 @@ cout << "# cats after ISR jet filter: " << cat.GetN() << endl;
 	type = kData;
       
       for(int c = 0; c < Ncat; c++){
-//	cout << cat[c].GetLabel() << " " << pp.Name() << endl;
-	if(!IsFilled(cat[c], pp))
+	if(!IsFilled(cat[c], pp)){
 	  continue;
-
-//	cout << "filled " << cat[c].GetLabel() << " " << pp.Name() << endl;
-	
+}
 	if(!hist){
 	  hist = (TH1D*) GetHistogram(cat[c], pp)->Clone(Form("plothist_%d_%s", i, name.c_str()));
 	} else {
@@ -642,7 +657,7 @@ cout << "# cats after ISR jet filter: " << cat.GetN() << endl;
       hists.push_back(hist);
     } 
   }
-
+if(hists.size() < 1) return nullptr;
   int Nsig = hists_sig.size();
   
   // sort the histograms by integral (N^2/2 brute force)
@@ -741,6 +756,7 @@ cout << "# cats after ISR jet filter: " << cat.GetN() << endl;
 
   double hmax = hists[0]->GetMaximum();
   
+  hists[0]->SetTitle("");
   hists[0]->Draw("hist");
   hists[0]->GetXaxis()->CenterTitle();
   hists[0]->GetXaxis()->SetTitleFont(42);
@@ -898,6 +914,7 @@ cout << "# cats after ISR jet filter: " << cat.GetN() << endl;
   string plotlabel = "#color[7014]{"+lep_labels[0]+"} + ";
   plotlabel += "#color[7004]{"+hadS_labels[0]+"} + ";
   plotlabel += "#color[7024]{"+hadI_labels[0]+"} + ";
+  if(extra_labels[0] != "") plotlabel += "#color[7024]{"+extra_labels[0]+"} + ";
   plotlabel += "p_{T}^{ISR} > 300 GeV";
   
   l.SetTextColor(kBlack);
@@ -1272,12 +1289,17 @@ TCanvas* FitPlotter::PlotYields(const string& can_name,
       
       Process pp = GetProcesses()[index];
 
-      procs += pp;
 
       if(pp.Type() == kSig){
 	type = kSig;
-      }
+	if(m_FileFold != nullptr){
+		string name = pp.Name();
+		name = name.substr(0,name.find("_")+1);
+		pp = Process(name,kSig);
+	}
+	}
       
+      procs += pp;
       if(pp.Type() == kData){
 	type = kData;
       }
@@ -1660,7 +1682,6 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
 
   vector<const CategoryTree*> CatTrees;
   CT.GetListDeepest(CatTrees);
-
   int Nvis = CatTrees.size();
   
   if(Nvis < 1)
@@ -1686,6 +1707,8 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
   TH1D* hist_totbkg[Nvis];
   double total_totbkg = 0.;
   
+  //int dumCatIdx = -999;
+
   for(int i = 0; i < Nproc; i++){
     VS vproc;
     if(m_Strings.count(proc[i]) != 0)
@@ -1723,14 +1746,11 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
     
     for(int v = 0; v < Nvis; v++){
       CategoryList cat = CatList.Filter(*CatTrees[v]);
-      
       TH1D* h = GetAddedHist(Form("plothist_%d_%d_%s", i, v, can_name.c_str()), cat, procs);
-      if(h)
+	 if(h)
 	itot += h->Integral();
-      
       hist[v] = h;
-    }
-    
+      }
     if(itot <= 1e-4)
       continue;
     
@@ -1757,12 +1777,12 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
       else
 	colors.push_back(m_ColorDefault[i]);
       
-      for(int v = 0; v < Nvis; v++)
-	hists[v].push_back(hist[v]);
+      for(int v = 0; v < Nvis; v++){
+	   hists[v].push_back(hist[v]);
+	}
       total.push_back(itot);
-    } 
+    }
   }
-
   if(m_FilePtr){
     Process totbkg("total_background", kBkg);
     ProcessList totbkgs;
@@ -1776,9 +1796,8 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
 	total_totbkg += h->Integral();
     }
   }
-  
+if(total.size() < 1) return nullptr; 
   int Nsig = hists_sig[0].size();
-  
   // sort the histograms by integral (N^2/2 brute force)
   int Nbkg = total.size();
   VS             vlabels;
@@ -1789,7 +1808,7 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
   int    itemp;
   TH1D*  htemp[Nvis];
   double ttemp;
-  
+ 
   for(int i = 0; i < Nbkg; i++){
     vlabels.push_back(labels[i]);
     vcolors.push_back(colors[i]);
@@ -1818,17 +1837,15 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
       }
     }
   }
-  
+ 
   vector<TH1D*> fhists;
   vector<TH1D*> fhists_sig;
   TH1D*         fhist_data   = nullptr;
   TH1D*         fhist_totbkg = nullptr;
 
   CategoryList dumcat = CatList.Filter(*CatTrees[0]);
-  
   const FitBin& fitbin = dumcat[0].GetFitBin();
   int Nbin = fitbin.NBins();
-  
   for(int i = 0; i < Nsig; i++){
     fhists_sig.push_back(new TH1D(Form("fhistsig_%d_%s", i, can_name.c_str()),
 				  Form("fhistsig_%d_%s", i, can_name.c_str()),
@@ -1842,7 +1859,6 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
       }
     }
   }
-  
   if(total_data > 0.){
     fhist_data = new TH1D(Form("fhistdata_%s", can_name.c_str()),
 			  Form("fhistdata_%s", can_name.c_str()),
@@ -1856,7 +1872,6 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
       }
     }
   }
-
   if(total_totbkg > 0.){
     fhist_totbkg = new TH1D(Form("fhisttotbkg_%s", can_name.c_str()),
 			  Form("fhisttotbkg_%s", can_name.c_str()),
@@ -1870,7 +1885,6 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
       }
     }
   }
-
   for(int i = 0; i < Nbkg; i++){
     for(int v = 0; v < Nvis; v++){
       if(vhists[v][i]){
@@ -1880,7 +1894,6 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
       }
     }
   }
-   
   for(int i = 0; i < Nbkg; i++){
     fhists.push_back(new TH1D(Form("fhistsbkg_%d_%s", i, can_name.c_str()),
 			      Form("fhistsbkg_%d_%s", i, can_name.c_str()),
@@ -1893,17 +1906,16 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
 	  hptr = vhists[v][j];
 	  j++;
 	}
+if(hptr == nullptr) continue;	
 	if(hptr){
 	  fhists[i]->SetBinContent(Nvis*b+v+1, hptr->GetBinContent(b+1));
 	  fhists[i]->SetBinError(Nvis*b+v+1, hptr->GetBinError(b+1));
 	}
       }
     }
-  }
-  
+}
   labels = vlabels;
   colors = vcolors;
-  
   for(int b = 0; b < Nbin*Nvis; b++)
     fhists[0]->GetXaxis()->SetBinLabel(b+1, "");
   
@@ -4254,7 +4266,7 @@ void FitPlotter::InitializeRecipes(){
 
   m_Strings["Data"] = VS().a("data_obs");
   
-  m_Title["ttbar"] = "t #bar{t} + jets";
+  m_Title["ttbar"] = "t #bar{t} + X";
   m_Color["ttbar"] = 7011;
 
   m_Title["ST"] = "single top";
@@ -4263,7 +4275,7 @@ void FitPlotter::InitializeRecipes(){
   m_Title["DB"] = "di-bosons";
   m_Color["DB"] = 7051;
 
-  m_Title["TB"] = "tri-bosons / t #bar{t} + V";
+  m_Title["TB"] = "tri-bosons";
   m_Color["TB"] = 7050;
 
   m_Title["ZDY"] = "Z / #gamma* + jets";
@@ -4438,7 +4450,7 @@ void FitPlotter::InitializeRecipes(){
   m_Strings["1Lm"] = VS().a("1L_elm_elG").a("1L_mum_muG");
 
   m_Title["1Lsilver"] = "#scale[1.2]{single silver #it{l}}";
-  m_Strings["1Lsilver"] = VS().a("1L_elp_elS").a("1L_elm_elS").a("1L_mup_muS").a("1L_mum_muS");
+  m_Strings["1Lsilver"] = VS().a("elpm_slvr").a("mupm_slvr");//a("1L_elp_elS").a("1L_elm_elS").a("1L_mup_muS").a("1L_mum_muS");
   
   m_Title["1Lelsilver"] = "#scale[1.2]{single silver e}";
   m_Strings["1Lelsilver"] = VS().a("1L_elp_elS").a("1L_elm_elS").a("1L_elpm_elS").a("1L_elp-elS").a("1L_elm-elS").a("1L_elpm-elS");
@@ -4447,7 +4459,7 @@ void FitPlotter::InitializeRecipes(){
   m_Strings["1Lmusilver"] = VS().a("1L_mup_muS").a("1L_mum_muS");
 
   m_Title["1Lbronze"] = "#scale[1.2]{single bronze #it{l}}";
-  m_Strings["1Lbronze"] = VS().a("1L_elp_elB").a("1L_elm_el2").a("1L_mup_muB").a("1L_mum_muB");
+  m_Strings["1Lbronze"] = VS().a("elpm_bron").a("mupm_bron");//a("1L_elp_elB").a("1L_elm_elB").a("1L_mup_muB").a("1L_mum_muB");
   
   m_Title["1Lelbronze"] = "#scale[1.2]{single bronze e}";
   m_Strings["1Lelbronze"] = VS().a("1L_elp_elB").a("1L_elm_elB").a("1L_elpm_elB").a("1L_elp-elB").a("1L_elm-elB").a("1L_elpm-elB");
@@ -4523,8 +4535,12 @@ void FitPlotter::InitializeRecipes(){
   
   m_Title["1j0b0svS"] = "#splitline{1 jet, 0 b-tags}{0 SV-tag} #scale[1.2]{#in S}";
 
+  m_Title["1jge1svS"] = "#splitline{1 jet, incl. b-tags}{#geq 1 SV-tag} #scale[1.2]{#in S}";
+
+  m_Title["1j0svS"] = "#splitline{1 jet, incl. b-tags}{0 SV-tags} #scale[1.2]{#in S}";
+
   m_Title["1jS"] = "#splitline{1 jet}{incl. b-tags} #scale[1.2]{#in S}";
-  m_Strings["1jS"] = VS().a("1jS").a("1j0bge1svS").a("1j0b0svS").a("1j1b0svS").a("1j1bge1svS");
+  m_Strings["1jS"] = VS().a("1jS").a("1j0bge1svS").a("1j0svS").a("1jge1svS").a("1j0b0svS").a("1j1b0svS").a("1j1bge1svS");
 
   m_Title["2jS"] = "#splitline{2 jets}{incl. b-tags} #scale[1.2]{#in S}";
   m_Strings["2jS"] = VS().a("2jS").a("2j0bS").a("2j1bS").a("2j2bS");
@@ -4539,8 +4555,25 @@ void FitPlotter::InitializeRecipes(){
 
   m_Title["3j1bS"] = "#splitline{3 jets}{1 b-tags} #scale[1.2]{#in S}";
 
-  m_Title["3j2bS"] = "#splitline{3 jets}{#geq 2 b-tags} #scale[1.2]{#in S}";
+  m_Title["3jge2bS"] = "#splitline{3 jets}{#geq 2 b-tags} #scale[1.2]{#in S}";
 
+  m_Title["4j0bS"] = "#splitline{4 jets}{0 b-tags} #scale[1.2]{#in S}";
+
+  m_Title["4j1bS"] = "#splitline{4 jets}{1 b-tags} #scale[1.2]{#in S}";
+
+  m_Title["4jge2bS"] = "#splitline{4 jets}{#geq 2 b-tags} #scale[1.2]{#in S}";
+
+  m_Title["5j0bS"] = "#splitline{5 jets}{0 b-tags} #scale[1.2]{#in S}";
+
+  m_Title["5j1bS"] = "#splitline{5 jets}{1 b-tags} #scale[1.2]{#in S}";
+
+  m_Title["5jge2bS"] = "#splitline{5 jets}{#geq 2 b-tags} #scale[1.2]{#in S}";
+  m_Title["3jS"] = "#splitline{3 jets}{incl. b-tags} #scale[1.2]{#in S}";
+  m_Strings["3jS"] = VS().a("3j0bS").a("3j1bS").a("3ge2bS");
+  
+  m_Title["4jS"] = "#splitline{4 jets}{incl. b-tags} #scale[1.2]{#in S}";
+  m_Strings["4jS"] = VS().a("4j0bS").a("4j1bS").a("4ge2bS");
+  
   m_Title["5jS"] = "#splitline{5 jets}{incl. b-tags} #scale[1.2]{#in S}";
   m_Strings["5jS"] = VS().a("ge5j0bS").a("ge5j1bS").a("ge5ge2bS");
   
