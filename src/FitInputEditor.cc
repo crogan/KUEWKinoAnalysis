@@ -189,7 +189,6 @@ void FitInputEditor::WriteCat(){
 }
 
 void FitInputEditor::SmoothFakes(){
- cout << "SmoothFakes" << endl;
   CategoryTreeTool CTTool;
   vector<const CategoryTree*> catTrees;
   vector<const CategoryTree*> CT_groups;
@@ -208,12 +207,10 @@ void FitInputEditor::SmoothFakes(){
 
   int NCT = CT_groups.size();
 
-  cout << m_Cat.GetN() << " Categories total" << endl;
   int icat = 0;
   
   // loop through category groups
   for(int g = 0; g < NCT; g++){
-      cout << "group #" << g << ": " << CT_groups[g]->GetBareLabel() << endl;
     CategoryList cats = m_Cat.Filter(*CT_groups[g]);
     int Ncat = cats.GetN();
     
@@ -322,7 +319,6 @@ void FitInputEditor::SmoothQCD(){
 
   // loop through category groups
   for(int g = 0; g < NCT; g++){
-	cout << "group #" << g << endl;
     CategoryList cats = m_Cat.Filter(*CT_groups[g]);
     int Ncat = cats.GetN();
     if(Ncat == 0)
@@ -621,7 +617,6 @@ void FitInputEditor::AddShapeSysFakes(){
 }
 
 void FitInputEditor::AddShapeSysQCD(){
-  cout << "AddShapeSysQCD" << endl;
   CategoryTreeTool CTTool;
   vector<const CategoryTree*> CT_groups;
   vector<const CategoryTree*> catTrees;
@@ -654,10 +649,8 @@ void FitInputEditor::AddShapeSysQCD(){
   //    CT_groups.push_back(catTrees[j]);
    //string sgroup = Form("QCD_%dL",i+1);
    int NCT = CT_groups.size();
- cout << "CT_groups size: " << NCT << endl; 
   // loop through category groups
   for(int g = 0; g < NCT; g++){
-cout << "group #" << g << ": " << CT_groups[g]->GetSpecLabel() << endl;   
   bool b_addSys_RISR  = false;
   bool b_addSys_Mperp = false;
   string sys_name = "QCD_"+CT_groups[g]->GetSpecLabel();
