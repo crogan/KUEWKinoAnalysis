@@ -1756,16 +1756,16 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
     }
     
     for(int v = 0; v < Nvis; v++){
-//cout << "catList #"  << v << ": " << CatTrees[v]->GetBareLabel() << endl;
+//cout << "catList #"  << v << ": " << CatTrees[v]->GetMatchString()[0] << endl;
       CategoryList cat = CatList.Filter(*CatTrees[v]);
       TH1D* h = GetAddedHist(Form("plothist_%d_%d_%s", i, v, can_name.c_str()), cat, procs);
 	 if(h)
 	itot += h->Integral();
     //  if(dumCatIdx == -999) dumCatIdx = v; 
-  //  if(h == nullptr) cout << "h null" << endl;     
+    //if(h == nullptr) cout << "h null" << endl;     
       hist[v] = h;
       }
-   //cout << "itot: " << itot << endl; 
+  // cout << "itot: " << itot << endl; 
     if(itot <= 1e-4)
       continue;
     
@@ -1799,7 +1799,7 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
     }
 //cout << "\n" << endl; 
   }
-
+//cout << "DOING TOTAL BKG" << endl;
   if(m_FilePtr){
     Process totbkg("total_background", kBkg);
     ProcessList totbkgs;
@@ -1808,13 +1808,15 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
       CategoryList cat = CatList.Filter(*CatTrees[v]);
       
       TH1D* h = GetAddedHist(Form("plothist_tot_%d_%s", v, can_name.c_str()), cat, totbkgs);
-      hist_totbkg[v] = h;
+if(h == nullptr) continue;//{ cout << "h null for " << CatTrees[v]->GetBareLabel() << endl; continue; }     
+ hist_totbkg[v] = h;
+//	cout << "v: " << v << " totbkg # bins: " << hist_totbkg[v]->GetNbinsX() << endl;
       if(h)
 	total_totbkg += h->Integral();
     }
   }
 if(total.size() < 1) return nullptr; 
-  cout << "get colors and labels" << endl;
+  //cout << "get colors and labels" << endl;
   int Nsig = hists_sig[0].size();
   // sort the histograms by integral (N^2/2 brute force)
   int Nbkg = total.size();
@@ -1868,12 +1870,13 @@ if(total.size() < 1) return nullptr;
   TH1D*         fhist_data   = nullptr;
   TH1D*         fhist_totbkg = nullptr;
 
-cout << "make sig/bkg/total hists" << endl;
+//cout << "make sig/bkg/total hists" << endl;
 
 
   CategoryList dumcat = CatList.Filter(*CatTrees[0]);
   const FitBin& fitbin = dumcat[0].GetFitBin();
   int Nbin = fitbin.NBins();
+//cout << "do sig" << endl;
   for(int i = 0; i < Nsig; i++){
     fhists_sig.push_back(new TH1D(Form("fhistsig_%d_%s", i, can_name.c_str()),
 				  Form("fhistsig_%d_%s", i, can_name.c_str()),
@@ -1887,6 +1890,7 @@ cout << "make sig/bkg/total hists" << endl;
       }
     }
   }
+//cout << "do bkg" << endl;
   if(total_data > 0.){
     fhist_data = new TH1D(Form("fhistdata_%s", can_name.c_str()),
 			  Form("fhistdata_%s", can_name.c_str()),
@@ -1900,6 +1904,7 @@ cout << "make sig/bkg/total hists" << endl;
       }
     }
   }
+//cout << "do bkg" << endl;
   if(total_totbkg > 0.){
     fhist_totbkg = new TH1D(Form("fhisttotbkg_%s", can_name.c_str()),
 			  Form("fhisttotbkg_%s", can_name.c_str()),
@@ -1913,7 +1918,7 @@ cout << "make sig/bkg/total hists" << endl;
       }
     }
   }
-cout << "get bkg hists" << endl;
+//cout << "get bkg hists" << endl;
   for(int i = 0; i < Nbkg; i++){
     for(int v = 0; v < Nvis; v++){
       if(vhists[v][i]){
@@ -1923,9 +1928,9 @@ cout << "get bkg hists" << endl;
       }
     }
   }
-cout << "make bkg hists" << endl;
-cout << "Nvis: " << Nvis << endl;
-cout << "Nbkg: " << Nbkg << endl;
+//cout << "make bkg hists" << endl;
+//cout << "Nvis: " << Nvis << endl;
+//cout << "Nbkg: " << Nbkg << endl;
   for(int i = 0; i < Nbkg; i++){
     fhists.push_back(new TH1D(Form("fhistsbkg_%d_%s", i, can_name.c_str()),
 			      Form("fhistsbkg_%d_%s", i, can_name.c_str()),
@@ -1942,13 +1947,14 @@ cout << "Nbkg: " << Nbkg << endl;
 	  j++;
 	}
 if(hptr == nullptr) continue;	
-	if(hptr)
+	if(hptr){
 	  fhists[i]->SetBinContent(Nvis*b+v+1, hptr->GetBinContent(b+1));
 	  fhists[i]->SetBinError(Nvis*b+v+1, hptr->GetBinError(b+1));
 	}
       }
     }
- cout << "begin formatting" << endl; 
+}
+// cout << "begin formatting" << endl; 
   labels = vlabels;
   colors = vcolors;
   for(int b = 0; b < Nbin*Nvis; b++)

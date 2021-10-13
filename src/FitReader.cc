@@ -188,7 +188,6 @@ TH1D* FitReader::GetAddedHist(const string&       name,
 			      const Systematic&   sys) const {
   int Np = procs.GetN();
   int Nc = cats.GetN();
-  
   TH1D* hist = nullptr;
 
   for(int p = 0; p < Np; p++){
