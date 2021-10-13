@@ -2,9 +2,31 @@
 
 #include "../include/FitPlotter.hh"
 
-void PlotFits(const string& inputfile = "test/FitInput_test.root", const string& a2 = "", const string& a3 = ""){
+//void PlotFits(const string& inputfile = "/home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/BuildFits/BF_allBkgs_data_T2tt_0L1L_QCDShapesSJet0p20var_QCDnorms0p50_WJetsnorms0p20_otherBkgnorms0p20_maskSR_09_27_21/FitInput_KUEWKino_2017.root", const string& a2 = "/home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/BuildFits/BF_allBkgs_data_T2tt_0L1L_QCDShapesSJet0p20var_QCDnorms0p50_WJetsnorms0p20_otherBkgnorms0p20_maskSR_09_27_21/all/T2tt/6000425/fitDiagnostics09_24_21wShapes.root", const string& a3 = "shapes_fit_b"){
+void PlotFits(const string& fold1 = "BF_allBkgs_data_TChiWZ_2016_0L1L_QCDShapes0p20_maskSR_10_11_21", const string& fold2 = "all/TChiWZ/3000250", const string& shapesFile = "10_13_21wShapes.root"){
+  
+  string dateName = shapesFile.substr(0,8);
+        string bfName = fold1.substr(2,fold1.size());
+        string odir = "prePostStackPlots"+bfName;
 
-  FitPlotter* FITReader = new FitPlotter(inputfile, a2, a3);
+        string inputfile1 = "BuildFits/"+fold1+"/FitInput_KUEWKino_2017.root";
+        string inputfile2 = "BuildFits/"+fold1+"/"+fold2+"/fitDiagnostics"+shapesFile;
+        string lepName;
+        if(fold2.find("Ch") != string::npos) lepName = fold2.substr(0,4);
+        else lepName = "all";
+        string fname = odir+"/"+lepName+"/"+shapesFile;
+cout << "input file: " << inputfile2 << endl;
+cout << "out directory: " << odir << "/" << lepName << "/" << endl;
+  
+ if(gSystem->AccessPathName(inputfile2.c_str())){ cout << "file " << inputfile2 << " not found" << endl; return; }
+        FitPlotter* FITPlotter_pre = new FitPlotter(inputfile1, inputfile2, "shapes_prefit");
+        FitPlotter* FITPlotter_bOnly = new FitPlotter(inputfile1, inputfile2, "shapes_fit_b");
+        FitPlotter* FITPlotter_sb = new FitPlotter(inputfile1, inputfile2, "shapes_fit_s");
+
+
+
+//  FitPlotter* FITReader = new FitPlotter(inputfile, a2, a3);
+  bool ratio = true;
 
   CategoryTreeTool CTTool;
 
@@ -15,18 +37,20 @@ void PlotFits(const string& inputfile = "test/FitInput_test.root", const string&
 
   VS all;
   all.a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD").a("Wjets").a("HF_Fakes").a("LF_Fakes").a("Data");
+  string sig;
+  //sig = "T2tt_6000425";
+  sig = "TChiWZ_3000250";
+  all += sig;  
+  //int depth0 = CT_0L.GetDepth();
+  //vector<const CategoryTree*> CTs;
+  //CT_0L.GetListDepth(CTs, depth0-3);
+  //vector<const CategoryTree*> CTs_deep;
+  //CT_0L.GetListDepth(CTs_deep, depth0-3);
+   
+   int depth0 = CT_1L.GetDepth()-3;
+   vector<const CategoryTree*> CTs;
+   CT_1L.GetListDepth(CTs, depth0);
   
-  int depth0 = CT_0L.GetDepth();
-  vector<const CategoryTree*> CTs;
-  CT_0L.GetListDepth(CTs, depth0-3);
-
-  vector<const CategoryTree*> CTs_deep;
-  CT_0L.GetListDepth(CTs_deep, depth0-3);
-  
-  // int depth0 = CT_1L.GetDepth();
-  // vector<const CategoryTree*> CTs;
-  // CT_1L.GetListDepth(CTs, depth0-1);
-
   // vector<const CategoryTree*> CTs_deep;
   // CT_1L.GetListDepth(CTs_deep, depth0-2);
 
@@ -44,10 +68,49 @@ void PlotFits(const string& inputfile = "test/FitInput_test.root", const string&
   // vector<const CategoryTree*> CTs_deep;
   // CT_3L.GetListDepth(CTs_deep, depth0-2);
 
-  for(int i = 0; i < CTs.size(); i++){
-    FITReader->Plot1Dstack(Form("hstack_%d", i),
-			   all,
-			   *CTs[i], true);
+
+ if(gSystem->AccessPathName((fname).c_str())){
+                gSystem->Exec(("mkdir "+odir).c_str());
+                gSystem->Exec(("mkdir "+odir+"/"+lepName).c_str());
+        }
+        TFile* file = new TFile(fname.c_str(),"RECREATE");
+        cout << "Writing to file: " << fname << endl;
+        file->cd();
+  for(int i = 1; i < CTs.size(); i++){
+    string dir = CTs[i]->GetPlainLabel(depth0-3);
+    while(dir.find(" ") != string::npos) dir.replace(dir.find(" "),1,"_"); 
+    cout << dir << " " << depth0-3 << endl;
+    cout << "##############plot prefit#############" << endl;
+    TCanvas* prefit_stack = FITPlotter_pre->Plot1Dstack(Form("pre_stack_%d",i),all,*CTs[i],ratio);
+    if(prefit_stack == nullptr) continue;
+    cout << "##############plot b-fit#############" << endl;
+    TCanvas* b_fit_stack = FITPlotter_bOnly->Plot1Dstack(Form("bFit_stack_%d",i),all,*CTs[i],ratio);
+    if(b_fit_stack == nullptr) continue;
+    //cout << "##############plot s+b fit#############" << endl; 
+    //TCanvas* sb_fit_stack = FITPlotter_sb->Plot1Dstack(Form("sbFit_stack_%d",i),all,*CTs[i],ratio);
+    //if(sb_fit_stack == nullptr) continue;
+cout << "writing plots to file" << endl;
+    if(!file->GetDirectory(dir.c_str()))
+            file->mkdir(dir.c_str());
+    file->cd(dir.c_str());
+    prefit_stack->Write("prefit_stack",TObject::kOverwrite);
+    b_fit_stack->Write("bfit_stack",TObject::kOverwrite);
+   //sb_fit_stack->Write("sbfit_stack",TObject::kOverwrite);
+  cout << "saving plots as pdf" << endl;
+
+   prefit_stack->SaveAs((odir+"/"+lepName+"/"+dir+sig+"prefit.pdf").c_str());
+   b_fit_stack->SaveAs((odir+"/"+lepName+"/"+dir+sig+"b-fit.pdf").c_str());
+   //sb_fit_stack->SaveAs((odir+"/"+lepName+"/"+dir+sig+"sb-fit.pdf").c_str());
+
+   prefit_stack->Close();
+   b_fit_stack->Close();
+   //sb_fit_stack->Close();
+
+
+   file->cd();
+   cout << "\n" << endl;
   }
-  
+
+
+
 }
