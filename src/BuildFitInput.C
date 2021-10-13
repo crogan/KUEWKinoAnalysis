@@ -31,7 +31,7 @@
 
 using namespace std;
 int main(int argc, char* argv[]) {
-  string NtuplePath = "/home/t3-ku/crogan/NTUPLES/NANO/NEW_21_09_20/";//"/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_21_09_20/";
+  string NtuplePath = "/home/t3-ku/z374f439/storage/crogan/";//"home/t3-ku/crogan/NTUPLES/NANO/NEW_21_09_20/";//"/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_21_09_20/";
  //for connect:
 //   string NtuplePath = "root://xrootd.unl.edu//store/user/zflowers/crogan/";
    string OutFile    = "BuildFitInput_output.root";
