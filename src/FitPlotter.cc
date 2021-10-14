@@ -516,7 +516,6 @@ CategoryList cat = GetCategories();
   }
 //for(int i = 0; i < vlep.size(); i++) cout << vlep[i] << endl;
   cat = cat.FilterOR(vlep);
-cout << "# cats after lep filter: " << cat.GetN() << endl;
   // Hadronic S
   VS hadS_labels;
   VS vhadS;
@@ -537,7 +536,6 @@ cout << "# cats after lep filter: " << cat.GetN() << endl;
 
   cat = cat.FilterOR(vhadS);
 
-cout << "# cats after s jet filter: " << cat.GetN() << endl;
   // Hadronic ISR
   VS hadI_labels;
   VS vhadI;
@@ -557,7 +555,6 @@ cout << "# cats after s jet filter: " << cat.GetN() << endl;
   }
 
   cat = cat.FilterOR(vhadI);
-
 cout << "# cats after ISR jet filter: " << cat.GetN() << endl;
   VS extra_labels;
   vector<VS> vextras;
@@ -608,7 +605,6 @@ cout << "# cats after extra filter: " << cat.GetN() << endl;
     for(int p = 0; p < int(vproc.size()); p++){
       
       int index = GetProcesses().Find(vproc[p]);
-      //cout << vproc[p] << " " << index << endl;
 	if(index < 0)
 	continue;
       
@@ -627,9 +623,9 @@ cout << "# cats after extra filter: " << cat.GetN() << endl;
       
       for(int c = 0; c < Ncat; c++){
 //	cout << cat[c].GetLabel() << " " << pp.Name() << endl;
-	if(!IsFilled(cat[c], pp)){
+	if(!IsFilled(cat[c], pp))
 	  continue;
-}
+
 //	cout << "filled " << cat[c].GetLabel() << " " << pp.Name() << endl;
 	
 	if(!hist){
@@ -1765,7 +1761,6 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
     //if(h == nullptr) cout << "h null" << endl;     
       hist[v] = h;
       }
-  // cout << "itot: " << itot << endl; 
     if(itot <= 1e-4)
       continue;
     
@@ -1797,9 +1792,7 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
 	}
       total.push_back(itot);
     }
-//cout << "\n" << endl; 
   }
-//cout << "DOING TOTAL BKG" << endl;
   if(m_FilePtr){
     Process totbkg("total_background", kBkg);
     ProcessList totbkgs;
@@ -1816,7 +1809,6 @@ if(h == nullptr) continue;//{ cout << "h null for " << CatTrees[v]->GetBareLabel
     }
   }
 if(total.size() < 1) return nullptr; 
-  //cout << "get colors and labels" << endl;
   int Nsig = hists_sig[0].size();
   // sort the histograms by integral (N^2/2 brute force)
   int Nbkg = total.size();
@@ -1828,14 +1820,6 @@ if(total.size() < 1) return nullptr;
   int    itemp;
   TH1D*  htemp[Nvis];
   double ttemp;
- 
-//for(int i = 0; i < Nbkg; i++){
-//  for(int v = 0; v < Nvis; v++){
-//   cout << "i: " << i << " v: " << v << " " << hists[v][i]->GetNbinsX() << endl;
-//  }
-//
-//}
- 
   for(int i = 0; i < Nbkg; i++){
     vlabels.push_back(labels[i]);
     vcolors.push_back(colors[i]);
@@ -1876,7 +1860,6 @@ if(total.size() < 1) return nullptr;
   CategoryList dumcat = CatList.Filter(*CatTrees[0]);
   const FitBin& fitbin = dumcat[0].GetFitBin();
   int Nbin = fitbin.NBins();
-//cout << "do sig" << endl;
   for(int i = 0; i < Nsig; i++){
     fhists_sig.push_back(new TH1D(Form("fhistsig_%d_%s", i, can_name.c_str()),
 				  Form("fhistsig_%d_%s", i, can_name.c_str()),
@@ -1890,7 +1873,6 @@ if(total.size() < 1) return nullptr;
       }
     }
   }
-//cout << "do bkg" << endl;
   if(total_data > 0.){
     fhist_data = new TH1D(Form("fhistdata_%s", can_name.c_str()),
 			  Form("fhistdata_%s", can_name.c_str()),
@@ -1904,7 +1886,6 @@ if(total.size() < 1) return nullptr;
       }
     }
   }
-//cout << "do bkg" << endl;
   if(total_totbkg > 0.){
     fhist_totbkg = new TH1D(Form("fhisttotbkg_%s", can_name.c_str()),
 			  Form("fhisttotbkg_%s", can_name.c_str()),
@@ -1918,7 +1899,6 @@ if(total.size() < 1) return nullptr;
       }
     }
   }
-//cout << "get bkg hists" << endl;
   for(int i = 0; i < Nbkg; i++){
     for(int v = 0; v < Nvis; v++){
       if(vhists[v][i]){
@@ -1928,9 +1908,6 @@ if(total.size() < 1) return nullptr;
       }
     }
   }
-//cout << "make bkg hists" << endl;
-//cout << "Nvis: " << Nvis << endl;
-//cout << "Nbkg: " << Nbkg << endl;
   for(int i = 0; i < Nbkg; i++){
     fhists.push_back(new TH1D(Form("fhistsbkg_%d_%s", i, can_name.c_str()),
 			      Form("fhistsbkg_%d_%s", i, can_name.c_str()),
@@ -1953,8 +1930,7 @@ if(hptr == nullptr) continue;
 	}
       }
     }
-}
-// cout << "begin formatting" << endl; 
+  }
   labels = vlabels;
   colors = vcolors;
   for(int b = 0; b < Nbin*Nvis; b++)
@@ -4307,7 +4283,7 @@ void FitPlotter::InitializeRecipes(){
 
   m_Strings["Data"] = VS().a("data_obs");
   
-  m_Title["ttbar"] = "t #bar{t} + jets";
+  m_Title["ttbar"] = "t #bar{t} + X";
   m_Color["ttbar"] = 7011;
 
   m_Title["ST"] = "single top";
@@ -4316,7 +4292,7 @@ void FitPlotter::InitializeRecipes(){
   m_Title["DB"] = "di-bosons";
   m_Color["DB"] = 7051;
 
-  m_Title["TB"] = "tri-bosons / t #bar{t} + V";
+  m_Title["TB"] = "tri-bosons";
   m_Color["TB"] = 7050;
 
   m_Title["ZDY"] = "Z / #gamma* + jets";
