@@ -124,6 +124,7 @@ FitBin CategoryTool::GetFitBin(int Nlep, int index, bool maskSR) const {
 
   if(Nlep == 2){//index 0,1,2,3 refer to specifically gold configurations for maskSR
     if(index == 0){//2L 0J slvr CR will match gold, bronz will include 2 bins
+       RBins.push_back(RBin(0.6,   0.7,   VD().a(0.).a(50.).a(120)));//adding Extra bins for CR uniformity
        RBins.push_back(RBin(0.7,   0.8,   VD().a(0.).a(40.).a(120.)));
        if(!maskSR){
          RBins.push_back(RBin(0.8,   0.9,   VD().a(0.).a(30.).a(120.)));
@@ -132,7 +133,8 @@ FitBin CategoryTool::GetFitBin(int Nlep, int index, bool maskSR) const {
        }
     }
     if(index == 1){
-      RBins.push_back(RBin(0.55,  0.7,  VD().a(0.).a(80.).a(200.)));
+      RBins.push_back(RBin(0.5,   0.6,   VD().a(0.).a(100).a(200.)));//added for uniformity
+      RBins.push_back(RBin(0.6,   0.7,  VD().a(0.).a(80.).a(200.)));//changed from 0.55->0.6 for uniformity
       if(!maskSR){
         RBins.push_back(RBin(0.7,   0.8,  VD().a(0.).a(60.).a(200.)));
 	RBins.push_back(RBin(0.8,   0.9,  VD().a(0.).a(40.).a(200.)));
@@ -141,8 +143,9 @@ FitBin CategoryTool::GetFitBin(int Nlep, int index, bool maskSR) const {
     }
     if(index == 2){
       RBins.push_back(RBin(0.5,   0.65,  VD().a(0.).a(100.).a(300.)));
+      RBins.push_back(RBin(0.65, 0.75, VD().a(0.).a(80.).a(300.)));//shifted from blind region into CR, it'll be okay (highest Signal presence though)
       if(!maskSR){
-        RBins.push_back(RBin(0.65,  0.75,  VD().a(0.).a(80.).a(300.)));
+       // RBins.push_back(RBin(0.65,  0.75,  VD().a(0.).a(80.).a(300.)));
 	RBins.push_back(RBin(0.75,  0.85,  VD().a(0.).a(60.).a(300.)));
 	RBins.push_back(RBin(0.85,  1.0,   VD().a(0.).a(300.)));
       }
@@ -1577,7 +1580,7 @@ CategoryList CategoryTool::GetCategories_2L(bool maskSR) const {
   Cats_2L_0S_slvr = Cats_2L_0S_slvr.CreateHadronicISRRegions(H_ISR_noB);
   Cats_2L_0S_slvr = Cats_2L_0S_slvr.CreateGenericRegions("PTISR", PTISR_incl);
 
-  Cats_2L_0S_bron = Cats_2L_0S_bron.CreateFitBinRegions(GetFitBin(2, 10, maskSR));
+  Cats_2L_0S_bron = Cats_2L_0S_bron.CreateFitBinRegions(GetFitBin(2, 0, maskSR));//bin uniformity change
   Cats_2L_0S_bron = Cats_2L_0S_bron.CreateLeptonIDRegions(IDs_bron);
   Cats_2L_0S_bron = Cats_2L_0S_bron.CreateHadronicSRegions(H_2L_0S);
   Cats_2L_0S_bron = Cats_2L_0S_bron.CreateHadronicISRRegions(H_ISR_noB);
@@ -1627,7 +1630,7 @@ CategoryList CategoryTool::GetCategories_2L(bool maskSR) const {
   Cats_2L_0j1sv_slvr = Cats_2L_0j1sv_slvr.CreateGenericRegions("gamT", gamT0);
   Cats_2L_0j1sv_slvr = Cats_2L_0j1sv_slvr.CreateGenericRegions("SVeta", SV_eta);
 
-  Cats_2L_0j1sv_bron = Cats_2L_0j1sv_bron.CreateFitBinRegions(GetFitBin(2, 10, maskSR));
+  Cats_2L_0j1sv_bron = Cats_2L_0j1sv_bron.CreateFitBinRegions(GetFitBin(2, 0, maskSR));//bin uniformity change
   Cats_2L_0j1sv_bron = Cats_2L_0j1sv_bron.CreateLeptonIDRegions(IDs_bron);
   Cats_2L_0j1sv_bron = Cats_2L_0j1sv_bron.CreateHadronicSRegions(H_2L_0j1sv);
   Cats_2L_0j1sv_bron = Cats_2L_0j1sv_bron.CreateHadronicISRRegions(H_ISR_noB);
@@ -1669,7 +1672,7 @@ CategoryList CategoryTool::GetCategories_2L(bool maskSR) const {
   Cats_2L_1jS_gold_SS = Cats_2L_1jS_gold_SS.CreateHadronicISRRegions(H_ISR_noB);
   Cats_2L_1jS_gold_SS = Cats_2L_1jS_gold_SS.CreateGenericRegions("PTISR", PTISR_incl);
 
-  Cats_2L_1jS_slvrbron = Cats_2L_1jS_slvrbron.CreateFitBinRegions(GetFitBin(2, 11, maskSR));//special CR binning
+  Cats_2L_1jS_slvrbron = Cats_2L_1jS_slvrbron.CreateFitBinRegions(GetFitBin(2, 1, maskSR));//special CR binning//removed for uniformity
   Cats_2L_1jS_slvrbron = Cats_2L_1jS_slvrbron.CreateLeptonIDRegions(IDs_slvrbron);
   Cats_2L_1jS_slvrbron = Cats_2L_1jS_slvrbron.CreateHadronicSRegions(H_2L_1jS_bkg);
   Cats_2L_1jS_slvrbron = Cats_2L_1jS_slvrbron.CreateHadronicISRRegions(H_ISR_noB);
@@ -1714,7 +1717,7 @@ CategoryList CategoryTool::GetCategories_2L(bool maskSR) const {
   Cats_2L_2jS_gold_SS = Cats_2L_2jS_gold_SS.CreateHadronicISRRegions(H_ISR_noB);
   Cats_2L_2jS_gold_SS = Cats_2L_2jS_gold_SS.CreateGenericRegions("PTISR", PTISR_incl);
 
-  Cats_2L_2jS_slvrbron = Cats_2L_2jS_slvrbron.CreateFitBinRegions(GetFitBin(2, 12, maskSR));//special CR binning
+  Cats_2L_2jS_slvrbron = Cats_2L_2jS_slvrbron.CreateFitBinRegions(GetFitBin(2, 2, maskSR));//special CR binning// removed for uniformity
   Cats_2L_2jS_slvrbron = Cats_2L_2jS_slvrbron.CreateLeptonIDRegions(IDs_slvrbron);
   Cats_2L_2jS_slvrbron = Cats_2L_2jS_slvrbron.CreateHadronicSRegions(H_2L_2jS_bkg);
   Cats_2L_2jS_slvrbron = Cats_2L_2jS_slvrbron.CreateHadronicISRRegions(H_ISR_noB);
