@@ -13,10 +13,10 @@ void FitConfiguration::Configure(ch::CombineHarvester& cb, ProcessList& processe
   using ch::syst::bin_id;
   using ch::syst::process;
 
-  bool QCDnorms = false;
+  bool QCDnorms = true;
   bool WJetsnorms = true;
   bool WJetsnorms_highLow = false;
-  bool bkgNorms_noQCD_noWjets = false;
+  bool bkgNorms_noQCD_noWjets = true;
   bool bkgNorms_bosonTopSplit = false;
   ProcessList signals = processes.Filter(kSig);
   ProcessList backgrounds = processes.Filter(kBkg); 
@@ -64,7 +64,14 @@ void FitConfiguration::Configure(ch::CombineHarvester& cb, ProcessList& processe
 	       ({"2016"}, 1.022)
 	       ({"2017"}, 1.022)
 	       ({"2018"}, 1.022));
-     cb.cp().process(plist.GetProcesses())
+    if(p == "DB"){
+	cb.cp().bin(VS().a(".*2L.*").a(".*3L.*")).process(plist.GetProcesses())
+	  .AddSyst(cb,"scale_"+p,"rateParam",SystMap<>::init(1.0));
+      	cb.cp().bin(VS().a(".*0L.*").a(".*1L.*")).process(plist.GetProcesses())
+	  .AddSyst(cb,"scale_"+p,"lnN",SystMap<>::init(1.2));
+    }
+    else 
+    cb.cp().process(plist.GetProcesses())
        .AddSyst(cb, "scale_"+p, "lnN", SystMap<>::init(1.2));
   }
   
@@ -353,6 +360,7 @@ void FitConfiguration::Configure(ch::CombineHarvester& cb, ProcessList& processe
   if(bkgNorms_noQCD_noWjets){
     ProcessList plist = backgrounds.Remove("QCD");
     plist = plist.Remove("Wjets");
+    plist.Print();
   cb.cp().process(plist.GetProcesses()).bin(VS().a(".*0L.*.*0j.*S.*"))
     .AddSyst(cb, "norm_bkgs_0L_0jS", "lnN", SystMap<>::init(1.2));
 
@@ -394,9 +402,6 @@ void FitConfiguration::Configure(ch::CombineHarvester& cb, ProcessList& processe
 
   cb.cp().process(plist.GetProcesses()).bin(VS().a(".*2L.*.*2j.*S.*"))
     .AddSyst(cb, "norm_bkgs_2L_2jS", "lnN", SystMap<>::init(1.2));
-
-  cb.cp().process(plist.GetProcesses()).bin(VS().a(".*2L.*.*3j.*S.*"))
-    .AddSyst(cb, "norm_bkgs_2L_3jS", "lnN", SystMap<>::init(1.2));
 
   cb.cp().process(plist.GetProcesses()).bin(VS().a(".*3L.*.*0j.*S.*"))
     .AddSyst(cb, "norm_bkgs_3L_0jS", "lnN", SystMap<>::init(1.2));
