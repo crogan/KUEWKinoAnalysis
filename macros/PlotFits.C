@@ -3,7 +3,7 @@
 #include "../include/FitPlotter.hh"
 
 //void PlotFits(const string& inputfile = "/home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/BuildFits/BF_allBkgs_data_T2tt_0L1L_QCDShapesSJet0p20var_QCDnorms0p50_WJetsnorms0p20_otherBkgnorms0p20_maskSR_09_27_21/FitInput_KUEWKino_2017.root", const string& a2 = "/home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/BuildFits/BF_allBkgs_data_T2tt_0L1L_QCDShapesSJet0p20var_QCDnorms0p50_WJetsnorms0p20_otherBkgnorms0p20_maskSR_09_27_21/all/T2tt/6000425/fitDiagnostics09_24_21wShapes.root", const string& a3 = "shapes_fit_b"){
-void PlotFits(const string& fold1 = "BF_allBkgs_data_TChiWZ_2016_0L1L_QCDShapes0p20_maskSR_10_11_21", const string& fold2 = "all/TChiWZ/3000250", const string& shapesFile = "10_13_21wShapes.root"){
+void PlotFits(const string& fold1 = "BF_allBkgs_data_T2tt_2L3L_QCDShapes0p20_maskSR_10_20_21", const string& fold2 = "Ch3L/T2tt/6000425", const string& shapesFile = "10_20_21wShapes.root"){
   
   string dateName = shapesFile.substr(0,8);
         string bfName = fold1.substr(2,fold1.size());
@@ -38,8 +38,8 @@ cout << "out directory: " << odir << "/" << lepName << "/" << endl;
   VS all;
   all.a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD").a("Wjets").a("HF_Fakes").a("LF_Fakes").a("Data");
   string sig;
-  //sig = "T2tt_6000425";
-  sig = "TChiWZ_3000250";
+  sig = "T2tt_6000425";
+  //sig = "TChiWZ_3000250";
   all += sig;  
   //int depth0 = CT_0L.GetDepth();
   //vector<const CategoryTree*> CTs;
@@ -47,28 +47,29 @@ cout << "out directory: " << odir << "/" << lepName << "/" << endl;
   //vector<const CategoryTree*> CTs_deep;
   //CT_0L.GetListDepth(CTs_deep, depth0-3);
    
-   int depth0 = CT_1L.GetDepth()-3;
-   vector<const CategoryTree*> CTs;
-   CT_1L.GetListDepth(CTs, depth0);
+  // int depth0 = CT_1L.GetDepth()-3;
+  // vector<const CategoryTree*> CTs;
+  // CT_1L.GetListDepth(CTs, depth0);
   
   // vector<const CategoryTree*> CTs_deep;
   // CT_1L.GetListDepth(CTs_deep, depth0-2);
 
-  // int depth0 = CT_2L.GetDepth();
-  // vector<const CategoryTree*> CTs;
-  // CT_2L.GetListDepth(CTs, depth0-2);
+   //int depth0 = CT_2L.GetDepth();
+   //int d = 4;
+   //vector<const CategoryTree*> CTs;
+   //CT_2L.GetListDepth(CTs, depth0-d);
+   
+   //vector<const CategoryTree*> CTs_deep;
+   //CT_2L.GetListDepth(CTs_deep, depth0-2);
 
-  // vector<const CategoryTree*> CTs_deep;
-  // CT_2L.GetListDepth(CTs_deep, depth0-2);
-
-  // int depth0 = CT_3L.GetDepth();
-  // vector<const CategoryTree*> CTs;
-  // CT_3L.GetListDepth(CTs, depth0-2);
+   int depth0 = CT_3L.GetDepth();
+   int d = 3;
+   vector<const CategoryTree*> CTs;
+   CT_3L.GetListDepth(CTs, depth0-2);
 
   // vector<const CategoryTree*> CTs_deep;
   // CT_3L.GetListDepth(CTs_deep, depth0-2);
-
-
+cout << depth0 << endl;
  if(gSystem->AccessPathName((fname).c_str())){
                 gSystem->Exec(("mkdir "+odir).c_str());
                 gSystem->Exec(("mkdir "+odir+"/"+lepName).c_str());
@@ -76,10 +77,11 @@ cout << "out directory: " << odir << "/" << lepName << "/" << endl;
         TFile* file = new TFile(fname.c_str(),"RECREATE");
         cout << "Writing to file: " << fname << endl;
         file->cd();
-  for(int i = 1; i < CTs.size(); i++){
-    string dir = CTs[i]->GetPlainLabel(depth0-3);
-    while(dir.find(" ") != string::npos) dir.replace(dir.find(" "),1,"_"); 
-    cout << dir << " " << depth0-3 << endl;
+  for(int i = 0; i < CTs.size(); i++){
+    string dir = CTs[i]->GetPlainLabel(depth0-d);
+cout << CTs[i]->GetSpectroscopicLabel() << endl;
+while(dir.find(" ") != string::npos) dir.replace(dir.find(" "),1,"_"); 
+    cout << dir << " " << depth0-d << endl;
     cout << "##############plot prefit#############" << endl;
     TCanvas* prefit_stack = FITPlotter_pre->Plot1Dstack(Form("pre_stack_%d",i),all,*CTs[i],ratio);
     if(prefit_stack == nullptr) continue;
@@ -109,7 +111,8 @@ cout << "writing plots to file" << endl;
 
    file->cd();
    cout << "\n" << endl;
-  }
+ //*/
+ }
 
 
 

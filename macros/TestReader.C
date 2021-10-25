@@ -4,39 +4,28 @@
 
 #include "../include/FitPlotter.hh"
 
-<<<<<<< HEAD
 //void TestReader(const string& inputfile = "BFI_allBkgs17_shapeNoFakeSysts/root/BFI_0.root", const string& a2 = "", const string& a3 = ""){
-void TestReader(const string& inputfile = "BuildFitInputs/BFI_allBkgsT2ttData_maskedSR_fakeShapesOnly_0p05allVariations/BFIShapes.root", const string& a2 = "", const string& a3 = ""){
+void TestReader(const string& inputfile = "/home/t3-ku/janguian/CMSSW_10_6_1/src/Experimental_Ewkino_Builds/BTest_Files/BFI_BT-4_TChiWZ17/BFS_BT-4_TChiWZ17.root", const string& a2 = "", const string& a3 = ""){
 	gSystem->Load("/home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/lib/libKUEWKino.so");
 FitPlotter* FITPlotter = new FitPlotter(inputfile, a2, a3);
   //FITReader->PrintCategories();
   //FITReader->PrintProcesses();
 
-=======
-void TestReader(const string& inputfile = "croganBFI_bkgs.root", const string& a2 = "", const string& a3 = ""){
-	gSystem->Load("/home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/lib/libKUEWKino.so");
-FitReader* FITReader = new FitReader(inputfile, a2, a3);
-//void TestReader(const string& inputfile = "test/FitInput_test.root", const string& a2 = "", const string& a3 = ""){
-//  void TestReader(const string& inputfile = "test/FitInput_test.root", const string& a2 = "", const string& a3 = ""){
-  
->>>>>>> crogan-master
   CategoryTreeTool CTTool;
 //  CategoryTree CT_Fakes1L = CTTool.GetCategories_Fakes1L();
 //  CategoryTree CT_0L = CTTool.GetCategories_0L();
   CategoryTree CT_1L = CTTool.GetCategories_1L();
   CategoryTree CT_2L = CTTool.GetCategories_2L();
   CategoryTree CT_3L = CTTool.GetCategories_3L();
-<<<<<<< HEAD
-=======
-  CategoryTree CT_Fakes3L = CTTool.GetCategories_Fakes3L();
+  CategoryTree CT_Fakes2L = CTTool.GetCategories_Fakes2L();
 //FITReader->PrintCategories();
 //CT_Fakes1L.Print(); 
-//vector<const CategoryTree*> catTrees;
-//CT_Fakes1L.GetListDepth(catTrees,1);
-//for(int i = 0; i < int(catTrees.size()); i++){
-//cout << "list #" << i << endl;
-//catTrees[i]->Print();
-//}
+vector<const CategoryTree*> catTrees;
+CT_Fakes2L.GetListDepth(catTrees,1);
+for(int i = 0; i < int(catTrees.size()); i++){
+cout << "list #" << i << endl;
+catTrees[i]->Print();
+}
 //  FITReader->PlotYields("0Lyields",
 //			VS().a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD")
 //			.a("Wjets").a("Fakes").a("T2tt_5000490").a("T2tt_5000480").a("T2tt_5000375"),
@@ -53,7 +42,6 @@ FitReader* FITReader = new FitReader(inputfile, a2, a3);
 //			VS().a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD")
 //			.a("Wjets").a("Fakes").a("T2tt_5000490").a("T2tt_5000480").a("T2tt_5000375"),
 //			CT_3L);
->>>>>>> crogan-master
 
   VS signals;
   //signals.a("TChiWZ_2500240").a("TChiWZ_2500220").a("TChiWZ_2500200").a("TChiWZ_2500160");
@@ -91,16 +79,16 @@ FitReader* FITReader = new FitReader(inputfile, a2, a3);
   // vector<const CategoryTree*> CTs_deep;
   // CT_0L.GetListDepth(CTs_deep, depth0-3);
   
-  int depth0 = CT_1L.GetDepth();
-  vector<const CategoryTree*> CTs;
-  CT_1L.GetListDepth(CTs, depth0-1);
+//  int depth0 = CT_1L.GetDepth();
+//  vector<const CategoryTree*> CTs;
+//  CT_1L.GetListDepth(CTs, depth0-1);
+//
+//  vector<const CategoryTree*> CTs_deep;
+//  CT_1L.GetListDepth(CTs_deep, depth0-2);
 
-  vector<const CategoryTree*> CTs_deep;
-  CT_1L.GetListDepth(CTs_deep, depth0-2);
-
-  // int depth0 = CT_2L.GetDepth();
-  // vector<const CategoryTree*> CTs;
-  // CT_2L.GetListDepth(CTs, depth0-2);
+   int depth0 = CT_2L.GetDepth();
+   vector<const CategoryTree*> CTs;
+   CT_2L.GetListDepth(CTs, 2);
 
 //   TCanvas* cv = FITReader->Plot2D(VS().a("T5tttt_22001700"),
 //			 VS().a("1L"),
@@ -116,9 +104,9 @@ FitReader* FITReader = new FitReader(inputfile, a2, a3);
   int iCT = 1;
   int iCTd = 0;
   
-  FITReader->Plot1Dstack("0Lstack2",
-  			 all,
-  			 *CTs[iCT], true);
+//  FITPlotter->Plot1Dstack("2Lstack2",
+//  			 all,
+//  			 *CTs[iCT], true);
   // FITReader->Plot2D("2D0",
   // 		    VS().a("data_obs"),
   // 		    *CTs_deep[iCTd]);
@@ -128,10 +116,10 @@ FitReader* FITReader = new FitReader(inputfile, a2, a3);
   // 		      *CTs_deep[iCTd]);
   // }
 
-  FITReader->Plot1Dstack(all,
-			 VS().a("1L"),
-			 VS().a("1j1b0svS"),
-			 VS().a("ge1jISR").a("ge1j0bISR").a("ge1jge1bISR"),
-			 "pre_stack");
-  
+//  FITReader->Plot1Dstack(all,
+//			 VS().a("1L"),
+//			 VS().a("1j1b0svS"),
+//			 VS().a("ge1jISR").a("ge1j0bISR").a("ge1jge1bISR"),
+//			 "pre_stack");
+//  
 }
