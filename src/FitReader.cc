@@ -201,7 +201,6 @@ TH1D* FitReader::GetAddedHist(const string&       name,
       }
     }
   }
-   
   return hist;
 }
 

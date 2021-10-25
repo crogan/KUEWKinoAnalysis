@@ -1750,22 +1750,22 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
 	  b_ratio = true;
       }
     }
-    
     for(int v = 0; v < Nvis; v++){
 //cout << "catList #"  << v << ": " << CatTrees[v]->GetMatchString()[0] << endl;
       CategoryList cat = CatList.Filter(*CatTrees[v]);
       TH1D* h = GetAddedHist(Form("plothist_%d_%d_%s", i, v, can_name.c_str()), cat, procs);
-	 if(h)
+      if(h)
 	itot += h->Integral();
     //  if(dumCatIdx == -999) dumCatIdx = v; 
     //if(h == nullptr) cout << "h null" << endl;     
       hist[v] = h;
       }
+if(type == kData && itot <= 1e-4) b_ratio = false;
     if(itot <= 1e-4)
       continue;
     
     if(type == kData){
-      for(int v = 0; v < Nvis; v++)
+    for(int v = 0; v < Nvis; v++)
 	hist_data[v] = hist[v];
       total_data = itot;
     }
@@ -1801,17 +1801,19 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
       CategoryList cat = CatList.Filter(*CatTrees[v]);
       
       TH1D* h = GetAddedHist(Form("plothist_tot_%d_%s", v, can_name.c_str()), cat, totbkgs);
-if(h == nullptr) continue;//{ cout << "h null for " << CatTrees[v]->GetBareLabel() << endl; continue; }     
+if(h == nullptr) continue;//{cout << "v: " << v << " h null for " << CatTrees[v]->GetBareLabel() << endl; continue; }     
  hist_totbkg[v] = h;
 //	cout << "v: " << v << " totbkg # bins: " << hist_totbkg[v]->GetNbinsX() << endl;
       if(h)
 	total_totbkg += h->Integral();
     }
   }
+
 if(total.size() < 1) return nullptr; 
   int Nsig = hists_sig[0].size();
   // sort the histograms by integral (N^2/2 brute force)
   int Nbkg = total.size();
+//cout << "Nsig: " << Nsig << " Nbkg: " << Nbkg << endl;
   VS             vlabels;
   vector<int>    vcolors;
   vector<TH1D*>  vhists[Nvis];
@@ -1855,11 +1857,10 @@ if(total.size() < 1) return nullptr;
   TH1D*         fhist_totbkg = nullptr;
 
 //cout << "make sig/bkg/total hists" << endl;
-
-
   CategoryList dumcat = CatList.Filter(*CatTrees[0]);
-  const FitBin& fitbin = dumcat[0].GetFitBin();
+ const FitBin& fitbin = dumcat[0].GetFitBin();
   int Nbin = fitbin.NBins();
+//cout << "do sig" << endl;
   for(int i = 0; i < Nsig; i++){
     fhists_sig.push_back(new TH1D(Form("fhistsig_%d_%s", i, can_name.c_str()),
 				  Form("fhistsig_%d_%s", i, can_name.c_str()),
@@ -1873,6 +1874,7 @@ if(total.size() < 1) return nullptr;
       }
     }
   }
+//cout << "do total_data" << endl;
   if(total_data > 0.){
     fhist_data = new TH1D(Form("fhistdata_%s", can_name.c_str()),
 			  Form("fhistdata_%s", can_name.c_str()),
@@ -1886,19 +1888,23 @@ if(total.size() < 1) return nullptr;
       }
     }
   }
+//cout << "do total_bkg" << endl;
   if(total_totbkg > 0.){
     fhist_totbkg = new TH1D(Form("fhisttotbkg_%s", can_name.c_str()),
 			  Form("fhisttotbkg_%s", can_name.c_str()),
 			  Nbin*Nvis, 0., Nbin*Nvis);
     for(int b = 0; b < Nbin; b++){
       for(int v = 0; v < Nvis; v++){
+//cout << "total_bkg v: " << v << endl;
 	if(hist_totbkg[v]){
+//cout << "setting bin content" << endl;
 	  fhist_totbkg->SetBinContent(b*Nvis+v+1, hist_totbkg[v]->GetBinContent(b+1));
 	  fhist_totbkg->SetBinError(b*Nvis+v+1, hist_totbkg[v]->GetBinError(b+1));
 	}
       }
     }
   }
+//cout << "do bkg" << endl;
   for(int i = 0; i < Nbkg; i++){
     for(int v = 0; v < Nvis; v++){
       if(vhists[v][i]){
@@ -1908,7 +1914,7 @@ if(total.size() < 1) return nullptr;
       }
     }
   }
-  for(int i = 0; i < Nbkg; i++){
+ for(int i = 0; i < Nbkg; i++){
     fhists.push_back(new TH1D(Form("fhistsbkg_%d_%s", i, can_name.c_str()),
 			      Form("fhistsbkg_%d_%s", i, can_name.c_str()),
 			      Nbin*Nvis, 0., Nbin*Nvis));
@@ -1916,7 +1922,7 @@ if(total.size() < 1) return nullptr;
       for(int v = 0; v < Nvis; v++){
 	int j = i;
 	TH1D* hptr = nullptr;
-//	cout << "b: " << b << " v: " << v << " j: " << j << endl;
+//cout << "b: " << b << " v: " << v << " j: " << j << endl;
 	while(j < Nbkg && hptr == nullptr){
   //      cout << "j: " << j << endl;
 //	if(vhists[v][j] == nullptr){ cout << "v: " << v << "j: " << j << " vhists null" << endl;}
@@ -1931,6 +1937,7 @@ if(hptr == nullptr) continue;
       }
     }
   }
+//cout << "do formatting" << endl;
   labels = vlabels;
   colors = vcolors;
   for(int b = 0; b < Nbin*Nvis; b++)
@@ -2026,7 +2033,6 @@ if(hptr == nullptr) continue;
     Y_bkg_ratio.push_back(1.);
     Yerr_bkg_ratio.push_back(htot->GetBinError(i+1)/htot->GetBinContent(i+1));
   }
-  
   TGraphErrors* gr = (TGraphErrors*) new TGraphErrors(Nvis*Nbin, &X[0], &Y[0],  &Xerr[0], &Yerr[0]);  
   gr->SetMarkerSize(0);
   gr->SetLineColor(kBlack);
@@ -2040,7 +2046,6 @@ if(hptr == nullptr) continue;
   gr_bkg_ratio->SetLineColor(kBlack);
   gr_bkg_ratio->SetFillColor(kBlack);
   gr_bkg_ratio->SetFillStyle(3244);
-  
   for(int i = 0; i < Nsig; i++){
     fhists_sig[i]->SetLineColor(m_SignalColor[i]);
     fhists_sig[i]->SetMarkerColor(m_SignalColor[i]);
@@ -2053,8 +2058,7 @@ if(hptr == nullptr) continue;
   }
 
   TH1D* fhist_data_ratio = nullptr;
-  
-  if(fhist_data){
+ if(fhist_data){
     fhist_data->SetLineColor(kBlack);
     fhist_data->SetFillColor(kWhite);
     fhist_data->SetMarkerStyle(8);
@@ -2063,7 +2067,6 @@ if(hptr == nullptr) continue;
     fhist_data->Draw("SAME ep");
     if(fhist_data->GetMaximum() > hmax)
       hmax = fhist_data->GetMaximum();
-
     fhist_data_ratio = (TH1D*) fhist_data->Clone(Form("data_ratio_%s", can_name.c_str()));
     for(int i = 0; i < Nvis*Nbin; i++){
       fhist_data_ratio->SetBinContent(i+1, fhist_data_ratio->GetBinContent(i+1)/htot->GetBinContent(i+1));
@@ -2096,9 +2099,10 @@ if(hptr == nullptr) continue;
     l.SetTextColor(7004 + 10*((b%Nvis)%8));
     // l.DrawLatex(hlo+(1.-hhi-hlo)/double(Nvis*Nbin)*(0.5+b), hbo + 4*eps,
     // 		CatTrees[b%Nvis]->GetPlainLabel(Depth).c_str());
-    l.DrawLatex(hlo+(1.-hhi-hlo)/double(Nvis*Nbin)*(0.5+b), 1.-hto - 4*eps,
+ l.DrawLatex(hlo+(1.-hhi-hlo)/double(Nvis*Nbin)*(0.5+b), 1.-hto - 4*eps,
 		CatTrees[b%Nvis]->GetPlainLabel(Depth).c_str());
-  }
+  cout << CatTrees[b%Nvis]->GetPlainLabel(Depth) << endl;
+   }
   
   TLegend* leg = new TLegend(1.-hhi+0.007, 1.- (Nbkg+Nsig+1)*(1.-0.49)/9., 0.98, 1.-hto-0.005);
   leg->SetTextFont(42);
@@ -2106,7 +2110,6 @@ if(hptr == nullptr) continue;
   leg->SetFillColor(kWhite);
   leg->SetLineColor(kWhite);
   leg->SetShadowColor(kWhite);
-
   if(fhist_data)
     leg->AddEntry(fhist_data, "data");
   leg->AddEntry(gr, "total uncertainty","F");
@@ -2115,7 +2118,6 @@ if(hptr == nullptr) continue;
   for(int i = 0; i < Nsig; i++)
     leg->AddEntry(fhists_sig[i], labels_sig[i].c_str(), "L");
   leg->Draw("SAME");
-
   TPad* pad_ratio = nullptr;
   if(b_ratio){
     can->cd();
@@ -2147,9 +2149,7 @@ if(hptr == nullptr) continue;
     fhist_data_ratio->Draw("same ep");
     
   }
-  
   DrawMR(fitbin, can, pad, pad_ratio);
-
   l.SetTextAngle(0);
   l.SetTextColor(kBlack);
   l.SetTextAlign(31);
