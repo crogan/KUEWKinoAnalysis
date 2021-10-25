@@ -1760,7 +1760,7 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
     //if(h == nullptr) cout << "h null" << endl;     
       hist[v] = h;
       }
-if(type == kData && itot <= 1e-4) b_ratio = false;
+    if(type == kData && itot <= 1e-4) b_ratio = false;
     if(itot <= 1e-4)
       continue;
     

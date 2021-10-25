@@ -8,7 +8,7 @@ import os
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--input', '-i', help='input json file')
-parser.add_argument('--output', '-o', help='name of the output file to create')
+parser.add_argument('--output', '-o', help='path of the output file')
 parser.add_argument('--sys','-s',help='name of systematic to plot')
 parser.add_argument('--uncert','-u',help='prior uncertainty on systematic')
 args = parser.parse_args()
@@ -18,17 +18,11 @@ odir = ""
 if args.input is None:
 	print("Need input json file, -i [json]")
 	exit()
-if "/" not in args.input:
+if args.output is None:
 	odir = "./"
 else:
-	odir = args.input[args.input.find("BF")+2:]
-	odir = odir[:odir.find("/")]
-	odir = "prePostStackPlots"+odir+"/"
-	if not os.path.isdir(odir):
-		odir = "./"
+	odir = args.output
 print 'out directory:',odir
-if args.output is None:
-	args.output = "output"
 
 if args.sys is None:
 	args.sys = 'PTISR'

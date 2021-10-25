@@ -812,6 +812,7 @@ CategoryTree CategoryTreeTool::GetCategories_3L() const {
  
   CT_0j.AddSubCategory(CT_Z);
   CT_0j.AddSubCategory(CT_noZ); 
+<<<<<<< HEAD
 
   CT_ge1j.AddSubCategory(CT_Z);
   CT_ge1j.AddSubCategory(CT_noZ); 
@@ -819,6 +820,15 @@ CategoryTree CategoryTreeTool::GetCategories_3L() const {
   CT_inclJs.AddSubCategory(CT_SS);
   
 
+=======
+
+  CT_ge1j.AddSubCategory(CT_Z);
+  CT_ge1j.AddSubCategory(CT_noZ); 
+
+  CT_inclJs.AddSubCategory(CT_SS);
+  
+
+>>>>>>> crogan-main
   CategoryTree CT_gold(VS().a("gold"), "gold", "G", kL_sub, false);
   CategoryTree CT_silver(VS().a("slvr"), "silver", "S", kL_sub, false);
   CategoryTree CT_bronze(VS().a("bron"), "bronze", "B", kL_sub, false);
