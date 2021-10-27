@@ -521,7 +521,8 @@ VS LepList::Combinatorics(const VS& labels, int N) const {
   if(Nl <= N){
     string lab = labels[0];
     for(int i = 1; i < Nl; i++)
-      lab += "_" + labels[i];
+      //lab += "_" + labels[i];
+      lab += labels[i];
     labels_ret += lab;
     return labels_ret;
   }
@@ -532,8 +533,9 @@ VS LepList::Combinatorics(const VS& labels, int N) const {
       labels_m1 += labels[j];
     labels_m1 = Combinatorics(labels_m1, N-1);
     for(auto l : labels_m1)
-      labels_ret += labels[i] + "_" + l;
-  }
+      //labels_ret += labels[i] + "_" + l;
+      labels_ret += labels[i] + l;
+    }
 
   return labels_ret;
 }
