@@ -64,30 +64,26 @@ void FitReader::ReadProcesses(){
     tree->GetEntry(i);
     
     Process p = m_ProcBranch.GetProcess();
-    //cout << "ProcSys name: " << p.Name() << endl;    
     if((p.Name().find("Up") != std::string::npos) ||
        (p.Name().find("Down") != std::string::npos))
       ProcSys += p;
     else
       m_Proc += p;
   }
- 
   if(m_FilePtr) m_Proc += Process("total_background",kBkg); 
   
   delete tree;
-  
   int Nproc = m_Proc.GetN();
   int Nsys  = ProcSys.GetN();
   for(int p = 0; p < Nproc; p++){
     Systematics sys;
     string proc = m_Proc[p].Name();
-    //if(proc.find("Fakes") != std::string::npos) continue;
-    //cout << "proc #" << p << ": " << proc << endl;
     for(int s = 0; s < Nsys; s++){
       string label = ProcSys[s].Name();
       if((proc.find("Fakes") == std::string::npos) &&
 	 (label.find("Fakes") != std::string::npos))
 	continue;
+      if(label.find(proc+"_") == std::string::npos) continue;
       if(label.find(proc) == 0){
 	label.replace(0,proc.length()+1,"");
 	if(label.find("Up") != std::string::npos)
