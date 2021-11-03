@@ -540,10 +540,9 @@ void FitInputEditor::AddShapeSysFakes(){
       while(pr != m_FakeGroupLists.end()){
 	ProcessList procs = pr->second;
 	int Nproc = procs.GetN();
-
 	bool b_addSys_RISR  = false;
 	bool b_addSys_Mperp = false;
-	string sys_name = sgroup+"_"+pr->first;
+	string sys_name = pr->first+"_"+sgroup;
 	Systematic sys_RISR(sys_name+"_RISR");
 	Systematic sys_Mperp(sys_name+"_Mperp");
 
@@ -562,11 +561,11 @@ void FitInputEditor::AddShapeSysFakes(){
 	    string hname = "h_"+proc.Name()+"_"+cat.GetLabel()+"_"+sys_name;
 	    TH1D* hist = (TH1D*) GetHistogram(cat, proc)->Clone(hname.c_str());
 
-	    TH1D* hist_RISRUp = getVariation_RISR(hname+"_RISRUp", hist, cat, 0.2);
-	    TH1D* hist_RISRDn = getVariation_RISR(hname+"_RISRDn", hist, cat, -0.2);
+	    TH1D* hist_RISRUp = getVariation_RISR(hname+"_RISRUp", hist, cat, 0.05);
+	    TH1D* hist_RISRDn = getVariation_RISR(hname+"_RISRDn", hist, cat, -0.05);
 
-	    TH1D* hist_MperpUp = getVariation_Mperp(hname+"_MperpUp", hist, cat, 0.2);
-	    TH1D* hist_MperpDn = getVariation_Mperp(hname+"_MperpDn", hist, cat, -0.2);
+	    TH1D* hist_MperpUp = getVariation_Mperp(hname+"_MperpUp", hist, cat, 0.05);
+	    TH1D* hist_MperpDn = getVariation_Mperp(hname+"_MperpDn", hist, cat, -0.05);
 
 	    // add systematic histograms to editor
 	    if(m_ProcHistSys.count(proc) == 0)
@@ -627,16 +626,7 @@ void FitInputEditor::AddShapeSysQCD(){
   
   CTs.push_back(CTTool.GetCategories_QCD0L());
   CTs.push_back(CTTool.GetCategories_QCD1L());
-
-  for(int i = 0; i < 2; i++){
-    catTrees.clear();
-    CTs[i].GetListDepth(catTrees,1);
-    for(int j = 0; j < int(catTrees.size()); j++)
-      CT_groups.push_back(catTrees[j]);
-  }
-
-  int NCT = CT_groups.size();
-
+  
   ProcessList processes = GetProcesses();
   int Nproc = processes.GetN();
 
@@ -653,13 +643,23 @@ void FitInputEditor::AddShapeSysQCD(){
   if(Nproc == 0)
     return;
 
-  bool b_addSys_RISR  = false;
-  bool b_addSys_Mperp = false;
-  Systematic sys_RISR("QCD_RISR");
-  Systematic sys_Mperp("QCD_Mperp");
-  
+  for(int i = 0; i < 2; i++){
+    CT_groups.clear();
+    CTs[i].GetListDepth(CT_groups,1);
+  //  for(int j = 0; j < int(catTrees.size()); j++)
+  //    CT_groups.push_back(catTrees[j]);
+   //string sgroup = Form("QCD_%dL",i+1);
+   int NCT = CT_groups.size();
+ cout << "CT_groups size: " << NCT << endl; 
   // loop through category groups
   for(int g = 0; g < NCT; g++){
+cout << "group #" << g << ": " << CT_groups[g]->GetSpecLabel() << endl;   
+  bool b_addSys_RISR  = false;
+  bool b_addSys_Mperp = false;
+  string sys_name = "QCD_"+CT_groups[g]->GetSpecLabel();
+  Systematic sys_RISR(sys_name+"_RISR");
+  Systematic sys_Mperp(sys_name+"_Mperp");
+  
     CategoryList cats = m_Cat.Filter(*CT_groups[g]);
     int Ncat = cats.GetN();
     if(Ncat == 0)
@@ -677,14 +677,14 @@ void FitInputEditor::AddShapeSysQCD(){
 	if(!IsFilled(cat, proc))
 	  continue;
 	    
-	string hname = "h_"+proc.Name()+"_"+cat.GetLabel()+"_QCD";
+	string hname = "h_"+proc.Name()+"_"+cat.GetLabel()+"_"+sys_name;
 	TH1D* hist = (TH1D*) GetHistogram(cat, proc)->Clone(hname.c_str());
 
-	TH1D* hist_RISRUp = getVariation_RISR(hname+"_RISRUp", hist, cat, 0.2);
-	TH1D* hist_RISRDn = getVariation_RISR(hname+"_RISRDn", hist, cat, -0.2);
+	TH1D* hist_RISRUp = getVariation_RISR(hname+"_RISRUp", hist, cat, 0.20);
+	TH1D* hist_RISRDn = getVariation_RISR(hname+"_RISRDn", hist, cat, -0.20);
 
-	TH1D* hist_MperpUp = getVariation_Mperp(hname+"_MperpUp", hist, cat, 0.2);
-	TH1D* hist_MperpDn = getVariation_Mperp(hname+"_MperpDn", hist, cat, -0.2);
+	TH1D* hist_MperpUp = getVariation_Mperp(hname+"_MperpUp", hist, cat, 0.20);
+	TH1D* hist_MperpDn = getVariation_Mperp(hname+"_MperpDn", hist, cat, -0.20);
 
 	// add systematic histograms to editor
 	if(m_ProcHistSys.count(proc) == 0)
@@ -719,7 +719,7 @@ void FitInputEditor::AddShapeSysQCD(){
 	  b_addSys_Mperp = true;
 	  b_addProcSys_Mperp = true;
 	} 
-      }
+      
     }	
   }
 
@@ -729,7 +729,8 @@ void FitInputEditor::AddShapeSysQCD(){
   if(b_addSys_Mperp){
     m_Sys += sys_Mperp;
   }
-  
+  }
+  } 
   CTs.clear();
 }
 
@@ -851,6 +852,39 @@ void FitInputEditor::AddFakeData(){
       if(m_ProcHist_2D[data_obs].count(cat) == 0)
 	m_ProcHist_2D[data_obs][cat] = hist_2D;
     }
+  }
+
+  if(added)
+    m_Proc += data_obs;
+}
+
+void FitInputEditor::AddEmptyData(){
+  Process data_obs("data_obs", kData);
+  bool added = false;
+  int Nproc = m_Proc.GetN(); 
+  int Ncat = m_Cat.GetN();
+  for(int c = 0; c < Ncat; c++){
+    Category cat = m_Cat[c];
+    TH1D* hist    = nullptr;
+    if(!IsThere(cat,data_obs)){
+	for(int p = 0; p < Nproc; p++){
+		Process proc = m_Proc[p];
+		if(IsFilled(cat,proc)){ 
+			hist = (TH1D*) GetHistogram(cat,proc)->Clone(("h_data_"+cat.GetLabel()).c_str());
+		 	break;
+		}
+	}
+	hist->SetBinContent(0,0.);
+	hist->SetBinContent(hist->GetNbinsX()+1,0.);
+	for(int i = 0; i < hist->GetNbinsX(); i++){ hist->SetBinContent(i+1,1e-8); hist->SetBinError(i+1,0.); }
+	if(m_ProcHist.count(data_obs) == 0) 
+		m_ProcHist[data_obs] = map<Category,TH1D*>();
+	if(m_ProcHist[data_obs].count(cat) == 0 || !m_ProcHist[data_obs][cat]) 
+		m_ProcHist[data_obs][cat] = hist;
+
+	added = true;
+    }
+
   }
 
   if(added)

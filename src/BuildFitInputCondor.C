@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
   bool doSigFile = false;
   string SigFile = "";
   
-  string NtuplePath = "/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_21_09_20/";
+  string NtuplePath = "/home/t3-ku/z374f439/storage/crogan/";
   string OutFile    = "BuildFitInput_output.root";
 
   bool bprint = false;

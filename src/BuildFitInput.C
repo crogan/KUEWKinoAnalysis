@@ -31,7 +31,7 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-  string NtuplePath = "/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_21_09_20/";
+  string NtuplePath = "/home/t3-ku/z374f439/storage/crogan/";
   string OutFile    = "BuildFitInput_output.root";
 
   bool doSigFile = false;
@@ -303,6 +303,9 @@ int main(int argc, char* argv[]) {
 
 	if(!base->EventFilter)
 	  continue;
+
+        if(base->runnum > 319077 && is_data && year == 2018)
+          continue;
 	
 	if(do_FilterDilepton)
 	  if(SF.DileptonEvent(base))
