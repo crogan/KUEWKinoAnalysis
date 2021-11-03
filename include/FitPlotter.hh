@@ -56,6 +56,8 @@ public:
 
   void FindBkgRare();
 
+  void YieldPerBkg(const VS& proc_bkg);
+
   void zeroBkgTest();
 
   TCanvas* Plot1Dstack(const string& can_name,
@@ -84,7 +86,11 @@ private:
   void DrawCatTree(const CategoryTree& CT, TCanvas* can);
   void DrawMR(const FitBin& fitbin, TCanvas* can);
 
+
   double calculateZbi(double Nsig, double Nbkg, double deltaNbkg = 0.2);
+
+  VS AddPrefix(const string& pre, const VS& post) const;
+
   
 };
 
