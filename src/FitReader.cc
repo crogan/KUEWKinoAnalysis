@@ -79,6 +79,7 @@ void FitReader::ReadProcesses(){
       if((proc.find("Fakes") == std::string::npos) &&
 	 (label.find("Fakes") != std::string::npos))
 	continue;
+if(label.find(proc+"_") == std::string::npos) continue;
       if(label.find(proc) == 0){
 	label.replace(0,proc.length()+1,"");
 	if(label.find("Up") != std::string::npos)
