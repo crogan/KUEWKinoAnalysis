@@ -7,28 +7,40 @@ import os
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--input', '-i', help='input json file')
+parser.add_argument('--input', '-i', help='input json file',required=True)
 parser.add_argument('--output', '-o', help='path of the output file')
-parser.add_argument('--sys','-s',help='name of systematic to plot')
-parser.add_argument('--uncert','-u',help='prior uncertainty on systematic')
+parser.add_argument('--sys','-s',help='name of systematic to plot',required=True)
+parser.add_argument('--uncert','-u',help='prior uncertainty on systematic',required=True)
+parser.add_argument('--channels','-chan',help='lepton channel (can be >1)',nargs='*')
+parser.add_argument('--kinematic','-kin',help='kinematic to look at for fake shapes (ie RISR or Mperp)',choices=['RISR','Mperp'])
 args = parser.parse_args()
 
 odir = ""
-
 if args.input is None:
 	print("Need input json file, -i [json]")
 	exit()
-if args.output is None:
+if "/" not in args.input:
 	odir = "./"
 else:
-	odir = args.output
+	odir = args.input[args.input.find("BF")+2:]
+	odir = odir[:odir.find("/")]
+	odir = "prePostStackPlots"+odir+"/"
+	if not os.path.isdir(odir):
+		os.mkdir(odir)
+		#odir = "./"
 print 'out directory:',odir
 
+if args.output is None:
+	args.output = "output"
 if args.sys is None:
 	args.sys = 'PTISR'
 if args.uncert is None:
 	print("Need input prior uncertainty, -u [uncertainty]")
 	exit()
+if args.channels is None:
+	leps = ["0L","1L","2L","3L"]
+else:
+	leps = args.channels
 # Load the json output of combineTool.py -M Impacts
 data = {}
 with open(args.input) as jsonfile:
@@ -38,10 +50,8 @@ with open(args.input) as jsonfile:
 POIs = [ele['name'] for ele in data['POIs']]
 POI = POIs[0]
 
-
-leps = ["0L","1L"]
 graphs = []
-
+legLabels = []
 maxPulls = 0
 minPulls = 0
 for l in leps:
@@ -56,6 +66,13 @@ for l in leps:
 		if p['type'] != 'Unconstrained' and l in p['name']:
 			if args.sys not in p['name']:
 				continue
+			if args.kinematic is not None and args.kinematic not in p['name']:
+				continue
+			if "Fake_" in p['name'] and args.kinematic is None:
+				print "Mperp or RISR fake shapes? -kin [RISR or Mperp]"
+				break 
+			if l not in legLabels:
+				legLabels.append(l)
 			pre_err_hi = (pre[2] - pre[1])
 			pre_err_lo = (pre[1] - pre[0])
 			pull = fit[1] - pre[1]
@@ -66,14 +83,18 @@ for l in leps:
         	        pull_lo = fit[0] - pre[1]
         	        pull_lo = (pull_lo/pre_err_hi) if pull_lo >= 0 else (pull_lo/pre_err_lo)
         	        pull_lo =  pull - pull_lo
-		
-			pos = p['name'].find('jS')
+	
+			if "Fake_" in p['name']:	
+				pos = p['name'].find('J')
+			else:
+				pos = p['name'].find('jS')
+			if p['name'][pos-1].isnumeric() == False:
+				continue
 			sJets.append(int(p['name'][pos-1]))
-			#print l, p['name'], 'pull', pull, 'err_lo', pull_lo, 'err_hi', pull_hi, 'sJets', int(p['name'][pos-1])
+			print l, p['name'], 'pull', pull, 'err_lo', pull_lo, 'err_hi', pull_hi, 'sJets', int(p['name'][pos-1])
 			pulls.append(pull)
 			err_hi.append(pull_hi)
 			err_lo.append(pull_lo)
-	
 	n = len(pulls)
 	hi = [sum(x) for x in zip(pulls,err_hi)]
 	lo = [x[0]-x[1] for x in zip(pulls,err_lo)]
@@ -84,6 +105,7 @@ for l in leps:
 			maxPulls = np.ceil(max(hi))
 		if np.floor(min(lo)) < minPulls:
 			minPulls = np.floor(min(lo))
+
 	gr = ROOT.TGraphAsymmErrors(n)
 	skip = 0
 	n = len(sJets)
@@ -110,20 +132,14 @@ for l in leps:
 if len(graphs) < 1:
 	print args.sys, "not found in json"
 	exit()
-green = 7012
-blue = 7002	
+
+for i,gr in enumerate(graphs):
+	gr.SetMarkerStyle(20+i*2)
+	gr.SetMarkerColor(800+i*20 + 9)
+	gr.SetLineColor(800+i*20 + 9)
 
 
-graphs[0].SetMarkerStyle(20)
-graphs[0].SetMarkerColor(blue)
-graphs[0].SetLineColor(blue)
-
-
-graphs[1].SetMarkerStyle(22)
-graphs[1].SetMarkerColor(green)
-graphs[1].SetLineColor(green)
 graphs[0].GetXaxis().SetRangeUser(-0.5,5.5)
-
 graphs[0].GetHistogram().SetMaximum(maxPulls)
 graphs[0].GetHistogram().SetMinimum(minPulls)
 graphs[0].GetXaxis().SetTitle("# s jets")
@@ -141,8 +157,8 @@ leg.SetFillColor(0)
 leg.SetShadowColor(0)
 leg.SetFillStyle(0)
 leg.SetTextFont(132)
-leg.AddEntry(graphs[0],leps[0])
-leg.AddEntry(graphs[1],leps[1])
+for i in range(len(graphs)):
+	leg.AddEntry(graphs[i],legLabels[i])
 eps = 0.0015
 hlo = 0.09
 hhi = 0.22
@@ -153,7 +169,8 @@ hto = 0.07
 cv = ROOT.TCanvas(args.output,args.sys)
 cv.cd()
 graphs[0].Draw("ap")
-graphs[1].Draw("SAMEP")
+for i in range(1,len(graphs)):
+	graphs[i].Draw("SAMEP")
 leg.Draw("same")
 
 l = ROOT.TLatex()
@@ -170,7 +187,10 @@ l.SetTextSize(0.035)
 l.SetTextFont(132)
 l.DrawLatex(hlo+eps*4+0.2, 1.-hhi+0.035,"prior uncertainty: %s%%" % args.uncert)
 
-plotlabel = "%s pulls" % args.sys #"#color[7014]{"+lep_labels[0]+"} + ";
+if args.kinematic is None:
+	plotlabel = "%s pulls" % args.sys #"#color[7014]{"+lep_labels[0]+"} + ";
+else:
+	plotlabel = "{}_Fakes_{} pulls".format(args.sys,args.kinematic)
 l.SetTextColor(1);
 l.SetTextAlign(13);
 l.SetTextSize(0.04);
@@ -182,9 +202,13 @@ line = ROOT.TLine(0,0,5.5,0)
 line.SetLineStyle(7)
 line.Draw("same")
 
-cv.Print(odir+'%s_sJetImpacts.root'%args.sys)
-cv.Print(odir+'%s_sJetImpacts.pdf'%args.sys)
+if args.kinematic is None:
+	oname = odir+"{}_sJetImpacts".format(args.sys)
+else:
+	oname = odir+"{}_{}_sJetImpacts".format(args.sys,args.kinematic)
 
+cv.Print(oname+'.root')
+cv.Print(oname+'.pdf')
 
 
 

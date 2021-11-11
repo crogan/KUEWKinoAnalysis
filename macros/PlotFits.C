@@ -3,11 +3,11 @@
 #include "../include/FitPlotter.hh"
 
 //void PlotFits(const string& inputfile = "/home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/BuildFits/BF_allBkgs_data_T2tt_0L1L_QCDShapesSJet0p20var_QCDnorms0p50_WJetsnorms0p20_otherBkgnorms0p20_maskSR_09_27_21/FitInput_KUEWKino_2017.root", const string& a2 = "/home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/BuildFits/BF_allBkgs_data_T2tt_0L1L_QCDShapesSJet0p20var_QCDnorms0p50_WJetsnorms0p20_otherBkgnorms0p20_maskSR_09_27_21/all/T2tt/6000425/fitDiagnostics09_24_21wShapes.root", const string& a3 = "shapes_fit_b"){
-void PlotFits(const string& fold1 = "BF_allBkgs_data_T2tt_2L3L_QCDShapes0p20_maskSR_10_20_21", const string& fold2 = "Ch3L/T2tt/6000425", const string& shapesFile = "10_20_21wShapes.root"){
+void PlotFits(const string& fold1 = "/BF_allBkgs_data_T2tt_2L3L_FakeShapes0p05_sJetSplitprocsTogether_maskSR_10_25_21", const string& fold2 = "all/T2tt/6000425", const string& shapesFile = "10_25_21wShapes.root"){
   
   string dateName = shapesFile.substr(0,8);
         string bfName = fold1.substr(2,fold1.size());
-        string odir = "prePostStackPlots"+bfName;
+        string odir = "prePostStackPlots/prePostStackPlots"+bfName;
 
         string inputfile1 = "BuildFits/"+fold1+"/FitInput_KUEWKino_2017.root";
         string inputfile2 = "BuildFits/"+fold1+"/"+fold2+"/fitDiagnostics"+shapesFile;
@@ -36,6 +36,7 @@ cout << "out directory: " << odir << "/" << lepName << "/" << endl;
   CategoryTree CT_3L = CTTool.GetCategories_3L();
 
   VS all;
+  //all.a("ttbar_all").a("ST_all").a("DB_all").a("ZDY_all").a("TB_all").a("QCD_all").a("Wjets_all").a("Data");
   all.a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD").a("Wjets").a("HF_Fakes").a("LF_Fakes").a("Data");
   string sig;
   sig = "T2tt_6000425";
@@ -54,11 +55,10 @@ cout << "out directory: " << odir << "/" << lepName << "/" << endl;
   // vector<const CategoryTree*> CTs_deep;
   // CT_1L.GetListDepth(CTs_deep, depth0-2);
 
-   //int depth0 = CT_2L.GetDepth();
-   //int d = 4;
-   //vector<const CategoryTree*> CTs;
-   //CT_2L.GetListDepth(CTs, depth0-d);
-   
+ //  int depth0 = CT_2L.GetDepth();
+ //  int d = 4;
+ //  vector<const CategoryTree*> CTs;
+ //  CT_2L.GetListDepth(CTs, 1);
    //vector<const CategoryTree*> CTs_deep;
    //CT_2L.GetListDepth(CTs_deep, depth0-2);
 
@@ -69,7 +69,7 @@ cout << "out directory: " << odir << "/" << lepName << "/" << endl;
 
   // vector<const CategoryTree*> CTs_deep;
   // CT_3L.GetListDepth(CTs_deep, depth0-2);
-cout << depth0 << endl;
+cout << depth0 << " " << CTs.size() << endl;
  if(gSystem->AccessPathName((fname).c_str())){
                 gSystem->Exec(("mkdir "+odir).c_str());
                 gSystem->Exec(("mkdir "+odir+"/"+lepName).c_str());
@@ -77,36 +77,38 @@ cout << depth0 << endl;
         TFile* file = new TFile(fname.c_str(),"RECREATE");
         cout << "Writing to file: " << fname << endl;
         file->cd();
-  for(int i = 0; i < CTs.size(); i++){
+  for(int i = 2; i < 3; i++){
     string dir = CTs[i]->GetPlainLabel(depth0-d);
-cout << CTs[i]->GetSpectroscopicLabel() << endl;
 while(dir.find(" ") != string::npos) dir.replace(dir.find(" "),1,"_"); 
-    cout << dir << " " << depth0-d << endl;
+    cout << dir  << endl;
+//0J only
+// if(dir.find("0J") == string::npos) continue;
     cout << "##############plot prefit#############" << endl;
     TCanvas* prefit_stack = FITPlotter_pre->Plot1Dstack(Form("pre_stack_%d",i),all,*CTs[i],ratio);
     if(prefit_stack == nullptr) continue;
-    cout << "##############plot b-fit#############" << endl;
-    TCanvas* b_fit_stack = FITPlotter_bOnly->Plot1Dstack(Form("bFit_stack_%d",i),all,*CTs[i],ratio);
-    if(b_fit_stack == nullptr) continue;
+   // cout << "##############plot b-fit#############" << endl;
+    //TCanvas* b_fit_stack = FITPlotter_bOnly->Plot1Dstack(Form("bFit_stack_%d",i),all,*CTs[i],ratio);
+    //if(b_fit_stack == nullptr) continue;
     //cout << "##############plot s+b fit#############" << endl; 
     //TCanvas* sb_fit_stack = FITPlotter_sb->Plot1Dstack(Form("sbFit_stack_%d",i),all,*CTs[i],ratio);
     //if(sb_fit_stack == nullptr) continue;
-cout << "writing plots to file" << endl;
-    if(!file->GetDirectory(dir.c_str()))
-            file->mkdir(dir.c_str());
-    file->cd(dir.c_str());
-    prefit_stack->Write("prefit_stack",TObject::kOverwrite);
-    b_fit_stack->Write("bfit_stack",TObject::kOverwrite);
-   //sb_fit_stack->Write("sbfit_stack",TObject::kOverwrite);
-  cout << "saving plots as pdf" << endl;
-
-   prefit_stack->SaveAs((odir+"/"+lepName+"/"+dir+sig+"prefit.pdf").c_str());
-   b_fit_stack->SaveAs((odir+"/"+lepName+"/"+dir+sig+"b-fit.pdf").c_str());
-   //sb_fit_stack->SaveAs((odir+"/"+lepName+"/"+dir+sig+"sb-fit.pdf").c_str());
-
-   prefit_stack->Close();
-   b_fit_stack->Close();
-   //sb_fit_stack->Close();
+//cout << "writing plots to file" << endl;
+  //  if(!file->GetDirectory(dir.c_str()))
+  //          file->mkdir(dir.c_str());
+  //  file->cd(dir.c_str());
+  //  prefit_stack->Write("prefit_stack",TObject::kOverwrite);
+  //  b_fit_stack->Write("bfit_stack",TObject::kOverwrite);
+// cout << "saving plots as pdf" << endl;
+  // if(all[0].find("all") != std::string::npos){
+  // prefit_stack->SaveAs((odir+"/"+lepName+"/"+dir+sig+"_fakesIncl_prefit.pdf").c_str());
+  // b_fit_stack->SaveAs((odir+"/"+lepName+"/"+dir+sig+"_fakesIncl_b-fit.pdf").c_str());
+  // }
+  // else{
+  // prefit_stack->SaveAs((odir+"/"+lepName+"/"+dir+sig+"prefit.pdf").c_str());
+  // b_fit_stack->SaveAs((odir+"/"+lepName+"/"+dir+sig+"b-fit.pdf").c_str());
+  // }
+  // prefit_stack->Close();
+  // b_fit_stack->Close();
 
 
    file->cd();

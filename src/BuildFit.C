@@ -384,6 +384,7 @@ map<string,VC> catBins;
 	  Process proc = proc_sys[p];
 	  // looping through categories to check that process/sys/cat is filled
 	  VS cat_names;
+//cout << "proc: " << proc.Name() << " with sys: " << sys.Label() << endl;
 	  for(auto ch : channels){
 	    int Ncat = chanMap[ch].GetN();
 	    for(int c = 0; c < Ncat; c++){
