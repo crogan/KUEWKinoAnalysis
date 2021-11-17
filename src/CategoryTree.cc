@@ -519,11 +519,11 @@ CategoryTree CategoryTreeTool::GetCategories_0L() const {
 
 CategoryTree CategoryTreeTool::GetCategories_1L() const {
   
-  CategoryTree CT_0b(VS().a("j0bS"), "0 b #in S", "0b", kJ_sub, true);
-  CategoryTree CT_1b(VS().a("j1bS"), "1 b #in S", "1b", kJ_sub, true);
+  CategoryTree CT_0b(VS().a("j0b").a("j0bS"), "0 b #in S", "0b", kJ_sub, true);
+  CategoryTree CT_1b(VS().a("jge1b").a("j1b"), "1 b #in S", "1b", kJ_sub, true);
   CategoryTree CT_0b_notGold(VS().a("j0bS"), "0 b #in S", "0b", kJ_sub, true);
   CategoryTree CT_1b_notGold(VS().a("j1bS"), "1 b #in S", "1b", kJ_sub, true);
-  CategoryTree CT_ge1b(VS().a("ge1bS"), "geq 1 b #in S", "1b", kJ_sub, true);
+  CategoryTree CT_ge1b(VS().a("ge1bS"), "#geq 1 b #in S", "1b", kJ_sub, true);
   CategoryTree CT_2b(VS().a("2bS"), "#geq 2 b #in S", "2b", kJ_sub, true);
  
   CategoryTree CT_inclbISR(VS().a("ge1jISR"), "#geq 1 j #in ISR", "ge1j", kX_sub, false);
@@ -642,7 +642,7 @@ CategoryTree CategoryTreeTool::GetCategories_1L() const {
   CT_ge4j.AddSubCategory(CT_silver_ge2j);
   CT_ge4j.AddSubCategory(CT_bronze_ge2j);
   
-  CategoryTree CT_1L(VS().a("Ch1L"), "1L", "1L", kL, true);
+  CategoryTree CT_1L(VS().a("Ch1L"), "1L", "1L", kL, false);
   CT_1L.AddSubCategory(CT_0j);
   CT_1L.AddSubCategory(CT_1j);
   CT_1L.AddSubCategory(CT_2j);

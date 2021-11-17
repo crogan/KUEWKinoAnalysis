@@ -419,6 +419,7 @@ CategoryList CategoryList::Filter(const CategoryTree& CT) const {
   CategoryList list = FilterOR(CT.GetMatchString());
 const CategoryTree* par = CT.GetParent();
   while(par){
+//cout << "# cats: " << list.GetN() << " " << par->GetMatchString()[0] << endl;
     list = list.Filter(*par);
     par = par->GetParent();
   }
@@ -451,7 +452,7 @@ CategoryList CategoryList::FilterOR(const VS& labels) const {
   for(int i = 0; i < m_N; i++){
     for(int l = 0; l < Nl; l++){
       if((m_Cat[i]->Label()+"_"+m_Cat[i]->GetLabel()).find(labels[l]) != std::string::npos){
-//	cout << "here " << (m_Cat[i]->Label()+"_"+m_Cat[i]->GetLabel()) << " " << labels[l] << endl;
+	//cout << "here " << (m_Cat[i]->Label()+"_"+m_Cat[i]->GetLabel()) << " " << labels[l] << endl;
 	list += *m_Cat[i];
 	break;
       }

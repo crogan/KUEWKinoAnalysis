@@ -1855,11 +1855,16 @@ if(total.size() < 1) return nullptr;
   vector<TH1D*> fhists_sig;
   TH1D*         fhist_data   = nullptr;
   TH1D*         fhist_totbkg = nullptr;
-
+//cout << "# catTrees:" << CatTrees.size() << endl;
+//cout << CatTrees[0]->GetSpecLabel() << endl;
 //cout << "make sig/bkg/total hists" << endl;
   CategoryList dumcat = CatList.Filter(*CatTrees[0]);
  const FitBin& fitbin = dumcat[0].GetFitBin();
   int Nbin = fitbin.NBins();
+//cout << "dumcat # cats: " << dumcat.GetN() << endl;
+//cout << "dumcat[0]: " << dumcat[0].GetLabel() << endl;
+//cout << "Nvis: " << Nvis << " Nbin: " << Nbin << endl;
+if(dumcat.GetN() < 1) return nullptr;
 //cout << "do sig" << endl;
   for(int i = 0; i < Nsig; i++){
     fhists_sig.push_back(new TH1D(Form("fhistsig_%d_%s", i, can_name.c_str()),
@@ -1896,8 +1901,8 @@ if(total.size() < 1) return nullptr;
     for(int b = 0; b < Nbin; b++){
       for(int v = 0; v < Nvis; v++){
 //cout << "total_bkg v: " << v << endl;
-	if(hist_totbkg[v]){
-//cout << "setting bin content" << endl;
+	if(hist_totbkg[v] != nullptr){
+//cout << "setting bin content with " << hist_totbkg[v]->GetNbinsX() << endl;
 	  fhist_totbkg->SetBinContent(b*Nvis+v+1, hist_totbkg[v]->GetBinContent(b+1));
 	  fhist_totbkg->SetBinError(b*Nvis+v+1, hist_totbkg[v]->GetBinError(b+1));
 	}
