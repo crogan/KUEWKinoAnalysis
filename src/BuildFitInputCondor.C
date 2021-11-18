@@ -304,7 +304,7 @@ void WriteScriptConnect(const string& src_name,
   file << "should_transfer_files = YES" << endl;
   file << "when_to_transfer_output = ON_EXIT" << endl;
   file << "transfer_output_files = "+root_output << endl;
-  file << "transfer_output_remaps = \""+root_output+"="+command.substr(command.find("-o ")+2)+"\"" << endl;
+  file << "transfer_output_remaps = \""+root_output+"="+pwd+"/"+command.substr(command.find("-o ")+3)+"\"" << endl;
   file << "+ProjectName=\"cms.org.ku\""<< endl;
   file << "+REQUIRED_OS=\"rhel7\"" << endl;
   file << "+RequiresCVMFS=True" << endl;
