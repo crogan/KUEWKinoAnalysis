@@ -567,14 +567,7 @@ processed = true;
       }
       delete base;
       delete chain;
-      if(!processed && attempt < 10 && !(file.find("TTTT") != string::npos)){
-	f--;
-	attempt++;
-	}
-	else{ processed = false; attempt = 0; }
-	
- 
-   }
+    }
   }
 
   FITBuilder.WriteFit(OutFile);
