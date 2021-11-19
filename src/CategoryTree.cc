@@ -605,7 +605,7 @@ CategoryTree CategoryTreeTool::GetCategories_1L() const {
   CT_ge1sv_notGold.AddSubCategory(CT_etaC);
   CT_ge1sv_notGold.AddSubCategory(CT_etaF);
   
-  CategoryTree CT_gold_0j(VS().a("gold")(, "gold", "G", kL_sub, true);
+  CategoryTree CT_gold_0j(VS().a("gold"), "gold", "G", kL_sub, true);
   CategoryTree CT_gold_1j(VS().a("gold"), "gold", "G", kL_sub, true);
   CategoryTree CT_gold_ge2j(VS().a("gold"), "gold", "G", kL_sub, true);
  
