@@ -21,9 +21,9 @@ void TestReader(const string& inputfile = "test/FitInput_test.root", const strin
   //signals.a("TSlepSlep_2000190").a("T2bW_5000480").a("TSlepSlep_2000180").a("T2bW_5000450");
   //signals.a("T2tt_5000480").a("T2bW_5000480").a("T2tt_5000450").a("T2bW_5000450");
   //signals.a("T2tt_5000450").a("T2bW_5000450").a("T2tt_5000420").a("T2bW_5000420");
-  signals.a("T2tt_5000450").a("T2bW_5000420").a("T2tt_5000375").a("T2bW_5000325");
+  //signals.a("T2tt_5000450").a("T2bW_5000420").a("T2tt_5000375").a("T2bW_5000325");
   //signals.a("T2bb_5000475").a("T2bb_5000450").a("T2bb_5000400").a("T2bb_5000350");
-  //signals.a("T2bW_5000480").a("T2bb_5000475").a("T2tt_5000450").a("T2bW_5000420").a("T2bW_5000325"); // 0L
+  signals.a("T2bW_5000480").a("T2bW_5000450").a("T2bW_5000420").a("T2bW_5000325"); // 0L
   //signals.a("T2bW_5000480").a("T2tt_5000450").a("T2bW_5000420").a("T2tt_5000375").a("T2bW_5000325"); // 1L
   //signals.a("TChiWZ_2500245").a("TChiWZ_2500240").a("TChiWZ_2500230").a("TChiWZ_2500210"); // 2L
   //signals.a("TChiWZ_2500247").a("T2bW_5000490").a("TChiWZ_2500240").a("T2bW_5000480"); // 2L
@@ -31,18 +31,18 @@ void TestReader(const string& inputfile = "test/FitInput_test.root", const strin
   VS all = signals;
   all.a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD").a("Wjets").a("HF_Fakes").a("LF_Fakes").a("Data");
 
-  // FITReader->PlotYields("0Lyields",
-  // 			all,
-  // 			CT_0L);
+  FITReader->PlotYields("0Lyields",
+  			all,
+  			CT_0L);
   // FITReader->PlotYields("1Lyields",
   // 			all,
   // 			CT_1L);
-  // FITReader->PlotYields("2Lyields",
-  // 			all,
-  // 			CT_2L);
-  // FITReader->PlotYields("3Lyields",
-  // 			all,
-  // 			CT_3L);
+  FITReader->PlotYields("2Lyields",
+  			all,
+  			CT_2L);
+  FITReader->PlotYields("3Lyields",
+  			all,
+  			CT_3L);
   
   // int depth0 = CT_0L.GetDepth();
   // vector<const CategoryTree*> CTs;
@@ -51,12 +51,12 @@ void TestReader(const string& inputfile = "test/FitInput_test.root", const strin
   // vector<const CategoryTree*> CTs_deep;
   // CT_0L.GetListDepth(CTs_deep, depth0-3);
   
-  int depth0 = CT_1L.GetDepth();
-  vector<const CategoryTree*> CTs;
-  CT_1L.GetListDepth(CTs, depth0-1);
+  // int depth0 = CT_1L.GetDepth();
+  // vector<const CategoryTree*> CTs;
+  // CT_1L.GetListDepth(CTs, depth0-1);
 
-  vector<const CategoryTree*> CTs_deep;
-  CT_1L.GetListDepth(CTs_deep, depth0-2);
+  // vector<const CategoryTree*> CTs_deep;
+  // CT_1L.GetListDepth(CTs_deep, depth0-2);
 
   // int depth0 = CT_2L.GetDepth();
   // vector<const CategoryTree*> CTs;
@@ -72,12 +72,12 @@ void TestReader(const string& inputfile = "test/FitInput_test.root", const strin
   // vector<const CategoryTree*> CTs_deep;
   // CT_3L.GetListDepth(CTs_deep, depth0-2);
 
-  int iCT = 1;
-  int iCTd = 0;
+  // int iCT = 0;
+  // int iCTd = 0;
   
-  FITReader->Plot1Dstack("0Lstack2",
-  			 all,
-  			 *CTs[iCT], true);
+  // FITReader->Plot1Dstack("0Lstack2",
+  // 			 all,
+  // 			 *CTs[iCT], true);
   // FITReader->Plot2D("2D0",
   // 		    VS().a("data_obs"),
   // 		    *CTs_deep[iCTd]);
@@ -85,12 +85,12 @@ void TestReader(const string& inputfile = "test/FitInput_test.root", const strin
   //   FITReader->Plot2D(Form("2D%d",s+1),
   // 		      VS().a(signals[s]),
   // 		      *CTs_deep[iCTd]);
-  // }
+  //  }
 
-  FITReader->Plot1Dstack(all,
-			 VS().a("1L"),
-			 VS().a("1j1b0svS"),
-			 VS().a("ge1jISR").a("ge1j0bISR").a("ge1jge1bISR"),
-			 "pre_stack");
+  // FITReader->Plot1Dstack(all,
+  // 			 VS().a("1L"),
+  // 			 VS().a("1j1b0svS"),
+  // 			 VS().a("ge1jISR").a("ge1j0bISR").a("ge1jge1bISR"),
+  // 			 "pre_stack");
   
 }
