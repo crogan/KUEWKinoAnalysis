@@ -1,5 +1,5 @@
 #!/bin/bash
-wget --no-check-certificate http://stash.osgconnect.net/+zflowers/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2
+#wget --quiet --no-check-certificate http://stash.osgconnect.net/+zflowers/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2
 
 tar -xzf ./config_BuildFitInput.tgz
 

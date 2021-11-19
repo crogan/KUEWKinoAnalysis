@@ -579,9 +579,6 @@ int main(int argc, char* argv[]) {
       }
       delete base;
       delete chain;
-      TFile file_to_close;
-      file_to_close.Open(file.c_str());
-      file_to_close.Close();
     }
   }
 
