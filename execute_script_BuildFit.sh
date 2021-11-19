@@ -14,4 +14,4 @@ cmssw_setup sandbox-CMSSW_10_6_5-6403d6f.tar.bz2
 
 source setup_RestFrames_connect.sh 
 
-./config_BuildFit/BuildFit.x "$@"
+./BuildFit.x "$@"
