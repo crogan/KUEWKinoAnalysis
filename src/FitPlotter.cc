@@ -4288,28 +4288,28 @@ void FitPlotter::InitializeRecipes(){
   VS s_Fakes_HF;
   s_Fakes_HF.a("Fakes_elf1G").a("Fakes_muf1G").a("Fakes_elf1S")
     .a("Fakes_muf1S").a("Fakes_elf1B").a("Fakes_muf1B")
-    .a("Fakes_elf1G_elf1G").a("Fakes_muf1G_muf1G").a("Fakes_elf1G_elf1S").a("Fakes_muf1G_muf1S")
-    .a("Fakes_elf1G_elf1B").a("Fakes_muf1G_muf1B").a("Fakes_elf1S_elf1S").a("Fakes_muf1S_muf1S")
-    .a("Fakes_elf1S_elf1B").a("Fakes_muf1S_muf1B")
-    .a("Fakes_elf0G_elf1G").a("Fakes_muf0G_muf1G").a("Fakes_elf0G_elf1S").a("Fakes_muf0G_muf1S")
-    .a("Fakes_elf1G_elf0S").a("Fakes_muf1G_muf0S").a("Fakes_elf0G_elf1B").a("Fakes_muf0G_muf1B")
-    .a("Fakes_elf1G_elf0B").a("Fakes_muf1G_muf0B").a("Fakes_elf0S_elf1S").a("Fakes_muf0S_muf1S")
-    .a("Fakes_elf0S_elf1B").a("Fakes_muf0S_muf1B").a("Fakes_elf1S_elf0B").a("Fakes_muf1S_muf0B")
-    .a("Fakes_elf1G_muf1G").a("Fakes_elf1G_muf1S").a("Fakes_elf1S_muf1G").a("Fakes_elf1G_muf1B")
-    .a("Fakes_elf1B_muf1G").a("Fakes_elf1S_muf1S").a("Fakes_elf1S_muf1B").a("Fakes_elf1B_muf1S")
-    .a("Fakes_elf1G_muf0G").a("Fakes_elf1G_muf0S").a("Fakes_elf1S_muf0G").a("Fakes_elf1G_muf0B")
-    .a("Fakes_elf1B_muf0G").a("Fakes_elf1S_muf0S").a("Fakes_elf1S_muf0B").a("Fakes_elf1B_muf0S")
-    .a("Fakes_elf0G_muf1G").a("Fakes_elf0G_muf1S").a("Fakes_elf0S_muf1G").a("Fakes_elf0G_muf1B")
-    .a("Fakes_elf0B_muf1G").a("Fakes_elf0S_muf1S").a("Fakes_elf0S_muf1B").a("Fakes_elf0B_muf1S");
+    .a("Fakes_elf1Gelf1G").a("Fakes_muf1Gmuf1G").a("Fakes_elf1Gelf1S").a("Fakes_muf1Gmuf1S")
+    .a("Fakes_elf1Gelf1B").a("Fakes_muf1Gmuf1B").a("Fakes_elf1Self1S").a("Fakes_muf1Smuf1S")
+    .a("Fakes_elf1Self1B").a("Fakes_muf1Smuf1B")
+    .a("Fakes_elf0Gelf1G").a("Fakes_muf0Gmuf1G").a("Fakes_elf0Gelf1S").a("Fakes_muf0Gmuf1S")
+    .a("Fakes_elf1Gelf0S").a("Fakes_muf1Gmuf0S").a("Fakes_elf0Gelf1B").a("Fakes_muf0Gmuf1B")
+    .a("Fakes_elf1Gelf0B").a("Fakes_muf1Gmuf0B").a("Fakes_elf0Self1S").a("Fakes_muf0Smuf1S")
+    .a("Fakes_elf0Self1B").a("Fakes_muf0Smuf1B").a("Fakes_elf1Self0B").a("Fakes_muf1Smuf0B")
+    .a("Fakes_elf1Gmuf1G").a("Fakes_elf1Gmuf1S").a("Fakes_elf1Smuf1G").a("Fakes_elf1Gmuf1B")
+    .a("Fakes_elf1Bmuf1G").a("Fakes_elf1Smuf1S").a("Fakes_elf1Smuf1B").a("Fakes_elf1Bmuf1S")
+    .a("Fakes_elf1Gmuf0G").a("Fakes_elf1Gmuf0S").a("Fakes_elf1Smuf0G").a("Fakes_elf1Gmuf0B")
+    .a("Fakes_elf1Bmuf0G").a("Fakes_elf1Smuf0S").a("Fakes_elf1Smuf0B").a("Fakes_elf1Bmuf0S")
+    .a("Fakes_elf0Gmuf1G").a("Fakes_elf0Gmuf1S").a("Fakes_elf0Smuf1G").a("Fakes_elf0Gmuf1B")
+    .a("Fakes_elf0Bmuf1G").a("Fakes_elf0Smuf1S").a("Fakes_elf0Smuf1B").a("Fakes_elf0Bmuf1S");
   
   VS s_Fakes_LF;
   s_Fakes_LF.a("Fakes_elf0G").a("Fakes_muf0G").a("Fakes_elf0S")
     .a("Fakes_muf0S").a("Fakes_elf0B").a("Fakes_muf0B")
-    .a("Fakes_elf0G_elf0G").a("Fakes_muf0G_muf0G").a("Fakes_elf0G_elf0S").a("Fakes_muf0G_muf0S")
-    .a("Fakes_elf0G_elf0B").a("Fakes_muf0G_muf0B").a("Fakes_elf0S_elf0S").a("Fakes_muf0S_muf0S")
-    .a("Fakes_elf0S_elf0B").a("Fakes_muf0S_muf0B")
-    .a("Fakes_elf0G_muf0G").a("Fakes_elf0G_muf0S").a("Fakes_elf0S_muf0G").a("Fakes_elf0G_muf0B")
-    .a("Fakes_elf0B_muf0G").a("Fakes_elf0S_muf0S").a("Fakes_elf0S_muf0B").a("Fakes_elf0B_muf0S");
+    .a("Fakes_elf0Gelf0G").a("Fakes_muf0Gmuf0G").a("Fakes_elf0Gelf0S").a("Fakes_muf0Gmuf0S")
+    .a("Fakes_elf0Gelf0B").a("Fakes_muf0Gmuf0B").a("Fakes_elf0Self0S").a("Fakes_muf0Smuf0S")
+    .a("Fakes_elf0Self0B").a("Fakes_muf0Smuf0B")
+    .a("Fakes_elf0Gmuf0G").a("Fakes_elf0Gmuf0S").a("Fakes_elf0Smuf0G").a("Fakes_elf0Gmuf0B")
+    .a("Fakes_elf0Bmuf0G").a("Fakes_elf0Smuf0S").a("Fakes_elf0Smuf0B").a("Fakes_elf0Bmuf0S");
   
   m_Title["QCD"] = "QCD multi-jets";
   m_Color["QCD"] = 7023;
