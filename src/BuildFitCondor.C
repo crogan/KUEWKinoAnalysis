@@ -256,7 +256,6 @@ int main(int argc, char* argv[]) {
     BuildFitCmd += "--verbose ";
   BuildFitCmd += "--output " + OutputFold + " ";
   BuildFitCmd += "--input " + InputFile + " ";
-  //BuildFitCmd += "--input " + OutputFile + " ";
   BuildFitCmd += Form("-year %d ", year);
   if(addChan)
     BuildFitCmd += "++chan ";
@@ -304,13 +303,16 @@ int main(int argc, char* argv[]) {
     iBFCmd += "+proc "+signals[p].Name()+" ";
     cout << "Adding proc " << signals[p].Name() << endl;
     if(procs.size() >= maxN || p == Nproc-1){
-      WriteScript(SrcFold+Form("submit_%d",Njob)+".sh",
-		  LogFold+Form("job_%d",Njob)+".log",
-		  BuildFitCmd+iBFCmd,
-		  CERNqueue);
       if(connect)
       {
         WriteScriptConnect(SrcFold+Form("submit_%d",Njob)+".sh",
+		  LogFold+Form("job_%d",Njob)+".log",
+		  BuildFitCmd+iBFCmd,
+		  CERNqueue);
+      }
+      else
+      {
+        WriteScript(SrcFold+Form("submit_%d",Njob)+".sh",
 		  LogFold+Form("job_%d",Njob)+".log",
 		  BuildFitCmd+iBFCmd,
 		  CERNqueue);
@@ -347,7 +349,7 @@ void WriteScriptConnect(const string& src_name,
    gSystem->Exec("cp scripts/cmssw_setup_connect.sh config_BuildFit/");
    gSystem->Exec("cp scripts/setup_RestFrames_connect.sh config_BuildFit/");
    string input_file = command.substr(command.find("input")+5,command.find(".root")-command.find("input"));
-   gSystem->Exec(("cp"+input_file+" config_BuildFit/").c_str());
+   gSystem->Exec(("cp --parents "+input_file+" config_BuildFit/").c_str());
    gSystem->Exec("tar -czf config_BuildFit.tgz config_BuildFit/");
    gSystem->Exec(("mv config_BuildFit.tgz "+command.substr(command.find("output ")+7,command.find("input")-10-command.find("output "))).c_str());
    gSystem->Exec("rm -r config_BuildFit/");
@@ -366,7 +368,7 @@ void WriteScriptConnect(const string& src_name,
   file << "log = "    << log_name << ".log" << endl;
   file << "Requirements = (Machine != \"red-node000.unl.edu\") && (Machine != \"red-c2325.unl.edu\")" << endl;
   file << "request_memory = 4 GB" << endl;
-  file << "transfer_input_files = "+command.substr(command.find("output ")+7,command.find("input")-10-command.find("output "))+"/config_BuildFit.tgz" << endl;
+  file << "transfer_input_files = /uscms/home/z374f439/nobackup/whatever_you_want/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2,"+command.substr(command.find("output ")+7,command.find("input")-10-command.find("output "))+"/config_BuildFit.tgz" << endl;
   file << "should_transfer_files = YES" << endl;
   file << "when_to_transfer_output = ON_EXIT" << endl;
   file << "transfer_output_files = datacards" << endl;
