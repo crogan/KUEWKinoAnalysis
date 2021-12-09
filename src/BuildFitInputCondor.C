@@ -244,19 +244,25 @@ int main(int argc, char* argv[]) {
     iBFICmd += "+proc "+proc.Name()+" ";
     cout << "Adding proc " << proc.Name() << endl;
     if(procs.size() >= maxN || p == Nsample-1){
-      WriteScript(SrcFold+Form("submit_%d",Njob)+".sh",
-		  LogFold+Form("job_%d",Njob)+".log",
-		  BuildFitInputCmd+iBFICmd+" -o "+RootFold+Form("BFI_%d.root ", Njob));
-      if(connect)
-        WriteScriptConnect(SrcFold+Form("submit_%d",Njob)+".sh",
-		  LogFold+Form("job_%d",Njob)+".log",
-		  BuildFitInputCmd+iBFICmd+" -o "+Form("BFI_%d.root ", Njob),
-		  RootFold);
-      condorsubmit << "condor_submit " << SrcFold << "submit_" << Njob << +".sh" << endl;
+      int Nfile = ST.NTrees(proc);
+      for(int f = 0; f < Nfile; f++){
+        string new_BFICmd = BuildFitInputCmd;
+        if(proc.Type() == kBkg)
+          new_BFICmd += ("-ifile "+std::to_string(f))+" ";
+        WriteScript(SrcFold+Form("submit_%d",Njob)+".sh",
+          	  LogFold+Form("job_%d",Njob)+".log",
+          	  new_BFICmd+iBFICmd+" -o "+RootFold+Form("BFI_%d.root ", Njob));
+        if(connect)
+          WriteScriptConnect(SrcFold+Form("submit_%d",Njob)+".sh",
+          	  LogFold+Form("job_%d",Njob)+".log",
+          	  new_BFICmd+iBFICmd+" -o "+Form("BFI_%d.root ", Njob),
+          	  RootFold);
+        condorsubmit << "condor_submit " << SrcFold << "submit_" << Njob << +".sh" << endl;
 
-      procs.clear();
-      iBFICmd = "";
-      Njob++;
+        Njob++;
+      }
+     iBFICmd = "";
+     procs.clear();
     }
   }
   condorsubmit.close();
@@ -299,7 +305,7 @@ void WriteScriptConnect(const string& src_name,
   file << "error = "  << log_name << ".err" << endl;
   file << "log = "    << log_name << ".log" << endl;
   file << "Requirements = (Machine != \"red-node000.unl.edu\") && (Machine != \"red-c2325.unl.edu\")" << endl;
-  file << "request_memory = 4 GB" << endl;
+  file << "request_memory = 2 GB" << endl;
   file << "transfer_input_files = /uscms/home/z374f439/nobackup/whatever_you_want/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2,"+pwd+"/"+OutputFold+"/../config_BuildFitInput.tgz" << endl;
   file << "should_transfer_files = YES" << endl;
   file << "when_to_transfer_output = ON_EXIT" << endl;

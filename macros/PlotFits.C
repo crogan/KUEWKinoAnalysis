@@ -111,6 +111,4 @@ cout << "writing plots to file" << endl;
    cout << "\n" << endl;
  }
 
-
-
 }
