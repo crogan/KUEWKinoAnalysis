@@ -3,7 +3,7 @@
 #include "../include/FitPlotter.hh"
 
 //void PlotFits(const string& inputfile = "/home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/BuildFits/BF_allBkgs_data_T2tt_0L1L_QCDShapesSJet0p20var_QCDnorms0p50_WJetsnorms0p20_otherBkgnorms0p20_maskSR_09_27_21/FitInput_KUEWKino_2017.root", const string& a2 = "/home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/BuildFits/BF_allBkgs_data_T2tt_0L1L_QCDShapesSJet0p20var_QCDnorms0p50_WJetsnorms0p20_otherBkgnorms0p20_maskSR_09_27_21/all/T2tt/6000425/fitDiagnostics09_24_21wShapes.root", const string& a3 = "shapes_fit_b"){
-void PlotFits(const string& fold1 = "BF_allBkgs_data_TChiWZ_2016_2L3L_FakesShapes0p05_sJetSplitprocsTogether/", const string& fold2 = "all/TChiWZ/4000350", const string& shapesFile = "11_11_21wShapes.root"){
+void PlotFits(const string& fold1 = "BF_allBkgs_data_T2tt_2L3L_FakeShapes0p05_sJetSplitprocsTogether_QCDShapes_maskSR_10_25_21", const string& fold2 = "datacards/all/T2tt/6000425", const string& shapesFile = "11_23_21wShapes.root"){
   
   string dateName = shapesFile.substr(0,8);
         string bfName = fold1.substr(2,fold1.size());
@@ -12,10 +12,12 @@ void PlotFits(const string& fold1 = "BF_allBkgs_data_TChiWZ_2016_2L3L_FakesShape
         string inputfile1 = "BuildFits/"+fold1+"/FitInput_KUEWKino_2017.root";
         string inputfile2 = "BuildFits/"+fold1+"/"+fold2+"/fitDiagnostics"+shapesFile;
         string lepName;
-        if(fold2.find("Ch") != string::npos) lepName = fold2.substr(0,4);
+        if(fold2.find("L") != string::npos) lepName = fold2.substr(10,4);
         else lepName = "all";
         string fname = odir+"/"+lepName+"/"+shapesFile;
 cout << "input file: " << inputfile2 << endl;
+cout << odir << endl;
+cout << lepName << endl;
 cout << "out directory: " << odir << "/" << lepName << "/" << endl;
   
  if(gSystem->AccessPathName(inputfile2.c_str())){ cout << "file " << inputfile2 << " not found" << endl; return; }
@@ -40,12 +42,13 @@ cout << "out directory: " << odir << "/" << lepName << "/" << endl;
   //all.a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD").a("Wjets").a("HF_Fakes").a("LF_Fakes").a("Data");
   string sig;
  // sig = "T2tt_6000425";
-  sig = "TChiWZ_3000250";
-  all += sig; 
+  //sig = "TChiWZ_4000350";
+ // all += sig; 
 
   bool zeroL = false;
   bool oneL = false;
   bool twoL = true;
+  bool twoL_0j = false;
   bool threeL = false; 
   vector<const CategoryTree*> CTs;
   int depth0, d;
@@ -64,6 +67,11 @@ cout << "out directory: " << odir << "/" << lepName << "/" << endl;
    d = 4;
    CT_2L.GetListDepth(CTs, 0);
    }
+  else if(twoL_0j){
+   depth0 = CT_2L.GetDepth();
+   d = 4;
+   CT_2L.GetListDepth(CTs, 1);
+   }
   else if(threeL){
    depth0 = CT_3L.GetDepth();
    d = 3;
@@ -77,11 +85,12 @@ cout << depth0 << " " << CTs.size() << endl;
         TFile* file = new TFile(fname.c_str(),"RECREATE");
         cout << "Writing to file: " << fname << endl;
         file->cd();
-  for(int i = 0; i < CTs.size(); i++){
+  for(int i = 0; i < 1; i++){
     string dir = CTs[i]->GetPlainLabel(depth0-d);
 while(dir.find(" ") != string::npos) dir.replace(dir.find(" "),1,"_"); 
     cout << dir  << endl; 
-if(dir.find("0J") != string::npos) continue; 
+if(dir.find("G") != string::npos) continue;
+//if(dir.find("0J") != string::npos) continue; 
   cout << "##############plot prefit#############" << endl;
     TCanvas* prefit_stack = FITPlotter_pre->Plot1Dstack(Form("pre_stack_%d",i),all,*CTs[i],ratio);
     if(prefit_stack == nullptr) continue;
@@ -96,8 +105,8 @@ cout << "writing plots to file" << endl;
     b_fit_stack->Write("bfit_stack",TObject::kOverwrite);
  cout << "saving plots as pdf" << endl;
    if(all[0].find("all") != std::string::npos){
-   prefit_stack->SaveAs((odir+"/"+lepName+"/"+dir+sig+"_fakesIncl_prefit.pdf").c_str());
-   b_fit_stack->SaveAs((odir+"/"+lepName+"/"+dir+sig+"_fakesIncl_b-fit.pdf").c_str());
+   prefit_stack->SaveAs((odir+"/"+lepName+"/"+dir+sig+"fakesIncl_prefit.pdf").c_str());
+   b_fit_stack->SaveAs((odir+"/"+lepName+"/"+dir+sig+"fakesIncl_b-fit.pdf").c_str());
    }
    else{
    prefit_stack->SaveAs((odir+"/"+lepName+"/"+dir+sig+"prefit.pdf").c_str());
