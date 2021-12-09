@@ -31,6 +31,7 @@
 
 using namespace std;
 int main(int argc, char* argv[]) {
+  int ifile = -1;
   string NtuplePath = "/home/t3-ku/z374f439/storage/crogan/";
   string OutFile    = "BuildFitInput_output.root";
 
@@ -70,6 +71,10 @@ int main(int argc, char* argv[]) {
     if(strncmp(argv[i],"-path", 5) == 0){
       i++;
       NtuplePath = string(argv[i]);
+    }
+    if(strncmp(argv[i],"-ifile", 6) == 0){
+      i++;
+      ifile = std::atoi(argv[i]);
     }
     if(strncmp(argv[i],"-o", 2) == 0){
       i++;
@@ -272,10 +277,10 @@ cout << "# processes: " << samples.GetN() << endl;
     int Nfile = ST.NTrees(proc);
 
     cout << "Processing " << Nfile << " files for process " << title << endl;
-   int attempt = 0;
-   bool processed = false; 
-   for(int f = 0; f < Nfile; f++){ 
-      cout << "Attempt: " << attempt << endl; 
+
+    for(int f = 0; f < Nfile; f++){
+      if(ifile != -1)
+        f = ifile;
       string file = ST.FileName(proc, f);
       string tree = ST.TreeName(proc, f);
 
@@ -567,6 +572,8 @@ processed = true;
       }
       delete base;
       delete chain;
+      if(ifile != -1)
+        break;
     }
   }
 
