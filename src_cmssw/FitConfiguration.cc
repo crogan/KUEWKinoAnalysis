@@ -32,7 +32,7 @@ void FitConfiguration::Configure(ch::CombineHarvester& cb, ProcessList& processe
   bkg_rate += "ZDY";
   bkg_rate += "QCD";
   //bkg_rate += "ST";
-  bkg_rate += "TB";
+//  bkg_rate += "TB";
   
   bkg_rare += "ST";
   bkg_rare += "DB";
