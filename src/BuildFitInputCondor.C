@@ -207,7 +207,7 @@ int main(int argc, char* argv[]) {
     OutputFold = OutputFold.substr(0,found);
   }
 
-  cout << "* Writing ouput to " << OutputFold << endl;
+  cout << "* Writing output to " << OutputFold << endl;
   gSystem->Exec(("rm -fr "+OutputFold).c_str());
   gSystem->Exec(("mkdir -p "+OutputFold).c_str());
 
