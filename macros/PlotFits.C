@@ -2,9 +2,9 @@
 
 #include "../include/FitPlotter.hh"
 
-void PlotFits(const string& inputfile = "test/FitInput_test.root", const string& a2 = "", const string& a3 = ""){
+void PlotFits(const string& inputfile = "test/FitInput_test.root", const string& fitfile = "", const string& fitfold = ""){
 
-  FitPlotter* FITReader = new FitPlotter(inputfile, a2, a3);
+  FitPlotter* FITReader = new FitPlotter(inputfile, fitfile, fitfold);
 
   CategoryTreeTool CTTool;
 
@@ -45,9 +45,7 @@ void PlotFits(const string& inputfile = "test/FitInput_test.root", const string&
   // CT_3L.GetListDepth(CTs_deep, depth0-2);
 
   for(int i = 0; i < CTs.size(); i++){
-    FITReader->Plot1Dstack(Form("hstack_%d", i),
-			   all,
-			   *CTs[i], true);
+    FITReader->Plot1Dstack(Form("hstack_%d", i), all, *CTs[i], true);
   }
   
 }
