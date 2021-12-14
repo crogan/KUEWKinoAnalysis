@@ -517,6 +517,27 @@ CategoryTree CategoryTreeTool::GetCategories_0L() const {
   return CT_0L;
 }
 
+CategoryTree CategoryTreeTool::GetCategories_1L_ChargeSep() const {
+
+  CategoryTree CT_gold(VS().a("gold"), "gold", "G", kL_sub, true);
+  CategoryTree CT_0j(VS().a("_0j"), "", "0J", kJ, true);
+  CategoryTree CT_elp(VS().a("elp"), "elp", "e^{+}", kL_sub, true);
+  CategoryTree CT_elm(VS().a("elm"), "elm", "e^{-}", kL_sub, true);
+  CategoryTree CT_mup(VS().a("mup"), "mup", "#mu^{+}", kL_sub, true);
+  CategoryTree CT_mum(VS().a("mum"), "mum", "#mu^{-}", kL_sub, true);
+  CategoryTree CT_1L(VS().a("Ch1L"), "1L", "1L", kL, true);
+
+  CT_0j.AddSubCategory(CT_elp);
+  CT_0j.AddSubCategory(CT_elm);
+  CT_0j.AddSubCategory(CT_mup);
+  CT_0j.AddSubCategory(CT_mum);
+  CT_gold.AddSubCategory(CT_0j);
+
+  CT_1L.AddSubCategory(CT_gold);
+
+  return CT_1L;
+}
+
 CategoryTree CategoryTreeTool::GetCategories_1L() const {
   
   CategoryTree CT_0b(VS().a("j0bS"), "0 b #in S", "0b", kJ_sub, true);

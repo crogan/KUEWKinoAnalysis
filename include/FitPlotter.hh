@@ -29,7 +29,7 @@ public:
         const VS& hadI_cat,
 	const string& name);
   
-TCanvas* Plot1Dstack(const VS& proc,
+  TCanvas* Plot1Dstack(const VS& proc,
 			const VS& lep_cat,
 			const VS& hadS_cat,
 			const VS& hadI_cat,

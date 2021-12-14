@@ -2266,12 +2266,16 @@ TCanvas* FitPlotter::Plot2D(const string& can_name,
   int Nproc = proc.size();
   if(Nproc == 0)
     return nullptr;
+
+  //cout << "Nproc: " << Nproc << endl;
   
   vector<const CategoryTree*> CatTrees;
   CT.GetListDeepest(CatTrees);
   
   int Nvis = CatTrees.size();
   
+  //cout << "Nvis: " << Nvis << endl;
+
   if(Nvis < 1)
     return nullptr;
   
@@ -2287,13 +2291,18 @@ TCanvas* FitPlotter::Plot2D(const string& can_name,
   CategoryList cat = CatList.Filter(CT);
   int Ncat = cat.GetN();
   
+  //cout << "Ncat: " << Ncat << endl;
+
   for(int i = 0; i < Nproc; i++){
     VS vproc;
-    if(m_Strings.count(proc[i]) != 0)
+    if(m_Strings.count(proc[i]) != 0){
       vproc = m_Strings[proc[i]];
-    else
+      //cout << vproc[i] << endl;
+    }
+    else{
       vproc += proc[i];
-    
+      //cout << vproc[i] << endl;
+    }
     ProcessList procs;
     
     ProcessType type = kBkg;
@@ -2310,6 +2319,7 @@ TCanvas* FitPlotter::Plot2D(const string& can_name,
 
       if(pp.Type() == kSig){
 	type = kSig;
+	//cout << "here" << endl;
       }
       
       if(pp.Type() == kData){
@@ -2318,6 +2328,7 @@ TCanvas* FitPlotter::Plot2D(const string& can_name,
 
       for(int c = 0; c < Ncat; c++){
 	if(GetHistogram2D(cat[c],pp)){
+	  //cout << "here" << endl;
 	  if(!hist)
 	    hist = (TH2D*) GetHistogram2D(cat[c],pp)
 	      ->Clone(Form("plothist2D_%s", can_name.c_str()));
@@ -2326,6 +2337,7 @@ TCanvas* FitPlotter::Plot2D(const string& can_name,
 	}
       }
     }
+    //cout << "hist ptr: " << hist << endl;
     if(hist == nullptr)
       continue;
     
@@ -2601,6 +2613,15 @@ else vhadS.push_back(m_Strings[hadS_cat[i]][j]);
     .a("DB_Fakes_elf1").a("DB_Fakes_muf1").a("ZDY").a("ZDY_Fakes_elf0").a("ZDY_Fakes_muf0").a("ZDY_Fakes_elf1").a("ZDY_Fakes_muf1")
     .a("Wjets").a("Wjets_Fakes_elf0").a("Wjets_Fakes_muf0").a("Wjets_Fakes_elf1").a("Wjets_Fakes_muf1");
 
+  m_Title["bkg_all"] = "All Backgrounds";
+  m_Color["bkg_all"] = 7011;
+  m_Strings["bkg_all"] = VS().a("ttbar").a("ttbar_Fakes_elf0").a("ttbar_Fakes_muf0").a("ttbar_Fakes_elf1").a("ttbar_Fakes_muf1")
+    .a("ST").a("ST_Fakes_elf0").a("ST_Fakes_muf0").a("ST_Fakes_elf1").a("ST_Fakes_muf1")
+    .a("DB").a("DB_Fakes_elf0").a("DB_Fakes_muf0").a("DB_Fakes_elf1").a("DB_Fakes_muf1")
+    .a("TB").a("TB_Fakes_elf0").a("TB_Fakes_muf0").a("TB_Fakes_elf1").a("TB_Fakes_muf1")
+    .a("ZDY").a("ZDY_Fakes_elf0").a("ZDY_Fakes_muf0").a("ZDY_Fakes_elf1").a("ZDY_Fakes_muf1")
+    .a("Wjets").a("Wjets_Fakes_elf0").a("Wjets_Fakes_muf0").a("Wjets_Fakes_elf1").a("Wjets_Fakes_muf1");
+  /*
   m_Title["HF_Fakes"] = "HF leptons";
   m_Color["HF_Fakes"] = 7022;
   m_Strings["HF_Fakes"] = VS();
@@ -2610,7 +2631,7 @@ else vhadS.push_back(m_Strings[hadS_cat[i]][j]);
   m_Strings["HF_Fakes"] += AddPrefix("DB", s_Fakes_HF);
   m_Strings["HF_Fakes"] += AddPrefix("ST", s_Fakes_HF);
   m_Strings["HF_Fakes"] += AddPrefix("TB", s_Fakes_HF);
-
+  */
 cout << cats[catTest].GetN() << endl;
  
 cout << "hadronic S cuts passed" << endl;
@@ -5094,7 +5115,7 @@ TCanvas* FitPlotter::PlotRegionSignificance(const string& can_name,
                              Form("can_%s", can_name.c_str()),
                              1200, 700);
   double hlo = 0.1;
-  double hhi = 0.19;
+  double hhi = 0.25;
   double hbo = 0.19;
   double hto = 0.07;
   can->SetLeftMargin(hlo);
@@ -5150,7 +5171,7 @@ TCanvas* FitPlotter::PlotRegionSignificance(const string& can_name,
   }
   leg->Draw("SAME");
 
-  DrawMR(fitbin, can);
+  DrawMR(fitbin,can,can);
 
   double eps = 0.0015;
   
