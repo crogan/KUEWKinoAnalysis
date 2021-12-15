@@ -56,6 +56,10 @@ public:
 		     const ProcessList&  procs,
 		     const Systematic&   sys = Systematic::Default()) const;
 
+  vector<double> GetAddedHistValues(const CategoryList& cats,
+				    const ProcessList&  procs,
+				    const Systematic&   sys = Systematic::Default()) const;
+
   bool IsFilled2D(const Category&   cat,
 		  const Process&    proc,
 		  const Systematic& sys = Systematic::Default()) const;
