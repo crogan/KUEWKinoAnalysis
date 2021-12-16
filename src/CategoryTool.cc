@@ -691,6 +691,8 @@ Hadronic CategoryTool::GetHadronicRegion(int Njet, int index) const {
 
 }
 
+float gamTval = 0.0;
+
 CategoryList CategoryTool::GetCategories_0L(bool maskSR) const {
   CategoryList Cats_0L;
   cout << "Creating 0L Categories" << endl;
@@ -731,7 +733,7 @@ CategoryList CategoryTool::GetCategories_0L(bool maskSR) const {
   vector<double> gamT0;
   gamT0.push_back(0.);
   vector<double> gamT;
-  gamT.push_back(0.);
+  gamT.push_back(gamTval);//Change lower cut on gammaT (originally 0)
   gamT.push_back(0.5);
 
   ///////////////////////////////////////////////
@@ -1002,7 +1004,7 @@ CategoryList Cats_1L;
   vector<double> gamT0;
   gamT0.push_back(0.);
   vector<double> gamT;
-  gamT.push_back(0.);
+  gamT.push_back(gamTval);
   gamT.push_back(0.5);
 
   // Define Lepton ID-based categories:
@@ -1526,7 +1528,7 @@ CategoryList CategoryTool::GetCategories_2L(bool maskSR) const {
   vector<double> gamT0;
   gamT0.push_back(0.);
   vector<double> gamT;
-  gamT.push_back(0.);
+  gamT.push_back(gamTval);
   gamT.push_back(0.5);
 
   // Define Lepton ID-based categories:
@@ -2179,7 +2181,7 @@ CategoryList CategoryTool::GetCategories_3L(bool maskSR) const {
   vector<double> gamT0;
   gamT0.push_back(0.);
   vector<double> gamT;
-  gamT.push_back(0.);
+  gamT.push_back(gamTval);
   gamT.push_back(0.5);
 
   // Define Lepton ID-based categories:
