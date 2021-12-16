@@ -197,18 +197,19 @@ TFile* file = TFile::Open(filename.c_str(), "READ");
 //cout << "is " << filename << " open? " << file->IsOpen() << endl;
   if(!file->IsOpen())
     return;
- 
+//cout << "file is open" << endl; 
   TIter list(file->GetListOfKeys());
   TKey* key;
   int M0, M1;
   string name;
   VS files;
+//cout << "a" << endl;
   while((key = (TKey*)list.Next())){
     name = string(key->GetName());
     if(name.find("SMS") == std::string::npos)
       continue;
     sscanf(name.c_str(), "SMS_%d_%d", &M0, &M1);
-
+//cout << name << endl;
     Process proc(Form("%s_%d", prefix.c_str(), 10000*M0+M1), kSig);
     files.clear();
     if(m_Proc[m_iYear].count(proc) == 0){
@@ -228,7 +229,7 @@ TFile* file = TFile::Open(filename.c_str(), "READ");
       m_SProcW[m_iYear][proc][filename] = weight;
     }
     
-   
+ //cout << "c" << endl;  
   }
   file->Close();
 }
