@@ -98,7 +98,7 @@ void EventCountPlot(){
   VS T2bW_2017;
   T2bW_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-T2bW_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
   T2bW_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-T2bW_X05_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-  T2bW_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-T2bW_X05_dM-10to80_2Lfilter_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+  //T2bW_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-T2bW_X05_dM-10to80_2Lfilter_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
   T2bW += T2bW_2017;
   
   VS T2tt_2017;
@@ -106,7 +106,7 @@ void EventCountPlot(){
   T2tt_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-T2tt_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
   T2tt_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-T2tt_mStop-400to1200_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
   T2tt_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-T2tt_dM-6to8_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-  T2tt_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-T2tt_dM-10to80_2Lfilter_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+  //T2tt_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-T2tt_dM-10to80_2Lfilter_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
   T2tt += T2tt_2017;
 
   VS TChiWZ_2017;
@@ -156,7 +156,7 @@ void EventCountPlot(){
   VS T2bW_2018;
   T2bW_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-T2bW_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
   T2bW_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-T2bW_X05_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
-  T2bW_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-T2bW_X05_dM-10to80_2Lfilter_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
+  //T2bW_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-T2bW_X05_dM-10to80_2Lfilter_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
   T2bW += T2bW_2018;
   
   VS T2tt_2018;
@@ -164,7 +164,7 @@ void EventCountPlot(){
   T2tt_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-T2tt_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
   T2tt_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-T2tt_mStop-400to1200_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
   T2tt_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-T2tt_dM-6to8_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
-  T2tt_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-T2tt_dM-10to80_2Lfilter_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
+  //T2tt_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-T2tt_dM-10to80_2Lfilter_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
   T2tt += T2tt_2018;
 
   VS TChiWZ_2018;
