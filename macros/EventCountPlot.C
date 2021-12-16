@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <boost/filesystem.hpp>
 
 #include <TFile.h>
 #include <TTree.h>
@@ -29,7 +30,6 @@
 
 using namespace std;
 
-
 string g_PlotTitle;
 string g_Label;
 string g_Xname;
@@ -45,12 +45,12 @@ using namespace RestFrames;
 
 void EventCountPlot(){
   
- RestFrames::SetStyle();
+  RestFrames::SetStyle();
 
- string NtuplePath = "/home/t3-ku/z374f439/storage/crogan/";
+  string NtuplePath = "/home/t3-ku/z374f439/storage/crogan/";
 
 
- int SKIP = 1;
+  int SKIP = 1;
 
   vector<VS> signals;
   VS signal_labels;
@@ -220,10 +220,10 @@ void EventCountPlot(){
   TChiWH += TChiWH_2018;
 
   // --- 2016 --- // 
-  signal_labels.a("T2bW_2016");
-  signals.push_back(T2bW_2016);
-  //signal_labels.a("T2tt_2016");
-  //signals.push_back(T2tt_2016);
+  //signal_labels.a("T2bW_2016");
+  //signals.push_back(T2bW_2016);
+  signal_labels.a("T2tt_2016");
+  signals.push_back(T2tt_2016);
   //signal_labels.a("TChiWZ_2016");
   //signals.push_back(TChiWZ_2016);
   //signal_labels.a("TChipmWW_2016");
@@ -232,10 +232,10 @@ void EventCountPlot(){
   //signals.push_back(TSlepSlep_2016);
   
   // --- 2017 --- //
-  signal_labels.a("T2bW_2017");
-  signals.push_back(T2bW_2017);
-  //signal_labels.a("T2tt_2017");
-  //signals.push_back(T2tt_2017);
+  //signal_labels.a("T2bW_2017");
+  //signals.push_back(T2bW_2017);
+  signal_labels.a("T2tt_2017");
+  signals.push_back(T2tt_2017);
   //signal_labels.a("TChiWZ_2017");
   //signals.push_back(TChiWZ_2017);
   //signal_labels.a("TChipmWW_2017");
@@ -256,10 +256,10 @@ void EventCountPlot(){
   //signals.push_back(TChiWH_2017);
   
   // --- 2018 --- //
-  signal_labels.a("T2bW_2018");
-  signals.push_back(T2bW_2018);
-  //signal_labels.a("T2tt_2018");
-  //signals.push_back(T2tt_2018);
+  //signal_labels.a("T2bW_2018");
+  //signals.push_back(T2bW_2018);
+  signal_labels.a("T2tt_2018");
+  signals.push_back(T2tt_2018);
   //signal_labels.a("TChiWZ_2018");
   //signals.push_back(TChiWZ_2018);
   //signal_labels.a("TChipmWW_2018");
@@ -281,10 +281,10 @@ void EventCountPlot(){
 
   // --- Run 2 --- //
 
-  signal_labels.a("T2bW");
-  signals.push_back(T2bW);
-  //signal_labels.a("T2tt");
-  //signals.push_back(T2tt);
+  //signal_labels.a("T2bW");
+  //signals.push_back(T2bW);
+  signal_labels.a("T2tt");
+  signals.push_back(T2tt);
   //signal_labels.a("TChiWZ");
   //signals.push_back(TChiWZ);
   //signal_labels.a("TChipmWW");
@@ -403,14 +403,16 @@ void EventCountPlot(){
   l.SetTextFont(42);
   l.DrawLatex(0.7,0.04,g_Label.c_str());
 
-  string can_name = hist->GetName();
-  can->SaveAs((can_name+".pdf").c_str());
+  string plot_dir = "plots";
+  string plot_name = plot_dir + "/";
+  plot_name += hist->GetName();
+  boost::filesystem::create_directories(plot_dir);
+  can->SaveAs((plot_name+".pdf").c_str());
   TFile* file = new TFile("output_EventCountPlot.root","UPDATE");
   can->Write();
   file->Close();
   delete can;
   
   }
-
 
 }
