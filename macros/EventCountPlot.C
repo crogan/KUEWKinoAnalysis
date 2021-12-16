@@ -66,6 +66,13 @@ void EventCountPlot(){
   VS T1ttbb;
   VS T5tttt;
   VS TChiWH;
+  
+  // TODO: Update T2bW_2016 file paths once files are created
+  VS T2bW_2016;
+  T2bW_2016.a(NtuplePath+"Summer16_102X_SMS/SMS-T2bW_TuneCP2_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
+  T2bW_2016.a(NtuplePath+"Summer16_102X_SMS/SMS-T2bW_X05_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
+  //T2bW_2016.a(NtuplePath+"Summer16_102X_SMS/SMS-T2bW_X05_dM-10to80_2Lfilter_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
+  T2bW += T2bW_2016;
 
   VS T2tt_2016;
   T2tt_2016.a(NtuplePath+"Summer16_102X_SMS/SMS-T2tt_dM-10to80_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
@@ -153,6 +160,7 @@ void EventCountPlot(){
   TChiWH_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-TChiWH_WToLNu_HToBB_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
   TChiWH += TChiWH_2017;
  
+  // TODO: Update T2bW_2018 file paths once files are created
   VS T2bW_2018;
   T2bW_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-T2bW_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
   T2bW_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-T2bW_X05_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
@@ -212,8 +220,10 @@ void EventCountPlot(){
   TChiWH += TChiWH_2018;
 
   // --- 2016 --- // 
-  signal_labels.a("T2tt_2016");
-  signals.push_back(T2tt_2016);
+  signal_labels.a("T2bW_2016");
+  signals.push_back(T2bW_2016);
+  //signal_labels.a("T2tt_2016");
+  //signals.push_back(T2tt_2016);
   //signal_labels.a("TChiWZ_2016");
   //signals.push_back(TChiWZ_2016);
   //signal_labels.a("TChipmWW_2016");
@@ -222,10 +232,10 @@ void EventCountPlot(){
   //signals.push_back(TSlepSlep_2016);
   
   // --- 2017 --- //
-  //signal_labels.a("T2bW_2017");
-  //signals.push_back(T2bW_2017);
-  signal_labels.a("T2tt_2017");
-  signals.push_back(T2tt_2017);
+  signal_labels.a("T2bW_2017");
+  signals.push_back(T2bW_2017);
+  //signal_labels.a("T2tt_2017");
+  //signals.push_back(T2tt_2017);
   //signal_labels.a("TChiWZ_2017");
   //signals.push_back(TChiWZ_2017);
   //signal_labels.a("TChipmWW_2017");
@@ -246,10 +256,10 @@ void EventCountPlot(){
   //signals.push_back(TChiWH_2017);
   
   // --- 2018 --- //
-  //signal_labels.a("T2bW_2018");
-  //signals.push_back(T2bW_2018);
-  signal_labels.a("T2tt_2018");
-  signals.push_back(T2tt_2018);
+  signal_labels.a("T2bW_2018");
+  signals.push_back(T2bW_2018);
+  //signal_labels.a("T2tt_2018");
+  //signals.push_back(T2tt_2018);
   //signal_labels.a("TChiWZ_2018");
   //signals.push_back(TChiWZ_2018);
   //signal_labels.a("TChipmWW_2018");
@@ -271,10 +281,10 @@ void EventCountPlot(){
 
   // --- Run 2 --- //
 
-  //signal_labels.a("T2bW");
-  //signals.push_back(T2bW);
-  signal_labels.a("T2tt");
-  signals.push_back(T2tt);
+  signal_labels.a("T2bW");
+  signals.push_back(T2bW);
+  //signal_labels.a("T2tt");
+  //signals.push_back(T2tt);
   //signal_labels.a("TChiWZ");
   //signals.push_back(TChiWZ);
   //signal_labels.a("TChipmWW");
