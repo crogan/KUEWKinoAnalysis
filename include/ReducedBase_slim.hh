@@ -794,6 +794,7 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchStatus("*weight",1);
    fChain->SetBranchStatus("PUweight_up",1);
    fChain->SetBranchStatus("NPU",1);
+   fChain->SetBranchStatus("runnum",1);
    fChain->SetBranchStatus("EventFilter", 1);
    fChain->SetBranchStatus("MET",1);
    fChain->SetBranchStatus("MET_phi",1);
