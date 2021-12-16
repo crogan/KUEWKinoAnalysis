@@ -2,6 +2,7 @@
 #include <string>
 #include <boost/filesystem.hpp>
 
+#include <TROOT.h>
 #include <TFile.h>
 #include <TTree.h>
 #include <TBranch.h>
@@ -44,11 +45,12 @@ double g_NY;
 using namespace RestFrames;
 
 void EventCountPlot(){
+  // speed up by not displaying canvas
+  gROOT->SetBatch(kTRUE);
   
   RestFrames::SetStyle();
 
   string NtuplePath = "/home/t3-ku/z374f439/storage/crogan/";
-
 
   int SKIP = 1;
 
@@ -222,8 +224,8 @@ void EventCountPlot(){
   // --- 2016 --- // 
   //signal_labels.a("T2bW_2016");
   //signals.push_back(T2bW_2016);
-  signal_labels.a("T2tt_2016");
-  signals.push_back(T2tt_2016);
+  //signal_labels.a("T2tt_2016");
+  //signals.push_back(T2tt_2016);
   //signal_labels.a("TChiWZ_2016");
   //signals.push_back(TChiWZ_2016);
   //signal_labels.a("TChipmWW_2016");
@@ -234,8 +236,8 @@ void EventCountPlot(){
   // --- 2017 --- //
   //signal_labels.a("T2bW_2017");
   //signals.push_back(T2bW_2017);
-  signal_labels.a("T2tt_2017");
-  signals.push_back(T2tt_2017);
+  //signal_labels.a("T2tt_2017");
+  //signals.push_back(T2tt_2017);
   //signal_labels.a("TChiWZ_2017");
   //signals.push_back(TChiWZ_2017);
   //signal_labels.a("TChipmWW_2017");
@@ -258,8 +260,8 @@ void EventCountPlot(){
   // --- 2018 --- //
   //signal_labels.a("T2bW_2018");
   //signals.push_back(T2bW_2018);
-  signal_labels.a("T2tt_2018");
-  signals.push_back(T2tt_2018);
+  //signal_labels.a("T2tt_2018");
+  //signals.push_back(T2tt_2018);
   //signal_labels.a("TChiWZ_2018");
   //signals.push_back(TChiWZ_2018);
   //signal_labels.a("TChipmWW_2018");
@@ -281,10 +283,10 @@ void EventCountPlot(){
 
   // --- Run 2 --- //
 
-  //signal_labels.a("T2bW");
-  //signals.push_back(T2bW);
-  signal_labels.a("T2tt");
-  signals.push_back(T2tt);
+  signal_labels.a("T2bW");
+  signals.push_back(T2bW);
+  //signal_labels.a("T2tt");
+  //signals.push_back(T2tt);
   //signal_labels.a("TChiWZ");
   //signals.push_back(TChiWZ);
   //signal_labels.a("TChipmWW");
