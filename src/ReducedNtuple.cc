@@ -216,7 +216,7 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("MetTrigSFweight_down", &m_MetTrigSFweight_down);
 
   tree->Branch("runnum", &m_runnum);
-  tree->Branch("luminum", &m_runnum);
+  tree->Branch("luminum", &m_luminum);
   tree->Branch("eventnum", &m_eventnum);
 
   tree->Branch("NPV", &m_NPV);
