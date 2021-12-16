@@ -289,6 +289,7 @@ void WriteScriptConnect(const string& src_name,
    int pos = root_output.find_last_of("/")+1;
    root_output = root_output.substr(pos, root_output.length()-pos);
   }
+//cout << "command: " << command << endl;
   gSystem->Exec("mkdir -p config_BuildFitInput");
   gSystem->Exec("cp BuildFitInput.x config_BuildFitInput/");
   gSystem->Exec("cp scripts/cmssw_setup_connect.sh config_BuildFitInput/");
