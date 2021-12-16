@@ -67,224 +67,232 @@ void EventCountPlot(){
   VS T5tttt;
   VS TChiWH;
 
-  signal_labels.a("T2tt_2016");
   VS T2tt_2016;
-   T2tt_2016.a(NtuplePath+"Summer16_102X_SMS/SMS-T2tt_dM-10to80_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
-   T2tt_2016.a(NtuplePath+"Summer16_102X_SMS/SMS-T2tt_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
-   T2tt_2016.a(NtuplePath+"Summer16_102X_SMS/SMS-T2tt_mStop-400to1200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
+  T2tt_2016.a(NtuplePath+"Summer16_102X_SMS/SMS-T2tt_dM-10to80_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
+  T2tt_2016.a(NtuplePath+"Summer16_102X_SMS/SMS-T2tt_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
+  T2tt_2016.a(NtuplePath+"Summer16_102X_SMS/SMS-T2tt_mStop-400to1200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
   T2tt_2016.a(NtuplePath+"Summer16_102X_SMS/SMS-T2tt_dM-6to8_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
   //T2tt_2016.a(NtuplePath+"Summer16_102X_SMS/SMS-T2tt_dM-10to80_2Lfilter_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
-  signals.push_back(T2tt_2016);
   T2tt += T2tt_2016;
 
-  signal_labels.a("TChiWZ_2016");
   VS TChiWZ_2016;
-   TChiWZ_2016.a(NtuplePath+"Summer16_102X_SMS/SMS-TChiWZ_ZToLL_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
-   TChiWZ_2016.a(NtuplePath+"Summer16_102X_SMS/SMS-TChiWZ_ZToLL_dM-90to100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
-   TChiWZ_2016.a(NtuplePath+"Summer16_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
-   TChiWZ_2016.a(NtuplePath+"Summer16_102X_SMS/TChiWZ_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
-   TChiWZ_2016.a(NtuplePath+"Summer16_102X_SMS/SMS-TChiWZ_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
-  signals.push_back(TChiWZ_2016);
+  TChiWZ_2016.a(NtuplePath+"Summer16_102X_SMS/SMS-TChiWZ_ZToLL_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
+  TChiWZ_2016.a(NtuplePath+"Summer16_102X_SMS/SMS-TChiWZ_ZToLL_dM-90to100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
+  TChiWZ_2016.a(NtuplePath+"Summer16_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
+  TChiWZ_2016.a(NtuplePath+"Summer16_102X_SMS/TChiWZ_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
+  TChiWZ_2016.a(NtuplePath+"Summer16_102X_SMS/SMS-TChiWZ_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
   TChiWZ += TChiWZ_2016;
 
-  signal_labels.a("TChipmWW_2016");
   VS TChipmWW_2016;
   TChipmWW_2016.a(NtuplePath+"Summer16_102X_SMS/SMS-TChipmWW_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
   TChipmWW_2016.a(NtuplePath+"Summer16_102X_SMS/SMS-TChipmWW_dM-3to50_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
   TChipmWW_2016.a(NtuplePath+"Summer16_102X_SMS/SMS-TChipmWW_WWTo2LNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
-  signals.push_back(TChipmWW_2016);
   TChipmWW += TChipmWW_2016;
 
-  signal_labels.a("TSlepSlep_2016");
   VS TSlepSlep_2016;
   TSlepSlep_2016.a(NtuplePath+"Summer16_102X_SMS/SMS-TSlepSlep_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
   TSlepSlep_2016.a(NtuplePath+"Summer16_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Summer16_102X.root");
   TSlepSlep_2016.a(NtuplePath+"Summer16_102X_SMS/SMS-TSlepSlep_mSlep-500To1300_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
-  signals.push_back(TSlepSlep_2016);
   TSlepSlep += TSlepSlep_2016;
 
-  signal_labels.a("T2bW_2017");
   VS T2bW_2017;
-   T2bW_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-T2bW_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-   T2bW_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-T2bW_X05_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-   T2bW_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-T2bW_X05_dM-10to80_2Lfilter_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-  signals.push_back(T2bW_2017);
+  T2bW_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-T2bW_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+  T2bW_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-T2bW_X05_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+  T2bW_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-T2bW_X05_dM-10to80_2Lfilter_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
   T2bW += T2bW_2017;
   
-  signal_labels.a("T2tt_2017");
   VS T2tt_2017;
-   T2tt_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-T2tt_dM-10to80_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-   T2tt_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-T2tt_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-   T2tt_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-T2tt_mStop-400to1200_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-   T2tt_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-T2tt_dM-6to8_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-   T2tt_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-T2tt_dM-10to80_2Lfilter_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-  signals.push_back(T2tt_2017);
+  T2tt_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-T2tt_dM-10to80_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+  T2tt_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-T2tt_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+  T2tt_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-T2tt_mStop-400to1200_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+  T2tt_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-T2tt_dM-6to8_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+  T2tt_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-T2tt_dM-10to80_2Lfilter_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
   T2tt += T2tt_2017;
 
-  signal_labels.a("TChiWZ_2017");
   VS TChiWZ_2017;
-   TChiWZ_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-   TChiWZ_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_dM-90to100_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-   TChiWZ_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-   TChiWZ_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_mC1-325to1000_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-   TChiWZ_2017.a(NtuplePath+"Fall17_102X_SMS/TChiWZ_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-  signals.push_back(TChiWZ_2017);
+  TChiWZ_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+  TChiWZ_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_dM-90to100_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+  TChiWZ_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+  TChiWZ_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_mC1-325to1000_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+  TChiWZ_2017.a(NtuplePath+"Fall17_102X_SMS/TChiWZ_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
   TChiWZ += TChiWZ_2017;
 
-  signal_labels.a("TChipmWW_2017");
   VS TChipmWW_2017;
-   TChipmWW_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-TChipmWW_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-   TChipmWW_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-TChipmWW_WWTo2LNu_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-   TChipmWW_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-TChipmWW_dM-3to50_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-  signals.push_back(TChipmWW_2017);
+  TChipmWW_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-TChipmWW_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+  TChipmWW_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-TChipmWW_WWTo2LNu_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+  TChipmWW_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-TChipmWW_dM-3to50_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
   TChipmWW += TChipmWW_2017;
 
-  signal_labels.a("TSlepSlep_2017");
   VS TSlepSlep_2017;
-   TSlepSlep_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-   TSlepSlep_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Fall17_102X.root");
-   TSlepSlep_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-TSlepSlep_mSlep-500To1300_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-  signals.push_back(TSlepSlep_2017);
+  TSlepSlep_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+  TSlepSlep_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Fall17_102X.root");
+  TSlepSlep_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-TSlepSlep_mSlep-500To1300_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
   TSlepSlep += TSlepSlep_2017;
 
-  signal_labels.a("T2bb_2017");
   VS T2bb_2017;
-   T2bb_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-T2bb_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-  signals.push_back(T2bb_2017);
+  T2bb_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-T2bb_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
   T2bb += T2bb_2017;
 
-  signal_labels.a("T2cc_2017");
   VS T2cc_2017;
-   T2cc_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-T2cc_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-  signals.push_back(T2cc_2017);
+  T2cc_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-T2cc_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
   T2cc += T2cc_2017;
 
-  signal_labels.a("T1bbbb_2017");
   VS T1bbbb_2017;
-   T1bbbb_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-T1bbbb_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-  signals.push_back(T1bbbb_2017);
+  T1bbbb_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-T1bbbb_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
   T1bbbb += T1bbbb_2017;
 
-  signal_labels.a("T1ttbb_2017");
   VS T1ttbb_2017;
-   T1ttbb_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-T1ttbb_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-  signals.push_back(T1ttbb_2017);
+  T1ttbb_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-T1ttbb_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
   T1ttbb += T1ttbb_2017;
 
-  signal_labels.a("T5tttt_2017");
   VS T5tttt_2017;
-   T5tttt_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-T5tttt_dM175_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-  signals.push_back(T5tttt_2017);
+  T5tttt_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-T5tttt_dM175_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
   T5tttt += T5tttt_2017;
 
-  signal_labels.a("TChiWH_2017");
   VS TChiWH_2017;
-   TChiWH_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-TChiWH_WToLNu_HToBB_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-  signals.push_back(TChiWH_2017);
+  TChiWH_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-TChiWH_WToLNu_HToBB_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
   TChiWH += TChiWH_2017;
  
-  signal_labels.a("T2bW_2018");
   VS T2bW_2018;
-   T2bW_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-T2bW_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
-   T2bW_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-T2bW_X05_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
-   T2bW_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-T2bW_X05_dM-10to80_2Lfilter_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
-  signals.push_back(T2bW_2018);
+  T2bW_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-T2bW_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
+  T2bW_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-T2bW_X05_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
+  T2bW_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-T2bW_X05_dM-10to80_2Lfilter_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
   T2bW += T2bW_2018;
   
-  signal_labels.a("T2tt_2018");
   VS T2tt_2018;
-   T2tt_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-T2tt_dM-10to80_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
-   T2tt_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-T2tt_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
-   T2tt_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-T2tt_mStop-400to1200_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
-   T2tt_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-T2tt_dM-6to8_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
-   T2tt_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-T2tt_dM-10to80_2Lfilter_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
-  signals.push_back(T2tt_2018);
+  T2tt_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-T2tt_dM-10to80_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
+  T2tt_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-T2tt_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
+  T2tt_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-T2tt_mStop-400to1200_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
+  T2tt_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-T2tt_dM-6to8_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
+  T2tt_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-T2tt_dM-10to80_2Lfilter_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
   T2tt += T2tt_2018;
 
-  signal_labels.a("TChiWZ_2018");
   VS TChiWZ_2018;
-   TChiWZ_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-TChiWZ_ZToLL_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
-   TChiWZ_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-TChiWZ_ZToLL_dM-90to100_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
-   TChiWZ_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
-   TChiWZ_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_mC1-325to1000_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
-   TChiWZ_2018.a(NtuplePath+"Autumn18_102X_SMS/TChiWZ_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
-  signals.push_back(TChiWZ_2018);
+  TChiWZ_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-TChiWZ_ZToLL_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
+  TChiWZ_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-TChiWZ_ZToLL_dM-90to100_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
+  TChiWZ_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
+  TChiWZ_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_mC1-325to1000_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
+  TChiWZ_2018.a(NtuplePath+"Autumn18_102X_SMS/TChiWZ_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
   TChiWZ += TChiWZ_2018;
 
-  signal_labels.a("TChipmWW_2018");
   VS TChipmWW_2018;
-   TChipmWW_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-TChipmWW_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
-   TChipmWW_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-TChipmWW_WWTo2LNu_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
-   TChipmWW_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-TChipmWW_dM-3to50_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
-  signals.push_back(TChipmWW_2018);
+  TChipmWW_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-TChipmWW_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
+  TChipmWW_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-TChipmWW_WWTo2LNu_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
+  TChipmWW_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-TChipmWW_dM-3to50_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
   TChipmWW += TChipmWW_2018;
 
-  signal_labels.a("TSlepSlep_2018");
   VS TSlepSlep_2018;
-   TSlepSlep_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
-   TSlepSlep_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Autumn18_102X.root");
-   TSlepSlep_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-TSlepSlep_mSlep-500To1300_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
-  signals.push_back(TSlepSlep_2018);
+  TSlepSlep_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
+  TSlepSlep_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Autumn18_102X.root");
+  TSlepSlep_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-TSlepSlep_mSlep-500To1300_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
   TSlepSlep += TSlepSlep_2018;
 
-  signal_labels.a("T2bb_2018");
   VS T2bb_2018;
-   T2bb_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-T2bb_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
-  signals.push_back(T2bb_2018);
+  T2bb_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-T2bb_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
   T2bb += T2bb_2018;
 
-  signal_labels.a("T2cc_2018");
   VS T2cc_2018;
-   T2cc_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-T2cc_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
-  signals.push_back(T2cc_2018);
+  T2cc_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-T2cc_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
   T2cc += T2cc_2018;
 
-  signal_labels.a("T1bbbb_2018");
   VS T1bbbb_2018;
-   T1bbbb_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-T1bbbb_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
-  signals.push_back(T1bbbb_2018);
+  T1bbbb_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-T1bbbb_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
   T1bbbb += T1bbbb_2018;
 
-  signal_labels.a("T1ttbb_2018");
   VS T1ttbb_2018;
-   T1ttbb_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-T1ttbb_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
-  signals.push_back(T1ttbb_2018);
+  T1ttbb_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-T1ttbb_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
   T1ttbb += T1ttbb_2018;
 
-  signal_labels.a("T5tttt_2018");
   VS T5tttt_2018;
-   T5tttt_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-T5tttt_dM175_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
-  signals.push_back(T5tttt_2018);
+  T5tttt_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-T5tttt_dM175_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
   T5tttt += T5tttt_2018;
 
-  signal_labels.a("TChiWH_2018");
   VS TChiWH_2018;
-   TChiWH_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-TChiWH_WToLNu_HToBB_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
-  signals.push_back(TChiWH_2018);
+  TChiWH_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-TChiWH_WToLNu_HToBB_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
   TChiWH += TChiWH_2018;
 
+  // --- 2016 --- // 
+  signal_labels.a("T2tt_2016");
+  signals.push_back(T2tt_2016);
+  //signal_labels.a("TChiWZ_2016");
+  //signals.push_back(TChiWZ_2016);
+  //signal_labels.a("TChipmWW_2016");
+  //signals.push_back(TChipmWW_2016);
+  //signal_labels.a("TSlepSlep_2016");
+  //signals.push_back(TSlepSlep_2016);
+  
+  // --- 2017 --- //
+  //signal_labels.a("T2bW_2017");
+  //signals.push_back(T2bW_2017);
+  signal_labels.a("T2tt_2017");
+  signals.push_back(T2tt_2017);
+  //signal_labels.a("TChiWZ_2017");
+  //signals.push_back(TChiWZ_2017);
+  //signal_labels.a("TChipmWW_2017");
+  //signals.push_back(TChipmWW_2017);
+  //signal_labels.a("TSlepSlep_2017");
+  //signals.push_back(TSlepSlep_2017);
+  //signal_labels.a("T2bb_2017");
+  //signals.push_back(T2bb_2017);
+  //signal_labels.a("T2cc_2017");
+  //signals.push_back(T2cc_2017);
+  //signal_labels.a("T1bbbb_2017");
+  //signals.push_back(T1bbbb_2017);
+  //signal_labels.a("T1ttbb_2017");
+  //signals.push_back(T1ttbb_2017);
+  //signal_labels.a("T5tttt_2017");
+  //signals.push_back(T5tttt_2017);
+  //signal_labels.a("TChiWH_2017");
+  //signals.push_back(TChiWH_2017);
+  
+  // --- 2018 --- //
+  //signal_labels.a("T2bW_2018");
+  //signals.push_back(T2bW_2018);
+  signal_labels.a("T2tt_2018");
+  signals.push_back(T2tt_2018);
+  //signal_labels.a("TChiWZ_2018");
+  //signals.push_back(TChiWZ_2018);
+  //signal_labels.a("TChipmWW_2018");
+  //signals.push_back(TChipmWW_2018);
+  //signal_labels.a("TSlepSlep_2018");
+  //signals.push_back(TSlepSlep_2018);
+  //signal_labels.a("T2bb_2018");
+  //signals.push_back(T2bb_2018);
+  //signal_labels.a("T2cc_2018");
+  //signals.push_back(T2cc_2018);
+  //signal_labels.a("T1bbbb_2018");
+  //signals.push_back(T1bbbb_2018);
+  //signal_labels.a("T1ttbb_2018");
+  //signals.push_back(T1ttbb_2018);
+  //signal_labels.a("T5tttt_2018");
+  //signals.push_back(T5tttt_2018);
+  //signal_labels.a("TChiWH_2018");
+  //signals.push_back(TChiWH_2018);
+
+  // --- Run 2 --- //
+
+  //signal_labels.a("T2bW");
+  //signals.push_back(T2bW);
   signal_labels.a("T2tt");
   signals.push_back(T2tt);
-  signal_labels.a("T2bW");
-  signals.push_back(T2bW);
-  signal_labels.a("TChiWZ");
-  signals.push_back(TChiWZ);
-  signal_labels.a("TChipmWW");
-  signals.push_back(TChipmWW);
-  signal_labels.a("TSlepSlep");
-  signals.push_back(TSlepSlep);
-  signal_labels.a("T2bb");
-  signals.push_back(T2bb);
-  signal_labels.a("T2cc");
-  signals.push_back(T2cc);
-  signal_labels.a("T1bbbb");
-  signals.push_back(T1bbbb);
-  signal_labels.a("T1ttbb");
-  signals.push_back(T1ttbb);
-  signal_labels.a("T5tttt");
-  signals.push_back(T5tttt);
-  signal_labels.a("TChiWH");
-  signals.push_back(TChiWH);
+  //signal_labels.a("TChiWZ");
+  //signals.push_back(TChiWZ);
+  //signal_labels.a("TChipmWW");
+  //signals.push_back(TChipmWW);
+  //signal_labels.a("TSlepSlep");
+  //signals.push_back(TSlepSlep);
+  //signal_labels.a("T2bb");
+  //signals.push_back(T2bb);
+  //signal_labels.a("T2cc");
+  //signals.push_back(T2cc);
+  //signal_labels.a("T1bbbb");
+  //signals.push_back(T1bbbb);
+  //signal_labels.a("T1ttbb");
+  //signals.push_back(T1ttbb);
+  //signal_labels.a("T5tttt");
+  //signals.push_back(T5tttt);
+  //signal_labels.a("TChiWH");
+  //signals.push_back(TChiWH);
   
   for(int s = 0; s < int(signals.size()); s++){
       g_Yname = "M_{LSP} [GeV]";
