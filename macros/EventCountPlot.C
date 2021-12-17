@@ -89,17 +89,17 @@ void EventCountPlot(){
   T2tt += T2tt_2016;
 
   VS TChiWZ_2016;
-  TChiWZ_2016.a(NtuplePath+"Summer16_102X_SMS/SMS-TChiWZ_ZToLL_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
-  TChiWZ_2016.a(NtuplePath+"Summer16_102X_SMS/SMS-TChiWZ_ZToLL_dM-90to100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
-  TChiWZ_2016.a(NtuplePath+"Summer16_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
-  TChiWZ_2016.a(NtuplePath+"Summer16_102X_SMS/TChiWZ_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
+  //TChiWZ_2016.a(NtuplePath+"Summer16_102X_SMS/SMS-TChiWZ_ZToLL_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
+  //TChiWZ_2016.a(NtuplePath+"Summer16_102X_SMS/SMS-TChiWZ_ZToLL_dM-90to100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
+  //TChiWZ_2016.a(NtuplePath+"Summer16_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
   TChiWZ_2016.a(NtuplePath+"Summer16_102X_SMS/SMS-TChiWZ_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
+  TChiWZ_2016.a(NtuplePath+"Summer16_102X_SMS/TChiWZ_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
   TChiWZ += TChiWZ_2016;
 
   VS TChipmWW_2016;
   TChipmWW_2016.a(NtuplePath+"Summer16_102X_SMS/SMS-TChipmWW_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
+  //TChipmWW_2016.a(NtuplePath+"Summer16_102X_SMS/SMS-TChipmWW_WWTo2LNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
   TChipmWW_2016.a(NtuplePath+"Summer16_102X_SMS/SMS-TChipmWW_dM-3to50_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
-  TChipmWW_2016.a(NtuplePath+"Summer16_102X_SMS/SMS-TChipmWW_WWTo2LNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root");
   TChipmWW += TChipmWW_2016;
 
   VS TSlepSlep_2016;
@@ -132,16 +132,16 @@ void EventCountPlot(){
   T2tt += T2tt_2017;
 
   VS TChiWZ_2017;
-  TChiWZ_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-  TChiWZ_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_dM-90to100_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-  TChiWZ_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-  TChiWZ_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_mC1-325to1000_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+  //TChiWZ_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+  //TChiWZ_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_dM-90to100_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+  //TChiWZ_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+  //TChiWZ_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_mC1-325to1000_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
   TChiWZ_2017.a(NtuplePath+"Fall17_102X_SMS/TChiWZ_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
   TChiWZ += TChiWZ_2017;
 
   VS TChipmWW_2017;
   TChipmWW_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-TChipmWW_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
-  TChipmWW_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-TChipmWW_WWTo2LNu_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+  //TChipmWW_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-TChipmWW_WWTo2LNu_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
   TChipmWW_2017.a(NtuplePath+"Fall17_102X_SMS/SMS-TChipmWW_dM-3to50_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
   TChipmWW += TChipmWW_2017;
 
@@ -195,16 +195,16 @@ void EventCountPlot(){
   T2tt += T2tt_2018;
 
   VS TChiWZ_2018;
-  TChiWZ_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-TChiWZ_ZToLL_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
-  TChiWZ_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-TChiWZ_ZToLL_dM-90to100_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
-  TChiWZ_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
-  TChiWZ_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_mC1-325to1000_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
+  //TChiWZ_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-TChiWZ_ZToLL_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
+  //TChiWZ_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-TChiWZ_ZToLL_dM-90to100_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
+  //TChiWZ_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
+  //TChiWZ_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_mC1-325to1000_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
   TChiWZ_2018.a(NtuplePath+"Autumn18_102X_SMS/TChiWZ_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
   TChiWZ += TChiWZ_2018;
 
   VS TChipmWW_2018;
   TChipmWW_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-TChipmWW_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
-  TChipmWW_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-TChipmWW_WWTo2LNu_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
+  //TChipmWW_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-TChipmWW_WWTo2LNu_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
   TChipmWW_2018.a(NtuplePath+"Autumn18_102X_SMS/SMS-TChipmWW_dM-3to50_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root");
   TChipmWW += TChipmWW_2018;
 
@@ -246,12 +246,12 @@ void EventCountPlot(){
   //signals.push_back(T2tt_2016);
   //signal_labels.a("TChiWZ_2016");
   //signals.push_back(TChiWZ_2016);
-  //signal_labels.a("TChipmWW_2016");
-  //signals.push_back(TChipmWW_2016);
+  signal_labels.a("TChipmWW_2016");
+  signals.push_back(TChipmWW_2016);
   //signal_labels.a("TSlepSlep_2016");
   //signals.push_back(TSlepSlep_2016);
-  signal_labels.a("T2bb_2016");
-  signals.push_back(T2bb_2016);
+  //signal_labels.a("T2bb_2016");
+  //signals.push_back(T2bb_2016);
   
   // --- 2017 --- //
   //signal_labels.a("T2bW_2017");
@@ -260,12 +260,12 @@ void EventCountPlot(){
   //signals.push_back(T2tt_2017);
   //signal_labels.a("TChiWZ_2017");
   //signals.push_back(TChiWZ_2017);
-  //signal_labels.a("TChipmWW_2017");
-  //signals.push_back(TChipmWW_2017);
+  signal_labels.a("TChipmWW_2017");
+  signals.push_back(TChipmWW_2017);
   //signal_labels.a("TSlepSlep_2017");
   //signals.push_back(TSlepSlep_2017);
-  signal_labels.a("T2bb_2017");
-  signals.push_back(T2bb_2017);
+  //signal_labels.a("T2bb_2017");
+  //signals.push_back(T2bb_2017);
   //signal_labels.a("T2cc_2017");
   //signals.push_back(T2cc_2017);
   //signal_labels.a("T1bbbb_2017");
@@ -284,12 +284,12 @@ void EventCountPlot(){
   //signals.push_back(T2tt_2018);
   //signal_labels.a("TChiWZ_2018");
   //signals.push_back(TChiWZ_2018);
-  //signal_labels.a("TChipmWW_2018");
-  //signals.push_back(TChipmWW_2018);
+  signal_labels.a("TChipmWW_2018");
+  signals.push_back(TChipmWW_2018);
   //signal_labels.a("TSlepSlep_2018");
   //signals.push_back(TSlepSlep_2018);
-  signal_labels.a("T2bb_2018");
-  signals.push_back(T2bb_2018);
+  //signal_labels.a("T2bb_2018");
+  //signals.push_back(T2bb_2018);
   //signal_labels.a("T2cc_2018");
   //signals.push_back(T2cc_2018);
   //signal_labels.a("T1bbbb_2018");
@@ -309,12 +309,12 @@ void EventCountPlot(){
   //signals.push_back(T2tt);
   //signal_labels.a("TChiWZ");
   //signals.push_back(TChiWZ);
-  //signal_labels.a("TChipmWW");
-  //signals.push_back(TChipmWW);
+  signal_labels.a("TChipmWW");
+  signals.push_back(TChipmWW);
   //signal_labels.a("TSlepSlep");
   //signals.push_back(TSlepSlep);
-  signal_labels.a("T2bb");
-  signals.push_back(T2bb);
+  //signal_labels.a("T2bb");
+  //signals.push_back(T2bb);
   //signal_labels.a("T2cc");
   //signals.push_back(T2cc);
   //signal_labels.a("T1bbbb");
