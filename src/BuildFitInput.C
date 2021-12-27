@@ -301,52 +301,62 @@ cout << "# processes: " << samples.GetN() << endl;
       TChain* chain = ST.Tree(proc, f);
       ReducedBase* base = new ReducedBase(chain);
       int Nentry = base->fChain->GetEntries();
-      
+     cout << "Nentry: " << Nentry << endl;
+if(chain == nullptr) cout << "chain null" << endl;
+if(base == nullptr) cout << "base null" << endl; 
       int SKIP = 1;
-
       // event loop
       for(int e = 0; e < Nentry; e += SKIP){
 	base->GetEntry(e);
 	if((e/SKIP)%(std::max(1, int(Nentry/SKIP/10))) == 0)
-	  cout << "      event " << e << " | " << Nentry  << endl;
+	 cout << "      event " << e << " | " << Nentry  << endl;
+//	cout << "event #" << e << " run #" << base->runnum << endl;
 	if(!base->EventFilter)	  
 		continue;
-
-	if(!base->EventFilter)
-	  continue;
+//if(base->runnum != 0){cout << "EventFilter cut: " << base->runnum << endl;}	
 
         if(base->runnum > 319077 && is_data && year == 2018)
           continue;
-	
+//if(base->runnum != 0){cout << "runnum cut: " << base->runnum << endl;}	
 	if(do_FilterDilepton)
 	  if(SF.DileptonEvent(base))
 	    continue;
+//if(base->runnum != 0){cout << "dilepton filter cut: " << base->runnum << endl;}	
 	// apply trigger to data and FullSim events
 	if(!base->METORtrigger && !is_FastSim)
 	  continue;
+//if(base->runnum != 0){cout << "met trigger cut: " << base->runnum << endl;}	
 	if(base->MET < 150)
 	  continue;
+//if(base->runnum != 0){cout << "met cut: " << base->runnum << endl;}	
 	  
 	if(base->PTISR < 250.)
-	  continue;
-
+	  continue; 
+//if(base->runnum != 0){cout << "ptisr cut: " << base->runnum << endl;}	
+ 
 	if(base->RISR < 0.45)
 	  continue;
+//if(base->runnum != 0){cout << "risr cut: " << base->runnum << endl;}	
 	double x = fabs(base->dphiCMI);
 	
 	if(base->PTCM > 200.)
 	  continue;
+//if(base->runnum != 0){cout << "ptcm cut: " << base->runnum << endl;}	
 	if(base->PTCM > -500.*sqrt(std::max(0.,-2.777*x*x+1.388*x+0.8264))+575. &&
 	   -2.777*x*x+1.388*x+0.8264 > 0.)
 	  continue;
+//if(base->runnum != 0){cout << "dphicmi cut: " << base->runnum << endl;}	
 	if(base->PTCM > -500.*sqrt(std::max(0.,-1.5625*x*x+7.8125*x-8.766))+600. &&
 	   -1.5625*x*x+7.8125*x-8.766 > 0.)
 	  continue;
+//if(base->runnum != 0){cout << "dphicmi cut 2: " << base->runnum << endl;}	
 	  
 	if(base->RISR < 0.45 || base->RISR > 1.0)
 	  continue;
+//if(base->runnum != 0){cout << "risr cut 2: " << base->runnum << endl;}	
 	if(fabs(base->dphiMET_V) > acos(-1.)/2.)
 	  continue;
+//if(base->runnum != 0){cout << "dphiMET_V cut: " << base->runnum << endl;}	
 	int Nlep     = base->Nlep;
 	int NjetS    = base->Njet_S;
 	int NbjetS   = base->Nbjet_S;
@@ -355,9 +365,10 @@ cout << "# processes: " << samples.GetN() << endl;
 	int NSV      = base->NSV_S;
 	if(Nlep + NjetS + NSV < 1)
 	  continue;
+//if(base->runnum != 0){cout << "object counting cut: " << base->runnum << endl;}	
 	LepList list_a;
 	LepList list_b;
-	  
+//if(e % 1000 == 0 && base->runnum != 0) cout << "runnum: " << base->runnum << endl;	
 	int index;
 	for(int i = 0; i < base->Nlep_a; i++){
 	  index = (*base->index_lep_a)[i];
