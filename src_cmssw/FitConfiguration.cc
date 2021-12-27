@@ -373,7 +373,6 @@ else{
   }
   if(bkgNorms_noQCD){
     ProcessList plist = backgrounds.Remove("QCD");
-    plist.Print();
   cb.cp().process(plist.GetProcesses()).bin(VS().a(".*0L.*.*0j.*S.*"))
     .AddSyst(cb, "norm_bkgs_0L_0jS", "lnN", SystMap<>::init(1.2));
 
@@ -425,7 +424,6 @@ else{
   if(bkgNorms_noQCD_noWjets){
     ProcessList plist = backgrounds.Remove("QCD");
     plist = plist.Remove("Wjets");
-    plist.Print();
   cb.cp().process(plist.GetProcesses()).bin(VS().a(".*0L.*.*0j.*S.*"))
     .AddSyst(cb, "norm_bkgs_0L_0jS", "lnN", SystMap<>::init(1.2));
 
