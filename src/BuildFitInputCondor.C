@@ -227,7 +227,7 @@ int main(int argc, char* argv[]) {
   int Njob = 0;
   for(int p = 0; p < Nsample; p++){
     Process proc = samples[p];
-
+//cout << "adding process " << proc.Name() << " to arguments" << endl;
     if(doSigFile && proc.Type() == kSig){
       bool keep = false;
       int Nfile = ST.NTrees(proc);
@@ -247,7 +247,8 @@ int main(int argc, char* argv[]) {
       int Nfile = ST.NTrees(proc);
       for(int f = 0; f < Nfile; f++){
         string new_BFICmd = BuildFitInputCmd;
-        if(proc.Type() == kBkg)
+        //if(proc.Type() == kBkg)
+        if(proc.Type() != kSig)
           new_BFICmd += ("-ifile "+std::to_string(f))+" ";
         WriteScript(SrcFold+Form("submit_%d",Njob)+".sh",
           	  LogFold+Form("job_%d",Njob)+".log",
@@ -289,6 +290,7 @@ void WriteScriptConnect(const string& src_name,
    int pos = root_output.find_last_of("/")+1;
    root_output = root_output.substr(pos, root_output.length()-pos);
   }
+//cout << "command: " << command << endl;
   gSystem->Exec("mkdir -p config_BuildFitInput");
   gSystem->Exec("cp BuildFitInput.x config_BuildFitInput/");
   gSystem->Exec("cp scripts/cmssw_setup_connect.sh config_BuildFitInput/");
@@ -333,7 +335,7 @@ void WriteScript(const string& src_name,
   file << "error = "  << log_name << ".err" << endl;
   file << "log = "    << log_name << ".log" << endl;
   file << "Requirements = (Machine != \"red-node000.unl.edu\") && (Machine != \"red-c2325.unl.edu\")" << endl;
-  file << "request_memory = 4 GB" << endl;
+  file << "request_memory = 2 GB" << endl;
   file << "queue " << endl;
   file.close();  
 }
