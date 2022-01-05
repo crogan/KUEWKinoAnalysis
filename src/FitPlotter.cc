@@ -1754,14 +1754,7 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
       if(pType == kRISR)
 	h = IntegrateMperp(Form("plotintegratedhist_%d_%d_%s", i, v, can_name.c_str()),fitbin,
 			   GetAddedHist(Form("plothist_%d_%d_%s", i, v, can_name.c_str()), cat, procs));
-      //cout << "here" << endl;
-      //TH1D* h = GetAddedHist(Form("plothist_%d_%d_%s", i, v, can_name.c_str()), cat, procs);
-      //hist_val = GetAddedHistValues(cat, procs);
-      /*
-      double sum = 0.;
-      for(int i= 0; i < hist_val.size(); i++)
-	itot += hist_val[i];
-      */
+
       if(h){
 	itot += h->Integral();
 	h->Draw();
@@ -1809,8 +1802,14 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
     totbkgs += totbkg;
     for(int v = 0; v < Nvis; v++){
       CategoryList cat = CatList.Filter(*CatTrees[v]);
-      
-      TH1D* h = GetAddedHist(Form("plothist_tot_%d_%s", v, can_name.c_str()), cat, totbkgs);
+      TH1D* h = nullptr;
+
+      if(pType == kFull)
+        h = GetAddedHist(Form("plothist_%d_%s",  v, can_name.c_str()), cat, totbkgs);
+      if(pType == kRISR)
+        h = IntegrateMperp(Form("plotintegratedhist_%d_%s", v, can_name.c_str()),fitbin,
+			   GetAddedHist(Form("plothist_tot_%d_%s", v, can_name.c_str()), cat, totbkgs));
+
       hist_totbkg[v] = h;
       if(h)
 	total_totbkg += h->Integral();
@@ -1863,9 +1862,6 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
   TH1D*         fhist_data   = nullptr;
   TH1D*         fhist_totbkg = nullptr;
 
-  //CategoryList dumcat = CatList.Filter(*CatTrees[0]);
-  //const FitBin& fitbin = dumcat[0].GetFitBin();
-  //int Nbin = fitbin.NBins();
   for(int i = 0; i < Nsig; i++){
     fhists_sig.push_back(new TH1D(Form("fhistsig_%d_%s", i, can_name.c_str()),
 				  Form("fhistsig_%d_%s", i, can_name.c_str()),
