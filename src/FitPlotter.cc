@@ -2439,11 +2439,13 @@ void FitPlotter::DrawRM(const FitBin& fitbin, TCanvas* can, TPad* pad, VS labels
   double hi_ratio = hlo_rat;
   double yline = hbo-0.02;
 
-  for(int r = 0; r < labels.size(); r++){
+  int Nl = labels.size();
+
+  for(int r = 0; r < Nl; r++){
     lo = hi;
     lo_ratio = hi_ratio;
-    hi = 1./double(NB)*(1.-hhi-hlo) + lo;
-    hi_ratio = 1./double(NB)*(1.-hhi_rat-hlo_rat) + lo_ratio;
+    hi = 1./double(Nl)*(1.-hhi-hlo) + lo;
+    hi_ratio = 1./double(Nl)*(1.-hhi_rat-hlo_rat) + lo_ratio;
 
     line->SetLineStyle(1);
     line->DrawLineNDC(lo + eps, yline,
@@ -2455,7 +2457,7 @@ void FitPlotter::DrawRM(const FitBin& fitbin, TCanvas* can, TPad* pad, VS labels
                       hi - eps, yline);
 
     line->SetLineStyle(1);
-    if(r < NR-1){
+    if(r < Nl-1){
       line->DrawLineNDC(hi, hbo, hi, 1.-hto);
       if(pad_ratio){
 	pad_ratio->cd();
@@ -2464,7 +2466,7 @@ void FitPlotter::DrawRM(const FitBin& fitbin, TCanvas* can, TPad* pad, VS labels
       }
     }
 
-    l.DrawLatex(hlo + (1.-hhi-hlo)*(0.5+r)/double(NB), yline-0.015, labels[r].c_str());
+    l.DrawLatex(hlo + (1.-hhi-hlo)*(0.5+r)/double(Nl), yline-0.015, labels[r].c_str());
   }
   
   l.SetTextAngle(0);
