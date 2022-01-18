@@ -41,14 +41,14 @@ string g_Yname;
 double g_Ymin;
 double g_Ymax;
 double g_NY;
-string g2_Yname;
-double g2_Ymin;
-double g2_Ymax;
-double g2_NY;
+string g_dm_Yname;
+double g_dm_Ymin;
+double g_dm_Ymax;
+double g_dm_NY;
 
 using namespace RestFrames;
 
-void format(TH2D* hist, string g_Xname, string g_Yname)
+void format(TH2D* hist, string Xname, string Yname)
 {
   hist->GetXaxis()->CenterTitle();
   hist->GetXaxis()->SetTitleFont(42);
@@ -56,14 +56,14 @@ void format(TH2D* hist, string g_Xname, string g_Yname)
   hist->GetXaxis()->SetTitleOffset(1.06);
   hist->GetXaxis()->SetLabelFont(42);
   hist->GetXaxis()->SetLabelSize(0.05);
-  hist->GetXaxis()->SetTitle(g_Xname.c_str());
+  hist->GetXaxis()->SetTitle(Xname.c_str());
   hist->GetYaxis()->CenterTitle();
   hist->GetYaxis()->SetTitleFont(42);
   hist->GetYaxis()->SetTitleSize(0.06);
   hist->GetYaxis()->SetTitleOffset(1.12);
   hist->GetYaxis()->SetLabelFont(42);
   hist->GetYaxis()->SetLabelSize(0.05);
-  hist->GetYaxis()->SetTitle(g_Yname.c_str());
+  hist->GetYaxis()->SetTitle(Yname.c_str());
   hist->GetZaxis()->CenterTitle();
   hist->GetZaxis()->SetTitleFont(42);
   hist->GetZaxis()->SetTitleSize(0.05);
@@ -71,7 +71,25 @@ void format(TH2D* hist, string g_Xname, string g_Yname)
   hist->GetZaxis()->SetLabelFont(42);
   hist->GetZaxis()->SetLabelSize(0.05);
   hist->GetZaxis()->SetTitle("N_{events}");
-  hist->GetZaxis()->SetRangeUser(0.9*hist->GetMinimum(0.0),1.1*hist->GetMaximum());
+  hist->GetZaxis()->SetRangeUser(0.9 * hist->GetMinimum(0.0), 1.1 * hist->GetMaximum());
+}
+
+void drawLatex(string title, string label)
+{
+  TLatex l;
+  l.SetTextFont(42);
+  l.SetNDC();
+  l.SetTextSize(0.035);
+  l.SetTextFont(42);
+  //l.DrawLatex(0.17, 0.855, title.c_str());
+  l.DrawLatex(0.71, 0.943, title.c_str());
+  l.SetTextSize(0.04);
+  l.SetTextFont(42);
+  l.DrawLatex(0.01, 0.943, "#bf{CMS} Simulation Preliminary");
+  
+  l.SetTextSize(0.045);
+  l.SetTextFont(42);
+  l.DrawLatex(0.7, 0.04, label.c_str());
 }
 
 void EventCountPlot()
@@ -82,8 +100,6 @@ void EventCountPlot()
   RestFrames::SetStyle();
 
   string NtuplePath = "/home/t3-ku/z374f439/storage/crogan/";
-
-  int SKIP = 1;
 
   vector<VS> signals;
   VS signal_labels;
@@ -360,29 +376,29 @@ void EventCountPlot()
   {
     g_Label = signal_labels[s];
     
-    g_Yname = "M_{LSP} [GeV]";
-    g_Ymin = 0.;
-    g_Ymax = 1000.;
-    g_NY = 40;
-    //g_NY = 20;
-
     g_Xname = "M_{NLSP} [GeV]";
-    g_Xmin = 0.;
-    g_Xmax = 1500.; 
-    g_NX = 60;
-    //g_NX = 30;
+    g_Xmin  = 0.;
+    g_Xmax  = 1500.; 
+    g_NX    = 60;
+    //g_NX  = 30;
     
+    g_Yname = "M_{LSP} [GeV]";
+    g_Ymin  = 0.;
+    g_Ymax  = 1000.;
+    g_NY    = 40;
+    //g_NY  = 20;
+
     // mass diff plot
-    g2_Yname = "M_{NLSP} - M_{LSP} [GeV]";
-    g2_Ymin = 0.;
-    g2_Ymax = 200.;
-    g2_NY = 10;
+    g_dm_Yname = "M_{NLSP} - M_{LSP} [GeV]";
+    g_dm_Ymin  = 0.;
+    g_dm_Ymax  = 200.;
+    g_dm_NY    = 10;
     
     // Change label for T2bW
     if (g_Label.find("T2bW") != string::npos)
     {
-      g_Xname = "M_{stop} [GeV]";
-      g2_Yname = "M_{stop} - M_{LSP} [GeV]";
+      g_Xname    = "M_{stop} [GeV]";
+      g_dm_Yname = "M_{stop} - M_{LSP} [GeV]";
     }
     
     cout << "Processing " << g_Label << endl;
@@ -393,11 +409,11 @@ void EventCountPlot()
       g_NX, g_Xmin, g_Xmax,
       g_NY, g_Ymin, g_Ymax
     );
-    TH2D* hist2 = new TH2D(
+    TH2D* hist_dm = new TH2D(
       (g_Label+"_EventCount").c_str(),
       (g_Label+"_EventCount").c_str(),
       g_NX,  g_Xmin,  g_Xmax,
-      g2_NY, g2_Ymin, g2_Ymax
+      g_dm_NY, g_dm_Ymin, g_dm_Ymax
     );
     
     //cout << "Processing " << Nfile << " files for process " << title << endl;
@@ -426,7 +442,7 @@ void EventCountPlot()
         LSP_Mass_string = LSP_Mass_string.erase(0,pos+1);
         double LSP_Mass = std::stod(LSP_Mass_string);
         hist->Fill(NLSP_Mass, LSP_Mass, events);
-        hist2->Fill(NLSP_Mass - LSP_Mass, LSP_Mass, events);
+        hist_dm->Fill(NLSP_Mass - LSP_Mass, LSP_Mass, events);
       }
     }
 
@@ -446,52 +462,18 @@ void EventCountPlot()
     can->Draw();
     can->cd();
 
-
     hist->Draw("COLZ");
     
-    format(hist, g_Xname, g_Yname);
+    format(hist,    g_Xname, g_Yname);
+    format(hist_dm, g_Xname, g_dm_Yname);
     
-    //hist->GetXaxis()->CenterTitle();
-    //hist->GetXaxis()->SetTitleFont(42);
-    //hist->GetXaxis()->SetTitleSize(0.06);
-    //hist->GetXaxis()->SetTitleOffset(1.06);
-    //hist->GetXaxis()->SetLabelFont(42);
-    //hist->GetXaxis()->SetLabelSize(0.05);
-    //hist->GetXaxis()->SetTitle(g_Xname.c_str());
-    //hist->GetYaxis()->CenterTitle();
-    //hist->GetYaxis()->SetTitleFont(42);
-    //hist->GetYaxis()->SetTitleSize(0.06);
-    //hist->GetYaxis()->SetTitleOffset(1.12);
-    //hist->GetYaxis()->SetLabelFont(42);
-    //hist->GetYaxis()->SetLabelSize(0.05);
-    //hist->GetYaxis()->SetTitle(g_Yname.c_str());
-    //hist->GetZaxis()->CenterTitle();
-    //hist->GetZaxis()->SetTitleFont(42);
-    //hist->GetZaxis()->SetTitleSize(0.05);
-    //hist->GetZaxis()->SetTitleOffset(1.15);
-    //hist->GetZaxis()->SetLabelFont(42);
-    //hist->GetZaxis()->SetLabelSize(0.05);
-    //hist->GetZaxis()->SetTitle("N_{events}");
-    //hist->GetZaxis()->SetRangeUser(0.9*hist->GetMinimum(0.0),1.1*hist->GetMaximum());
+    drawLatex(g_PlotTitle, g_Label);
 
-    TLatex l;
-    l.SetTextFont(42);
-    l.SetNDC();
-    l.SetTextSize(0.035);
-    l.SetTextFont(42);
-    // l.DrawLatex(0.17,0.855,g_PlotTitle.c_str());
-    l.DrawLatex(0.71,0.943,g_PlotTitle.c_str());
-    l.SetTextSize(0.04);
-    l.SetTextFont(42);
-    l.DrawLatex(0.01,0.943,"#bf{CMS} Simulation Preliminary");
-
-    l.SetTextSize(0.045);
-    l.SetTextFont(42);
-    l.DrawLatex(0.7,0.04,g_Label.c_str());
-
-    string plot_dir = "plots";
-    string plot_name = plot_dir + "/";
-    plot_name += hist->GetName();
+    string plot_dir     = "plots";
+    string plot_name    = plot_dir + "/";
+    string plot_name_dm = plot_dir + "/";
+    plot_name    += hist->GetName();
+    plot_name_dm += hist_dm->GetName();
     boost::filesystem::create_directories(plot_dir);
     can->SaveAs((plot_name+".pdf").c_str());
     TFile* file = new TFile("output_EventCountPlot.root","UPDATE");
