@@ -403,15 +403,17 @@ void EventCountPlot()
     
     cout << "Processing " << g_Label << endl;
 
+    // m_lsp vs m_nlsp
     TH2D* hist = new TH2D(
       (g_Label+"_EventCount").c_str(),
       (g_Label+"_EventCount").c_str(),
       g_NX, g_Xmin, g_Xmax,
       g_NY, g_Ymin, g_Ymax
     );
+    // mass diff (dm) vs m_nlsp
     TH2D* hist_dm = new TH2D(
-      (g_Label+"_EventCount").c_str(),
-      (g_Label+"_EventCount").c_str(),
+      (g_Label+"_dm_EventCount").c_str(),
+      (g_Label+"_dm_EventCount").c_str(),
       g_NX,  g_Xmin,  g_Xmax,
       g_dm_NY, g_dm_Ymin, g_dm_Ymax
     );
@@ -462,23 +464,35 @@ void EventCountPlot()
     can->Draw();
     can->cd();
 
-    hist->Draw("COLZ");
-    
+    // format histograms
     format(hist,    g_Xname, g_Yname);
     format(hist_dm, g_Xname, g_dm_Yname);
-    
-    drawLatex(g_PlotTitle, g_Label);
 
+    // output plot files
     string plot_dir     = "plots";
     string plot_name    = plot_dir + "/";
     string plot_name_dm = plot_dir + "/";
     plot_name    += hist->GetName();
     plot_name_dm += hist_dm->GetName();
+    
+    // create plot directory
     boost::filesystem::create_directories(plot_dir);
-    can->SaveAs((plot_name+".pdf").c_str());
-    TFile* file = new TFile("output_EventCountPlot.root","UPDATE");
+    
+    // m_lsp vs m_nlsp
+    hist->Draw("COLZ");
+    drawLatex(g_PlotTitle, g_Label);
+    can->SaveAs((plot_name + ".pdf").c_str());
+    
+    // mass diff (dm) vs m_nlsp
+    hist_dm->Draw("COLZ");
+    drawLatex(g_PlotTitle, g_Label);
+    can->SaveAs((plot_name_dm + ".pdf").c_str());
+    
+    // output root file
+    TFile* file = new TFile("output_EventCountPlot.root", "UPDATE");
     can->Write();
     file->Close();
+    
     delete can;
   }
 }
