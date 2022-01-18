@@ -41,10 +41,41 @@ string g_Yname;
 double g_Ymin;
 double g_Ymax;
 double g_NY;
+string g2_Yname;
+double g2_Ymin;
+double g2_Ymax;
+double g2_NY;
 
 using namespace RestFrames;
 
-void EventCountPlot(){
+void format(TH2D* hist, string g_Xname, string g_Yname)
+{
+  hist->GetXaxis()->CenterTitle();
+  hist->GetXaxis()->SetTitleFont(42);
+  hist->GetXaxis()->SetTitleSize(0.06);
+  hist->GetXaxis()->SetTitleOffset(1.06);
+  hist->GetXaxis()->SetLabelFont(42);
+  hist->GetXaxis()->SetLabelSize(0.05);
+  hist->GetXaxis()->SetTitle(g_Xname.c_str());
+  hist->GetYaxis()->CenterTitle();
+  hist->GetYaxis()->SetTitleFont(42);
+  hist->GetYaxis()->SetTitleSize(0.06);
+  hist->GetYaxis()->SetTitleOffset(1.12);
+  hist->GetYaxis()->SetLabelFont(42);
+  hist->GetYaxis()->SetLabelSize(0.05);
+  hist->GetYaxis()->SetTitle(g_Yname.c_str());
+  hist->GetZaxis()->CenterTitle();
+  hist->GetZaxis()->SetTitleFont(42);
+  hist->GetZaxis()->SetTitleSize(0.05);
+  hist->GetZaxis()->SetTitleOffset(1.15);
+  hist->GetZaxis()->SetLabelFont(42);
+  hist->GetZaxis()->SetLabelSize(0.05);
+  hist->GetZaxis()->SetTitle("N_{events}");
+  hist->GetZaxis()->SetRangeUser(0.9*hist->GetMinimum(0.0),1.1*hist->GetMaximum());
+}
+
+void EventCountPlot()
+{
   // speed up by not displaying canvas
   gROOT->SetBatch(kTRUE);
   
@@ -240,28 +271,28 @@ void EventCountPlot(){
   TChiWH += TChiWH_2018;
 
   // --- 2016 --- // 
-  //signal_labels.a("T2bW_2016");
-  //signals.push_back(T2bW_2016);
+  signal_labels.a("T2bW_2016");
+  signals.push_back(T2bW_2016);
   //signal_labels.a("T2tt_2016");
   //signals.push_back(T2tt_2016);
   //signal_labels.a("TChiWZ_2016");
   //signals.push_back(TChiWZ_2016);
-  signal_labels.a("TChipmWW_2016");
-  signals.push_back(TChipmWW_2016);
+  //signal_labels.a("TChipmWW_2016");
+  //signals.push_back(TChipmWW_2016);
   //signal_labels.a("TSlepSlep_2016");
   //signals.push_back(TSlepSlep_2016);
   //signal_labels.a("T2bb_2016");
   //signals.push_back(T2bb_2016);
   
   // --- 2017 --- //
-  //signal_labels.a("T2bW_2017");
-  //signals.push_back(T2bW_2017);
+  signal_labels.a("T2bW_2017");
+  signals.push_back(T2bW_2017);
   //signal_labels.a("T2tt_2017");
   //signals.push_back(T2tt_2017);
   //signal_labels.a("TChiWZ_2017");
   //signals.push_back(TChiWZ_2017);
-  signal_labels.a("TChipmWW_2017");
-  signals.push_back(TChipmWW_2017);
+  //signal_labels.a("TChipmWW_2017");
+  //signals.push_back(TChipmWW_2017);
   //signal_labels.a("TSlepSlep_2017");
   //signals.push_back(TSlepSlep_2017);
   //signal_labels.a("T2bb_2017");
@@ -278,14 +309,14 @@ void EventCountPlot(){
   //signals.push_back(TChiWH_2017);
   
   // --- 2018 --- //
-  //signal_labels.a("T2bW_2018");
-  //signals.push_back(T2bW_2018);
+  signal_labels.a("T2bW_2018");
+  signals.push_back(T2bW_2018);
   //signal_labels.a("T2tt_2018");
   //signals.push_back(T2tt_2018);
   //signal_labels.a("TChiWZ_2018");
   //signals.push_back(TChiWZ_2018);
-  signal_labels.a("TChipmWW_2018");
-  signals.push_back(TChipmWW_2018);
+  //signal_labels.a("TChipmWW_2018");
+  //signals.push_back(TChipmWW_2018);
   //signal_labels.a("TSlepSlep_2018");
   //signals.push_back(TSlepSlep_2018);
   //signal_labels.a("T2bb_2018");
@@ -302,15 +333,14 @@ void EventCountPlot(){
   //signals.push_back(TChiWH_2018);
 
   // --- Run 2 --- //
-
-  //signal_labels.a("T2bW");
-  //signals.push_back(T2bW);
+  signal_labels.a("T2bW");
+  signals.push_back(T2bW);
   //signal_labels.a("T2tt");
   //signals.push_back(T2tt);
   //signal_labels.a("TChiWZ");
   //signals.push_back(TChiWZ);
-  signal_labels.a("TChipmWW");
-  signals.push_back(TChipmWW);
+  //signal_labels.a("TChipmWW");
+  //signals.push_back(TChipmWW);
   //signal_labels.a("TSlepSlep");
   //signals.push_back(TSlepSlep);
   //signal_labels.a("T2bb");
@@ -326,115 +356,147 @@ void EventCountPlot(){
   //signal_labels.a("TChiWH");
   //signals.push_back(TChiWH);
   
-  for(int s = 0; s < int(signals.size()); s++){
-      g_Yname = "M_{LSP} [GeV]";
-      g_Ymin = 0.;
-      g_Ymax = 1000.;
-      g_NY = 50;
+  for(int s = 0; s < int(signals.size()); s++)
+  {
+    g_Label = signal_labels[s];
+    
+    g_Yname = "M_{LSP} [GeV]";
+    g_Ymin = 0.;
+    g_Ymax = 1000.;
+    g_NY = 40;
+    //g_NY = 20;
 
-      g_Xname = "M_{NLSP} [GeV]";
-      g_Xmin = 0.;
-      g_Xmax = 1500.; 
-      g_NX = 50;
+    g_Xname = "M_{NLSP} [GeV]";
+    g_Xmin = 0.;
+    g_Xmax = 1500.; 
+    g_NX = 60;
+    //g_NX = 30;
+    
+    // mass diff plot
+    g2_Yname = "M_{NLSP} - M_{LSP} [GeV]";
+    g2_Ymin = 0.;
+    g2_Ymax = 200.;
+    g2_NY = 10;
+    
+    // Change label for T2bW
+    if (g_Label.find("T2bW") != string::npos)
+    {
+      g_Xname = "M_{stop} [GeV]";
+      g2_Yname = "M_{stop} - M_{LSP} [GeV]";
+    }
+    
+    cout << "Processing " << g_Label << endl;
 
-      g_Label = signal_labels[s];
-      cout << "Processing " << g_Label << endl;
-
-      TH2D* hist = new TH2D((g_Label+"_EventCount").c_str(), (g_Label+"_EventCount").c_str(),
-            		g_NX, g_Xmin, g_Xmax,
-            		g_NY, g_Ymin, g_Ymax);
-      
+    TH2D* hist = new TH2D(
+      (g_Label+"_EventCount").c_str(),
+      (g_Label+"_EventCount").c_str(),
+      g_NX, g_Xmin, g_Xmax,
+      g_NY, g_Ymin, g_Ymax
+    );
+    TH2D* hist2 = new TH2D(
+      (g_Label+"_EventCount").c_str(),
+      (g_Label+"_EventCount").c_str(),
+      g_NX,  g_Xmin,  g_Xmax,
+      g2_NY, g2_Ymin, g2_Ymax
+    );
     
     //cout << "Processing " << Nfile << " files for process " << title << endl;
-    for(int f = 0; f < int(signals[s].size()); f++){
+    for(int f = 0; f < int(signals[s].size()); f++)
+    {
       vector<string> tree_names;
       TFile* file = new TFile(signals[s][f].c_str(),"READ");
-      for (auto&& keyAsObj : *file->GetListOfKeys()){
-       auto key = (TKey*) keyAsObj;
-       string name = key->GetName();
-       if (name.find("SMS") == std::string::npos) continue;
-       tree_names.push_back(key->GetName());
+      for (auto&& keyAsObj : *file->GetListOfKeys())
+      {
+        auto key = (TKey*) keyAsObj;
+        string name = key->GetName();
+        if (name.find("SMS") == string::npos) continue;
+        tree_names.push_back(key->GetName());
       }
       for(int k = 0; k < int(tree_names.size()); k++)
       {
-       TChain* chain = new TChain(tree_names[k].c_str());
-       chain->Add(signals[s][f].c_str());
-       int events = chain->GetEntries(); 
-       delete chain;
-       string NLSP_Mass_string = tree_names[k].erase(0,4); //remove SMS_
-       string LSP_Mass_string = NLSP_Mass_string;
-       NLSP_Mass_string = NLSP_Mass_string.substr(0,NLSP_Mass_string.find("_"));
-       double NLSP_Mass = std::stod(NLSP_Mass_string);
-       size_t pos = LSP_Mass_string.find("_");
-       LSP_Mass_string = LSP_Mass_string.erase(0,pos+1);
-       double LSP_Mass = std::stod(LSP_Mass_string);
-       hist->Fill(NLSP_Mass,LSP_Mass,events);
+        TChain* chain = new TChain(tree_names[k].c_str());
+        chain->Add(signals[s][f].c_str());
+        int events = chain->GetEntries(); 
+        delete chain;
+        string NLSP_Mass_string = tree_names[k].erase(0,4); //remove SMS_
+        string LSP_Mass_string = NLSP_Mass_string;
+        NLSP_Mass_string = NLSP_Mass_string.substr(0,NLSP_Mass_string.find("_"));
+        double NLSP_Mass = std::stod(NLSP_Mass_string);
+        size_t pos = LSP_Mass_string.find("_");
+        LSP_Mass_string = LSP_Mass_string.erase(0,pos+1);
+        double LSP_Mass = std::stod(LSP_Mass_string);
+        hist->Fill(NLSP_Mass, LSP_Mass, events);
+        hist2->Fill(NLSP_Mass - LSP_Mass, LSP_Mass, events);
       }
     }
-  cout << "Total " << hist->Integral() << endl;
-  
-  gStyle->SetOptTitle(0);
-  gStyle->SetOptStat(0);
-  gStyle->SetOptFit(11111111);
-  TCanvas* can = (TCanvas*) new TCanvas("can","can",700.,600);
 
-  can->SetLeftMargin(0.15);
-  can->SetRightMargin(0.18);
-  can->SetBottomMargin(0.15);
-  can->SetGridx();
-  can->SetGridy();
-  can->SetLogz();
-  can->Draw();
-  can->cd();
-  hist->Draw("COLZ");
-  hist->GetXaxis()->CenterTitle();
-  hist->GetXaxis()->SetTitleFont(42);
-  hist->GetXaxis()->SetTitleSize(0.06);
-  hist->GetXaxis()->SetTitleOffset(1.06);
-  hist->GetXaxis()->SetLabelFont(42);
-  hist->GetXaxis()->SetLabelSize(0.05);
-  hist->GetXaxis()->SetTitle(g_Xname.c_str());
-  hist->GetYaxis()->CenterTitle();
-  hist->GetYaxis()->SetTitleFont(42);
-  hist->GetYaxis()->SetTitleSize(0.06);
-  hist->GetYaxis()->SetTitleOffset(1.12);
-  hist->GetYaxis()->SetLabelFont(42);
-  hist->GetYaxis()->SetLabelSize(0.05);
-  hist->GetYaxis()->SetTitle(g_Yname.c_str());
-  hist->GetZaxis()->CenterTitle();
-  hist->GetZaxis()->SetTitleFont(42);
-  hist->GetZaxis()->SetTitleSize(0.05);
-  hist->GetZaxis()->SetTitleOffset(1.15);
-  hist->GetZaxis()->SetLabelFont(42);
-  hist->GetZaxis()->SetLabelSize(0.05);
-  hist->GetZaxis()->SetTitle("N_{events}");
-  hist->GetZaxis()->SetRangeUser(0.9*hist->GetMinimum(0.0),1.1*hist->GetMaximum());
+    cout << "Total " << hist->Integral() << endl;
+    
+    gStyle->SetOptTitle(0);
+    gStyle->SetOptStat(0);
+    gStyle->SetOptFit(11111111);
+    TCanvas* can = (TCanvas*) new TCanvas("can","can",700.,600);
 
-  TLatex l;
-  l.SetTextFont(42);
-  l.SetNDC();
-  l.SetTextSize(0.035);
-  l.SetTextFont(42);
-  // l.DrawLatex(0.17,0.855,g_PlotTitle.c_str());
-  l.DrawLatex(0.71,0.943,g_PlotTitle.c_str());
-  l.SetTextSize(0.04);
-  l.SetTextFont(42);
-  l.DrawLatex(0.01,0.943,"#bf{CMS} Simulation Preliminary");
+    can->SetLeftMargin(0.15);
+    can->SetRightMargin(0.18);
+    can->SetBottomMargin(0.15);
+    can->SetGridx();
+    can->SetGridy();
+    can->SetLogz();
+    can->Draw();
+    can->cd();
 
-  l.SetTextSize(0.045);
-  l.SetTextFont(42);
-  l.DrawLatex(0.7,0.04,g_Label.c_str());
 
-  string plot_dir = "plots";
-  string plot_name = plot_dir + "/";
-  plot_name += hist->GetName();
-  boost::filesystem::create_directories(plot_dir);
-  can->SaveAs((plot_name+".pdf").c_str());
-  TFile* file = new TFile("output_EventCountPlot.root","UPDATE");
-  can->Write();
-  file->Close();
-  delete can;
-  
+    hist->Draw("COLZ");
+    
+    format(hist, g_Xname, g_Yname);
+    
+    //hist->GetXaxis()->CenterTitle();
+    //hist->GetXaxis()->SetTitleFont(42);
+    //hist->GetXaxis()->SetTitleSize(0.06);
+    //hist->GetXaxis()->SetTitleOffset(1.06);
+    //hist->GetXaxis()->SetLabelFont(42);
+    //hist->GetXaxis()->SetLabelSize(0.05);
+    //hist->GetXaxis()->SetTitle(g_Xname.c_str());
+    //hist->GetYaxis()->CenterTitle();
+    //hist->GetYaxis()->SetTitleFont(42);
+    //hist->GetYaxis()->SetTitleSize(0.06);
+    //hist->GetYaxis()->SetTitleOffset(1.12);
+    //hist->GetYaxis()->SetLabelFont(42);
+    //hist->GetYaxis()->SetLabelSize(0.05);
+    //hist->GetYaxis()->SetTitle(g_Yname.c_str());
+    //hist->GetZaxis()->CenterTitle();
+    //hist->GetZaxis()->SetTitleFont(42);
+    //hist->GetZaxis()->SetTitleSize(0.05);
+    //hist->GetZaxis()->SetTitleOffset(1.15);
+    //hist->GetZaxis()->SetLabelFont(42);
+    //hist->GetZaxis()->SetLabelSize(0.05);
+    //hist->GetZaxis()->SetTitle("N_{events}");
+    //hist->GetZaxis()->SetRangeUser(0.9*hist->GetMinimum(0.0),1.1*hist->GetMaximum());
+
+    TLatex l;
+    l.SetTextFont(42);
+    l.SetNDC();
+    l.SetTextSize(0.035);
+    l.SetTextFont(42);
+    // l.DrawLatex(0.17,0.855,g_PlotTitle.c_str());
+    l.DrawLatex(0.71,0.943,g_PlotTitle.c_str());
+    l.SetTextSize(0.04);
+    l.SetTextFont(42);
+    l.DrawLatex(0.01,0.943,"#bf{CMS} Simulation Preliminary");
+
+    l.SetTextSize(0.045);
+    l.SetTextFont(42);
+    l.DrawLatex(0.7,0.04,g_Label.c_str());
+
+    string plot_dir = "plots";
+    string plot_name = plot_dir + "/";
+    plot_name += hist->GetName();
+    boost::filesystem::create_directories(plot_dir);
+    can->SaveAs((plot_name+".pdf").c_str());
+    TFile* file = new TFile("output_EventCountPlot.root","UPDATE");
+    can->Write();
+    file->Close();
+    delete can;
   }
-
 }
