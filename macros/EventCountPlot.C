@@ -31,20 +31,21 @@
 
 using namespace std;
 
+// global variables
 string g_PlotTitle;
 string g_Label;
 string g_Xname;
 double g_Xmin;
 double g_Xmax;
-double g_NX;
+double g_XN;
 string g_Yname;
 double g_Ymin;
 double g_Ymax;
-double g_NY;
+double g_YN;
 string g_dm_Yname;
 double g_dm_Ymin;
 double g_dm_Ymax;
-double g_dm_NY;
+double g_dm_YN;
 
 using namespace RestFrames;
 
@@ -379,20 +380,20 @@ void EventCountPlot()
     g_Xname = "M_{NLSP} [GeV]";
     g_Xmin  = 0.;
     g_Xmax  = 1500.; 
-    g_NX    = 60;
-    //g_NX  = 30;
+    g_XN    = 60;
+    //g_XN  = 30;
     
     g_Yname = "M_{LSP} [GeV]";
     g_Ymin  = 0.;
     g_Ymax  = 1000.;
-    g_NY    = 40;
-    //g_NY  = 20;
+    g_YN    = 40;
+    //g_YN  = 20;
 
     // mass diff plot
     g_dm_Yname = "M_{NLSP} - M_{LSP} [GeV]";
     g_dm_Ymin  = 0.;
     g_dm_Ymax  = 200.;
-    g_dm_NY    = 10;
+    g_dm_YN    = 20;
     
     // Change label for T2bW
     if (g_Label.find("T2bW") != string::npos)
@@ -407,15 +408,15 @@ void EventCountPlot()
     TH2D* hist = new TH2D(
       (g_Label+"_EventCount").c_str(),
       (g_Label+"_EventCount").c_str(),
-      g_NX, g_Xmin, g_Xmax,
-      g_NY, g_Ymin, g_Ymax
+      g_XN, g_Xmin, g_Xmax,
+      g_YN, g_Ymin, g_Ymax
     );
     // mass diff (dm) vs m_nlsp
     TH2D* hist_dm = new TH2D(
       (g_Label+"_dm_EventCount").c_str(),
       (g_Label+"_dm_EventCount").c_str(),
-      g_NX,  g_Xmin,  g_Xmax,
-      g_dm_NY, g_dm_Ymin, g_dm_Ymax
+      g_XN,    g_Xmin,    g_Xmax,
+      g_dm_YN, g_dm_Ymin, g_dm_Ymax
     );
     
     //cout << "Processing " << Nfile << " files for process " << title << endl;
