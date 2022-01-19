@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include <boost/filesystem.hpp>
+//#include <boost/filesystem.hpp>
 
 #include <TROOT.h>
 #include <TFile.h>
@@ -18,6 +18,7 @@
 #include <TH1D.h>
 #include <TStyle.h>
 #include <TLorentzVector.h>
+#include <TSystem.h>
 
 #include "../include/ReducedBase_slim.hh"
 #include "../include/SampleTool.hh"
@@ -481,7 +482,8 @@ void EventCountPlot()
     plot_name_dm += hist_dm->GetName();
     
     // create plot directory
-    boost::filesystem::create_directories(plot_dir);
+    //boost::filesystem::create_directories(plot_dir);
+    gSystem->mkdir(plot_dir.c_str());
     
     // m_lsp vs m_nlsp
     hist->Draw("COLZ");
