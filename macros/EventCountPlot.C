@@ -445,7 +445,7 @@ void EventCountPlot()
         LSP_Mass_string = LSP_Mass_string.erase(0,pos+1);
         double LSP_Mass = std::stod(LSP_Mass_string);
         hist->Fill(NLSP_Mass, LSP_Mass, events);
-        hist_dm->Fill(NLSP_Mass - LSP_Mass, LSP_Mass, events);
+        hist_dm->Fill(NLSP_Mass, NLSP_Mass - LSP_Mass, events);
       }
     }
 
