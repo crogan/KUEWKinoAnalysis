@@ -100,7 +100,8 @@ void EventCountPlot()
   
   RestFrames::SetStyle();
 
-  string NtuplePath = "/home/t3-ku/z374f439/storage/crogan/";
+  //string NtuplePath = "/home/t3-ku/z374f439/storage/crogan/";
+  string NtuplePath = "root://xrootd.unl.edu//store/user/zflowers/crogan/";
 
   vector<VS> signals;
   VS signal_labels;
@@ -423,7 +424,9 @@ void EventCountPlot()
     for(int f = 0; f < int(signals[s].size()); f++)
     {
       vector<string> tree_names;
-      TFile* file = new TFile(signals[s][f].c_str(),"READ");
+      //TFile* file = new TFile(signals[s][f].c_str(),"READ");
+      TFile* file = TFile::Open(signals[s][f].c_str(),"READ");
+      if(file == 0 || file->IsZombie()) { cout << "Cannot open: " << signals[s][f] << endl; continue; }
       for (auto&& keyAsObj : *file->GetListOfKeys())
       {
         auto key = (TKey*) keyAsObj;
@@ -447,6 +450,7 @@ void EventCountPlot()
         hist->Fill(NLSP_Mass, LSP_Mass, events);
         hist_dm->Fill(NLSP_Mass - LSP_Mass, LSP_Mass, events);
       }
+      file->Close();
     }
 
     cout << "Total " << hist->Integral() << endl;
@@ -490,9 +494,9 @@ void EventCountPlot()
     can->SaveAs((plot_name_dm + ".pdf").c_str());
     
     // output root file
-    TFile* file = new TFile("output_EventCountPlot.root", "UPDATE");
+    TFile* output_file = new TFile("output_EventCountPlot.root", "UPDATE");
     can->Write();
-    file->Close();
+    output_file->Close();
     
     delete can;
   }
