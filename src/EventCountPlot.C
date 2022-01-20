@@ -392,19 +392,19 @@ void EventCountPlot()
     Xmin  = 0.;
     Xmax  = 1500.; 
     XN    = 60;
-    //XN  = 30;
     
     Yname = "M_{LSP} [GeV]";
     Ymin  = 0.;
     Ymax  = 1000.;
     YN    = 40;
-    //YN  = 20;
 
     // mass diff plot
     dm_Yname = "M_{NLSP} - M_{LSP} [GeV]";
     dm_Ymin  = 0.;
-    dm_Ymax  = 200.;
-    dm_YN    = 20;
+    //dm_Ymax  = 200.;
+    //dm_YN    = 20;
+    dm_Ymax  = 400.;
+    dm_YN    = 40;
     
     // Change label for T2bW
     if (Label.find("T2bW") != string::npos)
