@@ -184,8 +184,6 @@ int main(int argc, char* argv[]) {
   cout << "Initializing sample maps from path " << NtuplePath << " for year " << year << endl;
   
   SampleTool ST(NtuplePath, year);
-  
-  cout << "Successfully initialized SampleTool." << endl;
 
   ScaleFactorTool SF;
 
@@ -250,8 +248,6 @@ int main(int argc, char* argv[]) {
     cout << "processing sample " << proc.Name() << endl;
   }
 
-  cout << "In between loops." << endl;
-  
   for(int s = 0; s < Nsample; s++){
     Process proc = samples[s];
 
