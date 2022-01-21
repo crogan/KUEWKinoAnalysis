@@ -192,11 +192,10 @@ int SampleTool::YearMap(int year){
 void SampleTool::InitSMS(const string& prefix, const string& filename, double weight, bool FS, bool DL){
   //TFile file;
   //file.Open(filename.c_str(), "READ"); //
-if(gSystem->AccessPathName(filename.c_str())) return;
-TFile* file = TFile::Open(filename.c_str(), "READ");  
-//cout << "is " << filename << " open? " << file->IsOpen() << endl;
-  if(!file->IsOpen())
-    return;
+  if(gSystem->AccessPathName(filename.c_str())) return;
+  TFile* file = TFile::Open(filename.c_str(), "READ");  
+  cout << "is " << filename << " open? " << file->IsOpen() << endl;
+  if(!file->IsOpen()) return;
  
   TIter list(file->GetListOfKeys());
   TKey* key;
