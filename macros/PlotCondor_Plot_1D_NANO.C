@@ -77,60 +77,131 @@ void PlotCondor_Plot_1D_NANO(){
 
   g_Xmin = 0.;
   g_Xmax = 3000.; 
-  g_NX = 128;
+  g_NX = 150;
 
    g_PlotTitle = "";
 
-   bool Scale = false;
+   bool Scale = true;
 
-   std::map<string,double> file_list_2016 = {
+   std::map<string,double> WJets_file_list_2016 = {
     {"output_Plot_1D_NANO_Summer16_102X_WJetsToLNu_HT-70To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8", 1.},
-    {"output_Plot_1D_NANO_Summer16_102X_WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8", 1.2},
-    {"output_Plot_1D_NANO_Summer16_102X_WJetsToLNu_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8", 0.2},
-    {"output_Plot_1D_NANO_Summer16_102X_WJetsToLNu_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8", 0.22},
-    {"output_Plot_1D_NANO_Summer16_102X_WJetsToLNu_HT-600To800_TuneCUETP8M1_13TeV-madgraphMLM-pythia8", 4.5},
-    {"output_Plot_1D_NANO_Summer16_102X_WJetsToLNu_HT-800To1200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8", 0.67},
-    {"output_Plot_1D_NANO_Summer16_102X_WJetsToLNu_HT-1200To2500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8", 1.37},
-    {"output_Plot_1D_NANO_Summer16_102X_WJetsToLNu_HT-2500ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8", 1.7},
+    {"output_Plot_1D_NANO_Summer16_102X_WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8", 1.},
+    {"output_Plot_1D_NANO_Summer16_102X_WJetsToLNu_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8", 1.},
+    {"output_Plot_1D_NANO_Summer16_102X_WJetsToLNu_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8", 1.},
+    {"output_Plot_1D_NANO_Summer16_102X_WJetsToLNu_HT-600To800_TuneCUETP8M1_13TeV-madgraphMLM-pythia8", 1.},
+    {"output_Plot_1D_NANO_Summer16_102X_WJetsToLNu_HT-800To1200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8", 1.},
+    {"output_Plot_1D_NANO_Summer16_102X_WJetsToLNu_HT-1200To2500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8", 1.},
+    {"output_Plot_1D_NANO_Summer16_102X_WJetsToLNu_HT-2500ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8", 1.},
    };
 
-   std::map<string,double> file_list_2017 = {
+   std::map<string,double> DY_file_list_2016 = {
+    {"output_Plot_1D_NANO_Summer16_102X_DYJetsToLL_M-50_HT-70to100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8", 1.},
+    {"output_Plot_1D_NANO_Summer16_102X_DYJetsToLL_M-50_HT-100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8", 1.},
+    {"output_Plot_1D_NANO_Summer16_102X_DYJetsToLL_M-50_HT-200to400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8", 1.},
+    {"output_Plot_1D_NANO_Summer16_102X_DYJetsToLL_M-50_HT-400to600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8", 1.},
+    {"output_Plot_1D_NANO_Summer16_102X_DYJetsToLL_M-50_HT-600to800_TuneCUETP8M1_13TeV-madgraphMLM-pythia8", 1.},
+    {"output_Plot_1D_NANO_Summer16_102X_DYJetsToLL_M-50_HT-800to1200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8", 1.},
+    {"output_Plot_1D_NANO_Summer16_102X_DYJetsToLL_M-50_HT-1200to2500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8", 1.},
+    {"output_Plot_1D_NANO_Summer16_102X_DYJetsToLL_M-50_HT-2500toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8", 1.},
+   };
+
+   std::map<string,double> ZJets_file_list_2016 = {
+    {"output_Plot_1D_NANO_Summer16_102X_ZJetsToNuNu_HT-100To200_13TeV-madgraph", 1.},
+    {"output_Plot_1D_NANO_Summer16_102X_ZJetsToNuNu_HT-200To400_13TeV-madgraph", 1.},
+    {"output_Plot_1D_NANO_Summer16_102X_ZJetsToNuNu_HT-400To600_13TeV-madgraph", 1.},
+    {"output_Plot_1D_NANO_Summer16_102X_ZJetsToNuNu_HT-600To800_13TeV-madgraph", 1.},
+    {"output_Plot_1D_NANO_Summer16_102X_ZJetsToNuNu_HT-800To1200_13TeV-madgraph", 1.},
+    {"output_Plot_1D_NANO_Summer16_102X_ZJetsToNuNu_HT-1200To2500_13TeV-madgraph", 1.},
+    {"output_Plot_1D_NANO_Summer16_102X_ZJetsToNuNu_HT-2500ToInf_13TeV-madgraph", 1.},
+   };
+
+   std::map<string,double> WJets_file_list_2017 = {
     {"output_Plot_1D_NANO_Fall17_102X_WJetsToLNu_HT-70To100_TuneCP5_13TeV-madgraphMLM-pythia8", 1.},
-    {"output_Plot_1D_NANO_Fall17_102X_WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8", 1.},
-    {"output_Plot_1D_NANO_Fall17_102X_WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8", 1.},
-    {"output_Plot_1D_NANO_Fall17_102X_WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8", 1.2},
-    {"output_Plot_1D_NANO_Fall17_102X_WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8", 2.},
-    {"output_Plot_1D_NANO_Fall17_102X_WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8", 1.3},
-    {"output_Plot_1D_NANO_Fall17_102X_WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8", 16.35},
-    {"output_Plot_1D_NANO_Fall17_102X_WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8", 2.75},
+    {"output_Plot_1D_NANO_Fall17_102X_WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8", 0.993},
+    {"output_Plot_1D_NANO_Fall17_102X_WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8", 1.002},
+    {"output_Plot_1D_NANO_Fall17_102X_WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8", 1.009},
+    {"output_Plot_1D_NANO_Fall17_102X_WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8", 1.120},
+    {"output_Plot_1D_NANO_Fall17_102X_WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8", 1.21},
+    {"output_Plot_1D_NANO_Fall17_102X_WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8", 1.45},
+    {"output_Plot_1D_NANO_Fall17_102X_WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8", 4.42},
    };
 
-   std::map<string,double> file_list_2018 = {
+   std::map<string,double> DY_file_list_2017 = {
+    {"output_Plot_1D_NANO_Fall17_102X_DYJetsToLL_M-50_HT-70to100_TuneCP5_13TeV-madgraphMLM-pythia8", 1.},
+    {"output_Plot_1D_NANO_Fall17_102X_DYJetsToLL_M-50_HT-100to200_TuneCP5_13TeV-madgraphMLM-pythia8", 1.},
+    {"output_Plot_1D_NANO_Fall17_102X_DYJetsToLL_M-50_HT-200to400_TuneCP5_13TeV-madgraphMLM-pythia8", 0.999},
+    {"output_Plot_1D_NANO_Fall17_102X_DYJetsToLL_M-50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8", 0.990},
+    {"output_Plot_1D_NANO_Fall17_102X_DYJetsToLL_M-50_HT-600to800_TuneCP5_13TeV-madgraphMLM-pythia8", 0.975},
+    {"output_Plot_1D_NANO_Fall17_102X_DYJetsToLL_M-50_HT-800to1200_TuneCP5_13TeV-madgraphMLM-pythia8", 1.195},
+    {"output_Plot_1D_NANO_Fall17_102X_DYJetsToLL_M-50_HT-1200to2500_TuneCP5_13TeV-madgraphMLM-pythia8", 0.9},
+    {"output_Plot_1D_NANO_Fall17_102X_DYJetsToLL_M-50_HT-2500toInf_TuneCP5_13TeV-madgraphMLM-pythia8", 1.1},
+   };
+
+   std::map<string,double> ZJets_file_list_2017 = {
+    {"output_Plot_1D_NANO_Fall17_102X_ZJetsToNuNu_HT-100To200_13TeV-madgraph", 1.},
+    {"output_Plot_1D_NANO_Fall17_102X_ZJetsToNuNu_HT-200To400_13TeV-madgraph", 1.},
+    {"output_Plot_1D_NANO_Fall17_102X_ZJetsToNuNu_HT-400To600_13TeV-madgraph", 1.},
+    {"output_Plot_1D_NANO_Fall17_102X_ZJetsToNuNu_HT-600To800_13TeV-madgraph", 1.},
+    {"output_Plot_1D_NANO_Fall17_102X_ZJetsToNuNu_HT-800To1200_13TeV-madgraph", 1.},
+    {"output_Plot_1D_NANO_Fall17_102X_ZJetsToNuNu_HT-1200To2500_13TeV-madgraph", 1.},
+    {"output_Plot_1D_NANO_Fall17_102X_ZJetsToNuNu_HT-2500ToInf_13TeV-madgraph", 1.},
+   };
+
+   std::map<string,double> WJets_file_list_2018 = {
    {"output_Plot_1D_NANO_Autumn18_102X_WJetsToLNu_HT-70To100_TuneCP5_13TeV-madgraphMLM-pythia8", 1.},
-   {"output_Plot_1D_NANO_Autumn18_102X_WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8", 5.},
-   {"output_Plot_1D_NANO_Autumn18_102X_WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8", 1.},
-   {"output_Plot_1D_NANO_Autumn18_102X_WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8", 0.85},
-   {"output_Plot_1D_NANO_Autumn18_102X_WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8", 1.5},
-   {"output_Plot_1D_NANO_Autumn18_102X_WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8", 1.27},
-   {"output_Plot_1D_NANO_Autumn18_102X_WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8", 1.83},
-   {"output_Plot_1D_NANO_Autumn18_102X_WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8", 50.23},
+   {"output_Plot_1D_NANO_Autumn18_102X_WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8", 0.993},
+   {"output_Plot_1D_NANO_Autumn18_102X_WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8", 1.002},
+   {"output_Plot_1D_NANO_Autumn18_102X_WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8", 1.009},
+   {"output_Plot_1D_NANO_Autumn18_102X_WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8", 1.120},
+   {"output_Plot_1D_NANO_Autumn18_102X_WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8", 1.21},
+   {"output_Plot_1D_NANO_Autumn18_102X_WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8", 1.45},
+   {"output_Plot_1D_NANO_Autumn18_102X_WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8", 4.42},
    };
 
-  vector<std::map<string,double>> file_lists = {
-   file_list_2016,
-   file_list_2017,
-   file_list_2018,
+   std::map<string,double> DY_file_list_2018 = {
+    {"output_Plot_1D_NANO_Autumn18_102X_DYJetsToLL_M-50_HT-70to100_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8", 1.},
+    {"output_Plot_1D_NANO_Autumn18_102X_DYJetsToLL_M-50_HT-100to200_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8", 1.},
+    {"output_Plot_1D_NANO_Autumn18_102X_DYJetsToLL_M-50_HT-200to400_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8", 0.999},
+    {"output_Plot_1D_NANO_Autumn18_102X_DYJetsToLL_M-50_HT-400to600_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8", 0.990},
+    {"output_Plot_1D_NANO_Autumn18_102X_DYJetsToLL_M-50_HT-600to800_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8", 0.975},
+    {"output_Plot_1D_NANO_Autumn18_102X_DYJetsToLL_M-50_HT-800to1200_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8", 1.195},
+    {"output_Plot_1D_NANO_Autumn18_102X_DYJetsToLL_M-50_HT-1200to2500_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8", 0.9},
+    {"output_Plot_1D_NANO_Autumn18_102X_DYJetsToLL_M-50_HT-2500toInf_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8", 1.1},
+   };
+
+   std::map<string,double> ZJets_file_list_2018 = {
+    {"output_Plot_1D_NANO_Autumn18_102X_ZJetsToNuNu_HT-100To200_13TeV-madgraph", 1.},
+    {"output_Plot_1D_NANO_Autumn18_102X_ZJetsToNuNu_HT-200To400_13TeV-madgraph", 1.},
+    {"output_Plot_1D_NANO_Autumn18_102X_ZJetsToNuNu_HT-400To600_13TeV-madgraph", 1.},
+    {"output_Plot_1D_NANO_Autumn18_102X_ZJetsToNuNu_HT-600To800_13TeV-madgraph", 1.},
+    {"output_Plot_1D_NANO_Autumn18_102X_ZJetsToNuNu_HT-800To1200_13TeV-madgraph", 1.},
+    {"output_Plot_1D_NANO_Autumn18_102X_ZJetsToNuNu_HT-1200To2500_13TeV-madgraph", 1.},
+    {"output_Plot_1D_NANO_Autumn18_102X_ZJetsToNuNu_HT-2500ToInf_13TeV-madgraph", 1.},
+   };
+
+  std::map<std::map<string,double>,string> file_lists = {
+   {WJets_file_list_2016,"WJets_Summer16_102X"},
+   {WJets_file_list_2017,"WJets_Fall17_102X"},
+   {WJets_file_list_2018,"WJets_Autumn18_102X"},
+   {ZJets_file_list_2016,"ZJets_Summer16_102X"},
+   {ZJets_file_list_2017,"ZJets_Fall17_102X"},
+   {ZJets_file_list_2018,"ZJets_Autumn18_102X"},
+   {DY_file_list_2016,"DY_Summer16_102X"},
+   {DY_file_list_2017,"DY_Fall17_102X"},
+   {DY_file_list_2018,"DY_Autumn18_102X"},
   };
   string path_to_lists = "/uscms/home/z374f439/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis/samples/NANO/";
 
-  for(int l = 0; l < int(file_lists.size()); l++)
+  for(std::map<std::map<string,double>,string>::iterator iter0 = file_lists.begin(); iter0 != file_lists.end(); ++iter0)
   {
-   TH1D* hist_tot = new TH1D((get_str_between_two_str(file_lists[l].begin()->first,"NANO_","_W")).c_str(), (get_str_between_two_str(file_lists[l].begin()->first,"NANO_","_W")).c_str(), g_NX, g_Xmin, g_Xmax);
-    for(std::map<string,double>::iterator iter = file_lists[l].begin(); iter != file_lists[l].end(); ++iter)
+   std::map<string,double> file_list = iter0->first;
+   string tag = iter0->second;
+   TH1D* hist_tot = new TH1D(tag.c_str(), tag.c_str(), g_NX, g_Xmin, g_Xmax);
+    for(std::map<string,double>::iterator iter = file_list.begin(); iter != file_list.end(); ++iter)
     {
      string inputRootFileName = iter->first;
      double SF = iter->second;
-     std::ifstream infile(path_to_lists+get_str_between_two_str(inputRootFileName,"NANO_","_W")+"_102X/"+inputRootFileName.substr(inputRootFileName.find("_W"+1))+".txt");
+     std::ifstream infile(path_to_lists+tag.substr(tag.find("_")+1)+"/"+inputRootFileName.substr(inputRootFileName.find("102X_")+5)+".txt");
      string line = "";
      int counter = 0;
      while(getline(infile,line))
@@ -140,9 +211,12 @@ void PlotCondor_Plot_1D_NANO(){
       replace(hist_name,"output_Plot_1D_NANO","hist");
       TH1D* hist = (TH1D*)file->Get(hist_name.c_str());
       if(Scale)
+      {
         hist->Scale(SF);
+      }
       hist_tot->Add(hist);
       file->Close();
+      counter++;
       delete file;    
      }
    }
@@ -150,9 +224,9 @@ void PlotCondor_Plot_1D_NANO(){
    gStyle->SetOptStat(0);
    gStyle->SetOptFit(11111111);
    
-   TFile* output_file = new TFile(("output_"+get_str_between_two_str(file_lists[l].begin()->first,"NANO_","_W")+".root").c_str(),"RECREATE");
+   TFile* output_file = new TFile(("output_"+tag+".root").c_str(),"RECREATE");
 
-   TCanvas* can = (TCanvas*) new TCanvas(("can_"+get_str_between_two_str(file_lists[l].begin()->first,"NANO_","_W")).c_str(),("can_"+get_str_between_two_str(file_lists[l].begin()->first,"NANO_","_W")).c_str(),700.,600);
+   TCanvas* can = (TCanvas*) new TCanvas(("can_"+tag).c_str(),("can_"+tag).c_str(),700.,600);
    can->SetLeftMargin(0.15);
    can->SetRightMargin(0.18);
    can->SetBottomMargin(0.15);
@@ -233,7 +307,10 @@ void PlotCondor_Plot_1D_NANO(){
    line_2500.SetLineWidth(2);
    line_2500.Draw("SAMES");
    
-   can->SaveAs((get_str_between_two_str(file_lists[l].begin()->first,"NANO_","_W")+".pdf").c_str());
+   if(Scale)
+     can->SaveAs((tag+".pdf").c_str());
+   else
+     can->SaveAs((tag+"_orig.pdf").c_str());
    can->Write();
    hist_tot->Write();
    output_file->Close(); 

@@ -61,13 +61,59 @@ void WriteScript(const string& src_name,
   file << "output = " << filetag+"_"+dataset_name+"_"+std::to_string(fileline) << ".out" << endl;
   file << "error = "  << filetag+"_"+dataset_name+"_"+std::to_string(fileline) << ".err" << endl;
   file << "log = "    << filetag+"_"+dataset_name+"_"+std::to_string(fileline) << ".log" << endl;
+  //file << "transfer_input_files = /uscms/home/z374f439/nobackup/whatever_you_want/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2,scripts/cmssw_setup_connect.sh,scripts/setup_RestFrames_connect.sh,macros/EventCounter.C,include/SUSYNANOBase_slim.hh,/uscms/home/z374f439/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis/samples/NANO/"+filetag+dataset << endl;
   file << "transfer_input_files = /uscms/home/z374f439/nobackup/whatever_you_want/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2,scripts/cmssw_setup_connect.sh,scripts/setup_RestFrames_connect.sh,macros/Condor_Plot_1D_NANO.C,include/SUSYNANOBase_slim.hh,/uscms/home/z374f439/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis/samples/NANO/"+filetag+dataset << endl;
   file << "should_transfer_files = YES" << endl;
   file << "when_to_transfer_output = ON_EXIT" << endl;
   file << "transfer_output_files = output_Plot_1D_NANO_"+filetag+"_"+dataset_name+"_"+std::to_string(fileline)+".root" << endl;
   file << "transfer_output_remaps = \""+pwd+"/output_Plot_1D_NANO_"+filetag+"_"+dataset_name+"_"+std::to_string(fileline)+".root\"" << endl;
+  //file << "transfer_output_files = EventCount_Plot_1D_NANO_"+filetag+"_"+dataset_name+"_"+std::to_string(fileline)+".txt" << endl;
+  //file << "transfer_output_remaps = \""+pwd+"/EventCount_Plot_1D_NANO_"+filetag+"_"+dataset_name+"_"+std::to_string(fileline)+".txt\"" << endl;
   file << "queue " << endl;
   file.close();  
+}
+
+double getTot(string input_dataset, string input_filetag, string EventCountFile)
+{
+  TFile* fout = new TFile(EventCountFile.c_str(),"READ");
+  TBranch* b_dataset = nullptr;
+  TBranch* b_filetag = nullptr;
+  TBranch* b_Nweight = nullptr;
+  TBranch* b_Nevent = nullptr;
+  TBranch* b_MP = nullptr;
+  TBranch* b_MC = nullptr;
+  string* dataset = nullptr;
+  string* filetag = nullptr;
+  double Nweight = 0.0;
+  double Nevent = 0.0;
+  int MP = 0;
+  int MC = 0;
+  TTree* tree = nullptr;
+  tree = (TTree*) fout->Get("EventCount");
+  
+  tree->SetMakeClass(1);
+  tree->SetBranchAddress("Nevent", &Nevent,&b_Nevent);
+  tree->SetBranchAddress("Nweight", &Nweight,&b_Nweight);
+  tree->SetBranchAddress("filetag", &filetag,&b_filetag);
+  tree->SetBranchAddress("dataset", &dataset,&b_dataset);
+  tree->SetBranchAddress("MP", &MP,&b_MP);
+  tree->SetBranchAddress("MC", &MC,&b_MC);
+
+  double tot_Nevent = 0;
+  double tot_Nweight = 0;
+
+  for(int i = 0; i < tree->GetEntries(); i++)
+  {
+   tree->GetEntry(i);
+   if(dataset->find(input_dataset) != std::string::npos && filetag->find(input_filetag) != std::string::npos)
+   {
+    tot_Nevent += Nevent;
+    tot_Nweight += Nweight;
+   }
+  }
+  fout->Close();
+  delete fout;
+  return tot_Nweight;
 }
 
 void SubmitCondor_Plot_1D_NANO(){
@@ -76,36 +122,82 @@ void SubmitCondor_Plot_1D_NANO(){
   RestFrames::SetStyle();
 
    std::map<string,long double> dataset_list_2016 = {
-    {"/WJetsToLNu_HT-70To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt", (1.0/10020533.0) * 1353.0 * 1.21 * 1.},
-    {"/WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt", (1.0/78043017.0) * 1345 * 1.21 * 1.2},
-    {"/WJetsToLNu_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt", (1.0/38984322.0) * 359.7 * 1.21 * 0.2},
-    {"/WJetsToLNu_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt", (1.0/7687800.0) * 48.91 * 1.21 * 0.22},
-    {"/WJetsToLNu_HT-600To800_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt", (1.0/18687480.0) * 12.05 * 1.21 * 4.5},
-    {"/WJetsToLNu_HT-800To1200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt", (1.0/7830536.0) * 5.501 * 1.21 * 0.67},
-    {"/WJetsToLNu_HT-1200To2500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt", (1.0/6872441.0) * 1.329 * 1.21 * 1.37},
-    {"/WJetsToLNu_HT-2500ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt", (1.0/2637821.0) * 0.03216 * 1.21 * 1.7},
+    {"/WJetsToLNu_HT-70To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("WJetsToLNu_HT-70To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","Summer16_102X","root/EventCount/EventCount_NANO_Summer16_102X.root")) * 1353.0 * 1.21},
+    {"/WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","Summer16_102X","root/EventCount/EventCount_NANO_Summer16_102X.root")) * 1346.0 * 1.21},
+    {"/WJetsToLNu_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("WJetsToLNu_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","Summer16_102X","root/EventCount/EventCount_NANO_Summer16_102X.root")) * 360.1 * 1.21},
+    {"/WJetsToLNu_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("WJetsToLNu_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","Summer16_102X","root/EventCount/EventCount_NANO_Summer16_102X.root")) * 48.8 * 1.21},
+    {"/WJetsToLNu_HT-600To800_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("WJetsToLNu_HT-600To800_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","Summer16_102X","root/EventCount/EventCount_NANO_Summer16_102X.root")) * 12.07 * 1.21},
+    {"/WJetsToLNu_HT-800To1200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("WJetsToLNu_HT-800To1200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","Summer16_102X","root/EventCount/EventCount_NANO_Summer16_102X.root")) * 5.497 * 1.21},
+    {"/WJetsToLNu_HT-1200To2500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("WJetsToLNu_HT-1200To2500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","Summer16_102X","root/EventCount/EventCount_NANO_Summer16_102X.root")) * 1.329 * 1.21},
+    {"/WJetsToLNu_HT-2500ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("WJetsToLNu_HT-2500ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","Summer16_102X","root/EventCount/EventCount_NANO_Summer16_102X.root")) * 0.03209 * 1.21},
+    {"/ZJetsToNuNu_HT-100To200_13TeV-madgraph.txt", (1.0/getTot("ZJetsToNuNu_HT-100To200_13TeV-madgraph","Summer16_102X","root/EventCount/EventCount_NANO_Summer16_102X.root")) * 280.35 },
+    {"/ZJetsToNuNu_HT-200To400_13TeV-madgraph.txt", (1.0/getTot("ZJetsToNuNu_HT-200To400_13TeV-madgraph","Summer16_102X","root/EventCount/EventCount_NANO_Summer16_102X.root")) * 77.67 },
+    {"/ZJetsToNuNu_HT-400To600_13TeV-madgraph.txt", (1.0/getTot("ZJetsToNuNu_HT-400To600_13TeV-madgraph","Summer16_102X","root/EventCount/EventCount_NANO_Summer16_102X.root")) * 10.73 },
+    {"/ZJetsToNuNu_HT-600To800_13TeV-madgraph.txt", (1.0/getTot("ZJetsToNuNu_HT-600To800_13TeV-madgraph","Summer16_102X","root/EventCount/EventCount_NANO_Summer16_102X.root")) * 2.559 },
+    {"/ZJetsToNuNu_HT-800To1200_13TeV-madgraph.txt", (1.0/getTot("ZJetsToNuNu_HT-800To1200_13TeV-madgraph","Summer16_102X","root/EventCount/EventCount_NANO_Summer16_102X.root")) * 1.1796 },
+    {"/ZJetsToNuNu_HT-1200To2500_13TeV-madgraph.txt", (1.0/getTot("ZJetsToNuNu_HT-1200To2500_13TeV-madgraph","Summer16_102X","root/EventCount/EventCount_NANO_Summer16_102X.root")) * 0.28833 },
+    {"/ZJetsToNuNu_HT-2500ToInf_13TeV-madgraph.txt", (1.0/getTot("ZJetsToNuNu_HT-2500ToInf_13TeV-madgraph","Summer16_102X","root/EventCount/EventCount_NANO_Summer16_102X.root")) * 0.006945 },
+    {"/DYJetsToLL_M-50_HT-70to100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("DYJetsToLL_M-50_HT-70to100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","Summer16_102X","root/EventCount/EventCount_NANO_Summer16_102X.root")) * 169.9 * 1.23},
+    {"/DYJetsToLL_M-50_HT-100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("DYJetsToLL_M-50_HT-100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","Summer16_102X","root/EventCount/EventCount_NANO_Summer16_102X.root")) * 147.40 * 1.23},
+    {"/DYJetsToLL_M-50_HT-200to400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("DYJetsToLL_M-50_HT-200to400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","Summer16_102X","root/EventCount/EventCount_NANO_Summer16_102X.root")) * 40.99 * 1.23},
+    {"/DYJetsToLL_M-50_HT-400to600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("DYJetsToLL_M-50_HT-400to600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","Summer16_102X","root/EventCount/EventCount_NANO_Summer16_102X.root")) * 5.678 * 1.23},
+    {"/DYJetsToLL_M-50_HT-600to800_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("DYJetsToLL_M-50_HT-600to800_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","Summer16_102X","root/EventCount/EventCount_NANO_Summer16_102X.root")) * 1.367 * 1.23},
+    {"/DYJetsToLL_M-50_HT-800to1200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("DYJetsToLL_M-50_HT-800to1200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","Summer16_102X","root/EventCount/EventCount_NANO_Summer16_102X.root")) * 0.6304 * 1.23},
+    {"/DYJetsToLL_M-50_HT-1200to2500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("DYJetsToLL_M-50_HT-1200to2500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","Summer16_102X","root/EventCount/EventCount_NANO_Summer16_102X.root")) * 0.1514 * 1.23},
+    {"/DYJetsToLL_M-50_HT-2500toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("DYJetsToLL_M-50_HT-2500toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8","Summer16_102X","root/EventCount/EventCount_NANO_Summer16_102X.root")) * 0.003565 * 1.23},
+
    };
 
    std::map<string,long double> dataset_list_2017 = {
-    {"/WJetsToLNu_HT-70To100_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/22201315.0) * 1353.0 * 1.21 * 1.},
-    {"/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/35804623.0) * 1395.0 * 1.21 * 1.},
-    {"/WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/21192211.0) * 407.9 * 1.21 * 1.},
-    {"/WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/14250114.0) * 57.48 * 1.21 * 1.2},
-    {"/WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/21582309.0) * 12.87 * 1.21 * 2.},
-    {"/WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/19557162.0) * 5.366 * 1.21 * 1.3},
-    {"/WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/19991892.0) * 1.074 * 1.21 * 16.35},
-    {"/WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/20629585.0) * 0.008001 * 1.21 * 2.75},
+    {"/WJetsToLNu_HT-70To100_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("WJetsToLNu_HT-70To100_TuneCP5_13TeV-madgraphMLM-pythia8","Fall17_102X","root/EventCount/EventCount_NANO_Fall17_102X.root")) * 1292.0 * 1.21},
+    {"/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8","Fall17_102X","root/EventCount/EventCount_NANO_Fall17_102X.root")) * 1395.0 * 1.21},
+    {"/WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8","Fall17_102X","root/EventCount/EventCount_NANO_Fall17_102X.root")) * 407.9 * 1.21},
+    {"/WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8","Fall17_102X","root/EventCount/EventCount_NANO_Fall17_102X.root")) * 57.48 * 1.21},
+    {"/WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8","Fall17_102X","root/EventCount/EventCount_NANO_Fall17_102X.root")) * 12.87 * 1.21},
+    {"/WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8","Fall17_102X","root/EventCount/EventCount_NANO_Fall17_102X.root")) * 5.366 * 1.21},
+    {"/WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8","Fall17_102X","root/EventCount/EventCount_NANO_Fall17_102X.root")) * 1.074 * 1.21},
+    {"/WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8","Fall17_102X","root/EventCount/EventCount_NANO_Fall17_102X.root")) * 0.008001 * 1.21},
+    {"/ZJetsToNuNu_HT-100To200_13TeV-madgraph.txt", (1.0/getTot("ZJetsToNuNu_HT-100To200_13TeV-madgraph","Fall17_102X","root/EventCount/EventCount_NANO_Fall17_102X.root")) * 280.35 },
+    {"/ZJetsToNuNu_HT-200To400_13TeV-madgraph.txt", (1.0/getTot("ZJetsToNuNu_HT-200To400_13TeV-madgraph","Fall17_102X","root/EventCount/EventCount_NANO_Fall17_102X.root")) * 77.67 },
+    {"/ZJetsToNuNu_HT-400To600_13TeV-madgraph.txt", (1.0/getTot("ZJetsToNuNu_HT-400To600_13TeV-madgraph","Fall17_102X","root/EventCount/EventCount_NANO_Fall17_102X.root")) * 10.73 },
+    {"/ZJetsToNuNu_HT-600To800_13TeV-madgraph.txt", (1.0/getTot("ZJetsToNuNu_HT-600To800_13TeV-madgraph","Fall17_102X","root/EventCount/EventCount_NANO_Fall17_102X.root")) * 2.559 },
+    {"/ZJetsToNuNu_HT-800To1200_13TeV-madgraph.txt", (1.0/getTot("ZJetsToNuNu_HT-800To1200_13TeV-madgraph","Fall17_102X","root/EventCount/EventCount_NANO_Fall17_102X.root")) * 1.1796 },
+    {"/ZJetsToNuNu_HT-1200To2500_13TeV-madgraph.txt", (1.0/getTot("ZJetsToNuNu_HT-1200To2500_13TeV-madgraph","Fall17_102X","root/EventCount/EventCount_NANO_Fall17_102X.root")) * 0.28833 },
+    {"/ZJetsToNuNu_HT-2500ToInf_13TeV-madgraph.txt", (1.0/getTot("ZJetsToNuNu_HT-2500ToInf_13TeV-madgraph","Fall17_102X","root/EventCount/EventCount_NANO_Fall17_102X.root")) * 0.006945 },
+    {"/DYJetsToLL_M-50_HT-70to100_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("DYJetsToLL_M-50_HT-70to100_TuneCP5_13TeV-madgraphMLM-pythia8","Fall17_102X","root/EventCount/EventCount_NANO_Fall17_102X.root")) * 169.9 * 1.23},
+    {"/DYJetsToLL_M-50_HT-100to200_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("DYJetsToLL_M-50_HT-100to200_TuneCP5_13TeV-madgraphMLM-pythia8","Fall17_102X","root/EventCount/EventCount_NANO_Fall17_102X.root")) * 161.1 * 1.23},
+    {"/DYJetsToLL_M-50_HT-200to400_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("DYJetsToLL_M-50_HT-200to400_TuneCP5_13TeV-madgraphMLM-pythia8","Fall17_102X","root/EventCount/EventCount_NANO_Fall17_102X.root")) * 48.66 * 1.23},
+    {"/DYJetsToLL_M-50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("DYJetsToLL_M-50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8","Fall17_102X","root/EventCount/EventCount_NANO_Fall17_102X.root")) * 6.968 * 1.23},
+    {"/DYJetsToLL_M-50_HT-600to800_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("DYJetsToLL_M-50_HT-600to800_TuneCP5_13TeV-madgraphMLM-pythia8","Fall17_102X","root/EventCount/EventCount_NANO_Fall17_102X.root")) * 1.743 * 1.23},
+    {"/DYJetsToLL_M-50_HT-800to1200_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("DYJetsToLL_M-50_HT-800to1200_TuneCP5_13TeV-madgraphMLM-pythia8","Fall17_102X","root/EventCount/EventCount_NANO_Fall17_102X.root")) * 0.6304 * 1.23},
+    {"/DYJetsToLL_M-50_HT-1200to2500_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("DYJetsToLL_M-50_HT-1200to2500_TuneCP5_13TeV-madgraphMLM-pythia8","Fall17_102X","root/EventCount/EventCount_NANO_Fall17_102X.root")) * 0.1933 * 1.23},
+    {"/DYJetsToLL_M-50_HT-2500toInf_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("DYJetsToLL_M-50_HT-2500toInf_TuneCP5_13TeV-madgraphMLM-pythia8","Fall17_102X","root/EventCount/EventCount_NANO_Fall17_102X.root")) * 0.003468 * 1.23},
    };
 
    std::map<string,long double> dataset_list_2018 = {
-    {"/WJetsToLNu_HT-70To100_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/28054964.875751) * 1353.0 * 1.21 * 1.},
-    {"/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/29385684.215082) * 1395.0 * 1.21 * 5.},
-    {"/WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/25415129.219721) * 407.9 * 1.21 * 1.},
-    {"/WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/5913597.776379) * 57.48 * 1.21 * 0.85},
-    {"/WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/19690762.318584) * 12.87 * 1.21 * 1.5},
-    {"/WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/8357921.274426) * 5.366 * 1.21 * 1.27},
-    {"/WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/7567071.151891) * 1.074 * 1.21 * 1.83},
-    {"/WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/3189396.081144) * 0.008001 * 1.21 * 50.23},
+    {"/WJetsToLNu_HT-70To100_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("WJetsToLNu_HT-70To100_TuneCP5_13TeV-madgraphMLM-pythia8","Autumn18_102X","root/EventCount/EventCount_NANO_Autumn18_102X.root")) * 1292.0 * 1.21},
+    {"/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8","Autumn18_102X","root/EventCount/EventCount_NANO_Autumn18_102X.root")) * 1395.0 * 1.21},
+    {"/WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8","Autumn18_102X","root/EventCount/EventCount_NANO_Autumn18_102X.root")) * 407.9 * 1.21},
+    {"/WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8","Autumn18_102X","root/EventCount/EventCount_NANO_Autumn18_102X.root")) * 57.48 * 1.21},
+    {"/WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8","Autumn18_102X","root/EventCount/EventCount_NANO_Autumn18_102X.root")) * 12.87 * 1.21},
+    {"/WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8","Autumn18_102X","root/EventCount/EventCount_NANO_Autumn18_102X.root")) * 5.366 * 1.21},
+    {"/WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8","Autumn18_102X","root/EventCount/EventCount_NANO_Autumn18_102X.root")) * 1.074 * 1.21},
+    {"/WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8","Autumn18_102X","root/EventCount/EventCount_NANO_Autumn18_102X.root")) * 0.008001 * 1.21},
+    {"/ZJetsToNuNu_HT-100To200_13TeV-madgraph.txt", (1.0/getTot("ZJetsToNuNu_HT-100To200_13TeV-madgraph","Autumn18_102X","root/EventCount/EventCount_NANO_Autumn18_102X.root")) * 280.35 },
+    {"/ZJetsToNuNu_HT-200To400_13TeV-madgraph.txt", (1.0/getTot("ZJetsToNuNu_HT-200To400_13TeV-madgraph","Autumn18_102X","root/EventCount/EventCount_NANO_Autumn18_102X.root")) * 77.67 },
+    {"/ZJetsToNuNu_HT-400To600_13TeV-madgraph.txt", (1.0/getTot("ZJetsToNuNu_HT-400To600_13TeV-madgraph","Autumn18_102X","root/EventCount/EventCount_NANO_Autumn18_102X.root")) * 10.73 },
+    {"/ZJetsToNuNu_HT-600To800_13TeV-madgraph.txt", (1.0/getTot("ZJetsToNuNu_HT-600To800_13TeV-madgraph","Autumn18_102X","root/EventCount/EventCount_NANO_Autumn18_102X.root")) * 2.559 },
+    {"/ZJetsToNuNu_HT-800To1200_13TeV-madgraph.txt", (1.0/getTot("ZJetsToNuNu_HT-800To1200_13TeV-madgraph","Autumn18_102X","root/EventCount/EventCount_NANO_Autumn18_102X.root")) * 1.1796 },
+    {"/ZJetsToNuNu_HT-1200To2500_13TeV-madgraph.txt", (1.0/getTot("ZJetsToNuNu_HT-1200To2500_13TeV-madgraph","Autumn18_102X","root/EventCount/EventCount_NANO_Autumn18_102X.root")) * 0.28833 },
+    {"/ZJetsToNuNu_HT-2500ToInf_13TeV-madgraph.txt", (1.0/getTot("ZJetsToNuNu_HT-2500ToInf_13TeV-madgraph","Autumn18_102X","root/EventCount/EventCount_NANO_Autumn18_102X.root")) * 0.006945 },
+    {"/DYJetsToLL_M-50_HT-70to100_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("DYJetsToLL_M-50_HT-70to100_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8","Autumn18_102X","root/EventCount/EventCount_NANO_Autumn18_102X.root")) * 169.9 * 1.23},
+    {"/DYJetsToLL_M-50_HT-100to200_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("DYJetsToLL_M-50_HT-100to200_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8","Autumn18_102X","root/EventCount/EventCount_NANO_Autumn18_102X.root")) * 161.1 * 1.23},
+    {"/DYJetsToLL_M-50_HT-200to400_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("DYJetsToLL_M-50_HT-200to400_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8","Autumn18_102X","root/EventCount/EventCount_NANO_Autumn18_102X.root")) * 48.66 * 1.23},
+    {"/DYJetsToLL_M-50_HT-400to600_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("DYJetsToLL_M-50_HT-400to600_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8","Autumn18_102X","root/EventCount/EventCount_NANO_Autumn18_102X.root")) * 6.968 * 1.23},
+    {"/DYJetsToLL_M-50_HT-600to800_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("DYJetsToLL_M-50_HT-600to800_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8","Autumn18_102X","root/EventCount/EventCount_NANO_Autumn18_102X.root")) * 1.743 * 1.23},
+    {"/DYJetsToLL_M-50_HT-800to1200_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("DYJetsToLL_M-50_HT-800to1200_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8","Autumn18_102X","root/EventCount/EventCount_NANO_Autumn18_102X.root")) * 0.6304 * 1.23},
+    {"/DYJetsToLL_M-50_HT-1200to2500_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("DYJetsToLL_M-50_HT-1200to2500_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8","Autumn18_102X","root/EventCount/EventCount_NANO_Autumn18_102X.root")) * 0.1933 * 1.23},
+    {"/DYJetsToLL_M-50_HT-2500toInf_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8.txt", (1.0/getTot("DYJetsToLL_M-50_HT-2500toInf_TuneCP5_PSweights_13TeV-madgraphMLM-pythia8","Autumn18_102X","root/EventCount/EventCount_NANO_Autumn18_102X.root")) * 0.003468 * 1.23},
    };
 
   vector<std::map<string,long double>> datasets = {
