@@ -15,18 +15,30 @@ def makeDir(dir_name):
     if not os.path.exists(dir_name):
         os.makedirs(dir_name)
 
-def getTree(input_file, tree_name):
-    tFile    = ROOT.TFile.Open(input_file)
-    tTree    = tFile.Get(tree_name)
-    n_events = tTree.GetEntries()
-    print("tree: {0}, number of events: {1}".format(tree_name, n_events))
-    print("tree (1): {0}".format(tTree))
-    return tTree
+# get chain from list of ROOT files
+def getChain(input_files, num_files):
+    # use num_files as max if it is not negative
+    if num_files >= 0:
+        input_files = input_files[0:num_files]
+    chain = ROOT.TChain('pixelTree')
+    for f in input_files:
+        chain.Add(f)
+    return 
+
+# ERROR: returned TTree object is broken
+def getTree(open_file, tree_name):
+    tree     = open_file.Get(tree_name)
+    n_events = tree.GetEntries()
+    print("tree (1): {0}".format(tree))
+    print("number of events: {0}".format(tree.GetEntries()))
+    #print("tree: {0}, number of events: {1}".format(tree_name, n_events))
+    #tree.Draw("SV_pt")
+    return tree
 
 def plot(plot_dir, plot_name, tree, variable, cuts = ""):
     output_name = "{0}/{1}".format(plot_dir, plot_name)
-    
-    #print("tree (3): {0}".format(tree))
+    print("tree (3): {0}".format(tree))
+    print("number of events: {0}".format(tree.GetEntries()))
     
     #print(tree.GetEntries())
     #tree.Scan(variable)
@@ -51,9 +63,12 @@ def makePlots():
     plot_name  = "SV_pt"
     variable   = "SV_pt"
     
+    tFile = ROOT.TFile.Open(input_file)
+    tree  = getTree(tFile, tree_name)
+    print("tree (2): {0}".format(tree))
+    print("number of events: {0}".format(tree.GetEntries()))
+    
     makeDir(plot_dir)
-    tree = getTree(input_file, tree_name)
-    #print("tree (2): {0}".format(tree))
     
     plot(plot_dir, plot_name, tree, variable)
 
