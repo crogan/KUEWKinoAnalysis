@@ -25,29 +25,23 @@ def getChain(input_files, num_files):
         chain.Add(f)
     return 
 
-# ERROR: returned TTree object is broken
+# get tree from open file
+# WARNING: Do not open TFile in getTree(); if you do, the returned TTree object will be destroyed when the TFile closes.
+#          Pass open TFile to getTree().
 def getTree(open_file, tree_name):
     tree     = open_file.Get(tree_name)
     n_events = tree.GetEntries()
-    print("tree (1): {0}".format(tree))
-    print("number of events: {0}".format(tree.GetEntries()))
-    #print("tree: {0}, number of events: {1}".format(tree_name, n_events))
-    #tree.Draw("SV_pt")
+    print("tree: {0}, number of events: {1}".format(tree_name, n_events))
     return tree
 
 def plot(plot_dir, plot_name, tree, variable, cuts = ""):
     output_name = "{0}/{1}".format(plot_dir, plot_name)
-    print("tree (3): {0}".format(tree))
-    print("number of events: {0}".format(tree.GetEntries()))
     
-    #print(tree.GetEntries())
-    #tree.Scan(variable)
-    #c = ROOT.TCanvas("c", "c", 800, 800)
-    #tree.Draw(variable, cuts)
-    #tree.Draw(variable)
-    #c.Update()
-    #c.SaveAs(output_name + ".pdf")
-    #c.SaveAs(output_name + ".png")
+    c = ROOT.TCanvas("c", "c", 800, 800)
+    tree.Draw(variable, cuts)
+    c.Update()
+    c.SaveAs(output_name + ".pdf")
+    c.SaveAs(output_name + ".png")
 
 def makePlots():
     print("Go make plots!")
@@ -63,10 +57,10 @@ def makePlots():
     plot_name  = "SV_pt"
     variable   = "SV_pt"
     
-    tFile = ROOT.TFile.Open(input_file)
-    tree  = getTree(tFile, tree_name)
-    print("tree (2): {0}".format(tree))
-    print("number of events: {0}".format(tree.GetEntries()))
+    # WARNING: Make sure to open file here, not within getTree() so that TFile stays open. 
+    #          If TFile closes, then TTree object is destroyed.
+    open_file   = ROOT.TFile.Open(input_file)
+    tree        = getTree(open_file, tree_name)
     
     makeDir(plot_dir)
     
