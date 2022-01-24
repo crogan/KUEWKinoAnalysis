@@ -34,11 +34,17 @@ def getTree(open_file, tree_name):
     print("tree: {0}, number of events: {1}".format(tree_name, n_events))
     return tree
 
-def plot(plot_dir, plot_name, tree, variable, cuts = ""):
+def plot(plot_dir, plot_name, tree, variable, cuts = "", setLogY=True):
     output_name = "{0}/{1}".format(plot_dir, plot_name)
     
     c = ROOT.TCanvas("c", "c", 800, 800)
+    
+    # set log y
+    if setLogY:
+        c.SetLogy(1)
+    
     tree.Draw(variable, cuts)
+    
     c.Update()
     c.SaveAs(output_name + ".pdf")
     c.SaveAs(output_name + ".png")
