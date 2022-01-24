@@ -20,11 +20,16 @@ def getTree(input_file, tree_name):
     tTree    = tFile.Get(tree_name)
     n_events = tTree.GetEntries()
     print("tree: {0}, number of events: {1}".format(tree_name, n_events))
+    print("tree (1): {0}".format(tTree))
     return tTree
 
 def plot(plot_dir, plot_name, tree, variable, cuts = ""):
     output_name = "{0}/{1}".format(plot_dir, plot_name)
-    tree.Scan(variable)
+    
+    #print("tree (3): {0}".format(tree))
+    
+    #print(tree.GetEntries())
+    #tree.Scan(variable)
     #c = ROOT.TCanvas("c", "c", 800, 800)
     #tree.Draw(variable, cuts)
     #tree.Draw(variable)
@@ -48,6 +53,7 @@ def makePlots():
     
     makeDir(plot_dir)
     tree = getTree(input_file, tree_name)
+    #print("tree (2): {0}".format(tree))
     
     plot(plot_dir, plot_name, tree, variable)
 
