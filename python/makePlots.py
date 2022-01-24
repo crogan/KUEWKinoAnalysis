@@ -54,8 +54,41 @@ def makePlots():
     
     tree_name  = "Events"
     plot_dir   = "plots_sv"
-    plot_name  = "SV_pt"
-    variable   = "SV_pt"
+
+    # SV variables:
+    # ------------
+    # SV_dlen    : Float_t decay length in cm                             *
+    # SV_dlenSig : Float_t decay length significance                      *
+    # SV_dxy     : Float_t 2D decay length in cm                          *
+    # SV_dxySig  : Float_t 2D decay length significance                   *
+    # SV_pAngle  : Float_t pointing angle, i.e. acos(p_SV * (SV - PV))    *
+    # SV_chi2    : Float_t reduced chi2, i.e. chi/ndof                    *
+    # SV_eta     : Float_t eta                                            *
+    # SV_mass    : Float_t mass                                           *
+    # SV_ndof    : Float_t number of degrees of freedom                   *
+    # SV_phi     : Float_t phi                                            *
+    # SV_pt      : Float_t pt                                             *
+    # SV_x       : Float_t secondary vertex X position, in cm             *
+    # SV_y       : Float_t secondary vertex Y position, in cm             *
+    # SV_z       : Float_t secondary vertex Z position, in cm             *
+    # ------------
+    
+    variables = [
+        "SV_dlen",
+        "SV_dlenSig",
+        "SV_dxy",
+        "SV_dxySig",
+        "SV_pAngle",
+        "SV_chi2",
+        "SV_eta",
+        "SV_mass",
+        "SV_ndof",
+        "SV_phi",
+        "SV_pt",
+        "SV_x",
+        "SV_y",
+        "SV_z",
+    ]
     
     # WARNING: Make sure to open file here, not within getTree() so that TFile stays open. 
     #          If TFile closes, then TTree object is destroyed.
@@ -64,7 +97,9 @@ def makePlots():
     
     makeDir(plot_dir)
     
-    plot(plot_dir, plot_name, tree, variable)
+    for variable in variables:
+        plot_name = variable
+        plot(plot_dir, plot_name, tree, variable)
 
 def main():
     makePlots()
