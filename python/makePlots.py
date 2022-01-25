@@ -52,14 +52,18 @@ def plot(plot_dir, plot_name, tree, variable, cuts = "", setLogY=True):
 def makePlots():
     print("Go make plots!")
     
+    tree_name  = "Events"
+    
     # file for ntuples (from Erich's NANO AOD script)
     #input_file = "root://xrootd.unl.edu//store/mc/RunIIFall17MiniAODv2/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8/MINIAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/70000/D0890E60-8086-E811-93BF-0025904B7C26.root"
     
     # file from samples/NANO/Fall17_102X/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8.txt: 
-    input_file = "root://cmsxrootd.fnal.gov//store/mc/RunIIFall17NanoAODv7/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8/NANOAODSIM/PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/270000/FC6D9F02-3BCC-454B-A535-9FE6B2783A49.root"
-    
-    tree_name  = "Events"
-    plot_dir   = "plots_sv"
+    #input_file = "root://cmsxrootd.fnal.gov//store/mc/RunIIFall17NanoAODv7/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8/NANOAODSIM/PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/270000/FC6D9F02-3BCC-454B-A535-9FE6B2783A49.root"
+    #plot_dir   = "plots_SV_Standard_TTJets_DiLept"
+
+    # custom file created on UNL
+    input_file = "samples/custom/myNanoProdMc2017_NANO_v2.root"
+    plot_dir   = "plots_SV_Custom_TTJets_DiLept"
 
     # SV variables:
     # ------------
@@ -79,6 +83,7 @@ def makePlots():
     # SV_z       : Float_t secondary vertex Z position, in cm             *
     # ------------
     
+    # standard variables
     variables = [
         "SV_dlen",
         "SV_dlenSig",
@@ -95,6 +100,9 @@ def makePlots():
         "SV_y",
         "SV_z",
     ]
+    # added variables (in custom ntuples)
+    variables.append("SV_flavor")
+    variables.append("SV_ntrk")
     
     # WARNING: Make sure to open file here, not within getTree() so that TFile stays open. 
     #          If TFile closes, then TTree object is destroyed.
