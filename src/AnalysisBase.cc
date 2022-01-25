@@ -227,6 +227,21 @@ double AnalysisBase<Base>::GetPUWeight(int updown){
 }
 
 template <class Base>
+double AnalysisBase<Base>::GetMuFWeight(int updown){
+  return 0;
+}
+
+template <class Base>
+double AnalysisBase<Base>::GetMuRWeight(int updown){
+  return 0;
+}
+
+template <class Base>
+double AnalysisBase<Base>::GetPDFWeight(int updown){
+  return 0;
+}
+
+template <class Base>
 double AnalysisBase<Base>::GetBtagSFWeight(const ParticleList& jets, bool HForLF, int updown, ParticleIDType tag){
   return 0;
 }
@@ -1070,6 +1085,43 @@ double AnalysisBase<SUSYNANOBase>::GetPUWeight(int updown){
     year = 2018;
 
   return m_PUTool.GetWeight(Pileup_nPU, year, updown);
+}
+
+ // [0] is muR=0.5 muF=0.5 ; [1] is muR=0.5 muF=1.0 ; [2] is muR=0.5 muF=2.0 ;
+ // [3] is muR=0.1 muF=0.5 ; [4] is muR=1.0 muF=1.0 ; [5] is muR=1.0 muF=2.0 ;
+ // [6] is muR=2.0 muF=0.5 ; [7] is muR=2.0 muF=1.0 ; [8] is muR=2.0 muF=2.0 ;
+
+template <>
+double AnalysisBase<SUSYNANOBase>::GetMuFWeight(int updown){
+  if(IsData())
+    return 1.;
+  if(updown > 0)
+    return LHEScaleWeight[5];
+  else if(updown < 0) 
+    return LHEScaleWeight[3];
+  else
+    return LHEScaleWeight[4]; //nominal
+}
+
+template <>
+double AnalysisBase<SUSYNANOBase>::GetMuRWeight(int updown){
+  if(IsData())
+    return 1.;
+  if(updown > 0)
+    return LHEScaleWeight[7];
+  else if(updown < 0) 
+    return LHEScaleWeight[1];
+  else
+    return LHEScaleWeight[4]; //nominal
+  return 1.;
+}
+
+template <>
+double AnalysisBase<SUSYNANOBase>::GetPDFWeight(int updown){
+  if(IsData() || IsSMS())
+    return 1.;
+  else
+    return m_LHETool.GetWeight(nLHEPdfWeight,LHEPdfWeight,updown);
 }
 
 template <>

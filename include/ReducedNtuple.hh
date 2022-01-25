@@ -29,6 +29,12 @@ private:
   double m_PUweight;
   double m_PUweight_up;
   double m_PUweight_down;
+  double m_MuFweight;
+  double m_MuFweight_up;
+  double m_MuFweight_down;
+  double m_MuRweight;
+  double m_MuRweight_up;
+  double m_MuRweight_down;
   double m_BtagHFSFweight;
   double m_BtagHFSFweight_up;
   double m_BtagHFSFweight_down;
