@@ -181,6 +181,7 @@ int main(int argc, char* argv[]) {
     Categories += CT.GetCategories_3L(maskSR);
   
   cout << "Initializing sample maps from path " << NtuplePath << " for year " << year << endl;
+  
   SampleTool ST(NtuplePath, year);
 
   ScaleFactorTool SF;
@@ -245,7 +246,7 @@ cout << "# processes: " << samples.GetN() << endl;
 	continue;
     }
   }
-  
+
   for(int s = 0; s < Nsample; s++){
     Process proc = samples[s];
 

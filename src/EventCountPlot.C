@@ -31,24 +31,17 @@
 #include "RestFrames/RestFrames.hh"
 
 using namespace std;
-
-// global variables
-string g_PlotTitle;
-string g_Label;
-string g_Xname;
-double g_Xmin;
-double g_Xmax;
-double g_XN;
-string g_Yname;
-double g_Ymin;
-double g_Ymax;
-double g_YN;
-string g_dm_Yname;
-double g_dm_Ymin;
-double g_dm_Ymax;
-double g_dm_YN;
-
 using namespace RestFrames;
+
+void format(TH2D* hist, string Xname, string Yname);
+void drawLatex(string title, string label);
+void EventCountPlot();
+
+int main(int argc, char* argv[])
+{
+  EventCountPlot();
+  return 0;
+}
 
 void format(TH2D* hist, string Xname, string Yname)
 {
@@ -101,8 +94,24 @@ void EventCountPlot()
   
   RestFrames::SetStyle();
 
-  //string NtuplePath = "/home/t3-ku/z374f439/storage/crogan/";
-  string NtuplePath = "root://xrootd.unl.edu//store/user/zflowers/crogan/";
+  string NtuplePath = "/home/t3-ku/z374f439/storage/crogan/";
+  //string NtuplePath = "root://xrootd.unl.edu//store/user/zflowers/crogan/";
+  
+  // variables
+  string PlotTitle;
+  string Label;
+  string Xname;
+  double Xmin;
+  double Xmax;
+  double XN;
+  string Yname;
+  double Ymin;
+  double Ymax;
+  double YN;
+  string dm_Yname;
+  double dm_Ymin;
+  double dm_Ymax;
+  double dm_YN;
 
   vector<VS> signals;
   VS signal_labels;
@@ -290,8 +299,8 @@ void EventCountPlot()
   TChiWH += TChiWH_2018;
 
   // --- 2016 --- // 
-  signal_labels.a("T2bW_2016");
-  signals.push_back(T2bW_2016);
+  //signal_labels.a("T2bW_2016");
+  //signals.push_back(T2bW_2016);
   //signal_labels.a("T2tt_2016");
   //signals.push_back(T2tt_2016);
   //signal_labels.a("TChiWZ_2016");
@@ -306,30 +315,30 @@ void EventCountPlot()
   // --- 2017 --- //
   signal_labels.a("T2bW_2017");
   signals.push_back(T2bW_2017);
-  //signal_labels.a("T2tt_2017");
-  //signals.push_back(T2tt_2017);
-  //signal_labels.a("TChiWZ_2017");
-  //signals.push_back(TChiWZ_2017);
-  //signal_labels.a("TChipmWW_2017");
-  //signals.push_back(TChipmWW_2017);
-  //signal_labels.a("TSlepSlep_2017");
-  //signals.push_back(TSlepSlep_2017);
-  //signal_labels.a("T2bb_2017");
-  //signals.push_back(T2bb_2017);
-  //signal_labels.a("T2cc_2017");
-  //signals.push_back(T2cc_2017);
-  //signal_labels.a("T1bbbb_2017");
-  //signals.push_back(T1bbbb_2017);
-  //signal_labels.a("T1ttbb_2017");
-  //signals.push_back(T1ttbb_2017);
-  //signal_labels.a("T5tttt_2017");
-  //signals.push_back(T5tttt_2017);
-  //signal_labels.a("TChiWH_2017");
-  //signals.push_back(TChiWH_2017);
+  signal_labels.a("T2tt_2017");
+  signals.push_back(T2tt_2017);
+  signal_labels.a("TChiWZ_2017");
+  signals.push_back(TChiWZ_2017);
+  signal_labels.a("TChipmWW_2017");
+  signals.push_back(TChipmWW_2017);
+  signal_labels.a("TSlepSlep_2017");
+  signals.push_back(TSlepSlep_2017);
+  signal_labels.a("T2bb_2017");
+  signals.push_back(T2bb_2017);
+  signal_labels.a("T2cc_2017");
+  signals.push_back(T2cc_2017);
+  signal_labels.a("T1bbbb_2017");
+  signals.push_back(T1bbbb_2017);
+  signal_labels.a("T1ttbb_2017");
+  signals.push_back(T1ttbb_2017);
+  signal_labels.a("T5tttt_2017");
+  signals.push_back(T5tttt_2017);
+  signal_labels.a("TChiWH_2017");
+  signals.push_back(TChiWH_2017);
   
   // --- 2018 --- //
-  signal_labels.a("T2bW_2018");
-  signals.push_back(T2bW_2018);
+  //signal_labels.a("T2bW_2018");
+  //signals.push_back(T2bW_2018);
   //signal_labels.a("T2tt_2018");
   //signals.push_back(T2tt_2018);
   //signal_labels.a("TChiWZ_2018");
@@ -352,8 +361,8 @@ void EventCountPlot()
   //signals.push_back(TChiWH_2018);
 
   // --- Run 2 --- //
-  signal_labels.a("T2bW");
-  signals.push_back(T2bW);
+  //signal_labels.a("T2bW");
+  //signals.push_back(T2bW);
   //signal_labels.a("T2tt");
   //signals.push_back(T2tt);
   //signal_labels.a("TChiWZ");
@@ -377,48 +386,48 @@ void EventCountPlot()
   
   for(int s = 0; s < int(signals.size()); s++)
   {
-    g_Label = signal_labels[s];
+    Label = signal_labels[s];
     
-    g_Xname = "M_{NLSP} [GeV]";
-    g_Xmin  = 0.;
-    g_Xmax  = 1500.; 
-    g_XN    = 60;
-    //g_XN  = 30;
+    Xname = "M_{NLSP} [GeV]";
+    Xmin  = 0.;
+    Xmax  = 1500.; 
+    XN    = 60;
     
-    g_Yname = "M_{LSP} [GeV]";
-    g_Ymin  = 0.;
-    g_Ymax  = 1000.;
-    g_YN    = 40;
-    //g_YN  = 20;
+    Yname = "M_{LSP} [GeV]";
+    Ymin  = 0.;
+    Ymax  = 1000.;
+    YN    = 40;
 
     // mass diff plot
-    g_dm_Yname = "M_{NLSP} - M_{LSP} [GeV]";
-    g_dm_Ymin  = 0.;
-    g_dm_Ymax  = 200.;
-    g_dm_YN    = 20;
+    dm_Yname = "M_{NLSP} - M_{LSP} [GeV]";
+    dm_Ymin  = 0.;
+    //dm_Ymax  = 200.;
+    //dm_YN    = 20;
+    dm_Ymax  = 400.;
+    dm_YN    = 40;
     
     // Change label for T2bW
-    if (g_Label.find("T2bW") != string::npos)
+    if (Label.find("T2bW") != string::npos)
     {
-      g_Xname    = "M_{stop} [GeV]";
-      g_dm_Yname = "M_{stop} - M_{LSP} [GeV]";
+      Xname    = "M_{stop} [GeV]";
+      dm_Yname = "M_{stop} - M_{LSP} [GeV]";
     }
     
-    cout << "Processing " << g_Label << endl;
+    cout << "Processing " << Label << endl;
 
     // m_lsp vs m_nlsp
     TH2D* hist = new TH2D(
-      (g_Label+"_EventCount").c_str(),
-      (g_Label+"_EventCount").c_str(),
-      g_XN, g_Xmin, g_Xmax,
-      g_YN, g_Ymin, g_Ymax
+      (Label+"_EventCount").c_str(),
+      (Label+"_EventCount").c_str(),
+      XN, Xmin, Xmax,
+      YN, Ymin, Ymax
     );
     // mass diff (dm) vs m_nlsp
     TH2D* hist_dm = new TH2D(
-      (g_Label+"_dm_EventCount").c_str(),
-      (g_Label+"_dm_EventCount").c_str(),
-      g_XN,    g_Xmin,    g_Xmax,
-      g_dm_YN, g_dm_Ymin, g_dm_Ymax
+      (Label+"_dm_EventCount").c_str(),
+      (Label+"_dm_EventCount").c_str(),
+      XN,    Xmin,    Xmax,
+      dm_YN, dm_Ymin, dm_Ymax
     );
     
     //cout << "Processing " << Nfile << " files for process " << title << endl;
@@ -471,8 +480,8 @@ void EventCountPlot()
     can->cd();
 
     // format histograms
-    format(hist,    g_Xname, g_Yname);
-    format(hist_dm, g_Xname, g_dm_Yname);
+    format(hist,    Xname, Yname);
+    format(hist_dm, Xname, dm_Yname);
 
     // output plot files
     string plot_dir     = "plots";
@@ -487,12 +496,12 @@ void EventCountPlot()
     
     // m_lsp vs m_nlsp
     hist->Draw("COLZ");
-    drawLatex(g_PlotTitle, g_Label);
+    drawLatex(PlotTitle, Label);
     can->SaveAs((plot_name + ".pdf").c_str());
     
     // mass diff (dm) vs m_nlsp
     hist_dm->Draw("COLZ");
-    drawLatex(g_PlotTitle, g_Label);
+    drawLatex(PlotTitle, Label);
     can->SaveAs((plot_name_dm + ".pdf").c_str());
     
     // output root file

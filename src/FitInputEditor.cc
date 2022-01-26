@@ -550,7 +550,7 @@ void FitInputEditor::AddShapeSysFakes(bool sJetSplit){
 	if(sJetSplit) sys_name += "_"+CT_groups[g]->GetSpecLabel();
 	Systematic sys_RISR(sys_name+"_RISR");
 	Systematic sys_Mperp(sys_name+"_Mperp");
-	cout << "systematic: " << sys_name << endl;
+	//cout << "systematic: " << sys_name << endl;
 	// loop through individual categories and processes
 	for(int c = 0; c < Ncat; c++){
 	  Category cat = cats[c];
@@ -617,7 +617,7 @@ void FitInputEditor::AddShapeSysFakes(bool sJetSplit){
 
 	pr++;
       }   
-   cout << "\n" << endl;
+   //cout << "\n" << endl;
     }
   }
   

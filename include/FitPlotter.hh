@@ -11,6 +11,7 @@ using std::string;
 using std::pair;
 
 enum SignificanceType {kSB, kSrootB, kZbin};
+enum PlotType{kFull, kRISR, kInv};
 ///////////////////////////////////////////
 ////////// FitPlotter class
 ///////////////////////////////////////////
@@ -57,19 +58,18 @@ public:
 				  const VS& proc_bkg,
 				  const VS& proc_sig,
 				  const CategoryTree& CT,
-				  SignificanceType sType = kSB);
+				  PlotType pType = kFull,
+				  SignificanceType sType = kZbin);
 
   void FindBkgZeros(const VS& proc_bkg);
-
   void FindBkgRare();
-
   void YieldPerBkg(const VS& proc_bkg);
-
   void zeroBkgTest();
 
   TCanvas* Plot1Dstack(const string& can_name,
 		       const VS& proc,
 		       const CategoryTree& CT,
+		       PlotType pType = kFull,
 		       bool do_ratio = false);
 
   TCanvas* Plot2D(const string& can_name,
@@ -77,31 +77,32 @@ public:
 		  const CategoryTree& CT);
 
   TCanvas* Plot1DratioProc(const VS& proc,
-           const string& lep_cat,
-           const string& hadS_cat,
-           const string& hadI_cat,
-           const string& name,
-           const string& extra);
+			   const string& lep_cat,
+			   const string& hadS_cat,
+			   const string& hadI_cat,
+			   const string& name,
+			   const string& extra);
 
   TCanvas* Plot1Dratio(const string& proc,
-           const VS& lep_cat,
-           const VS& hadS_cat,
-           const VS& hadI_cat,
-           const string& name,
-           const VS& extra);
+		       const VS& lep_cat,
+		       const VS& hadS_cat,
+		       const VS& hadI_cat,
+		       const string& name,
+		       const VS& extra);
 
   TCanvas* Plot1DratioSyst(const VS& proc,
-     const Systematic& syst,
-           const VS& lep_cat,
-           const VS& hadS_cat,
-           const VS& hadI_cat,
-           const string& name,
-           const VS& extra);
+			   const Systematic& syst,
+			   const VS& lep_cat,
+			   const VS& hadS_cat,
+			   const VS& hadI_cat,
+			   const string& name,
+			   const VS& extra);
+
   TCanvas* PlotRatioSystDist(const VS& proc,
-     const Systematic& syst,
-           const VS& lep_cat,
-           const VS& matchString,
-           const string& name);
+			     const Systematic& syst,
+			     const VS& lep_cat,
+			     const VS& matchString,
+			     const string& name);
 
   map<string,VS> m_Strings;
   
@@ -116,17 +117,23 @@ private:
   void InitializeRecipes();
   string GetSignalTitle(const string& label);
 
-  TGraphErrors* GetTotalBackground(const CategoryList& cat);
+  TGraphErrors *GetTotalBackground(const CategoryList& cat);
 
   void DrawCatTree(const CategoryTree& CT, TCanvas* can);
   void DrawMR(const FitBin& fitbin, TCanvas* can, TPad* pad, TPad* pad_ratio = nullptr);
+  void DrawRM(const FitBin& fitbin, TCanvas* can, TPad* pad, TPad* pad_ratio = nullptr);
+  void DrawRM(const FitBin& fitbin, TCanvas* can, TPad* pad, VS labels, TPad* pad_ratio = nullptr);
+  double CalculateZbi(double Nsig, double Nbkg, double deltaNbkg = 0.2);
 
+  ProcessList FetchProcs(VS proc_list);
+  VS FetchLabels(VS categories);
+  VS FetchCats(VS categories);
 
-  double calculateZbi(double Nsig, double Nbkg, double deltaNbkg = 0.2);
+  vector<double> IntegrateMperp(const FitBin fitBin, const vector<double> histVec) const;
+  TH1D* IntegrateMperp(const TString& name, const FitBin fitBin, TH1D* hist) const;
 
   VS AddPrefix(const string& pre, const VS& post) const;
 
-  
 };
 
 #endif
