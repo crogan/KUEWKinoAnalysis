@@ -1120,8 +1120,13 @@ template <>
 double AnalysisBase<SUSYNANOBase>::GetPDFWeight(int updown){
   if(IsData() || IsSMS())
     return 1.;
+  int year = 2016;
+  if(m_FileTag.find("17") != std::string::npos)
+    year = 2017;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
   else
-    return m_LHETool.GetWeight(nLHEPdfWeight,LHEPdfWeight,Generator_id1,Generator_id2,Generator_x1,Generator_x2,Generator_scalePDF,updown);
+    return m_LHETool.GetWeight(nLHEPdfWeight,LHEPdfWeight,Generator_id1,Generator_id2,Generator_x1,Generator_x2,Generator_scalePDF,year,updown);
 }
 
 template <>
