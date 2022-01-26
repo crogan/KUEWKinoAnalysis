@@ -35,6 +35,9 @@ private:
   double m_MuRweight;
   double m_MuRweight_up;
   double m_MuRweight_down;
+  double m_PDFweight;
+  double m_PDFweight_up;
+  double m_PDFweight_down;
   double m_BtagHFSFweight;
   double m_BtagHFSFweight_up;
   double m_BtagHFSFweight_down;

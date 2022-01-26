@@ -212,6 +212,10 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("MuRweight_up", &m_MuRweight_up);
   tree->Branch("MuRweight_down", &m_MuRweight_down);
 
+  tree->Branch("PDFweight", &m_PDFweight);
+  tree->Branch("PDFweight_up", &m_PDFweight_up);
+  tree->Branch("PDFweight_down", &m_PDFweight_down);
+
   tree->Branch("BtagHFSFweight", &m_BtagHFSFweight);
   tree->Branch("BtagHFSFweight_up", &m_BtagHFSFweight_up);
   tree->Branch("BtagHFSFweight_down", &m_BtagHFSFweight_down);
