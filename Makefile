@@ -5,6 +5,7 @@ RFCFLAGS    = $(shell restframes-config --cxxflags)
 RFGLIBS     = $(shell restframes-config --libs)
 
 LHAPDFCFLAGS = $(shell /cvmfs/cms.cern.ch/slc7_amd64_gcc700/external/lhapdf/6.2.1-pafccj3/bin/lhapdf-config --cflags --ldflags)
+LHAPDFGLIBS = $(shell /cvmfs/cms.cern.ch/slc7_amd64_gcc700/external/lhapdf/6.2.1-pafccj3/bin/lhapdf-config --libs)
 
 CXX         = g++
 
@@ -15,6 +16,7 @@ CXXFLAGS      += $(filter-out -stdlib=libc++ -pthread , $(LHAPDFCFLAGS))
 
 GLIBS          = $(filter-out -stdlib=libc++ -pthread , $(ROOTGLIBS))
 GLIBS         += $(filter-out -stdlib=libc++ -pthread , $(RFGLIBS))
+GLIBS         += $(filter-out -stdlib=libc++ -pthread , $(LHAPDFGLIBS))
 GLIBS         += -lRooFit -lRooFitCore
 
 INCLUDEDIR       = ./include/
