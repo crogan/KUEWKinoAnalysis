@@ -198,12 +198,18 @@ TH1D* FitReader::GetAddedHist(const string&       name,
       }
     }
   }
+  //if(hist)
+  //cout << "Added hist bins: " << hist->GetNbinsX() << endl;
+   
   return hist;
 }
 
 vector<double> FitReader::GetAddedHistValues(const CategoryList& cats,
 					     const ProcessList&  procs,
 					     const Systematic&   sys) const {
+
+  const FitBin& fitbin = cats[0].GetFitBin();
+  int NBins = fitbin.NBins();
 
   vector<double> histValues;
 
@@ -236,9 +242,9 @@ vector<double> FitReader::GetAddedHistValues(const CategoryList& cats,
     delete hist;
   }
   else{
-    histValues.push_back(0.);
+    for (int i = 0; i < NBins; i++)
+      histValues.push_back(0.);
   }
-
 
   return histValues;
 }
@@ -260,12 +266,17 @@ const TH1D* FitReader::GetHistogram(const Category&   cat,
 const TH2D* FitReader::GetHistogram2D(const Category&   cat,
 				      const Process&    proc,
 				      const Systematic& sys) const {
-  if(!IsFilled2D(cat, proc, sys))
+  //cout << "Getting histogram!" << endl;
+  if(!IsFilled2D(cat, proc, sys)){
+    cout << "hist not filled!" << endl;
     return nullptr;
+  }
   //cout << cat.GetLabel() << " " << proc.Name() << " hist integral: " << m_ProcHist_2D[proc][cat]->Integral() << endl;   
   if(!sys){
+    //cout << "no sys, hist filled" << endl;
     return m_ProcHist_2D[proc][cat];
   } else {
+    cout << "sys" << endl;
     return (sys.IsUp() ? m_ProcHistSys_2D[proc][sys][cat].first :
 	    m_ProcHistSys_2D[proc][sys][cat].second);
   }

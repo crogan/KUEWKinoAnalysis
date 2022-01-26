@@ -247,7 +247,8 @@ int main(int argc, char* argv[]) {
       int Nfile = ST.NTrees(proc);
       for(int f = 0; f < Nfile; f++){
         string new_BFICmd = BuildFitInputCmd;
-        if(proc.Type() == kBkg)
+        //if(proc.Type() == kBkg)
+        if(proc.Type() != kSig)
           new_BFICmd += ("-ifile "+std::to_string(f))+" ";
         WriteScript(SrcFold+Form("submit_%d",Njob)+".sh",
           	  LogFold+Form("job_%d",Njob)+".log",
@@ -334,7 +335,7 @@ void WriteScript(const string& src_name,
   file << "error = "  << log_name << ".err" << endl;
   file << "log = "    << log_name << ".log" << endl;
   file << "Requirements = (Machine != \"red-node000.unl.edu\") && (Machine != \"red-c2325.unl.edu\")" << endl;
-  file << "request_memory = 4 GB" << endl;
+  file << "request_memory = 2 GB" << endl;
   file << "queue " << endl;
   file.close();  
 }

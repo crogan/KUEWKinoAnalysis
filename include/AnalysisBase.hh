@@ -13,6 +13,7 @@
 #include "XsecTool.hh"
 #include "JSONTool.hh"
 #include "PUTool.hh"
+#include "LHETool.hh"
 #include "BtagSFTool.hh"
 #include "JMETool.hh"
 #include "SVDiscrTool.hh"
@@ -116,6 +117,9 @@ protected:
   
   virtual double GetEventWeight();
   virtual double GetPUWeight(int updown = 0);
+  virtual double GetPDFWeight(int updown = 0);
+  virtual double GetMuFWeight(int updown = 0);
+  virtual double GetMuRWeight(int updown = 0);
   virtual double GetBtagSFWeight(const ParticleList& jets, bool HForLF, int updown = 0, ParticleIDType tag = kMedium);
   virtual double GetMETTriggerSFWeight(double MET, double HT, int Nele, int Nmu, int updown = 0);
   virtual double GetXsec();
@@ -134,6 +138,7 @@ private:
   XsecTool        m_XsecTool;
   JSONTool        m_JSONTool;
   PUTool          m_PUTool;
+  LHETool         m_LHETool;
   BtagSFTool      m_BtagSFTool;
   JMETool         m_JMETool;
   SVDiscrTool     m_SVDiscrTool;

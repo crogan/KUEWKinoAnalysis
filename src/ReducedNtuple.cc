@@ -204,6 +204,18 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("PUweight_up", &m_PUweight_up);
   tree->Branch("PUweight_down", &m_PUweight_down);
 
+  tree->Branch("MuFweight", &m_MuFweight);
+  tree->Branch("MuFweight_up", &m_MuFweight_up);
+  tree->Branch("MuFweight_down", &m_MuFweight_down);
+
+  tree->Branch("MuRweight", &m_MuRweight);
+  tree->Branch("MuRweight_up", &m_MuRweight_up);
+  tree->Branch("MuRweight_down", &m_MuRweight_down);
+
+  tree->Branch("PDFweight", &m_PDFweight);
+  tree->Branch("PDFweight_up", &m_PDFweight_up);
+  tree->Branch("PDFweight_down", &m_PDFweight_down);
+
   tree->Branch("BtagHFSFweight", &m_BtagHFSFweight);
   tree->Branch("BtagHFSFweight_up", &m_BtagHFSFweight_up);
   tree->Branch("BtagHFSFweight_down", &m_BtagHFSFweight_down);
@@ -1071,6 +1083,14 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
     m_PUweight = AnalysisBase<Base>::GetPUWeight(0);
     m_PUweight_up = AnalysisBase<Base>::GetPUWeight(1);
     m_PUweight_down = AnalysisBase<Base>::GetPUWeight(-1);
+
+    m_MuFweight = AnalysisBase<Base>::GetMuFWeight(0);
+    m_MuFweight_up = AnalysisBase<Base>::GetMuFWeight(1);
+    m_MuFweight_down = AnalysisBase<Base>::GetMuFWeight(-1);
+
+    m_MuRweight = AnalysisBase<Base>::GetMuRWeight(0);
+    m_MuRweight_up = AnalysisBase<Base>::GetMuRWeight(1);
+    m_MuRweight_down = AnalysisBase<Base>::GetMuRWeight(-1);
     
     m_BtagHFSFweight = AnalysisBase<Base>::GetBtagSFWeight(Jets, true, 0, kMedium);
     m_BtagHFSFweight_up = AnalysisBase<Base>::GetBtagSFWeight(Jets, true, 1, kMedium);
@@ -1093,6 +1113,12 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
     m_PUweight = 1;
     m_PUweight_up = 1;
     m_PUweight_down = 1;
+    m_MuFweight = 1;
+    m_MuFweight_up = 1;
+    m_MuFweight_down = 1;
+    m_MuRweight = 1;
+    m_MuRweight_up = 1;
+    m_MuRweight_down = 1;
     m_BtagHFSFweight = 1;
     m_BtagHFSFweight_up = 1;
     m_BtagHFSFweight_down = 1;
