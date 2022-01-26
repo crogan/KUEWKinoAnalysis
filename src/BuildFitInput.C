@@ -308,7 +308,6 @@ cout << "# processes: " << samples.GetN() << endl;
       // event loop
       for(int e = 0; e < Nentry; e += SKIP){
 	base->GetEntry(e);
-processed = true;
 	if((e/SKIP)%(std::max(1, int(Nentry/SKIP/10))) == 0)
 	  cout << "      event " << e << " | " << Nentry  << endl;
 	if(!base->EventFilter)	  
