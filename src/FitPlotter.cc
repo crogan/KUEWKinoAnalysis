@@ -1741,8 +1741,9 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
       Process pp = GetProcesses()[index];
 
       procs += pp;
-
+//cout << "process: " << pp.Name() << endl;
       if(pp.Type() == kSig){
+//	cout << "sig" << endl;
 	type = kSig;
       }
       
@@ -1753,13 +1754,13 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
       }
     }
     for(int v = 0; v < Nvis; v++){
-//cout << "catList #"  << v << ": " << CatTrees[v]->GetMatchString()[0] << endl;
+if(i == 0)cout << " catList #"  << v << ": " << CatTrees[v]->GetPlainLabel(CT.GetDepth()) << endl;
       CategoryList cat = CatList.Filter(*CatTrees[v]);
       TH1D* h = GetAddedHist(Form("plothist_%d_%d_%s", i, v, can_name.c_str()), cat, procs);
       if(h)
 	itot += h->Integral();
     //  if(dumCatIdx == -999) dumCatIdx = v; 
-    //if(h == nullptr) cout << "h null" << endl;     
+ //   if(h == nullptr) cout << "h null" << endl;     
       hist[v] = h;
       }
     if(type == kData && itot <= 1e-4) b_ratio = false;
@@ -2108,7 +2109,7 @@ if(hptr == nullptr) continue;
     // 		CatTrees[b%Nvis]->GetPlainLabel(Depth).c_str());
  l.DrawLatex(hlo+(1.-hhi-hlo)/double(Nvis*Nbin)*(0.5+b), 1.-hto - 4*eps,
 		CatTrees[b%Nvis]->GetPlainLabel(Depth).c_str());
-  cout << CatTrees[b%Nvis]->GetPlainLabel(Depth) << endl;
+//  cout << CatTrees[b%Nvis]->GetPlainLabel(Depth) << endl;
    }
   
   TLegend* leg = new TLegend(1.-hhi+0.007, 1.- (Nbkg+Nsig+1)*(1.-0.49)/9., 0.98, 1.-hto-0.005);
