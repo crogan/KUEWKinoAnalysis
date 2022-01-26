@@ -27,7 +27,7 @@ void WriteScriptConnect(const string& src_name,
 		 const string& OutputFold);
 
 int main(int argc, char* argv[]) {
-  int  maxN = 10;
+  int  maxN = 1;
   bool dryRun = false;
   bool connect = false;
   bool doSigFile = false;

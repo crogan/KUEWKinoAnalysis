@@ -224,12 +224,6 @@ cout << "# processes: " << samples.GetN() << endl;
 
   int underflow = 0.;
 
-  //set systematic event weight parameters
-  // varWeights vw("varWeights");
-  // double maxWeight = 2.;
-  // double minWeight = 0.01;
-  // vw.setMinMax(minWeight,maxWeight);
-
   // dummy in case there is no data requested
   Process data_obs("data_obs", kData);
 
