@@ -265,7 +265,7 @@ const TH2D* FitReader::GetHistogram2D(const Category&   cat,
 				      const Systematic& sys) const {
   //cout << "Getting histogram!" << endl;
   if(!IsFilled2D(cat, proc, sys)){
-    cout << "hist not filled!" << endl;
+    //cout << "hist not filled!" << endl;
     return nullptr;
   }
   //cout << cat.GetLabel() << " " << proc.Name() << " hist integral: " << m_ProcHist_2D[proc][cat]->Integral() << endl;   

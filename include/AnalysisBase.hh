@@ -13,6 +13,7 @@
 #include "XsecTool.hh"
 #include "JSONTool.hh"
 #include "PUTool.hh"
+#include "LHETool.hh"
 #include "BtagSFTool.hh"
 #include "JMETool.hh"
 #include "SVDiscrTool.hh"
@@ -80,12 +81,16 @@ public:
   virtual TVector3 GetMET();
   virtual ParticleList GetJets(int id = -1);
   virtual ParticleList GetJetsMET(TVector3& MET, int id = -1);
+  virtual ParticleList GetGenJets();
   virtual ParticleList GetElectrons();
   virtual ParticleList GetMuons();
   virtual ParticleList GetSVs(const TVector3& PV);
 
   virtual TVector3 GetAltMET();
   
+  virtual double Get_LHE_HT();
+  virtual double Get_LHE_HTIncoming();
+
   virtual bool IsHEM(Particle part);
 
   virtual TVector3 GetGenMET();
@@ -116,6 +121,9 @@ protected:
   
   virtual double GetEventWeight();
   virtual double GetPUWeight(int updown = 0);
+  virtual double GetPDFWeight(int updown = 0);
+  virtual double GetMuFWeight(int updown = 0);
+  virtual double GetMuRWeight(int updown = 0);
   virtual double GetBtagSFWeight(const ParticleList& jets, bool HForLF, int updown = 0, ParticleIDType tag = kMedium);
   virtual double GetMETTriggerSFWeight(double MET, double HT, int Nele, int Nmu, int updown = 0);
   virtual double GetXsec();
@@ -134,6 +142,7 @@ private:
   XsecTool        m_XsecTool;
   JSONTool        m_JSONTool;
   PUTool          m_PUTool;
+  LHETool         m_LHETool;
   BtagSFTool      m_BtagSFTool;
   JMETool         m_JMETool;
   SVDiscrTool     m_SVDiscrTool;
