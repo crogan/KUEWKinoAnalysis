@@ -45,6 +45,8 @@ public :
    Double_t        MET;
    Double_t        MET_phi;
    Double_t        HT;
+   Double_t        LHE_HT;
+   Double_t        LHE_HTIncoming;
    Int_t           Nele;
    Int_t           Nmu;
    Int_t           Nlep;
@@ -252,6 +254,8 @@ public :
    TBranch        *b_MET;   //!
    TBranch        *b_MET_phi;   //!
    TBranch        *b_HT;   //!
+   TBranch        *b_LHE_HT;   //!
+   TBranch        *b_LHE_HTIncoming;   //!
    TBranch        *b_Nele;   //!
    TBranch        *b_Nmu;   //!
    TBranch        *b_Nlep;   //!
@@ -605,6 +609,8 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchAddress("MET", &MET, &b_MET);
    fChain->SetBranchAddress("MET_phi", &MET_phi, &b_MET_phi);
    fChain->SetBranchAddress("HT", &HT, &b_HT);
+   fChain->SetBranchAddress("LHE_HT", &LHE_HT, &b_LHE_HT);
+   fChain->SetBranchAddress("LHE_HTIncoming", &LHE_HTIncoming, &b_LHE_HTIncoming);
    fChain->SetBranchAddress("Nele", &Nele, &b_Nele);
    fChain->SetBranchAddress("Nmu", &Nmu, &b_Nmu);
    fChain->SetBranchAddress("Nlep", &Nlep, &b_Nlep);
