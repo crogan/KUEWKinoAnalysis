@@ -1091,6 +1091,10 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
     m_MuRweight = AnalysisBase<Base>::GetMuRWeight(0);
     m_MuRweight_up = AnalysisBase<Base>::GetMuRWeight(1);
     m_MuRweight_down = AnalysisBase<Base>::GetMuRWeight(-1);
+
+    m_PDFweight = AnalysisBase<Base>::GetPDFWeight(0);
+    m_PDFweight_up = AnalysisBase<Base>::GetPDFWeight(1);
+    m_PDFweight_down = AnalysisBase<Base>::GetPDFWeight(-1);
     
     m_BtagHFSFweight = AnalysisBase<Base>::GetBtagSFWeight(Jets, true, 0, kMedium);
     m_BtagHFSFweight_up = AnalysisBase<Base>::GetBtagSFWeight(Jets, true, 1, kMedium);
@@ -1119,6 +1123,9 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
     m_MuRweight = 1;
     m_MuRweight_up = 1;
     m_MuRweight_down = 1;
+    m_PDFweight = 1;
+    m_PDFweight_up = 1;
+    m_PDFweight_down = 1;
     m_BtagHFSFweight = 1;
     m_BtagHFSFweight_up = 1;
     m_BtagHFSFweight_down = 1;
