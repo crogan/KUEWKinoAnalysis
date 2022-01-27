@@ -26,7 +26,7 @@ done
 # check for outpuut file
 if [[ -z "$outputName" ]]
 then
-    echo "Please provide a output file name (wihtout .txt extension) using the -o option."
+    echo "Please provide a output file name (without .txt extension) using the -o option."
     exit 1
 fi
 
