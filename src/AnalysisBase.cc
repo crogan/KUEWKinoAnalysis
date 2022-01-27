@@ -227,6 +227,21 @@ double AnalysisBase<Base>::GetPUWeight(int updown){
 }
 
 template <class Base>
+double AnalysisBase<Base>::GetMuFWeight(int updown){
+  return 0;
+}
+
+template <class Base>
+double AnalysisBase<Base>::GetMuRWeight(int updown){
+  return 0;
+}
+
+template <class Base>
+double AnalysisBase<Base>::GetPDFWeight(int updown){
+  return 0;
+}
+
+template <class Base>
 double AnalysisBase<Base>::GetBtagSFWeight(const ParticleList& jets, bool HForLF, int updown, ParticleIDType tag){
   return 0;
 }
@@ -259,6 +274,16 @@ TVector3 AnalysisBase<Base>::GetMET(){
 template <class Base>
 TVector3 AnalysisBase<Base>::GetAltMET(){
   return TVector3(0.,0.,0.);
+}
+
+template <class Base>
+double AnalysisBase<Base>::Get_LHE_HT(){
+  return 0.;
+}
+
+template <class Base>
+double AnalysisBase<Base>::Get_LHE_HTIncoming(){
+  return 0.;
 }
 
 template <class Base>
@@ -319,6 +344,11 @@ ParticleList AnalysisBase<Base>::GetJetsMET(TVector3& MET, int id){
 
 template <class Base>
 ParticleList AnalysisBase<Base>::GetJets(int id){
+  return ParticleList();
+}
+
+template <class Base>
+ParticleList AnalysisBase<Base>::GetGenJets(){
   return ParticleList();
 }
 
@@ -520,6 +550,16 @@ TVector3 AnalysisBase<StopNtupleTree>::GetMET(){
   else
     vmet.SetPtEtaPhi(met_d,0.0,metphi_d);
   return vmet;
+}
+
+template <>
+double AnalysisBase<StopNtupleTree>::Get_LHE_HT(){
+  return 0.;
+}
+
+template <>
+double AnalysisBase<StopNtupleTree>::Get_LHE_HTIncoming(){
+  return 0.;
 }
 
 template <>
@@ -1050,7 +1090,7 @@ double AnalysisBase<SUSYNANOBase>::GetEventWeight(){
       return genWeight*m_IndexToXsec[m_SampleIndex]/m_IndexToNweight[m_SampleIndex];
 
     //cout << "genWeight " << genWeight << endl;
-    // cout << "Xsec " << m_IndexToXsec[m_SampleIndex] << endl;
+    //cout << "Xsec " << m_IndexToXsec[m_SampleIndex] << endl;
     //cout << "Nweight " << m_IndexToNweight[m_SampleIndex] << endl;
     //cout << "Filter eff " << m_NeventTool.GetFilterEff(m_DataSet,m_FileTag,luminosityBlock) << endl;
     return genWeight*m_IndexToXsec[m_SampleIndex]/m_IndexToNweight[m_SampleIndex]*m_NeventTool.GetFilterEff(m_DataSet,m_FileTag,luminosityBlock);
@@ -1070,6 +1110,48 @@ double AnalysisBase<SUSYNANOBase>::GetPUWeight(int updown){
     year = 2018;
 
   return m_PUTool.GetWeight(Pileup_nPU, year, updown);
+}
+
+ // [0] is muR=0.5 muF=0.5 ; [1] is muR=0.5 muF=1.0 ; [2] is muR=0.5 muF=2.0 ;
+ // [3] is muR=0.1 muF=0.5 ; [4] is muR=1.0 muF=1.0 ; [5] is muR=1.0 muF=2.0 ;
+ // [6] is muR=2.0 muF=0.5 ; [7] is muR=2.0 muF=1.0 ; [8] is muR=2.0 muF=2.0 ;
+
+template <>
+double AnalysisBase<SUSYNANOBase>::GetMuFWeight(int updown){
+  if(IsData())
+    return 1.;
+  if(updown > 0)
+    return LHEScaleWeight[5];
+  else if(updown < 0) 
+    return LHEScaleWeight[3];
+  else
+    return LHEScaleWeight[4]; //nominal
+}
+
+template <>
+double AnalysisBase<SUSYNANOBase>::GetMuRWeight(int updown){
+  if(IsData())
+    return 1.;
+  if(updown > 0)
+    return LHEScaleWeight[7];
+  else if(updown < 0) 
+    return LHEScaleWeight[1];
+  else
+    return LHEScaleWeight[4]; //nominal
+  return 1.;
+}
+
+template <>
+double AnalysisBase<SUSYNANOBase>::GetPDFWeight(int updown){
+  if(IsData() || IsSMS())
+    return 1.;
+  int year = 2016;
+  if(m_FileTag.find("17") != std::string::npos)
+    year = 2017;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+  else
+    return m_LHETool.GetWeight(nLHEPdfWeight,LHEPdfWeight,Generator_id1,Generator_id2,Generator_x1,Generator_x2,Generator_scalePDF,year,updown);
 }
 
 template <>
@@ -1272,6 +1354,40 @@ void AnalysisBase<SUSYNANOBase>::BookHistograms(vector<TH1D*>& histos){
 }
 
 template <>
+ParticleList AnalysisBase<SUSYNANOBase>::GetGenJets(){
+  ParticleList list;
+  if(IsData())
+    return list;
+  int year = 2017;
+  if(m_FileTag.find("16") != std::string::npos)
+    year = 2016;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+
+  int NGenjet = nGenJet;
+
+  for(int i = 0; i < NGenjet; i++){
+    if(GenJet_pt[i] < 15. || fabs(GenJet_eta[i]) > 5.)
+      continue;
+    Particle jet;
+    float mass = GenJet_mass[i];
+    if(std::isnan(mass))
+      mass = 0;
+    if(std::isinf(mass))
+      mass = 0;
+    if(mass < 0.)
+      mass = 0.;
+    jet.SetPtEtaPhiM(GenJet_pt[i], GenJet_eta[i],
+                    GenJet_phi[i], mass);
+    //jet.SetPDGID( GenPart_pdgId[i] );
+
+    list.push_back(jet);
+  }
+  return list;
+}
+
+
+template <>
 ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET, int id){
   int year = 2017;
   if(m_FileTag.find("16") != std::string::npos)
@@ -1442,6 +1558,16 @@ TVector3 AnalysisBase<SUSYNANOBase>::GetAltMET(){
   MET.SetPtEtaPhi(MET_pt,0.0,MET_phi);
 
   return MET;
+}
+
+template <>
+double AnalysisBase<SUSYNANOBase>::Get_LHE_HT(){
+  return LHE_HT;
+}
+
+template <>
+double AnalysisBase<SUSYNANOBase>::Get_LHE_HTIncoming(){
+  return LHE_HTIncoming;
 }
 
 template <>
