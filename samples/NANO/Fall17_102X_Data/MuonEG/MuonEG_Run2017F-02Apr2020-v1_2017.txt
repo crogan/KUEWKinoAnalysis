@@ -1,4 +1,3 @@
-root://cmsxrootd.fnal.gov/ERROR: das exit with code: 2 , error: DBS unable to unmarshal the data into DAS record, api=files_via_dataset, data={&#34;exception&#34;: 400, &#34;message&#34;: &#34;Invalid Input Data /MuonEG/Ru...: Not Match Required Format&#34;, &#34;type&#34;: &#34;HTTPError&#34;}, error=json: cannot unmarshal object into Go value of type []mongo.DASRecord
 root://cmsxrootd.fnal.gov//store/data/Run2017F/MuonEG/NANOAOD/02Apr2020-v1/30000/3249087F-D72D-6F45-A907-534D72CB8F21.root
 root://cmsxrootd.fnal.gov//store/data/Run2017F/MuonEG/NANOAOD/02Apr2020-v1/510000/3A868C49-013C-D04A-A3ED-AD35DEB95EEA.root
 root://cmsxrootd.fnal.gov//store/data/Run2017F/MuonEG/NANOAOD/02Apr2020-v1/30000/D71CED56-760C-CF4F-89BF-3F1DB2CB8E10.root
