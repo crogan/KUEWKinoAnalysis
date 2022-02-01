@@ -75,6 +75,7 @@ samples/NANO/Summer16_102X/WZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8.txt
 samples/NANO/Summer16_102X/WZTo1L3Nu_13TeV_amcatnloFXFX_madspin_pythia8.txt
 samples/NANO/Summer16_102X/WZTo3LNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.txt
 samples/NANO/Summer16_102X/WZTo3LNu_TuneCUETP8M1_13TeV-powheg-pythia8.txt
+samples/NANO/Summer16_102X/WZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8.txt
 samples/NANO/Summer16_102X/WZ_TuneCUETP8M1_13TeV-pythia8.txt
 samples/NANO/Summer16_102X/ZJetsToNuNu_HT-100To200_13TeV-madgraph.txt
 samples/NANO/Summer16_102X/ZJetsToNuNu_HT-1200To2500_13TeV-madgraph.txt

@@ -1,9 +1,12 @@
 #include "LHETool.hh"
 
-void LHETool::GetFromLHAPDF(int& nPDFWeights, std::vector<double>& PDFWeights, int id1, int id2, float x1, float x2, float scalePDF){
-//write code to get from LHAPDF (scram tool info LHAPDF)
- LHAPDF::PDFSet pdfset = LHAPDF::getPDFSet("NNPDF31_nnlo_as_0118"); //self.pset
- std::vector<LHAPDF::PDF*> pdfs = pdfset.mkPDFs(); //self.pdfs
+void LHETool::GetFromLHAPDF(int& nPDFWeights, std::vector<double>& PDFWeights, int id1, int id2, float x1, float x2, float scalePDF, int year){
+ LHAPDF::PDFSet pdfset;
+ if(year == 2017 || year == 2018)
+  pdfset = LHAPDF::getPDFSet("NNPDF31_nnlo_as_0118"); 
+ if(year == 2016)
+  pdfset = LHAPDF::getPDFSet("NNPDF30_lo_as_0130"); 
+ std::vector<LHAPDF::PDF*> pdfs = pdfset.mkPDFs(); 
  std::string errorTypeCount = pdfset.errorType();
  size_t npar = std::count(errorTypeCount.begin(),errorTypeCount.end(),'+');
  nPDFWeights = npar;
@@ -20,7 +23,7 @@ void LHETool::GetFromLHAPDF(int& nPDFWeights, std::vector<double>& PDFWeights, i
  }
 }
 
-double LHETool::GetWeight(unsigned int nLHEPdfWeight, float* LHEPdfWeight, int Generator_id1, int Generator_id2, float Generator_x1, float Generator_x2, float Generator_scalePDF, int updown){
+double LHETool::GetWeight(unsigned int nLHEPdfWeight, float* LHEPdfWeight, int Generator_id1, int Generator_id2, float Generator_x1, float Generator_x2, float Generator_scalePDF, int year, int updown){
   if(updown == 0) return 1.;
   double w84 = 1.;
   double w16 = 1.;
@@ -29,7 +32,7 @@ double LHETool::GetWeight(unsigned int nLHEPdfWeight, float* LHEPdfWeight, int G
   int nPDFWeights = nLHEPdfWeight;
   std::vector<double> PDFWeights;
   if(nPDFWeights == 0)
-    GetFromLHAPDF(nPDFWeights,PDFWeights,Generator_id1,Generator_id2,Generator_x1,Generator_x2,Generator_scalePDF);
+    GetFromLHAPDF(nPDFWeights,PDFWeights,Generator_id1,Generator_id2,Generator_x1,Generator_x2,Generator_scalePDF,year);
   else
    for(int i = 0; i < nPDFWeights; i++) { PDFWeights.push_back(LHEPdfWeight[i]); }
   

@@ -25,8 +25,8 @@ if __name__ == "__main__":
     print "Output Directory: %s" % (OUT_DIR)
         
     # create and organize output folders
-   # os.system("rm -rf "+OUT_DIR)
-    if not os.path.isdir(OUT_DIR): os.system("mkdir -p "+OUT_DIR)
+    #os.system("rm -rf "+OUT_DIR)
+    os.system("mkdir -p "+OUT_DIR)
 
     for dirs in os.walk(IN_DIR):
         target = dirs[0].split("/")

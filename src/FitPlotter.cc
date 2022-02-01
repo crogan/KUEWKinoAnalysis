@@ -1685,7 +1685,7 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
 
   if(pType == kFull)
     Nbin = fitbin.NBins();
-  if(pType == kRISR || kInv)
+  if(pType == kRISR || pType == kInv)
     Nbin = fitbin.NRBins(); 
 
   if(CatList.GetN() < 1)
@@ -1753,7 +1753,7 @@ if(i == 0)cout << " catList #"  << v << ": " << CatTrees[v]->GetPlainLabel(CT.Ge
 
       if(pType == kFull)
 	h = GetAddedHist(Form("plothist_%d_%d_%s", i, v, can_name.c_str()), cat, procs);
-      if(pType == kRISR || kInv)
+      if(pType == kRISR || pType == kInv)
 	h = IntegrateMperp(Form("plotintegratedhist_%d_%d_%s", i, v, can_name.c_str()),fitbin,
 			   GetAddedHist(Form("plothist_%d_%d_%s", i, v, can_name.c_str()), cat, procs));
 
@@ -1810,8 +1810,7 @@ if(i == 0)cout << " catList #"  << v << ": " << CatTrees[v]->GetPlainLabel(CT.Ge
 cout << "getaddedhist" << endl;
       if(pType == kFull)
         h = GetAddedHist(Form("plothist_%d_%s",  v, can_name.c_str()), cat, totbkgs);
-      cout << "getaddedhist end" << endl;
-	if(pType == kRISR || kInv)
+      if(pType == kRISR || pType == kInv)
         h = IntegrateMperp(Form("plotintegratedhist_%d_%s", v, can_name.c_str()),fitbin,
 			   GetAddedHist(Form("plothist_tot_%d_%s", v, can_name.c_str()), cat, totbkgs));
 
@@ -5390,8 +5389,8 @@ TCanvas* FitPlotter::PlotRegionSignificance(const string& can_name,
   l.DrawLatex(hlo+eps*4, 1.-hto+0.02, m_CMSLabel.c_str());
 
   can->Update();
-  can->SaveAs("plots/"+TString(can_name)+".pdf");
-  can->SaveAs("plots/"+TString(can_name)+".gif");
+  //can->SaveAs("plots/"+TString(can_name)+".pdf");
+  //can->SaveAs("plots/"+TString(can_name)+".gif");
   return can;
 }
 

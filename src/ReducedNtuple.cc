@@ -257,6 +257,9 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("altMET", &m_altMET);
   tree->Branch("altMET_phi", &m_altMET_phi);
 
+  tree->Branch("LHE_HT", &m_LHE_HT);
+  tree->Branch("LHE_HTIncoming", &m_LHE_HTIncoming);
+
   tree->Branch("HT_eta24", &m_HT_eta24);
   tree->Branch("HT_eta24_id", &m_HT_eta24_id);
   tree->Branch("HT_eta3", &m_HT_eta3);
@@ -311,6 +314,12 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("M_SV",   &m_M_SV);
   tree->Branch("ProbB_SV",   &m_ProbB_SV);
   tree->Branch("ProbC_SV",   &m_ProbC_SV);
+
+  tree->Branch("PT_Genjet",  &m_PT_Genjet);
+  tree->Branch("Eta_Genjet", &m_Eta_Genjet);
+  tree->Branch("Phi_Genjet", &m_Phi_Genjet);
+  tree->Branch("M_Genjet",   &m_M_Genjet);
+  tree->Branch("Index_jet",   &m_Index_jet);
 
   tree->Branch("Njet_ISR", &m_Njet_ISR);
   tree->Branch("Njet_S", &m_Njet_S);
@@ -651,6 +660,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   TVector3 ETMiss;
   ParticleList Jets_noID = AnalysisBase<Base>::GetJetsMET(ETMiss);
   ParticleList Jets      = AnalysisBase<Base>::GetJetsMET(ETMiss, 3); // jet ID 3
+  ParticleList GenJets   = AnalysisBase<Base>::GetGenJets();
   
   if(ETMiss.Mag() < 150.)
     return;
@@ -673,6 +683,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
 
   Jets      = Jets.PtEtaCut(20., 5.);
   Jets_noID = Jets_noID.PtEtaCut(20., 5.);
+  GenJets   = GenJets.PtEtaCut(20., 5.);
   Njet      = Jets.size();
   Njet_noID = Jets_noID.size();
 
@@ -721,6 +732,9 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   for(int j = 0; j < Njet; j++){
     m_HT_eta24_id += Jets[j].Pt();
   }
+
+  m_LHE_HT = AnalysisBase<Base>::Get_LHE_HT();
+  m_LHE_HTIncoming = AnalysisBase<Base>::Get_LHE_HTIncoming();
   
   ParticleList Muons = AnalysisBase<Base>::GetMuons();
   Muons = Muons.ParticleIDCut(kVeryLoose);
@@ -739,9 +753,21 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   
   Jets = Jets.RemoveOverlap(Leptons, 0.2);
 
+  ParticleList GenMuons = AnalysisBase<Base>::GetGenMuons();
+  ParticleList GenElectrons = AnalysisBase<Base>::GetGenElectrons();
+  ParticleList GenLeptons = GenElectrons+GenMuons;
+  GenLeptons.SortByPt();
+
+  m_genNele = GenElectrons.size();
+  m_genNmu  = GenMuons.size();
+  m_genNlep = GenLeptons.size();
+
+  GenJets = GenJets.RemoveOverlap(GenLeptons, 0.2);
+
   // merge jets until total number is combinatorically manageable
   Jets = Jets.BinaryMerge(13-SVs.size()-Leptons.size());
   Jets.SortByPt();
+  GenJets.SortByPt();
   
   // skip event reconstruction for now if too many jets
   // if((Jets.size()+SVs.size()) >= 16){
@@ -752,7 +778,8 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   // }
   
   m_Njet = Jets.size();
-  
+  m_NGenjet = GenJets.size();  
+
   ParticleList BJets;
   vector<int> BJets_index;
   for(int i = 0; i < m_Njet; i++){
@@ -1091,6 +1118,10 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
     m_MuRweight = AnalysisBase<Base>::GetMuRWeight(0);
     m_MuRweight_up = AnalysisBase<Base>::GetMuRWeight(1);
     m_MuRweight_down = AnalysisBase<Base>::GetMuRWeight(-1);
+
+    m_PDFweight = AnalysisBase<Base>::GetPDFWeight(0);
+    m_PDFweight_up = AnalysisBase<Base>::GetPDFWeight(1);
+    m_PDFweight_down = AnalysisBase<Base>::GetPDFWeight(-1);
     
     m_BtagHFSFweight = AnalysisBase<Base>::GetBtagSFWeight(Jets, true, 0, kMedium);
     m_BtagHFSFweight_up = AnalysisBase<Base>::GetBtagSFWeight(Jets, true, 1, kMedium);
@@ -1119,6 +1150,9 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
     m_MuRweight = 1;
     m_MuRweight_up = 1;
     m_MuRweight_down = 1;
+    m_PDFweight = 1;
+    m_PDFweight_up = 1;
+    m_PDFweight_down = 1;
     m_BtagHFSFweight = 1;
     m_BtagHFSFweight_up = 1;
     m_BtagHFSFweight_down = 1;
@@ -1169,6 +1203,30 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
     m_Flavor_jet.push_back(Jets[i].PDGID());
   }
 
+  // Fill GenJets
+  vector<int> genmatch_jet;
+  for(int i = 0; i < m_NGenjet; i++)
+    genmatch_jet.push_back(-1);
+  m_PT_Genjet.clear();
+  m_Eta_Genjet.clear();
+  m_Phi_Genjet.clear();
+  m_M_Genjet.clear();
+  for(int i = 0; i < m_NGenjet; i++){
+    m_PT_Genjet.push_back(GenJets[i].Pt());
+    m_Eta_Genjet.push_back(GenJets[i].Eta());
+    m_Phi_Genjet.push_back(GenJets[i].Phi());
+    m_M_Genjet.push_back(GenJets[i].M());
+    int index = -1;
+    double minDR = 0.1;
+    for(int g = 0; g < m_NGenjet; g++)
+      if(Jets[i].DeltaR(GenJets[g]) < minDR){
+       minDR = Jets[i].DeltaR(GenJets[g]);
+       index = g;
+       genmatch_jet[g] = i;
+      }
+    m_Index_jet.push_back(index);
+  }
+
   // Fill SVs
   m_PT_SV.clear();
   m_Eta_SV.clear();
@@ -1184,15 +1242,6 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
     m_ProbB_SV.push_back(SVs[i].ProbB());
     m_ProbC_SV.push_back(SVs[i].ProbC());
   }
-  
-  ParticleList GenMuons = AnalysisBase<Base>::GetGenMuons();
-  ParticleList GenElectrons = AnalysisBase<Base>::GetGenElectrons();
-  ParticleList GenLeptons = GenElectrons+GenMuons;
-  GenLeptons.SortByPt();
-  
-  m_genNele = GenElectrons.size();
-  m_genNmu  = GenMuons.size();
-  m_genNlep = GenLeptons.size();
   
   // Fill reconstructed lepton branches
   m_PT_lep.clear();
