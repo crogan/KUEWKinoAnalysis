@@ -1759,7 +1759,7 @@ if(i == 0)cout << " catList #"  << v << ": " << CatTrees[v]->GetPlainLabel(CT.Ge
 
       if(h){
 	itot += h->Integral();
-	h->Draw();
+	//h->Draw();
       }
       hist[v] = h;
     }
@@ -1807,10 +1807,11 @@ if(i == 0)cout << " catList #"  << v << ": " << CatTrees[v]->GetPlainLabel(CT.Ge
       
 //	cout << "v: " << v << " totbkg # bins: " << hist_totbkg[v]->GetNbinsX() << endl;
       TH1D* h = nullptr;
-
+cout << "getaddedhist" << endl;
       if(pType == kFull)
         h = GetAddedHist(Form("plothist_%d_%s",  v, can_name.c_str()), cat, totbkgs);
-      if(pType == kRISR || kInv)
+      cout << "getaddedhist end" << endl;
+	if(pType == kRISR || kInv)
         h = IntegrateMperp(Form("plotintegratedhist_%d_%s", v, can_name.c_str()),fitbin,
 			   GetAddedHist(Form("plothist_tot_%d_%s", v, can_name.c_str()), cat, totbkgs));
 
@@ -1930,7 +1931,7 @@ if(dumcat.GetN() < 1) return nullptr;
 	    index = v*Nbin+b+1;
 	  else
 	    index = b*Nvis+v+1;
-
+cout << "bin # " << index << ": " << hist_totbkg[v]->GetBinContent(b+1) << endl;
 	  fhist_totbkg->SetBinContent(index, hist_totbkg[v]->GetBinContent(b+1));
 	  fhist_totbkg->SetBinError(index, hist_totbkg[v]->GetBinError(b+1));
 	}
@@ -2218,8 +2219,8 @@ if(dumcat.GetN() < 1) return nullptr;
   l.DrawLatex(hlo+eps*4, 1.-hto+0.02, m_CMSLabel.c_str());
   
   can->Update();
-  can->SaveAs("plots/"+TString(can_name)+".pdf");
-  can->SaveAs("plots/"+TString(can_name)+".gif");
+  //can->SaveAs("plots/"+TString(can_name)+".pdf");
+  //can->SaveAs("plots/"+TString(can_name)+".gif");
   return can;
 }
 
