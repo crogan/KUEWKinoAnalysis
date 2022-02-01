@@ -2,7 +2,7 @@
 
 #include "../include/FitPlotter.hh"
 
-void PlotFits(const string& fold1 = "BF_allBkgs_data_TChiWZ_2017_allchan_fullFitConfig_maskSR_1_19_22", const string& fold2 = "datacards/all/TChiWZ/4000350", const string& shapesFile = "1_24_22wShapes.root"){
+void PlotFits(const string& fold1 = "BF_allBkgs_data_TChiWZ_2017_allchan_fullFitConfig_maskSR_1_2_22", const string& fold2 = "datacards/all/TChiWZ/4000350", const string& shapesFile = "1_2_22wShapes.root"){
   
   string dateName = shapesFile.substr(0,8);
         string bfName = fold1.substr(2,fold1.size());
@@ -27,10 +27,10 @@ cout << "out directory: " << odir << "/" << lepName << "/" << endl;
 
 PlotType pType = kFull;
 bool prefit = true;
-bool bfit = true;
+bool bfit = false;
 bool sbfit = false;
 //  FitPlotter* FITReader = new FitPlotter(inputfile, a2, a3);
-  bool ratio = true;
+  bool ratio = false;
 
   CategoryTreeTool CTTool;
 
@@ -47,8 +47,8 @@ bool sbfit = false;
  sig = "TChiWZ_4000350";
  all += sig; 
 
-  bool zeroL = true;
-  bool oneL = false;
+  bool zeroL = false;
+  bool oneL = true;
   bool twoL = false;
   bool threeL = false; 
   vector<const CategoryTree*> CTs;
