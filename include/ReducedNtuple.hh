@@ -64,6 +64,9 @@ private:
   double m_genMET;
   double m_genMET_phi;
 
+  double m_LHE_HT;
+  double m_LHE_HTIncoming;
+
   double m_HT_eta24;
   double m_HT_eta24_id;
   double m_HT_eta3;
@@ -122,6 +125,13 @@ private:
   vector<double> m_Flavor_jet;
   vector<double> m_ProbB_SV;
   vector<double> m_ProbC_SV;
+
+  int m_NGenjet;
+  vector<double> m_PT_Genjet;
+  vector<double> m_Eta_Genjet;
+  vector<double> m_Phi_Genjet;
+  vector<double> m_M_Genjet;
+  vector<int>    m_Index_jet;
 
   int m_NSV;
   vector<double> m_PT_SV;

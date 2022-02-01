@@ -81,12 +81,16 @@ public:
   virtual TVector3 GetMET();
   virtual ParticleList GetJets(int id = -1);
   virtual ParticleList GetJetsMET(TVector3& MET, int id = -1);
+  virtual ParticleList GetGenJets();
   virtual ParticleList GetElectrons();
   virtual ParticleList GetMuons();
   virtual ParticleList GetSVs(const TVector3& PV);
 
   virtual TVector3 GetAltMET();
   
+  virtual double Get_LHE_HT();
+  virtual double Get_LHE_HTIncoming();
+
   virtual bool IsHEM(Particle part);
 
   virtual TVector3 GetGenMET();
