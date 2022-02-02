@@ -32,7 +32,7 @@ if __name__ == "__main__":
         target = dirs[0].split("/")
         target = target[-1]
         print target
-        haddcmd = "hadd "+OUT_DIR+"/"+target+".root "
+        haddcmd = "hadd -f "+OUT_DIR+"/"+target+".root "
         haddcmd += IN_DIR+"/"+target+"/*.root"
         print haddcmd
         os.system(haddcmd)
