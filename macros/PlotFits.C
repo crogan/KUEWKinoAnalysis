@@ -25,7 +25,6 @@ cout << "out directory: " << odir << "/" << lepName << "/" << endl;
         FitPlotter* FITPlotter_bOnly = new FitPlotter(inputfile1, inputfile2, "shapes_fit_b");
         FitPlotter* FITPlotter_sb = new FitPlotter(inputfile1, inputfile2, "shapes_fit_s");
 
-PlotType pType = kFull;
 bool prefit = true;
 bool bfit = false;
 bool sbfit = false;
@@ -48,8 +47,8 @@ bool sbfit = false;
  all += sig; 
 
   bool zeroL = false;
-  bool oneL = true;
-  bool twoL = false;
+  bool oneL = false;
+  bool twoL = true;
   bool threeL = false; 
   vector<const CategoryTree*> CTs;
   int depth0, d;
@@ -73,7 +72,7 @@ bool sbfit = false;
    d = 3;
    CT_3L.GetListDepth(CTs, depth0-2);
   }
-cout << depth0 << " " << CTs.size() << endl;
+cout << "depth: " << depth0-2 << " size:" << CTs.size() << endl;
  if(gSystem->AccessPathName((fname).c_str())){
                 gSystem->Exec(("mkdir "+odir).c_str());
                 gSystem->Exec(("mkdir "+odir+"/"+lepName).c_str());
@@ -90,17 +89,17 @@ while(dir.find(" ") != string::npos) dir.replace(dir.find(" "),1,"_");
     TCanvas* sb_fit_stack = nullptr;
     if(prefit){
     	cout << "##############plot prefit#############" << endl;
-    	prefit_stack = FITPlotter_pre->Plot1Dstack(Form("pre_stack_%d",i),all,*CTs[i],pType,ratio);
+    	prefit_stack = FITPlotter_pre->Plot1Dstack(Form("pre_stack_%d",i),all,*CTs[i],ratio);
     	if(prefit_stack == nullptr){cout << "prefit null" << endl; continue;}
     }
     if(bfit){
     	cout << "##############plot b fit#############" << endl;
-    	b_fit_stack = FITPlotter_bOnly->Plot1Dstack(Form("bFit_stack_%d",i),all,*CTs[i],pType,ratio);
+    	b_fit_stack = FITPlotter_bOnly->Plot1Dstack(Form("bFit_stack_%d",i),all,*CTs[i],ratio);
     	if(b_fit_stack == nullptr) continue;
     }
     if(sbfit){
 	cout << "##############plot s+b fit#############" << endl;
-    	sb_fit_stack = FITPlotter_sb->Plot1Dstack(Form("sbFit_stack_%d",i),all,*CTs[i],pType,ratio);
+    	sb_fit_stack = FITPlotter_sb->Plot1Dstack(Form("sbFit_stack_%d",i),all,*CTs[i],ratio);
     	if(sb_fit_stack == nullptr) continue;
     }
 cout << "writing plots to file" << endl;
