@@ -252,6 +252,11 @@ double AnalysisBase<Base>::GetMETTriggerSFWeight(double MET, double HT, int Nele
 }
 
 template <class Base>
+int AnalysisBase<Base>::GetMETTriggerSFCurve(double HT, int Nele, int Nmu){
+  return 0;
+}
+
+template <class Base>
 int AnalysisBase<Base>::GetNPV(){
   return 0;
 }
@@ -1229,6 +1234,18 @@ double AnalysisBase<SUSYNANOBase>::GetMETTriggerSFWeight(double MET, double HT, 
 				   (Nele > 0), (Nmu > 0),
 				   false, updown);
   }
+}
+
+template <>
+int AnalysisBase<SUSYNANOBase>::GetMETTriggerSFCurve(double HT, int Nele, int Nmu){
+
+  int year = 2016;
+  if(m_FileTag.find("17") != std::string::npos)
+    year = 2017;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+
+  return m_METTriggerTool.Get_Curve_Index(HT, year, (Nele > 0), (Nmu > 0), IsData());
 }
 
 template <>
