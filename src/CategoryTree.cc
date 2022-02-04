@@ -549,7 +549,7 @@ CategoryTree CategoryTreeTool::GetCategories_1L_ChargeSep() const {
 CategoryTree CategoryTreeTool::GetCategories_1L() const {
   
   CategoryTree CT_0b(VS().a("j0b").a("j0bS"), "0 b #in S", "0b", kJ_sub, true);
-  CategoryTree CT_1b(VS().a("jge1b").a("j1b"), "1 b #in S", "1b", kJ_sub, true);
+  CategoryTree CT_1b(VS().a("jge1bS").a("j1b"), "1 b #in S", "1b", kJ_sub, true);
   CategoryTree CT_0b_notGold(VS().a("j0bS"), "0 b #in S", "0b", kJ_sub, true);
   CategoryTree CT_1b_notGold(VS().a("j1bS"), "1 b #in S", "1b", kJ_sub, true);
   CategoryTree CT_ge1b(VS().a("ge1bS"), "#geq 1 b #in S", "1b", kJ_sub, true);
@@ -704,7 +704,7 @@ CategoryTree CategoryTreeTool::GetCategories_1L() const {
 
 
 CategoryTree CategoryTreeTool::GetCategories_2L() const {
-  CategoryTree CT_0b(VS().a("j0b"), "0b", "0b", kJ_sub, false);
+  CategoryTree CT_0b(VS().a("j0bS"), "0b", "0b", kJ_sub, false);
   CategoryTree CT_1b(VS().a("1bS").a("j1b"), "1b", "1b", kJ_sub, false);
  
   CategoryTree CT_0bISR(VS().a("0bISR"), "0 b #in ISR", "0b", kX_sub, true);
@@ -728,16 +728,16 @@ CategoryTree CategoryTreeTool::GetCategories_2L() const {
   CategoryTree CT_p0(VS().a("PTISR0"), "", "", kX_sup, false);
   CategoryTree CT_p1(VS().a("PTISR1"), "", "p+", kX_sup, false);
 
-  CategoryTree CT_g0(VS().a("gamT0"), "", "#gamma-", kX_sup, false);
-  CategoryTree CT_g1(VS().a("gamT1"), "", "#gamma+", kX_sup, false);
+//  CategoryTree CT_g0(VS().a("gamT0"), "", "#gamma-", kX_sup, false);
+//  CategoryTree CT_g1(VS().a("gamT1"), "", "#gamma+", kX_sup, false);
 
  // CategoryTree CT_k0(VS().a("PTISR0_gamT0").a("PTISR0_gamT1").a("PTISR1_gamT0"), "", "k-", kX_sup, false);
-  CategoryTree CT_k0(VS().a("PTISR0_gamT0").a("PTISR0_gamT1"), "", "k-", kX_sup, false);
-  CategoryTree CT_k0_Z(VS().a("PTISR0_gamT0").a("PTISR0_gamT1"), "", "k-", kX_sup, false);
+//  CategoryTree CT_k0(VS().a("PTISR0_gamT0").a("PTISR0_gamT1"), "", "k-", kX_sup, false);
+//  CategoryTree CT_k0_Z(VS().a("PTISR0_gamT0").a("PTISR0_gamT1"), "", "k-", kX_sup, false);
   //CategoryTree CT_k1(VS().a("PTISR1_gamT1"), "", "k+", kX_sup, false);
 
   //CategoryTree CT_k0_0(VS().a("PTISR0_gamT0").a("PTISR0_gamT1").a("PTISR1_gamT0"), "", "k-", kX_sup, false);
-  CategoryTree CT_k0_0(VS().a("PTISR0_gamT0"), "", "k-", kX_sup, false);
+//  CategoryTree CT_k0_0(VS().a("PTISR0_gamT0"), "", "k-", kX_sup, false);
   //CategoryTree CT_k1_0(VS().a("PTISR1_gamT1"), "", "k+", kX_sup, false);
 
   //CT_g0.AddSubCategory(CT_p0);
