@@ -20,6 +20,7 @@ public:
 
   void BuildMap(const string& csv);
 
+  int Get_Curve_Index(double HT, int year, bool el, bool mu, bool data);
   double Get_EFF(double MET = 0., double HT = 0., int year = 2017,
 		 bool el = false, bool mu = false,
 		 bool data = false, int updown = 0);

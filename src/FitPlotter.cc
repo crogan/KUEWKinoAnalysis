@@ -1957,6 +1957,8 @@ if(hptr == nullptr) continue;
   TCanvas* can = new TCanvas(Form("can_%s", can_name.c_str()),
 			     Form("can_%s", can_name.c_str()),
 			     1200, 700);
+
+  double yline = can->GetBottomMargin() - 0.02;
   double hlo = 0.105;
   double hhi = 0.2;
   double hbo = 0.19;

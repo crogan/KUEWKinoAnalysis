@@ -226,6 +226,7 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("MetTrigSFweight", &m_MetTrigSFweight);
   tree->Branch("MetTrigSFweight_up", &m_MetTrigSFweight_up);
   tree->Branch("MetTrigSFweight_down", &m_MetTrigSFweight_down);
+  tree->Branch("m_MetTrigSFCurveIndex", &m_MetTrigSFCurveIndex);
 
   tree->Branch("runnum", &m_runnum);
   tree->Branch("luminum", &m_runnum);
@@ -1133,6 +1134,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
     m_MetTrigSFweight = AnalysisBase<Base>::GetMETTriggerSFWeight(m_MET, m_HT_eta5, m_Nele, m_Nmu, 0);
     m_MetTrigSFweight_up = AnalysisBase<Base>::GetMETTriggerSFWeight(m_MET, m_HT_eta5, m_Nele, m_Nmu, 1);
     m_MetTrigSFweight_down = AnalysisBase<Base>::GetMETTriggerSFWeight(m_MET, m_HT_eta5, m_Nele, m_Nmu, -1);
+    m_MetTrigSFCurveIndex = AnalysisBase<Base>::GetMETTriggerSFCurve(m_HT_eta5, m_Nele, m_Nmu);
    
     m_NPU = AnalysisBase<Base>::GetNPUtrue();
 
@@ -1162,6 +1164,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
     m_MetTrigSFweight = 1.;
     m_MetTrigSFweight_up = 1.;
     m_MetTrigSFweight_down = 1.;
+    m_MetTrigSFCurveIndex = 0;
 
     m_NPU = 0.;
   }
