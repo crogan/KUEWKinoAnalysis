@@ -126,6 +126,7 @@ protected:
   virtual double GetMuRWeight(int updown = 0);
   virtual double GetBtagSFWeight(const ParticleList& jets, bool HForLF, int updown = 0, ParticleIDType tag = kMedium);
   virtual double GetMETTriggerSFWeight(double MET, double HT, int Nele, int Nmu, int updown = 0);
+  virtual int GetMETTriggerSFCurve(double HT, int Nele, int Nmu);
   virtual double GetXsec();
   virtual bool   IsGoodEvent();
 

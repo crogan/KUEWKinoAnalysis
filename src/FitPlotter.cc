@@ -1971,6 +1971,8 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
   TCanvas* can = new TCanvas(Form("can_%s", can_name.c_str()),
 			     Form("can_%s", can_name.c_str()),
 			     1200, 700);
+
+  double yline = can->GetBottomMargin() - 0.02;
   double hlo = 0.105;
   double hhi = 0.2;
   double hbo = 0.19;
@@ -2126,6 +2128,24 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
 
   for(int b = 0; b < Nvis*Nbin; b++){
     string label;
+    double xpos, ypos;
+    if(pType == kInv){
+      label = rlabels[b%Nbin];
+      xpos = hlo+(1.-hhi-hlo)/double(Nvis*Nbin)*(0.5+b);
+      ypos = yline+0.015;
+    }
+    else{
+      label = CatTrees[b%Nvis]->GetPlainLabel(Depth);
+      xpos = hlo+(1.-hhi-hlo)/double(Nvis*Nbin)*(0.5+b);
+      ypos = 1. - hto - 4*eps;
+      l.SetTextColor(7004 + 10*((b%Nvis)%8));
+    }
+
+    l.DrawLatex(xpos,ypos,label.c_str());
+  }
+  /*
+  for(int b = 0; b < Nvis*Nbin; b++){
+    string label;
     if(pType == kInv)
       label = rlabels[b%Nbin];
     else 
@@ -2139,7 +2159,7 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
     l.DrawLatex(hlo+(1.-hhi-hlo)/double(Nvis*Nbin)*(0.5+b), 1.-hto - 4*eps,
 		label.c_str());
   }
-  
+  */
   TLegend* leg = new TLegend(1.-hhi+0.007, 1.- (Nbkg+Nsig+1)*(1.-0.49)/9., 0.98, 1.-hto-0.005);
   leg->SetTextFont(42);
   leg->SetTextSize(0.035);
@@ -2203,8 +2223,8 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
   l.DrawLatex(hlo+eps*4, 1.-hto+0.02, m_CMSLabel.c_str());
   
   can->Update();
-  //can->SaveAs("plots/"+TString(can_name)+".pdf");
-  //can->SaveAs("plots/"+TString(can_name)+".gif");
+  can->SaveAs("plots/"+TString(can_name)+".pdf");
+  can->SaveAs("plots/"+TString(can_name)+".gif");
   return can;
 }
 
@@ -2367,7 +2387,7 @@ void FitPlotter::DrawRM(const FitBin& fitbin, TCanvas* can, TPad* pad, TPad* pad
     lo_ratio = hi_ratio;
     hi = 1./double(NB)*(1.-hhi-hlo) + lo;
     hi_ratio = 1./double(NB)*(1.-hhi_rat-hlo_rat) + lo_ratio;
-
+    /*
     line->SetLineStyle(1);
     line->DrawLineNDC(lo + eps, yline,
                       lo + eps, yline + 6*eps);
@@ -2376,7 +2396,7 @@ void FitPlotter::DrawRM(const FitBin& fitbin, TCanvas* can, TPad* pad, TPad* pad
 
     line->DrawLineNDC(lo + eps, yline,
                       hi - eps, yline);
-
+    */
     line->SetLineStyle(1);
     if(r < NR-1){
       line->DrawLineNDC(hi, hbo, hi, 1.-hto);
@@ -2386,14 +2406,13 @@ void FitPlotter::DrawRM(const FitBin& fitbin, TCanvas* can, TPad* pad, TPad* pad
 	pad->cd();
       }
     }
-
-    l.DrawLatex(hlo + (1.-hhi-hlo)*(0.5+r)/double(NB), yline-0.015, rlabels[r].c_str());
+    l.DrawLatex(hlo + (1.-hhi-hlo)*(0.5+r)/double(NB), yline, rlabels[r].c_str());
   }
   
   l.SetTextAngle(0);
   l.SetTextAlign(32);
   l.SetTextSize(0.035);
-  l.DrawLatex(hlo, yline-0.03, "#scale[1.15]{R_{ISR}} #in");
+  l.DrawLatex((hi-hlo)/2.+hlo+0.02, hbo-0.1, "#scale[1.15]{R_{ISR}}");
 }
 
 void FitPlotter::DrawRM(const FitBin& fitbin, TCanvas* can, TPad* pad, VS labels, TPad* pad_ratio){
@@ -2421,8 +2440,13 @@ void FitPlotter::DrawRM(const FitBin& fitbin, TCanvas* can, TPad* pad, VS labels
   int NB = fitbin.NRBins();
 
   VS rlabels;
-  for(int r = 0; r < NR; r++)
-    rlabels += fitbin[r].GetRBinLabel();
+  int maxSize = 0;
+  for(int r = 0; r < NR; r++){
+    string label = fitbin[r].GetRBinLabel();
+    rlabels += label;
+    if(maxSize < label.size())
+      maxSize = label.size();
+  }
   
   TLine* line = new TLine();
   line->SetLineWidth(2);
@@ -2448,17 +2472,8 @@ void FitPlotter::DrawRM(const FitBin& fitbin, TCanvas* can, TPad* pad, VS labels
     hi_ratio = 1./double(Nl)*(1.-hhi_rat-hlo_rat) + lo_ratio;
 
     line->SetLineStyle(1);
-    line->DrawLineNDC(lo + eps, yline,
-                      lo + eps, yline + 6*eps);
-    line->DrawLineNDC(hi - eps, yline,
-                      hi - eps, yline + 6*eps);
-
-    line->DrawLineNDC(lo + eps, yline,
-                      hi - eps, yline);
-
-    line->SetLineStyle(1);
     if(r < Nl-1){
-      line->DrawLineNDC(hi, hbo, hi, 1.-hto);
+      line->DrawLineNDC(hi, hbo-0.011*(maxSize+1), hi, 1.-hto);
       if(pad_ratio){
 	pad_ratio->cd();
 	line->DrawLineNDC(hi_ratio, 0., hi_ratio, 1.);
@@ -2466,13 +2481,13 @@ void FitPlotter::DrawRM(const FitBin& fitbin, TCanvas* can, TPad* pad, VS labels
       }
     }
 
-    l.DrawLatex(hlo + (1.-hhi-hlo)*(0.5+r)/double(Nl), yline-0.015, labels[r].c_str());
+    l.DrawLatex(hlo + (1.-hhi-hlo)*(0.5+r)/double(Nl), 1 - hto - 4*eps, labels[r].c_str());
   }
   
   l.SetTextAngle(0);
   l.SetTextAlign(32);
   l.SetTextSize(0.035);
-  //l.DrawLatex(hlo, yline-0.03, "#scale[1.15]{R_{ISR}} #in");
+  l.DrawLatex((hi-hlo)/2.+hlo+0.02, hbo-0.015*(maxSize+1), "#scale[1.15]{R_{ISR}}");
 }
 
 TCanvas* FitPlotter::Plot2D(const string& can_name,
@@ -5264,6 +5279,21 @@ TCanvas* FitPlotter::PlotRegionSignificance(const string& can_name,
   
   fhists[0]->LabelsOption("v","X");
 
+  int Depth = CT.GetDepth();
+  VS rlabels;
+  VS vlabels;
+
+  int maxSize = 0;
+  for(int r = 0; r < Nbin; r++){
+    string label = fitbin[r].GetRBinLabel();
+    rlabels += label;
+    if(maxSize < label.size())
+      maxSize = label.size();
+  }
+    
+  for(int v = 0; v < Nvis; v++)
+    vlabels += CatTrees[v]->GetPlainLabel(Depth);
+
   gROOT->SetBatch(kTRUE);
   gStyle->SetOptTitle(0);
   gStyle->SetOptStat(0);
@@ -5271,10 +5301,13 @@ TCanvas* FitPlotter::PlotRegionSignificance(const string& can_name,
   TCanvas* can = new TCanvas(Form("can_%s", can_name.c_str()),
                              Form("can_%s", can_name.c_str()),
                              1200, 700);
+
+  double yline = can->GetBottomMargin() - 0.02;
   double hlo = 0.1;
   double hhi = 0.25;
-  double hbo = 0.19;
   double hto = 0.07;
+  double hbo = 0.19;
+
   can->SetLeftMargin(hlo);
   can->SetRightMargin(hhi);
   can->SetBottomMargin(hbo);
@@ -5327,14 +5360,6 @@ TCanvas* FitPlotter::PlotRegionSignificance(const string& can_name,
   }
   leg->Draw("SAME");
 
-  int Depth = CT.GetDepth();
-  VS rlabels;
-  VS vlabels;
-  for(int r = 0; r < Nbin; r++)
-    rlabels += fitbin[r].GetRBinLabel();
-  for(int v = 0; v < Nvis; v++)
-    vlabels += CatTrees[v]->GetPlainLabel(Depth);
-
   if(pType == kFull)
     DrawMR(fitbin,can,can);
   if(pType == kRISR)
@@ -5355,14 +5380,20 @@ TCanvas* FitPlotter::PlotRegionSignificance(const string& can_name,
 
   for(int b = 0; b < Nvis*Nbin; b++){
     string label;
-    if(pType == kInv)
+    double xpos, ypos;
+    if(pType == kInv){
       label = rlabels[b%Nbin];
-    else
+      xpos = hlo+(1.-hhi-hlo)/double(Nvis*Nbin)*(0.5+b);
+      ypos = yline+0.015;
+    }
+    else{
       label = CatTrees[b%Nvis]->GetPlainLabel(Depth);
+      xpos = hlo+(1.-hhi-hlo)/double(Nvis*Nbin)*(0.5+b);
+      ypos = 1 - hto - 4*eps;
+      l.SetTextColor(7004 + 10*((b%Nvis)%8));
+    }
 	
-    l.SetTextColor(7004 + 10*((b%Nvis)%8));
-    l.DrawLatex(hlo+(1.-hhi-hlo)/double(Nvis*Nbin)*(0.5+b), 1 - hto - 4*eps,
-		label.c_str());
+    l.DrawLatex(xpos,ypos,label.c_str());
   }
 
   l.SetTextAngle(0);
@@ -5374,8 +5405,8 @@ TCanvas* FitPlotter::PlotRegionSignificance(const string& can_name,
   l.DrawLatex(hlo+eps*4, 1.-hto+0.02, m_CMSLabel.c_str());
 
   can->Update();
-  //can->SaveAs("plots/"+TString(can_name)+".pdf");
-  //can->SaveAs("plots/"+TString(can_name)+".gif");
+  can->SaveAs("plots/"+TString(can_name)+".pdf");
+  can->SaveAs("plots/"+TString(can_name)+".gif");
   return can;
 }
 
@@ -5683,14 +5714,22 @@ ProcessList FitPlotter::FetchProcs(VS proc_list){
   int Nproc = proc_list.size();
   ProcessList procs;
 
-  for(int p = 0; p < Nproc; p++){
+  for(int i = 0; i < Nproc; i++){
+    VS vproc;
+    if(m_Strings.count(proc_list[i]) != 0)
+      vproc = m_Strings[proc_list[i]];
+    else
+      vproc += proc_list[i];
 
-    int index = GetProcesses().Find(proc_list[p]);
-    if(index < 0)
-      continue;
+    for(int p = 0; p < int(vproc.size()); p++){
 
-    Process pp = GetProcesses()[index];
-    procs += pp;
+      int index = GetProcesses().Find(vproc[p]);
+      if(index < 0)
+	continue;
+
+      Process pp = GetProcesses()[index];
+      procs += pp;
+    }
   }
   return procs;
 }

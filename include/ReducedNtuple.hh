@@ -47,6 +47,7 @@ private:
   double m_MetTrigSFweight;
   double m_MetTrigSFweight_up;
   double m_MetTrigSFweight_down;
+  int    m_MetTrigSFCurveIndex;
 
   int m_runnum;
   int m_luminum;

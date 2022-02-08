@@ -98,7 +98,7 @@ string METTriggerTool::Get_Name(double HT, int year, bool el, bool mu, bool data
     else if(mu)
       name+="SingleMuon_"+std::to_string(year)+"_Muon"; 
     else {
-      name+="SingleElectron_"+std::to_string(year)+"_ZeroLepton"; //
+      name+="SingleElectron_"+std::to_string(year)+"_ZeroLepton";
     }
   } else {
     name+="Bkg_"+std::to_string(year)+"_";
@@ -111,6 +111,42 @@ string METTriggerTool::Get_Name(double HT, int year, bool el, bool mu, bool data
   }
 
   return name;
+}
+
+int METTriggerTool::Get_Curve_Index(double HT, int year, bool el, bool mu, bool data){
+  int index = 0;
+
+  if(HT <= 600.)
+    index += 1;
+  else if(HT > 600. && HT < 750.)
+    index += 2;
+  else if(HT > 750.)
+    index += 3;
+  
+  if(el)
+    index += 10;
+  else if(mu)
+    index += 20;
+  else
+    index += 30;
+  
+  if(data){
+    if(el)
+      index += 100;
+    else if(mu)
+      index += 200;
+    else
+      index += 300;
+  } else {
+    if(el)
+      index += 400;
+    else if(mu)
+      index += 500;
+    else
+      index += 600;
+  }
+
+  return index;
 }
 
 double METTriggerTool::Get_EFF(string name, double MET, int updown){
