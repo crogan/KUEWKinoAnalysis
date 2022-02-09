@@ -16,6 +16,9 @@ samples/NANO/Summer16_102X/GJets_DR-0p4_HT-200To400_TuneCUETP8M1_13TeV-madgraphM
 samples/NANO/Summer16_102X/GJets_DR-0p4_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Summer16_102X/GJets_DR-0p4_HT-40To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Summer16_102X/GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
+samples/NANO/Summer16_102X/GluGluHToWWTo2L2Nu_M125_13TeV_powheg_JHUgenv628_pythia8.txt
+samples/NANO/Summer16_102X/GluGluHToWWToLNuQQ_M125_13TeV_powheg_JHUGenV628_pythia8.txt
+samples/NANO/Summer16_102X/GluGluHToZZTo2L2Nu_M125_TuneCUETP8M1_13TeV_powheg2_JHUGenV735_pythia8.txt
 samples/NANO/Summer16_102X/GluGluHToZZTo4L_M125_13TeV_powheg2_JHUgenV6_pythia8.txt
 samples/NANO/Summer16_102X/QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Summer16_102X/QCD_HT100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
@@ -69,6 +72,7 @@ samples/NANO/Summer16_102X/WWG_TuneCUETP8M1_13TeV-amcatnlo-pythia8.txt
 samples/NANO/Summer16_102X/WWTo2L2Nu_13TeV-powheg.txt
 samples/NANO/Summer16_102X/WWTo4Q_13TeV-powheg.txt
 samples/NANO/Summer16_102X/WWToLNuQQ_13TeV-powheg.txt
+samples/NANO/Summer16_102X/WWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8.txt
 samples/NANO/Summer16_102X/WWZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8.txt
 samples/NANO/Summer16_102X/WZG_TuneCUETP8M1_13TeV-amcatnlo-pythia8.txt
 samples/NANO/Summer16_102X/WZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8.txt
@@ -88,6 +92,7 @@ samples/NANO/Summer16_102X/ZZTo2L2Nu_13TeV_powheg_pythia8_ext1.txt
 samples/NANO/Summer16_102X/ZZTo2L2Q_13TeV_powheg_pythia8.txt
 samples/NANO/Summer16_102X/ZZTo2Q2Nu_13TeV_amcatnloFXFX_madspin_pythia8.txt
 samples/NANO/Summer16_102X/ZZTo4Q_13TeV_amcatnloFXFX_madspin_pythia8.txt
+samples/NANO/Summer16_102X/ZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8.txt
 samples/NANO/Summer16_102X/tZq_ll_4f_13TeV-amcatnlo-pythia8.txt
 samples/NANO/Summer16_102X/ttHToNonbb_M125_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8.txt
 samples/NANO/Summer16_102X/ttHTobb_M125_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8.txt

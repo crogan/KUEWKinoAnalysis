@@ -317,6 +317,7 @@ std::map<std::string,double> XsecTool::InitMap_Xsec_BKG(){
   Label2Xsec["ZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8"] = 0.01398 ;
   Label2Xsec["ZZZ_TuneCP5_13TeV-amcatnlo-pythia8"] = 0.01398 ;
   Label2Xsec["WZZ_TuneCP5_13TeV-amcatnlo-pythia8"] = 0.05565;
+  Label2Xsec["WZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8"] = 0.05565;
 
   Label2Xsec["TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 831.76;
   Label2Xsec["TTJets_TuneCUETP8M2T4_13TeV-amcatnloFXFX-pythia8"] = 831.76;
@@ -395,6 +396,13 @@ std::map<std::string,double> XsecTool::InitMap_Xsec_BKG(){
   Label2Xsec["GJets_DR-0p4_HT-40To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 17410.0;
   Label2Xsec["GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 44.27;
   Label2Xsec["GluGluHToZZTo4L_M125_13TeV_powheg2_JHUgenV6_pythia8"] = 29.99;
+  Label2Xsec["GluGluHToWWTo2L2Nu_M125_13TeV_powheg_JHUgenv628_pythia8"] = 29.99;
+  Label2Xsec["GluGluHToWWToLNuQQ_M125_13TeV_powheg_JHUGenV628_pythia8"] = 29.99;
+  Label2Xsec["GluGluHToZZTo2L2Nu_M125_TuneCUETP8M1_13TeV_powheg2_JHUGenV735_pythia8"] = 29.99;
+  Label2Xsec["GluGluHToWWToLNuQQ_M125_NNPDF31_TuneCP5_PSweights_13TeV_powheg_JHUGen710_pythia8"] = 28.87;
+  Label2Xsec["GluGluHToWWTo2L2Nu_M125_13TeV_powheg2_JHUGenV714_pythia8"] = 28.87;
+  Label2Xsec["GluGluHToZZTo2L2Nu_M125_TuneCP5_13TeV_powheg2_JHUGenV735_pythia8"] = 28.87;
+  Label2Xsec["GluGluHToWWToLNuQQ_M125_13TeV_powheg2_JHUGenV714_pythia8"] = 28.87;
   
   Label2Xsec["tZq_ll_4f_13TeV-amcatnlo-pythia8"] = 0.0758;
   Label2Xsec["ttHToNonbb_M125_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8"] = 0.5638;
