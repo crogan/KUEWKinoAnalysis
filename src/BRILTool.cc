@@ -131,6 +131,10 @@ void BRILTool::ParseLine(std::string& line, int& run, int& fill, int& DeliveredL
   
 }
 
+void BRILTool::AddEventToFill(int fill){
+  m_mapFillInfo[fill].AddEvent();
+}
+
 int BRILTool::GetTotalRuns(int fill){
   return m_mapFillInfo[fill].GetTotalRuns();
 }
@@ -157,5 +161,17 @@ int BRILTool::GetFillFromRun(int run){
   }
 }
 
+int BRILTool::GetTotalFills(){
+  return m_mapFillInfo.size();
+}
+
+int BRILTool::GetEventsInFill(int fill){
+  return m_mapFillInfo[fill].GetNEvents();
+}
+
+bool BRILTool::IsFillInJSON(int fill){
+  if(m_mapFillInfo.count(fill)) return true;
+  else return false;
+}
 
 

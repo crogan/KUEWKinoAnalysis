@@ -23,11 +23,15 @@ public:
   virtual void SetLumiSections(vector<int> LumiSections);
   virtual void SetRecordedLumis(vector<double> RecordedLumis);
   virtual void SetPileups(vector<double> Pileups);
+
+  virtual void AddEvent();
   virtual int GetFillNumber();
   virtual vector<int> GetRuns();
   virtual vector<int> GetLumiSections();
   virtual vector<double> GetRecordedLumis();
   virtual vector<double> GetPileups();
+  virtual int GetNEvents();
+
   virtual int GetTotalRuns();
   virtual int GetTotalLumiSections();
   virtual double GetIntegratedLumi();
@@ -41,6 +45,8 @@ private:
   vector<int> m_LumiSections;
   vector<double> m_RecordedLumis;
   vector<double> m_Pileups;
+
+  int m_events = 0;
   
 };
 

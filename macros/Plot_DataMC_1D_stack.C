@@ -25,7 +25,6 @@
 #include "../include/Leptonic.hh"
 #include "../include/Hadronic.hh"
 #include "../include/FitReader.hh"
-#include "../include/BRILTool.hh"
 
 #include "RestFrames/RestFrames.hh"
 
@@ -41,19 +40,16 @@ double g_NX;
 
 using namespace RestFrames;
 
-void Plot_Yield_BRIL(){
+void Plot_DataMC_1D_stack(){
   RestFrames::SetStyle();
 
-  int year = 2017;
-  BRILTool bril;
-  bril.BuildMap("json/BRIL/brilcalc_"+std::to_string(year)+".txt");
+  
+   RestFrames::SetStyle();
 
   string NtuplePath = "/home/t3-ku/z374f439/storage/crogan/";
-  //string NtuplePath = "root://xrootd.unl.edu//store/user/zflowers/crogan/";
 
-
-  cout << "Initializing sample maps from path " << NtuplePath << " for year " << year << endl;
-  SampleTool ST(NtuplePath, year);
+  cout << "Initializing sample maps from path " << NtuplePath << " for year " << 2017 << endl;
+  SampleTool ST(NtuplePath, 2017);
   
   ScaleFactorTool SF;
   CategoryTool CT;
@@ -75,34 +71,23 @@ void Plot_Yield_BRIL(){
   //Categories = Categories.Filter(CT_2L);
 
   
-  //ProcessList backgrounds = ST.Get(kBkg);
+  ProcessList backgrounds = ST.Get(kBkg);
 
   string g_Label = "PreSelection";
 
 
-  g_Xname = "fill";
-  if(year == 2016){
-    g_Xmin = 4915;
-    g_Xmax = 5451; 
-  }
-  else if(year == 2017){
-    g_Xmin = 5830;
-    g_Xmax = 6380; 
-  }
-  else if(year == 2018){
-    g_Xmin = 6615;
-    g_Xmax = 7334; 
-  }
-  else cout << "check year! " << endl;
-
-  g_NX = g_Xmax - g_Xmin;
+  g_Xname = "pT_{ISR}";
+  g_Xmin = 250.;
+  g_Xmax = 1000.; 
+  g_NX = 100;
 
   double lumi = 41.529152060;
 
 
   
-  ProcessList samples = ST.Get(kData);
-  //samples += background;
+   ProcessList samples = backgrounds;
+  ProcessList data = ST.Get(kData);
+  samples += data;
 
    g_PlotTitle = samples[0].Name();
    
@@ -293,29 +278,12 @@ void Plot_Yield_BRIL(){
         if(!is_data)
           weight *= double(SKIP)*lumi;
 
-        int fill = bril.GetFillFromRun(base->runnum);
-        bril.AddEventToFill(fill);
-
 //if(e > 5) break;	
-	//hist[s]->Fill(fill, IntegratedLumi);
+	hist[s]->Fill(PTISR, weight);
       }
       
       delete base;
       delete chain;
-    }
-  }
-
-  //loop over fills and set bin content as events/lumi
-  for(int s = 0; s < Nsample; s++){
-    Process proc = samples[s];
-    int bin = 0;
-    for(int ifill = g_Xmin; ifill < g_Xmax; ifill++)
-    {
-     bin++;
-     if(!bril.IsFillInJSON(ifill)) continue;
-     int events = bril.GetEventsInFill(ifill);
-     double IntegratedLumi = bril.GetIntegratedLumi(ifill);
-     hist[s]->SetBinContent(bin,events/IntegratedLumi);
     }
   }
 
@@ -380,14 +348,58 @@ void Plot_Yield_BRIL(){
   hist[imax]->GetYaxis()->SetTitleOffset(1.12);
   hist[imax]->GetYaxis()->SetLabelFont(42);
   hist[imax]->GetYaxis()->SetLabelSize(0.05);
-  hist[imax]->GetYaxis()->SetTitle("N_{events}/Integrated Fill Lumi");
+  hist[imax]->GetYaxis()->SetTitle("N_{events}");
 
   for(int i = 0; i < Nsample; i++){
     Process proc = samples[i];
-    hist[i]->SetLineWidth(1.0);
-    hist[i]->SetFillStyle(1001);
-    hist[i]->Draw("SAME");
-  } 
+    if(proc.Type() == kBkg){
+      if(proc.Name() == "ttbar")
+      {
+        hist[i]->SetLineColor(7011);
+        hist[i]->SetFillColor(7011);
+      }
+      else if(proc.Name() == "ST")
+      {
+        hist[i]->SetLineColor(7010);
+        hist[i]->SetFillColor(7010);
+      }
+      else if(proc.Name() == "ZDY")
+      {
+        hist[i]->SetLineColor(7000);
+        hist[i]->SetFillColor(7000);
+      }
+      else if(proc.Name() == "DB")
+      {
+        hist[i]->SetLineColor(7051);
+        hist[i]->SetFillColor(7051);
+      }
+      else if(proc.Name() == "TB")
+      {
+        hist[i]->SetLineColor(7050);
+        hist[i]->SetFillColor(7050);
+      }
+      else if(proc.Name() == "Wjets")
+      {
+        hist[i]->SetLineColor(7001);
+        hist[i]->SetFillColor(7001);
+      }
+      else if(proc.Name() == "QCD")
+      {
+        hist[i]->SetLineColor(7023);
+        hist[i]->SetFillColor(7023);
+      }
+      hist[i]->SetLineWidth(1.0);
+      hist[i]->SetFillStyle(1001);
+      hist[i]->Draw("SAME HIST");
+    }
+  }
+
+  if(isBKG){
+    h_BKG->SetLineWidth(3.0);
+    h_BKG->SetLineColor(kRed);
+    h_BKG->SetMarkerSize(0);
+    h_BKG->Draw("SAME HIST");
+  }
 
   for(int i = 0; i < Nsample; i++){
     Process proc = samples[i];
@@ -405,9 +417,26 @@ void Plot_Yield_BRIL(){
   leg->SetFillColor(kWhite);
   leg->SetLineColor(kWhite);
   leg->SetShadowColor(kWhite);
+  if(isBKG) leg->AddEntry(h_BKG, "SM total");
   for(int i = 0; i < Nsample; i++){
     Process proc = samples[i];
+    if(proc.Type() == kData)
       leg->AddEntry(hist[i],"Data");
+    else
+      if(proc.Name() == "ttbar")
+        leg->AddEntry(hist[i],"t #bar{t} + X","F");
+      else if(proc.Name() == "ST")
+        leg->AddEntry(hist[i],"single top","F");
+      else if(proc.Name() == "DB")
+        leg->AddEntry(hist[i],"di-bosons","F");
+      else if(proc.Name() == "TB")
+        leg->AddEntry(hist[i],"tri-bosons","F");
+      else if(proc.Name() == "ZDY")
+        leg->AddEntry(hist[i],"Z / #gamma* + jets","F");
+      else if(proc.Name() == "Wjets")
+        leg->AddEntry(hist[i],"W + jets","F");
+      else if(proc.Name() == "QCD")
+        leg->AddEntry(hist[i],"QCD multi-jets","F");
   }
   leg->SetLineColor(kWhite);
   leg->SetFillColor(kWhite);
@@ -429,13 +458,7 @@ void Plot_Yield_BRIL(){
   l.SetTextFont(42);
   l.DrawLatex(0.7,0.04,g_Label.c_str());
 
-  string outfile_name = "Plot_Yield_BRIL_"+std::to_string(year);
-  can->SaveAs((outfile_name+".pdf").c_str());
-
-  TFile* output_file = new TFile((outfile_name+".root").c_str(),"RECREATE");
-  can->Write();
-  output_file->Close();
-  delete output_file;
+  can->SaveAs("Plot1D_DataMC_Stack.pdf");
 
   gApplication->Terminate(0);
 }

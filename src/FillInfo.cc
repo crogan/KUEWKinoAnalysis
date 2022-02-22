@@ -34,6 +34,10 @@ void FillInfo::SetPileups(vector<double> Pileups){
  m_Pileups = Pileups;
 }
 
+void FillInfo::AddEvent(){
+ m_events++;
+}
+
 int FillInfo::GetFillNumber(){
  return m_fill;
 }
@@ -52,6 +56,10 @@ vector<double> FillInfo::GetRecordedLumis(){
 
 vector<double> FillInfo::GetPileups(){
  return m_Pileups;
+}
+
+int FillInfo::GetNEvents(){
+ return m_events;
 }
 
 int FillInfo::GetTotalRuns(){

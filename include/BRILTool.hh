@@ -20,14 +20,21 @@ public:
 
   virtual void BuildMap(const string& csv);
 
+  virtual void AddEventToFill(int fill);
+
   virtual int GetTotalRuns(int fill);
   virtual int GetTotalLumiSections(int fill);
   virtual double GetIntegratedLumi(int fill);
   virtual double GetAveragePileup(int fill);
   virtual int GetFillFromRun(int run); 
+  virtual int GetTotalFills();
+  virtual int GetEventsInFill(int fill);
+
+  virtual bool IsFillInJSON(int fill);
 
 
 private:
+
   string m_filename;
   std::map<int,FillInfo> m_mapFillInfo;
   
