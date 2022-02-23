@@ -31,3 +31,4 @@ samples/NANO/Summer16_102X_SMS/SMS-TSlepSlep_TuneCUETP8M1_13TeV-madgraphMLM-pyth
 #samples/NANO/Summer16_102X_SMS/SMS-TStauStau_lefthanded_dM-10to50_genHT-80_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Summer16_102X_SMS/TChiWZ_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Summer16_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext.txt
+samples/NANO/Summer16_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
