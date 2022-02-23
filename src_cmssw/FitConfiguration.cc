@@ -80,12 +80,12 @@ else bkg_rare += "DB";
 	       ({"2016"}, 1.022)
 	       ({"2017"}, 1.022)
 	       ({"2018"}, 1.022));
-    if(p == "DB"){
-	cb.cp().bin(VS().a(".*2L.*").a(".*3L.*")).process(plist.GetProcesses())
-	  .AddSyst(cb,"scale_"+p,"rateParam",SystMap<>::init(1.0));
-      	cb.cp().bin(VS().a(".*0L.*").a(".*1L.*")).process(plist.GetProcesses())
-	  .AddSyst(cb,"scale_"+p,"lnN",SystMap<>::init(1.2));
-    }
+   // if(p == "DB"){
+   //     cb.cp().bin(VS().a(".*2L.*").a(".*3L.*")).process(plist.GetProcesses())
+   //       .AddSyst(cb,"scale_"+p,"rateParam",SystMap<>::init(1.0));
+   //   	cb.cp().bin(VS().a(".*0L.*").a(".*1L.*")).process(plist.GetProcesses())
+   //       .AddSyst(cb,"scale_"+p,"lnN",SystMap<>::init(1.2));
+   // }
     else 
     cb.cp().process(plist.GetProcesses())
        .AddSyst(cb, "scale_"+p, "lnN", SystMap<>::init(1.2));
