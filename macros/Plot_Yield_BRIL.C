@@ -45,6 +45,7 @@ void Plot_Yield_BRIL(){
   RestFrames::SetStyle();
 
   int year = 2017;
+  bool lumi_only = false;
   BRILTool bril;
   bril.BuildMap("json/BRIL/brilcalc_"+std::to_string(year)+".txt");
 
@@ -315,7 +316,15 @@ void Plot_Yield_BRIL(){
      if(!bril.IsFillInJSON(ifill)) continue;
      int events = bril.GetEventsInFill(ifill);
      double IntegratedLumi = bril.GetIntegratedLumi(ifill);
-     hist[s]->SetBinContent(bin,events/IntegratedLumi);
+     if(lumi_only)
+     {
+      hist[s]->SetBinContent(bin,IntegratedLumi);
+     }
+     else
+     {
+       hist[s]->SetBinContent(bin,events/IntegratedLumi);
+       hist[s]->SetBinError(bin,sqrt(events)/IntegratedLumi);
+     }
     }
   }
 
@@ -366,7 +375,7 @@ void Plot_Yield_BRIL(){
   can->SetLogy();
   can->Draw();
   can->cd();
-  hist[imax]->Draw("hist");
+  hist[imax]->Draw("");
   hist[imax]->GetXaxis()->CenterTitle();
   hist[imax]->GetXaxis()->SetTitleFont(42);
   hist[imax]->GetXaxis()->SetTitleSize(0.06);
@@ -380,7 +389,10 @@ void Plot_Yield_BRIL(){
   hist[imax]->GetYaxis()->SetTitleOffset(1.12);
   hist[imax]->GetYaxis()->SetLabelFont(42);
   hist[imax]->GetYaxis()->SetLabelSize(0.05);
-  hist[imax]->GetYaxis()->SetTitle("N_{events}/Integrated Fill Lumi");
+  if(lumi_only)
+    hist[imax]->GetYaxis()->SetTitle("Integrated Fill Lumi");
+  else
+    hist[imax]->GetYaxis()->SetTitle("N_{events}/Integrated Fill Lumi");
 
   for(int i = 0; i < Nsample; i++){
     Process proc = samples[i];
@@ -430,6 +442,8 @@ void Plot_Yield_BRIL(){
   l.DrawLatex(0.7,0.04,g_Label.c_str());
 
   string outfile_name = "Plot_Yield_BRIL_"+std::to_string(year);
+  if(lumi_only)
+    outfile_name += "_lumi_only";
   can->SaveAs((outfile_name+".pdf").c_str());
 
   TFile* output_file = new TFile((outfile_name+".root").c_str(),"RECREATE");
