@@ -2,7 +2,7 @@
 
 #include "../include/FitPlotter.hh"
 
-void PlotFits(const string& fold1 = "BF_allBkgs_data_TChiWZ_2017_allchan_fullFitConfig_maskSR_1_2_22", const string& fold2 = "datacards/all/TChiWZ/4000350", const string& shapesFile = "1_2_22wShapes.root"){
+void PlotFits(const string& fold1 = "BF_allBkgs_data_TChiWZ_2017_allchan_fullFitConfig_maskSR_1_2_22", const string& fold2 = "datacards/all/TChiWZ/4000350", const string& shapesFile = "1_2_22wShapes.root",  int lepNum = 2){
   
   string dateName = shapesFile.substr(0,8);
         string bfName = fold1.substr(2,fold1.size());
@@ -48,8 +48,13 @@ bool sbfit = false;
 
   bool zeroL = false;
   bool oneL = false;
-  bool twoL = true;
-  bool threeL = false; 
+  bool twoL = false;
+  bool threeL = false;
+  if(lepNum == 0) zeroL = true;
+  else if(lepNum == 1) oneL = true;
+  else if(lepNum == 2) twoL = true;
+  else if(lepNum == 3) threeL = true;
+  else{ cout << "Invalid lepton number specified. Must be 0, 1, 2, or 3." << endl; return; } 
   vector<const CategoryTree*> CTs;
   int depth0, d;
   if(zeroL){
