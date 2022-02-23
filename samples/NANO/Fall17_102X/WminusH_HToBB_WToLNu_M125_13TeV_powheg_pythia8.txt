@@ -1,0 +1,4 @@
+root://cmsxrootd.fnal.gov//store/mc/RunIIFall17NanoAODv7/WminusH_HToBB_WToLNu_M125_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/70000/715FA7A7-D5CC-B749-A489-0BBBA81A6B8C.root
+root://cmsxrootd.fnal.gov//store/mc/RunIIFall17NanoAODv7/WminusH_HToBB_WToLNu_M125_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/70000/AC066AE4-C6E2-C245-9F85-D017D83507EB.root
+root://cmsxrootd.fnal.gov//store/mc/RunIIFall17NanoAODv7/WminusH_HToBB_WToLNu_M125_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/70000/DD48A267-1D58-A34A-8990-5B605DD663FD.root
+root://cmsxrootd.fnal.gov//store/mc/RunIIFall17NanoAODv7/WminusH_HToBB_WToLNu_M125_13TeV_powheg_pythia8/NANOAODSIM/PU2017_12Apr2018_Nano02Apr2020_102X_mc2017_realistic_v8-v1/70000/5D4B3C5A-9077-8B4B-AEC6-0881487CCE11.root
