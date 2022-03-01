@@ -159,6 +159,7 @@ int BRILTool::GetFillFromRun(int run){
    if(temp_FillInfo.IsRunInFill(run))
      return fill;
   }
+  return 0;
 }
 
 int BRILTool::GetTotalFills(){
