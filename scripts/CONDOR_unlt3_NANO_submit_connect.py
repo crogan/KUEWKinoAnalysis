@@ -210,7 +210,8 @@ if __name__ == "__main__":
     FILTEREFF = "./config/FilterEff.root"
 
     # make json file
-    os.system("cat json/GoodRunList/* > "+config+"GRL_JSON.txt")
+    os.system("cat json/GoodRunList/*.txt > "+config+"GRL_JSON.txt")
+    os.system("echo -n $(tr -d '\n' < "+config+"GRL_JSON.txt) > "+config+"GRL_JSON.txt")
     JSON = "./config/GRL_JSON.txt"
 
     # copy PU root files
