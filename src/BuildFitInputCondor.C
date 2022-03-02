@@ -248,7 +248,7 @@ int main(int argc, char* argv[]) {
       for(int f = 0; f < Nfile; f++){
         string new_BFICmd = BuildFitInputCmd;
         //if(proc.Type() == kBkg)
-        if(proc.Type() != kSig)
+//        if(proc.Type() != kSig)
           new_BFICmd += ("-ifile "+std::to_string(f))+" ";
         WriteScript(SrcFold+Form("submit_%d",Njob)+".sh",
           	  LogFold+Form("job_%d",Njob)+".log",
