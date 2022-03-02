@@ -310,6 +310,14 @@ void SampleTool::InitProcMap(){
     list += m_Path + "Summer16_102X/ZZTo2Q2Nu_13TeV_amcatnloFXFX_madspin_pythia8_Summer16_102X.root";
     list += m_Path + "Summer16_102X/ZZTo4Q_13TeV_amcatnloFXFX_madspin_pythia8_Summer16_102X.root";
     list += m_Path + "Summer16_102X/GluGluHToZZTo4L_M125_13TeV_powheg2_JHUgenV6_pythia8_Summer16_102X.root";
+    list += m_Path + "Summer16_102X/GluGluHToTauTau_M125_13TeV_powheg_pythia8_Summer16_102X.root";
+    list += m_Path + "Summer16_102X/GluGluHToWWTo2L2Nu_M125_13TeV_powheg_JHUgenv628_pythia8_Summer16_102X.root";
+    list += m_Path + "Summer16_102X/GluGluHToWWToLNuQQ_M125_13TeV_powheg_JHUGenV628_pythia8_Summer16_102X.root ";
+    list += m_Path + "Summer16_102X/GluGluHToZZTo2L2Nu_M125_TuneCUETP8M1_13TeV_powheg2_JHUGenV735_pythia8_Summer16_102X.root";
+    list += m_Path + "Summer16_102X/WminusH_HToBB_WToLNu_M125_13TeV_powheg_pythia8_Summer16_102X.root";
+    list += m_Path + "Summer16_102X/WplusH_HToBB_WToLNu_M125_13TeV_powheg_pythia8_Summer16_102X.root";
+    list += m_Path + "Summer16_102X/ZH_HToBB_ZToLL_M125_13TeV_powheg_pythia8_Summer16_102X.root";
+    list += m_Path + "Summer16_102X/ZH_HToBB_ZToNuNu_M125_13TeV_powheg_pythia8_Summer16_102X.root";
     list += m_Path + "Summer16_102X/VHToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_Summer16_102X.root";
     m_Proc[m_iYear][DB] = pair<vector<string>,string>(list, "KUAnalysis");
 
@@ -374,6 +382,7 @@ void SampleTool::InitProcMap(){
     InitSMS("TSlepSlep", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 2.77, true);
     InitSMS("TSlepSlep", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Summer16_102X.root", 2.77, true);
     InitSMS("TSlepSlep", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_mSlep-500To1300_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 2.77, true);
+    InitSMS("TSlepSlep", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 2.77, true);
 
     //InitSMS("T2bb", m_Path+"Summer16_102X_SMS/SMS-T2bb_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 1., true);
 
@@ -477,7 +486,14 @@ m_Proc[m_iYear][data_obs] = pair<vector<string>,string>(list, "KUAnalysis");
     list += m_Path + "Fall17_102X/ZZTo2Q2Nu_TuneCP5_13TeV_amcatnloFXFX_madspin_pythia8_Fall17_102X.root";
     list += m_Path + "Fall17_102X/ZZTo4L_13TeV_powheg_pythia8_Fall17_102X.root";
     list += m_Path + "Fall17_102X/GluGluHToZZTo4L_M125_13TeV_powheg2_JHUGenV7011_pythia8_Fall17_102X.root";
-    list += m_Path + "Fall17_102X/VHToGG_M125_13TeV_amcatnloFXFX_madspin_pythia8_Fall17_102X.root";
+    list += m_Path + "Fall17_102X/GluGluHToTauTau_M125_13TeV_powheg_pythia8_Fall17_102X.root";
+    list += m_Path + "Fall17_102X/GluGluHToWWTo2L2Nu_M125_13TeV_powheg2_JHUGenV714_pythia8_Fall17_102X.root";
+    list += m_Path + "Fall17_102X/GluGluHToWWToLNuQQ_M125_NNPDF31_TuneCP5_PSweights_13TeV_powheg_JHUGen710_pythia8_Fall17_102X.root";
+    list += m_Path + "Fall17_102X/GluGluHToZZTo2L2Nu_M125_TuneCP5_13TeV_powheg2_JHUGenV735_pythia8_Fall17_102X.root";
+    list += m_Path + "Fall17_102X/WminusH_HToBB_WToLNu_M125_13TeV_powheg_pythia8_Fall17_102X.root";
+    list += m_Path + "Fall17_102X/WplusH_HToBB_WToLNu_M125_13TeV_powheg_pythia8_Fall17_102X.root";
+    list += m_Path + "Fall17_102X/ZH_HToBB_ZToLL_M125_13TeV_powheg_pythia8_Fall17_102X.root";
+    list += m_Path + "Fall17_102X/ZH_HToBB_ZToNuNu_M125_13TeV_powheg_pythia8_Fall17_102X.root";
     list += m_Path + "Fall17_102X/VHToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_Fall17_102X.root";
     m_Proc[m_iYear][DB] = pair<vector<string>,string>(list, "KUAnalysis");
 
@@ -543,6 +559,7 @@ m_Proc[m_iYear][data_obs] = pair<vector<string>,string>(list, "KUAnalysis");
     InitSMS("TSlepSlep", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 2.77, true);
     InitSMS("TSlepSlep", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Fall17_102X.root", 2.77, true);
     InitSMS("TSlepSlep", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_mSlep-500To1300_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 2.77, true);
+    InitSMS("TSlepSlep", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 2.77, true);
 
     InitSMS("T2bb", m_Path+"Fall17_102X_SMS/SMS-T2bb_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
 
@@ -680,7 +697,14 @@ m_Proc[m_iYear][data_obs] = pair<vector<string>,string>(list, "KUAnalysis");
     list += m_Path + "Autumn18_102X/ZZTo2Q2Nu_TuneCP5_13TeV_amcatnloFXFX_madspin_pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/ZZTo4L_TuneCP5_13TeV_powheg_pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/GluGluHToZZTo4L_M125_13TeV_powheg2_JHUGenV7011_pythia8_Autumn18_102X.root";
-    list += m_Path + "Autumn18_102X/VHToGG_M125_13TeV_amcatnloFXFX_madspin_pythia8_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/GluGluHToTauTau_M125_13TeV_powheg_pythia8_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/GluGluHToWWTo2L2Nu_M125_13TeV_powheg2_JHUGenV714_pythia8_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/GluGluHToWWToLNuQQ_M125_13TeV_powheg2_JHUGenV714_pythia8_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/GluGluHToZZTo2L2Nu_M125_TuneCP5_13TeV_powheg2_JHUGenV735_pythia8_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/WminusH_HToBB_WToLNu_M125_13TeV_powheg_pythia8_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/WplusH_HToBB_WToLNu_M125_13TeV_powheg_pythia8_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/ZH_HToBB_ZToLL_M125_13TeV_powheg_pythia8_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/ZH_HToBB_ZToNuNu_M125_13TeV_powheg_pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/VHToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_Autumn18_102X.root";
     m_Proc[m_iYear][DB] = pair<vector<string>,string>(list, "KUAnalysis");
 
@@ -740,6 +764,7 @@ m_Proc[m_iYear][data_obs] = pair<vector<string>,string>(list, "KUAnalysis");
     InitSMS("TSlepSlep", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 2.77, true);
     InitSMS("TSlepSlep", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Autumn18_102X.root", 2.77, true);
     InitSMS("TSlepSlep", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_mSlep-500To1300_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 2.77, true);
+    InitSMS("TSlepSlep", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 2.77, true);
 
     //InitSMS("T2bb", m_Path+"Autumn18_102X_SMS/SMS-T2bb_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 1., true);
 
