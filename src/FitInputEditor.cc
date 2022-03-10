@@ -13,9 +13,10 @@
 ////////// FitInputEditor class
 ///////////////////////////////////////////
 
-FitInputEditor::FitInputEditor(const string& inputfile)
+FitInputEditor::FitInputEditor(const string& inputfile, bool procSplit)
   : FitReader(inputfile) {
   m_OutFile = nullptr;
+  m_procSplit = procSplit;
 
   InitShapeGroups();
 }
@@ -60,11 +61,11 @@ void FitInputEditor::InitShapeGroups(){
     
     for(auto s : m_FakeSources){
       if(sfake.find(s) != string::npos){
-	sgroup = m_FakeGroups[sproc]+"_"+s;
+	if(m_procSplit) sgroup = m_FakeGroups[sproc]+"_"+s;
+	else sgroup = s;
 	break;
       }
     }
-    
     if(m_FakeGroupLists.count(sgroup) == 0)
       m_FakeGroupLists[sgroup] = ProcessList();
 
@@ -141,9 +142,10 @@ void FitInputEditor::WriteProc(){
       if(hist){
 	hist->Write(proc.Name().c_str(), TObject::kOverwrite);
 	delete hist;
-      } else
+      } else{
 	continue;
-      // write systematics histograms
+      }
+	// write systematics histograms
       if(m_ProcSys.count(proc) > 0){
 	int Nsys = m_ProcSys[proc].GetN();
 	for(int s = 0; s < Nsys; s++){
@@ -189,6 +191,7 @@ void FitInputEditor::WriteCat(){
 }
 
 void FitInputEditor::SmoothFakes(){
+//cout << "SmoothFakes" << endl;
   CategoryTreeTool CTTool;
   vector<const CategoryTree*> catTrees;
   vector<const CategoryTree*> CT_groups;
@@ -207,7 +210,6 @@ void FitInputEditor::SmoothFakes(){
 
   int NCT = CT_groups.size();
 
-  cout << m_Cat.GetN() << " Categories total" << endl;
   int icat = 0;
   
   // loop through category groups
@@ -221,7 +223,7 @@ void FitInputEditor::SmoothFakes(){
     
     if(Ncat == 0)
       continue;
-
+//cout << "group #" << g << ":" << CT_groups[g]->GetSpectroscopicLabel() << endl;
     // loop through process groups
     auto pr = m_FakeGroupLists.begin();
     while(pr != m_FakeGroupLists.end()){
@@ -247,6 +249,7 @@ void FitInputEditor::SmoothFakes(){
 	  // loop through individual categories and processes
 	  for(int c = 0; c < Ncat; c++){
 	    Category cat = cats[c];
+//cout << "Category: " << cats[c].GetLabel() << endl;
 	    for(int p = 0; p < Nproc; p++){
 	      Process proc = procs[p];
 
@@ -510,7 +513,8 @@ void FitInputEditor::checkErrors(TH1D* hist_new, TH1D* hist_old){
   }
 }
 
-void FitInputEditor::AddShapeSysFakes(){
+void FitInputEditor::AddShapeSysFakes(bool sJetSplit){
+//cout << "AddShapeSysFakes" << endl;
   CategoryTreeTool CTTool;
   vector<const CategoryTree*> CT_groups;
   
@@ -534,7 +538,7 @@ void FitInputEditor::AddShapeSysFakes(){
       int Ncat = cats.GetN();
       if(Ncat == 0)
 	continue;
-      
+      //cout << "group #" << g << ": " << CT_groups[g]->GetBareLabel() << endl; 
       // loop through process groups
       auto pr = m_FakeGroupLists.begin();
       while(pr != m_FakeGroupLists.end()){
@@ -543,9 +547,10 @@ void FitInputEditor::AddShapeSysFakes(){
 	bool b_addSys_RISR  = false;
 	bool b_addSys_Mperp = false;
 	string sys_name = pr->first+"_"+sgroup;
+	if(sJetSplit) sys_name += "_"+CT_groups[g]->GetSpecLabel();
 	Systematic sys_RISR(sys_name+"_RISR");
 	Systematic sys_Mperp(sys_name+"_Mperp");
-
+	//cout << "systematic: " << sys_name << endl;
 	// loop through individual categories and processes
 	for(int c = 0; c < Ncat; c++){
 	  Category cat = cats[c];
@@ -602,6 +607,7 @@ void FitInputEditor::AddShapeSysFakes(){
 	    } 
 	  }
 	}
+
 	if(b_addSys_RISR){
 	  m_Sys += sys_RISR;
 	}
@@ -611,6 +617,7 @@ void FitInputEditor::AddShapeSysFakes(){
 
 	pr++;
       }   
+   //cout << "\n" << endl;
     }
   }
   
@@ -650,10 +657,8 @@ void FitInputEditor::AddShapeSysQCD(){
   //    CT_groups.push_back(catTrees[j]);
    //string sgroup = Form("QCD_%dL",i+1);
    int NCT = CT_groups.size();
- cout << "CT_groups size: " << NCT << endl; 
   // loop through category groups
   for(int g = 0; g < NCT; g++){
-cout << "group #" << g << ": " << CT_groups[g]->GetSpecLabel() << endl;   
   bool b_addSys_RISR  = false;
   bool b_addSys_Mperp = false;
   string sys_name = "QCD_"+CT_groups[g]->GetSpecLabel();
@@ -874,6 +879,7 @@ void FitInputEditor::AddEmptyData(){
 		 	break;
 		}
 	}
+     if(hist == nullptr) return;
 	hist->SetBinContent(0,0.);
 	hist->SetBinContent(hist->GetNbinsX()+1,0.);
 	for(int i = 0; i < hist->GetNbinsX(); i++){ hist->SetBinContent(i+1,1e-8); hist->SetBinError(i+1,0.); }
@@ -881,7 +887,6 @@ void FitInputEditor::AddEmptyData(){
 		m_ProcHist[data_obs] = map<Category,TH1D*>();
 	if(m_ProcHist[data_obs].count(cat) == 0 || !m_ProcHist[data_obs][cat]) 
 		m_ProcHist[data_obs][cat] = hist;
-
 	added = true;
     }
 

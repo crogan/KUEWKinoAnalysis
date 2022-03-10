@@ -13,7 +13,7 @@ using std::pair;
 
 class FitInputEditor : public FitReader {
 public:
-  FitInputEditor(const string& inputfile);
+  FitInputEditor(const string& inputfile, bool procSplit = false);
 
   virtual ~FitInputEditor();
 
@@ -22,7 +22,7 @@ public:
   void SmoothFakes();
   void SmoothQCD();
 
-  void AddShapeSysFakes();
+  void AddShapeSysFakes(bool sJetSplit = false);
   void AddShapeSysQCD();
 
   void AddFakeData();
@@ -30,6 +30,8 @@ public:
   
 private:
   TFile* m_OutFile;
+
+  bool m_procSplit;
 
   void WriteProc();
   void WriteCat();
