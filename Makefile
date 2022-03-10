@@ -4,19 +4,14 @@ ROOTGLIBS   = $(shell root-config --glibs)
 RFCFLAGS    = $(shell restframes-config --cxxflags)
 RFGLIBS     = $(shell restframes-config --libs)
 
-LHAPDFCFLAGS = $(shell /cvmfs/cms.cern.ch/slc7_amd64_gcc700/external/lhapdf/6.2.1-pafccj3/bin/lhapdf-config --cflags --ldflags)
-LHAPDFGLIBS = $(shell /cvmfs/cms.cern.ch/slc7_amd64_gcc700/external/lhapdf/6.2.1-pafccj3/bin/lhapdf-config --libs)
-
 CXX         = g++
 
 #CXXFLAGS       = -fPIC -Wall -O3 -g
 CXXFLAGS       = -fPIC $(filter-out -stdlib=libc++ -pthread , $(ROOTCFLAGS))
 CXXFLAGS      += $(filter-out -stdlib=libc++ -pthread , $(RFCFLAGS))
-CXXFLAGS      += $(filter-out -stdlib=libc++ -pthread , $(LHAPDFCFLAGS))
 
 GLIBS          = $(filter-out -stdlib=libc++ -pthread , $(ROOTGLIBS))
 GLIBS         += $(filter-out -stdlib=libc++ -pthread , $(RFGLIBS))
-GLIBS         += $(filter-out -stdlib=libc++ -pthread , $(LHAPDFGLIBS))
 GLIBS         += -lRooFit -lRooFitCore
 
 INCLUDEDIR       = ./include/
@@ -28,6 +23,11 @@ OUTOBJ_CMSSW	 = ./obj_cmssw/
 INCLUDEDIR_CMSSW  = ./include_cmssw/
 SRCDIR_CMSSW      = ./src_cmssw/
 
+#LHAPDF stuff is cmssw specific
+cmssw: LHAPDFCFLAGS = $(shell /cvmfs/cms.cern.ch/slc7_amd64_gcc700/external/lhapdf/6.2.1-pafccj3/bin/lhapdf-config --cflags --ldflags)
+cmssw: LHAPDFGLIBS = $(shell /cvmfs/cms.cern.ch/slc7_amd64_gcc700/external/lhapdf/6.2.1-pafccj3/bin/lhapdf-config --libs)
+cmssw: CXXFLAGS      += $(filter-out -stdlib=libc++ -pthread , $(LHAPDFCFLAGS))
+cmssw: GLIBS         += $(filter-out -stdlib=libc++ -pthread , $(LHAPDFGLIBS))
 cmssw: CXX += -I$(INCLUDEDIR_CMSSW)
 
 CC_FILES := $(wildcard src/*.cc)
@@ -45,7 +45,7 @@ all : GLIBS += -L/cvmfs/cms.cern.ch/slc7_amd64_gcc700/external/lwtnn/2.4-gnimlf3
 all : CXX   += -I/cvmfs/cms.cern.ch/slc7_amd64_gcc700/external/lwtnn/2.4-gnimlf3/include/
 
 local : GLIBS += -L/Users/christopherrogan/GitHub/lwtnn/lib -llwtnn
-local : CXX   += -I/Users/christopherrogan/GitHub/lwtnn/include
+local : CXX   += -I/Users/christopherrogan/GitHub/lwtnn/include 
 
 cmssw : GLIBS += -L../../lib/slc7_amd64_gcc700 -lCombineHarvesterCombinePdfs -lHiggsAnalysisCombinedLimit -lCombineHarvesterCombineTools
 cmssw : GLIBS += -L/cvmfs/cms.cern.ch/slc7_amd64_gcc700/external/lwtnn/2.4-gnimlf3/lib -llwtnn
@@ -54,6 +54,7 @@ cmssw : GLIBS += -L/cvmfs/cms.cern.ch/slc7_amd64_gcc700/cms/cmssw/CMSSW_10_6_5/e
 cmssw : CXX   += -I../. -I/cvmfs/cms.cern.ch/slc7_amd64_gcc700/external/boost/1.67.0/include/
 cmssw : CXX   += -I/cvmfs/cms.cern.ch/slc7_amd64_gcc700/external/lwtnn/2.4-gnimlf3/include/
 cmssw : CXX   += -I../../src/HiggsAnalysis/CombinedLimit/interface/
+cmssw : CXX   += -D_CMSSW_
 
 locallib : GLIBS += -L/Users/christopherrogan/GitHub/lwtnn/lib -llwtnn
 locallib : CXX   += -I/Users/christopherrogan/GitHub/lwtnn/include

@@ -1,5 +1,6 @@
 #include "../include/SampleTool.hh"
 #include <TSystem.h>
+#include <TKey.h>
 
 ///////////////////////////////////////////
 ////////// SampleTool class ///////////////

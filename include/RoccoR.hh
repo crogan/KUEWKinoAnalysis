@@ -3,6 +3,7 @@
 
 //#include <boost/math/special_functions/erf.hpp>
 #include "TMath.h"
+#include <vector>
 
 struct CrystalBall{
     static const double pi;

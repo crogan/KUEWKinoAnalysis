@@ -10,7 +10,7 @@ void SVDiscrTool::CreateNN(const std::string& json_file_name){
     std::ifstream jsonfile(json_file_name);
 
     auto config = lwt::parse_json(jsonfile);
-    neural_network_ = std::make_unique<const lwt::LightweightNeuralNetwork>(config.inputs, config.layers, config.outputs);
+    neural_network_ = our_make_unique<const lwt::LightweightNeuralNetwork>(config.inputs, config.layers, config.outputs);
 
 }
 
