@@ -38,7 +38,7 @@ double LHETool::GetWeight(unsigned int nLHEPdfWeight, float* LHEPdfWeight, int G
   if(nPDFWeights == 0){
 #ifdef _CMSSW_
     GetFromLHAPDF(nPDFWeights,PDFWeights,Generator_id1,Generator_id2,Generator_x1,Generator_x2,Generator_scalePDF,year);
-#el
+#else
     return 1;
 #endif
   } else {
