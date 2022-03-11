@@ -239,7 +239,8 @@ void SampleTool::InitProcMap(){
   m_Lumi[0] = 36.333380074;    // 2016 lumi
   m_Lumi[1] = 41.479680529;    // 2017 lumi
   //m_Lumi[2] = 59.832475339;     // 2018 lumi
-  m_Lumi[2] = 21.077794578;    // 2018 preHEM lumi
+  //m_Lumi[2] = 21.077794578;    // 2018 preHEM lumi
+  m_Lumi[2] = 21.077794578 + 0.95*38.662770624;    // 2018 preHEM + post w/ rought veto eff 
 
   // 2018 lumi ---> 21.077794578, 38.662770624 (pre/post HEM)
 

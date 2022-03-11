@@ -314,7 +314,8 @@ int main(int argc, char* argv[]) {
 	  continue;
 
         if(base->runnum > 319077 && is_data && year == 2018)
-          continue;
+	  if(base->HEM_Veto)
+	    continue;
 	
 	if(do_FilterDilepton)
 	  if(SF.DileptonEvent(base))

@@ -39,6 +39,7 @@ public :
    Long64_t        eventnum;
    Int_t           NPV;
    Bool_t          EventFilter;
+   Bool_t          HEM_Veto;
    Bool_t          METtrigger;
    Bool_t          METHTtrigger;
    Bool_t          METORtrigger;
@@ -248,6 +249,7 @@ public :
    TBranch        *b_eventnum;   //!
    TBranch        *b_NPV;   //!
    TBranch        *b_EventFilter;   //!
+   TBranch        *b_HEM_Veto;   //!
    TBranch        *b_METtrigger;   //!
    TBranch        *b_METHTtrigger;   //!
    TBranch        *b_METORtrigger;   //!
@@ -600,6 +602,7 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchAddress("eventnum", &eventnum, &b_eventnum);
    fChain->SetBranchAddress("NPV", &NPV, &b_NPV);
    fChain->SetBranchAddress("EventFilter", &EventFilter, &b_EventFilter);
+   fChain->SetBranchAddress("HEM_Veto", &HEM_Veto, &b_HEM_Veto);
    fChain->SetBranchAddress("METtrigger", &METtrigger, &b_METtrigger);
    fChain->SetBranchAddress("METHTtrigger", &METHTtrigger, &b_METHTtrigger);
    fChain->SetBranchAddress("METORtrigger", &METORtrigger, &b_METORtrigger);
@@ -848,6 +851,7 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchStatus("MX3a_BoostT",1);
    fChain->SetBranchStatus("MX3b_BoostT",1);
    fChain->SetBranchStatus("PX3_BoostT",1);
+   fChain->SetBranchStatus("HEM_Veto", 1);
  
 }
 

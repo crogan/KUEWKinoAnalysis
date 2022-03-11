@@ -39,7 +39,7 @@ TCanvas* PlotGraphs(vector<TGraphErrors*>& grs, vector<string>& labels, string t
 void Plot_Yield_BRIL(){
   RestFrames::SetStyle();
 
-  int year = 2017;
+  int year = 2018;
   bool lumi_only = false;
   BRILTool bril;
   bril.BuildMap("json/BRIL/brilcalc_"+std::to_string(year)+".txt");
@@ -117,7 +117,7 @@ void Plot_Yield_BRIL(){
       
       int Nentry = base->fChain->GetEntries();
       
-      int SKIP = 10000;
+      int SKIP = 1000;
       
       // event loop
       for(int e = 0; e < Nentry; e += SKIP){
@@ -128,6 +128,10 @@ void Plot_Yield_BRIL(){
 	
 	if(do_FilterDilepton)
 	  if(SF.DileptonEvent(base))
+	    continue;
+
+	if(base->runnum > 319077 && is_data && year == 2018)
+	  if(base->HEM_Veto)
 	    continue;
 	
 	// apply trigger to data and FullSim events
