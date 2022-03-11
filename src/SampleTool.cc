@@ -38,7 +38,7 @@ ProcessList SampleTool::Get(const string& name) const {
 
   for(auto p = m_Proc[m_iYear].begin(); p != m_Proc[m_iYear].end(); p++){
     if(p->first.Name().find(name) != std::string::npos)
-	list += p->first;
+      list += p->first;
   }
 
   return list;
@@ -141,9 +141,9 @@ TChain* SampleTool::Tree(const Process& proc, int itree){
   if(m_Proc[m_iYear].count(proc) == 0)
     return nullptr;
 
-   if(m_SProcInit[m_iYear].count(proc) > 0)
-     if(!m_SProcInit[m_iYear][proc])
-       InitSignalProc(proc);
+  if(m_SProcInit[m_iYear].count(proc) > 0)
+    if(!m_SProcInit[m_iYear][proc])
+      InitSignalProc(proc);
 
   TChain* chain = new TChain(m_Proc[m_iYear][proc].second.c_str());
   int Nfile = int(m_Proc[m_iYear][proc].first.size());
@@ -214,7 +214,7 @@ void SampleTool::InitSMS(const string& prefix, const string& filename, double we
     if(m_Proc[m_iYear].count(proc) == 0){
       files += filename;
       m_Proc[m_iYear][proc] = pair<vector<string>,string>(files, name);
-	m_SProcInit[m_iYear][proc] = false;
+      m_SProcInit[m_iYear][proc] = false;
       m_SProcFS[m_iYear][proc] = std::map<string,bool>();
       m_SProcDL[m_iYear][proc] = std::map<string,bool>();
       m_SProcW[m_iYear][proc] = std::map<string,double>();
@@ -250,7 +250,7 @@ void SampleTool::InitProcMap(){
   ////////// 2016 samples ///////////////////
   ///////////////////////////////////////////
   m_iYear = 0;
-{
+  {
     // ------------------ //
     // --- Background --- //
     // ------------------ //
@@ -405,19 +405,19 @@ void SampleTool::InitProcMap(){
     Process data_obs("data_obs", kData);
     list.clear();
       
-      list += m_Path + "Summer16_102X_Data/MET_Run2016B-02Apr2020_ver2-v1_2016_Summer16_102X.root";
-      list += m_Path + "Summer16_102X_Data/MET_Run2016C-02Apr2020-v1_2016_Summer16_102X.root";
-      list += m_Path + "Summer16_102X_Data/MET_Run2016D-02Apr2020-v1_2016_Summer16_102X.root";
-      list += m_Path + "Summer16_102X_Data/MET_Run2016E-02Apr2020-v1_2016_Summer16_102X.root";
-      list += m_Path + "Summer16_102X_Data/MET_Run2016F-02Apr2020-v1_2016_Summer16_102X.root";
-      list += m_Path + "Summer16_102X_Data/MET_Run2016G-02Apr2020-v1_2016_Summer16_102X.root";
-      list += m_Path + "Summer16_102X_Data/MET_Run2016H-02Apr2020-v2_2016_Summer16_102X.root";
+    list += m_Path + "Summer16_102X_Data/MET_Run2016B-02Apr2020_ver2-v1_2016_Summer16_102X.root";
+    list += m_Path + "Summer16_102X_Data/MET_Run2016C-02Apr2020-v1_2016_Summer16_102X.root";
+    list += m_Path + "Summer16_102X_Data/MET_Run2016D-02Apr2020-v1_2016_Summer16_102X.root";
+    list += m_Path + "Summer16_102X_Data/MET_Run2016E-02Apr2020-v1_2016_Summer16_102X.root";
+    list += m_Path + "Summer16_102X_Data/MET_Run2016F-02Apr2020-v1_2016_Summer16_102X.root";
+    list += m_Path + "Summer16_102X_Data/MET_Run2016G-02Apr2020-v1_2016_Summer16_102X.root";
+    list += m_Path + "Summer16_102X_Data/MET_Run2016H-02Apr2020-v2_2016_Summer16_102X.root";
 
 
 
-m_Proc[m_iYear][data_obs] = pair<vector<string>,string>(list, "KUAnalysis");
+    m_Proc[m_iYear][data_obs] = pair<vector<string>,string>(list, "KUAnalysis");
 
-}
+  }
   ///////////////////////////////////////////
   ////////// 2017 samples ///////////////////
   ///////////////////////////////////////////
@@ -586,46 +586,46 @@ m_Proc[m_iYear][data_obs] = pair<vector<string>,string>(list, "KUAnalysis");
     //list += m_Path + "Fall17_102X_Data/MET_Run2017D-Nano25Oct2019-v1_2017_Fall17_102X.root";
     //list += m_Path + "Fall17_102X_Data/MET_Run2017E-Nano25Oct2019-v1_2017_Fall17_102X.root";
     //list += m_Path + "Fall17_102X_Data/MET_Run2017F-Nano25Oct2019-v1_2017_Fall17_102X.root";
-     // list += m_Path + "DoubleEG_Run2017B-02Apr2020-v1_2017_Fall17_102X.root";    
-     // list += m_Path + "DoubleEG_Run2017C-02Apr2020-v1_2017_Fall17_102X.root"; 
-     // list += m_Path + "DoubleEG_Run2017D-02Apr2020-v1_2017_Fall17_102X.root";
-     // list += m_Path + "DoubleEG_Run2017D-02Apr2020-v1_2017_Fall17_102X.root"; 
-     // list += m_Path + "DoubleEG_Run2017D-02Apr2020-v1_2017_Fall17_102X.root"; 
-     // list += m_Path + "DoubleEG_Run2017D-02Apr2020-v1_2017_Fall17_102X.root";
-     // list += m_Path + "DoubleEG_Run2017E-02Apr2020-v1_2017_Fall17_102X.root";
-     // list += m_Path + "DoubleEG_Run2017F-02Apr2020-v1_2017_Fall17_102X.root";  
+    // list += m_Path + "DoubleEG_Run2017B-02Apr2020-v1_2017_Fall17_102X.root";    
+    // list += m_Path + "DoubleEG_Run2017C-02Apr2020-v1_2017_Fall17_102X.root"; 
+    // list += m_Path + "DoubleEG_Run2017D-02Apr2020-v1_2017_Fall17_102X.root";
+    // list += m_Path + "DoubleEG_Run2017D-02Apr2020-v1_2017_Fall17_102X.root"; 
+    // list += m_Path + "DoubleEG_Run2017D-02Apr2020-v1_2017_Fall17_102X.root"; 
+    // list += m_Path + "DoubleEG_Run2017D-02Apr2020-v1_2017_Fall17_102X.root";
+    // list += m_Path + "DoubleEG_Run2017E-02Apr2020-v1_2017_Fall17_102X.root";
+    // list += m_Path + "DoubleEG_Run2017F-02Apr2020-v1_2017_Fall17_102X.root";  
       
-      list += m_Path + "Fall17_102X_Data/MET_Run2017B-02Apr2020-v1_2017_Fall17_102X.root";
-      list += m_Path + "Fall17_102X_Data/MET_Run2017C-02Apr2020-v1_2017_Fall17_102X.root";
-      list += m_Path + "Fall17_102X_Data/MET_Run2017D-02Apr2020-v1_2017_Fall17_102X.root";
-      list += m_Path + "Fall17_102X_Data/MET_Run2017E-02Apr2020-v1_2017_Fall17_102X.root";
-      list += m_Path + "Fall17_102X_Data/MET_Run2017F-02Apr2020-v1_2017_Fall17_102X.root";
+    list += m_Path + "Fall17_102X_Data/MET_Run2017B-02Apr2020-v1_2017_Fall17_102X.root";
+    list += m_Path + "Fall17_102X_Data/MET_Run2017C-02Apr2020-v1_2017_Fall17_102X.root";
+    list += m_Path + "Fall17_102X_Data/MET_Run2017D-02Apr2020-v1_2017_Fall17_102X.root";
+    list += m_Path + "Fall17_102X_Data/MET_Run2017E-02Apr2020-v1_2017_Fall17_102X.root";
+    list += m_Path + "Fall17_102X_Data/MET_Run2017F-02Apr2020-v1_2017_Fall17_102X.root";
 
-     // list += m_Path + "DoubleMuon_Run2017B-02Apr2020-v1_2017_Fall17_102X.root"; 
-     // list += m_Path + "DoubleMuon_Run2017D-02Apr2020-v1_2017_Fall17_102X.root";  
-     // list += m_Path + "DoubleMuon_Run2017E-02Apr2020-v1_2017_Fall17_102X.root"; 
-     // list += m_Path + "DoubleMuon_Run2017F-02Apr2020-v1_2017_Fall17_102X.root";  
+    // list += m_Path + "DoubleMuon_Run2017B-02Apr2020-v1_2017_Fall17_102X.root"; 
+    // list += m_Path + "DoubleMuon_Run2017D-02Apr2020-v1_2017_Fall17_102X.root";  
+    // list += m_Path + "DoubleMuon_Run2017E-02Apr2020-v1_2017_Fall17_102X.root"; 
+    // list += m_Path + "DoubleMuon_Run2017F-02Apr2020-v1_2017_Fall17_102X.root";  
 
-     // list += m_Path + "SingleElectron_Run2017B-02Apr2020-v1_2017_Fall17_102X.root";
-     // list += m_Path + "SingleElectron_Run2017C-02Apr2020-v1_2017_Fall17_102X.root";
-     // list += m_Path + "SingleElectron_Run2017D-02Apr2020-v1_2017_Fall17_102X.root";
-     // list += m_Path + "SingleElectron_Run2017E-02Apr2020-v1_2017_Fall17_102X.root";
-     // list += m_Path + "SingleElectron_Run2017F-02Apr2020-v1_2017_Fall17_102X.root";
+    // list += m_Path + "SingleElectron_Run2017B-02Apr2020-v1_2017_Fall17_102X.root";
+    // list += m_Path + "SingleElectron_Run2017C-02Apr2020-v1_2017_Fall17_102X.root";
+    // list += m_Path + "SingleElectron_Run2017D-02Apr2020-v1_2017_Fall17_102X.root";
+    // list += m_Path + "SingleElectron_Run2017E-02Apr2020-v1_2017_Fall17_102X.root";
+    // list += m_Path + "SingleElectron_Run2017F-02Apr2020-v1_2017_Fall17_102X.root";
 
-     // list += m_Path + "JetHT_Run2017B-02Apr2020-v1_2017_Fall17_102X.root";
-     // list += m_Path + "JetHT_Run2017C-02Apr2020-v1_2017_Fall17_102X.root";       
-     // list += m_Path + "JetHT_Run2017D-02Apr2020-v1_2017_Fall17_102X.root";       
-     // list += m_Path + "JetHT_Run2017E-02Apr2020-v1_2017_Fall17_102X.root";
-     // list += m_Path + "JetHT_Run2017F-02Apr2020-v1_2017_Fall17_102X.root";  
+    // list += m_Path + "JetHT_Run2017B-02Apr2020-v1_2017_Fall17_102X.root";
+    // list += m_Path + "JetHT_Run2017C-02Apr2020-v1_2017_Fall17_102X.root";       
+    // list += m_Path + "JetHT_Run2017D-02Apr2020-v1_2017_Fall17_102X.root";       
+    // list += m_Path + "JetHT_Run2017E-02Apr2020-v1_2017_Fall17_102X.root";
+    // list += m_Path + "JetHT_Run2017F-02Apr2020-v1_2017_Fall17_102X.root";  
 
-     // list += m_Path + "SingleMuon_Run2017B-02Apr2020-v1_2017_Fall17_102X.root";
-     // list += m_Path + "SingleMuon_Run2017C-02Apr2020-v1_2017_Fall17_102X.root";
-     // list += m_Path + "SingleMuon_Run2017D-02Apr2020-v1_2017_Fall17_102X.root";
-     // list += m_Path + "SingleMuon_Run2017E-02Apr2020-v1_2017_Fall17_102X.root";
-     // list += m_Path + "SingleMuon_Run2017F-02Apr2020-v1_2017_Fall17_102X.root";
+    // list += m_Path + "SingleMuon_Run2017B-02Apr2020-v1_2017_Fall17_102X.root";
+    // list += m_Path + "SingleMuon_Run2017C-02Apr2020-v1_2017_Fall17_102X.root";
+    // list += m_Path + "SingleMuon_Run2017D-02Apr2020-v1_2017_Fall17_102X.root";
+    // list += m_Path + "SingleMuon_Run2017E-02Apr2020-v1_2017_Fall17_102X.root";
+    // list += m_Path + "SingleMuon_Run2017F-02Apr2020-v1_2017_Fall17_102X.root";
 
 
-m_Proc[m_iYear][data_obs] = pair<vector<string>,string>(list, "KUAnalysis");
+    m_Proc[m_iYear][data_obs] = pair<vector<string>,string>(list, "KUAnalysis");
 
   }
   
@@ -633,7 +633,7 @@ m_Proc[m_iYear][data_obs] = pair<vector<string>,string>(list, "KUAnalysis");
   ////////// 2018 samples ///////////////////
   ///////////////////////////////////////////
   m_iYear = 2;
- { 
+  { 
     // ------------------ //
     // --- Background --- //
     // ------------------ //
@@ -787,15 +787,15 @@ m_Proc[m_iYear][data_obs] = pair<vector<string>,string>(list, "KUAnalysis");
     Process data_obs("data_obs", kData);
     list.clear();
       
-      list += m_Path + "Autumn18_102X_Data/MET_Run2018A-02Apr2020-v1_2018_Autumn18_102X.root";
-      list += m_Path + "Autumn18_102X_Data/MET_Run2018B-02Apr2020-v1_2018_Autumn18_102X.root";
-      list += m_Path + "Autumn18_102X_Data/MET_Run2018C-02Apr2020-v1_2018_Autumn18_102X.root";
-      list += m_Path + "Autumn18_102X_Data/MET_Run2018D-02Apr2020-v2_2018_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X_Data/MET_Run2018A-02Apr2020-v1_2018_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X_Data/MET_Run2018B-02Apr2020-v1_2018_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X_Data/MET_Run2018C-02Apr2020-v1_2018_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X_Data/MET_Run2018D-02Apr2020-v2_2018_Autumn18_102X.root";
 
 
-m_Proc[m_iYear][data_obs] = pair<vector<string>,string>(list, "KUAnalysis");
+    m_Proc[m_iYear][data_obs] = pair<vector<string>,string>(list, "KUAnalysis");
 
-}
+  }
 }  
 
 bool SampleTool::m_ProcInit = false;

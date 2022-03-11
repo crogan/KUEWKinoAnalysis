@@ -21,7 +21,7 @@
 #include <TMultiGraph.h>
 #include "../include/ReducedBase_slim.hh"
 #include "../include/SampleTool.hh"
-//#include "../include/CategoryTool.hh"
+#include "../include/CategoryTool.hh"
 #include "../include/ScaleFactorTool.hh"
 //#include "../include/Leptonic.hh"
 //#include "../include/Hadronic.hh"
@@ -39,7 +39,7 @@ TCanvas* PlotGraphs(vector<TGraphErrors*>& grs, vector<string>& labels, string t
 void Plot_Yield_BRIL(){
   RestFrames::SetStyle();
 
-  int year = 2018;
+  int year = 2017;
   bool lumi_only = false;
   BRILTool bril;
   bril.BuildMap("json/BRIL/brilcalc_"+std::to_string(year)+".txt");
@@ -171,13 +171,14 @@ void Plot_Yield_BRIL(){
 	if(Nlep + NjetS + NSV < 1)
 	  continue;
 
+	/////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////
 	
-	// LepList list_a;
-	// LepList list_b;
+	LepList list_a;
+	LepList list_b;
 	  
-	// int index;
+	int index;
 
-	/*
 	for(int i = 0; i < base->Nlep_a; i++){
 	  index = (*base->index_lep_a)[i];
 	    
@@ -258,8 +259,9 @@ void Plot_Yield_BRIL(){
 	if(eindex < 0){
 	  continue;
 	}	
-	*/
-	/////////////////
+       
+	/////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////
 	
         int fill = bril.GetFillFromRun(base->runnum);
 
