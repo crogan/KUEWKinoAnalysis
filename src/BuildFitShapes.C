@@ -22,6 +22,9 @@ int main(int argc, char* argv[]) {
 
   bool addFakeData = false;
 
+  bool sJetSysSplit = false;
+  bool procSysSplit = false;
+
   bool bprint  = false;
   bool verbose = false;
     
@@ -77,6 +80,12 @@ int main(int argc, char* argv[]) {
     if(strncmp(argv[i],"-fakedata", 9) == 0){
       addFakeData = true;
     }
+    if(strncmp(argv[i],"-sJetSplit", 9) == 0){
+      sJetSysSplit = true;
+    }
+    if(strncmp(argv[i],"-procSplit", 9) == 0){
+      procSysSplit = true;
+    }
   }
     
  // if(!smoothFakes &&
@@ -101,6 +110,8 @@ int main(int argc, char* argv[]) {
     cout << "   -shapeFakes         add fake lep systematic shape variations" << endl;
     cout << "   -shapeQCD           add QCD systematic shape variations" << endl;
     cout << "   -fakedata           add data_obs as sum of MC backgrounds" << endl;
+    cout << "   -sJetSplit          split fake lepton shape systematics by S-jet multiplicities" << endl;
+    cout << "   -procSplit          split fake lepton shape systematics by process groups" << endl;
  
     return 0;
   }
@@ -109,7 +120,7 @@ int main(int argc, char* argv[]) {
   ////////////////////////////////////////////////////////////////////                                  
   ////////////////////////////////////////////////////////////////////
 
-  FitInputEditor FIT(InputFile);
+  FitInputEditor FIT(InputFile, procSysSplit);
   if(verbose){
     cout << "Input file " << InputFile << " contains:" << endl;
     FIT.PrintCategories();
@@ -123,7 +134,7 @@ int main(int argc, char* argv[]) {
     FIT.SmoothQCD();
 
   if(shapeFakes)
-    FIT.AddShapeSysFakes();
+    FIT.AddShapeSysFakes(sJetSysSplit);
 
   if(shapeQCD)
     FIT.AddShapeSysQCD();
