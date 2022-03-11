@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "Process.hh"
+#include "Category.hh"
 
 using std::map;
 using std::string;

@@ -14,6 +14,10 @@ GLIBS          = $(filter-out -stdlib=libc++ -pthread , $(ROOTGLIBS))
 GLIBS         += $(filter-out -stdlib=libc++ -pthread , $(RFGLIBS))
 GLIBS         += -lRooFit -lRooFitCore
 
+SGLIBS          = $(filter-out -stdlib=libc++ -pthread , $(ROOTGLIBS))
+SGLIBS         += $(filter-out -stdlib=libc++ -pthread , $(RFGLIBS))
+SGLIBS         += -lRooFit -lRooFitCore
+
 INCLUDEDIR       = ./include/
 SRCDIR           = ./src/
 CXX	            += -I$(INCLUDEDIR) -I.
@@ -22,6 +26,9 @@ OUTOBJ_CMSSW	 = ./obj_cmssw/
 
 INCLUDEDIR_CMSSW  = ./include_cmssw/
 SRCDIR_CMSSW      = ./src_cmssw/
+
+SCXX   = $(CXX)
+
 
 #LHAPDF stuff is cmssw specific
 cmssw: LHAPDFCFLAGS = $(shell /cvmfs/cms.cern.ch/slc7_amd64_gcc700/external/lhapdf/6.2.1-pafccj3/bin/lhapdf-config --cflags --ldflags)
@@ -39,7 +46,7 @@ cmssw: HH_FILES += $(wildcard include_cmssw/*.hh)
 OBJ_FILES := $(addprefix $(OUTOBJ),$(notdir $(CC_FILES:.cc=.o)))
 OBJ_FILES_CMSSW := $(addprefix $(OUTOBJ_CMSSW),$(notdir $(CC_FILES_CMSSW:.cc=.o)))
 
-SOBJ_FILES = $(filter-out AnalysisBase.o SVDiscrTool.o ReducedNtuple.o NtupleBase.o, $(OBJ_FILES))
+SOBJ_FILES = $(filter-out ./obj/AnalysisBase.o ./obj/SVDiscrTool.o ./obj/ReducedNtuple.o ./obj/NtupleBase.o, $(OBJ_FILES))
 
 all : GLIBS += -L/cvmfs/cms.cern.ch/slc7_amd64_gcc700/external/lwtnn/2.4-gnimlf3/lib -llwtnn
 all : CXX   += -I/cvmfs/cms.cern.ch/slc7_amd64_gcc700/external/lwtnn/2.4-gnimlf3/include/
@@ -113,8 +120,10 @@ BuildFitCondor.x:  $(SRCDIR)BuildFitCondor.C $(OBJ_FILES) $(HH_FILES)
 
 lib/libKUEWKino.so: $(SOBJ_FILES)
 	mkdir -p lib
-	$(CXX) -shared -o lib/libKUEWKino.so $(OUTOBJ)/*.o $(GLIBS)
+	echo $(SOBJ_FILES)
+	$(SCXX) -shared -o lib/libKUEWKino.so $(SOBJ_FILES) $(SGLIBS)
 	touch lib/libKUEWKino.so
+	echo $(SGLIBS)
 
 $(OUTOBJ)%.o: src/%.cc include/%.hh
 	$(CXX) $(CXXFLAGS) -c $< -o $@

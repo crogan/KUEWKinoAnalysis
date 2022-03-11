@@ -17,14 +17,15 @@
 #include <TStyle.h>
 #include <TApplication.h>
 #include <TLorentzVector.h>
-
+#include <TGraphErrors.h>
+#include <TMultiGraph.h>
 #include "../include/ReducedBase_slim.hh"
 #include "../include/SampleTool.hh"
-#include "../include/CategoryTool.hh"
+//#include "../include/CategoryTool.hh"
 #include "../include/ScaleFactorTool.hh"
-#include "../include/Leptonic.hh"
-#include "../include/Hadronic.hh"
-#include "../include/FitReader.hh"
+//#include "../include/Leptonic.hh"
+//#include "../include/Hadronic.hh"
+//#include "../include/FitReader.hh"
 #include "../include/BRILTool.hh"
 
 #include "RestFrames/RestFrames.hh"
@@ -33,13 +34,7 @@ using namespace std;
 
 using namespace RestFrames;
 
-string g_PlotTitle;
-string g_Xname;
-double g_Xmin;
-double g_Xmax;
-double g_NX;
-
-using namespace RestFrames;
+TCanvas* PlotGraphs(vector<TGraphErrors*>& grs, vector<string>& labels, string title, string label, string scan);
 
 void Plot_Yield_BRIL(){
   RestFrames::SetStyle();
@@ -49,73 +44,48 @@ void Plot_Yield_BRIL(){
   BRILTool bril;
   bril.BuildMap("json/BRIL/brilcalc_"+std::to_string(year)+".txt");
 
-  string NtuplePath = "/home/t3-ku/z374f439/storage/crogan/";
+  //string NtuplePath = "/home/t3-ku/z374f439/storage/crogan/";
   //string NtuplePath = "root://xrootd.unl.edu//store/user/zflowers/crogan/";
+  string NtuplePath = "/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_21_09_20/";
 
 
   cout << "Initializing sample maps from path " << NtuplePath << " for year " << year << endl;
   SampleTool ST(NtuplePath, year);
   
   ScaleFactorTool SF;
-  CategoryTool CT;
-  CategoryList Categories = CT.GetCategories();
 
-  CategoryTreeTool CTTool;
-  CategoryTree CT_0L = CTTool.GetCategories_0L();
-  CategoryTree CT_1L = CTTool.GetCategories_1L();
-  CategoryTree CT_2L = CTTool.GetCategories_2L();
-  CategoryTree CT_3L = CTTool.GetCategories_3L();
-
-  //int depth0 = CT_1L.GetDepth();
-  //vector<const CategoryTree*> CTs;
-  //CT_1L.GetListDepth(CTs, depth0-2);
-
-  //int iCAT = 2;
-  //const CategoryTree* myCT = CTs[iCAT];
-  //const CategoryTree* myCT = &CT_0L;
-  //Categories = Categories.Filter(CT_2L);
-
+  std::map<int,double> Ncount;
+  std::map<int,double> Ncount_0L[4];
+  std::map<int,double> Ncount_1L[4];
+  std::map<int,double> Ncount_2L[3];
+  std::map<int,double> Ncount_3L;
   
-  //ProcessList backgrounds = ST.Get(kBkg);
+  // g_Xname = "fill";
+  // if(year == 2016){
+  //   g_Xmin = 4915;
+  //   g_Xmax = 5451; 
+  // }
+  // else if(year == 2017){
+  //   g_Xmin = 5830;
+  //   g_Xmax = 6380; 
+  // }
+  // else if(year == 2018){
+  //   g_Xmin = 6615;
+  //   g_Xmax = 7334; 
+  // }
+  // else cout << "check year! " << endl;
 
-  string g_Label = "PreSelection";
-
-
-  g_Xname = "fill";
-  if(year == 2016){
-    g_Xmin = 4915;
-    g_Xmax = 5451; 
-  }
-  else if(year == 2017){
-    g_Xmin = 5830;
-    g_Xmax = 6380; 
-  }
-  else if(year == 2018){
-    g_Xmin = 6615;
-    g_Xmax = 7334; 
-  }
-  else cout << "check year! " << endl;
-
-  g_NX = g_Xmax - g_Xmin;
-
-  double lumi = 41.529152060;
-
-
+  // g_NX = g_Xmax - g_Xmin;
   
   ProcessList samples = ST.Get(kData);
-  //samples += background;
-
-   g_PlotTitle = samples[0].Name();
-   
+    
   int Nsample = samples.GetN();
-  TH1D* hist[Nsample];
   
   for(int s = 0; s < Nsample; s++){
     Process proc = samples[s];
     
     string title = proc.Name();
-    hist[s] = new TH1D(title.c_str(),title.c_str(),g_NX,g_Xmin,g_Xmax);
-
+   
     bool is_data   = (proc.Type() == kData);
     bool is_bkg    = (proc.Type() == kBkg);
     bool is_signal = (proc.Type() == kSig);
@@ -147,7 +117,7 @@ void Plot_Yield_BRIL(){
       
       int Nentry = base->fChain->GetEntries();
       
-      int SKIP = 1;
+      int SKIP = 10000;
       
       // event loop
       for(int e = 0; e < Nentry; e += SKIP){
@@ -197,16 +167,13 @@ void Plot_Yield_BRIL(){
 	if(Nlep + NjetS + NSV < 1)
 	  continue;
 
-	// 2L/3L stuff
-	//g_Label = "2L J X";
-	//if(Nlep != 2)
-	//  continue;
 	
-	LepList list_a;
-	LepList list_b;
+	// LepList list_a;
+	// LepList list_b;
 	  
-	int index;
-	  
+	// int index;
+
+	/*
 	for(int i = 0; i < base->Nlep_a; i++){
 	  index = (*base->index_lep_a)[i];
 	    
@@ -223,9 +190,9 @@ void Plot_Yield_BRIL(){
 	    id = kGold;
 	  LepFlavor flavor;
 	  if(abs(PDGID) == 11)
-	    flavor = kElectron;
+	    flavor = (LepFlavor)kElectron;
 	  else
-	    flavor = kMuon;
+	    flavor = (LepFlavor)kMuon;
 	  LepCharge charge = (base->Charge_lep->at(index) > 0 ? kPos : kNeg);
 	  //LepSource source = LepSource(base->SourceID_lep->at(index));
 	  LepSource source = LepSource(base->ID_lep->at(index*2+1));
@@ -248,9 +215,9 @@ void Plot_Yield_BRIL(){
 	    id = kGold;
 	  LepFlavor flavor;
 	  if(abs(PDGID) == 11)
-	    flavor = kElectron;
+	    flavor = (LepFlavor)kElectron;
 	  else
-	    flavor = kMuon;
+	    flavor = (LepFlavor)kMuon;
 	  LepCharge charge = (base->Charge_lep->at(index) > 0 ? kPos : kNeg);
 	  //LepSource source = LepSource(base->SourceID_lep->at(index));
 	  LepSource source = LepSource(base->ID_lep->at(index*2+1));
@@ -287,18 +254,76 @@ void Plot_Yield_BRIL(){
 	if(eindex < 0){
 	  continue;
 	}	
-
+	*/
 	/////////////////
 	
-	double weight = (base->weight != 0.) ? base->weight : 1.;
-        if(!is_data)
-          weight *= double(SKIP)*lumi;
-
         int fill = bril.GetFillFromRun(base->runnum);
-        bril.AddEventToFill(fill);
 
-//if(e > 5) break;	
-	//hist[s]->Fill(fill, IntegratedLumi);
+	if(Ncount.count(fill) < 1)
+	  Ncount[fill] = 0.;
+	Ncount[fill]++;
+	
+	if(Nlep == 0){
+	  if(Ncount_0L[0].count(fill) < 1)
+	    Ncount_0L[0][fill] = 0.;
+	  Ncount_0L[0][fill]++;
+
+	  if(NjetS >= 4){
+	    if(Ncount_0L[3].count(fill) < 1)
+	      Ncount_0L[3][fill] = 0.;
+	    Ncount_0L[3][fill]++;
+	  } else if(NjetS >= 2){
+	    if(Ncount_0L[2].count(fill) < 1)
+	      Ncount_0L[2][fill] = 0.;
+	    Ncount_0L[2][fill]++;
+	  } else {
+	     if(Ncount_0L[1].count(fill) < 1)
+	       Ncount_0L[1][fill] = 0.;
+	     Ncount_0L[1][fill]++;
+	  }
+	}
+
+	if(Nlep == 1){
+	  if(Ncount_1L[0].count(fill) < 1)
+	    Ncount_1L[0][fill] = 0.;
+	  Ncount_1L[0][fill]++;
+
+	  if(NjetS >= 3){
+	    if(Ncount_1L[3].count(fill) < 1)
+	      Ncount_1L[3][fill] = 0.;
+	    Ncount_1L[3][fill]++;
+	  } else if(NjetS >= 1){
+	    if(Ncount_1L[2].count(fill) < 1)
+	      Ncount_1L[2][fill] = 0.;
+	    Ncount_1L[2][fill]++;
+	  } else {
+	    if(Ncount_1L[1].count(fill) < 1)
+	       Ncount_1L[1][fill] = 0.;
+	     Ncount_1L[1][fill]++;
+	  }
+	}
+
+	if(Nlep == 2){
+	  if(Ncount_2L[0].count(fill) < 1)
+	    Ncount_2L[0][fill] = 0.;
+	  Ncount_2L[0][fill]++;
+
+	  if(NjetS >= 1){
+	    if(Ncount_2L[2].count(fill) < 1)
+	      Ncount_2L[2][fill] = 0.;
+	    Ncount_2L[2][fill]++;
+	  } else {
+	    if(Ncount_2L[1].count(fill) < 1)
+	      Ncount_2L[1][fill] = 0.;
+	    Ncount_2L[1][fill]++;
+	  }
+	}
+
+	if(Nlep == 3){
+	  if(Ncount_3L.count(fill) < 1)
+	    Ncount_3L[fill] = 0.;
+	  Ncount_3L[fill]++;
+	}
       }
       
       delete base;
@@ -306,150 +331,268 @@ void Plot_Yield_BRIL(){
     }
   }
 
-  //loop over fills and set bin content as events/lumi
-  for(int s = 0; s < Nsample; s++){
-    Process proc = samples[s];
-    int bin = 0;
-    for(int ifill = g_Xmin; ifill < g_Xmax; ifill++)
-    {
-     bin++;
-     if(!bril.IsFillInJSON(ifill)) continue;
-     int events = bril.GetEventsInFill(ifill);
-     double IntegratedLumi = bril.GetIntegratedLumi(ifill);
-     if(lumi_only)
-     {
-      hist[s]->SetBinContent(bin,IntegratedLumi);
-     }
-     else
-     {
-       hist[s]->SetBinContent(bin,events/IntegratedLumi);
-       hist[s]->SetBinError(bin,sqrt(events)/IntegratedLumi);
-     }
+  vector<double> X;
+  vector<double> Y;
+  vector<double> Y_err;
+  vector<double> X_Nlep[4];
+  vector<double> Y_Nlep[4];
+  vector<double> Y_err_Nlep[4];
+  vector<double> X_0L[3];
+  vector<double> Y_0L[3];
+  vector<double> Y_err_0L[3];
+  vector<double> X_1L[3];
+  vector<double> Y_1L[3];
+  vector<double> Y_err_1L[3];
+  vector<double> X_2L[2];
+  vector<double> Y_2L[2];
+  vector<double> Y_err_2L[2];
+
+  for(auto c : Ncount){
+    int fill = c.first;
+    int N = c.second;
+    double L = bril.GetIntegratedLumi(fill);
+    if(L > 0){
+      X.push_back(fill);
+      Y.push_back(N / L);
+      Y_err.push_back(sqrt(N) / L);
     }
   }
 
-  TH1D* h_BKG = nullptr;
-  bool isBKG = false;
+  for(auto c : Ncount_0L[0]){
+    int fill = c.first;
+    int N = c.second;
+    double L = bril.GetIntegratedLumi(fill);
+    if(L > 0){
+      X_Nlep[0].push_back(fill);
+      Y_Nlep[0].push_back(N / L);
+      Y_err_Nlep[0].push_back(sqrt(N) / L);
+    }
+  }
 
-  for(int s = 0; s < Nsample; s++){
-    Process proc = samples[s];
-    
-    bool is_data   = (proc.Type() == kData);
-    bool is_bkg    = (proc.Type() == kBkg);
-    bool is_signal = (proc.Type() == kSig);
-    if(is_data) continue;
-    
-    if(is_bkg){
-     if(!isBKG){
-       h_BKG = (TH1D*)hist[s]->Clone("TOT_BKG");
-       isBKG = true;
-     } else {
-       for(int k = 0; k < s; k++){
-         hist[k]->Add(hist[s]);
-       }
-       h_BKG->Add(hist[s]);
+  for(auto c : Ncount_1L[0]){
+    int fill = c.first;
+    int N = c.second;
+    double L = bril.GetIntegratedLumi(fill);
+    if(L > 0){
+      X_Nlep[1].push_back(fill);
+      Y_Nlep[1].push_back(N / L);
+      Y_err_Nlep[1].push_back(sqrt(N) / L);
+    }
+  }
+
+  for(auto c : Ncount_2L[0]){
+    int fill = c.first;
+    int N = c.second;
+    double L = bril.GetIntegratedLumi(fill);
+    if(L > 0){
+      X_Nlep[2].push_back(fill);
+      Y_Nlep[2].push_back(N / L);
+      Y_err_Nlep[2].push_back(sqrt(N) / L);
+    }
+  }
+
+  for(auto c : Ncount_3L){
+    int fill = c.first;
+    int N = c.second;
+    double L = bril.GetIntegratedLumi(fill);
+    if(L > 0){
+      X_Nlep[3].push_back(fill);
+      Y_Nlep[3].push_back(N / L);
+      Y_err_Nlep[3].push_back(sqrt(N) / L);
+    }
+  }
+
+  for(int i = 0; i < 3; i++){
+    for(auto c : Ncount_0L[i+1]){
+      int fill = c.first;
+      int N = c.second;
+      double L = bril.GetIntegratedLumi(fill);
+      if(L > 0){
+	X_0L[i].push_back(fill);
+	Y_0L[i].push_back(N / L);
+	Y_err_0L[i].push_back(sqrt(N) / L);
       }
     }
   }
 
-  double fmax = -1.;
-  int imax = -1;
-  for(int i = 0; i < Nsample; i++){
-    if(hist[i]->GetMaximum() > fmax){
-      fmax = hist[i]->GetMaximum();
-      imax = i;
+  for(int i = 0; i < 3; i++){
+    for(auto c : Ncount_1L[i+1]){
+      int fill = c.first;
+      int N = c.second;
+      double L = bril.GetIntegratedLumi(fill);
+      if(L > 0){
+	X_1L[i].push_back(fill);
+	Y_1L[i].push_back(N / L);
+	Y_err_1L[i].push_back(sqrt(N) / L);
+      }
     }
   }
 
+  for(int i = 0; i < 2; i++){
+    for(auto c : Ncount_2L[i+1]){
+      int fill = c.first;
+      int N = c.second;
+      double L = bril.GetIntegratedLumi(fill);
+      if(L > 0){
+	X_2L[i].push_back(fill);
+	Y_2L[i].push_back(N / L);
+	Y_err_2L[i].push_back(sqrt(N) / L);
+      }
+    }
+  }
+
+  string title = std::to_string(year)+" Data";
   
-  gStyle->SetOptTitle(0);
-  gStyle->SetOptStat(0);
-  gStyle->SetOptFit(11111111);
-  TCanvas* can = (TCanvas*) new TCanvas("can","can",700.,600);
+  vector<TGraphErrors*> gr_incl;
+  gr_incl.push_back(new TGraphErrors(X.size(), &X[0], &Y[0], 0, &Y_err[0]));
+  vector<string> labels;
+  
+  TCanvas* can_incl = PlotGraphs(gr_incl, labels, title, "Preselection", "incl");
+  
+  vector<TGraphErrors*> gr_Nlep;
+  gr_Nlep.push_back(new TGraphErrors(X_Nlep[0].size(), &X_Nlep[0][0], &Y_Nlep[0][0], 0, &Y_err_Nlep[0][0]));
+  gr_Nlep.push_back(new TGraphErrors(X_Nlep[1].size(), &X_Nlep[1][0], &Y_Nlep[1][0], 0, &Y_err_Nlep[1][0]));
+  gr_Nlep.push_back(new TGraphErrors(X_Nlep[2].size(), &X_Nlep[2][0], &Y_Nlep[2][0], 0, &Y_err_Nlep[2][0]));
+  gr_Nlep.push_back(new TGraphErrors(X_Nlep[3].size(), &X_Nlep[3][0], &Y_Nlep[3][0], 0, &Y_err_Nlep[3][0]));
+  labels.clear();
+  labels.push_back("0L J X");
+  labels.push_back("1L J X");
+  labels.push_back("2L J X");
+  labels.push_back("3L J X");
+
+  TCanvas* can_Nlep = PlotGraphs(gr_Nlep, labels, title, "Preselection", "Nlep");
+  
+  vector<TGraphErrors*> gr_0L;
+  gr_0L.push_back(new TGraphErrors(X_0L[0].size(), &X_0L[0][0], &Y_0L[0][0], 0, &Y_err_0L[0][0]));
+  gr_0L.push_back(new TGraphErrors(X_0L[1].size(), &X_0L[1][0], &Y_0L[1][0], 0, &Y_err_0L[1][0]));
+  gr_0L.push_back(new TGraphErrors(X_0L[2].size(), &X_0L[2][0], &Y_0L[2][0], 0, &Y_err_0L[2][0]));
+  labels.clear();
+  labels.push_back("0L 0-1J X");
+  labels.push_back("0L 2-3J X");
+  labels.push_back("0L 4-5J X");
+
+  TCanvas* can_0L = PlotGraphs(gr_0L, labels, title, "Preselection + 0L", "0L");
+
+  vector<TGraphErrors*> gr_1L;
+  gr_1L.push_back(new TGraphErrors(X_1L[0].size(), &X_1L[0][0], &Y_1L[0][0], 0, &Y_err_1L[0][0]));
+  gr_1L.push_back(new TGraphErrors(X_1L[1].size(), &X_1L[1][0], &Y_1L[1][0], 0, &Y_err_1L[1][0]));
+  gr_1L.push_back(new TGraphErrors(X_1L[2].size(), &X_1L[2][0], &Y_1L[2][0], 0, &Y_err_1L[2][0]));
+  labels.clear();
+  labels.push_back("1L 0-1J X");
+  labels.push_back("1L 2-3J X");
+  labels.push_back("1L 4-5J X");
+
+  TCanvas* can_1L = PlotGraphs(gr_1L, labels, title, "Preselection + 1L", "1L");
+
+  vector<TGraphErrors*> gr_2L;
+  gr_2L.push_back(new TGraphErrors(X_2L[0].size(), &X_2L[0][0], &Y_2L[0][0], 0, &Y_err_2L[0][0]));
+  gr_2L.push_back(new TGraphErrors(X_2L[1].size(), &X_2L[1][0], &Y_2L[1][0], 0, &Y_err_2L[1][0]));
+  labels.clear();
+  labels.push_back("2L 0J X");
+  labels.push_back("2L 1-2J X");
+
+  TCanvas* can_2L = PlotGraphs(gr_2L, labels, title, "Preselection + 2L", "2L");
+
+  string ofile = "Yields_"+std::to_string(year);
+  TFile* fout = new TFile((ofile+".root").c_str(),"RECREATE");
+  fout->cd();
+  
+  can_incl->SaveAs((ofile+"_incl.gif").c_str());
+  can_incl->Write("",TObject::kOverwrite);
+  can_Nlep->SaveAs((ofile+"_Nlep.gif").c_str());
+  can_Nlep->Write("",TObject::kOverwrite);
+  can_0L->SaveAs((ofile+"_0L.gif").c_str());
+  can_0L->Write("",TObject::kOverwrite);
+  can_1L->SaveAs((ofile+"_1L.gif").c_str());
+  can_1L->Write("",TObject::kOverwrite);
+  can_2L->SaveAs((ofile+"_2L.gif").c_str());
+  can_2L->Write("",TObject::kOverwrite);
+  
+  fout->Close();
+  delete fout;
+
+}
+
+
+TCanvas* PlotGraphs(vector<TGraphErrors*>& grs, vector<string>& labels, string title, string label, string scan){
+  int Ngr = grs.size();
+  if(Ngr < 1)
+    return nullptr; 
+
+  TCanvas* can = (TCanvas*) new TCanvas(("can_"+scan).c_str(),
+					("can_"+scan).c_str(),700.,600);
 
   can->SetLeftMargin(0.15);
-  can->SetRightMargin(0.26);
+  can->SetRightMargin(0.04);
   can->SetBottomMargin(0.15);
-  can->SetGridx();
   can->SetGridy();
   can->SetLogy();
   can->Draw();
   can->cd();
-  hist[imax]->Draw("");
-  hist[imax]->GetXaxis()->CenterTitle();
-  hist[imax]->GetXaxis()->SetTitleFont(42);
-  hist[imax]->GetXaxis()->SetTitleSize(0.06);
-  hist[imax]->GetXaxis()->SetTitleOffset(1.06);
-  hist[imax]->GetXaxis()->SetLabelFont(42);
-  hist[imax]->GetXaxis()->SetLabelSize(0.05);
-  hist[imax]->GetXaxis()->SetTitle(g_Xname.c_str());
-  hist[imax]->GetYaxis()->CenterTitle();
-  hist[imax]->GetYaxis()->SetTitleFont(42);
-  hist[imax]->GetYaxis()->SetTitleSize(0.06);
-  hist[imax]->GetYaxis()->SetTitleOffset(1.12);
-  hist[imax]->GetYaxis()->SetLabelFont(42);
-  hist[imax]->GetYaxis()->SetLabelSize(0.05);
-  if(lumi_only)
-    hist[imax]->GetYaxis()->SetTitle("Integrated Fill Lumi");
-  else
-    hist[imax]->GetYaxis()->SetTitle("N_{events}/Integrated Fill Lumi");
 
-  for(int i = 0; i < Nsample; i++){
-    Process proc = samples[i];
-    hist[i]->SetLineWidth(1.0);
-    hist[i]->SetFillStyle(1001);
-    hist[i]->Draw("SAME");
-  } 
+  int mycolor[8];
+  mycolor[0] = kBlue+2;
+  mycolor[1] = kGreen+3;
+  mycolor[2] = kRed+1;
+  mycolor[3] = kYellow+2;
+  mycolor[4] = kMagenta+1;
+  mycolor[5] = kMagenta+2;
+  mycolor[6] = kCyan+2;
+  mycolor[7] = kCyan+3;
 
-  for(int i = 0; i < Nsample; i++){
-    Process proc = samples[i];
-    if(proc.Type() == kData){
-      hist[i]->SetLineColor(kBlack);
-      hist[i]->SetLineWidth(1.0);
-      hist[i]->SetFillStyle(1001);
-      hist[i]->Draw("SAME");
+  TMultiGraph* mg = new TMultiGraph();
+  for(int i = 0; i < Ngr; i++){
+    grs[i]->SetMarkerSize(1);
+    grs[i]->SetLineWidth(2);
+    if(Ngr > 1){
+      grs[i]->SetMarkerColor(mycolor[i]);
+      grs[i]->SetLineColor(mycolor[i]);
     }
+    mg->Add(grs[i]);
   }
+  
+  mg->Draw("AP");
+  mg->GetXaxis()->CenterTitle();
+  mg->GetXaxis()->SetTitleFont(42);
+  mg->GetXaxis()->SetTitleSize(0.05);
+  mg->GetXaxis()->SetTitleOffset(1.2);
+  mg->GetXaxis()->SetLabelFont(42);
+  mg->GetXaxis()->SetLabelSize(0.045);
+  mg->GetXaxis()->SetTitle("fill number");
+  mg->GetYaxis()->CenterTitle();
+  mg->GetYaxis()->SetTitleFont(42);
+  mg->GetYaxis()->SetTitleSize(0.05);
+  mg->GetYaxis()->SetTitleOffset(1.14);
+  mg->GetYaxis()->SetLabelFont(42);
+  mg->GetYaxis()->SetLabelSize(0.045);
+  mg->GetYaxis()->SetTitle("N_{event} / fill integrated lumi [fb^{-1}]");
+  if(Ngr > 1)
+    mg->GetYaxis()->SetRangeUser(mg->GetYaxis()->GetXmin(), 8.*mg->GetYaxis()->GetXmax());
 
-  TLegend* leg = new TLegend(0.75,0.32,0.95,0.62);
+  TLatex l;
+  l.SetNDC();
+  l.SetTextSize(0.04);
+  l.SetTextFont(42);
+  l.SetTextAlign(12);
+  l.DrawLatex(0.15,0.943,"#bf{#it{CMS}} work-in-progress");
+  l.SetTextAlign(32);
+  l.DrawLatex(0.95,0.943,title.c_str());
+  l.SetTextAlign(12);
+  l.DrawLatex(0.18,0.86,label.c_str());
+
+  if(Ngr < 2)
+    return can;
+  
+  TLegend* leg = new TLegend(0.75,0.675,0.955,0.892);
   leg->SetTextFont(132);
   leg->SetTextSize(0.044);
   leg->SetFillColor(kWhite);
   leg->SetLineColor(kWhite);
   leg->SetShadowColor(kWhite);
-  for(int i = 0; i < Nsample; i++){
-    Process proc = samples[i];
-      leg->AddEntry(hist[i],"Data");
-  }
-  leg->SetLineColor(kWhite);
-  leg->SetFillColor(kWhite);
-  leg->SetShadowColor(kWhite);
+  for(int i = 0; i < Ngr; i++)
+    leg->AddEntry(grs[i],labels[i].c_str());
   leg->Draw("SAME");
 
-  TLatex l;
-  l.SetTextFont(42);
-  l.SetNDC();
-  l.SetTextSize(0.035);
-  l.SetTextFont(42);
-  // l.DrawLatex(0.17,0.855,g_PlotTitle.c_str());
-  //l.DrawLatex(0.71,0.943,g_PlotTitle.c_str());
-  l.SetTextSize(0.04);
-  l.SetTextFont(42);
-  l.DrawLatex(0.01,0.943,"#bf{CMS} Simulation Preliminary");
-
-  l.SetTextSize(0.045);
-  l.SetTextFont(42);
-  l.DrawLatex(0.7,0.04,g_Label.c_str());
-
-  string outfile_name = "Plot_Yield_BRIL_"+std::to_string(year);
-  if(lumi_only)
-    outfile_name += "_lumi_only";
-  can->SaveAs((outfile_name+".pdf").c_str());
-
-  TFile* output_file = new TFile((outfile_name+".root").c_str(),"RECREATE");
-  can->Write();
-  output_file->Close();
-  delete output_file;
-
-  gApplication->Terminate(0);
+  return can;
+  
 }
