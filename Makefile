@@ -46,7 +46,7 @@ cmssw: HH_FILES += $(wildcard include_cmssw/*.hh)
 OBJ_FILES := $(addprefix $(OUTOBJ),$(notdir $(CC_FILES:.cc=.o)))
 OBJ_FILES_CMSSW := $(addprefix $(OUTOBJ_CMSSW),$(notdir $(CC_FILES_CMSSW:.cc=.o)))
 
-SOBJ_FILES = $(filter-out ./obj/AnalysisBase.o ./obj/SVDiscrTool.o ./obj/ReducedNtuple.o ./obj/NtupleBase.o, ./obj/LHETool.o, $(OBJ_FILES))
+SOBJ_FILES = $(filter-out ./obj/AnalysisBase.o ./obj/SVDiscrTool.o ./obj/ReducedNtuple.o ./obj/NtupleBase.o ./obj/LHETool.o, $(OBJ_FILES))
 
 all : GLIBS += -L/cvmfs/cms.cern.ch/slc7_amd64_gcc700/external/lwtnn/2.4-gnimlf3/lib -llwtnn
 all : CXX   += -I/cvmfs/cms.cern.ch/slc7_amd64_gcc700/external/lwtnn/2.4-gnimlf3/include/
