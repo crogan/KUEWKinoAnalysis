@@ -76,6 +76,10 @@ void Plot_Yield_BRIL(){
   // else cout << "check year! " << endl;
 
   // g_NX = g_Xmax - g_Xmin;
+
+  CategoryTool CT;
+  CategoryList Categories;
+  Categories += CT.GetCategories(false);
   
   ProcessList samples = ST.Get(kData);
     
