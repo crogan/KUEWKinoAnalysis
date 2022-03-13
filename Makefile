@@ -76,7 +76,7 @@ locallib: lib
 
 lib: lib/libKUEWKino.so
 
-alltargets: MakeReducedNtuple_NANO.x EventCountPlot.x MakeEventCount_NANO.x BuildFitInput.x BuildPlotInput.x BuildFitShapes.x BuildFitInputCondor.x BuildFitCondor.x
+alltargets: MakeReducedNtuple_NANO.x EventCountPlot.x MakeEventCount_NANO.x BuildFitInput.x BuildPlotInput.x BuildFitShapes.x BuildFitInputCondor.x BuildPlotInputCondor.x BuildFitCondor.x
 
 EventCountPlot.x:  $(SRCDIR)EventCountPlot.C $(OBJ_FILES) $(HH_FILES)
 	$(CXX) $(CXXFLAGS) -o EventCountPlot.x $(OUTOBJ)/*.o $(GLIBS) $ $<
@@ -117,6 +117,10 @@ BuildFitShapes.x:  $(SRCDIR)BuildFitShapes.C $(OBJ_FILES) $(HH_FILES)
 BuildFitInputCondor.x:  $(SRCDIR)BuildFitInputCondor.C $(OBJ_FILES) $(HH_FILES)
 	$(CXX) $(CXXFLAGS) -o BuildFitInputCondor.x $(OUTOBJ)/*.o $(GLIBS) $ $<
 	touch BuildFitInputCondor.x
+
+BuildPlotInputCondor.x:  $(SRCDIR)BuildPlotInputCondor.C $(OBJ_FILES) $(HH_FILES)
+	$(CXX) $(CXXFLAGS) -o BuildPlotInputCondor.x $(OUTOBJ)/*.o $(GLIBS) $ $<
+	touch BuildPlotInputCondor.x
 
 BuildFitCondor.x:  $(SRCDIR)BuildFitCondor.C $(OBJ_FILES) $(HH_FILES)
 	$(CXX) $(CXXFLAGS) -o BuildFitCondor.x $(OUTOBJ)/*.o $(GLIBS) $ $<
