@@ -852,6 +852,16 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchStatus("MX3b_BoostT",1);
    fChain->SetBranchStatus("PX3_BoostT",1);
    fChain->SetBranchStatus("HEM_Veto", 1);
+
+   fChain->SetBranchStatus("PT_jet", 1);
+   fChain->SetBranchStatus("Eta_jet", 1);
+   fChain->SetBranchStatus("Phi_jet", 1);
+   fChain->SetBranchStatus("BtagID_jet", 1);
+
+   fChain->SetBranchStatus("PT_SV", 1);
+   fChain->SetBranchStatus("Eta_SV", 1);
+   fChain->SetBranchStatus("Phi_SV", 1);
+  
  
 }
 

@@ -314,7 +314,7 @@ int main(int argc, char* argv[]) {
 	  continue;
 
         if(base->runnum > 319077 && is_data && year == 2018)
-	  if(base->HEM_Veto)
+	  if(!base->HEM_Veto)
 	    continue;
 	
 	if(do_FilterDilepton)
