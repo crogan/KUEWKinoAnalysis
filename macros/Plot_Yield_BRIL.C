@@ -23,8 +23,8 @@
 #include "../include/SampleTool.hh"
 #include "../include/CategoryTool.hh"
 #include "../include/ScaleFactorTool.hh"
-//#include "../include/Leptonic.hh"
-//#include "../include/Hadronic.hh"
+#include "../include/Leptonic.hh"
+#include "../include/Hadronic.hh"
 //#include "../include/FitReader.hh"
 #include "../include/BRILTool.hh"
 
@@ -39,14 +39,14 @@ TCanvas* PlotGraphs(vector<TGraphErrors*>& grs, vector<string>& labels, string t
 void Plot_Yield_BRIL(){
   RestFrames::SetStyle();
 
-  int year = 2017;
+  int year = 2018;
   bool lumi_only = false;
   BRILTool bril;
   bril.BuildMap("json/BRIL/brilcalc_"+std::to_string(year)+".txt");
 
-  //string NtuplePath = "/home/t3-ku/z374f439/storage/crogan/";
+  string NtuplePath = "/home/t3-ku/z374f439/storage/crogan/";
   //string NtuplePath = "root://xrootd.unl.edu//store/user/zflowers/crogan/";
-  string NtuplePath = "/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_21_09_20/";
+  //string NtuplePath = "/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_21_09_20/";
 
 
   cout << "Initializing sample maps from path " << NtuplePath << " for year " << year << endl;
@@ -81,6 +81,10 @@ void Plot_Yield_BRIL(){
   CategoryList Categories;
   Categories += CT.GetCategories(false);
   
+  CategoryTool CT;
+  CategoryList Categories;
+  Categories += CT.GetCategories(false);
+
   ProcessList samples = ST.Get(kData);
     
   int Nsample = samples.GetN();
@@ -121,7 +125,7 @@ void Plot_Yield_BRIL(){
       
       int Nentry = base->fChain->GetEntries();
       
-      int SKIP = 1000;
+      int SKIP = 1;
       
       // event loop
       for(int e = 0; e < Nentry; e += SKIP){
@@ -134,9 +138,11 @@ void Plot_Yield_BRIL(){
 	  if(SF.DileptonEvent(base))
 	    continue;
 
-	if(base->runnum > 319077 && is_data && year == 2018)
-	  if(base->HEM_Veto)
+	if(base->runnum > 319077 && is_data && year == 2018){
+	  if(!base->HEM_Veto){
 	    continue;
+	  }
+	}
 	
 	// apply trigger to data and FullSim events
 	if(!base->METORtrigger && !is_FastSim)
