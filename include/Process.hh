@@ -8,8 +8,10 @@
 #include <iostream>
 #include <vector>
 
-#include "Category.hh"
 #include "Systematics.hh"
+
+class Category;
+class FitBin;
 
 ///////////////////////////////////////////
 ////////// Process class

@@ -156,7 +156,7 @@ VS VS::Remove(const string& label) const {
   return list;
 }
 
-VS VS::FilterOR(VS& labels) const {
+VS VS::FilterOR(const VS& labels) const {
   VS list;
   
   for(auto s : *this)
@@ -169,7 +169,7 @@ VS VS::FilterOR(VS& labels) const {
   return list;
 }
 
-VS VS::FilterAND(VS& labels) const {
+VS VS::FilterAND(const VS& labels) const {
   VS list;
   
   for(auto s : *this){
@@ -186,7 +186,7 @@ VS VS::FilterAND(VS& labels) const {
   return list;
 }
 
-VS VS::RemoveOR(VS& labels) const {
+VS VS::RemoveOR(const VS& labels) const {
   VS list;
   
   for(auto s : *this){
@@ -203,7 +203,7 @@ VS VS::RemoveOR(VS& labels) const {
   return list;
 }
 
-VS VS::RemoveAND(VS& labels) const {
+VS VS::RemoveAND(const VS& labels) const {
   VS list;
   
   for(auto s : *this)

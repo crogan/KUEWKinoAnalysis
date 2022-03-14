@@ -89,7 +89,7 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
     #fsrc.write('+RequiresCVMFS = True \n')
     #fsrc.write('+RequiresSharedFS = True \n')
 
-    transfer_input = 'transfer_input_files = '+TARGET+'config.tgz\n'
+    transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/stash/user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
     fsrc.write(transfer_input)
 
     fsrc.write('should_transfer_files = YES\n')
@@ -211,6 +211,7 @@ if __name__ == "__main__":
 
     # make json file
     os.system("cat json/GoodRunList/*.txt > "+config+"GRL_JSON.txt")
+    os.system("echo -n $(tr -d '\n' < "+config+"GRL_JSON.txt) > "+config+"GRL_JSON.txt")
     JSON = "./config/GRL_JSON.txt"
 
     # copy PU root files

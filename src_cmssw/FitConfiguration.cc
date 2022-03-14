@@ -51,7 +51,6 @@ else{
   bkg_rare += "ST";
   bkg_rare += "TB";
 //float scale_DB in 2017
-//if(*cb.era_set().find("2017") != *cb.era_set().end()) cout << "era: 2017" << endl;
 if(*cb.era_set().begin() == "2017") bkg_rate += "DB";
 else bkg_rare += "DB";
  // bkg_boson += "Wjets";

@@ -2,6 +2,7 @@
 #include <map>
 
 #include "Process.hh"
+#include "Category.hh"
 
 ///////////////////////////////////////////
 ////////// Process class
