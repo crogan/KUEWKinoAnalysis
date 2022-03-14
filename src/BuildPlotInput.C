@@ -35,7 +35,8 @@ using namespace RestFrames;
 
 int main(int argc, char* argv[]) {
   int ifile = -1;
-  string NtuplePath = "/home/t3-ku/z374f439/storage/crogan/";
+  //string NtuplePath = "/home/t3-ku/z374f439/storage/crogan/";
+  string NtuplePath = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v0/";
   string OutFile    = "BuildPlotInput_output.root";
 
   bool doSigFile = false;
@@ -414,8 +415,8 @@ int main(int argc, char* argv[]) {
 	if(!base->EventFilter)
 	  continue;
 
-	if(base->runnum > 319077 && is_data && year == 2018)
-	  if(!base->HEM_Veto)
+	if(base->runnum >= 319077 && is_data && year == 2018)
+	  if(base->HEM_Veto)
 	    continue;
 	
 	if(do_FilterDilepton)
