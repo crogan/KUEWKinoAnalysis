@@ -81,10 +81,6 @@ void Plot_Yield_BRIL(){
   CategoryList Categories;
   Categories += CT.GetCategories(false);
   
-  CategoryTool CT;
-  CategoryList Categories;
-  Categories += CT.GetCategories(false);
-
   ProcessList samples = ST.Get(kData);
     
   int Nsample = samples.GetN();
@@ -138,7 +134,7 @@ void Plot_Yield_BRIL(){
 	  if(SF.DileptonEvent(base))
 	    continue;
 
-	if(base->runnum > 319077 && is_data && year == 2018){
+	if(base->runnum >= 319077 && is_data && year == 2018){
 	  if(!base->HEM_Veto){
 	    continue;
 	  }

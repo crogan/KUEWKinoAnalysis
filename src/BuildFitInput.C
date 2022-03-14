@@ -315,7 +315,7 @@ int main(int argc, char* argv[]) {
 	if(!base->EventFilter)
 	  continue;
 
-        if(base->runnum > 319077 && is_data && year == 2018)
+        if(base->runnum >= 319077 && is_data && year == 2018)
           if(base->HEM_Veto)
             continue;
 	
