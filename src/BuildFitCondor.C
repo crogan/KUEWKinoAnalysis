@@ -198,7 +198,7 @@ int main(int argc, char* argv[]) {
     cout << "   +MCstats            adds autoMCStats uncertainties" << endl;
     cout << "   -sepchan            make datacards for each group of channels separately" << endl;
     cout << "   --workspace(-w)     also build workspaces (note: faster not to, and run message)" << endl;
-    cout << "Example: ./BuildFitCondor.x ++bkg +proc T2tt ++cat ++chan --connect -o /stash/user/zflowers/FIT_REPO/CMSSW_10_6_5/src/KUEWKinoAnalysis/test_BuildFit/ -i root://xrootd.unl.edu//store/user/malazaro/BuildFitInputs/BFIShapes_0_fakeData.root " << endl;
+    cout << "Example: ./BuildFitCondor.x ++bkg +proc T2tt ++cat ++chan --connect -o name_of_BuildFit_output_folder/ -i name_of_BFI_root_file.root " << endl;
 
     return 0;
   }
