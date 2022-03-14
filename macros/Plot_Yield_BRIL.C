@@ -135,7 +135,7 @@ void Plot_Yield_BRIL(){
 	    continue;
 
 	if(base->runnum >= 319077 && is_data && year == 2018){
-	  if(!base->HEM_Veto){
+	  if(base->HEM_Veto){
 	    continue;
 	  }
 	}
