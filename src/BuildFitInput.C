@@ -28,11 +28,13 @@
 #include "ScaleFactorTool.hh"
 #include "Leptonic.hh"
 #include "Hadronic.hh"
+#include "METTriggerTool.hh"
 
 using namespace std;
 int main(int argc, char* argv[]) {
   int ifile = -1;
-  string NtuplePath = "/home/t3-ku/z374f439/storage/crogan/";
+  //string NtuplePath = "root://xrootd.unl.edu//store/user/zflowers/crogan/";
+  string NtuplePath = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v0/";
   string OutFile    = "BuildFitInput_output.root";
 
   bool doSigFile = false;
@@ -317,7 +319,8 @@ cout << "# processes: " << samples.GetN() << endl;
 	  continue;
 
         if(base->runnum > 319077 && is_data && year == 2018)
-          continue;
+          if(base->HEM_Veto)
+            continue;
 	
 	if(do_FilterDilepton)
 	  if(SF.DileptonEvent(base))
@@ -492,6 +495,8 @@ cout << "# processes: " << samples.GetN() << endl;
 	    weight = (setLumi ? lumi : ST.Lumi())*base->weight*sample_weight;
 	    
 	    if(sys == Systematic("MET_TRIG"))
+            {
+/*
 	      if(sys.IsUp())
 		if(is_FastSim)
 		  weight *= SF.GetMETEff(base->MET, 1);
@@ -507,14 +512,49 @@ cout << "# processes: " << samples.GetN() << endl;
 		weight *= SF.GetMETEff(base->MET);
 	      else
 		weight *= SF.GetMETSF(base->MET);
-	    
-//	    if(sys == Systematic("BTAGHF_SF"))
-//	      if(sys.IsUp())
-//		weight *= base->BtagSFweight_up;
-//	      else
-//		weight *= base->BtagSFweight_down;
-//	    else 
-//	      weight *= base->BtagSFweight;
+*/	    
+             // HERE BE DRAGONS
+
+//                         ^    ^
+//                        / \  //\
+//          |\___/|      /   \//  .\
+//          /O  O  \__  /    //  | \ \
+//         /     /  \/_/    //   |  \  \
+//         @___@'    \/_   //    |   \   \ 
+//            |       \/_ //     |    \    \ 
+//            |        \///      |     \     \ 
+//           _|_ /   )  //       |      \     _\
+//          '/,_ _ _/  ( ; -.    |    _ _\.-~        .-~~~^-.
+//          ,-{        _      `-.|.-~-.           .~         `.
+//           '/\      /                 ~-. _ .-~      .-~^-.  \
+//              `.   {            }                   /      \  \
+//            .----~-.\        \-'                 .~         \  `. \^-.
+//           ///.----..>    c   \             _ -~             `.  ^-`   ^-_
+//             ///-._ _ _ _ _ _ _}^ - - - - ~                     ~--,   .-~
+//                                                                   /.-'
+//         
+             METTriggerTool m_METTriggerTool;
+             m_METTriggerTool.BuildMap("Parameters.csv");
+             if(sys.IsUp())
+               if(is_FastSim)
+                 weight *= m_METTriggerTool.Get_EFF(base->MET, base->PTISR, year, (base->Nele > 0), (base->Nmu > 0), false, 1)*
+                 m_METTriggerTool.Get_SF(base->MET, base->PTISR, year, (base->Nele > 0), (base->Nmu > 0), false, 1);
+               else
+                 weight *= m_METTriggerTool.Get_SF(base->MET, base->PTISR, year, (base->Nele > 0), (base->Nmu > 0), false, 1);
+             else
+               if(is_FastSim)
+                 weight *= m_METTriggerTool.Get_EFF(base->MET, base->PTISR, year, (base->Nele > 0), (base->Nmu > 0), false, -1)*
+                 m_METTriggerTool.Get_SF(base->MET, base->PTISR, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
+               else
+                 weight *= m_METTriggerTool.Get_SF(base->MET, base->PTISR, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
+            }
+	    if(sys == Systematic("BTAGHF_SF"))
+	      if(sys.IsUp())
+		weight *= base->BtagSFweight_up;
+	      else
+		weight *= base->BtagSFweight_down;
+	    else 
+	      weight *= base->BtagSFweight;
 
 	    if(sys == Systematic("BTAGLF_SF"))
 	      if(sys.IsUp())

@@ -6,7 +6,9 @@
 #include <numeric>
 #include <algorithm>
 #include <math.h>
+#ifdef _CMSSW_
 #include "LHAPDF/LHAPDF.h"
+#endif
 
 // may need to run from command line:
 // export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/cvmfs/cms.cern.ch/slc7_amd64_gcc700/external/lhapdf/6.2.1-pafccj3/lib

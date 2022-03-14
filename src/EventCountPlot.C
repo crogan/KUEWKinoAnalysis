@@ -19,6 +19,7 @@
 #include <TStyle.h>
 #include <TLorentzVector.h>
 #include <TSystem.h>
+#include <TKey.h>
 
 #include "../include/ReducedBase_slim.hh"
 #include "../include/SampleTool.hh"

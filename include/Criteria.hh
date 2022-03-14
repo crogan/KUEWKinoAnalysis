@@ -99,10 +99,10 @@ public:
 
   VS Filter(const string& label) const;
   VS Remove(const string& label) const;
-  VS FilterOR(VS& labels) const;
-  VS FilterAND(VS& labels) const;
-  VS RemoveOR(VS& labels) const;
-  VS RemoveAND(VS& labels) const;
+  VS FilterOR(const VS& labels) const;
+  VS FilterAND(const VS& labels) const;
+  VS RemoveOR(const VS& labels) const;
+  VS RemoveAND(const VS& labels) const;
   
 };
 

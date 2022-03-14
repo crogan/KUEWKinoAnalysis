@@ -39,6 +39,7 @@ public :
    Long64_t        eventnum;
    Int_t           NPV;
    Bool_t          EventFilter;
+   Bool_t          HEM_Veto;
    Bool_t          METtrigger;
    Bool_t          METHTtrigger;
    Bool_t          METORtrigger;
@@ -248,6 +249,7 @@ public :
    TBranch        *b_eventnum;   //!
    TBranch        *b_NPV;   //!
    TBranch        *b_EventFilter;   //!
+   TBranch        *b_HEM_Veto;   //!
    TBranch        *b_METtrigger;   //!
    TBranch        *b_METHTtrigger;   //!
    TBranch        *b_METORtrigger;   //!
@@ -606,8 +608,6 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchAddress("MET", &MET, &b_MET);
    fChain->SetBranchAddress("MET_phi", &MET_phi, &b_MET_phi);
    fChain->SetBranchAddress("HT", &HT, &b_HT);
-   fChain->SetBranchAddress("LHE_HT", &LHE_HT, &b_LHE_HT);
-   fChain->SetBranchAddress("LHE_HTIncoming", &LHE_HTIncoming, &b_LHE_HTIncoming);
    fChain->SetBranchAddress("Nele", &Nele, &b_Nele);
    fChain->SetBranchAddress("Nmu", &Nmu, &b_Nmu);
    fChain->SetBranchAddress("Nlep", &Nlep, &b_Nlep);
@@ -794,6 +794,9 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchAddress("genM_susy", &genM_susy, &b_genM_susy);
    fChain->SetBranchAddress("genPDGID_susy", &genPDGID_susy, &b_genPDGID_susy);
    fChain->SetBranchAddress("genMomPDGID_susy", &genMomPDGID_susy, &b_genMomPDGID_susy);
+   fChain->SetBranchAddress("LHE_HT", &LHE_HT, &b_LHE_HT);
+   fChain->SetBranchAddress("LHE_HTIncoming", &LHE_HTIncoming, &b_LHE_HTIncoming);
+   fChain->SetBranchAddress("HEM_Veto", &HEM_Veto, &b_HEM_Veto);
    Notify();
 
    fChain->SetBranchStatus("*",0);
@@ -852,6 +855,17 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchStatus("MX3a_BoostT",1);
    fChain->SetBranchStatus("MX3b_BoostT",1);
    fChain->SetBranchStatus("PX3_BoostT",1);
+   fChain->SetBranchStatus("HEM_Veto", 1);
+
+   fChain->SetBranchStatus("PT_jet", 1);
+   fChain->SetBranchStatus("Eta_jet", 1);
+   fChain->SetBranchStatus("Phi_jet", 1);
+   fChain->SetBranchStatus("BtagID_jet", 1);
+
+   fChain->SetBranchStatus("PT_SV", 1);
+   fChain->SetBranchStatus("Eta_SV", 1);
+   fChain->SetBranchStatus("Phi_SV", 1);
+  
  
  
 }

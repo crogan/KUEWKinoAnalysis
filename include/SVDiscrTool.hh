@@ -7,10 +7,12 @@
 #include <map>
 #include <memory>
 
-// template<typename T, typename... Args>
-// std::unique_ptr<T> make_unique(Args&&... args) {
-//     return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
-// }
+
+// so that the code compiles with older compilers
+template<typename T, typename... Args>
+std::unique_ptr<T> our_make_unique(Args&&... args) {
+    return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
+}
 
 class SVDiscrTool {
 
