@@ -602,15 +602,12 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchAddress("eventnum", &eventnum, &b_eventnum);
    fChain->SetBranchAddress("NPV", &NPV, &b_NPV);
    fChain->SetBranchAddress("EventFilter", &EventFilter, &b_EventFilter);
-   fChain->SetBranchAddress("HEM_Veto", &HEM_Veto, &b_HEM_Veto);
    fChain->SetBranchAddress("METtrigger", &METtrigger, &b_METtrigger);
    fChain->SetBranchAddress("METHTtrigger", &METHTtrigger, &b_METHTtrigger);
    fChain->SetBranchAddress("METORtrigger", &METORtrigger, &b_METORtrigger);
    fChain->SetBranchAddress("MET", &MET, &b_MET);
    fChain->SetBranchAddress("MET_phi", &MET_phi, &b_MET_phi);
    fChain->SetBranchAddress("HT", &HT, &b_HT);
-   fChain->SetBranchAddress("LHE_HT", &LHE_HT, &b_LHE_HT);
-   fChain->SetBranchAddress("LHE_HTIncoming", &LHE_HTIncoming, &b_LHE_HTIncoming);
    fChain->SetBranchAddress("Nele", &Nele, &b_Nele);
    fChain->SetBranchAddress("Nmu", &Nmu, &b_Nmu);
    fChain->SetBranchAddress("Nlep", &Nlep, &b_Nlep);
@@ -797,6 +794,9 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchAddress("genM_susy", &genM_susy, &b_genM_susy);
    fChain->SetBranchAddress("genPDGID_susy", &genPDGID_susy, &b_genPDGID_susy);
    fChain->SetBranchAddress("genMomPDGID_susy", &genMomPDGID_susy, &b_genMomPDGID_susy);
+   fChain->SetBranchAddress("LHE_HT", &LHE_HT, &b_LHE_HT);
+   fChain->SetBranchAddress("LHE_HTIncoming", &LHE_HTIncoming, &b_LHE_HTIncoming);
+   fChain->SetBranchAddress("HEM_Veto", &HEM_Veto, &b_HEM_Veto);
    Notify();
 
    fChain->SetBranchStatus("*",0);
