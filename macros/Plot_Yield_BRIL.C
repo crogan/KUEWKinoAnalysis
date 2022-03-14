@@ -80,10 +80,6 @@ void Plot_Yield_BRIL(){
   CategoryTool CT;
   CategoryList Categories;
   Categories += CT.GetCategories(false);
-  
-  CategoryTool CT;
-  CategoryList Categories;
-  Categories += CT.GetCategories(false);
 
   ProcessList samples = ST.Get(kData);
     

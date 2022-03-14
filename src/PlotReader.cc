@@ -34,7 +34,11 @@ void PlotReader::Initialize(){
 
   m_CMSLabel = "#bf{#it{CMS}} work-in-progress";
   
-  m_Strings["Data"] = VS().a("data_obs");
+  m_Strings["Data"] = VS().a("data_obs").a("Data-j").a("Data-bj").a("Data-sv").a("Data-el").a("Data-mu");
+  
+  m_Strings["Bkg"] = VS().a("Bkg-j").a("Bkg-bj").a("Bkg-sv").a("Bkg-el").a("Bkg-mu");
+  m_Title["Bkg"] = "SM backgrounds";
+  m_Color["Bkg"] = 7001;
   
   m_Title["ttbar"] = "t #bar{t} + X";
   m_Color["ttbar"] = 7011;
@@ -60,13 +64,87 @@ void PlotReader::Initialize(){
   m_Title["MET"]  = "MET [GeV]";
   m_Title["RISR"] = "R_{ISR}";
   m_Title["Mperp"] = "M_{#perp } [GeV]";
+  m_Title["PTISR"] = "P_{T}^{ISR} [GeV]";
+  m_Title["Gperp"] = "#gamma_{#perp}";
 
+  m_Title["NSjet"] = "N_{jet}^{S}";
+  m_Title["Nbjet"] = "N_{bjet}";
+  m_Title["NSbjet"] = "N_{bjet}^{S}";
+  m_Title["NSV"] = "N_{SV}";
+  m_Title["Nel"] = "N_{el}";
+  m_Title["Nmu"] = "N_{mu}";
+
+  m_Title["JetEta"] = "#eta_{jet}";
+  m_Title["JetPhi"] = "#phi_{jet}";
+  m_Title["JetPt"] = "p_{T}^{jet} [GeV]";
+
+  m_Title["incl"]  = "preselection";
+  m_Title["0J"]  = "L 0J X";
+  m_Title["1J"]  = "L 1J X";
+  m_Title["2J"]  = "L 2J X";
+  m_Title["3J"]  = "L 3J X";
+  m_Title["4J"]  = "L 4J X";
+  m_Title["5J"]  = "L 5J X";
+  m_Title["0L"]  = "0L J X";
   m_Title["0L_0J"]  = "0L 0J X";
   m_Title["0L_1J"]  = "0L 1J X";
   m_Title["0L_2J"]  = "0L 2J X";
   m_Title["0L_3J"]  = "0L 3J X";
   m_Title["0L_4J"]  = "0L 4J X";
   m_Title["0L_5J"]  = "0L 5J X";
+
+  m_Title["1L"]  = "1L J X";
+  m_Title["1L_0J"]  = "1L 0J X";
+  m_Title["1L_1J"]  = "1L 1J X";
+  m_Title["1L_2J"]  = "1L 2J X";
+  m_Title["1L_3J"]  = "1L 3J X";
+  m_Title["1L_4J"]  = "1L 4J X";
+  m_Title["gold1L"]  = "1L_{G} J X";
+  m_Title["gold1L_0J"]  = "1L_{G} 0J X";
+  m_Title["gold1L_1J"]  = "1L_{G} 1J X";
+  m_Title["gold1L_2J"]  = "1L_{G} 2J X";
+  m_Title["gold1L_3J"]  = "1L_{G} 3J X";
+  m_Title["gold1L_4J"]  = "1L_{G} 4J X";
+  m_Title["slvr1L"]  = "1L_{S} J X";
+  m_Title["slvr1L_0J"]  = "1L_{S} 0J X";
+  m_Title["slvr1L_1J"]  = "1L_{S} 1J X";
+  m_Title["slvr1L_2J"]  = "1L_{S} 2J X";
+  m_Title["slvr1L_3J"]  = "1L_{S} 3J X";
+  m_Title["slvr1L_4J"]  = "1L_{S} 4J X";
+  m_Title["bron1L"]  = "1L_{B} J X";
+  m_Title["bron1L_0J"]  = "1L_{B} 0J X";
+  m_Title["bron1L_1J"]  = "1L_{B} 1J X";
+  m_Title["bron1L_2J"]  = "1L_{B} 2J X";
+  m_Title["bron1L_3J"]  = "1L_{B} 3J X";
+  m_Title["bron1L_4J"]  = "1L_{B} 4J X";
+  m_Title["2L"]  = "2L J X";
+  m_Title["2L_0J"]  = "2L 0J X";
+  m_Title["2L_1J"]  = "2L 1J X";
+  m_Title["2L_2J"]  = "2L 2J X";
+  m_Title["gold2L"]  = "2L_{G} J X";
+  m_Title["gold2L_0J"]  = "2L_{G} 0J X";
+  m_Title["gold2L_1J"]  = "2L_{G} 1J X";
+  m_Title["gold2L_2J"]  = "2L_{G} 2J X";
+  m_Title["slvr2L"]  = "2L_{S} J X";
+  m_Title["slvr2L_0J"]  = "2L_{S} 0J X";
+  m_Title["slvr2L_1J"]  = "2L_{S} 1J X";
+  m_Title["slvr2L_2J"]  = "2L_{S} 2J X";
+  m_Title["bron2L"]  = "2L_{B} J X";
+  m_Title["bron2L_0J"]  = "2L_{B} 0J X";
+  m_Title["bron2L_1J"]  = "2L_{B} 1J X";
+  m_Title["bron2L_2J"]  = "2L_{B} 2J X";
+  m_Title["3L"]  = "3L J X";
+  m_Title["3L_0J"]  = "3L 0J X";
+  m_Title["3L_1J"]  = "3L 1J X";
+  m_Title["gold3L"]  = "3L_{G} J X";
+  m_Title["gold3L_0J"]  = "3L_{G} 0J X";
+  m_Title["gold3L_1J"]  = "3L_{G} 1J X";
+  m_Title["slvr3L"]  = "3L_{S} J X";
+  m_Title["slvr3L_0J"]  = "3L_{S} 0J X";
+  m_Title["slvr3L_1J"]  = "3L_{S} 1J X";
+  m_Title["bron3L"]  = "3L_{B} J X";
+  m_Title["bron3L_0J"]  = "3L_{B} 0J X";
+  m_Title["bron3L_1J"]  = "3L_{B} 1J X";
     
 }
 
@@ -187,8 +265,7 @@ TCanvas* PlotReader::Plot1Dstack(const string& can_name,
 				 const string& var,
 				 const VS& procs,
 				 const string& region,
-				 bool norm,
-				 int rebin){
+				 bool norm, int rebin, double xmin, double xmax){
   RestFrames::SetStyle();
 
   bool b_ratio = false;
@@ -225,10 +302,10 @@ TCanvas* PlotReader::Plot1Dstack(const string& can_name,
     for(auto p : vproc){
       if(!hist_proc){
 	hist_proc = (TH1D*) GetHist(can_name+"hist_"+p,
-				    var, vproc[0], region);
+				    var, p, region);
       } else {
 	TH1D* temp = (TH1D*) GetHist(can_name+"temp_"+p,
-				     var, vproc[0], region);
+				     var, p, region);
 	if(temp){
 	  hist_proc->Add(temp);
 	  delete temp;
@@ -248,7 +325,6 @@ TCanvas* PlotReader::Plot1Dstack(const string& can_name,
 	hist_totbkg->Add(hist_proc);
       else {
 	hist_totbkg = (TH1D*) hist_proc->Clone((can_name+"_totalbkg"+procs[i]).c_str());
-	hist_totbkg->Sumw2();
       }
     } else {
       hist_data = hist_proc;
@@ -395,6 +471,8 @@ TCanvas* PlotReader::Plot1Dstack(const string& can_name,
   hists[0]->GetYaxis()->SetTitle("number of events");
   hists[0]->GetYaxis()->SetRangeUser(hmin, hmax*5);
 
+  if(xmin >= 0. && xmax > xmin)
+    hists[0]->GetXaxis()->SetRangeUser(xmin, xmax);
   pad->SetLogy();
    
   for(int i = 0; i < Nhist; i++){
@@ -528,8 +606,11 @@ TCanvas* PlotReader::Plot1Dstack(const string& can_name,
     hist_data_ratio->GetYaxis()->SetLabelSize(0.095);
     hist_data_ratio->GetYaxis()->SetTitle("#frac{data}{MC}");
 
-    if(hist_data_ratio->GetYaxis()->GetXmax() > 3.0)
-      hist_data_ratio->GetYaxis()->SetRangeUser(hist_data_ratio->GetYaxis()->GetXmin(), 3.2);
+    if(hist_data_ratio->GetMaximum() > 2.)
+      hist_data_ratio->GetYaxis()->SetRangeUser(0., 2.8);
+
+    if(xmin >= 0. && xmax > xmin)
+       hist_data_ratio->GetXaxis()->SetRangeUser(xmin, xmax);
     
     gr_bkg_ratio->Draw("same p2");
     hist_data_ratio->Draw("same ep");

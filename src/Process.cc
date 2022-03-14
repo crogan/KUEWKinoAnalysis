@@ -52,7 +52,7 @@ ProcessType Process::Type() const {
   return m_Type;
 }
 
-void Process::AddEvent(double weight, double Mperp, double RISR,
+bool Process::AddEvent(double weight, double Mperp, double RISR,
 		       const Category& cat, const Systematic& sys, bool extrahist){
 
   string clabel = cat.Label()+"_"+cat.GetLabel();
@@ -64,7 +64,7 @@ void Process::AddEvent(double weight, double Mperp, double RISR,
   if(m_ProcBins[plabel].count(clabel) == 0)
     m_ProcBins[plabel][clabel] = cat.GetNewFitBin(plabel, extrahist);
       
-  m_ProcBins[plabel][clabel]->Fill(weight, Mperp, RISR);
+  return m_ProcBins[plabel][clabel]->Fill(weight, Mperp, RISR);
 }
 
 ////// CHECK systs includes up and down? where is map filled

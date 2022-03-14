@@ -25,7 +25,7 @@ public:
 
   virtual ~FitInputBuilder(); 
   
-  void AddEvent(double weight, double Mperp, double RISR,
+  bool AddEvent(double weight, double Mperp, double RISR,
 		const Category& cat,
 		const Process& proc,
 		const Systematic& sys = Systematic::Default());
