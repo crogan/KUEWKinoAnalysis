@@ -271,7 +271,7 @@ cout << "# processes: " << samples.GetN() << endl;
     bool is_signal = (proc.Type() == kSig);
     int Nsys = (is_data ? 1 : systematics.GetN());
     
-    int Nfile = ST.NTrees(proc);
+    int Nfile = 1;//ST.NTrees(proc);
 
     cout << "Processing " << Nfile << " files for process " << title << endl;
 
@@ -297,7 +297,7 @@ cout << "# processes: " << samples.GetN() << endl;
     
       TChain* chain = ST.Tree(proc, f);
       ReducedBase* base = new ReducedBase(chain);
-      int Nentry = base->fChain->GetEntries();
+      int Nentry = 1e6;//base->fChain->GetEntries();
      cout << "Nentry: " << Nentry << endl;
 if(chain == nullptr) cout << "chain null" << endl;
 if(base == nullptr) cout << "base null" << endl; 
@@ -310,19 +310,21 @@ if(base == nullptr) cout << "base null" << endl;
 //	cout << "event #" << e << " run #" << base->runnum << endl;
 	if(!base->EventFilter)	  
 		continue;
+//cout << "passed EventFilter" << endl;
 //if(base->runnum != 0){cout << "EventFilter cut: " << base->runnum << endl;}	
 
         if(base->runnum > 319077 && is_data && year == 2018)
           if(base->HEM_Veto)
             continue;
-	
 	if(do_FilterDilepton)
 	  if(SF.DileptonEvent(base))
 	    continue;
+//cout << "passed dilepton event filter" << endl;
 //if(base->runnum != 0){cout << "dilepton filter cut: " << base->runnum << endl;}	
 	// apply trigger to data and FullSim events
 	if(!base->METORtrigger && !is_FastSim)
 	  continue;
+//cout << "passed MET Trigger or is not FastSim" << endl;
 //if(base->runnum != 0){cout << "met trigger cut: " << base->runnum << endl;}	
 	if(base->MET < 150)
 	  continue;
@@ -354,6 +356,7 @@ if(base == nullptr) cout << "base null" << endl;
 //if(base->runnum != 0){cout << "risr cut 2: " << base->runnum << endl;}	
 	if(fabs(base->dphiMET_V) > acos(-1.)/2.)
 	  continue;
+//cout << "passed analysis selection" << endl;
 //if(base->runnum != 0){cout << "dphiMET_V cut: " << base->runnum << endl;}	
 	int Nlep     = base->Nlep;
 	int NjetS    = base->Njet_S;
@@ -363,6 +366,7 @@ if(base == nullptr) cout << "base null" << endl;
 	int NSV      = base->NSV_S;
 	if(Nlep + NjetS + NSV < 1)
 	  continue;
+//cout <<"passed object count cut" << endl;
 //if(base->runnum != 0){cout << "object counting cut: " << base->runnum << endl;}	
 	LepList list_a;
 	LepList list_b;
@@ -435,16 +439,19 @@ if(base == nullptr) cout << "base null" << endl;
 	Event.AddGenericVal(gammaT);
 	Event.AddGenericVal(SVmaxeta);
 	int eindex = Categories.Find(Event);
-
-	if(eindex < 0){
+ 	if(eindex < 0){
 	  continue;
+cout << "passed eindex " << eindex << endl;
 	  if(Nlep > 3)
 	    continue;
+cout << "passed Nlep " << Nlep << endl;
 	  if(base->PTISR < 250. && Nlep >= 2)
 	     continue;
+cout << "passed 2+L PTISR " << Nlep << " " << base->PTISR << endl;
 	  if(base->PTISR < 400. && Nlep < 2)
 	     continue;
-
+cout << "passed 0-1L PTISR " << Nlep << " " << base->PTISR << endl;
+cout << "passed lepton specific PTISR cuts" << endl;
 	  int Nbron = 0;
 	  int Nslvr = 0;
 	  for(int i = 0; i < Nlep; i++){
@@ -464,7 +471,7 @@ if(base == nullptr) cout << "base null" << endl;
 	    continue;
 	  if(Nbron+Nslvr >= 3)
 	    continue;
-	  
+	 cout << "passed lepton quality # cuts" << endl; 
 	  cout << "Nlep = " << Nlep << " PTISR = " << base->PTISR << " NjetS = " << NjetS << " NSV = " << NSV << endl;
 	  for(int i = 0; i < Nlep; i++){
 	    if(i < base->Nlep_a)
@@ -483,10 +490,10 @@ if(base == nullptr) cout << "base null" << endl;
 	}
 
 	// systematics loop
-	
 	for(int is = 0; is < Nsys; is++){
 	  Systematic& sys = systematics[is];
-	if(!(!sys)){
+//cout << "systematic: " << sys.Label()<< endl;	
+if(!(!sys)){
 	    if(sys.IsUp()){
 	      sys.Down();
 	      is--;
@@ -498,7 +505,7 @@ if(base == nullptr) cout << "base null" << endl;
 	double weight = 1.;
 	  if(!is_data){
 	    weight = (setLumi ? lumi : ST.Lumi())*base->weight*sample_weight;
-	    
+	   //cout << "sample tool lumi: " << ST.Lumi() << " ntuple weight:" << base->weight << " sample weight:" << sample_weight << endl; 
 	    if(sys == Systematic("MET_TRIG"))
             {
 /*
@@ -553,22 +560,23 @@ if(base == nullptr) cout << "base null" << endl;
                else
                  weight *= m_METTriggerTool.Get_SF(base->MET, base->PTISR, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
             }
-	    if(sys == Systematic("BTAGHF_SF"))
-	      if(sys.IsUp())
-		weight *= base->BtagSFweight_up;
-	      else
-		weight *= base->BtagSFweight_down;
-	    else 
-	      weight *= base->BtagSFweight;
-
-	    if(sys == Systematic("BTAGLF_SF"))
-	      if(sys.IsUp())
-		weight *= base->BtagSFweight_up;
-	 else
-		weight *= base->BtagSFweight_down;
-	    else 
-	      weight *= base->BtagSFweight;
-
+//cout << "METTrig weight: " << weight << endl;
+//	    if(sys == Systematic("BTAGHF_SF"))
+//	      if(sys.IsUp())
+//		weight *= base->BtagSFweight_up;
+//	      else
+//		weight *= base->BtagSFweight_down;
+//	    else 
+//	      weight *= base->BtagSFweight;
+//
+//	    if(sys == Systematic("BTAGLF_SF"))
+//	      if(sys.IsUp())
+//		weight *= base->BtagSFweight_up;
+//	 else
+//		weight *= base->BtagSFweight_down;
+//	    else 
+//	      weight *= base->BtagSFweight;
+//cout << "btag weight: " << base->BtagSFweight << endl;
 	    // turn off PU systematics for now
 	    // if(sys == Systematic("PU_SF"))
 	    //   if(sys.IsUp())
@@ -590,11 +598,11 @@ if(base == nullptr) cout << "base null" << endl;
 	  if((Nlep == 0) && (NjetS == 1) && (NSV == 0))
 	    Mperp = 2.*base->EJ_BoostT;
 	  
-	
 	  double RISR  = base->RISR;
 	//double rlow;
 	  if(Fakes.GetN() > 0 && is_bkg){
-	    VS flabels = Fakes.GetFakeLabels(2); // processes w/ up to 2 "fake" leps
+	  
+	  VS flabels = Fakes.GetFakeLabels(2); // processes w/ up to 2 "fake" leps
 	    int Nf = flabels.size();
 	  
 	    for(int fl = 0; fl < Nf; fl++){
@@ -606,6 +614,7 @@ if(base == nullptr) cout << "base null" << endl;
 				  Categories[eindex], proc.FakeProcess(flabels[fl]), sys);
 	    }
 	  } else {
+//	cout << "AddEvent with weight " << weight << endl;
 	    FITBuilder.AddEvent(weight, Mperp, RISR,
 				Categories[eindex], proc, sys);
 	  }
@@ -621,7 +630,7 @@ if(base == nullptr) cout << "base null" << endl;
         break;
     }
   }
-
+cout << "write Fit" << endl;
   FITBuilder.WriteFit(OutFile);
   
 }
