@@ -561,21 +561,21 @@ int main(int argc, char* argv[]) {
                else
                  weight *= m_METTriggerTool.Get_SF(base->MET, base->PTISR, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
             }
-	    if(sys == Systematic("BTAGHF_SF"))
-	      if(sys.IsUp())
-		weight *= base->BtagSFweight_up;
-	      else
-		weight *= base->BtagSFweight_down;
-	    else 
-	      weight *= base->BtagSFweight;
-
-	    if(sys == Systematic("BTAGLF_SF"))
-	      if(sys.IsUp())
-		weight *= base->BtagSFweight_up;
-	      else
-		weight *= base->BtagSFweight_down;
-	    else 
-	      weight *= base->BtagSFweight;
+//	    if(sys == Systematic("BTAGHF_SF"))
+//	      if(sys.IsUp())
+//		weight *= base->BtagSFweight_up;
+//	      else
+//		weight *= base->BtagSFweight_down;
+//	    else 
+//	      weight *= base->BtagSFweight;
+//
+//	    if(sys == Systematic("BTAGLF_SF"))
+//	      if(sys.IsUp())
+//		weight *= base->BtagSFweight_up;
+//	      else
+//		weight *= base->BtagSFweight_down;
+//	    else 
+//	      weight *= base->BtagSFweight;
 
 	    // turn off PU systematics for now
 	    // if(sys == Systematic("PU_SF"))
