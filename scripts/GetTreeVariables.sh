@@ -53,7 +53,7 @@ outputFile="$outputName"_variables.txt
 outputFileClean="$outputName"_variables_clean.txt
 
 # output tree variables to file
-python $pythonScript -i $rootFile > $outputFile
+python $pythonScript -i $rootFile -t KUAnalysis > $outputFile
 # cleaned output (one line per variable) to file
 grep Br $outputFile > $outputFileClean
 
