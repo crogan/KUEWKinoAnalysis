@@ -313,7 +313,7 @@ if(base == nullptr) cout << "base null" << endl;
 //cout << "passed EventFilter" << endl;
 //if(base->runnum != 0){cout << "EventFilter cut: " << base->runnum << endl;}	
 
-        if(base->runnum > 319077 && is_data && year == 2018)
+        if(base->runnum >= 319077 && is_data && year == 2018)
           if(base->HEM_Veto)
             continue;
 	if(do_FilterDilepton)
@@ -560,7 +560,6 @@ if(!(!sys)){
                else
                  weight *= m_METTriggerTool.Get_SF(base->MET, base->PTISR, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
             }
-//cout << "METTrig weight: " << weight << endl;
 //	    if(sys == Systematic("BTAGHF_SF"))
 //	      if(sys.IsUp())
 //		weight *= base->BtagSFweight_up;
@@ -572,11 +571,11 @@ if(!(!sys)){
 //	    if(sys == Systematic("BTAGLF_SF"))
 //	      if(sys.IsUp())
 //		weight *= base->BtagSFweight_up;
-//	 else
+//	      else
 //		weight *= base->BtagSFweight_down;
 //	    else 
 //	      weight *= base->BtagSFweight;
-//cout << "btag weight: " << base->BtagSFweight << endl;
+
 	    // turn off PU systematics for now
 	    // if(sys == Systematic("PU_SF"))
 	    //   if(sys.IsUp())

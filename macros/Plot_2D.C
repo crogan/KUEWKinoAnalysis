@@ -29,7 +29,6 @@
 
 using namespace std;
 
-using namespace RestFrames;
 
 string g_PlotTitle;
 string g_Xname;
@@ -47,13 +46,11 @@ double units_per_bin_y;
 using namespace RestFrames;
 
 void Plot_2D(){
-  RestFrames::SetStyle();
 
-  int BKG_SKIP = 1;
   
    RestFrames::SetStyle();
 
-  string NtuplePath = "/Users/christopherrogan/Dropbox/SAMPLES/EWKino/NANO/NEW_21_09_20/";
+  string NtuplePath = "/home/t3-ku/z374f439/storage/crogan/";
 
   cout << "Initializing sample maps from path " << NtuplePath << " for year " << 2017 << endl;
   SampleTool ST(NtuplePath, 2017);
@@ -76,7 +73,7 @@ void Plot_2D(){
 
   //const CategoryTree* myCT = CTs[iCAT];
   const CategoryTree* myCT = &CT_0L;
-  Categories = Categories.Filter(CT_2L);
+  //Categories = Categories.Filter(CT_2L);
 
   VS vsignals;
   //vsignals.a("TChiWZ_2500245").a("TChiWZ_2500240").a("TChiWZ_2500220").a("TChiWZ_2500200").a("TChiWZ_2500160");
@@ -89,17 +86,19 @@ void Plot_2D(){
   // VS all = signals;
   // all.a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD").a("Wjets").a("Fakes");
 
-  //vsignals.a("TChiWZ_2750272");
-  vsignals.a("ttbar");
+  //vsignals.a("T2tt_6000590");
+  vsignals.a("TChiWZ_2750245");
+  //vsignals.a("ttbar");
   
-  ProcessList backgrounds = ST.Get(kBkg).Remove("QCD");
+  //ProcessList backgrounds = ST.Get(kBkg).Remove("QCD");
+  ProcessList backgrounds = ST.Get(kBkg).Filter("Wjets");
 
   ProcessList signals;
   for(auto s : vsignals)
     signals += ST.Get(s);
   
-  //string g_Label = "No selection";
-  string g_Label = "1 lepton";
+  string g_Label = "No selection";
+  //string g_Label = "1 lepton";
 
   // g_Yname = "Njets_S";
   // g_Ymin = 0.0;
@@ -110,23 +109,23 @@ void Plot_2D(){
   //g_Xname = "E_{lep #scale[0.8]{#perp}}^{ S}  [GeV]";
   //g_Xname = "#bar{M}_{#tilde{#chi_{2}} #scale[0.8]{#perp}}  [GeV]";
   // g_Xname = "p_{T}^{lep} [GeV]";
-  //g_Xname = "M_{#perp}    [GeV]";
-  g_Xname = "#Delta R (#it{l} #it{l} )";
-  g_Xmin = 0.0;
-  g_Xmax = 1.; 
-  g_NX = 32;
+  g_Yname = "M_{#perp}  [GeV]";
+  //g_Xname = "#Delta R (#it{l} #it{l} )";
+  //g_Xmin = 0.0;
+  //g_Xmax = 1.; 
+  //g_NX = 32;
   //g_Yname = "#Delta R (#it{l} #it{l} )";
-  g_Yname = "m(#it{l} #it{l} ) [GeV]";
+  //g_Yname = "m(#it{l} #it{l} ) [GeV]";
   //g_Yname = "#gamma_{T}";
   //g_Yname = "p_{T}^{ISR}";
   g_Ymin = 0.;
-  g_Ymax = 20.;
+  g_Ymax = 100.;
   g_NY = 32;
 
-  // g_Xname = "R_{ISR}";
-  // g_Xmin = -1.;
-  // g_Xmax = 1.; 
-  // g_NX = 32;
+   g_Xname = "R_{ISR}";
+   g_Xmin = 0.5;
+   g_Xmax = 1.; 
+   g_NX = 32;
   // g_Yname = "p_{T}^{ISR} [GeV]";
   // g_Ymin = -1.;
   // g_Ymax = 1.;
@@ -136,10 +135,13 @@ void Plot_2D(){
 			g_NX, g_Xmin, g_Xmax,
 			g_NY, g_Ymin, g_Ymax);
   
-   ProcessList samples = signals;
+  int SKIP = 100;
+  //ProcessList samples = signals;
+  ProcessList samples = backgrounds;
   //samples += backgrounds;
 
    g_PlotTitle = samples[0].Name();
+   //g_PlotTitle = "#tilde{#chi}_{1}^{#pm} #tilde{#chi}_{2}^{0} -> #tilde{#chi}_{1}^{0} #tilde{#chi}_{1}^{0}, m_{#tilde{#chi}_{1}^{#pm}} = m_{#tilde{#chi}_{2}^{0}} = 275, m_{#tilde{#chi}_{1}^{0}} = 245";
    
   int Nsample = samples.GetN();
   
@@ -177,9 +179,7 @@ void Plot_2D(){
       
       ReducedBase* base = new ReducedBase(chain);
       
-      int Nentry = base->fChain->GetEntries();
-      
-      int SKIP = 1;
+      int Nentry = base->fChain->GetEntries(); 
       
       // event loop
       for(int e = 0; e < Nentry; e += SKIP){
@@ -206,9 +206,6 @@ void Plot_2D(){
 	//   continue;
 	
 	if(base->PTISR < 250.)
-	  continue;
-
-	if(base->RISR < 0.6)
 	  continue;
 
 	// if(base->Nbjet_ISR->at(1) > 0)
@@ -271,10 +268,11 @@ void Plot_2D(){
 	if(Nlep + NjetS + NSV < 1)
 	  continue;
 
-	// 2L/3L stuff
-	g_Label = "2L J X";
+	g_Label = "2L 1J";
 	if(Nlep != 2)
 	  continue;
+	if(NjetS != 1)
+          continue;
 
 	double minDR = 1000;
 	double minMLL = 1000;
@@ -399,7 +397,7 @@ void Plot_2D(){
 	//   continue;
 
 	
-	hist->Fill(minDR, minMLL, weight*double(SKIP));
+	hist->Fill(RISR, Mperp, weight*double(SKIP));
       }
       
       delete base;
@@ -467,6 +465,11 @@ void Plot_2D(){
   l.SetTextFont(42);
   l.DrawLatex(0.7,0.04,g_Label.c_str());
 
+  can->SaveAs("can.pdf");
+  TFile* file = new TFile("output_Plot_2D.root","RECREATE");
+  can->Write();
+  file->Close();
+  //delete can;
 
   // SampleSet sample;
   // sample.write_plot("output/2Dplots.root",g_Label, can);

@@ -45,7 +45,7 @@ else{
   bkg_rate += "Wjets";
   bkg_rate += "ZDY";
   bkg_rate += "QCD";
-bkg_rate += "DB";
+ bkg_rate += "DB";
   
   bkg_rare += "ST";
   bkg_rare += "TB";

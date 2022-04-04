@@ -103,7 +103,7 @@ public:
   
   FitBin& InitializeHistogram(const string& label, bool extrahist = false);
   
-  void Fill(double weight = 1., double M = 0., double R = 0.);
+  bool Fill(double weight = 1., double M = 0., double R = 0.);
 
   void WriteHistogram(const string& name,
 		      const string& fold,

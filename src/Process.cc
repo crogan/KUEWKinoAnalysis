@@ -52,25 +52,7 @@ ProcessType Process::Type() const {
   return m_Type;
 }
 
-
-double Process::GetRlow(const Category& cat, const Systematic& sys){
-  string clabel = cat.Label()+"_"+cat.GetLabel();
-  string plabel = sys.TreeName(Name());
-cout << plabel << " count: " << m_ProcBins.count(plabel) << endl;
-if(m_ProcBins.count(plabel) != 0) cout << clabel << " count: " << m_ProcBins[plabel].count(clabel)  << endl;
-  
-FitBin* bin = m_ProcBins[plabel][clabel];
-if(bin == NULL){ cout << "null bin" << endl; return 0.;}  
-cout << "n rbins: " << bin->NRBins() << endl;
-  vector<RBin*> rbins = bin->RBins();
-  cout << "n mbins: " << rbins[0]->NBins() << endl;
-  return rbins[0]->Rlow();
-
-}
-
-
-
-double Process::AddEvent(double weight, double Mperp, double RISR,
+bool Process::AddEvent(double weight, double Mperp, double RISR,
 		       const Category& cat, const Systematic& sys, bool extrahist){
 
   string clabel = cat.Label()+"_"+cat.GetLabel();
@@ -82,10 +64,7 @@ double Process::AddEvent(double weight, double Mperp, double RISR,
   if(m_ProcBins[plabel].count(clabel) == 0)
     m_ProcBins[plabel][clabel] = cat.GetNewFitBin(plabel, extrahist);
       
-  m_ProcBins[plabel][clabel]->Fill(weight, Mperp, RISR);
-FitBin* bin = m_ProcBins[plabel][clabel];
-  vector<RBin*> rbins = bin->RBins();
-  return rbins[0]->Rlow();
+  return m_ProcBins[plabel][clabel]->Fill(weight, Mperp, RISR);
 }
 
 ////// CHECK systs includes up and down? where is map filled

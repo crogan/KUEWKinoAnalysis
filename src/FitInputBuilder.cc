@@ -40,7 +40,7 @@ FitInputBuilder::~FitInputBuilder(){
     delete m_CatTree;
 }
 
-void FitInputBuilder::AddEvent(double weight, double Mperp, double RISR,
+bool FitInputBuilder::AddEvent(double weight, double Mperp, double RISR,
 			       const Category&   cat,
 			       const Process&    proc,
 			       const Systematic& sys){
@@ -56,9 +56,10 @@ void FitInputBuilder::AddEvent(double weight, double Mperp, double RISR,
   }
 
   if(sys.IsDefault())
-   rlow =  m_Proc[sproc]->AddEvent(weight, Mperp, RISR, cat, sys, m_BookHist);
+    return m_Proc[sproc]->AddEvent(weight, Mperp, RISR, cat, sys, m_BookHist);
   else
-    rlow = m_Proc[sproc]->AddEvent(weight, Mperp, RISR, cat, sys);
+    return m_Proc[sproc]->AddEvent(weight, Mperp, RISR, cat, sys);
+			  
 }
 
 

@@ -33,8 +33,7 @@ public:
 		       const string& var,
 		       const VS& procs,
 		       const string& region,
-		       bool norm = true,
-		       int rebin = 4);
+		       bool norm = true, int rebin = 4, double xmin = -1., double xmax = -1.);
  
 protected:
   mutable TFile  m_File;

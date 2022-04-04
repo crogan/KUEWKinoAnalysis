@@ -359,19 +359,22 @@ FitBin& FitBin::InitializeHistogram(const string& label, bool extrahist){
   return *this;
 }
 
-vector<RBin*> FitBin::RBins(){
-  return m_RBins;
-}
-
-void FitBin::Fill(double weight, double M, double R){
+bool FitBin::Fill(double weight, double M, double R){
   if(m_hist1D == nullptr)
-    return;
+    return false;
+
+  bool ret = true;
+  
   int ibin = GetBin(R, M);
   if(ibin >= 0)
     m_hist1D->Fill(ibin, weight);
+  else
+    ret = false;
+
   if(m_hist2D != nullptr)
     m_hist2D->Fill(M, R, weight);
 
+  return ret;
 }
 
 void FitBin::WriteHistogram(const string& name,

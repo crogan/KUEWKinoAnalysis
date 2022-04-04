@@ -177,11 +177,11 @@ int main(int argc, char* argv[]) {
   HistPlot* hist_plot = new HistPlot("plot","");
 
   // variables
-  const HistPlotVar& MET   = hist_plot->GetNewVar("MET", "MET", 150., 1500., "[GeV]");
+  const HistPlotVar& MET   = hist_plot->GetNewVar("MET", "MET", 150., 2000., "[GeV]");
   const HistPlotVar& RISR  = hist_plot->GetNewVar("RISR", "RISR", 0.45, 1.);
-  const HistPlotVar& PTISR = hist_plot->GetNewVar("PTISR", "PTISR", 250., 2000.);
+  const HistPlotVar& PTISR = hist_plot->GetNewVar("PTISR", "PTISR", 250., 2500.);
   const HistPlotVar& Gperp = hist_plot->GetNewVar("Gperp", "Gperp", 0., 1.);
-  const HistPlotVar& Mperp = hist_plot->GetNewVar("Mperp","Mperp", 0., 1000.);
+  const HistPlotVar& Mperp = hist_plot->GetNewVar("Mperp","Mperp", 0., 800.);
 
   // object counting
   const HistPlotVar& NSjet  = hist_plot->GetNewVar("NSjet","NSjet",-0.5,15.5);
@@ -239,6 +239,9 @@ int main(int argc, char* argv[]) {
   
   // dummy in case there is no data requested
   Process data_obs("data_obs", kData);
+
+  // to check RISR/Mperp bin
+  FitInputBuilder FITBuilder;
 
   bool some_data = false;
   bool some_bkg  = false; 
@@ -412,7 +415,7 @@ int main(int argc, char* argv[]) {
 	if(!base->EventFilter)
 	  continue;
 
-	if(base->runnum > 319077 && is_data && year == 2018)
+	if(base->runnum >= 319077 && is_data && year == 2018)
 	  if(base->HEM_Veto)
 	    continue;
 	
@@ -566,7 +569,13 @@ int main(int argc, char* argv[]) {
 	  Mperp = 2.*base->EJ_BoostT;
 	if((Nlep < 1) && (NjetS == 1) && (NSV < 1))
 	  Mperp = 2.*base->EJ_BoostT;
-	
+
+	bool found = FITBuilder.AddEvent(1., Mperp, RISR,
+					 Categories[eindex], data_obs);
+	if(!found)
+	  continue;
+      
+      
 	double weight = 1.;
 	if(!is_data)
 	  weight = (setLumi ? lumi : ST.Lumi())*base->weight*sample_weight;
