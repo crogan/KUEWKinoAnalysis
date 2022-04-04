@@ -22,7 +22,7 @@ public:
   void SmoothFakes();
   void SmoothQCD();
 
-  void AddShapeSysFakes(bool sJetSplit = false);
+  void AddShapeSysFakes(bool sJetSplit = true);
   void AddShapeSysQCD();
 
   void AddFakeData();

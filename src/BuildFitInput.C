@@ -318,7 +318,7 @@ cout << "# processes: " << samples.GetN() << endl;
 	if(!base->EventFilter)
 	  continue;
 
-        if(base->runnum > 319077 && is_data && year == 2018)
+        if(base->runnum >= 319077 && is_data && year == 2018)
           if(base->HEM_Veto)
             continue;
 	
@@ -548,21 +548,21 @@ cout << "# processes: " << samples.GetN() << endl;
                else
                  weight *= m_METTriggerTool.Get_SF(base->MET, base->PTISR, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
             }
-	    if(sys == Systematic("BTAGHF_SF"))
-	      if(sys.IsUp())
-		weight *= base->BtagSFweight_up;
-	      else
-		weight *= base->BtagSFweight_down;
-	    else 
-	      weight *= base->BtagSFweight;
-
-	    if(sys == Systematic("BTAGLF_SF"))
-	      if(sys.IsUp())
-		weight *= base->BtagSFweight_up;
-	 else
-		weight *= base->BtagSFweight_down;
-	    else 
-	      weight *= base->BtagSFweight;
+//	    if(sys == Systematic("BTAGHF_SF"))
+//	      if(sys.IsUp())
+//		weight *= base->BtagSFweight_up;
+//	      else
+//		weight *= base->BtagSFweight_down;
+//	    else 
+//	      weight *= base->BtagSFweight;
+//
+//	    if(sys == Systematic("BTAGLF_SF"))
+//	      if(sys.IsUp())
+//		weight *= base->BtagSFweight_up;
+//	      else
+//		weight *= base->BtagSFweight_down;
+//	    else 
+//	      weight *= base->BtagSFweight;
 
 	    // turn off PU systematics for now
 	    // if(sys == Systematic("PU_SF"))

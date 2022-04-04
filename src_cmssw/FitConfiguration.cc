@@ -43,21 +43,10 @@ else{
   bkg_rate += "Wjets";
   bkg_rate += "ZDY";
   bkg_rate += "QCD";
-  //bkg_rate += "ST";
-//  bkg_rate += "TB";
   
   bkg_rare += "ST";
   bkg_rare += "TB";
-//float scale_DB in 2017
-if(*cb.era_set().begin() == "2017") bkg_rate += "DB";
-else bkg_rare += "DB";
- // bkg_boson += "Wjets";
- // bkg_boson += "ZDY";
- // bkg_boson += "TB";
- // bkg_boson += "DB";
-
- // bkg_top += "ttbar";
- // bkg_top += "ST";
+ bkg_rate += "DB";
 
 
   // allow for regex filtering
@@ -77,13 +66,6 @@ else bkg_rare += "DB";
 	       ({"2016"}, 1.022)
 	       ({"2017"}, 1.022)
 	       ({"2018"}, 1.022));
-   // if(p == "DB"){
-   //     cb.cp().bin(VS().a(".*2L.*").a(".*3L.*")).process(plist.GetProcesses())
-   //       .AddSyst(cb,"scale_"+p,"rateParam",SystMap<>::init(1.0));
-   //   	cb.cp().bin(VS().a(".*0L.*").a(".*1L.*")).process(plist.GetProcesses())
-   //       .AddSyst(cb,"scale_"+p,"lnN",SystMap<>::init(1.2));
-   // }
-    //else 
     cb.cp().process(plist.GetProcesses())
        .AddSyst(cb, "scale_"+p, "lnN", SystMap<>::init(1.2));
   }
