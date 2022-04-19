@@ -817,6 +817,7 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchStatus("MET", 1);
    fChain->SetBranchStatus("N*_ISR", 1);
    fChain->SetBranchStatus("N*_S", 1);
+   fChain->SetBranchStatus("NSV*", 1);
    fChain->SetBranchStatus("PTISR", 1);
    fChain->SetBranchStatus("RISR", 1);
    fChain->SetBranchStatus("Mperp", 1);
