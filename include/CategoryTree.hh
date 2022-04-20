@@ -129,6 +129,7 @@ public:
   CategoryTree GetCategories_QCD0L() const;
   CategoryTree GetCategories_QCD1L() const;
   CategoryTree GetCategories_1L_ChargeSep() const;
+  CategoryTree GetCategories_Plot1L() const;
 };
 
 #endif

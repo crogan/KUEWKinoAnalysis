@@ -46,7 +46,7 @@ void Plot_DataMC_1D_stack(){
   
    RestFrames::SetStyle();
 
-  string NtuplePath = "/home/t3-ku/z374f439/storage/crogan/";
+  string NtuplePath = "root://xrootd.unl.edu//store/user/zflowers/crogan";//"/home/t3-ku/z374f439/storage/crogan/";
 
   cout << "Initializing sample maps from path " << NtuplePath << " for year " << 2017 << endl;
   SampleTool ST(NtuplePath, 2017);

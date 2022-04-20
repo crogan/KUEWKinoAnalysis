@@ -436,7 +436,7 @@ private:
 
 
 
-void ParseLimitJSON(const string& json, bool inclObs = false, PlotType ptype = kT2tt){
+void ParseLimitJSON(const string& json, bool inclObs = false, PlotType ptype = kTChiWZ){
   RestFrames::SetStyle();
   
   Limit* limit_def = new Limit(json);
@@ -819,7 +819,7 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
   l.SetTextAlign(31);
   l.SetTextSize(0.04);
   l.SetTextFont(42);
-  l.DrawLatex(0.8, 0.95, "45.7 fb^{-1} (13 TeV)");
+  l.DrawLatex(0.8, 0.95, "137 fb^{-1} (13 TeV)");
   l.SetTextAlign(11);
   l.SetTextSize(0.04);
   l.SetTextFont(42);

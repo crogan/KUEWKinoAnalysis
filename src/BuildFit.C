@@ -225,7 +225,6 @@ int main(int argc, char* argv[]) {
   else 
     channels = FIT.GetChannels().FilterOR(chan_to_add);
   channels = channels.RemoveOR(chan_to_rem);
- 
   CategoryList categories;
   if(addCat)
     categories = FIT.GetCategories();
@@ -285,6 +284,7 @@ map<string,VC> catBins;
       cout << " with categories/bins:" << endl;
     
     VC cats = chanMap[c].GetCategories();
+ //cout << "# categories for AddObservations: " << cats.size() << endl;
     
     if(verbose){
       cout << "  $BIN_ID   $BIN" << endl; 
@@ -292,11 +292,13 @@ map<string,VC> catBins;
 	cout << "     " << p.first << "      " << p.second << endl;
       cout << endl;
     }
-
-    cb.AddObservations({"*"}, {Ana}, {Era}, {c}, cats);
+   cb.AddObservations({"*"}, {Ana}, {Era}, {c}, cats);
   }
-  
-  // Add all the background processes
+ 
+
+
+VC total_cats;
+ // Add all the background processes
   int Nbkg = backgrounds.GetN();
   for(int b = 0; b < Nbkg; b++){
     Process proc = backgrounds[b];
@@ -319,7 +321,8 @@ map<string,VC> catBins;
 	continue;
 
       VC cats = filled.GetCategories();
-      cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
+	for(auto c : cats) total_cats.push_back(c);      
+cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
 
     }
   }
@@ -347,6 +350,7 @@ map<string,VC> catBins;
         continue;
 
       VC cats = filled.GetCategories();
+	for(auto c : cats) total_cats.push_back(c);      
       SM sig  = proc.GetSM();
       cb.AddProcesses(sig.second, {Ana}, {Era}, {ch}, {sig.first+"_"}, cats, true);
 
@@ -438,7 +442,26 @@ map<string,VC> catBins;
 
   // Loop through all signals and write a datacard, create output
   
-  VC cats = categories.GetCategories();
+//  VC cats = categories.GetCategories();
+
+//set<pair<int,string>> VC_set(total_cats.begin(),total_cats.end());
+//cout << "# categories for AddProcesses: " << VC_set.size() << " " << total_cats.size()<< endl;
+//cout << "bin_set: " << cb.bin_set().size() << endl;
+//cout << "bin set from Observations: " << cb.SetFromObs(std::mem_fn(&ch::Process::bin)).size() << endl;
+//cout << "bin set from Systematics: " << cb.SetFromSysts(std::mem_fn(&ch::Process::bin)).size() << endl;
+//cout << "imax: " << cb.SetFromProcs(std::mem_fn(&ch::Process::bin)).size() << endl;
+//
+//vector<string> binSet;
+//vector<string> setFromProcs;
+//for(auto b : cb.bin_set()) binSet.push_back(b);//cout << b << endl;
+//for(auto b : cb.SetFromProcs(std::mem_fn(&ch::Process::bin))) setFromProcs.push_back(b);//cout << b << endl;
+//int len = min(binSet.size(),setFromProcs.size());
+//for(int i = 0; i < len; i++){
+//  if(binSet[i] == setFromProcs[i]) continue;
+//  else{ cout << i << endl; cout << "binSet"  << endl; cout << binSet[i-1] << " " << binSet[i] << " " << binSet[i+1] << endl;
+//    cout << "setFromProcs" << endl; cout << setFromProcs[i-1] << " " << setFromProcs[i] << " " << setFromProcs[i+1] << endl; break; }
+//
+//}
 
   cout << "* Writing ouput to " << OutputFold << endl;
   string OutputFile = "";
@@ -479,7 +502,8 @@ map<string,VC> catBins;
       fold = OutputFold+"/all/"+sm.first+"/"+m;
       if(connect)
         fold = "datacards/all/"+sm.first+"/"+m;
-      gSystem->Exec(("mkdir -p "+fold).c_str());
+      //cout << "making directory: " << fold << endl;
+	gSystem->Exec(("mkdir -p "+fold).c_str());
       
       if(verbose)
 	cout << "    * all channels " << sm.first+"_"+m << endl;

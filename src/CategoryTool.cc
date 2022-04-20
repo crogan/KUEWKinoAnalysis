@@ -920,7 +920,6 @@ CategoryList CategoryTool::GetCategories_0L(bool maskSR) const {
 }
 
 CategoryList CategoryTool::GetCategories_1L(bool maskSR) const {
-cout << "CategoryTool::GetCategories_1L" << endl;  
 CategoryList Cats_1L;
   cout << "Creating 1L Categories" << endl;
 

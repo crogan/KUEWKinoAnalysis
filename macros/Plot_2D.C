@@ -47,13 +47,13 @@ using namespace RestFrames;
 
 void Plot_2D(){
 
-  
+   int year = 2017;  
    RestFrames::SetStyle();
-
-  string NtuplePath = "/home/t3-ku/z374f439/storage/crogan/";
-
-  cout << "Initializing sample maps from path " << NtuplePath << " for year " << 2017 << endl;
-  SampleTool ST(NtuplePath, 2017);
+   int ifile = -1;
+//  string NtuplePath = "/home/t3-ku/z374f439/storage/crogan/";
+string NtuplePath = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v0/";
+  cout << "Initializing sample maps from path " << NtuplePath << " for year " << year << endl;
+  SampleTool ST(NtuplePath, year);
   
   ScaleFactorTool SF;
   CategoryTool CT;
@@ -76,22 +76,11 @@ void Plot_2D(){
   //Categories = Categories.Filter(CT_2L);
 
   VS vsignals;
-  //vsignals.a("TChiWZ_2500245").a("TChiWZ_2500240").a("TChiWZ_2500220").a("TChiWZ_2500200").a("TChiWZ_2500160");
-  //vsignals.a("TSlepSlep_2500245").a("TSlepSlep_2500240").a("TSlepSlep_2500220").a("TSlepSlep_2500200").a("TSlepSlep_2500170");
-  //vsignals.a("T2tt_5000490").a("T2bW_5000490").a("T2tt_5000480").a("T2bW_5000480");
-  //vsignals.a("T2tt_5000480").a("T2tt_5000450").a("T2tt_5000400").a("T2tt_5000325");
-  //vsignals.a("T2bW_5000480").a("T2bW_5000450").a("T2bW_5000420").a("T2bW_5000325");
-  //vsignals.a("T2tt_5000450").a("T2bW_5000420").a("T2tt_5000375").a("T2bW_5000325");
-  //vsignals.a("T2bb_5000475").a("T2bb_5000450").a("T2bb_5000400").a("T2bb_5000350");
-  // VS all = signals;
-  // all.a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD").a("Wjets").a("Fakes");
-
-  //vsignals.a("T2tt_6000590");
-  vsignals.a("TChiWZ_2750245");
+  vsignals.a("TChiWZ_4000350");
   //vsignals.a("ttbar");
   
   //ProcessList backgrounds = ST.Get(kBkg).Remove("QCD");
-  ProcessList backgrounds = ST.Get(kBkg).Filter("Wjets");
+  ProcessList backgrounds = ST.Get(kBkg);
 
   ProcessList signals;
   for(auto s : vsignals)
@@ -109,7 +98,7 @@ void Plot_2D(){
   //g_Xname = "E_{lep #scale[0.8]{#perp}}^{ S}  [GeV]";
   //g_Xname = "#bar{M}_{#tilde{#chi_{2}} #scale[0.8]{#perp}}  [GeV]";
   // g_Xname = "p_{T}^{lep} [GeV]";
-  g_Yname = "M_{#perp}  [GeV]";
+  //g_Yname = "M_{#perp}  [GeV]";
   //g_Xname = "#Delta R (#it{l} #it{l} )";
   //g_Xmin = 0.0;
   //g_Xmax = 1.; 
@@ -117,9 +106,9 @@ void Plot_2D(){
   //g_Yname = "#Delta R (#it{l} #it{l} )";
   //g_Yname = "m(#it{l} #it{l} ) [GeV]";
   //g_Yname = "#gamma_{T}";
-  //g_Yname = "p_{T}^{ISR}";
+  g_Yname = "p_{T}^{ISR} [GeV]";
   g_Ymin = 0.;
-  g_Ymax = 100.;
+  g_Ymax = 800.;
   g_NY = 32;
 
    g_Xname = "R_{ISR}";
@@ -135,9 +124,8 @@ void Plot_2D(){
 			g_NX, g_Xmin, g_Xmax,
 			g_NY, g_Ymin, g_Ymax);
   
-  int SKIP = 100;
-  //ProcessList samples = signals;
-  ProcessList samples = backgrounds;
+  ProcessList samples = signals;
+  //ProcessList samples = backgrounds;
   //samples += backgrounds;
 
    g_PlotTitle = samples[0].Name();
@@ -147,7 +135,7 @@ void Plot_2D(){
   
   for(int s = 0; s < Nsample; s++){
     Process proc = samples[s];
-    
+
     string title = proc.Name();
 
     bool is_data   = (proc.Type() == kData);
@@ -157,7 +145,10 @@ void Plot_2D(){
     int Nfile = ST.NTrees(proc);
     
     cout << "Processing " << Nfile << " files for process " << title << endl;
+   
     for(int f = 0; f < Nfile; f++){
+      if(ifile != -1)
+        f = ifile;
       string file = ST.FileName(proc, f);
       string tree = ST.TreeName(proc, f);
       
@@ -176,11 +167,10 @@ void Plot_2D(){
 	cout << "      Filter Out dilepton events" << endl;
       
       TChain* chain = ST.Tree(proc, f);
-      
       ReducedBase* base = new ReducedBase(chain);
-      
       int Nentry = base->fChain->GetEntries(); 
-      
+     cout << "Nentry: " << Nentry << endl; 
+      int SKIP = 100;
       // event loop
       for(int e = 0; e < Nentry; e += SKIP){
 	base->GetEntry(e);
@@ -195,7 +185,7 @@ void Plot_2D(){
 	// apply trigger to data and FullSim events
 	if(!base->METORtrigger && !is_FastSim)
 	  continue;
-		
+	cout << "event #"  << e << " MET:" << base->MET << endl;	
 	if(base->MET < 150)
 	  continue;
 	  
@@ -268,11 +258,9 @@ void Plot_2D(){
 	if(Nlep + NjetS + NSV < 1)
 	  continue;
 
-	g_Label = "2L 1J";
+	g_Label = "2L J X";
 	if(Nlep != 2)
 	  continue;
-	if(NjetS != 1)
-          continue;
 
 	double minDR = 1000;
 	double minMLL = 1000;
@@ -473,10 +461,6 @@ void Plot_2D(){
 
   // SampleSet sample;
   // sample.write_plot("output/2Dplots.root",g_Label, can);
-  TString file_name = "output/2D_plots/"+g_Label+".root";
-  TFile* file = new TFile(file_name,"RECREATE");
-  file->cd();
-  can->Write();
 
 
 }

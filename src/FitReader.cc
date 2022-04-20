@@ -190,7 +190,7 @@ TH1D* FitReader::GetAddedHist(const string&       name,
     for(int c = 0; c < Nc; c++){
       if(!IsFilled(cats[c], procs[p], sys))
 	continue;
-	if(procs[p].Name() != "total_background" && name.find("plothist_0_") != std::string::npos && p == 0) cout << cats[c].Label()+"_"+cats[c].GetLabel() << " " << procs[p].Name() << endl;  
+	//if(procs[p].Name() != "total_background" && name.find("plothist_0_") != std::string::npos && p == 0) cout << cats[c].Label()+"_"+cats[c].GetLabel() << " " << procs[p].Name() << endl;  
   if(!hist){
 	hist = (TH1D*) GetHistogram(cats[c], procs[p], sys)->Clone(name.c_str());
       } else {

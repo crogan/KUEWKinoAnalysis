@@ -7,7 +7,7 @@ TString RmSpace(TString str);
 void PlotStackAndSignificance(){
 
   //Input BFI file
-  string inputFile = "/home/t3-ku/aabreuna/WorkDir/CMSSW_10_6_12/src/KUEWKinoAnalysis/BFI_batch_hist_v2.root";
+  string inputFile = "/uscms/home/mlazarov/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis/BuildFitInputs/BFI_allBkgs_data_TChiWZ_2018_allchan_maskSR_12_21_21/root/BFI.root";//"/home/t3-ku/aabreuna/WorkDir/CMSSW_10_6_12/src/KUEWKinoAnalysis/BFI_batch_hist_v2.root";
 
   //Create FitPlotter object to call stack and significance plotting functions
   FitPlotter* FITPlotter = new FitPlotter(inputFile, "", "");
@@ -16,7 +16,7 @@ void PlotStackAndSignificance(){
   CategoryTreeTool CTTool;
   
   //Choosing category 1L with charge separation (defined in CategoryTree)
-  CategoryTree CT_1L = CTTool.GetCategories_1L_ChargeSep();
+  CategoryTree CT_1L = CTTool.GetCategories_1L();
  
   //Assign signals and backgrounds for plot
   VS sigs;
@@ -32,26 +32,27 @@ void PlotStackAndSignificance(){
   int depth0 = CT_1L.GetDepth();
   vector<const CategoryTree*> CTs_1L;
   CT_1L.GetListDepth(CTs_1L, depth0-2);
-
-  cout << CTs_1L.size() << endl;
+  int d = depth0;
+  cout << "depth:" << depth0-2 << " size:" <<CTs_1L.size() << endl;
 
   //Loop over all regions at specified depth
   for(int i = 0; i < int(CTs_1L.size()); i++){ 
-
+string dir = CTs_1L[i]->GetPlainLabel(depth0-d);
+while(dir.find(" ") != string::npos) dir.replace(dir.find(" "),1,"_");
+    cout << dir  << endl;
     //significance plot with Mperp binning    
-    FITPlotter->PlotRegionSignificance(string(RmSpace(CTs_1L[i]->GetPlainLabel(depth0))+"ratioZbin_chargeSep_RISR_Mperp"),
-				       bkgs,                                                                                                                 
-				       sigs,
-				       *CTs_1L[i]);
-
+//    FITPlotter->PlotRegionSignificance(string(RmSpace(CTs_1L[i]->GetPlainLabel(depth0))+"ratioZbin_chargeSep_RISR_Mperp"),
+//				       bkgs,                                                                                                               //				          sigs,
+//				       *CTs_1L[i]);
+//
     //significance plot integrated over Mperp 
-    FITPlotter->PlotRegionSignificance(string(RmSpace(CTs_1L[i]->GetPlainLabel(depth0))+"ratioZbin_chargeSep_RISR"),
-                                       bkgs,
-                                       sigs,
-                                       *CTs_1L[i],
-				       kRISR);
+//    FITPlotter->PlotRegionSignificance(string(RmSpace(CTs_1L[i]->GetPlainLabel(depth0))+"ratioZbin_chargeSep_RISR"),
+//                                       bkgs,
+//                                       sigs,
+//                                       *CTs_1L[i],
+//				       kRISR);
     //stack plot with Mperp binning 
-    FITPlotter->Plot1Dstack(string(RmSpace(CTs_1L[i]->GetPlainLabel(depth0))+"stack_chargeSep_RISR_Mperp"),
+    TCanvas* cv = FITPlotter->Plot1Dstack(string(RmSpace(CTs_1L[i]->GetPlainLabel(depth0))+"stack_chargeSep_RISR_Mperp"),
 			    all,                                                                                                          
 			    *CTs_1L[i]);
 
