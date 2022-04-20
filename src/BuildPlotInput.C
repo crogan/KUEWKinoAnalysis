@@ -19,7 +19,7 @@
 //#include <TIter.h>
 #include <TKey.h>
 
-#include "ReducedBase_slim.hh"
+#include "ReducedBase.hh"
 #include "FitInputBuilder.hh"
 #include "Systematics.hh"
 #include "SampleTool.hh"
@@ -34,6 +34,7 @@ using namespace std;
 using namespace RestFrames;
 
 int main(int argc, char* argv[]) {
+int event_count = 0;
   int ifile = -1;
   //string NtuplePath = "/home/t3-ku/z374f439/storage/crogan/";
   string NtuplePath = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v0/";
@@ -580,6 +581,7 @@ int main(int argc, char* argv[]) {
 	if(!is_data)
 	  weight = (setLumi ? lumi : ST.Lumi())*base->weight*sample_weight;
 
+event_count++;    
 	// region fills
 	hist_plot->Fill(cat_incl[proc][0], weight);
 
@@ -668,7 +670,6 @@ int main(int argc, char* argv[]) {
 	}
 	
       }
-    
       delete base;
       delete chain;
       if(ifile != -1)
@@ -678,5 +679,6 @@ int main(int argc, char* argv[]) {
 
    hist_plot->WriteHist(OutFile);
   //FITBuilder.WriteFit(OutFile);
+std::cout << "Number of Events: " << event_count << endl;
   
 }

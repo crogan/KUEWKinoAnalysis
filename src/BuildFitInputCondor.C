@@ -245,15 +245,14 @@ int main(int argc, char* argv[]) {
     iBFICmd += "+proc "+proc.Name()+" ";
     cout << "Adding proc " << proc.Name() << endl;
     if(procs.size() >= maxN || p == Nsample-1){
+     if(connect)
+     {
       int Nfile = ST.NTrees(proc);
       for(int f = 0; f < Nfile; f++){
         string new_BFICmd = BuildFitInputCmd;
         //if(proc.Type() == kBkg)
-//        if(proc.Type() != kSig)
+        //if(proc.Type() != kSig)
           new_BFICmd += ("-ifile "+std::to_string(f))+" ";
-        WriteScript(SrcFold+Form("submit_%d",Njob)+".sh",
-          	  LogFold+Form("job_%d",Njob)+".log",
-          	  new_BFICmd+iBFICmd+" -o "+RootFold+Form("BFI_%d.root ", Njob));
         if(connect)
           WriteScriptConnect(SrcFold+Form("submit_%d",Njob)+".sh",
           	  LogFold+Form("job_%d",Njob)+".log",
@@ -262,6 +261,14 @@ int main(int argc, char* argv[]) {
         condorsubmit << "condor_submit " << SrcFold << "submit_" << Njob << +".sh" << endl;
 
         Njob++;
+       }
+      }
+      if(!connect)
+      {
+       WriteScript(SrcFold+Form("submit_%d",Njob)+".sh",
+          	  LogFold+Form("job_%d",Njob)+".log",
+          	  BuildFitInputCmd+iBFICmd+" -o "+RootFold+Form("BFI_%d.root ", Njob));
+       Njob++;
       }
      iBFICmd = "";
      procs.clear();

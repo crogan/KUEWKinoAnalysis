@@ -7,6 +7,8 @@
 #include "TTree.h"
 
 void DO_FILE(string filename, string filetag);
+// example syntax: root -l 'macros/MakeFilterEff.C++("test_list.txt","Summer16_102X")'
+// where list is list of filter eff text files
 
 void MakeFilterEff(string listname, string filetag){
   string line;
