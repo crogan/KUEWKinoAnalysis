@@ -308,9 +308,47 @@ Systematics SystematicsTool::GetWeightSystematics() const {
   Systematics list;
   
   //list += "PU_SF"; // turn off for now
-  list += "BTAGHF_SF";
-  list += "BTAGLF_SF";
-  list += "MET_TRIG";
+  //list += "BTAGHF_SF";
+  //list += "BTAGLF_SF";
+  //
+  //list += "MET_TRIG_0L_01J";
+  //list += "MET_TRIG_0L_23J";
+  //list += "MET_TRIG_0L_45J";
+  //list += "MET_TRIG_1Lel_01J";
+  //list += "MET_TRIG_1Lel_234J";
+  //list += "MET_TRIG_1Lmu_01J";
+  //list += "MET_TRIG_1Lmu_234J";
+  //list += "MET_TRIG_2L3L_01J";
+  //list += "MET_TRIG_2L3L_2J";
+  //
+  //list += "MET_TRIG_0L";
+  //list += "MET_TRIG_el";
+  //list += "MET_TRIG_mu";
+  //
+  //list += "MET_TRIG_1L";
+  //list += "MET_TRIG_2L3L";
+  //
+  //list += "MET_TRIG_0L";
+  //list += "MET_TRIG_1Lel";
+  //list += "MET_TRIG_1Lmu";
+  //list += "MET_TRIG_2L3Lel";
+  //list += "MET_TRIG_2L3Lmu";
+  //
+  //list += "MET_TRIG_0L_HTLow";
+  //list += "MET_TRIG_0L_HTMed";
+  //list += "MET_TRIG_0L_HTHigh";
+  //list += "MET_TRIG_1Lel_HTLow";
+  //list += "MET_TRIG_1Lel_HTMed";
+  //list += "MET_TRIG_1Lel_HTHigh";
+  //list += "MET_TRIG_1Lmu_HTLow";
+  //list += "MET_TRIG_1Lmu_HTMed";
+  //list += "MET_TRIG_1Lmu_HTHigh";
+  //list += "MET_TRIG_2L3Lel_HTLow";
+  //list += "MET_TRIG_2L3Lel_HTMed";
+  //list += "MET_TRIG_2L3Lel_HTHigh";
+  //list += "MET_TRIG_2L3Lmu_HTLow";
+  //list += "MET_TRIG_2L3Lmu_HTMed";
+  //list += "MET_TRIG_2L3Lmu_HTHigh";
 
   return list;
 }
