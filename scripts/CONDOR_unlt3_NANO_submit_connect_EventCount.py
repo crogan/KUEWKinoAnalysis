@@ -220,8 +220,6 @@ if __name__ == "__main__":
             dataset = dataset.replace(".txt",'')
 
             # make output folders
-            os.system("rm -rf "+ROOT+"/"+dataset+"/")
-            os.system("mkdir -p "+ROOT+"/"+dataset+"/")
 
             filetag = ""
             for ktag in knowntags:
@@ -238,6 +236,7 @@ if __name__ == "__main__":
 
             if len(datasetlist) == 0:
                 datasetlist.append((dataset,filetag,rootlist))
+                os.system("rm -rf "+ROOT+dataset+"_"+filetag+"/")
                 os.system("mkdir -p "+ROOT+dataset+"_"+filetag+"/")
                 continue
             
@@ -285,7 +284,7 @@ if __name__ == "__main__":
 
     for f in submit_list:
         print "submitting: ", f
-        os.system('condor_submit ' + f)
+        #os.system('condor_submit ' + f)
    
 
 
