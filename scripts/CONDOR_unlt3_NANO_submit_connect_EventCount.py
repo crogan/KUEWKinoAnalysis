@@ -284,7 +284,7 @@ if __name__ == "__main__":
 
     for f in submit_list:
         print "submitting: ", f
-        #os.system('condor_submit ' + f)
+        os.system('condor_submit ' + f)
    
 
 
