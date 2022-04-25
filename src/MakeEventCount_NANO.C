@@ -35,7 +35,6 @@ int main(int argc, char* argv[]) {
   char TreeName[400];
   char DataSet[400];
   char FileTag[400];
-  char FilterEff[400];
 
   bool DO_FILE = false;
   bool DO_LIST = false;
@@ -73,7 +72,6 @@ int main(int argc, char* argv[]) {
     if (strncmp(argv[i],"-dataset",8)==0)   sscanf(argv[i],"-dataset=%s", DataSet);
     if (strncmp(argv[i],"-filetag",8)==0)   sscanf(argv[i],"-filetag=%s", FileTag);
     if (strncmp(argv[i],"--sms",5)==0)  DO_SMS = true;
-    if (strncmp(argv[i],"-filtereff",10)==0)   sscanf(argv[i],"-filtereff=%s", FilterEff);
   }
 
   gROOT->ProcessLine("#include <vector>");
@@ -128,11 +126,6 @@ int main(int argc, char* argv[]) {
     chain->Add(filenames[i].c_str());
     cout << "   Adding file " << filenames[i] << endl;
   }
-
-  NeventTool NevtTool;
-  NevtTool.BuildFilterEffMap(string(FilterEff));
-  
-  cout << "DONE Filter eff" << endl;
 
   Float_t genWeight;
   UInt_t  luminosityBlock;
@@ -194,7 +187,6 @@ int main(int argc, char* argv[]) {
     Nweight += genWeight;
 
     if(DO_SMS){
-      double eff = NevtTool.GetFilterEff(dataset, filetag, luminosityBlock);
       MP = 0;
       MC = 0;
       int Ngen = nGenPart;
