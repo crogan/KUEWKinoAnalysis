@@ -299,7 +299,7 @@ cout << "# processes: " << samples.GetN() << endl;
     
       TChain* chain = ST.Tree(proc, f);
       ReducedBase* base = new ReducedBase(chain);
-      int Nentry = 1e6;//base->fChain->GetEntries();
+      int Nentry = base->fChain->GetEntries();
      cout << "Nentry: " << Nentry << endl;
 if(chain == nullptr) cout << "chain null" << endl;
 if(base == nullptr) cout << "base null" << endl; 
