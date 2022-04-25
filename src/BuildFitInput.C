@@ -219,8 +219,8 @@ cout << "# processes: " << samples.GetN() << endl;
 
   SystematicsTool SYS;
   METTriggerTool m_METTriggerTool;
-  m_METTriggerTool.BuildMap("Parameters.csv");
-  //m_METTriggerTool.BuildMap("csv/METTrigger/Parameters.csv");
+  //m_METTriggerTool.BuildMap("Parameters.csv");
+  m_METTriggerTool.BuildMap("csv/METTrigger/Parameters.csv");
 
   Systematics systematics(1);
   if(doSys)
@@ -273,7 +273,7 @@ cout << "# processes: " << samples.GetN() << endl;
     bool is_signal = (proc.Type() == kSig);
     int Nsys = (is_data ? 1 : systematics.GetN());
     
-    int Nfile = 1;//ST.NTrees(proc);
+    int Nfile = ST.NTrees(proc);
 
     cout << "Processing " << Nfile << " files for process " << title << endl;
 
@@ -505,7 +505,7 @@ cout << "passed lepton specific PTISR cuts" << endl;
                 trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0)*
                               m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
           }
-	
+if(weight > 100) cout << "weight: " << weight << endl;	
 	// systematics loop
 	// do down sys first
 	for(int is = 0; is < Nsys; is++){
@@ -709,7 +709,6 @@ if(is_data) weight = 1.;
         break;
     }
   }
-cout << "write Fit" << endl;
   FITBuilder.WriteFit(OutFile);
 
 }
