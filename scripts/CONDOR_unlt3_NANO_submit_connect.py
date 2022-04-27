@@ -247,10 +247,6 @@ if __name__ == "__main__":
     if ROOT == TARGET:
         ROOT = ROOT+"root/"
 
-    # make output folders
-    os.system("rm -rf "+ROOT)
-    os.system("mkdir -p "+ROOT)
-
     datasetlist = []
 
     knowntags = ["Fall17_94X","Autumn18_102X","Summer16_94X","Fall17_102X","Summer16_102X","Summer20UL16_102X","Summer20UL16APV_102X","Summer20UL17_102X","Summer20UL18_102X"]
@@ -286,12 +282,14 @@ if __name__ == "__main__":
 
             if len(datasetlist) == 0:
                 datasetlist.append((dataset,filetag,rootlist))
+                os.system("rm -rf "+ROOT+dataset+"_"+filetag+"/")
                 os.system("mkdir -p "+ROOT+dataset+"_"+filetag+"/")
                 continue
             
             tagtuple = [item for item in datasetlist if item[0] == dataset]
             if len(tagtuple) == 0:
                 datasetlist.append((dataset,filetag,rootlist))
+                os.system("rm -rf "+ROOT+dataset+"_"+filetag+"/")
                 os.system("mkdir -p "+ROOT+dataset+"_"+filetag+"/")
                 continue
 
