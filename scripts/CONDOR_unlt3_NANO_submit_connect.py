@@ -198,40 +198,49 @@ if __name__ == "__main__":
     os.system("mkdir -p "+srcdir)
 
     # make config directory
+    print(" --- make config directory")
     config = TARGET+"config/"
     os.system("mkdir -p "+config)
 
     # make EventCount file
+    print(" --- make EventCount file")
     os.system("hadd "+config+"EventCount.root root/EventCount/*.root")
     EVTCNT = "./config/EventCount.root"
 
     # make FilterEff file 
+    print(" --- make FilterEff file")
     os.system("hadd "+config+"FilterEff.root root/FilterEff/*.root")
     FILTEREFF = "./config/FilterEff.root"
 
     # make json file
+    print(" --- make json file")
     os.system("cat json/GoodRunList/*.txt > "+config+"GRL_JSON.txt")
     os.system("echo -n $(tr -d '\n' < "+config+"GRL_JSON.txt) > "+config+"GRL_JSON.txt")
     JSON = "./config/GRL_JSON.txt"
 
     # copy PU root files
+    print(" --- copy PU root files")
     os.system("cp -r root/PU "+config+".")
     PUFOLD = "./config/PU/"
 
     # copy BTAG SF files
+    print(" --- copy BTAG SF files")
     os.system("cp -r root/BtagSF "+config+".")
     os.system("cp -r csv/BtagSF/* "+config+"BtagSF/.")
     BTAGFOLD = "./config/BtagSF/"
 
     # copy JME files
+    print(" --- copy JME files")
     os.system("cp -r data/JME "+config+".")
     JMEFOLD = "./config/JME/"
 
     # copy MET trigger files
+    print(" --- copy MET trigger files")
     os.system("cp -r csv/METTrigger "+config+".")
     METFILE = "./config/METTrigger/Parameters.csv"
 
     # copy SV NN model
+    print(" --- copy SV NN model")
     os.system("cat json/lwtnn/nano_train_model.json > "+config+"NNmodel.json")
     SVFILE = "./config/NNmodel.json"
     
