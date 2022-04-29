@@ -18,15 +18,26 @@ These packages must be included in the **CMSSW** directory structure as:
     - KUEWKinoAnalysis
 ```
 
-You can set up a **CMSSW** area and checkout the required packages by performing the terminal commands below. 
+You can setup a **CMSSW** area and checkout the required packages by performing the terminal commands below. 
+These instructions are for bash users.
+Bash is recommended, as framework scripts for other shells are not created/supported.
+You can check what shell you are using by running `echo $0` or `echo $SHELL`.
 
 ### Setup environmental variables for CMSSW
-Put these commands in `~/.bash_profile` or `~/.bashrc` so that they are run when your terminal session starts:
+Put these commands in either `~/.bash_profile` or `~/.bashrc` (but not both)
+so that they are run at the beginning of every new terminal session:
 ```
 source /cvmfs/cms.cern.ch/cmsset_default.sh
 source /cvmfs/cms.cern.ch/crab3/crab.sh
 export SCRAM_ARCH=slc7_amd64_gcc700
 ```    
+Once these commands are added to `~/.bash_profile` or `~/.bashrc` for the first time,
+you can then source whichever file was modified to apply these changes.
+```
+source ~/.bash_profile
+source ~/.bashrc
+```
+
 Note that assigning this SCRAM_ARCH (slc7_amd64_gcc700) is required before
 checking out CMSSW_10_6_5 so that the framework can compile successfully.
 For this use case, SCRAM_ARCH does matter!
