@@ -16,11 +16,11 @@ template <class Base>
 AnalysisBase<Base>::AnalysisBase(TTree* tree)
   : Base(tree), m_Systematics(true)
 {
-  m_Nsample = 0;
+  m_Nsample     = 0;
   m_SampleIndex = 0;
-  m_DoSMS = false;
-  m_IsData = false;
-  m_IsFastSim = false;
+  m_DoSMS       = false;
+  m_IsData      = false;
+  m_IsFastSim   = false;
 
   m_CurSys = &Systematic::Default();
 }
@@ -65,21 +65,21 @@ void AnalysisBase<Base>::AddMMSSystematics(){
 
 template <class Base>
 void AnalysisBase<Base>::DoSMS(){
-  m_DoSMS = true;
+  m_DoSMS  = true;
   m_IsData = false;
 }
 
 template <class Base>
 void AnalysisBase<Base>::DoData(){
-  m_IsData = true;
-  m_IsFastSim = false;
-  m_DoSMS = false;
+  m_IsData      = true;
+  m_IsFastSim   = false;
+  m_DoSMS       = false;
 }
 
 template <class Base>
 void AnalysisBase<Base>::DoFastSim(){
   m_IsFastSim = true;
-  m_IsData = false;
+  m_IsData    = false;
 }
 
 template <class Base>
@@ -96,9 +96,9 @@ string AnalysisBase<Base>::GetEntry(int entry){
 template <class Base>
 int AnalysisBase<Base>::GetSampleIndex(){
   if(m_Nsample == 0){
-    m_IndexToSample[0] = "KUAnalysis";
-    m_IndexToXsec[0] = 1.;
-    m_IndexToNevent[0] = 1.;
+    m_IndexToSample[0]  = "KUAnalysis";
+    m_IndexToXsec[0]    = 1.;
+    m_IndexToNevent[0]  = 1.;
     m_IndexToNweight[0] = 1.;
     m_Nsample++;
   }
@@ -1485,11 +1485,11 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET, int id){
 
       // Deep Flavor
       if(jet.Btag() > 0.7221)
-	jet.SetBtagID(kTight);
+        jet.SetBtagID(kTight);
       else if(jet.Btag() > 0.3093) 
-	jet.SetBtagID(kMedium);
+        jet.SetBtagID(kMedium);
       else if(jet.Btag() > 0.0614)
-	jet.SetBtagID(kLoose);
+        jet.SetBtagID(kLoose);
     }
 
     // https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation94X
@@ -1504,11 +1504,11 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET, int id){
 
       // Deep Flavor
       if(jet.Btag() > 0.7489)
-	jet.SetBtagID(kTight);
+        jet.SetBtagID(kTight);
       else if(jet.Btag() > 0.3033) 
-	jet.SetBtagID(kMedium);
+        jet.SetBtagID(kMedium);
       else if(jet.Btag() > 0.0521)
-	jet.SetBtagID(kLoose);
+        jet.SetBtagID(kLoose);
     }
 
     // https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation102X
@@ -1523,11 +1523,11 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET, int id){
 
       // DeepFlavor
       if(jet.Btag() > 0.7264)
-	jet.SetBtagID(kTight);
+        jet.SetBtagID(kTight);
       else if(jet.Btag() > 0.2770) 
-	jet.SetBtagID(kMedium);
+        jet.SetBtagID(kMedium);
       else if(jet.Btag() > 0.0494)
-	jet.SetBtagID(kLoose);
+        jet.SetBtagID(kLoose);
     }
 
     jet.SetPDGID( Jet_partonFlavour[i] );
@@ -2069,6 +2069,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetSVs(const TVector3& PV){
   
   int N = nSV;
   for(int i = 0; i < N; i++){
+    // SV cuts
     if(SV_chi2[i] < 0.)
       continue;
     if(SV_pt[i] >= 20. || SV_pt[i] < 2.)
@@ -2087,6 +2088,9 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetSVs(const TVector3& PV){
     SV.SetD3dSig(fabs(SV_dlenSig[i]));
     SV.SetCosTheta((xSV-PV).Unit().Dot(SV.Vect().Unit()));
     SV.SetNdof(SV_ndof[i]);
+    // Additional SV variables
+    SV.SetFlavor(SV_flavor[i]);
+    SV.SetNtrk(SV_ntrk[i]);
 
     std::map<std::string, double> probs = m_SVDiscrTool.PROB(SV);
 
@@ -2109,6 +2113,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetSVs(const TVector3& PV){
     // if(SV_ndof[i] < 1.8) // replacement for ntracks cut...
     //   continue;
 
+    // SV discriminator cut
     if(probs["prob_isB"] > 0.3)
       list.push_back(SV);
   }
