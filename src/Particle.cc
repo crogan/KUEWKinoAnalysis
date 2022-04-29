@@ -131,6 +131,14 @@ double Particle::ProbC() const {
   return m_ProbC;
 }
 
+int Particle::Flavor() const {
+  return m_Flavor;
+}
+
+int Particle::Ntrk() const {
+  return m_Ntrk;
+}
+
 void Particle::SetDxy(double val){
   m_Dxy = val;
 }
@@ -177,6 +185,14 @@ void Particle::SetProbB(double val){
 
 void Particle::SetProbC(double val){
   m_ProbC = val;
+}
+
+void Particle::SetFlavor(int val){
+  m_Flavor = val;
+}
+
+void Particle::SetNtrk(int val){
+  m_Ntrk = val;
 }
 
 void Particle::SetRelIso(double iso){

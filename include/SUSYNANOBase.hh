@@ -535,6 +535,8 @@ public :
   Float_t         SV_x[100];   //[nSV]
   Float_t         SV_y[100];   //[nSV]
   Float_t         SV_z[100];   //[nSV]
+  Int_t           SV_flavor[100];   //[nSV]
+  Int_t           SV_ntrk[100];   //[nSV]
   Int_t           Tau_genPartIdx[25];   //[nTau]
   UChar_t         Tau_genPartFlav[25];   //[nTau]
   Bool_t          L1simulation_step;
@@ -1703,6 +1705,8 @@ public :
   TBranch        *b_SV_x;   //!
   TBranch        *b_SV_y;   //!
   TBranch        *b_SV_z;   //!
+  TBranch        *b_SV_flavor;   //!
+  TBranch        *b_SV_ntrk;   //!
   TBranch        *b_Tau_genPartIdx;   //!
   TBranch        *b_Tau_genPartFlav;   //!
   TBranch        *b_L1simulation_step;   //!
@@ -2934,6 +2938,8 @@ inline void SUSYNANOBase::Init(TTree *tree)
   fChain->SetBranchAddress("SV_x", SV_x, &b_SV_x);
   fChain->SetBranchAddress("SV_y", SV_y, &b_SV_y);
   fChain->SetBranchAddress("SV_z", SV_z, &b_SV_z);
+  fChain->SetBranchAddress("SV_flavor", SV_flavor, &b_SV_flavor);
+  fChain->SetBranchAddress("SV_ntrk", SV_ntrk, &b_SV_ntrk);
   fChain->SetBranchAddress("Tau_genPartIdx", Tau_genPartIdx, &b_Tau_genPartIdx);
   fChain->SetBranchAddress("Tau_genPartFlav", Tau_genPartFlav, &b_Tau_genPartFlav);
   fChain->SetBranchAddress("L1simulation_step", &L1simulation_step, &b_L1simulation_step);

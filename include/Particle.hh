@@ -53,12 +53,16 @@ public:
   double Ndof() const;
   double ProbB() const;
   double ProbC() const;
+  int Flavor() const;
+  int Ntrk() const;
   void SetD3d(double val);
   void SetD3dSig(double val);
   void SetCosTheta(double val);
   void SetNdof(double val);  
   void SetProbB(double val);
   void SetProbC(double val);
+  void SetFlavor(int val);
+  void SetNtrk(int val);
 
   double Btag() const;
   void SetBtag(double btag);
@@ -100,6 +104,10 @@ private:
   double m_Ndof;
   double m_ProbB; 
   double m_ProbC;
+
+  // Additional SV variables
+  int m_Flavor;
+  int m_Ntrk;
   
 };
 
