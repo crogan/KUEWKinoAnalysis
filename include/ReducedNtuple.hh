@@ -124,8 +124,6 @@ private:
   vector<double> m_Btag_jet;
   vector<int>    m_BtagID_jet;
   vector<double> m_Flavor_jet;
-  vector<double> m_ProbB_SV;
-  vector<double> m_ProbC_SV;
 
   int m_NGenjet;
   vector<double> m_PT_Genjet;
@@ -139,6 +137,10 @@ private:
   vector<double> m_Eta_SV;
   vector<double> m_Phi_SV;
   vector<double> m_M_SV;
+  vector<double> m_ProbB_SV;
+  vector<double> m_ProbC_SV;
+  vector<int>    m_Flavor_SV;
+  vector<int>    m_Ntrk_SV;
 
   int m_genNele;
   int m_genNmu;

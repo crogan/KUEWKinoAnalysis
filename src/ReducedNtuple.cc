@@ -293,34 +293,36 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("SourceID_lep",      &m_SourceID_lep);
   tree->Branch("Index_lep",   &m_Index_lep);
   
-  tree->Branch("Njet", &m_Njet);
+  tree->Branch("Njet",  &m_Njet);
   tree->Branch("Nbjet", &m_Nbjet);
   
-  tree->Branch("PT_jet",  &m_PT_jet);
-  tree->Branch("Eta_jet", &m_Eta_jet);
-  tree->Branch("Phi_jet", &m_Phi_jet);
-  tree->Branch("M_jet",   &m_M_jet);
-  tree->Branch("Btag_jet",   &m_Btag_jet);
-  tree->Branch("BtagID_jet",   &m_BtagID_jet);
-  tree->Branch("Flavor_jet",   &m_Flavor_jet);
-  tree->Branch("index_jet_a", &m_index_jet_a);
-  tree->Branch("index_jet_b", &m_index_jet_b);
+  tree->Branch("PT_jet",        &m_PT_jet);
+  tree->Branch("Eta_jet",       &m_Eta_jet);
+  tree->Branch("Phi_jet",       &m_Phi_jet);
+  tree->Branch("M_jet",         &m_M_jet);
+  tree->Branch("Btag_jet",      &m_Btag_jet);
+  tree->Branch("BtagID_jet",    &m_BtagID_jet);
+  tree->Branch("Flavor_jet",    &m_Flavor_jet);
+  tree->Branch("index_jet_a",   &m_index_jet_a);
+  tree->Branch("index_jet_b",   &m_index_jet_b);
   tree->Branch("index_jet_ISR", &m_index_jet_ISR);
-  tree->Branch("index_jet_S", &m_index_jet_S);
+  tree->Branch("index_jet_S",   &m_index_jet_S);
 
-  tree->Branch("NSV", &m_NSV);
-  tree->Branch("PT_SV",  &m_PT_SV);
-  tree->Branch("Eta_SV", &m_Eta_SV);
-  tree->Branch("Phi_SV", &m_Phi_SV);
-  tree->Branch("M_SV",   &m_M_SV);
-  tree->Branch("ProbB_SV",   &m_ProbB_SV);
-  tree->Branch("ProbC_SV",   &m_ProbC_SV);
+  tree->Branch("NSV",       &m_NSV);
+  tree->Branch("PT_SV",     &m_PT_SV);
+  tree->Branch("Eta_SV",    &m_Eta_SV);
+  tree->Branch("Phi_SV",    &m_Phi_SV);
+  tree->Branch("M_SV",      &m_M_SV);
+  tree->Branch("ProbB_SV",  &m_ProbB_SV);
+  tree->Branch("ProbC_SV",  &m_ProbC_SV);
+  tree->Branch("Flavor_SV", &m_Flavor_SV);
+  tree->Branch("Ntrk_SV",   &m_Ntrk_SV);
 
   tree->Branch("PT_Genjet",  &m_PT_Genjet);
   tree->Branch("Eta_Genjet", &m_Eta_Genjet);
   tree->Branch("Phi_Genjet", &m_Phi_Genjet);
   tree->Branch("M_Genjet",   &m_M_Genjet);
-  tree->Branch("Index_jet",   &m_Index_jet);
+  tree->Branch("Index_jet",  &m_Index_jet);
 
   tree->Branch("Njet_ISR", &m_Njet_ISR);
   tree->Branch("Njet_S", &m_Njet_S);
@@ -1237,6 +1239,8 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   m_M_SV.clear();
   m_ProbB_SV.clear();
   m_ProbC_SV.clear();
+  m_Flavor_SV.clear();
+  m_Ntrk_SV.clear();
   for(int i = 0; i < m_NSV; i++){
     m_PT_SV.push_back(SVs[i].Pt());
     m_Eta_SV.push_back(SVs[i].Eta());
@@ -1244,6 +1248,8 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
     m_M_SV.push_back(SVs[i].M());
     m_ProbB_SV.push_back(SVs[i].ProbB());
     m_ProbC_SV.push_back(SVs[i].ProbC());
+    m_Flavor_SV.push_back(SVs[i].Flavor());
+    m_Ntrk_SV.push_back(SVs[i].Ntrk());
   }
   
   // Fill reconstructed lepton branches
