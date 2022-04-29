@@ -30,8 +30,8 @@ export SCRAM_ARCH=slc7_amd64_gcc700
 Note that assigning this SCRAM_ARCH (slc7_amd64_gcc700) is required before
 checking out CMSSW_10_6_5 so that the framework can compile successfully.
 For this use case, SCRAM_ARCH does matter!
-Compile errors have been observed in KUEWKinoAnalysis using CMSSW_10_6_5
-when SCRAM_ARCH is not set before setup.
+Compile errors have been observed in KUEWKinoAnalysis
+when SCRAM_ARCH is not set before checking out CMSSW_10_6_5.
 
 ### Setup CMSSW area
 Checkout CMSSW_10_6_5.
@@ -41,7 +41,7 @@ cd CMSSW_10_6_5/src
 cmsenv
 ```
     
-### Check out required packages
+### Checkout required packages
 Download these repos in the `CMSSW_10_6_5/src` directory.
 Use the KU branch of HiggsAnalysis, the connect branch of CombineHarvester, and the master branch of KUEWKinoAnalysis.
 ```
