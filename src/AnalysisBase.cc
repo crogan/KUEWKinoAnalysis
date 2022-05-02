@@ -1148,6 +1148,11 @@ double AnalysisBase<SUSYNANOBase>::GetMuRWeight(int updown){
 
 template <>
 double AnalysisBase<SUSYNANOBase>::GetPDFWeight(int updown){
+  // skip PDF weight to speed up processing
+  bool skip = true;
+  if (skip)
+    return 1.;
+  // get PDF weight
   if(IsData() || IsSMS())
     return 1.;
   int year = 2016;
