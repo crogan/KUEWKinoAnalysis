@@ -296,6 +296,8 @@ std::map<std::string,double> XsecTool::InitMap_Xsec_BKG(){
   Label2Xsec["WZ_TuneCP5_13TeV-pythia8"] = 47.13;
   Label2Xsec["WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8"] = 4.42965;
   Label2Xsec["WZTo3LNu_TuneCP5_13TeV-powheg-pythia8"] = 4.42965;
+  Label2Xsec["WZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8"] = 5.606;
+  Label2Xsec["WZTo1L1Nu2Q_13TeV_TuneCP5_amcatnloFXFX_madspin_pythia8"] = 11.74;
   Label2Xsec["WWTo2L2Nu_13TeV-powheg"] = 12.178;
   Label2Xsec["WWTo4Q_13TeV-powheg"] = 51.723;
   Label2Xsec["WWToLNuQQ_13TeV-powheg"] = 49.997;
@@ -367,8 +369,6 @@ std::map<std::string,double> XsecTool::InitMap_Xsec_BKG(){
   Label2Xsec["TTZH_TuneCP5_13TeV-madgraph-pythia8"] = 0.00113;
   Label2Xsec["TTZZ_TuneCP5_13TeV-madgraph-pythia8"] = 0.001386;
   
-  Label2Xsec["VHToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8"] = 0.952;
-
   // Zjets NLO k-factors from https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns
   // HT "stitching" factors for Zjets 2017/2018 from
   // https://indico.cern.ch/event/781231/contributions/3263952/subcontributions/274982/attachments/1795600/2926947/190213_mc_discrep_ppd.pdf
@@ -395,25 +395,22 @@ std::map<std::string,double> XsecTool::InitMap_Xsec_BKG(){
   Label2Xsec["GJets_DR-0p4_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 131.8;
   Label2Xsec["GJets_DR-0p4_HT-40To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 17410.0;
   Label2Xsec["GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 44.27;
-  Label2Xsec["GluGluHToZZTo4L_M125_13TeV_powheg2_JHUgenV6_pythia8"] = 29.99;
-  Label2Xsec["GluGluHToWWTo2L2Nu_M125_13TeV_powheg_JHUgenv628_pythia8"] = 29.99;
-  Label2Xsec["GluGluHToWWToLNuQQ_M125_13TeV_powheg_JHUGenV628_pythia8"] = 29.99;
-  Label2Xsec["GluGluHToZZTo2L2Nu_M125_TuneCUETP8M1_13TeV_powheg2_JHUGenV735_pythia8"] = 29.99;
-  Label2Xsec["GluGluHToWWToLNuQQ_M125_NNPDF31_TuneCP5_PSweights_13TeV_powheg_JHUGen710_pythia8"] = 28.87;
-  Label2Xsec["GluGluHToWWTo2L2Nu_M125_13TeV_powheg2_JHUGenV714_pythia8"] = 28.87;
-  Label2Xsec["GluGluHToZZTo2L2Nu_M125_TuneCP5_13TeV_powheg2_JHUGenV735_pythia8"] = 28.87;
-  Label2Xsec["GluGluHToWWToLNuQQ_M125_13TeV_powheg2_JHUGenV714_pythia8"] = 28.87;
-  Label2Xsec["GluGluHToTauTau_M125_13TeV_powheg_pythia8"] = 29.99;
-  Label2Xsec["GluGluHToTauTau_M125_13TeV_powheg_pythia8"] = 28.87;
 
-  Label2Xsec["ZH_HToBB_ZToLL_M125_13TeV_powheg_pythia8"] = 0.07523;
-  Label2Xsec["ZH_HToBB_ZToNuNu_M125_13TeV_powheg_pythia8"] = 0.1482;
-  Label2Xsec["WplusH_HToBB_WToLNu_M125_13TeV_powheg_pythia8"] = 0.2791;
-  Label2Xsec["&WminusH_HToBB_WToLNu_M125_13TeV_powheg_pythia8"] = 0.1733;
-  Label2Xsec["ZH_HToBB_ZToLL_M125_13TeV_powheg_pythia8"] = 0.07924;
-  Label2Xsec["ZH_HToBB_ZToNuNu_M125_13TeV_powheg_pythia8"] = 0.1565;
-  Label2Xsec["WplusH_HToBB_WToLNu_M125_13TeV_powheg_pythia8"] = 0.2819;
-  Label2Xsec["WminusH_HToBB_WToLNu_M125_13TeV_powheg_pythia8"] = 0.176;
+  Label2Xsec["GluGluHToZZTo4L_M125_13TeV_powheg2_JHUgenV6_pythia8"] = 0.001454;
+  Label2Xsec["GluGluHToZZTo2L2Nu_M125_TuneCUETP8M1_13TeV_powheg2_JHUGenV735_pythia8"] = 0.3272;
+  Label2Xsec["GluGluHToZZTo2L2Nu_M125_TuneCP5_13TeV_powheg2_JHUGenV735_pythia8"] = 0.3272;
+  Label2Xsec["GluGluHToWWTo2L2Nu_M125_13TeV_powheg_JHUgenv628_pythia8"] = 1.11994;
+  Label2Xsec["GluGluHToWWTo2L2Nu_M125_13TeV_powheg2_JHUGenV714_pythia8"] = 1.11994;
+  Label2Xsec["GluGluHToWWToLNuQQ_M125_13TeV_powheg_JHUGenV628_pythia8"] = 2.3073;
+  Label2Xsec["GluGluHToWWToLNuQQ_M125_NNPDF31_TuneCP5_PSweights_13TeV_powheg_JHUGen710_pythia8"] = 2.3073;
+  Label2Xsec["GluGluHToWWToLNuQQ_M125_13TeV_powheg2_JHUGenV714_pythia8"] = 2.3073;
+  Label2Xsec["GluGluHToTauTau_M125_13TeV_powheg_pythia8"] = 3.0410416;
+
+  Label2Xsec["ZH_HToBB_ZToLL_M125_13TeV_powheg_pythia8"] = 0.017206;
+  Label2Xsec["ZH_HToBB_ZToNuNu_M125_13TeV_powheg_pythia8"] = 0.10224;
+  Label2Xsec["WplusH_HToBB_WToLNu_M125_13TeV_powheg_pythia8"] = 0.05851;
+  Label2Xsec["WminusH_HToBB_WToLNu_M125_13TeV_powheg_pythia8"] = 0.1002;
+  Label2Xsec["VHToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8"] = 0.9379;
   
   Label2Xsec["tZq_ll_4f_13TeV-amcatnlo-pythia8"] = 0.0758;
   Label2Xsec["ttHToNonbb_M125_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8"] = 0.5638;
