@@ -2,13 +2,13 @@
 
 #include "../include/FitPlotter.hh"
 
-void PlotFits(const string& fold1 = "BF_allBkgs_data_TChiWZincl4000390_2018_allchan_maskSR_3_17_22", const string& fold2 = "all/TChiWZ/4000390", const string& shapesFile = ".cMinStrat0.robustHesse.wShapes.3_18_22.root",  int lepNum = 0){
+void PlotFits(const string& fold1 = "BF_allBkgs_data_TChiWZincl_2016_allchan_maskSR_4_27_22", const string& fold2 = "datacards/all/TChiWZ/2000170", const string& shapesFile = "4_26_22wShapes.root",  int lepNum = 2){
   
   string dateName = shapesFile.substr(0,8);
         string bfName = fold1.substr(2,fold1.size());
         string odir = "prePostStackPlots/prePostStackPlots"+bfName;
 
-        string inputfile1 = "BuildFits/"+fold1+"/FitInput_KUEWKino_2018.root";
+        string inputfile1 = "BuildFits/"+fold1+"/FitInput_KUEWKino_2016.root";
         string inputfile2 = "BuildFits/"+fold1+"/"+fold2+"/fitDiagnostics"+shapesFile;
         string lepName;
         if(fold2.find("L") != string::npos) lepName = fold2.substr(10,4);
@@ -43,7 +43,7 @@ bool ratio = true;
   //all.a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD").a("Wjets").a("HF_Fakes").a("LF_Fakes").a("Data");
   string sig;
  // sig = "T2tt_6000425";
- sig = "TChiWZ_4000390";
+// sig = "TChiWZ_4000390";
  //all += sig; 
 
   bool zeroL = false;
