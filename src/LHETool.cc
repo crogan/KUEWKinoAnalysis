@@ -12,7 +12,7 @@ void LHETool::GetFromLHAPDF(int& nPDFWeights, std::vector<double>& PDFWeights, i
   std::string errorTypeCount = pdfset.errorType();
   size_t npar = std::count(errorTypeCount.begin(),errorTypeCount.end(),'+');
   nPDFWeights = npar;
-  PDFWeights.resize(nPDFWeights);
+  PDFWeights.resize(pdfset.size());
   std::fill(PDFWeights.begin(),PDFWeights.end(),0.0);
   double x1_cen = pdfs[0]->xfxQ(id1,x1,scalePDF);
   double x2_cen = pdfs[0]->xfxQ(id2,x2,scalePDF);
