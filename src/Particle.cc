@@ -24,8 +24,14 @@ Particle::Particle() : TLorentzVector() {
   m_Ndof = 0.;
   m_ProbB = 0.;
   m_ProbC = 0.;
+  
   m_Flavor = 0;
   m_Ntrk = 0;
+  m_PAngle = 0.;
+  m_Chi2 = 0.;
+  m_X = 0.;
+  m_Y = 0.;
+  m_Z = 0.;
   
   m_Btag = 0.;
   m_BtagID = kNothing;
@@ -149,6 +155,26 @@ int Particle::Ntrk() const {
   return m_Ntrk;
 }
 
+double Particle::PAngle() const {
+  return m_PAngle;
+}
+
+double Particle::Chi2() const {
+  return m_Chi2;
+}
+
+double Particle::X() const {
+  return m_X;
+}
+
+double Particle::Y() const {
+  return m_Y;
+}
+
+double Particle::Z() const {
+  return m_Z;
+}
+
 void Particle::SetDxy(double val){
   m_Dxy = val;
 }
@@ -207,6 +233,26 @@ void Particle::SetFlavor(int val){
 
 void Particle::SetNtrk(int val){
   m_Ntrk = val;
+}
+
+void Particle::SetPAngle(double val){
+  m_PAngle = val;
+}
+
+void Particle::SetChi2(double val){
+  m_Chi2 = val;
+}
+
+void Particle::SetX(double val){
+  m_X = val;
+}
+
+void Particle::SetY(double val){
+  m_Y = val;
+}
+
+void Particle::SetZ(double val){
+  m_Z = val;
 }
 
 void Particle::SetRelIso(double iso){

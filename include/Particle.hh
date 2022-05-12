@@ -57,6 +57,12 @@ public:
   double ProbC() const;
   int Flavor() const;
   int Ntrk() const;
+  double PAngle() const;
+  double Chi2() const;
+  double X() const;
+  double Y() const;
+  double Z() const;
+  
   void SetD3d(double val);
   void SetD3dSig(double val);
   void SetCosTheta(double val);
@@ -65,6 +71,11 @@ public:
   void SetProbC(double val);
   void SetFlavor(int val);
   void SetNtrk(int val);
+  void SetPAngle(double val);  
+  void SetChi2(double val);  
+  void SetX(double val);  
+  void SetY(double val);  
+  void SetZ(double val);  
 
   double Btag() const;
   void SetBtag(double btag);
@@ -110,6 +121,11 @@ private:
   // Additional SV variables
   int m_Flavor;
   int m_Ntrk;
+  double m_PAngle;
+  double m_Chi2;
+  double m_X;
+  double m_Y;
+  double m_Z;
 };
 
 bool sortbypt(const Particle& p1, const Particle& p2);
