@@ -12,6 +12,7 @@ Particle::Particle() : TLorentzVector() {
   m_MiniIso = 0.;
   m_Dxy = 0.;
   m_DxyErr = 0.;
+  m_DxySig = 0.;
   m_Dz = 0.;
   m_DzErr = 0.;
   m_IP3D = 0.;
@@ -21,6 +22,11 @@ Particle::Particle() : TLorentzVector() {
   m_D3dSig = 0.;
   m_CosTheta = 0.;
   m_Ndof = 0.;
+  m_ProbB = 0.;
+  m_ProbC = 0.;
+  m_Flavor = 0;
+  m_Ntrk = 0;
+  
   m_Btag = 0.;
   m_BtagID = kNothing;
 }
@@ -91,6 +97,10 @@ double Particle::DxyErr() const {
   return m_DxyErr;
 }
 
+double Particle::DxySig() const {
+  return m_DxySig;
+}
+
 double Particle::Dz() const {
   return m_Dz;
 }
@@ -145,6 +155,10 @@ void Particle::SetDxy(double val){
 
 void Particle::SetDxyErr(double val){
   m_DxyErr = val;
+}
+
+void Particle::SetDxySig(double val){
+  m_DxySig = val;
 }
 
 void Particle::SetDz(double val){

@@ -36,12 +36,14 @@ public:
 
   double Dxy() const;
   double DxyErr() const;
+  double DxySig() const;
   double Dz() const;
   double DzErr() const;
   double IP3D() const;
   double SIP3D() const;
   void SetDxy(double val);
   void SetDxyErr(double val);
+  void SetDxySig(double val);
   void SetDz(double val);
   void SetDzErr(double val);
   void SetIP3D(double val);
@@ -87,12 +89,12 @@ private:
   ParticleIDType m_BtagID;
 
   // lepton stuff
-  
   double m_RelIso;
   double m_MiniIso;
 
   double m_Dxy;
   double m_DxyErr;
+  double m_DxySig;
   double m_Dz;
   double m_DzErr;
   double m_IP3D;
@@ -108,7 +110,6 @@ private:
   // Additional SV variables
   int m_Flavor;
   int m_Ntrk;
-  
 };
 
 bool sortbypt(const Particle& p1, const Particle& p2);
