@@ -2088,7 +2088,11 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetSVs(const TVector3& PV){
     Particle SV;
     SV.SetPtEtaPhiM(SV_pt[i],SV_eta[i],SV_phi[i],SV_mass[i]);
 
-    SV.SetDxy(fabs((xSV-PV).Pt()));
+    // old Dxy
+    //SV.SetDxy(fabs((xSV-PV).Pt()));
+    // new Dxy
+    SV.SetDxy(SV_dxy[i]);
+    SV.SetDxySig(fabs(SV_dxySig[i]));
     SV.SetD3d(SV_dlen[i]);
     SV.SetD3dSig(fabs(SV_dlenSig[i]));
     SV.SetCosTheta((xSV-PV).Unit().Dot(SV.Vect().Unit()));
@@ -2096,6 +2100,11 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetSVs(const TVector3& PV){
     // Additional SV variables
     SV.SetFlavor(SV_flavor[i]);
     SV.SetNtrk(SV_ntrk[i]);
+    SV.SetPAngle(SV_pAngle[i]);
+    SV.SetChi2(SV_chi2[i]);
+    SV.SetX(SV_x[i]);
+    SV.SetY(SV_y[i]);
+    SV.SetZ(SV_z[i]);
 
     std::map<std::string, double> probs = m_SVDiscrTool.PROB(SV);
 

@@ -317,6 +317,11 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("ProbC_SV",  &m_ProbC_SV);
   tree->Branch("Flavor_SV", &m_Flavor_SV);
   tree->Branch("Ntrk_SV",   &m_Ntrk_SV);
+  tree->Branch("PAngle_SV", &m_PAngle_SV);
+  tree->Branch("Chi2_SV",   &m_Chi2_SV);
+  tree->Branch("X_SV",      &m_X_SV);
+  tree->Branch("Y_SV",      &m_Y_SV);
+  tree->Branch("Z_SV",      &m_Z_SV);
 
   tree->Branch("PT_Genjet",  &m_PT_Genjet);
   tree->Branch("Eta_Genjet", &m_Eta_Genjet);
@@ -1241,6 +1246,11 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   m_ProbC_SV.clear();
   m_Flavor_SV.clear();
   m_Ntrk_SV.clear();
+  m_PAngle_SV.clear();
+  m_Chi2_SV.clear();
+  m_X_SV.clear();
+  m_Y_SV.clear();
+  m_Z_SV.clear();
   for(int i = 0; i < m_NSV; i++){
     m_PT_SV.push_back(SVs[i].Pt());
     m_Eta_SV.push_back(SVs[i].Eta());
@@ -1250,6 +1260,11 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
     m_ProbC_SV.push_back(SVs[i].ProbC());
     m_Flavor_SV.push_back(SVs[i].Flavor());
     m_Ntrk_SV.push_back(SVs[i].Ntrk());
+    m_PAngle_SV.push_back(SVs[i].PAngle());
+    m_Chi2_SV.push_back(SVs[i].Chi2());
+    m_X_SV.push_back(SVs[i].X());
+    m_Y_SV.push_back(SVs[i].Y());
+    m_Z_SV.push_back(SVs[i].Z());
   }
   
   // Fill reconstructed lepton branches
