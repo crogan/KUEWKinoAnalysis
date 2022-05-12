@@ -2095,8 +2095,8 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetSVs(const TVector3& PV){
     SV.SetDxySig(fabs(SV_dxySig[i]));
     SV.SetD3d(SV_dlen[i]);
     SV.SetD3dSig(fabs(SV_dlenSig[i]));
-    SV.SetCosTheta((xSV-PV).Unit().Dot(SV.Vect().Unit()));
     SV.SetNdof(SV_ndof[i]);
+    SV.SetCosTheta((xSV-PV).Unit().Dot(SV.Vect().Unit()));
     // Additional SV variables
     SV.SetFlavor(SV_flavor[i]);
     SV.SetNtrk(SV_ntrk[i]);
