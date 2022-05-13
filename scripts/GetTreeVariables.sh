@@ -3,8 +3,11 @@
 # Caleb J. Smith
 # February 7, 2019
 
-# input text file (listing root files) or root file
-# output text files containting all variables from tree
+# Arguments:
+# - name of tree
+# - output text file to save variables from tree
+# - input either a text file (listing root files) or root file
+treeName=
 outputName=
 textFile=
 rootFile=
@@ -13,17 +16,25 @@ rootFile=
 pythonScript=scripts/GetTreeVariables.py
 
 # all options require values, hence we have a colon after each
-while getopts o:t:r: option
+while getopts n:o:t:r: option
 do
     case "${option}"
     in
+    n) treeName=${OPTARG};;
     o) outputName=${OPTARG};;
     t) textFile=${OPTARG};;
     r) rootFile=${OPTARG};;
     esac
 done
 
-# check for outpuut file
+# check for tree name
+if [[ -z "$treeName" ]]
+then
+    echo "Please provide a tree name using the -n option."
+    exit 1
+fi
+
+# check for output file
 if [[ -z "$outputName" ]]
 then
     echo "Please provide a output file name (without .txt extension) using the -o option."
@@ -55,8 +66,7 @@ outputFileClean="$outputName"_variables_clean.txt
 # output tree variables to file
 # -i : input root file
 # -t : tree in root file that you wish to print 
-python $pythonScript -i $rootFile -t Events > $outputFile
-#python $pythonScript -i $rootFile -t KUAnalysis > $outputFile
+python $pythonScript -i $rootFile -t $treeName > $outputFile
 
 # cleaned output (one line per variable) to file
 grep Br $outputFile > $outputFileClean
