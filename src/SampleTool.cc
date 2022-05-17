@@ -307,6 +307,10 @@ void SampleTool::InitProcMap(){
     list += m_Path + "Summer16_102X/WWTo2L2Nu_13TeV-powheg_Summer16_102X.root";
     list += m_Path + "Summer16_102X/WWTo4Q_13TeV-powheg_Summer16_102X.root";
     list += m_Path + "Summer16_102X/WWToLNuQQ_13TeV-powheg_Summer16_102X.root";
+    list += m_Path + "Summer16_102X/WZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8_Summer16_102X.root";
+    list += m_Path + "Summer16_102X/WZTo1L3Nu_13TeV_amcatnloFXFX_madspin_pythia8_Summer16_102X.root";
+    list += m_Path + "Summer16_102X/WZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8_Summer16_102X.root";
+    list += m_Path + "Summer16_102X/WZTo3LNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_Summer16_102X.root";
     list += m_Path + "Summer16_102X/ZZTo2L2Nu_13TeV_powheg_pythia8_ext1_Summer16_102X.root";
     list += m_Path + "Summer16_102X/ZZTo2L2Q_13TeV_powheg_pythia8_Summer16_102X.root";
     list += m_Path + "Summer16_102X/ZZTo2Q2Nu_13TeV_amcatnloFXFX_madspin_pythia8_Summer16_102X.root";
