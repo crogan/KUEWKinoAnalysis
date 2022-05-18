@@ -106,8 +106,6 @@ std::map<std::string,double> XsecTool::InitMap_Xsec_BKG(){
   Label2Xsec["GJets_DR-0p4_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8"] = 132.5;
   Label2Xsec["GJets_DR-0p4_HT-600ToInf_TuneCP5_13TeV-madgraphMLM-pythia8"] = 44.05;
   
-  Label2Xsec["GluGluHToZZTo4L_M125_13TeV_powheg2_JHUGenV7011_pythia8"] = 28.87;
-
   // DYjets NLO k-factors from https://twiki.cern.ch/twiki/bin/viewauth/CMS/SummaryTable1G25ns
   // HT "stitching" factors for DYjets 2017/2018 from
   // https://indico.cern.ch/event/781231/contributions/3263952/subcontributions/274982/attachments/1795600/2926947/190213_mc_discrep_ppd.pdf
