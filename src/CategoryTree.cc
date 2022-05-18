@@ -524,6 +524,25 @@ CategoryTree CategoryTreeTool::GetCategories_0L() const {
 
   return CT_0L;
 }
+CategoryTree CategoryTreeTool::GetCategories_0L_plotFormat() const {
+  CategoryTree CT_0j(VS().a("_0j"), "", "0J", kJ, true);
+  CategoryTree CT_1j(VS().a("_1j"), "", "1J", kJ, true);
+  CategoryTree CT_2j(VS().a("_2j"), "2 j #in S", "2J", kJ, true);
+  CategoryTree CT_3j(VS().a("_3j"), "3 j #in S", "3J", kJ, true);
+  CategoryTree CT_4j(VS().a("_4j"), "4 j #in S", "4J", kJ, true);
+  CategoryTree CT_ge5j(VS().a("_ge5j"), "#geq 5 j #in S", "5J", kJ, true);
+  
+  
+  CategoryTree CT_0L(VS().a("Ch0L"), "0L", "0L", kL, true);
+  CT_0L.AddSubCategory(CT_0j);
+  CT_0L.AddSubCategory(CT_1j);
+  CT_0L.AddSubCategory(CT_2j);
+  CT_0L.AddSubCategory(CT_3j);
+  CT_0L.AddSubCategory(CT_4j);
+  CT_0L.AddSubCategory(CT_ge5j);
+
+  return CT_0L;
+}
 
 CategoryTree CategoryTreeTool::GetCategories_1L_ChargeSep() const {
 
@@ -857,6 +876,19 @@ CategoryTree CategoryTreeTool::GetCategories_2L() const {
   CT_2L.AddSubCategory(CT_bronze);
   CT_2L.AddSubCategory(CT_silver);
   CT_2L.AddSubCategory(CT_gold);
+
+  return CT_2L;
+  
+}
+CategoryTree CategoryTreeTool::GetCategories_2L_plotFormat() const {
+  CategoryTree CT_0j(VS().a("_0j"), "", "0J", kJ, true);
+  CategoryTree CT_1j(VS().a("_1j"), "", "1J", kJ, true);
+  CategoryTree CT_ge2j(VS().a("_ge2j"), "#geq 2 j #in S", "2J", kJ, true);
+
+  CategoryTree CT_2L(VS().a("Ch2L"), "2L", "2L", kL, true);
+  CT_2L.AddSubCategory(CT_0j);
+  CT_2L.AddSubCategory(CT_1j);
+  CT_2L.AddSubCategory(CT_ge2j);
 
   return CT_2L;
   
