@@ -2,11 +2,11 @@
 
 #include "../include/FitPlotter.hh"
 
-void PlotFits(const string& fold1 = "BF_allBkgs_data_TChiWZincl_2016_allchan_maskSR_4_27_22", const string& fold2 = "datacards/all/TChiWZ/2000170", const string& shapesFile = "4_26_22wShapes.root",  int lepNum = 2){
+void PlotFits(const string& fold1 = "BF_allBkgs_data_TChiWZincl_2016_allchan_maskSR_4_27_22", const string& fold2 = "datacards/all/TChiWZ/2000170", const string& shapesFile = "4_26_22wShapes.root",  int lepNum = 0){
   
   string dateName = shapesFile.substr(0,8);
         string bfName = fold1.substr(2,fold1.size());
-        string odir = "prePostStackPlots/prePostStackPlots"+bfName;
+        string odir = "prePostStackPlots/TESTprePostStackPlots"+bfName;
 
         string inputfile1 = "BuildFits/"+fold1+"/FitInput_KUEWKino_2016.root";
         string inputfile2 = "BuildFits/"+fold1+"/"+fold2+"/fitDiagnostics"+shapesFile;
@@ -33,9 +33,9 @@ bool ratio = true;
 
   CategoryTreeTool CTTool;
 
-  CategoryTree CT_0L = CTTool.GetCategories_0L();
+  CategoryTree CT_0L = CTTool.GetCategories_0L_plotFormat();
   CategoryTree CT_1L = CTTool.GetCategories_1L();
-  CategoryTree CT_2L = CTTool.GetCategories_2L();
+  CategoryTree CT_2L = CTTool.GetCategories_2L_plotFormat();
   CategoryTree CT_3L = CTTool.GetCategories_3L();
 
   VS all;
@@ -46,6 +46,7 @@ bool ratio = true;
 // sig = "TChiWZ_4000390";
  //all += sig; 
 
+  PlotType type = kInv;
   bool zeroL = false;
   bool oneL = false;
   bool twoL = false;
@@ -60,7 +61,7 @@ bool ratio = true;
   if(zeroL){
    depth0 = CT_0L.GetDepth();
    d = depth0;    
-   CT_0L.GetListDepth(CTs, depth0-3);
+   CT_0L.GetListDepth(CTs, 0);
   }
   else if(oneL){
    depth0 = CT_1L.GetDepth()-3;
@@ -69,7 +70,7 @@ bool ratio = true;
   }
   else if(twoL){
    depth0 = CT_2L.GetDepth();
-   d = 4;
+   d = 1;
    CT_2L.GetListDepth(CTs, 0);
    }
   else if(threeL){
@@ -77,7 +78,7 @@ bool ratio = true;
    d = 3;
    CT_3L.GetListDepth(CTs, depth0-2);
   }
-cout << "depth: " << depth0-2 << " size:" << CTs.size() << endl;
+cout << "depth: " << depth0 << " size:" << CTs.size() << endl;
  if(gSystem->AccessPathName((fname).c_str())){
                 gSystem->Exec(("mkdir "+odir).c_str());
                 gSystem->Exec(("mkdir "+odir+"/"+lepName).c_str());
@@ -94,17 +95,17 @@ while(dir.find(" ") != string::npos) dir.replace(dir.find(" "),1,"_");
     TCanvas* sb_fit_stack = nullptr;
     if(prefit){
     	cout << "##############plot prefit#############" << endl;
-    	prefit_stack = FITPlotter_pre->Plot1Dstack(Form("pre_stack_%d",i),all,*CTs[i],kFull,ratio);
+    	prefit_stack = FITPlotter_pre->Plot1Dstack(Form("pre_stack_%d",i),all,*CTs[i],type,ratio);
     	if(prefit_stack == nullptr){cout << "prefit null" << endl; continue;}
     }
     if(bfit){
     	cout << "##############plot b fit#############" << endl;
-    	b_fit_stack = FITPlotter_bOnly->Plot1Dstack(Form("bFit_stack_%d",i),all,*CTs[i],kFull,ratio);
+    	b_fit_stack = FITPlotter_bOnly->Plot1Dstack(Form("bFit_stack_%d",i),all,*CTs[i],type,ratio);
     	if(b_fit_stack == nullptr) continue;
     }
     if(sbfit){
 	cout << "##############plot s+b fit#############" << endl;
-    	sb_fit_stack = FITPlotter_sb->Plot1Dstack(Form("sbFit_stack_%d",i),all,*CTs[i],kFull,ratio);
+    	sb_fit_stack = FITPlotter_sb->Plot1Dstack(Form("sbFit_stack_%d",i),all,*CTs[i],type,ratio);
     	if(sb_fit_stack == nullptr) continue;
     }
 cout << "writing plots to file" << endl;
