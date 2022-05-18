@@ -396,6 +396,7 @@ std::map<std::string,double> XsecTool::InitMap_Xsec_BKG(){
   Label2Xsec["GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 44.27;
 
   Label2Xsec["GluGluHToZZTo4L_M125_13TeV_powheg2_JHUgenV6_pythia8"] = 0.01309;
+  Label2Xsec["GluGluHToZZTo4L_M125_13TeV_powheg2_JHUGenV7011_pythia8"] = 0.01309;
   Label2Xsec["GluGluHToZZTo2L2Nu_M125_TuneCUETP8M1_13TeV_powheg2_JHUGenV735_pythia8"] = 0.9818;
   Label2Xsec["GluGluHToZZTo2L2Nu_M125_TuneCP5_13TeV_powheg2_JHUGenV735_pythia8"] = 0.9818;
   Label2Xsec["GluGluHToWWTo2L2Nu_M125_13TeV_powheg_JHUgenv628_pythia8"] = 1.11994;
