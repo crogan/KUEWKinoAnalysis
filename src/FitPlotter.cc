@@ -1674,15 +1674,28 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
   vector<const CategoryTree*> CatTrees;
   CT.GetListDeepest(CatTrees);
   int Nvis = CatTrees.size();
-  
+  int Nbin;
   if(Nvis < 1)
     return nullptr;
   
   CategoryList CatList = GetCategories();
   CategoryList dumcat = CatList.Filter(*CatTrees[0]);
   const FitBin& fitbin = dumcat[0].GetFitBin();
-  int Nbin;
+ //vector<const FitBin&> fitbins;
+ vector<CategoryList> dumcats;
+ for(int v = 0; v < Nvis; v++){
+  dumcats.push_back(CatList.Filter(*CatTrees[v]));
+ // fitbins.push_back(dumcats[v][0].GetFitBin());
 
+ } 
+//   int maxBin = 0;
+  //the categories passed might not have the same binning, account for this
+//  if(pType == kRISR ||pType == kInv){
+//   cout << "Nvis: " << Nvis << endl; 
+//   for(int v = 0; v < Nvis; v++) 
+//	if(CatList.Filter(*CatTrees[v])[0].GetFitBin().NRBins() > maxBin){  dumcat = CatList.Filter(*CatTrees[v]); maxBin = dumcat[0].GetFitBin().NRBins();} 
+//  }
+//cout << "maxbin: " << maxBin << endl; 
   if(pType == kFull)
     Nbin = fitbin.NBins();
   if(pType == kRISR || pType == kInv)
@@ -1746,7 +1759,6 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
     
     for(int v = 0; v < Nvis; v++){
       CategoryList cat = CatList.Filter(*CatTrees[v]);
-
       TH1D* h = nullptr;
 
       if(pType == kFull)
@@ -1756,6 +1768,7 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
 			   GetAddedHist(Form("plothist_%d_%d_%s", i, v, can_name.c_str()), cat, procs));
 
       if(h){
+	cout << "nCats: " << cat.GetN() << " " << cat[0].GetLabel() << " " << h->GetNbinsX() << endl;
 	itot += h->Integral();
 	h->Draw();
       }
@@ -1831,8 +1844,10 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
   for(int i = 0; i < Nbkg; i++){
     vlabels.push_back(labels[i]);
     vcolors.push_back(colors[i]);
-    for(int v = 0; v < Nvis; v++)
+    for(int v = 0; v < Nvis; v++){
       vhists[v].push_back(hists[v][i]);
+cout << i << " " << v << " nbins: " << hists[v][i]->GetNbinsX() << endl;
+	}
     vtotal.push_back(total[i]);
     for(int j = vtotal.size()-2; j >= 0; j--){
       if(vtotal[j] < vtotal[j+1]){
@@ -1856,7 +1871,6 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
       }
     }
   }
- 
   vector<TH1D*> fhists;
   vector<TH1D*> fhists_sig;
   TH1D*         fhist_data   = nullptr;
@@ -1946,6 +1960,7 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
 	if(hptr == nullptr) 
 	  continue;	
 	if(hptr){
+	cout << "true Nbins: " << hptr->GetNbinsX() << " Nbin: " << Nbin << endl;
 	  int index;
 	  if(pType == kInv)
 	    index = v*Nbin+b+1;
