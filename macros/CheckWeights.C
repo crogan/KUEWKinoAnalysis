@@ -67,8 +67,8 @@ void getEvents_Manual(const string& input_dataset, const string& input_filetag, 
 
 bool find_file(string input_dataset, string input_filetag)
 {
-  bool found = false;
-  gSystem->Exec(("xrdfs root://cmseos.fnal.gov/ ls /store/group/lpcsusylep/NTUPLES_v0/"+input_filetag+"/ > checkfile.txt").c_str());
+  if(input_filetag.find("_SMS") != std::string::npos)
+    input_filetag.erase(input_filetag.length()-4);
   ifstream checkfile;
   checkfile.open("checkfile.txt");
   while (!checkfile.eof())
@@ -78,13 +78,11 @@ bool find_file(string input_dataset, string input_filetag)
    if(line.find(input_dataset+"_"+input_filetag+".root") != string::npos) 
    {
     checkfile.close();
-    gSystem->Exec("rm checkfile.txt");
     return true;
    }
   }
   checkfile.close();
-  gSystem->Exec("rm checkfile.txt");
-  return found;
+  return false;
 }
 
 double getTot(string input_dataset, string input_filetag, string EventCountFile, bool weight, bool ntuple)
@@ -95,7 +93,9 @@ double getTot(string input_dataset, string input_filetag, string EventCountFile,
   else
     filename = EventCountFile;
 
-  if(!find_file(input_dataset,input_filetag))
+  if(ntuple && filename.find("_SMS.root") != std::string::npos)
+   filename.erase(filename.find("_SMS.root"),4);
+  if(ntuple && !find_file(input_dataset,input_filetag))
     return -1.;
   TFile* fout = TFile::Open(filename.c_str(),"READ");
 
@@ -113,6 +113,12 @@ double getTot(string input_dataset, string input_filetag, string EventCountFile,
   int MC = 0;
   TTree* tree = nullptr;
   tree = (TTree*) fout->Get("EventCount");
+  if(tree == 0 || tree == nullptr)
+  {
+   tree = nullptr;
+   fout->Close();
+   return -1.;
+  }
   
   tree->SetMakeClass(1);
   tree->SetBranchAddress("Nevent", &Nevent,&b_Nevent);
@@ -125,10 +131,13 @@ double getTot(string input_dataset, string input_filetag, string EventCountFile,
   double tot_Nevent = 0;
   double tot_Nweight = 0;
 
+
+  if(input_filetag.find("_SMS") != std::string::npos)
+    input_filetag.erase(input_filetag.length()-4);
   for(int i = 0; i < tree->GetEntries(); i++)
   {
    tree->GetEntry(i);
-   if(dataset->find(input_dataset) != std::string::npos && filetag->find(input_filetag) != std::string::npos)
+   if(*dataset == input_dataset && filetag->find(input_filetag) != std::string::npos)
    {
     tot_Nevent += Nevent;
     tot_Nweight += Nweight;
@@ -142,14 +151,33 @@ double getTot(string input_dataset, string input_filetag, string EventCountFile,
     return tot_Nevent;
 }
 
+bool check_dataset_file(string dataset_name)
+{
+ std::ifstream testfile(dataset_name);
+ if(testfile.peek() == std::ifstream::traits_type::eof())
+ {
+  testfile.close();
+  return false;
+ }
+ testfile.close();
+ return true;
+}
+
 double EventsInDAS(string dataset = "", string filetag = "")
 {
+ if(filetag.find("_SMS") != std::string::npos)
+   filetag.erase(filetag.length()-4);
  filetag.erase(filetag.length()-5);
  double Events = 0.;
  //gSystem->Exec(("dasgoclient -query=\"file dataset=/"+dataset+"/*"+filetag+"*NanoAODv7*"+"/NANO*\" -json > "+filetag+"_"+dataset+".json").c_str());
  //cout << "dasgoclient -query=\"dataset=/"+dataset+"/*"+filetag+"*NanoAODv7*"+"/NANO*\" -json > "+filetag+"_"+dataset+".json" << endl;
- gSystem->Exec(("dasgoclient -query=\"dataset=/"+dataset+"/*"+filetag+"*NanoAODv7*"+"/NANO*\" > datasets_"+filetag+"_"+dataset+".txt").c_str());
+ gSystem->Exec(("dasgoclient -query=\"dataset=/"+dataset+"/*"+filetag+"*NanoAODv7*"+"*/NANO*\" >> datasets_"+filetag+"_"+dataset+".txt").c_str());
+ if(!check_dataset_file("datasets_"+filetag+"_"+dataset+".txt"))
+   gSystem->Exec(("dasgoclient -query=\"dataset=/"+dataset+"/*"+filetag+"*NanoAODv4*"+"*/NANO*\" >> datasets_"+filetag+"_"+dataset+".txt").c_str());
+ if(!check_dataset_file("datasets_"+filetag+"_"+dataset+".txt"))
+   gSystem->Exec(("dasgoclient -query=\"dataset=/"+dataset+"/*"+filetag+"*NanoAOD*"+"*/NANO*\" >> datasets_"+filetag+"_"+dataset+".txt").c_str());
  std::ifstream infile("datasets_"+filetag+"_"+dataset+".txt");
+
  string dataset_fullname = "";
  while(getline(infile,dataset_fullname))
  {
@@ -183,7 +211,18 @@ double GetSingleEventWeight(string dataset = "", string filetag = "")
  file->GetObject("KUAnalysis",tree);
  tree->SetBranchAddress("weight",&weight);
  tree->GetEntry(0);
+ int entries = tree->GetEntries();
  m_weight = weight;
+/*
+ for(int i = 0; i < entries; i++)
+ {
+  tree->GetEntry(i);
+  if((i)%(std::max(1, int(entries/10))) == 0)
+    cout << "event " << i << " | " << entries << endl;
+  m_weight += weight;
+ }
+ m_weight /= entries;
+*/
  file->Close();
  return m_weight;
 }
@@ -220,64 +259,101 @@ void CheckWeights(){
    RestFrames::SetStyle();
    cout << std::fixed;
 
-   XsecTool XS;
-   string filetag;
-   string eventcount;
-   //vector<string> datasets_list_2017 = {
-   // //"GluGluHToWWToLNuQQ_M125_NNPDF31_TuneCP5_PSweights_13TeV_powheg_JHUGen710_pythia8",
-   // "TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8",
-   // "WZTo1L3Nu_13TeV_amcatnloFXFX_madspin_pythia8",
+   //vector<string> datasets_list = {
+    //"GluGluHToWWToLNuQQ_M125_NNPDF31_TuneCP5_PSweights_13TeV_powheg_JHUGen710_pythia8",
+    //"TTJets_HT-600to800_TuneCP5_13TeV-madgraphMLM-pythia8",
    //};
-   vector<string> datasets_list_2017;
-   std::map<std::string,double> XS_map = XS.InitMap_Xsec_BKG();
-   for ( const auto &myPair : XS_map )
+   vector<string> filetags = {
+    "Summer16_102X",
+    //"Fall17_102X",
+    //"Autumn18_102X",
+    //"Summer16_102X_SMS",
+    //"Fall17_102X_SMS",
+    //"Autumn18_102X_SMS",
+   };
+   //vector<string> datasets_list;
+   //std::map<std::string,double> XS_map = XS.InitMap_Xsec_BKG();
+   //for ( const auto &myPair : XS_map )
+   //{
+   //  string dataset_name = myPair.first;
+   //  if(dataset_name[0] == '&')
+   //    dataset_name.erase(0,1);
+   //  datasets_list.push_back(dataset_name);
+   //}
+   XsecTool XS;
+   for(int t = 0; t < int(filetags[t].size()); t++)
    {
-     string dataset_name = myPair.first;
-     if(dataset_name[0] == '&')
-       dataset_name.erase(0,1);
-     datasets_list_2017.push_back(dataset_name);
-   }
-   filetag = "Fall17_102X";
-   eventcount = "root/EventCount/EventCount_NANO_Fall17_102X.root";
-   for(int i = 0; i < int(datasets_list_2017.size()); i++) 
-   { 
-    //int Events_File_Default = int(getTot(datasets_list_2017[i],filetag,eventcount,false));
-    //int Events_File_new = int(getTot(datasets_list_2017[i],filetag,"/uscms/home/z374f439/nobackup/EventCount/root/EventCount_TEST.root",false));
-    //cout << "Default: " << Events_File_Default << endl;
-    //cout << "New: " << Events_File_new << endl;
-
-    double TotEvents_Ntuple = getTot(datasets_list_2017[i],filetag,eventcount,false,true);
-    double TotEvents = getTot(datasets_list_2017[i],filetag,eventcount,false,false);
-    //double TotWeight_Ntuple = getTot(datasets_list_2017[i],filetag,eventcount,true,true); // EventCount tree in ntuples is bugged...
-    double TotWeight = getTot(datasets_list_2017[i],filetag,eventcount,true,false);
-    double e_weight = GetSingleEventWeight(datasets_list_2017[i],filetag);
-    double theory_XS = XS.GetXsec_BKG(datasets_list_2017[i])/1000.;
-    double calc_XS = TotWeight*e_weight/1000.0;
-    //cout << "Checking all event weights... " << endl;
-    //CheckAllEWeights(datasets_list_2017[i],filetag,e_weight);
-
-    //cout << "tot event from ntuple "+datasets_list_2017[i]+": " << TotEvents_Ntuple << endl;
-    //cout << "tot event from local event count: " << TotEvents << endl;
-    //cout << "tot weight from ntuple "+datasets_list_2017[i]+": " << TotWeight_Ntuple << endl;
-    //cout << "tot weight from local event count: " << TotWeight << endl;
-    //cout << "event weight: " << e_weight << endl;
-    //cout << "calc xsec: " << calc_XS << endl;
-    //cout << "theory xsec: " << theory_XS << endl;
-    if(TotEvents_Ntuple == -1.) continue;
-    if(TotEvents_Ntuple != TotEvents)
+    string eventcount = "root/EventCount/EventCount_NANO_"+filetags[t]+".root";
+    gSystem->Exec(("xrdfs root://cmseos.fnal.gov/ ls /store/group/lpcsusylep/NTUPLES_v0/"+filetags[t]+"/ > checkfile.txt").c_str());
+    ifstream tagfile;
+    tagfile.open("samples/NANO/"+filetags[t]+"/Tags.list");
+    while (!tagfile.eof())
     {
-     cout << "check dataset: " << datasets_list_2017[i] << endl;
-     cout << "ntuple events:      " << TotEvents_Ntuple << endl;
-     cout << "event count events: " << TotEvents << endl;
+     string dataset = "";
+     getline(tagfile,dataset);
+     if(dataset == "") continue;
+     if(dataset[0] == '#') continue;
+
+     //int Events_File_Default = int(getTot(dataset,filetags[t],eventcount,false));
+     //int Events_File_new = int(getTot(dataset,filetags[t],"/uscms/home/z374f439/nobackup/EventCount/root/EventCount_TEST.root",false));
+     //cout << "Default: " << Events_File_Default << endl;
+     //cout << "New: " << Events_File_new << endl;
+
+     //int TotEvents_Ntuple = int(getTot(dataset,filetags[t],eventcount,false,true));
+     //int TotEvents = int(getTot(dataset,filetags[t],eventcount,false,false));
+     //int Events_DAS = int(EventsInDAS(dataset,filetags[t]));
+     double TotEvents_Ntuple = getTot(dataset,filetags[t],eventcount,false,true);
+     double TotEvents = getTot(dataset,filetags[t],eventcount,false,false);
+     double Events_DAS = EventsInDAS(dataset,filetags[t]);
+     //double TotWeight_Ntuple = getTot(dataset,filetags[t],eventcount,true,true); // EventCount tree in ntuples is bugged...
+     //double TotWeight = getTot(dataset,filetags[t],eventcount,true,false);
+     //double e_weight = GetSingleEventWeight(dataset,filetags[t]);
+     //double theory_XS = XS.GetXsec_BKG(dataset)/1000.;
+     //double calc_XS = TotWeight*e_weight/1000.0;
+     //double calc_XS = TotWeight/TotEvents_Ntuple;
+     //double calc_XS = TotWeight/TotEvents;
+
+     //cout << "Checking all event weights... " << endl;
+     //CheckAllEWeights(dataset,filetags,e_weight);
+
+     //cout << "tot event from ntuple "+dataset+": " << TotEvents_Ntuple << endl;
+     //cout << "tot event from local event count: " << TotEvents << endl;
+     //cout << "tot event from DAS: " << Events_DAS << endl;
+     //cout << "tot weight from ntuple "+dataset+": " << TotWeight_Ntuple << endl;
+     //cout << "tot weight from local event count: " << TotWeight << endl;
+     //cout << "event weight: " << e_weight << endl;
+     //cout << "calc xsec: " << calc_XS << endl;
+     //cout << "theory xsec: " << theory_XS << endl;
+
+     if(TotEvents_Ntuple == -1) continue;
+     if(TotEvents != Events_DAS || TotEvents_Ntuple != Events_DAS || TotEvents_Ntuple != TotEvents)
+     //if(TotEvents != Events_DAS)
+     {
+       cout << "check dataset: " << dataset << " " << filetags[t] << endl;
+       cout << "  Ntuple:     " << TotEvents_Ntuple << endl;
+       cout << "  EventCount: " << TotEvents << endl;
+       cout << "  DAS:        " << Events_DAS << endl;
+     }
+     //if(TotEvents_Ntuple == -1. || TotEvents == -1.) continue;
+     //if(TotEvents_Ntuple != TotEvents)
+     //{
+     // cout << "check dataset: " << dataset << " " << filetags[t] << endl;
+     // cout << "ntuple events:      " << TotEvents_Ntuple << endl;
+     // cout << "event count events: " << TotEvents << endl;
+     //}
+/* 
+     if((theory_XS - calc_XS)/theory_XS*100. > 1.)
+     {
+      cout << "check cross section: " << dataset << endl;
+      cout << "theory XS: " << theory_XS << endl;
+      cout << "calc xsec: " << calc_XS << endl;
+     }
+*/ 
     }
-    if((theory_XS - calc_XS)/theory_XS*100. > 1.)
-    {
-     cout << "check cross section: " << datasets_list_2017[i] << endl;
-     cout << "theory XS: " << theory_XS << endl;
-     cout << "calc xsec: " << calc_XS << endl;
-    }
-
-
-
+cout << "Gonna crash...??? " << endl;
+    tagfile.close();
+    gSystem->Exec("rm checkfile.txt");
    }
+cout << "Gonna crash...??? " << endl;
+
 }
