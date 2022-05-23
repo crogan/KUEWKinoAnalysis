@@ -489,10 +489,6 @@ public :
   Float_t         PV_score;
   Int_t           PV_npvs;
   Int_t           PV_npvsGood;
-  UInt_t          nSV;
-  Float_t         SV_dlen[100];   //[nSV]
-  Float_t         SV_dlenSig[100];   //[nSV]
-  Float_t         SV_pAngle[100];   //[nSV]
   Float_t         PFcand_dz[200];   //[nPFcand]
   Float_t         PFcand_eta[200];   //[nPFcand]
   Float_t         PFcand_fromPV[200];   //[nPFcand]
@@ -526,15 +522,21 @@ public :
   Float_t         SB_phi[20];   //[nSB]
   Float_t         SB_pt[20];   //[nSB]
   Int_t           SB_ntracks[20];   //[nSB]
+  UInt_t          nSV;
+  Float_t         SV_pAngle[100];   //[nSV]
   Float_t         SV_chi2[100];   //[nSV]
+  Float_t         SV_ndof[100];   //[nSV]
   Float_t         SV_eta[100];   //[nSV]
   Float_t         SV_mass[100];   //[nSV]
-  Float_t         SV_ndof[100];   //[nSV]
   Float_t         SV_phi[100];   //[nSV]
   Float_t         SV_pt[100];   //[nSV]
   Float_t         SV_x[100];   //[nSV]
   Float_t         SV_y[100];   //[nSV]
   Float_t         SV_z[100];   //[nSV]
+  Float_t         SV_dxy[100];   //[nSV]
+  Float_t         SV_dxySig[100];   //[nSV]
+  Float_t         SV_dlen[100];   //[nSV]
+  Float_t         SV_dlenSig[100];   //[nSV]
   Int_t           SV_flavor[100];   //[nSV]
   Int_t           SV_ntrk[100];   //[nSV]
   Int_t           Tau_genPartIdx[25];   //[nTau]
@@ -1659,10 +1661,6 @@ public :
   TBranch        *b_PV_score;   //!
   TBranch        *b_PV_npvs;   //!
   TBranch        *b_PV_npvsGood;   //!
-  TBranch        *b_nSV;   //!
-  TBranch        *b_SV_dlen;   //!
-  TBranch        *b_SV_dlenSig;   //!
-  TBranch        *b_SV_pAngle;   //!
   TBranch        *b_PFcand_dz;   //!
   TBranch        *b_PFcand_eta;   //!
   TBranch        *b_PFcand_fromPV;   //!
@@ -1696,15 +1694,21 @@ public :
   TBranch        *b_SB_phi;   //!
   TBranch        *b_SB_pt;   //!
   TBranch        *b_SB_ntracks;   //!
+  TBranch        *b_nSV;   //!
+  TBranch        *b_SV_pAngle;   //!
   TBranch        *b_SV_chi2;   //!
+  TBranch        *b_SV_ndof;   //!
   TBranch        *b_SV_eta;   //!
   TBranch        *b_SV_mass;   //!
-  TBranch        *b_SV_ndof;   //!
   TBranch        *b_SV_phi;   //!
   TBranch        *b_SV_pt;   //!
   TBranch        *b_SV_x;   //!
   TBranch        *b_SV_y;   //!
   TBranch        *b_SV_z;   //!
+  TBranch        *b_SV_dxy;   //!
+  TBranch        *b_SV_dxySig;   //!
+  TBranch        *b_SV_dlen;   //!
+  TBranch        *b_SV_dlenSig;   //!
   TBranch        *b_SV_flavor;   //!
   TBranch        *b_SV_ntrk;   //!
   TBranch        *b_Tau_genPartIdx;   //!
@@ -2892,10 +2896,6 @@ inline void SUSYNANOBase::Init(TTree *tree)
   fChain->SetBranchAddress("PV_score", &PV_score, &b_PV_score);
   fChain->SetBranchAddress("PV_npvs", &PV_npvs, &b_PV_npvs);
   fChain->SetBranchAddress("PV_npvsGood", &PV_npvsGood, &b_PV_npvsGood);
-  fChain->SetBranchAddress("nSV", &nSV, &b_nSV);
-  fChain->SetBranchAddress("SV_dlen", SV_dlen, &b_SV_dlen);
-  fChain->SetBranchAddress("SV_dlenSig", SV_dlenSig, &b_SV_dlenSig);
-  fChain->SetBranchAddress("SV_pAngle", SV_pAngle, &b_SV_pAngle);
   fChain->SetBranchAddress("PFcand_dz", PFcand_dz, &b_PFcand_dz);
   fChain->SetBranchAddress("PFcand_eta", PFcand_eta, &b_PFcand_eta);
   fChain->SetBranchAddress("PFcand_fromPV", PFcand_fromPV, &b_PFcand_fromPV);
@@ -2929,15 +2929,21 @@ inline void SUSYNANOBase::Init(TTree *tree)
   fChain->SetBranchAddress("SB_phi", SB_phi, &b_SB_phi);
   fChain->SetBranchAddress("SB_pt", SB_pt, &b_SB_pt);
   fChain->SetBranchAddress("SB_ntracks", SB_ntracks, &b_SB_ntracks);
+  fChain->SetBranchAddress("nSV", &nSV, &b_nSV);
+  fChain->SetBranchAddress("SV_pAngle", SV_pAngle, &b_SV_pAngle);
   fChain->SetBranchAddress("SV_chi2", SV_chi2, &b_SV_chi2);
+  fChain->SetBranchAddress("SV_ndof", SV_ndof, &b_SV_ndof);
   fChain->SetBranchAddress("SV_eta", SV_eta, &b_SV_eta);
   fChain->SetBranchAddress("SV_mass", SV_mass, &b_SV_mass);
-  fChain->SetBranchAddress("SV_ndof", SV_ndof, &b_SV_ndof);
   fChain->SetBranchAddress("SV_phi", SV_phi, &b_SV_phi);
   fChain->SetBranchAddress("SV_pt", SV_pt, &b_SV_pt);
   fChain->SetBranchAddress("SV_x", SV_x, &b_SV_x);
   fChain->SetBranchAddress("SV_y", SV_y, &b_SV_y);
   fChain->SetBranchAddress("SV_z", SV_z, &b_SV_z);
+  fChain->SetBranchAddress("SV_dxy", SV_dxy, &b_SV_dxy);
+  fChain->SetBranchAddress("SV_dxySig", SV_dxySig, &b_SV_dxySig);
+  fChain->SetBranchAddress("SV_dlen", SV_dlen, &b_SV_dlen);
+  fChain->SetBranchAddress("SV_dlenSig", SV_dlenSig, &b_SV_dlenSig);
   fChain->SetBranchAddress("SV_flavor", SV_flavor, &b_SV_flavor);
   fChain->SetBranchAddress("SV_ntrk", SV_ntrk, &b_SV_ntrk);
   fChain->SetBranchAddress("Tau_genPartIdx", Tau_genPartIdx, &b_Tau_genPartIdx);

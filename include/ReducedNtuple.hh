@@ -139,8 +139,19 @@ private:
   vector<double> m_M_SV;
   vector<double> m_ProbB_SV;
   vector<double> m_ProbC_SV;
+  vector<double> m_Dxy_SV;
+  vector<double> m_DxySig_SV;
+  vector<double> m_D3d_SV;
+  vector<double> m_D3dSig_SV;
+  vector<double> m_Ndof_SV;
+  vector<double> m_CosTheta_SV;
   vector<int>    m_Flavor_SV;
   vector<int>    m_Ntrk_SV;
+  vector<double> m_PAngle_SV;
+  vector<double> m_Chi2_SV;
+  vector<double> m_X_SV;
+  vector<double> m_Y_SV;
+  vector<double> m_Z_SV;
 
   int m_genNele;
   int m_genNmu;
