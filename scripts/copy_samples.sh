@@ -3,8 +3,8 @@
 
 # copy samples from one version to another
 
-export old_version=v4
-export new_version=v5
+export old_version=v5
+export new_version=v6
 
 mkdir -p samples/NANO_SVSF/Summer16_102X_${new_version}
 mkdir -p samples/NANO_SVSF/Fall17_102X_${new_version}
