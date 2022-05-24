@@ -42,6 +42,9 @@ public:
   void AddJMEFolder(const string& jmefold);
   void AddSVDiscrFile(const string& svfile);
   void AddMETTriggerFile(const string& csvfile);
+  #ifdef _CMSSW_
+  void AddLHAPDF();
+  #endif
   void DoSMS();
   void DoData();
   void DoFastSim();
