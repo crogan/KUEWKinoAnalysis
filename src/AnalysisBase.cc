@@ -2127,9 +2127,14 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetSVs(const TVector3& PV){
     // if(SV_ndof[i] < 1.8) // replacement for ntracks cut...
     //   continue;
 
+    // For custom SV ntuples, don't apply the SV discriminator cut
     // SV discriminator cut
-    if(probs["prob_isB"] > 0.3)
+    //if(probs["prob_isB"] > 0.3)
+    if(true)
+    {
+      //printf("nSV=%d; SV[%d]: pt=%.3f, eta=%.3f, phi=%.3f, mass=%.3f, x=%.3f, y=%.3f, z=%.3f, prob_isB=%.3f\n", nSV, i, SV_pt[i], SV_eta[i], SV_phi[i], SV_mass[i], SV_x[i], SV_y[i], SV_z[i], probs["prob_isB"]);
       list.push_back(SV);
+    }
   }
   
   return list;
