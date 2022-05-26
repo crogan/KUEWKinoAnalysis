@@ -2,7 +2,7 @@
 
 #include "../include/FitPlotter.hh"
 
-void PlotFits(const string& fold1 = "BF_allBkgs_data_TChiWZincl_2016_allchan_maskSR_4_27_22", const string& fold2 = "datacards/all/TChiWZ/2000170", const string& shapesFile = "4_26_22wShapes.root",  int lepNum = 0){
+void PlotFits(const string& fold1 = "BF_allBkgs_data_TChiWZincl_2016_allchan_maskSR_4_27_22", const string& fold2 = "datacards/all/TChiWZ/2000170", const string& shapesFile = "4_26_22wShapes.root",  int lepNum = 2){
   
   string dateName = shapesFile.substr(0,8);
         string bfName = fold1.substr(2,fold1.size());
@@ -34,9 +34,9 @@ bool ratio = true;
   CategoryTreeTool CTTool;
 
   CategoryTree CT_0L = CTTool.GetCategories_0L_plotFormat();
-  CategoryTree CT_1L = CTTool.GetCategories_1L();
+  CategoryTree CT_1L = CTTool.GetCategories_1L_plotFormat();
   CategoryTree CT_2L = CTTool.GetCategories_2L_plotFormat();
-  CategoryTree CT_3L = CTTool.GetCategories_3L();
+  CategoryTree CT_3L = CTTool.GetCategories_3L_plotFormat();
 
   VS all;
   all.a("ttbar_all").a("ST_all").a("DB_all").a("ZDY_all").a("TB_all").a("QCD").a("Wjets_all").a("Data");
@@ -66,7 +66,7 @@ bool ratio = true;
   else if(oneL){
    depth0 = CT_1L.GetDepth()-3;
    d = depth0;
-   CT_1L.GetListDepth(CTs, 1);
+   CT_1L.GetListDepth(CTs, 0);
   }
   else if(twoL){
    depth0 = CT_2L.GetDepth();
@@ -76,7 +76,7 @@ bool ratio = true;
   else if(threeL){
    depth0 = CT_3L.GetDepth();
    d = 3;
-   CT_3L.GetListDepth(CTs, depth0-2);
+   CT_3L.GetListDepth(CTs, 0);
   }
 cout << "depth: " << depth0 << " size:" << CTs.size() << endl;
  if(gSystem->AccessPathName((fname).c_str())){
@@ -116,6 +116,7 @@ cout << "writing plots to file" << endl;
 //    if(bfit) b_fit_stack->Write("bfit_stack",TObject::kOverwrite);
 //    if(sbfit) sb_fit_stack->Write("sbfit_stack",TObject::kOverwrite);
  cout << "saving plots as pdf" << endl;
+cout << dir << " " << sig << endl;
    if(all[0].find("all") != std::string::npos){
    if(prefit) prefit_stack->SaveAs((odir+"/"+lepName+"/"+dir+sig+"fakesIncl_prefit.pdf").c_str());
    if(bfit) b_fit_stack->SaveAs((odir+"/"+lepName+"/"+dir+sig+"fakesIncl_b-fit.pdf").c_str());

@@ -130,7 +130,9 @@ public:
   CategoryTree GetCategories_QCD1L() const;
   CategoryTree GetCategories_1L_ChargeSep() const;
   CategoryTree GetCategories_0L_plotFormat() const;
+  CategoryTree GetCategories_1L_plotFormat() const;
   CategoryTree GetCategories_2L_plotFormat() const;
+  CategoryTree GetCategories_3L_plotFormat() const;
   CategoryTree GetCategories_Plot1L() const;
 };
 

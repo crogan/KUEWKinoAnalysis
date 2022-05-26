@@ -721,6 +721,23 @@ CategoryTree CategoryTreeTool::GetCategories_1L() const {
   return CT_1L;
 }
 
+CategoryTree CategoryTreeTool::GetCategories_1L_plotFormat() const {
+  CategoryTree CT_0j(VS().a("_0j"), "", "0J", kJ, true);
+  CategoryTree CT_1j(VS().a("_1j"), "", "1J", kJ, true);
+  CategoryTree CT_2j(VS().a("_2j"), "", "2J", kJ, true);
+  CategoryTree CT_3j(VS().a("_3j"), "", "3J", kJ, true);
+  CategoryTree CT_ge4j(VS().a("_ge4j"), "#geq 4 j #in S", "4J", kJ, true);
+
+  CategoryTree CT_1L(VS().a("Ch1L"), "1L", "1L", kL, true);
+  CT_1L.AddSubCategory(CT_0j);
+  CT_1L.AddSubCategory(CT_1j);
+  CT_1L.AddSubCategory(CT_2j);
+  CT_1L.AddSubCategory(CT_3j);
+  CT_1L.AddSubCategory(CT_ge4j);
+
+  return CT_1L;
+  
+}
 
 CategoryTree CategoryTreeTool::GetCategories_2L() const {
   CategoryTree CT_0b(VS().a("j0bS"), "0b", "0b", kJ_sub, false);
@@ -940,6 +957,19 @@ CategoryTree CategoryTreeTool::GetCategories_3L() const {
   return CT_3L;
 }
 
+CategoryTree CategoryTreeTool::GetCategories_3L_plotFormat() const {
+  CategoryTree CT_0j(VS().a("_0j"), "", "0J", kJ, true);
+  CategoryTree CT_1j(VS().a("_ge1j"), "", "ge1J", kJ, true);
+  CategoryTree CT_inclJ(VS().a("_inclS"), "inclJS", "inclJ", kJ, true);
+
+  CategoryTree CT_3L(VS().a("Ch3L"), "3L", "3L", kL, true);
+  CT_3L.AddSubCategory(CT_0j);
+  CT_3L.AddSubCategory(CT_1j);
+  CT_3L.AddSubCategory(CT_inclJ);
+
+  return CT_3L;
+  
+}
 
 CategoryTree CategoryTreeTool::GetCategories_Fakes1L() const {
   
