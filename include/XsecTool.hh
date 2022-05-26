@@ -15,9 +15,12 @@ public:
   double GetXsec_BKG(const std::string& dataset) const;
   double GetXsec_SMS(const std::string& dataset, double MP) const;
 
-private:
   static std::map<std::string,double> m_Label2Xsec_BKG;
   static std::map<std::string,double> InitMap_Xsec_BKG();
+
+private:
+  //static std::map<std::string,double> m_Label2Xsec_BKG;
+  //static std::map<std::string,double> InitMap_Xsec_BKG();
 
   static std::map<std::string,int> m_N_SMS;
   static std::map<std::string,int> InitMap_N_SMS();

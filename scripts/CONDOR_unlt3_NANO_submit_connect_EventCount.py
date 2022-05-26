@@ -20,6 +20,7 @@ LIST = "default.list"
 QUEUE = ""
 MAXN = 1
 SPLIT = 1
+CONNECT = False
 
 def new_listfile(rootlist, listfile):
     mylist = open(listfile,'w')
@@ -76,12 +77,16 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag):
     fsrc.write('output = '+outlog+" \n")
     fsrc.write('error = '+errlog+" \n")
     fsrc.write('log = '+loglog+" \n")
-    fsrc.write('Requirements = (Machine != "red-node000.unl.edu")\n')
+    fsrc.write('priority = 10 \n')
+    fsrc.write('Requirements = (Machine != "red-node000.unl.edu" && Machine != "ncm*.hpc.itc.rwth-aachen.de" && Machine != "mh-epyc7662-8.t2.ucsd.edu")\n')
     fsrc.write('request_memory = 2 GB \n')
     #fsrc.write('+RequiresCVMFS = True \n')
     #fsrc.write('+RequiresSharedFS = True \n')
 
-    transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/uscms/home/z374f439/nobackup/whatever_you_want/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
+    if CONNECT is True:
+        transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/stash/user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
+    else:
+        transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/uscms/home/z374f439/nobackup/whatever_you_want/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
     fsrc.write(transfer_input)
 
     fsrc.write('should_transfer_files = YES\n')
@@ -113,7 +118,7 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag):
 
 if __name__ == "__main__":
     if not len(sys.argv) > 1 or '-h' in sys.argv or '--help' in sys.argv:
-        print "Usage: %s [-q queue] [-tree treename] [-list listfile.list] [-maxN N] [--sms]" % sys.argv[0]
+        print "Usage: %s [-q queue] [-tree treename] [-list listfile.list] [--sms]" % sys.argv[0]
         print
         sys.exit(1)
 
@@ -133,21 +138,13 @@ if __name__ == "__main__":
         p = sys.argv.index('-tree')
         TREE = sys.argv[p+1]
         argv_pos += 2
-    if '-maxN' in sys.argv:
-        p = sys.argv.index('-maxN')
-        MAXN = int(sys.argv[p+1])
-        argv_pos += 2
     if '--sms' in sys.argv:
         DO_SMS = 1
         argv_pos += 1
-        
+    if '--connect' in sys.argv:
+        CONNECT = True
+        argv_pos += 1
     
-    if SPLIT <= 1:
-        SPLIT = 1
-    else:
-        MAXN = 1
-    
-    print "maxN is %d" % MAXN
     print "split is %d" % SPLIT
 
     if DO_DATA:
@@ -164,6 +161,7 @@ if __name__ == "__main__":
     print listname
 
     NAME = listname.replace(".list",'')
+    NAME += "_EventCount"
     
     print NAME
     print RUN_DIR
@@ -193,6 +191,9 @@ if __name__ == "__main__":
 
     print TARGET
     #os.system("tar -czf "+TARGET+"/config.tgz "+config)
+
+    if CONNECT is True:
+        OUT  = "/stash/user/"+USER+"/EventCount/root/"
 
     # output root files
     ROOT = OUT+"/"+NAME+"/"

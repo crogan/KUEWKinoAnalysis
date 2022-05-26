@@ -82,7 +82,7 @@ string METTriggerTool::Get_Name(double HT, int year, bool el, bool mu, bool data
     name+="HT-Le600--"; 
   else if(HT > 600. && HT < 750.)
     name+="HT-G600--HT-L750--"; 
-  else if(HT > 750.)
+  else if(HT >= 750.)
     name+="HT-Ge750--";
   
   if(el)
@@ -120,7 +120,7 @@ int METTriggerTool::Get_Curve_Index(double HT, int year, bool el, bool mu, bool 
     index += 1;
   else if(HT > 600. && HT < 750.)
     index += 2;
-  else if(HT > 750.)
+  else if(HT >= 750.)
     index += 3;
   
   if(el)
