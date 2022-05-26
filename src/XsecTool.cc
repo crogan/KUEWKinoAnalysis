@@ -409,7 +409,7 @@ std::map<std::string,double> XsecTool::InitMap_Xsec_BKG(){
   Label2Xsec["ZH_HToBB_ZToLL_M125_13TeV_powheg_pythia8"] = 0.07523;
   Label2Xsec["ZH_HToBB_ZToNuNu_M125_13TeV_powheg_pythia8"] = 0.1482;
   Label2Xsec["WplusH_HToBB_WToLNu_M125_13TeV_powheg_pythia8"] = 0.2791;
-  Label2Xsec["&WminusH_HToBB_WToLNu_M125_13TeV_powheg_pythia8"] = 0.1733;
+  Label2Xsec["WminusH_HToBB_WToLNu_M125_13TeV_powheg_pythia8"] = 0.1733;
   Label2Xsec["ZH_HToBB_ZToLL_M125_13TeV_powheg_pythia8"] = 0.07924;
   Label2Xsec["ZH_HToBB_ZToNuNu_M125_13TeV_powheg_pythia8"] = 0.1565;
   Label2Xsec["WplusH_HToBB_WToLNu_M125_13TeV_powheg_pythia8"] = 0.2819;
