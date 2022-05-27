@@ -2472,7 +2472,6 @@ void FitPlotter::DrawRM(vector<CategoryList> cats, TCanvas* can, TPad* pad, VS l
      rlabels.push_back(VS());
      for(int r = 0; r < NR[v]; r++){
       string label = cats[v][0].GetFitBin()[r].GetRBinLabel();
-	cout << label << endl;
       rlabels[v] += label;
       if(maxSize < labels.size())
         maxSize = label.size();
@@ -2513,17 +2512,14 @@ void FitPlotter::DrawRM(vector<CategoryList> cats, TCanvas* can, TPad* pad, VS l
 	pad->cd();
       }
     }
-//cout << "hi: " << hi << " hi_last: " << hi_last << " placement: " << (hi+hi_last)/2. << endl; 
-    //l.DrawLatex(hlo + (1.-hhi-hlo)*(0.5+r)/double(Nbins_total), 1 - hto - 4*eps, labels[r].c_str());
     l.DrawLatex((hi + hi_last)/2., 1 - hto - 4*eps, labels[r].c_str());
-    //l.DrawLatex(hlo + (1.-hhi-hlo)*(0.5+r)/double(Nl), 1 - hto - 4*eps, labels[r].c_str());
   
   }
 
   l.SetTextAngle(0);
   l.SetTextAlign(32);
   l.SetTextSize(0.035);
-  l.DrawLatex((hi-hlo)/2.+hlo+0.02, hbo-0.015*(maxSize+1), "#scale[1.15]{R_{ISR}}");
+  l.DrawLatex((hi-hlo)/2.+hlo+0.02, hbo-0.013*(maxSize+1), "#scale[1.15]{R_{ISR}}");
 }
 void FitPlotter::DrawRM(const FitBin& fitbin, TCanvas* can, TPad* pad, VS labels, TPad* pad_ratio){
   pad->cd();
