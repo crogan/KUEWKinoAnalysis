@@ -181,6 +181,10 @@ int main(int argc, char* argv[]) {
   ntuple->AddJMEFolder(string(JMEFOLD));
   ntuple->AddSVDiscrFile(string(SVFILE));
   ntuple->AddMETTriggerFile(string(METTRIGFILE));
+  #ifdef _CMSSW_
+  if(!DO_SMS && !IS_DATA)
+    ntuple->AddLHAPDF();
+  #endif
 
   if(DO_SYS)
     ntuple->AddSystematics();

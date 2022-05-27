@@ -2365,6 +2365,64 @@ void FitPlotter::DrawRM(const FitBin& fitbin, TCanvas* can, TPad* pad, TPad* pad
 
   double eps = 0.0015;
 
+  int Nproc = proc.size();
+  if(Nproc == 0)
+    return nullptr;
+  
+  vector<const CategoryTree*> CatTrees;
+  CT.GetListDeepest(CatTrees);
+  
+  int Nvis = CatTrees.size();
+  
+  l.SetTextSize(0.033);
+  l.SetTextFont(42);
+  l.SetTextAlign(23);
+  line->SetLineWidth(2);
+
+  double lo = hlo;
+  double hi = hlo;
+  double lo_ratio = hlo_rat;
+  double hi_ratio = hlo_rat;
+  double yline = hbo-0.02;
+
+  for(int r = 0; r < NB; r++){
+    lo = hi;
+    lo_ratio = hi_ratio;
+    hi = 1./double(NB)*(1.-hhi-hlo) + lo;
+    hi_ratio = 1./double(NB)*(1.-hhi_rat-hlo_rat) + lo_ratio;
+    /*
+    line->SetLineStyle(1);
+    line->DrawLineNDC(lo + eps, yline,
+                      lo + eps, yline + 6*eps);
+    line->DrawLineNDC(hi - eps, yline,
+                      hi - eps, yline + 6*eps);
+
+    line->DrawLineNDC(lo + eps, yline,
+                      hi - eps, yline);
+    */
+    line->SetLineStyle(1);
+    if(r < NR-1){
+      line->DrawLineNDC(hi, hbo, hi, 1.-hto);
+      if(pad_ratio){
+	pad_ratio->cd();
+	line->DrawLineNDC(hi_ratio, 0., hi_ratio, 1.);
+	pad->cd();
+      }
+    }
+    l.DrawLatex(hlo + (1.-hhi-hlo)*(0.5+r)/double(NB), yline, rlabels[r].c_str());
+  }
+  
+  l.SetTextAngle(0);
+  l.SetTextAlign(32);
+  l.SetTextSize(0.035);
+  l.DrawLatex((hi-hlo)/2.+hlo+0.02, hbo-0.1, "#scale[1.15]{R_{ISR}}");
+}
+
+void FitPlotter::DrawRM(vector<CategoryList> cats, TCanvas* can, TPad* pad, VS labels, TPad* pad_ratio){
+  pad->cd();
+
+  double eps = 0.0015;
+
   double hlo = can->GetLeftMargin();
   double hhi = can->GetRightMargin();
   double hbo = can->GetBottomMargin();
@@ -2372,12 +2430,174 @@ void FitPlotter::DrawRM(const FitBin& fitbin, TCanvas* can, TPad* pad, TPad* pad
 
   double hlo_rat = 0.;
   double hhi_rat = 0.;
-
   if(pad_ratio){
     hlo_rat = pad_ratio->GetLeftMargin();
     hhi_rat = pad_ratio->GetRightMargin();
   }
   
+  TLatex l;
+  l.SetTextFont(42);
+  l.SetNDC();
+
+
+  vector<int> NR;// fitbin.NBins();
+  vector<int> NB; //fitbin.NRBins();
+  int Ncats = cats.size();
+  for(int v = 0; v < Ncats; v++){
+   NR.push_back(cats[v][0].GetFitBin().NBins());
+   NB.push_back(cats[v][0].GetFitBin().NRBins());
+}
+  vector<VS> rlabels;
+  int maxSize = 0;
+  for(int v = 0; v < Ncats; v++){
+     rlabels.push_back(VS());
+     for(int r = 0; r < NR[v]; r++){
+      string label = cats[v][0].GetFitBin()[r].GetRBinLabel();
+      rlabels[v] += label;
+      if(maxSize < labels.size())
+        maxSize = label.size();
+      }
+  }
+  
+  TLine* line = new TLine();
+  line->SetLineWidth(2);
+  line->SetLineColor(kBlack);
+  
+  l.SetTextSize(0.033);
+  l.SetTextFont(42);
+  l.SetTextAlign(23);
+  line->SetLineWidth(2);
+
+  double lo = hlo;
+  double hi = hlo;
+  double lo_ratio = hlo_rat;
+  double hi_ratio = hlo_rat;
+  double yline = hbo-0.02;
+  int Nl = labels.size();
+  int Nbins_total = std::accumulate(NB.begin(),NB.end(),0);
+  double hi_next;
+  double hi_last;
+  for(int r = 0; r < Ncats; r++){
+    lo = hi;
+    hi_last = hi;
+    lo_ratio = hi_ratio;
+    hi = NB[r]/double(Nbins_total)*(1.-hhi-hlo) + lo;
+    hi_ratio = 1./double(Nl)*(1.-hhi_rat-hlo_rat) + lo_ratio;
+
+    line->SetLineStyle(1);
+    if(r < Nl-1){
+      line->DrawLineNDC(hi, hbo-0.011*(maxSize+1), hi, 1.-hto);
+      if(pad_ratio){
+	pad_ratio->cd();
+	line->DrawLineNDC(hi_ratio, 0., hi_ratio, 1.);
+	pad->cd();
+      }
+    }
+    l.DrawLatex((hi + hi_last)/2., 1 - hto - 4*eps, labels[r].c_str());
+  
+  }
+
+  l.SetTextAngle(0);
+  l.SetTextAlign(32);
+  l.SetTextSize(0.035);
+  l.DrawLatex((hi-hlo)/2.+hlo+0.02, hbo-0.013*(maxSize+1), "#scale[1.15]{R_{ISR}}");
+}
+void FitPlotter::DrawRM(const FitBin& fitbin, TCanvas* can, TPad* pad, VS labels, TPad* pad_ratio){
+  pad->cd();
+
+  double eps = 0.0015;
+
+  double hlo = can->GetLeftMargin();
+  double hhi = can->GetRightMargin();
+  double hbo = can->GetBottomMargin();
+  double hto = can->GetTopMargin();
+
+  double hlo_rat = 0.;
+  double hhi_rat = 0.;
+  if(pad_ratio){
+    hlo_rat = pad_ratio->GetLeftMargin();
+    hhi_rat = pad_ratio->GetRightMargin();
+  }
+  
+  TLatex l;
+  l.SetTextFont(42);
+  l.SetNDC();
+
+  int NR = fitbin.NBins();
+  int NB = fitbin.NRBins();
+
+  VS rlabels;
+  int maxSize = 0;
+  for(int r = 0; r < NR; r++){
+    string label = fitbin[r].GetRBinLabel();
+    rlabels += label;
+    if(maxSize < label.size())
+      maxSize = label.size();
+  }
+  
+  TLine* line = new TLine();
+  line->SetLineWidth(2);
+  line->SetLineColor(kBlack);
+  
+  l.SetTextSize(0.033);
+  l.SetTextFont(42);
+  l.SetTextAlign(23);
+  line->SetLineWidth(2);
+
+  double lo = hlo;
+  double hi = hlo;
+  double lo_ratio = hlo_rat;
+  double hi_ratio = hlo_rat;
+  double yline = hbo-0.02;
+
+  int Nl = labels.size();
+
+  for(int r = 0; r < Nl; r++){
+    lo = hi;
+    lo_ratio = hi_ratio;
+    hi = 1./double(Nl)*(1.-hhi-hlo) + lo;
+    hi_ratio = 1./double(Nl)*(1.-hhi_rat-hlo_rat) + lo_ratio;
+
+    line->SetLineStyle(1);
+    if(r < Nl-1){
+      line->DrawLineNDC(hi, hbo-0.011*(maxSize+1), hi, 1.-hto);
+      if(pad_ratio){
+	pad_ratio->cd();
+	line->DrawLineNDC(hi_ratio, 0., hi_ratio, 1.);
+	pad->cd();
+      }
+    }
+
+    l.DrawLatex(hlo + (1.-hhi-hlo)*(0.5+r)/double(Nl), 1 - hto - 4*eps, labels[r].c_str());
+  }
+  
+  l.SetTextAngle(0);
+  l.SetTextAlign(32);
+  l.SetTextSize(0.035);
+  l.DrawLatex((hi-hlo)/2.+hlo+0.02, hbo-0.015*(maxSize+1), "#scale[1.15]{R_{ISR}}");
+}
+
+TCanvas* FitPlotter::Plot2D(const string& can_name,
+			   const VS& proc,
+			   const CategoryTree& CT){
+  RestFrames::SetStyle();
+
+  int Nproc = proc.size();
+  if(Nproc == 0)
+    return nullptr;
+
+ // cout << "Nproc: " << Nproc << endl;
+  
+  vector<const CategoryTree*> CatTrees;
+  CT.GetListDeepest(CatTrees);
+  
+  int Nvis = CatTrees.size();
+  
+  //cout << "Nvis: " << Nvis << endl;
+
+  if(Nvis < 1)
+    return nullptr;
+	  
   TLatex l;
   l.SetTextFont(42);
   l.SetNDC();
