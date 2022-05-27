@@ -2,7 +2,7 @@
 
 #include "../include/FitPlotter.hh"
 
-void PlotFits(const string& fold1 = "BF_allBkgs_data_TChiWZincl_2016_allchan_maskSR_4_27_22", const string& fold2 = "datacards/all/TChiWZ/2000170", const string& shapesFile = "4_26_22wShapes.root",  int lepNum = 2){
+void PlotFits(const string& fold1 = "BF_allBkgs_data_TChiWZincl_2016_allchan_maskSR_4_27_22", const string& fold2 = "datacards/all/TChiWZ/2000170", const string& shapesFile = "4_26_22wShapes.root",  int lepNum = 1){
   
   string dateName = shapesFile.substr(0,8);
         string bfName = fold1.substr(2,fold1.size());
