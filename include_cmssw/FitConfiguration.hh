@@ -31,6 +31,8 @@ public:
   void AddSVSys(ch::CombineHarvester& cb, ProcessList& processes);
   void AddKinematicSys(ch::CombineHarvester& cb, ProcessList& processes);
   void AddSJetNormSys(string& label, VS& procs, ch::CombineHarvester& cb, ProcessList& processes);
+
+  void AddShapeSysAsNorm(const Systematic& sys, ch::CombineHarvester& cb, FitReader& FIT);
   
 };
 

@@ -788,3 +788,66 @@ void FitConfiguration::AddSJetNormSys(string& label, VS& procs, ch::CombineHarve
    
   cb.SetFlag("filters-use-regex", false);
 }
+  
+  double Integral(const Category&   cat,
+		  const Process&    proc,
+		  const Systematic& sys = Systematic::Default()) const;
+
+  bool HasSystematic(const Process& proc, const Systematic& sys) const;
+
+ bool IsThere(const Category&   cat,
+	       const Process&    proc,
+	       const Systematic& sys = Systematic::Default()) const;
+
+
+void FitConfiguration::AddShapeSysAsNorm(const Systematic& sys, ch::CombineHarvester& cb, FitReader& FIT){
+  cb.SetFlag("filters-use-regex", true);
+
+  ProcessList processes = FIT.GetProcesses();
+  CategoryList categories = FIT.GetCategories();
+  VS channels = FIT.GetChannels();
+
+  // prepare channels/categories
+  map<string,CategoryList> chanMap;
+  for(auto c : channels)
+    chanMap[c] = categories.Filter(c);
+  categories.Clear();
+  for(auto c : channels)
+    categories += chanMap[c];
+  
+  int Nproc = processes.GetN();
+  int Ncat  = categories.GetN();
+
+  for(int ip = 0; ip < Nproc; ip++){
+    Process p = processes[ip];
+    
+    if(!FIT.HasSystematic(p, sys))
+      continue;
+
+    for(int ic = 0; ic < Ncat; ic++){
+      Category c = categories[ic];
+
+      if(!FIT.IsThere(c, p) ||
+	 !FIT.IsThere(c, p, sys))
+	continue;
+      
+      double nom = Integral(c, p);
+
+      if(nom <= 0.) continue;
+      
+      double up  = Integral(c, p, sys.Up());
+      double dn  = Integral(c, p, sys.Down());
+
+      double err = std::max(fabs(up-dn), std::max(fabs(up-nom), fabs(dn-nom)));
+
+      if(err <= 0.) continue;
+      
+      err = 1. + err/2./nom;
+      cb.cp().process(VS().a(p.Name())).bin(VS().a(cat.FullLabel()))
+	.AddSyst(cb, "norm_"+sys.Label(), "lnN", SystMap<>::init(err));
+
+    }
+  }
+  
+  cb.SetFlag("filters-use-regex", false);
+}
