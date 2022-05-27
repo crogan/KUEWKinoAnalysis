@@ -123,6 +123,7 @@ private:
   void DrawMR(const FitBin& fitbin, TCanvas* can, TPad* pad, TPad* pad_ratio = nullptr);
   void DrawRM(const FitBin& fitbin, TCanvas* can, TPad* pad, TPad* pad_ratio = nullptr);
   void DrawRM(const FitBin& fitbin, TCanvas* can, TPad* pad, VS labels, TPad* pad_ratio = nullptr);
+  void DrawRM(vector<CategoryList> cats, TCanvas* can, TPad* pad, VS labels, TPad* pad_ratio = nullptr);
   double CalculateZbi(double Nsig, double Nbkg, double deltaNbkg = 0.2);
 
   ProcessList FetchProcs(VS proc_list);
