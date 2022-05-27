@@ -775,7 +775,7 @@ void FitInputEditor::AddShapeSysWjets(){
   for(int g = 0; g < NCT; g++){
   bool b_addSys_RISR  = false;
   bool b_addSys_Mperp = false;
-  string sys_name = sgroup+CT_groups[g]->GetSpecLabel();
+  string sys_name = sgroup+"_"+CT_groups[g]->GetSpecLabel();
   Systematic sys_RISR(sys_name+"_RISR");
   Systematic sys_Mperp(sys_name+"_Mperp");
  cout << sys_name << endl; 
@@ -798,7 +798,7 @@ void FitInputEditor::AddShapeSysWjets(){
 	    
 	string hname = "h_"+proc.Name()+"_"+cat.GetLabel()+"_"+sys_name;
 	TH1D* hist = (TH1D*) GetHistogram(cat, proc)->Clone(hname.c_str());
-
+//cout << hname << endl;
 	TH1D* hist_RISRUp = getVariation_RISR(hname+"_RISRUp", hist, cat, 0.20);
 	TH1D* hist_RISRDn = getVariation_RISR(hname+"_RISRDn", hist, cat, -0.20);
 
