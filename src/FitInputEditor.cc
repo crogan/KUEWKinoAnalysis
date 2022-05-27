@@ -738,6 +738,120 @@ void FitInputEditor::AddShapeSysQCD(){
   } 
   CTs.clear();
 }
+void FitInputEditor::AddShapeSysWjets(){
+  CategoryTreeTool CTTool;
+  vector<const CategoryTree*> CT_groups;
+  vector<const CategoryTree*> catTrees;
+
+  vector<CategoryTree> CTs;
+  
+  CTs.push_back(CTTool.GetCategories_QCD0L());
+  CTs.push_back(CTTool.GetCategories_Fakes1L());
+  CTs.push_back(CTTool.GetCategories_Fakes2L());
+  CTs.push_back(CTTool.GetCategories_Fakes3L());
+  
+  ProcessList processes = GetProcesses();
+  int Nproc = processes.GetN();
+
+  ProcessList procs;
+  
+  for(int p = 0; p < Nproc; p++){
+    Process proc = processes[p];
+    string pname = proc.Name();
+    if(pname.find("Wjets") != string::npos)
+      procs += proc;
+  }
+
+  Nproc = procs.GetN();
+  if(Nproc == 0)
+    return;
+
+  for(int i = 0; i < 4; i++){
+    CT_groups.clear();
+    CTs[i].GetListDepth(CT_groups,1);
+   int NCT = CT_groups.size();
+   string sgroup = Form("Wjets_%dL",i);
+  // loop through category groups
+  for(int g = 0; g < NCT; g++){
+  bool b_addSys_RISR  = false;
+  bool b_addSys_Mperp = false;
+  string sys_name = sgroup+CT_groups[g]->GetSpecLabel();
+  Systematic sys_RISR(sys_name+"_RISR");
+  Systematic sys_Mperp(sys_name+"_Mperp");
+ cout << sys_name << endl; 
+    CategoryList cats = m_Cat.Filter(*CT_groups[g]);
+    int Ncat = cats.GetN();
+    if(Ncat == 0)
+      continue;
+
+    // loop through individual categories and processes
+    for(int c = 0; c < Ncat; c++){
+      Category cat = cats[c];
+      for(int p = 0; p < Nproc; p++){
+	Process proc = procs[p];
+
+	bool b_addProcSys_RISR  = false;
+	bool b_addProcSys_Mperp = false;
+	    
+	if(!IsFilled(cat, proc))
+	  continue;
+	    
+	string hname = "h_"+proc.Name()+"_"+cat.GetLabel()+"_"+sys_name;
+	TH1D* hist = (TH1D*) GetHistogram(cat, proc)->Clone(hname.c_str());
+
+	TH1D* hist_RISRUp = getVariation_RISR(hname+"_RISRUp", hist, cat, 0.20);
+	TH1D* hist_RISRDn = getVariation_RISR(hname+"_RISRDn", hist, cat, -0.20);
+
+	TH1D* hist_MperpUp = getVariation_Mperp(hname+"_MperpUp", hist, cat, 0.20);
+	TH1D* hist_MperpDn = getVariation_Mperp(hname+"_MperpDn", hist, cat, -0.20);
+
+	// add systematic histograms to editor
+	if(m_ProcHistSys.count(proc) == 0)
+	  m_ProcHistSys[proc] = map<Systematic,map<Category,pair<TH1D*,TH1D*> > >();
+
+	if(hist_RISRUp && hist_RISRDn){
+	  if(m_ProcHistSys[proc].count(sys_RISR) == 0)
+	    m_ProcHistSys[proc][sys_RISR] = map<Category,pair<TH1D*,TH1D*> >();
+	  if(m_ProcHistSys[proc][sys_RISR].count(cat) == 0){
+	    m_ProcHistSys[proc][sys_RISR][cat] = pair<TH1D*,TH1D*>(hist_RISRUp, hist_RISRDn);
+	  }
+	  if(!b_addProcSys_RISR){
+	    if(m_ProcSys.count(proc) == 0)
+	      m_ProcSys[proc] = Systematics();
+	    m_ProcSys[proc] += sys_RISR;
+	  }
+	  b_addSys_RISR = true;
+	  b_addProcSys_RISR = true;
+	}
+
+	if(hist_MperpUp && hist_MperpDn){
+	  if(m_ProcHistSys[proc].count(sys_Mperp) == 0)
+	    m_ProcHistSys[proc][sys_Mperp] = map<Category,pair<TH1D*,TH1D*> >();
+	  if(m_ProcHistSys[proc][sys_Mperp].count(cat) == 0){
+	    m_ProcHistSys[proc][sys_Mperp][cat] = pair<TH1D*,TH1D*>(hist_MperpUp, hist_MperpDn);
+	  }
+	  if(!b_addProcSys_Mperp){
+	    if(m_ProcSys.count(proc) == 0)
+	      m_ProcSys[proc] = Systematics();
+	    m_ProcSys[proc] += sys_Mperp;
+	  }
+	  b_addSys_Mperp = true;
+	  b_addProcSys_Mperp = true;
+	} 
+      
+    }	
+  }
+
+  if(b_addSys_RISR){
+    m_Sys += sys_RISR;
+  }
+  if(b_addSys_Mperp){
+    m_Sys += sys_Mperp;
+  }
+  }
+  } 
+  CTs.clear();
+}
 
 TH1D* FitInputEditor::getVariation_RISR(string hname, TH1D* hist, const Category& cat, double varmax){
   if(!hist)

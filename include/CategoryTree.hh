@@ -128,6 +128,8 @@ public:
   CategoryTree GetCategories_Fakes3L() const;
   CategoryTree GetCategories_QCD0L() const;
   CategoryTree GetCategories_QCD1L() const;
+  CategoryTree GetCategories_Wjets2L() const;
+  CategoryTree GetCategories_Wjets3L() const;
   CategoryTree GetCategories_1L_ChargeSep() const;
   CategoryTree GetCategories_0L_plotFormat() const;
   CategoryTree GetCategories_1L_plotFormat() const;
