@@ -1,4 +1,5 @@
 #include "../include/ScaleFactorTool.hh"
+#include "ReducedBase.hh"
 
 #include "Math/DistFunc.h"
 
@@ -76,5 +77,56 @@ bool ScaleFactorTool::DileptonEvent(ReducedBase* base){
     return true;
 
   return false;
+
+}
+
+void ScaleFactorTool::AddBtagFolder(const string& btagfold){
+  m_BtagSFTool.BuildMap(btagfold);
+}  
+
+double ScaleFactorTool::GetBtagSFWeight(ReducedBase* base, int year, bool fastsim, bool HForLF, int updown, ParticleIDType tag){
+ 
+  int Njet = base->Njet;
+  int iflavor;
+  double EFF, SF, PT;
+
+  double probMC   = 1.;
+  double probDATA = 1.;
+  
+  for(int i = 0; i < Njet; i++){
+    if(abs(base->Flavor_jet->at(i)) == 5)
+      iflavor = 0;
+    else if(abs(base->Flavor_jet->at(i)) == 4)
+      iflavor = 1;
+    else
+      iflavor = 2;
+   
+    if(HForLF && iflavor == 2)
+      continue;
+    if(!HForLF && iflavor != 2)
+      continue;
+
+    PT = base->PT_jet->at(i);
+    
+    EFF = m_BtagSFTool.EFF(PT, year, iflavor, fastsim);
+    SF  = m_BtagSFTool.SF(PT, year, iflavor, updown);
+
+    //std::cout << iflavor << " " << PT << " " << EFF << " " << SF << " " << base->BtagID_jet->at(i) << std::endl;
+    if(fastsim)
+      SF *= m_BtagSFTool.SF(PT, year, iflavor, updown, fastsim);
+
+    if(base->BtagID_jet->at(i) >= tag){
+      probMC   *= EFF;
+      probDATA *= SF*EFF;
+    } else {
+      probMC   *= (1.-EFF);
+      probDATA *= (1.-SF*EFF);
+    }
+  }
+
+  if(probMC <= 0. || probDATA <= 0.)
+    return 1.;
+  
+  return probDATA/probMC;
 
 }

@@ -4,9 +4,12 @@
 #include <iostream>
 #include <vector>
 
-#include "ReducedBase_slim.hh"
+#include "Particle.hh"
+#include "BtagSFTool.hh"
 
 using std::string;
+
+class ReducedBase;
 
 ///////////////////////////////////////////
 ////////// ScaleFactorTool class
@@ -24,6 +27,14 @@ public:
   double GetMETSF(double MET, int updown = 0);
 
   bool DileptonEvent(ReducedBase* base);
+
+  void AddBtagFolder(const string& btagfold);
+  double GetBtagSFWeight(ReducedBase* base, int year,  bool fastsim, bool HForLF, int updown = 0, ParticleIDType tag = kMedium);
+
+  
+
+private:
+  BtagSFTool m_BtagSFTool;
 
 };
 

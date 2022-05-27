@@ -308,8 +308,8 @@ Systematics SystematicsTool::GetWeightSystematics() const {
   Systematics list;
   
   //list += "PU_SF"; // turn off for now
-  //list += "BTAGHF_SF";
-  //list += "BTAGLF_SF";
+  list += "BTAGHF_SF";
+  list += "BTAGLF_SF";
   //
   //list += "MET_TRIG_0L_01J";
   //list += "MET_TRIG_0L_23J";

@@ -187,8 +187,6 @@ int main(int argc, char* argv[]) {
   
   SampleTool ST(NtuplePath, year);
 
-  ScaleFactorTool SF;
-
   ProcessList samples;
   if(addBkg){
     cout << "Adding all background processes" << endl;
@@ -222,9 +220,13 @@ int main(int argc, char* argv[]) {
   // Categories.Print();
 
   SystematicsTool SYS;
+  
   METTriggerTool m_METTriggerTool;
   m_METTriggerTool.BuildMap("Parameters.csv");
   //m_METTriggerTool.BuildMap("csv/METTrigger/Parameters.csv");
+
+  ScaleFactorTool SF;
+  SF.AddBtagFolder("./BtagSF");
 
   Systematics systematics(1);
   if(doSys)
@@ -453,9 +455,9 @@ int main(int argc, char* argv[]) {
 	  if(Nlep > 3)
 	    continue;
 	  if(base->PTISR < 250. && Nlep >= 2)
-	     continue;
+	    continue;
 	  if(base->PTISR < 400. && Nlep < 2)
-	     continue;
+	    continue;
 
 	  int Nbron = 0;
 	  int Nslvr = 0;
@@ -483,33 +485,27 @@ int main(int argc, char* argv[]) {
 	      cout << list_a[i].ID() << " " << list_a[i].IDLabel() << " " << list_a[i].Charge() << " a" << endl;
 	    else
 	      cout << list_b[i-base->Nlep_a].ID() << " " << list_b[i-base->Nlep_a].IDLabel() << " " << list_b[i-base->Nlep_a].Charge() << " b" << endl;
-	//     int Nlep     = base->Nlep;
-	// int NjetS    = base->Njet_S;
-	// int NbjetS   = base->Nbjet_S;
-	// int NjetISR  = base->Njet_ISR;
-	// int NbjetISR = base->Nbjet_ISR;
-	// int NSV      = base->NSV_S;
+	    //     int Nlep     = base->Nlep;
+	    // int NjetS    = base->Njet_S;
+	    // int NbjetS   = base->Nbjet_S;
+	    // int NjetISR  = base->Njet_ISR;
+	    // int NbjetISR = base->Nbjet_ISR;
+	    // int NSV      = base->NSV_S;
 	  }
    	  
 	  continue;
 	}
 
-          double PTISR = base->PTISR;
-          double PTISR_to_HT = PTISR*2.-150.;
-	  double weight = 1.;
-          double btag_weight = 1.;
-          double PU_weight = 1.;
-          double trig_weight = 1.;
-	  if(!is_data)
-          {
-	    weight = (setLumi ? lumi : ST.Lumi())*base->weight*sample_weight;
-            //btag_weight = base->BtagSFweight;
-            //PU_weight = base->PUweight;
-            trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
-            if(is_FastSim)
-                trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0)*
-                              m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
-          }
+	double PTISR = base->PTISR;
+	double PTISR_to_HT = PTISR*2.-150.;
+	double weight = 1.;
+	double btag_weight = 1.;
+	double PU_weight = 1.;
+	double trig_weight = 1.;
+
+	if(!is_data){
+	  weight = (setLumi ? lumi : ST.Lumi())*base->weight*sample_weight;
+	}
 	
 	// systematics loop
 	// do down sys first
@@ -525,149 +521,184 @@ int main(int argc, char* argv[]) {
 	  }
 	  
 	  if(!(!sys) && is_data) continue;
+
+	  btag_weight = 1.;
+	  PU_weight = 1.;
+	  trig_weight = 1.;
 	    
-             // HERE BE DRAGONS
+	  // HERE BE DRAGONS
 
-//                         ^    ^
-//                        / \  //\
-//          |\___/|      /   \//  .\
-//          /O  O  \__  /    //  | \ \
-//         /     /  \/_/    //   |  \  \
-//         @___@'    \/_   //    |   \   \ 
-//            |       \/_ //     |    \    \ 
-//            |        \///      |     \     \ 
-//           _|_ /   )  //       |      \     _\
-//          '/,_ _ _/  ( ; -.    |    _ _\.-~        .-~~~^-.
-//          ,-{        _      `-.|.-~-.           .~         `.
-//           '/\      /                 ~-. _ .-~      .-~^-.  \
-//              `.   {            }                   /      \  \
-//            .----~-.\        \-'                 .~         \  `. \^-.
-//           ///.----..>    c   \             _ -~             `.  ^-`   ^-_
-//             ///-._ _ _ _ _ _ _}^ - - - - ~                     ~--,   .-~
-//                                                                   /.-'
-//         
+	  //                         ^    ^
+	  //                        / \  //\
+	  //          |\___/|      /   \//  .\
+	  //          /O  O  \__  /    //  | \ \
+	  //         /     /  \/_/    //   |  \  \
+	  //         @___@'    \/_   //    |   \   \ 
+	  //            |       \/_ //     |    \    \ 
+	  //            |        \///      |     \     \ 
+	  //           _|_ /   )  //       |      \     _\
+	  //          '/,_ _ _/  ( ; -.    |    _ _\.-~        .-~~~^-.
+	  //          ,-{        _      `-.|.-~-.           .~         `.
+	  //           '/\      /                 ~-. _ .-~      .-~^-.  \
+	  //              `.   {            }                   /      \  \
+	  //            .----~-.\        \-'                 .~         \  `. \^-.
+	  //           ///.----..>    c   \             _ -~             `.  ^-`   ^-_
+	  //             ///-._ _ _ _ _ _ _}^ - - - - ~                     ~--,   .-~
+	  //                                                                   /.-'
+	  //         
 
-              if(sys.Label().find("MET_TRIG") != std::string::npos)
-              {
+	  if(sys.Label().find("MET_TRIG") != std::string::npos){
+	    bool correct_sys = false;
+	    if(sys == Systematic("MET_TRIG_0L_01J") && (base->Nele == 0 && base->Nmu == 0 && NjetS < 2))
+	      correct_sys = true;
+	    else if(sys == Systematic("MET_TRIG_0L_23J") && (base->Nele == 0 && base->Nmu == 0 && NjetS > 1 && NjetS < 4))
+	      correct_sys = true;
+	    else if(sys == Systematic("MET_TRIG_0L_45J") && (base->Nele == 0 && base->Nmu == 0 && NjetS > 3))
+	      correct_sys = true;
+	    else if(sys == Systematic("MET_TRIG_1Lel_01J") && (base->Nele == 1 && base->Nmu == 0 && NjetS < 2))
+	      correct_sys = true;
+	    else if(sys == Systematic("MET_TRIG_1Lel_234J") && (base->Nele == 1 && base->Nmu == 0 && NjetS > 1))
+	      correct_sys = true;
+	    else if(sys == Systematic("MET_TRIG_1Lmu_01J") && (base->Nmu == 1 && base->Nele == 0 && NjetS < 2))
+	      correct_sys = true;
+	    else if(sys == Systematic("MET_TRIG_1Lmu_234J") && (base->Nmu == 1 && base->Nele == 0 && NjetS > 1))
+	      correct_sys = true;
+	    else if(sys == Systematic("MET_TRIG_2L3L_01J") && (base->Nlep > 1 && NjetS < 2))
+	      correct_sys = true;
+	    else if(sys == Systematic("MET_TRIG_2L3L_2J") && (base->Nlep > 1 && NjetS > 1))
+	      correct_sys = true;
 
-
-               bool correct_sys = false;
-	       if(sys == Systematic("MET_TRIG_0L_01J") && (base->Nele == 0 && base->Nmu == 0 && NjetS < 2))
-                 correct_sys = true;
-	       else if(sys == Systematic("MET_TRIG_0L_23J") && (base->Nele == 0 && base->Nmu == 0 && NjetS > 1 && NjetS < 4))
-                 correct_sys = true;
-	       else if(sys == Systematic("MET_TRIG_0L_45J") && (base->Nele == 0 && base->Nmu == 0 && NjetS > 3))
-                 correct_sys = true;
-	       else if(sys == Systematic("MET_TRIG_1Lel_01J") && (base->Nele == 1 && base->Nmu == 0 && NjetS < 2))
-                 correct_sys = true;
-	       else if(sys == Systematic("MET_TRIG_1Lel_234J") && (base->Nele == 1 && base->Nmu == 0 && NjetS > 1))
-                 correct_sys = true;
-	       else if(sys == Systematic("MET_TRIG_1Lmu_01J") && (base->Nmu == 1 && base->Nele == 0 && NjetS < 2))
-                 correct_sys = true;
-	       else if(sys == Systematic("MET_TRIG_1Lmu_234J") && (base->Nmu == 1 && base->Nele == 0 && NjetS > 1))
-                 correct_sys = true;
-	       else if(sys == Systematic("MET_TRIG_2L3L_01J") && (base->Nlep > 1 && NjetS < 2))
-                 correct_sys = true;
-	       else if(sys == Systematic("MET_TRIG_2L3L_2J") && (base->Nlep > 1 && NjetS > 1))
-                 correct_sys = true;
-
-/*
-	       else if(sys == Systematic("MET_TRIG_el") && (base->Nele > 0 && base->Nele >= base->Nmu))
-                 correct_sys = true;
-	       else if(sys == Systematic("MET_TRIG_mu") && (base->Nmu > 0 && base->Nmu > base->Nele))
-                 correct_sys = true;
-*/
-/*
-	       else if(sys == Systematic("MET_TRIG_1L") && (base->Nlep == 1))
-                 correct_sys = true;
-	       else if(sys == Systematic("MET_TRIG_2L3L") && (base->Nlep > 1))
-                 correct_sys = true;
-*/
-/*
-	       else if(sys == Systematic("MET_TRIG_1Lel") && (base->Nele == 1 && base->Nmu == 0))
-                 correct_sys = true;
-	       else if(sys == Systematic("MET_TRIG_1Lmu") && (base->Nmu == 1 && base->Nele == 0))
-                 correct_sys = true;
-	       else if(sys == Systematic("MET_TRIG_2L3Lel") && (base->Nele >= 1 && base->Nele >= base->Nmu))
-                 correct_sys = true;
-	       else if(sys == Systematic("MET_TRIG_2L3Lmu") && (base->Nmu > 1 && base->Nmu > base->Nele))
-                 correct_sys = true;
-*/
-/*
-	       if(sys == Systematic("MET_TRIG_0L_HTLow") && (base->Nele != 0 || base->Nmu != 0 || PTISR_to_HT > 600.))
-                 continue;
-	       else if(sys == Systematic("MET_TRIG_0L_HTMed") && (base->Nmu == 0 || base->Nele >= base->Nmu || PTISR_to_HT <= 600. || PTISR_to_HT >= 750.))
-                  continue;
-	       else if(sys == Systematic("MET_TRIG_0L_HTHigh") && (base->Nele != 0 || base->Nmu != 0 || PTISR_to_HT < 750.))
-                 continue;
-	       else if(sys == Systematic("MET_TRIG_1Lel_HTLow") && (base->Nele != 1 && base->Nmu != 0 || PTISR_to_HT > 600.))
-                 continue;
-	       else if(sys == Systematic("MET_TRIG_1Lel_HTMed") && (base->Nele != 1 && base->Nmu != 0 || PTISR_to_HT <= 600. || PTISR_to_HT >= 750.))
-                 continue;
-	       else if(sys == Systematic("MET_TRIG_1Lel_HTHigh") && (base->Nele != 1 && base->Nmu != 0 || PTISR_to_HT < 750.))
-                 continue;
-	       else if(sys == Systematic("MET_TRIG_1Lmu_HTLow") && (base->Nmu != 1 && base->Nele != 0 || PTISR_to_HT > 600.))
-                 continue;
-	       else if(sys == Systematic("MET_TRIG_1Lmu_HTMed") && (base->Nmu != 1 && base->Nele != 0 || PTISR_to_HT <= 600. || PTISR_to_HT >= 750.))
-                 continue;
-	       else if(sys == Systematic("MET_TRIG_1Lmu_HTHigh") && (base->Nmu != 1 && base->Nele != 0 || PTISR_to_HT < 750.))
-                 continue;
-	       else if(sys == Systematic("MET_TRIG_2L3Lel_HTLow") && (base->Nele <= 1 && base->Nmu > base->Nele || PTISR_to_HT > 600.))
-                 continue;
-	       else if(sys == Systematic("MET_TRIG_2L3Lel_HTMed") && (base->Nele <= 1 && base->Nmu > base->Nele <= 600. || PTISR_to_HT >= 750.))
-                 continue;
-	       else if(sys == Systematic("MET_TRIG_2L3Lel_HTHigh") && (base->Nele <= 1 && base->Nmu > base->Nele || PTISR_to_HT < 750.))
-                 continue;
-	       else if(sys == Systematic("MET_TRIG_2L3Lmu_HTLow") && (base->Nmu < 2 || base->Nele > base->Nmu || PTISR_to_HT > 600.))
-                 continue;
-	       else if(sys == Systematic("MET_TRIG_2L3Lmu_HTMed") && (base->Nmu < 2 || base->Nele > base->Nmu <= 600. || PTISR_to_HT >= 750.))
-                 continue;
-	       else if(sys == Systematic("MET_TRIG_2L3Lmu_HTHigh") && (base->Nmu < 2 || base->Nele > base->Nmu || PTISR_to_HT < 750.))
-                 continue;
-*/
-               if(!correct_sys) continue;
-               if(sys.IsUp())
-                 if(is_FastSim)
-                   trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1)*
-                   m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1);
-                 else
-                   trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1);
-               else
-                 if(is_FastSim)
-                   trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1)*
-                   m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
-                 else
-                   trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
-              }
-
-/*
-	    if(sys == Systematic("BTAGHF_SF"))
-	      if(sys.IsUp())
-		weight *= base->BtagSFweight_up;
+	    /*
+	      else if(sys == Systematic("MET_TRIG_el") && (base->Nele > 0 && base->Nele >= base->Nmu))
+	      correct_sys = true;
+	      else if(sys == Systematic("MET_TRIG_mu") && (base->Nmu > 0 && base->Nmu > base->Nele))
+	      correct_sys = true;
+	    */
+	    /*
+	      else if(sys == Systematic("MET_TRIG_1L") && (base->Nlep == 1))
+	      correct_sys = true;
+	      else if(sys == Systematic("MET_TRIG_2L3L") && (base->Nlep > 1))
+	      correct_sys = true;
+	    */
+	    /*
+	      else if(sys == Systematic("MET_TRIG_1Lel") && (base->Nele == 1 && base->Nmu == 0))
+	      correct_sys = true;
+	      else if(sys == Systematic("MET_TRIG_1Lmu") && (base->Nmu == 1 && base->Nele == 0))
+	      correct_sys = true;
+	      else if(sys == Systematic("MET_TRIG_2L3Lel") && (base->Nele >= 1 && base->Nele >= base->Nmu))
+	      correct_sys = true;
+	      else if(sys == Systematic("MET_TRIG_2L3Lmu") && (base->Nmu > 1 && base->Nmu > base->Nele))
+	      correct_sys = true;
+	    */
+	    /*
+	      if(sys == Systematic("MET_TRIG_0L_HTLow") && (base->Nele != 0 || base->Nmu != 0 || PTISR_to_HT > 600.))
+	      continue;
+	      else if(sys == Systematic("MET_TRIG_0L_HTMed") && (base->Nmu == 0 || base->Nele >= base->Nmu || PTISR_to_HT <= 600. || PTISR_to_HT >= 750.))
+	      continue;
+	      else if(sys == Systematic("MET_TRIG_0L_HTHigh") && (base->Nele != 0 || base->Nmu != 0 || PTISR_to_HT < 750.))
+	      continue;
+	      else if(sys == Systematic("MET_TRIG_1Lel_HTLow") && (base->Nele != 1 && base->Nmu != 0 || PTISR_to_HT > 600.))
+	      continue;
+	      else if(sys == Systematic("MET_TRIG_1Lel_HTMed") && (base->Nele != 1 && base->Nmu != 0 || PTISR_to_HT <= 600. || PTISR_to_HT >= 750.))
+	      continue;
+	      else if(sys == Systematic("MET_TRIG_1Lel_HTHigh") && (base->Nele != 1 && base->Nmu != 0 || PTISR_to_HT < 750.))
+	      continue;
+	      else if(sys == Systematic("MET_TRIG_1Lmu_HTLow") && (base->Nmu != 1 && base->Nele != 0 || PTISR_to_HT > 600.))
+	      continue;
+	      else if(sys == Systematic("MET_TRIG_1Lmu_HTMed") && (base->Nmu != 1 && base->Nele != 0 || PTISR_to_HT <= 600. || PTISR_to_HT >= 750.))
+	      continue;
+	      else if(sys == Systematic("MET_TRIG_1Lmu_HTHigh") && (base->Nmu != 1 && base->Nele != 0 || PTISR_to_HT < 750.))
+	      continue;
+	      else if(sys == Systematic("MET_TRIG_2L3Lel_HTLow") && (base->Nele <= 1 && base->Nmu > base->Nele || PTISR_to_HT > 600.))
+	      continue;
+	      else if(sys == Systematic("MET_TRIG_2L3Lel_HTMed") && (base->Nele <= 1 && base->Nmu > base->Nele <= 600. || PTISR_to_HT >= 750.))
+	      continue;
+	      else if(sys == Systematic("MET_TRIG_2L3Lel_HTHigh") && (base->Nele <= 1 && base->Nmu > base->Nele || PTISR_to_HT < 750.))
+	      continue;
+	      else if(sys == Systematic("MET_TRIG_2L3Lmu_HTLow") && (base->Nmu < 2 || base->Nele > base->Nmu || PTISR_to_HT > 600.))
+	      continue;
+	      else if(sys == Systematic("MET_TRIG_2L3Lmu_HTMed") && (base->Nmu < 2 || base->Nele > base->Nmu <= 600. || PTISR_to_HT >= 750.))
+	      continue;
+	      else if(sys == Systematic("MET_TRIG_2L3Lmu_HTHigh") && (base->Nmu < 2 || base->Nele > base->Nmu || PTISR_to_HT < 750.))
+	      continue;
+	    */
+	    if(!correct_sys) continue;
+	    
+	    if(sys.IsUp())
+	      if(is_FastSim)
+		trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1)*
+		  m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1);
 	      else
-		weight *= base->BtagSFweight_down;
+		trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1);
+	    else
+	      if(is_FastSim)
+		trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1)*
+		  m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
+	      else
+		trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
+	    
+	  } else {
+	    
+	    trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
+            if(is_FastSim)
+	      trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0)*
+		m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
+	  }
+
+	  //
+	  // BTAG systematics from the ntuples
+	  //
+	  /*
+	    if(sys == Systematic("BTAGHF_SF"))
+	    if(sys.IsUp())
+	    btag_weight *= base->BtagSFweight_up;
+	    else
+	    btag_weight *= base->BtagSFweight_down;
 	    else 
-	      weight *= base->BtagSFweight;
+	    btag_weight *= base->BtagSFweight;
 
 	    if(sys == Systematic("BTAGLF_SF"))
-	      if(sys.IsUp())
-		weight *= base->BtagSFweight_up;
-	      else
-		weight *= base->BtagSFweight_down;
+	    if(sys.IsUp())
+	    btag_weight *= base->BtagSFweight_up;
+	    else
+	    btag_weight *= base->BtagSFweight_down;
 	    else 
-	      weight *= base->BtagSFweight;
-*/
+	    btag_weight *= base->BtagSFweight;
+	  */
 
-	    // turn off PU systematics for now
-	    // if(sys == Systematic("PU_SF"))
-	    //   if(sys.IsUp())
-	    // 	weight *= base->PUweight_up;
-	    //   else
-	    // 	weight *= base->PUweight_down;
-	    // else
-	    //   weight *= base->PUweight;
-//weight *= btag_weight*PU_weight*trig_weight;
-if(is_data) weight = 1.;
+	  //
+	  // BTAG systematics on the fly (needs jet collection in reduced ntuples)
+	  //
+	  if(sys == Systematic("BTAGHF_SF")){
+	    if(sys.IsUp())
+	      btag_weight *= SF.GetBtagSFWeight(base, year, is_FastSim, true, 1);
+	    else
+	      btag_weight *= SF.GetBtagSFWeight(base, year, is_FastSim, true, -1);
+	  } else {
+	    btag_weight *= SF.GetBtagSFWeight(base, year, is_FastSim, true, 0);
+	  }
+	  
+	  if(sys == Systematic("BTAGLF_SF")){
+	    if(sys.IsUp())
+	      btag_weight *= SF.GetBtagSFWeight(base, year, is_FastSim, false, 1);
+	    else
+	      btag_weight *= SF.GetBtagSFWeight(base, year, is_FastSim, false, -1);
+	  } else {
+	    btag_weight *= SF.GetBtagSFWeight(base, year, is_FastSim, false, 0);
+	  }
+	  // turn off PU systematics for now
+	  // if(sys == Systematic("PU_SF"))
+	  //   if(sys.IsUp())
+	  // 	PU_weight = base->PUweight_up;
+	  //   else
+	  // 	PU_weight = base->PUweight_down;
+	  // else
+	  //   PU_weight = base->PUweight;
+
+	  //weight *= btag_weight*PU_weight*trig_weight;
+	  weight *= btag_weight*PU_weight;
+
+	  if(is_data) weight = 1.;
 	  
 	  LepList Fakes  = list_a.GetFakes();
 	  Fakes         += list_b.GetFakes();
