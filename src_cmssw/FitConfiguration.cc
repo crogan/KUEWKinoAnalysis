@@ -760,7 +760,7 @@ void FitConfiguration::AddSJetNormSys(string& label, VS& procs, ch::CombineHarve
 
   std::map<string, VS> SJets;
   
-  ProcessList plist = backgrounds.Filter("Wjets");
+  ProcessList plist = processes.Filter(kBkg).Filter("Wjets");
   
   SJets["0L_0jS"] = VS().a(".*0L.*.*0j.*S.*");
   SJets["0L_1jS"] = VS().a(".*0L.*.*1j.*S.*");
