@@ -14,11 +14,12 @@ int main(int argc, char* argv[]) {
   string InputFile  = "";
   string OutputFile = "FitInput_new.root";
 
-  bool smoothFakes = false;
-  bool smoothQCD   = false;
+  bool smoothFakes = true;
+  bool smoothQCD   = true;
 
   bool shapeFakes = false;
   bool shapeQCD   = false;
+  bool shapeWjets   = false;
 
   bool addFakeData = false;
 
@@ -70,12 +71,16 @@ int main(int argc, char* argv[]) {
     if(strncmp(argv[i],"-shape", 7) == 0){
       shapeFakes = true;
       shapeQCD   = true;
+      shapeWjets   = true;
     }
     if(strncmp(argv[i],"-shapeFakes", 11) == 0){
       shapeFakes = true;
     }
     if(strncmp(argv[i],"-shapeQCD", 9) == 0){
       shapeQCD = true;
+    }
+    if(strncmp(argv[i],"-shapeWjets", 11) == 0){
+      shapeWjets = true;
     }
     if(strncmp(argv[i],"-fakedata", 9) == 0){
       addFakeData = true;
@@ -138,6 +143,9 @@ int main(int argc, char* argv[]) {
 
   if(shapeQCD)
     FIT.AddShapeSysQCD();
+  
+  if(shapeWjets)
+    FIT.AddShapeSysWjets();
 
   if(addFakeData)
     FIT.AddFakeData();

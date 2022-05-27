@@ -299,13 +299,18 @@ void WriteScriptConnect(const string& src_name,
    root_output = root_output.substr(pos, root_output.length()-pos);
   }
 //cout << "command: " << command << endl;
+  
   gSystem->Exec("mkdir -p config_BuildFitInput");
+  gSystem->Exec("mkdir -p config_BuildFitInput/BtagSF");
   gSystem->Exec("cp BuildFitInput.x config_BuildFitInput/");
   gSystem->Exec("cp scripts/cmssw_setup_connect.sh config_BuildFitInput/");
   gSystem->Exec("cp scripts/setup_RestFrames_connect.sh config_BuildFitInput/");
+  gSystem->Exec("cp root/BtagSF/*.root config_BuildFitInput/BtagSF/.");
+  gSystem->Exec("cp csv/BtagSF/* config_BuildFitInput/BtagSF/.");
   gSystem->Exec("tar -czf config_BuildFitInput.tgz config_BuildFitInput/");
   gSystem->Exec(("mv config_BuildFitInput.tgz "+OutputFold+"/../").c_str());
   gSystem->Exec("rm -r config_BuildFitInput/");
+  
   file << "universe = vanilla" << endl;
   file << "executable = execute_script_BuildFitInput.sh" << endl;
   file << "getenv = True" << endl;

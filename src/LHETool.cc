@@ -3,12 +3,6 @@
 void LHETool::GetFromLHAPDF(int& nPDFWeights, std::vector<double>& PDFWeights, int id1, int id2, float x1, float x2, float scalePDF, int year){
 
 #ifdef _CMSSW_
-  LHAPDF::PDFSet pdfset;
-  if(year == 2017 || year == 2018)
-    pdfset = LHAPDF::getPDFSet("NNPDF31_nnlo_as_0118"); 
-  if(year == 2016)
-    pdfset = LHAPDF::getPDFSet("NNPDF30_lo_as_0130"); 
-  std::vector<LHAPDF::PDF*> pdfs = pdfset.mkPDFs(); 
   std::string errorTypeCount = pdfset.errorType();
   size_t npar = std::count(errorTypeCount.begin(),errorTypeCount.end(),'+');
   nPDFWeights = npar;
@@ -24,6 +18,17 @@ void LHETool::GetFromLHAPDF(int& nPDFWeights, std::vector<double>& PDFWeights, i
   }
 #endif
  
+}
+
+void LHETool::AddLHAPDF(int year)
+{
+#ifdef _CMSSW_
+  if(year == 2017 || year == 2018)
+    pdfset = LHAPDF::getPDFSet("NNPDF31_nnlo_as_0118"); 
+  if(year == 2016)
+    pdfset = LHAPDF::getPDFSet("NNPDF30_lo_as_0130"); 
+  pdfs = pdfset.mkPDFs(); 
+#endif
 }
 
 double LHETool::GetWeight(unsigned int nLHEPdfWeight, float* LHEPdfWeight, int Generator_id1, int Generator_id2, float Generator_x1, float Generator_x2, float Generator_scalePDF, int year, int updown){

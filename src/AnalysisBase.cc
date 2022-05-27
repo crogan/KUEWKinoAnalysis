@@ -1146,6 +1146,23 @@ double AnalysisBase<SUSYNANOBase>::GetMuRWeight(int updown){
   return 1.;
 }
 
+#ifdef _CMSSW_
+
+template<>
+void AnalysisBase<SUSYNANOBase>::AddLHAPDF(){
+  if(IsData() || IsSMS())
+    return;
+  int year = 2016;
+  if(m_FileTag.find("17") != std::string::npos)
+    year = 2017;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+ 
+  m_LHETool.AddLHAPDF(year);
+}
+
+#endif
+
 template <>
 double AnalysisBase<SUSYNANOBase>::GetPDFWeight(int updown){
   if(IsData() || IsSMS())

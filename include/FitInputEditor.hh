@@ -24,6 +24,7 @@ public:
 
   void AddShapeSysFakes(bool sJetSplit = true);
   void AddShapeSysQCD();
+  void AddShapeSysWjets();
 
   void AddFakeData();
   void AddEmptyData();

@@ -77,7 +77,20 @@ void PlotReader::Initialize(){
   m_Title["JetEta"] = "#eta_{jet}";
   m_Title["JetPhi"] = "#phi_{jet}";
   m_Title["JetPt"] = "p_{T}^{jet} [GeV]";
+  m_Title["BjetEta"] = "#eta_{bjet}";
+  m_Title["BjetPhi"] = "#phi_{bjet}";
+  m_Title["BjetPt"] = "p_{T}^{bjet} [GeV]";
+  m_Title["SVJetEta"] = "#eta_{SV}";
+  m_Title["SVPhi"] = "#phi_{SV}";
+  m_Title["SVPt"] = "p_{T}^{SV} [GeV]";
+  m_Title["ElEta"] = "#eta_{el}";
+  m_Title["ElPhi"] = "#phi_{el}";
+  m_Title["ElPt"] = "p_{T}^{el} [GeV]";
+  m_Title["MuEta"] = "#eta_{mu}";
+  m_Title["MuPhi"] = "#phi_{mu}";
+  m_Title["MuPt"] = "p_{T}^{mu} [GeV]";
 
+  m_Title["p"] = "preselection";
   m_Title["incl"]  = "preselection";
   m_Title["0J"]  = "L 0J X";
   m_Title["1J"]  = "L 1J X";
@@ -215,18 +228,20 @@ TH1D* PlotReader::GetHist(const string& name,
   VS labels;
   for(auto r : regions){
     labels += var+"_"+proc+"_"+r;
-    
   }
 
   // VS list = GetHists().Filter(var);
   // list = list.Filter(proc);
   list = list.FilterOR(labels);
+  
   if(list.size() < 1)
     return nullptr;
 
   TH1D* hist = nullptr;
 
   for(auto h : list){
+    if(h.find("_v_") != std::string::npos)
+      continue;
     TH1D* temp = (TH1D*) m_File.Get(("plot/hist/"+h).c_str());
     if(!temp)
       continue;
