@@ -820,7 +820,7 @@ void FitConfiguration::AddShapeSysAsNorm(const Systematic& sys, ch::CombineHarve
 	 !FIT.IsThere(c, p, sys))
 	continue;
       
-      double nom = Integral(c, p);
+      double nom = FIT.Integral(c, p);
 
       if(nom <= 0.) continue;
       
