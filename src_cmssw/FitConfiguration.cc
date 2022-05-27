@@ -788,17 +788,6 @@ void FitConfiguration::AddSJetNormSys(string& label, VS& procs, ch::CombineHarve
    
   cb.SetFlag("filters-use-regex", false);
 }
-  
-  double Integral(const Category&   cat,
-		  const Process&    proc,
-		  const Systematic& sys = Systematic::Default()) const;
-
-  bool HasSystematic(const Process& proc, const Systematic& sys) const;
-
- bool IsThere(const Category&   cat,
-	       const Process&    proc,
-	       const Systematic& sys = Systematic::Default()) const;
-
 
 void FitConfiguration::AddShapeSysAsNorm(const Systematic& sys, ch::CombineHarvester& cb, FitReader& FIT){
   cb.SetFlag("filters-use-regex", true);
