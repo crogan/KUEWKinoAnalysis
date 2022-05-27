@@ -824,15 +824,15 @@ void FitConfiguration::AddShapeSysAsNorm(const Systematic& sys, ch::CombineHarve
 
       if(nom <= 0.) continue;
       
-      double up  = Integral(c, p, sys.Up());
-      double dn  = Integral(c, p, sys.Down());
+      double up  = FIT.Integral(c, p, sys.Up());
+      double dn  = FIT.Integral(c, p, sys.Down());
 
       double err = std::max(fabs(up-dn), std::max(fabs(up-nom), fabs(dn-nom)));
 
       if(err <= 0.) continue;
       
       err = 1. + err/2./nom;
-      cb.cp().process(VS().a(p.Name())).bin(VS().a(cat.FullLabel()))
+      cb.cp().process(VS().a(p.Name())).bin(VS().a(c.FullLabel()))
 	.AddSyst(cb, "norm_"+sys.Label(), "lnN", SystMap<>::init(err));
 
     }
