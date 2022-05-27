@@ -1,4 +1,5 @@
 #include <iostream>
+#include <numeric>
 #include <map>
 #include <TStyle.h>
 #include <TROOT.h>
@@ -1644,7 +1645,7 @@ void FitPlotter::DrawCatTree(const CategoryTree& CT, TCanvas* can){
 	if(irun > 1 && CurPar){
 	  line->DrawLineNDC(hlo + (hhi-hlo)*double(brun)/double(Nvis), hto - double(i)/double(Depth)*frac*(hto-hbo),
 	  		    hlo + (hhi-hlo)*double(brun)/double(Nvis), hbo);
-	  l.DrawLatex(hlo + (hhi-hlo)*double(brun)/double(Nvis) + 0.0015,
+	  l.DrawLatex(hlo + (hhi-hlo)*double(brun)/double(Nvis) + 0.0055,
 		      hto - double(i)/double(Depth)*frac*(hto-hbo),
 		      CurPar->GetSpectroscopicLabel().c_str());
 	}
@@ -1674,19 +1675,25 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
   vector<const CategoryTree*> CatTrees;
   CT.GetListDeepest(CatTrees);
   int Nvis = CatTrees.size();
-  
+  int Nbin;
+  vector<int> Nbins;
   if(Nvis < 1)
     return nullptr;
   
   CategoryList CatList = GetCategories();
   CategoryList dumcat = CatList.Filter(*CatTrees[0]);
   const FitBin& fitbin = dumcat[0].GetFitBin();
-  int Nbin;
-
-  if(pType == kFull)
+  vector<CategoryList> dumcats;  
+if(pType == kFull)
     Nbin = fitbin.NBins();
   if(pType == kRISR || pType == kInv)
     Nbin = fitbin.NRBins(); 
+ for(int v = 0; v < Nvis; v++){
+  dumcats.push_back(CatList.Filter(*CatTrees[v]));
+  CategoryList dumcat_tmp = CatList.Filter(*CatTrees[v]); 
+  if(pType == kFull) Nbins.push_back(dumcats[v][0].GetFitBin().NBins());
+  if(pType == kRISR || pType == kInv) Nbins.push_back(dumcats[v][0].GetFitBin().NRBins());
+ } 
 
   if(CatList.GetN() < 1)
     return nullptr;
@@ -1746,16 +1753,16 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
     
     for(int v = 0; v < Nvis; v++){
       CategoryList cat = CatList.Filter(*CatTrees[v]);
-
       TH1D* h = nullptr;
 
       if(pType == kFull)
 	h = GetAddedHist(Form("plothist_%d_%d_%s", i, v, can_name.c_str()), cat, procs);
       if(pType == kRISR || pType == kInv)
-	h = IntegrateMperp(Form("plotintegratedhist_%d_%d_%s", i, v, can_name.c_str()),fitbin,
+	h = IntegrateMperp(Form("plotintegratedhist_%d_%d_%s", i, v, can_name.c_str()),cat[0].GetFitBin(),
 			   GetAddedHist(Form("plothist_%d_%d_%s", i, v, can_name.c_str()), cat, procs));
 
       if(h){
+//	cout << v << " " << cat[0].GetLabel() << " " << h->GetNbinsX() << endl;
 	itot += h->Integral();
 	h->Draw();
       }
@@ -1807,7 +1814,7 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
       if(pType == kFull)
         h = GetAddedHist(Form("plothist_%d_%s",  v, can_name.c_str()), cat, totbkgs);
       if(pType == kRISR || pType == kInv)
-        h = IntegrateMperp(Form("plotintegratedhist_%d_%s", v, can_name.c_str()),fitbin,
+        h = IntegrateMperp(Form("plotintegratedhist_%d_%s", v, can_name.c_str()),cat[0].GetFitBin(),
 			   GetAddedHist(Form("plothist_tot_%d_%s", v, can_name.c_str()), cat, totbkgs));
 
       hist_totbkg[v] = h;
@@ -1831,8 +1838,9 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
   for(int i = 0; i < Nbkg; i++){
     vlabels.push_back(labels[i]);
     vcolors.push_back(colors[i]);
-    for(int v = 0; v < Nvis; v++)
+    for(int v = 0; v < Nvis; v++){
       vhists[v].push_back(hists[v][i]);
+	}
     vtotal.push_back(total[i]);
     for(int j = vtotal.size()-2; j >= 0; j--){
       if(vtotal[j] < vtotal[j+1]){
@@ -1856,12 +1864,12 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
       }
     }
   }
- 
   vector<TH1D*> fhists;
   vector<TH1D*> fhists_sig;
   TH1D*         fhist_data   = nullptr;
   TH1D*         fhist_totbkg = nullptr;
-
+  int		Nbins_total = std::accumulate(Nbins.begin(),Nbins.end(),0);
+  int		Nbins_max = *std::max_element(Nbins.begin(),Nbins.end());
   for(int i = 0; i < Nsig; i++){
     fhists_sig.push_back(new TH1D(Form("fhistsig_%d_%s", i, can_name.c_str()),
 				  Form("fhistsig_%d_%s", i, can_name.c_str()),
@@ -1885,19 +1893,22 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
   if(total_data > 0.){
     fhist_data = new TH1D(Form("fhistdata_%s", can_name.c_str()),
 			  Form("fhistdata_%s", can_name.c_str()),
-			  Nbin*Nvis, 0., Nbin*Nvis);
-    for(int b = 0; b < Nbin; b++){
+			  Nbins_total, 0., Nbins_total);
+int offset = 0; 
+    for(int b = 0; b < Nbins_max; b++){
       for(int v = 0; v < Nvis; v++){
 
 	if(hist_data[v]){
 	  int index;
+	if(b+1 > Nbins[v]) continue;
           if(pType == kInv)
-            index = v*Nbin+b+1;
+            index = v*Nbins[v]+b+1-offset;
           else
             index = b*Nvis+v+1;
 
 	  fhist_data->SetBinContent(index, hist_data[v]->GetBinContent(b+1));
 	  fhist_data->SetBinError(index, hist_data[v]->GetBinError(b+1));
+	if(b+2 > Nbins[v] && b+2 <= Nbins_max) offset++; 
 	}
       }
     }
@@ -1905,19 +1916,22 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
   if(total_totbkg > 0.){
     fhist_totbkg = new TH1D(Form("fhisttotbkg_%s", can_name.c_str()),
 			  Form("fhisttotbkg_%s", can_name.c_str()),
-			  Nbin*Nvis, 0., Nbin*Nvis);
-    for(int b = 0; b < Nbin; b++){
+			  Nbins_total, 0., Nbins_total);
+int offset = 0; 
+    for(int b = 0; b < Nbins_max; b++){
       for(int v = 0; v < Nvis; v++){
-
 	if(hist_totbkg[v]){
 	  int index;
-	  if(pType == kInv)
-	    index = v*Nbin+b+1;
+	if(b+1 > Nbins[v]) continue;
+	 if(pType == kInv)
+	    index = v*Nbins[v]+b+1-offset;
 	  else
 	    index = b*Nvis+v+1;
 
 	  fhist_totbkg->SetBinContent(index, hist_totbkg[v]->GetBinContent(b+1));
 	  fhist_totbkg->SetBinError(index, hist_totbkg[v]->GetBinError(b+1));
+	if(b+2 > Nbins[v] && b+2 <= Nbins_max) offset++; 
+//cout <<  "total bkg;  cat " << v << " has nbins " << Nbins[v] << " b " << b << " index " << index << " with " << hist_totbkg[v]->GetBinContent(b+1) << " offset: " << offset << endl;	  
 	}
       }
     }
@@ -1931,36 +1945,40 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
       }
     }
   }
-  for(int i = 0; i < Nbkg; i++){
+ for(int i = 0; i < Nbkg; i++){
     fhists.push_back(new TH1D(Form("fhistsbkg_%d_%s", i, can_name.c_str()),
 			      Form("fhistsbkg_%d_%s", i, can_name.c_str()),
-			      Nbin*Nvis, 0., Nbin*Nvis));
-    for(int b = 0; b < Nbin; b++){
+			      Nbins_total, 0., Nbins_total));
+int offset = 0; 
+    for(int b = 0; b < Nbins_max; b++){
       for(int v = 0; v < Nvis; v++){
 	int j = i;
 	TH1D* hptr = nullptr;
 	while(j < Nbkg && hptr == nullptr){
 	  hptr = vhists[v][j];
+//	if(hptr != nullptr) cout << v << " " << j << " true Nbins: " << hptr->GetNbinsX() << " Nbin: " << Nbins[v] << endl;
 	  j++;
 	}
 	if(hptr == nullptr) 
 	  continue;	
+	if(b+1 > Nbins[v]) continue;
 	if(hptr){
 	  int index;
 	  if(pType == kInv)
-	    index = v*Nbin+b+1;
+	    index = v*Nbins[v]+b+1-offset;
 	  else
 	    index = b*Nvis+v+1;
-	  
 	  fhists[i]->SetBinContent(index, hptr->GetBinContent(b+1));
 	  fhists[i]->SetBinError(index, hptr->GetBinError(b+1));
+	if(b+2 > Nbins[v] && b+2 <= Nbins_max) offset++; 
+//cout <<  "bkg #"<< i << " cat " << v << " has nbins " << Nbins[v] << " b " << b << " index " << index << " with " << hptr->GetBinContent(b+1) << " offset: " << offset << endl;	  
 	}
       }
     }
   }
   labels = vlabels;
   colors = vcolors;
-  for(int b = 0; b < Nbin*Nvis; b++)
+  for(int b = 0; b < Nbins_total; b++)
     fhists[0]->GetXaxis()->SetBinLabel(b+1, "");
   
   fhists[0]->LabelsOption("v","X");
@@ -2047,7 +2065,7 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
   vector<double> Yerr;
   vector<double> Y_bkg_ratio;
   vector<double> Yerr_bkg_ratio;
-  for(int i = 0; i < Nvis*Nbin; i++){
+  for(int i = 0; i < Nbins_total; i++){
     X.push_back(htot->GetXaxis()->GetBinCenter(i+1));
     Xerr.push_back(0.5);
     Y.push_back(htot->GetBinContent(i+1));
@@ -2056,14 +2074,14 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
     Yerr_bkg_ratio.push_back(htot->GetBinError(i+1)/htot->GetBinContent(i+1));
   }
 
-  TGraphErrors* gr = (TGraphErrors*) new TGraphErrors(Nvis*Nbin, &X[0], &Y[0],  &Xerr[0], &Yerr[0]);  
+  TGraphErrors* gr = (TGraphErrors*) new TGraphErrors(Nbins_total, &X[0], &Y[0],  &Xerr[0], &Yerr[0]);  
   gr->SetMarkerSize(0);
   gr->SetLineColor(kBlack);
   gr->SetFillColor(kBlack);
   gr->SetFillStyle(3244);
   gr->Draw("same p2");
 
-  TGraphErrors* gr_bkg_ratio = (TGraphErrors*) new TGraphErrors(Nvis*Nbin, &X[0],
+  TGraphErrors* gr_bkg_ratio = (TGraphErrors*) new TGraphErrors(Nbins_total, &X[0],
 								&Y_bkg_ratio[0],  &Xerr[0], &Yerr_bkg_ratio[0]);  
   gr_bkg_ratio->SetMarkerSize(0);
   gr_bkg_ratio->SetLineColor(kBlack);
@@ -2094,7 +2112,7 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
       hmax = fhist_data->GetMaximum();
 
     fhist_data_ratio = (TH1D*) fhist_data->Clone(Form("data_ratio_%s", can_name.c_str()));
-    for(int i = 0; i < Nvis*Nbin; i++){
+    for(int i = 0; i < Nbins_total; i++){
       fhist_data_ratio->SetBinContent(i+1, fhist_data_ratio->GetBinContent(i+1)/htot->GetBinContent(i+1));
       if(fhist_data_ratio->GetBinContent(i+1) > 0.)
 	fhist_data_ratio->SetBinError(i+1, fhist_data_ratio->GetBinError(i+1)/htot->GetBinContent(i+1));
@@ -2113,7 +2131,7 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
   l.SetTextFont(42);
   l.SetNDC();
 
-  l.SetTextSize(std::min(0.03, 1.5/double(Nvis*Nbin)));
+  l.SetTextSize(std::min(0.03, 1.5/double(Nbins_total)));
   l.SetTextFont(42);
   l.SetTextAlign(32);
   l.SetTextAngle(90);
@@ -2121,22 +2139,25 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
   int Depth = CT.GetDepth();
   VS rlabels;
   VS vLabels;
-  for(int r = 0; r < Nbin; r++)
-    rlabels += fitbin[r].GetRBinLabel();
+  for(int v = 0; v < Nvis; v++){
+    CategoryList tmpcat = CatList.Filter(*CatTrees[v]);
+  for(int r = 0; r < Nbins[v]; r++){
+rlabels += tmpcat[0].GetFitBin()[r].GetRBinLabel();
+  }}
   for(int v = 0; v < Nvis; v++)
     vLabels += CatTrees[v]->GetPlainLabel(Depth);
 
-  for(int b = 0; b < Nvis*Nbin; b++){
+  for(int b = 0; b < Nbins_total; b++){
     string label;
     double xpos, ypos;
     if(pType == kInv){
-      label = rlabels[b%Nbin];
-      xpos = hlo+(1.-hhi-hlo)/double(Nvis*Nbin)*(0.5+b);
+      label = rlabels[b];
+      xpos = hlo+(1.-hhi-hlo)/double(Nbins_total)*(0.5+b);
       ypos = yline+0.015;
     }
     else{
       label = CatTrees[b%Nvis]->GetPlainLabel(Depth);
-      xpos = hlo+(1.-hhi-hlo)/double(Nvis*Nbin)*(0.5+b);
+      xpos = hlo+(1.-hhi-hlo)/double(Nbins_total)*(0.5+b);
       ypos = 1. - hto - 4*eps;
       l.SetTextColor(7004 + 10*((b%Nvis)%8));
     }
@@ -2175,7 +2196,7 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
   for(int i = 0; i < Nsig; i++)
     leg->AddEntry(fhists_sig[i], labels_sig[i].c_str(), "L");
   leg->Draw("SAME");
-  //cout << "here" << endl;
+ // cout << "here" << endl;
   TPad* pad_ratio = nullptr;
   if(b_ratio){
     can->cd();
@@ -2212,7 +2233,8 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
   if(pType == kRISR)
     DrawRM(fitbin, can, pad, pad_ratio);
   if(pType == kInv)
-    DrawRM(fitbin,can,can,vLabels);
+    //DrawRM(fitbin,can,can,vLabels);
+    DrawRM(dumcats,can,can,vLabels);
 
   l.SetTextAngle(0);
   l.SetTextColor(kBlack);
@@ -2415,6 +2437,94 @@ void FitPlotter::DrawRM(const FitBin& fitbin, TCanvas* can, TPad* pad, TPad* pad
   l.DrawLatex((hi-hlo)/2.+hlo+0.02, hbo-0.1, "#scale[1.15]{R_{ISR}}");
 }
 
+void FitPlotter::DrawRM(vector<CategoryList> cats, TCanvas* can, TPad* pad, VS labels, TPad* pad_ratio){
+  pad->cd();
+
+  double eps = 0.0015;
+
+  double hlo = can->GetLeftMargin();
+  double hhi = can->GetRightMargin();
+  double hbo = can->GetBottomMargin();
+  double hto = can->GetTopMargin();
+
+  double hlo_rat = 0.;
+  double hhi_rat = 0.;
+  if(pad_ratio){
+    hlo_rat = pad_ratio->GetLeftMargin();
+    hhi_rat = pad_ratio->GetRightMargin();
+  }
+  
+  TLatex l;
+  l.SetTextFont(42);
+  l.SetNDC();
+
+
+  vector<int> NR;// fitbin.NBins();
+  vector<int> NB; //fitbin.NRBins();
+  int Ncats = cats.size();
+  for(int v = 0; v < Ncats; v++){
+   NR.push_back(cats[v][0].GetFitBin().NBins());
+   NB.push_back(cats[v][0].GetFitBin().NRBins());
+}
+  vector<VS> rlabels;
+  int maxSize = 0;
+  for(int v = 0; v < Ncats; v++){
+     rlabels.push_back(VS());
+     for(int r = 0; r < NR[v]; r++){
+      string label = cats[v][0].GetFitBin()[r].GetRBinLabel();
+	cout << label << endl;
+      rlabels[v] += label;
+      if(maxSize < labels.size())
+        maxSize = label.size();
+      }
+  }
+  
+  TLine* line = new TLine();
+  line->SetLineWidth(2);
+  line->SetLineColor(kBlack);
+  
+  l.SetTextSize(0.033);
+  l.SetTextFont(42);
+  l.SetTextAlign(23);
+  line->SetLineWidth(2);
+
+  double lo = hlo;
+  double hi = hlo;
+  double lo_ratio = hlo_rat;
+  double hi_ratio = hlo_rat;
+  double yline = hbo-0.02;
+  int Nl = labels.size();
+  int Nbins_total = std::accumulate(NB.begin(),NB.end(),0);
+  double hi_next;
+  double hi_last;
+  for(int r = 0; r < Ncats; r++){
+    lo = hi;
+    hi_last = hi;
+    lo_ratio = hi_ratio;
+    hi = NB[r]/double(Nbins_total)*(1.-hhi-hlo) + lo;
+    hi_ratio = 1./double(Nl)*(1.-hhi_rat-hlo_rat) + lo_ratio;
+
+    line->SetLineStyle(1);
+    if(r < Nl-1){
+      line->DrawLineNDC(hi, hbo-0.011*(maxSize+1), hi, 1.-hto);
+      if(pad_ratio){
+	pad_ratio->cd();
+	line->DrawLineNDC(hi_ratio, 0., hi_ratio, 1.);
+	pad->cd();
+      }
+    }
+//cout << "hi: " << hi << " hi_last: " << hi_last << " placement: " << (hi+hi_last)/2. << endl; 
+    //l.DrawLatex(hlo + (1.-hhi-hlo)*(0.5+r)/double(Nbins_total), 1 - hto - 4*eps, labels[r].c_str());
+    l.DrawLatex((hi + hi_last)/2., 1 - hto - 4*eps, labels[r].c_str());
+    //l.DrawLatex(hlo + (1.-hhi-hlo)*(0.5+r)/double(Nl), 1 - hto - 4*eps, labels[r].c_str());
+  
+  }
+
+  l.SetTextAngle(0);
+  l.SetTextAlign(32);
+  l.SetTextSize(0.035);
+  l.DrawLatex((hi-hlo)/2.+hlo+0.02, hbo-0.015*(maxSize+1), "#scale[1.15]{R_{ISR}}");
+}
 void FitPlotter::DrawRM(const FitBin& fitbin, TCanvas* can, TPad* pad, VS labels, TPad* pad_ratio){
   pad->cd();
 
@@ -2499,7 +2609,7 @@ TCanvas* FitPlotter::Plot2D(const string& can_name,
   if(Nproc == 0)
     return nullptr;
 
-  //cout << "Nproc: " << Nproc << endl;
+ // cout << "Nproc: " << Nproc << endl;
   
   vector<const CategoryTree*> CatTrees;
   CT.GetListDeepest(CatTrees);
@@ -2524,7 +2634,6 @@ TCanvas* FitPlotter::Plot2D(const string& can_name,
   int Ncat = cat.GetN();
   
   //cout << "Ncat: " << Ncat << endl;
-
   for(int i = 0; i < Nproc; i++){
     VS vproc;
     if(m_Strings.count(proc[i]) != 0){
@@ -2533,7 +2642,7 @@ TCanvas* FitPlotter::Plot2D(const string& can_name,
     }
     else{
       vproc += proc[i];
-      //cout << vproc[i] << endl;
+      //cout << proc[i] << endl;
     }
     ProcessList procs;
     
@@ -2813,57 +2922,6 @@ else vhadS.push_back(m_Strings[hadS_cat[i]][j]);
   
 }
 
-  m_Title["ttbar_all"] = "t #bar{t} + jets W/Fakes";
-  m_Color["ttbar_all"] = 7011;
-  m_Strings["ttbar_all"] = VS().a("ttbar").a("ttbar_Fakes_elf0").a("ttbar_Fakes_muf0").a("ttbar_Fakes_elf1").a("ttbar_Fakes_muf1");
-
-  m_Title["ST_all"] = "single top W/Fakes";
-  m_Color["ST_all"] = 7010;
-  m_Strings["ST_all"] = VS().a("ST").a("ST_Fakes_elf0").a("ST_Fakes_muf0").a("ST_Fakes_elf1").a("ST_Fakes_muf1");
-
-  m_Title["DB_all"] = "di-bosons W/Fakes";
-  m_Color["DB_all"] = 7051;
-  m_Strings["DB_all"] = VS().a("DB").a("DB_Fakes_elf0").a("DB_Fakes_muf0").a("DB_Fakes_elf1").a("DB_Fakes_muf1");
-
-  m_Title["TB_all"] = "tri-bosons / t #bar{t} + V W/Fakes";
-  m_Color["TB_all"] = 7050;
-  m_Strings["TB_all"] = VS().a("TB").a("TB_Fakes_elf0").a("TB_Fakes_muf0").a("TB_Fakes_elf1").a("TB_Fakes_muf1");
-
-  m_Title["ZDY_all"] = "Z / #gamma* + jets W/Fakes";
-  m_Color["ZDY_all"] = 7000;
-  m_Strings["ZDY_all"] = VS().a("ZDY").a("ZDY_Fakes_elf0").a("ZDY_Fakes_muf0").a("ZDY_Fakes_elf1").a("ZDY_Fakes_muf1");
-
-  m_Title["Wjets_all"] = "W + jets W/Fakes";
-  m_Color["Wjets_all"] = 7001;
-  m_Strings["Wjets_all"] = VS().a("Wjets").a("Wjets_Fakes_elf0").a("Wjets_Fakes_muf0").a("Wjets_Fakes_elf1").a("Wjets_Fakes_muf1");
-
-  m_Title["Non-Rare"] = "Non-Rare Backgrounds";
-  m_Color["Non-Rare"] = 7001;
-  m_Strings["Non-Rare"] = VS().a("QCD_Fakes_elf0").a("QCD_Fakes_elf1").a("QCD_Fakes_elf2")
-    .a("QCD_Fakes_muf0").a("QCD_Fakes_muf1").a("QCD_Fakes_muf2").a("QCD").a("ttbar").a("ttbar_Fakes_elf0")
-    .a("ttbar_Fakes_muf0").a("ttbar_Fakes_elf1").a("ttbar_Fakes_muf1").a("DB").a("DB_Fakes_elf0").a("DB_Fakes_muf0")
-    .a("DB_Fakes_elf1").a("DB_Fakes_muf1").a("ZDY").a("ZDY_Fakes_elf0").a("ZDY_Fakes_muf0").a("ZDY_Fakes_elf1").a("ZDY_Fakes_muf1")
-    .a("Wjets").a("Wjets_Fakes_elf0").a("Wjets_Fakes_muf0").a("Wjets_Fakes_elf1").a("Wjets_Fakes_muf1");
-
-  m_Title["bkg_all"] = "All Backgrounds";
-  m_Color["bkg_all"] = 7011;
-  m_Strings["bkg_all"] = VS().a("ttbar").a("ttbar_Fakes_elf0").a("ttbar_Fakes_muf0").a("ttbar_Fakes_elf1").a("ttbar_Fakes_muf1")
-    .a("ST").a("ST_Fakes_elf0").a("ST_Fakes_muf0").a("ST_Fakes_elf1").a("ST_Fakes_muf1")
-    .a("DB").a("DB_Fakes_elf0").a("DB_Fakes_muf0").a("DB_Fakes_elf1").a("DB_Fakes_muf1")
-    .a("TB").a("TB_Fakes_elf0").a("TB_Fakes_muf0").a("TB_Fakes_elf1").a("TB_Fakes_muf1")
-    .a("ZDY").a("ZDY_Fakes_elf0").a("ZDY_Fakes_muf0").a("ZDY_Fakes_elf1").a("ZDY_Fakes_muf1")
-    .a("Wjets").a("Wjets_Fakes_elf0").a("Wjets_Fakes_muf0").a("Wjets_Fakes_elf1").a("Wjets_Fakes_muf1");
-  /*
-  m_Title["HF_Fakes"] = "HF leptons";
-  m_Color["HF_Fakes"] = 7022;
-  m_Strings["HF_Fakes"] = VS();
-  m_Strings["HF_Fakes"] += AddPrefix("ttbar", s_Fakes_HF);
-  m_Strings["HF_Fakes"] += AddPrefix("Wjets", s_Fakes_HF);
-  m_Strings["HF_Fakes"] += AddPrefix("ZDY", s_Fakes_HF);
-  m_Strings["HF_Fakes"] += AddPrefix("DB", s_Fakes_HF);
-  m_Strings["HF_Fakes"] += AddPrefix("ST", s_Fakes_HF);
-  m_Strings["HF_Fakes"] += AddPrefix("TB", s_Fakes_HF);
-  */
 cout << cats[catTest].GetN() << endl;
  
 cout << "hadronic S cuts passed" << endl;
