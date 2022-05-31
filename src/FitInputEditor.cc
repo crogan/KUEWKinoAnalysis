@@ -778,7 +778,6 @@ void FitInputEditor::AddShapeSysWjets(){
   string sys_name = sgroup+"_"+CT_groups[g]->GetSpecLabel();
   Systematic sys_RISR(sys_name+"_RISR");
   Systematic sys_Mperp(sys_name+"_Mperp");
- cout << sys_name << endl; 
     CategoryList cats = m_Cat.Filter(*CT_groups[g]);
     int Ncat = cats.GetN();
     if(Ncat == 0)
