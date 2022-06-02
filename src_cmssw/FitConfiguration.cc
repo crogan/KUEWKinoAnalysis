@@ -21,17 +21,9 @@ void FitConfiguration::Configure(ch::CombineHarvester& cb, ProcessList& processe
   bool bkgNorms_noQCD_noWjets;
   bool WJetsnorms;
   bool bkgNorms_noQCD;
-  if(*cb.era_set().begin() == "2016"){
-    cout << "era: 2016" << endl;
-    bkgNorms_noQCD_noWjets = false;
-    WJetsnorms = false;
-    bkgNorms_noQCD = true;
-  }
-  else{
     WJetsnorms = true;
     bkgNorms_noQCD_noWjets = true;
     bkgNorms_noQCD = false;
-  }
   // bool WJetsnorms_highLow = false;
   //  bool bkgNorms_bosonTopSplit = false;
 
