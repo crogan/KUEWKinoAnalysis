@@ -6,6 +6,7 @@
 #include <algorithm>
 
 #include "Criteria.hh"
+#include "CategoryTree.hh"
 
 class Systematics;
 
@@ -110,7 +111,9 @@ public:
 
   virtual ~SystematicsTool();
 
+  Systematics GetConvertedSystematics() const;
   Systematics GetWeightSystematics() const;
+  //Systematics GetFakeShapeSystematics(CategoryTree CT, VS procs) const;
   
   Systematics GetTreeSystematics() const;
 

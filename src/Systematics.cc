@@ -1,5 +1,5 @@
 #include "Systematics.hh"
-
+#include "CategoryTree.hh"
 ///////////////////////////////////////////
 ////////// Systematic class
 ///////////////////////////////////////////
@@ -303,6 +303,16 @@ SystematicsTool::SystematicsTool(){
 SystematicsTool::~SystematicsTool() {}
 
 
+//get list to convert shape systematics to normalizations
+Systematics SystematicsTool::GetConvertedSystematics() const {
+   Systematics list;
+   
+  list += "BTAGHF_SF";
+  list += "BTAGLF_SF";
+ 
+return list;
+}
+
 // Default weight/SF systematics
 Systematics SystematicsTool::GetWeightSystematics() const {
   Systematics list;
@@ -352,6 +362,32 @@ Systematics SystematicsTool::GetWeightSystematics() const {
 
   return list;
 }
+
+//pass this list of real procs ie ttbar, Wjets
+//Systematics SystematicsTool::GetFakeShapeSystematics(CategoryTree CT, VS procs) const {
+//        Systematics list;
+//	vector<const CategoryTree*> catTrees;
+//	CT.GetListDepth(catTrees,1);
+//
+//	VS procGroups;
+//	if(std::count(procs.begin(),procs.end(),"ttbar") || std::count(procs.begin(),procs.end(),"ST")) procGroups += "ttbarST";
+//	if(std::count(procs.begin(),procs.end(),"Wjets") || std::count(procs.begin(),procs.end(),"TB") || std::count(procs.begin(),procs.end(),"DB")) procGroups += "WjetsDBTB";
+//	if(std::count(procs.begin(),procs.end(),"ZDY")) procGroups += "ZDY";
+//	if(std::count(procs.begin(),procs.end(),"QCD")) procGroups += "QCD";
+//
+//
+//	for(int c = 0; c < int(catTrees.size()); c++){
+//		for(int p = 0; p < procGroups.size(); p++){
+//			list += Systematic(procGroups[p]+"_"+catTrees[c]->GetSpecLabel()+"f0_RISR").Up();
+//			list += Systematic(procGroups[p]+"_"+catTrees[c]->GetSpecLabel()+"f1_RISR").Down();
+//			list += Systematic(procGroups[p]+"_"+catTrees[c]->GetSpecLabel()+"f0_Mperp").Up();
+//			list += Systematic(procGroups[p]+"_"+catTrees[c]->GetSpecLabel()+"f1_Mperp").Down();
+//		}
+//	}
+//  
+//
+//  return list;
+//}
 
 // Default alternative tree systematics
 Systematics SystematicsTool::GetTreeSystematics() const {

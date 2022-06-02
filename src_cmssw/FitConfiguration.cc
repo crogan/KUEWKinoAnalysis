@@ -15,6 +15,8 @@ void FitConfiguration::Configure(ch::CombineHarvester& cb, ProcessList& processe
   
   ProcessList signals = processes.Filter(kSig);
   ProcessList backgrounds = processes.Filter(kBkg); 
+//cout << "Era set size: " << cb.era_set().size() << endl;
+//cout << "Era: " << *cb.era_set().begin() << endl;
   bool QCDnorms = true;
   bool bkgNorms_noQCD_noWjets;
   bool WJetsnorms;
@@ -821,17 +823,22 @@ void FitConfiguration::AddShapeSysAsNorm(const Systematic& sys, ch::CombineHarve
 	continue;
       
       double nom = FIT.Integral(c, p);
-
+//cout << "nom: " << nom << endl;
       if(nom <= 0.) continue;
-      
+//cout << "cat: " << c.FullLabel() << " proc: " << p.Name() << " sys: " << sys.Label() << endl;      
       double up  = FIT.Integral(c, p, sys.Up());
-      double dn  = FIT.Integral(c, p, sys.Down());
+//cout << "up: " << up << endl;     
+ double dn  = FIT.Integral(c, p, sys.Down());
+//cout << "down: " << dn << endl;     
+      double err = up - dn;
+  //   cout << "up: " << up << " down: " << dn << " err: " << err << endl; 
+      if(fabs(err) < fabs(up-nom)) err = up - nom;
+      if(fabs(err) < fabs(nom-dn)) err = nom - dn;
 
-      double err = std::max(fabs(up-dn), std::max(fabs(up-nom), fabs(dn-nom)));
-
-      if(err <= 0.) continue;
-      
+    // cout << "1 err: " << err << endl;
       err = 1. + err/2./nom;
+    // cout << "2 err: " << err << endl;
+      if(err > 0.)
       cb.cp().process(VS().a(p.Name())).bin(VS().a(c.FullLabel()))
 	.AddSyst(cb, "norm_"+sys.Label(), "lnN", SystMap<>::init(err));
 
