@@ -2,11 +2,11 @@
 
 #include "../include/FitPlotter.hh"
 
-void PlotFits(const string& fold1 = "BF_allBkgs_data_TChiWZincl_2016_allchan_maskSR_4_27_22", const string& fold2 = "datacards/all/TChiWZ/2000170", const string& shapesFile = "4_26_22wShapes.root",  int lepNum = 1){
+void PlotFits(const string& fold1 = "BF_allBkgs_data_TChiWZincl_2016_allchan_btagShapeToNorm_maskSR_5_28_22", const string& fold2 = "datacards/all/TChiWZ/4000350", const string& shapesFile = "6_2_22wShapes.root",  int lepNum = 1){
   
   string dateName = shapesFile.substr(0,8);
         string bfName = fold1.substr(2,fold1.size());
-        string odir = "prePostStackPlots/TESTprePostStackPlots"+bfName;
+        string odir = "prePostStackPlots/prePostStackPlots"+bfName;
 
         string inputfile1 = "BuildFits/"+fold1+"/FitInput_KUEWKino_2016.root";
         string inputfile2 = "BuildFits/"+fold1+"/"+fold2+"/fitDiagnostics"+shapesFile;
@@ -25,8 +25,8 @@ cout << "out directory: " << odir << "/" << lepName << "/" << endl;
         FitPlotter* FITPlotter_bOnly = new FitPlotter(inputfile1, inputfile2, "shapes_fit_b");
         FitPlotter* FITPlotter_sb = new FitPlotter(inputfile1, inputfile2, "shapes_fit_s");
 
-bool prefit = true;
-bool bfit = false;
+bool prefit = false;
+bool bfit = true;
 bool sbfit = false;
 
 bool ratio = true;
@@ -34,7 +34,8 @@ bool ratio = true;
   CategoryTreeTool CTTool;
 
   CategoryTree CT_0L = CTTool.GetCategories_0L_plotFormat();
-  CategoryTree CT_1L = CTTool.GetCategories_1L_plotFormat();
+  //CategoryTree CT_1L = CTTool.GetCategories_1L_plotFormat();
+  CategoryTree CT_1L = CTTool.GetCategories_1L();
   CategoryTree CT_2L = CTTool.GetCategories_2L_plotFormat();
   CategoryTree CT_3L = CTTool.GetCategories_3L_plotFormat();
 
@@ -66,7 +67,7 @@ bool ratio = true;
   else if(oneL){
    depth0 = CT_1L.GetDepth()-3;
    d = depth0;
-   CT_1L.GetListDepth(CTs, 0);
+   CT_1L.GetListDepth(CTs, 1);
   }
   else if(twoL){
    depth0 = CT_2L.GetDepth();

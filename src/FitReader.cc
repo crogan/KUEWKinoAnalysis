@@ -25,11 +25,6 @@ FitReader::FitReader(const string& inputfile,
   : m_File(inputfile.c_str(), "READ") {
 
   
-//  ReadProcesses();
-  
-//  ReadCategories();
-
-  m_inputfile = inputfile;
   if(otherfile != ""){
     m_FilePtr = new TFile(otherfile.c_str(), "READ");
     if(!m_FilePtr || !m_FilePtr->IsOpen())
