@@ -111,6 +111,7 @@ public:
 
   virtual ~SystematicsTool();
 
+  Systematics GetConvertedSystematics() const;
   Systematics GetWeightSystematics() const;
   //Systematics GetFakeShapeSystematics(CategoryTree CT, VS procs) const;
   

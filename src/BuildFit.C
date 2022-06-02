@@ -399,20 +399,30 @@ cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
   using ch::syst::channel;
   using ch::syst::bin_id;
   using ch::syst::process;
-  
+ 
+  SystematicsTool SYS;
+  Systematics shapeToNorm = SYS.GetConvertedSystematics();
+
+     
+
+ 
   int Nsys = systematics.GetN();
+  
   if(Nsys > 0){
     cout << "+ Adding shape systematics" << endl;
-    for(int s = 0; s < Nsys; s++){
+    for(int s = 0; s < Nsys; s++){  
       Systematic& sys = systematics[s];
+      if(shapeToNorm.Contains(sys)){ 
+        CONFIG.AddShapeSysAsNorm(sys,cb,FIT); continue;
+      }
       ProcessList proc_sys;
 
       for(int p = 0; p < Nbkg; p++)
 	if(FIT.HasSystematic(backgrounds[p], sys))
 	  proc_sys += backgrounds[p];
-      for(int p = 0; p < Nsig; p++)
-	if(FIT.HasSystematic(signals[p], sys))
-	  proc_sys += signals[p];
+//      for(int p = 0; p < Nsig; p++)
+//	if(FIT.HasSystematic(signals[p], sys))
+//	  proc_sys += signals[p];
 
       if(proc_sys.GetN() > 0){
 	cout << "  + " << sys.Label() << endl;
@@ -432,6 +442,7 @@ cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
 	      }
 	    }
 	  }
+	  if(cat_names.size() > 0)
 	  cb.cp().process(VS().a(proc.Name())).bin(cat_names)
 		  .AddSyst(cb, sys.Label(), "shape", SystMap<>::init(1.00));
 	}

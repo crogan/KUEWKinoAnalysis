@@ -303,6 +303,16 @@ SystematicsTool::SystematicsTool(){
 SystematicsTool::~SystematicsTool() {}
 
 
+//get list to convert shape systematics to normalizations
+Systematics SystematicsTool::GetConvertedSystematics() const {
+   Systematics list;
+   
+  list += "BTAGHF_SF";
+  list += "BTAGLF_SF";
+ 
+return list;
+}
+
 // Default weight/SF systematics
 Systematics SystematicsTool::GetWeightSystematics() const {
   Systematics list;
