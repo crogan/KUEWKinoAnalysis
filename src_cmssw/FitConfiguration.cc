@@ -749,7 +749,7 @@ void FitConfiguration::AddKinematicSys(ch::CombineHarvester& cb, ProcessList& pr
   cb.SetFlag("filters-use-regex", false);
 }
 
-void FitConfiguration::AddSJetNormSys(string& label, VS& procs, ch::CombineHarvester& cb, ProcessList& processes){
+void FitConfiguration::AddSJetNormSys(const string& label, VS& procs, ch::CombineHarvester& cb, ProcessList& processes){
   cb.SetFlag("filters-use-regex", true);
 
   std::map<string, VS> SJets;
