@@ -4742,7 +4742,7 @@ void FitPlotter::InitializeRecipes(){
   m_Strings["DB_all"] += AddPrefix("DB", s_Fakes_HF);
   m_Strings["DB_all"] += AddPrefix("DB", s_Fakes_LF);
 
-  m_Title["TB_all"] = "tri-bosons / t #bar{t} + V + fakes";
+  m_Title["TB_all"] = "tri-bosons / + fakes";
   m_Color["TB_all"] = 7050;
   m_Strings["TB_all"] = VS().a("TB");
   m_Strings["TB_all"] += AddPrefix("TB", s_Fakes_HF);
