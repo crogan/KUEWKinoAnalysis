@@ -64,6 +64,7 @@ void FitConfiguration::Configure(ch::CombineHarvester& cb, ProcessList& processe
     cb.cp().process(plist.GetProcesses())
       .AddSyst(cb, "scale_"+p, "lnN", SystMap<>::init(1.2));
   }
+
   
   // signal luminosity uncertainty
   cb.cp().signals()
@@ -123,11 +124,17 @@ void FitConfiguration::Configure(ch::CombineHarvester& cb, ProcessList& processe
   // ///////////////////////
   // // SV factors
   // ///////////////////////
-  cb.cp().backgrounds().bin(VS().a(".*1svS.*"))
-    .AddSyst(cb, "SV_eff", "lnN", SystMap<>::init(1.08));
+//  cb.cp().backgrounds().bin(VS().a(".*1svS.*")).AddSyst(cb, "SV_eff", "lnN", SystMap<>::init(1.08));
+   cb.cp().backgrounds().bin(VS().a(".*1svS.*"))
+      .AddSyst(cb, "SV_eff", "rateParam", SystMap<>::init(1.00));
 
-  cb.cp().backgrounds().bin(VS().a(".*2svS.*"))
-    .AddSyst(cb, "SV_eff", "lnN", SystMap<>::init(1.16));
+
+ // cb.cp().backgrounds().bin(VS().a(".*2svS.*")).AddSyst(cb, "SV_eff", "lnN", SystMap<>::init(1.16));
+   cb.cp().backgrounds().bin(VS().a(".*2svS.*"))
+      .AddSyst(cb, "SV_eff_2svS", "rateParam", SystMapFunc<>::init
+ 	("(@0*@0)","SV_eff"));
+  
+  cb.PrintAll();
 
   // cb.cp().backgrounds().bin(VS().a(".*SVeta1.*")).PrintObs();
   cb.cp().backgrounds().bin(VS().a(".*SVeta1.*")).process(VS().a("ttbar").a("ST"))
