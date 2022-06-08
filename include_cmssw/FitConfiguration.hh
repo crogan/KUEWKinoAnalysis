@@ -11,7 +11,7 @@
 #include "CombineHarvester/CombineTools/interface/Utilities.h"
 #include "CombineHarvester/CombineTools/interface/Systematics.h"
 #include "CombineHarvester/CombineTools/interface/BinByBin.h"
-
+using ch::syst::SystMapFunc;
 ///////////////////////////////////////////
 ////////// FitConfiguration class
 ///////////////////////////////////////////
