@@ -330,12 +330,7 @@ bool FitReader::IsFilled(const Category&   cat,
    m_ProcHistSys[proc][sys][cat].first  = (TH1D*) m_File.Get(shistUp.c_str());
       m_ProcHistSys[proc][sys][cat].second = (TH1D*) m_File.Get(shistDown.c_str());
     }
-if(m_ProcHistSys[proc][sys][cat].first == nullptr) cout << "up null" << endl;
-if(m_ProcHistSys[proc][sys][cat].second == nullptr) cout << "down null" << endl;
 
-//   cout << "up hist: " << m_ProcHistSys[proc][sys][cat].first->GetName() << endl;  
-//   cout << "down hist: " << m_ProcHistSys[proc][sys][cat].second->GetName() << endl;  
-//   cout << "IsFilled end" << endl; 
     return (sys.IsUp() ? m_ProcHistSys[proc][sys][cat].first :
 	    m_ProcHistSys[proc][sys][cat].second);
   }    
