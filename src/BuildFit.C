@@ -354,9 +354,8 @@ map<string,VC> catBins;
   }
   
   FitConfiguration CONFIG;
-  CONFIG.Configure(cb, processes);
+  //CONFIG.Configure(cb, processes);
 
-  /*
   VS bkg_rate;
   bkg_rate += "ttbar";
   bkg_rate += "Wjets";
@@ -388,7 +387,6 @@ map<string,VC> catBins;
   Other += "ST";
   Other += "TB";
   CONFIG.AddSJetNormSys("Other", Other, cb, processes);
-  */
   
   using ch::syst::SystMap;
   using ch::syst::era;
