@@ -360,7 +360,6 @@ cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
   FitConfiguration CONFIG;
   //CONFIG.Configure(cb, processes);
 
-  
   VS bkg_rate;
   bkg_rate += "ttbar";
   bkg_rate += "Wjets";
@@ -393,7 +392,6 @@ cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
   Other += "TB";
   CONFIG.AddSJetNormSys("Other", Other, cb, processes);
  
-  
   using ch::syst::SystMap;
   using ch::syst::era;
   using ch::syst::channel;
@@ -408,6 +406,13 @@ cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
  
   int Nsys = systematics.GetN();
   
+
+  SystematicsTool SYS;
+  Systematics shapeToNorm = SYS.GetConvertedSystematics();
+ 
+  
+
+ int Nsys = systematics.GetN();
   if(Nsys > 0){
     cout << "+ Adding shape systematics" << endl;
     for(int s = 0; s < Nsys; s++){  

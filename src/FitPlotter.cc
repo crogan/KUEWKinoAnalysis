@@ -1764,7 +1764,7 @@ if(pType == kFull)
       if(h){
 //	cout << v << " " << cat[0].GetLabel() << " " << h->GetNbinsX() << endl;
 	itot += h->Integral();
-//	h->Draw();
+	h->Draw();
       }
       hist[v] = h;
     }
@@ -2244,7 +2244,6 @@ rlabels += tmpcat[0].GetFitBin()[r].GetRBinLabel();
   l.SetTextAlign(11);
   l.DrawLatex(hlo+eps*4, 1.-hto+0.02, m_CMSLabel.c_str());
   
-  can->Update();
   //can->SaveAs("plots/"+TString(can_name)+".pdf");
   //can->SaveAs("plots/"+TString(can_name)+".gif");
   return can;

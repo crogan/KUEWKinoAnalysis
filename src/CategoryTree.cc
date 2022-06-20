@@ -898,8 +898,8 @@ CategoryTree CategoryTreeTool::GetCategories_2L() const {
   
 }
 CategoryTree CategoryTreeTool::GetCategories_2L_plotFormat() const {
-  CategoryTree CT_0j(VS().a("_0j"), "", "0J", kJ, true);
-  CategoryTree CT_1j(VS().a("_1j"), "", "1J", kJ, true);
+  CategoryTree CT_0j(VS().a("_0j"), "0J", "0J", kJ, true);
+  CategoryTree CT_1j(VS().a("_1j"), "1J", "1J", kJ, true);
   CategoryTree CT_ge2j(VS().a("_ge2j"), "#geq 2 j #in S", "2J", kJ, true);
 
   CategoryTree CT_2L(VS().a("Ch2L"), "2L", "2L", kL, true);
