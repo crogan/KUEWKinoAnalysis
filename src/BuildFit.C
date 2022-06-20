@@ -379,13 +379,21 @@ int main(int argc, char* argv[]) {
   using ch::syst::channel;
   using ch::syst::bin_id;
   using ch::syst::process;
+
+  SystematicsTool SYS;
+  Systematics shapeToNorm = SYS.GetConvertedSystematics();
+ 
   
-  int Nsys = systematics.GetN();
+
+ int Nsys = systematics.GetN();
   if(Nsys > 0){
     cout << "+ Adding shape systematics" << endl;
     for(int s = 0; s < Nsys; s++){
       Systematic& sys = systematics[s];
-      ProcessList proc_sys;
+if(shapeToNorm.Contains(sys)){
+        CONFIG.AddShapeSysAsNorm(sys,cb,FIT); continue;
+      }  
+    ProcessList proc_sys;
 
       for(int p = 0; p < Nbkg; p++)
 	if(FIT.HasSystematic(backgrounds[p], sys))
