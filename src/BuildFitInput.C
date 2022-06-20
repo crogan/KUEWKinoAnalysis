@@ -184,7 +184,6 @@ int main(int argc, char* argv[]) {
   
   SampleTool ST(NtuplePath, year);
 
-  ScaleFactorTool SF;
   ProcessList samples;
   if(addBkg){
     cout << "Adding all background processes" << endl;

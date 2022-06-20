@@ -387,7 +387,7 @@ map<string,VC> catBins;
   Other += "ST";
   Other += "TB";
   CONFIG.AddSJetNormSys("Other", Other, cb, processes);
-  
+ 
   using ch::syst::SystMap;
   using ch::syst::era;
   using ch::syst::channel;
