@@ -400,18 +400,6 @@ cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
  
   SystematicsTool SYS;
   Systematics shapeToNorm = SYS.GetConvertedSystematics();
-
-     
-
- 
-  int Nsys = systematics.GetN();
-  
-
-  SystematicsTool SYS;
-  Systematics shapeToNorm = SYS.GetConvertedSystematics();
- 
-  
-
  int Nsys = systematics.GetN();
   if(Nsys > 0){
     cout << "+ Adding shape systematics" << endl;
