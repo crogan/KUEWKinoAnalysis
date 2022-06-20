@@ -2,13 +2,13 @@
 
 #include "../include/FitPlotter.hh"
 
-void PlotFits(const string& fold1 = "BF_allBkgs_data_TChiWZincl_2016_allchan_btagShapeToNorm_maskSR_5_28_22", const string& fold2 = "datacards/all/TChiWZ/4000350", const string& shapesFile = "6_2_22wShapes.root",  int lepNum = 1){
+void PlotFits(const string& fold1 = "BF_allBkgs_data_TChiWZincl_2018_allchan_maskSR_6_7_22", const string& fold2 = "datacards/all/TChiWZ/4000350", const string& shapesFile = "6_17_22wShapes.root",  int lepNum = 2){
   
   string dateName = shapesFile.substr(0,8);
         string bfName = fold1.substr(2,fold1.size());
         string odir = "prePostStackPlots/prePostStackPlots"+bfName;
 
-        string inputfile1 = "BuildFits/"+fold1+"/FitInput_KUEWKino_2016.root";
+        string inputfile1 = "BuildFits/"+fold1+"/FitInput_KUEWKino_2018.root";
         string inputfile2 = "BuildFits/"+fold1+"/"+fold2+"/fitDiagnostics"+shapesFile;
         string lepName;
         if(fold2.find("L") != string::npos) lepName = fold2.substr(10,4);
@@ -25,20 +25,30 @@ cout << "out directory: " << odir << "/" << lepName << "/" << endl;
         FitPlotter* FITPlotter_bOnly = new FitPlotter(inputfile1, inputfile2, "shapes_fit_b");
         FitPlotter* FITPlotter_sb = new FitPlotter(inputfile1, inputfile2, "shapes_fit_s");
 
-bool prefit = false;
+bool prefit = true;
 bool bfit = true;
 bool sbfit = false;
-
 bool ratio = true;
+bool plotFormat = true;
 
   CategoryTreeTool CTTool;
 
-  CategoryTree CT_0L = CTTool.GetCategories_0L_plotFormat();
-  //CategoryTree CT_1L = CTTool.GetCategories_1L_plotFormat();
-  CategoryTree CT_1L = CTTool.GetCategories_1L();
-  CategoryTree CT_2L = CTTool.GetCategories_2L_plotFormat();
-  CategoryTree CT_3L = CTTool.GetCategories_3L_plotFormat();
-
+  CategoryTree CT_0L;
+  CategoryTree CT_1L;
+  CategoryTree CT_2L;
+  CategoryTree CT_3L;
+if(plotFormat){
+  CT_0L = CTTool.GetCategories_0L_plotFormat();
+  CT_1L = CTTool.GetCategories_1L_plotFormat();
+  CT_2L = CTTool.GetCategories_2L_plotFormat();
+  CT_3L = CTTool.GetCategories_3L_plotFormat();
+}
+else{
+  CT_0L = CTTool.GetCategories_0L();
+  CT_1L = CTTool.GetCategories_1L();
+  CT_2L = CTTool.GetCategories_2L();
+  CT_3L = CTTool.GetCategories_3L();
+}
   VS all;
   all.a("ttbar_all").a("ST_all").a("DB_all").a("ZDY_all").a("TB_all").a("QCD").a("Wjets_all").a("Data");
   //all.a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD").a("Wjets").a("HF_Fakes").a("LF_Fakes").a("Data");
@@ -58,7 +68,9 @@ bool ratio = true;
   else if(lepNum == 3) threeL = true;
   else{ cout << "Invalid lepton number specified. Must be 0, 1, 2, or 3." << endl; return; } 
   vector<const CategoryTree*> CTs;
-  int depth0, d;
+  int depth0, d, listDepth;
+  if(plotFormat) listDepth = 0;
+  else listDepth = 1;
   if(zeroL){
    depth0 = CT_0L.GetDepth();
    d = depth0;    
@@ -67,12 +79,14 @@ bool ratio = true;
   else if(oneL){
    depth0 = CT_1L.GetDepth()-3;
    d = depth0;
-   CT_1L.GetListDepth(CTs, 1);
+   //get list at 0 depth with plotFormat for s-jet bins
+   //get list at 1 depth without plotFormat for b-tag splits
+   CT_1L.GetListDepth(CTs, listDepth);
   }
   else if(twoL){
-   depth0 = CT_2L.GetDepth();
-   d = 1;
-   CT_2L.GetListDepth(CTs, 0);
+   depth0 = CT_2L.GetDepth()-3;
+   d = depth0;
+   CT_2L.GetListDepth(CTs, listDepth);
    }
   else if(threeL){
    depth0 = CT_3L.GetDepth();

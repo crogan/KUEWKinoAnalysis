@@ -134,7 +134,7 @@ void FitConfiguration::Configure(ch::CombineHarvester& cb, ProcessList& processe
       .AddSyst(cb, "SV_eff_2svS", "rateParam", SystMapFunc<>::init
  	("(@0*@0)","SV_eff"));
   
-  cb.PrintAll();
+ // cb.PrintAll();
 
   // cb.cp().backgrounds().bin(VS().a(".*SVeta1.*")).PrintObs();
   cb.cp().backgrounds().bin(VS().a(".*SVeta1.*")).process(VS().a("ttbar").a("ST"))

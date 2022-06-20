@@ -358,9 +358,9 @@ cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
   }
   
   FitConfiguration CONFIG;
-  CONFIG.Configure(cb, processes);
+  //CONFIG.Configure(cb, processes);
 
-  /*
+  
   VS bkg_rate;
   bkg_rate += "ttbar";
   bkg_rate += "Wjets";
@@ -392,7 +392,7 @@ cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
   Other += "ST";
   Other += "TB";
   CONFIG.AddSJetNormSys("Other", Other, cb, processes);
-  */
+ 
   
   using ch::syst::SystMap;
   using ch::syst::era;
@@ -413,6 +413,7 @@ cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
     for(int s = 0; s < Nsys; s++){  
       Systematic& sys = systematics[s];
       if(shapeToNorm.Contains(sys)){ 
+	cout << "adding " << sys.Label() << " as norm" << endl;
         CONFIG.AddShapeSysAsNorm(sys,cb,FIT); continue;
       }
       ProcessList proc_sys;
