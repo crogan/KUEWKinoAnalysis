@@ -222,6 +222,7 @@ cout << "# processes: " << samples.GetN() << endl;
   //m_METTriggerTool.BuildMap("Parameters.csv");
   m_METTriggerTool.BuildMap("Parameters.csv");
 
+  ScaleFactorTool SF;
   SF.AddBtagFolder("./BtagSF");
 
   Systematics systematics(1);
