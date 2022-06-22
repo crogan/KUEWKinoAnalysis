@@ -12,7 +12,9 @@ using ch::syst::bin_id;
 using ch::syst::process;
 
 void FitConfiguration::Configure(ch::CombineHarvester& cb, ProcessList& processes){
-  
+
+//This function now does nothing
+/* 
   ProcessList signals = processes.Filter(kSig);
   ProcessList backgrounds = processes.Filter(kBkg); 
 //cout << "Era set size: " << cb.era_set().size() << endl;
@@ -573,7 +575,7 @@ void FitConfiguration::Configure(ch::CombineHarvester& cb, ProcessList& processe
 
   // turn off regex filtering
   cb.SetFlag("filters-use-regex", false);
-
+  */
 }
 
 void FitConfiguration::AddFloatingNorms(VS& float_procs, ch::CombineHarvester& cb, ProcessList& all_procs){
@@ -664,16 +666,17 @@ void FitConfiguration::AddSVSys(ch::CombineHarvester& cb, ProcessList& processes
   cb.SetFlag("filters-use-regex", true);
 
   cb.cp().backgrounds().bin(VS().a(".*1svS.*"))
-    .AddSyst(cb, "SV_eff", "lnN", SystMap<>::init(1.08));
+     .AddSyst(cb, "SV_eff", "rateParam", SystMap<>::init(1.00));
 
   cb.cp().backgrounds().bin(VS().a(".*2svS.*"))
-    .AddSyst(cb, "SV_eff", "lnN", SystMap<>::init(1.16));
+    .AddSyst(cb, "SV_eff_2svS", "rateParam", SystMapFunc<>::init
+ 	("(@0*@0)","SV_eff"));
 
   cb.cp().backgrounds().bin(VS().a(".*SVeta1.*")).process(VS().a("ttbar").a("ST"))
-    .AddSyst(cb, "SV_eta_top", "lnN", SystMap<>::init(1.05));
+    .AddSyst(cb, "SV_eta_top", "rateParam", SystMap<>::init(1.00));
 
   cb.cp().backgrounds().bin(VS().a(".*SVeta1.*")).process(VS().a("Wjets").a("ZDY").a("TB"))
-    .AddSyst(cb, "SV_eta_other", "lnN", SystMap<>::init(1.05));
+    .AddSyst(cb, "SV_eta_other", "rateParam", SystMap<>::init(1.00));
   
   cb.SetFlag("filters-use-regex", false);
 }
@@ -756,6 +759,22 @@ void FitConfiguration::AddKinematicSys(ch::CombineHarvester& cb, ProcessList& pr
   cb.SetFlag("filters-use-regex", false);
 }
 
+/*void FitConfiguration::AddNormHierarchy( const string& label, VS& proc, ch::CombineHarvester& cb, ProcessList& processes){
+	//create standard string mapping
+	std::map<int, string> Lmap;
+	std::map<int, string> Jmap;
+	Lmap[0] = ".*0L.*.*";
+	Lmap[1] = ".*1L.*.*";
+	Lmap[2] = ".*2L.*.*";
+        Lmap[3] = ".*3L.*.*";
+	Jmap[0] = "0j.*S_.*";
+	Jmap[1] = "1j.*S_.*";
+	Jmap[2] = "2j.*S_.*";
+	Jmap[3] = "3j.*S_.*";
+	Jmap[4] = "4j.*S_.*";
+	Jmap[5] = "5j.*S_.*";
+
+}*/
 void FitConfiguration::AddSJetNormSys(const string& label, VS& procs, ch::CombineHarvester& cb, ProcessList& processes){
   cb.SetFlag("filters-use-regex", true);
 
@@ -784,7 +803,7 @@ void FitConfiguration::AddSJetNormSys(const string& label, VS& procs, ch::Combin
   for(auto s : SJets){
     string name = "norm_" + label + s.first;
     cb.cp().process(plist.GetProcesses()).bin(s.second)
-      .AddSyst(cb, name, "lnN", SystMap<>::init(1.2));
+      .AddSyst(cb, name, "rateParam", SystMap<>::init(1.00));
   }
    
   cb.SetFlag("filters-use-regex", false);
