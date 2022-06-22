@@ -377,7 +377,6 @@ cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
   CONFIG.AddFakeLeptonSys(cb, processes);
   CONFIG.AddSVSys(cb, processes);
   CONFIG.AddKinematicSys(cb, processes);
-
   VS Wjets;
   Wjets += "Wjets";
   CONFIG.AddSJetNormSys("Wjets", Wjets, cb, processes);
@@ -391,7 +390,11 @@ cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
   Other += "ST";
   Other += "TB";
   CONFIG.AddSJetNormSys("Other", Other, cb, processes);
- 
+
+  //VS tt;
+  //tt += "ttbar";
+  //CONFIG.AddSJetNormSys("ttJets",tt,cb,processes); 
+  
   using ch::syst::SystMap;
   using ch::syst::era;
   using ch::syst::channel;
@@ -406,7 +409,6 @@ cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
     for(int s = 0; s < Nsys; s++){  
       Systematic& sys = systematics[s];
       if(shapeToNorm.Contains(sys)){ 
-	cout << "adding " << sys.Label() << " as norm" << endl;
         CONFIG.AddShapeSysAsNorm(sys,cb,FIT); continue;
       }
       ProcessList proc_sys;
