@@ -760,7 +760,7 @@ void FitConfiguration::AddSJetNormSys(const string& label, VS& procs, ch::Combin
 
   std::map<string, VS> SJets;
   
- // ProcessList plist = processes.Filter(kBkg).Filter("Wjets");
+  //ProcessList plist = processes.Filter(kBkg).Filter("Wjets");
   
   ProcessList plist;
   for(auto p : procs){
