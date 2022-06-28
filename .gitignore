@@ -8,3 +8,7 @@
 *.pcm
 AutoDict*
 *.tgz
+
+B*.sh
+BFI_B*/
+BF_B*/

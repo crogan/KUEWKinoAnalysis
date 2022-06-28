@@ -15,7 +15,7 @@ using ch::syst::SystMapFunc;
 ///////////////////////////////////////////
 ////////// FitConfiguration class
 ///////////////////////////////////////////
-
+typedef std::map< std::string , std::vector<std::pair<int,int>>> SystDict;
 class FitConfiguration {
 public:
   FitConfiguration() {}
@@ -33,9 +33,11 @@ public:
   void AddSJetNormSys(const string& label, VS& procs, ch::CombineHarvester& cb, ProcessList& processes);
 
   void AddShapeSysAsNorm(const Systematic& sys, ch::CombineHarvester& cb, FitReader& FIT);
+
+  void AddNormHierarchy( SystDict& sm, VS& proc, ch::CombineHarvester& cb, ProcessList& processes);
   
+  void appSystDict( SystDict& sm , std::string label, std::vector<int> list);
+  void initSystDict( SystDict& sm );
 };
-
-
 
 #endif
