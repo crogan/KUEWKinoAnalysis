@@ -2,13 +2,13 @@
 
 #include "../include/FitPlotter.hh"
 
-void PlotFits(const string& fold1 = "BF_allBkgs_data_TChiWZincl_2018_allchan_maskSR_6_7_22", const string& fold2 = "datacards/all/TChiWZ/4000350", const string& shapesFile = "6_17_22wShapes.root",  int lepNum = 2){
+void PlotFits(const string& fold1 = "BF_allBkgs_data_TChiWZincl_allyears_allchan_maskSR_6_13_22", const string& fold2 = "datacards/all/TChiWZ/4000350", const string& shapesFile = "6_17_22wShapes.root",  int lepNum = 0){
   
-  string dateName = shapesFile.substr(0,8);
+	string dateName = shapesFile.substr(0,8);
         string bfName = fold1.substr(2,fold1.size());
         string odir = "prePostStackPlots/prePostStackPlots"+bfName;
 
-        string inputfile1 = "BuildFits/"+fold1+"/FitInput_KUEWKino_2018.root";
+        string inputfile1 = "BuildFits/"+fold1+"/FitInput_KUEWKino_2016.root";
         string inputfile2 = "BuildFits/"+fold1+"/"+fold2+"/fitDiagnostics"+shapesFile;
         string lepName;
         if(fold2.find("L") != string::npos) lepName = fold2.substr(10,4);
@@ -98,9 +98,9 @@ cout << "depth: " << depth0 << " size:" << CTs.size() << endl;
                 gSystem->Exec(("mkdir "+odir).c_str());
                 gSystem->Exec(("mkdir "+odir+"/"+lepName).c_str());
         }
-        TFile* file = new TFile(fname.c_str(),"RECREATE");
-        cout << "Writing to file: " << fname << endl;
-        file->cd();
+        //TFile* file = new TFile(fname.c_str(),"RECREATE");
+        //cout << "Writing to file: " << fname << endl;
+        //file->cd();
   for(int i = 0; i < CTs.size(); i++){
     string dir = CTs[i]->GetPlainLabel(depth0-d);
 while(dir.find(" ") != string::npos) dir.replace(dir.find(" "),1,"_"); 
@@ -123,7 +123,7 @@ while(dir.find(" ") != string::npos) dir.replace(dir.find(" "),1,"_");
     	sb_fit_stack = FITPlotter_sb->Plot1Dstack(Form("sbFit_stack_%d",i),all,*CTs[i],type,ratio);
     	if(sb_fit_stack == nullptr) continue;
     }
-cout << "writing plots to file" << endl;
+//cout << "writing plots to file" << endl;
 //    if(!file->GetDirectory(dir.c_str()))
 //            file->mkdir(dir.c_str());
 //    file->cd(dir.c_str());
@@ -131,7 +131,7 @@ cout << "writing plots to file" << endl;
 //    if(bfit) b_fit_stack->Write("bfit_stack",TObject::kOverwrite);
 //    if(sbfit) sb_fit_stack->Write("sbfit_stack",TObject::kOverwrite);
  cout << "saving plots as pdf" << endl;
-cout << dir << " " << sig << endl;
+//cout << dir << " " << sig << endl;
    if(all[0].find("all") != std::string::npos){
    if(prefit) prefit_stack->SaveAs((odir+"/"+lepName+"/"+dir+sig+"fakesIncl_prefit.pdf").c_str());
    if(bfit) b_fit_stack->SaveAs((odir+"/"+lepName+"/"+dir+sig+"fakesIncl_b-fit.pdf").c_str());
@@ -146,7 +146,7 @@ cout << dir << " " << sig << endl;
    if(bfit) b_fit_stack->Close();
    if(sbfit) sb_fit_stack->Close();
 
-   file->cd();
+   //file->cd();
    cout << "\n" << endl;
  }
 

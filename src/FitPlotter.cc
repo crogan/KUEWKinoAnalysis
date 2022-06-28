@@ -1764,7 +1764,7 @@ if(pType == kFull)
       if(h){
 //	cout << v << " " << cat[0].GetLabel() << " " << h->GetNbinsX() << endl;
 	itot += h->Integral();
-	h->Draw();
+//	h->Draw();
       }
       hist[v] = h;
     }
