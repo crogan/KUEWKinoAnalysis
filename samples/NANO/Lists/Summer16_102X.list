@@ -67,6 +67,10 @@ samples/NANO/Summer16_102X/WJetsToLNu_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM
 samples/NANO/Summer16_102X/WJetsToLNu_HT-600To800_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Summer16_102X/WJetsToLNu_HT-70To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Summer16_102X/WJetsToLNu_HT-800To1200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
+samples/NANO/Summer16_102X/WJetsToLNu_Pt-100To250_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.txt
+samples/NANO/Summer16_102X/WJetsToLNu_Pt-250To400_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.txt
+samples/NANO/Summer16_102X/WJetsToLNu_Pt-400To600_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.txt
+samples/NANO/Summer16_102X/WJetsToLNu_Pt-600ToInf_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8.txt
 samples/NANO/Summer16_102X/WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Summer16_102X/WWG_TuneCUETP8M1_13TeV-amcatnlo-pythia8.txt
 samples/NANO/Summer16_102X/WWTo2L2Nu_13TeV-powheg.txt
