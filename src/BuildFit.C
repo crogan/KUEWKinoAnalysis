@@ -377,12 +377,8 @@ cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
   CONFIG.AddFakeLeptonSys(cb, processes);
   CONFIG.AddSVSys(cb, processes);
   CONFIG.AddKinematicSys(cb, processes);
-<<<<<<< HEAD
-  VS Wjets;
-=======
 
   VS Wjets; //removing norm wjets for hierarchy leave VS for later hier call
->>>>>>> crogan-main
   Wjets += "Wjets";
 //  SystDict sm;
 //  CONFIG.initSystDict(sm);
@@ -400,17 +396,8 @@ cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
   Other += "ST";
   Other += "TB";
   CONFIG.AddSJetNormSys("Other", Other, cb, processes);
-<<<<<<< HEAD
-
-  //VS tt;
-  //tt += "ttbar";
-  //CONFIG.AddSJetNormSys("ttJets",tt,cb,processes); 
-  
-  using ch::syst::SystMap;
-=======
  
  using ch::syst::SystMap;
->>>>>>> crogan-main
   using ch::syst::era;
   using ch::syst::channel;
   using ch::syst::bin_id;
@@ -418,10 +405,7 @@ cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
  
   SystematicsTool SYS;
   Systematics shapeToNorm = SYS.GetConvertedSystematics();
-<<<<<<< HEAD
-=======
  
->>>>>>> crogan-main
  int Nsys = systematics.GetN();
   if(Nsys > 0){
     cout << "+ Adding shape systematics" << endl;
