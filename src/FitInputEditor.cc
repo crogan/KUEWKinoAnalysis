@@ -855,7 +855,6 @@ void FitInputEditor::AddShapeSysWjets(){
 TH1D* FitInputEditor::getVariation_RISR(string hname, TH1D* hist, const Category& cat, double varmax){
   if(!hist)
     return nullptr;
-
   if(varmax < -0.95)
     varmax = -0.95;
   
@@ -866,6 +865,7 @@ TH1D* FitInputEditor::getVariation_RISR(string hname, TH1D* hist, const Category
     return nullptr;
 
   TH1D* hist_var = (TH1D*) hist->Clone(hname.c_str());
+  double integral = hist->Integral();
   
   int ibin = 0;
   for(int r = 0; r < NR; r++){
@@ -878,6 +878,9 @@ TH1D* FitInputEditor::getVariation_RISR(string hname, TH1D* hist, const Category
       ibin++;
     }
   }
+  double integral_var = hist_var->Integral();
+  if(integral_var > 0)
+    hist_var->Scale(integral/integral_var);
   
   return hist_var;
 }
@@ -896,7 +899,7 @@ TH1D* FitInputEditor::getVariation_Mperp(string hname, TH1D* hist, const Categor
   int NR = fitBin.NRBins();
 
   TH1D* hist_var = (TH1D*) hist->Clone(hname.c_str());
-  
+  double integral = hist->Integral(); 
   int ibin = 0;
   for(int r = 0; r < NR; r++){
     int NM = fitBin[r].NBins();
@@ -915,7 +918,8 @@ TH1D* FitInputEditor::getVariation_Mperp(string hname, TH1D* hist, const Categor
       im++;
     }
   }
-
+  double integral_var = hist_var->Integral();
+  if(integral_var > 0) hist_var->Scale(integral/integral_var);
   if(!isvar)
     return nullptr;
   

@@ -358,7 +358,7 @@ map<string,VC> catBins;
 
   VS bkg_rate;
   bkg_rate += "ttbar";
-  bkg_rate += "Wjets";
+  bkg_rate += "Wjets"; //removing scale wjets for hierarchy
   bkg_rate += "ZDY";
   bkg_rate += "QCD";
   bkg_rate += "DB";
@@ -374,9 +374,14 @@ map<string,VC> catBins;
   CONFIG.AddSVSys(cb, processes);
   CONFIG.AddKinematicSys(cb, processes);
 
-  VS Wjets;
+  VS Wjets; //removing norm wjets for hierarchy leave VS for later hier call
   Wjets += "Wjets";
-  CONFIG.AddSJetNormSys("Wjets", Wjets, cb, processes);
+//  SystDict sm;
+//  CONFIG.initSystDict(sm);
+//  CONFIG.AddNormHierarchy( sm, Wjets, cb,processes) ;
+ // cb.PrintSysts();
+   CONFIG.AddSJetNormSys("Wjets", Wjets, cb, processes);
+
   VS QCD;
   QCD += "QCD";
   CONFIG.AddSJetNormSys("QCD", QCD, cb, processes);
@@ -388,7 +393,7 @@ map<string,VC> catBins;
   Other += "TB";
   CONFIG.AddSJetNormSys("Other", Other, cb, processes);
  
-  using ch::syst::SystMap;
+ using ch::syst::SystMap;
   using ch::syst::era;
   using ch::syst::channel;
   using ch::syst::bin_id;
@@ -397,8 +402,6 @@ map<string,VC> catBins;
   SystematicsTool SYS;
   Systematics shapeToNorm = SYS.GetConvertedSystematics();
  
-  
-
  int Nsys = systematics.GetN();
   if(Nsys > 0){
     cout << "+ Adding shape systematics" << endl;

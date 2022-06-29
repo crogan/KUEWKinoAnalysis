@@ -1634,7 +1634,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetElectrons(){
 
     Particle lep;
     lep.SetPtEtaPhiM(Electron_pt[i], Electron_eta[i],
-		     Electron_phi[i], std::max(Electron_mass[i],float(0.)));
+		     Electron_phi[i], std::max(Electron_mass[i],float(1.e-6)));
     lep.SetPDGID( (Electron_charge[i] < 0. ? 11 : -11) );
     lep.SetCharge( (Electron_charge[i] < 0. ? -1 : 1) );
 

@@ -271,6 +271,29 @@ std::map<std::string,double> XsecTool::InitMap_Xsec_BKG(){
   Label2Xsec["WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8"] = 1.074 * 1.21 * 1.45;
   Label2Xsec["WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8"] = 0.008001 * 1.21 * 4.42;
 
+  //
+
+  Label2Xsec["WJetsToLNu_Pt-100To250_TuneCP5_13TeV-amcatnloFXFX-pythia8"] = 779.1;
+  Label2Xsec[""] = ;
+  Label2Xsec[""] = ;
+  Label2Xsec[""] = ;
+  Label2Xsec[""] = ;
+  Label2Xsec[""] = ;
+  Label2Xsec[""] = ;
+  Label2Xsec[""] = ;
+  Label2Xsec[""] = ;
+  Label2Xsec[""] = ;
+  Label2Xsec[""] = ;
+  Label2Xsec[""] = ;
+  Label2Xsec[""] = ;
+  Label2Xsec[""] = ;
+  Label2Xsec[""] = ;
+  Label2Xsec[""] = ;
+  Label2Xsec[""] = ;
+  Label2Xsec[""] = ;
+  Label2Xsec[""] = ;
+  Label2Xsec[""] = ;
+
   Label2Xsec["WW_TuneCP5_13TeV-pythia8"] = 118.8;
   Label2Xsec["WWTo2L2Nu_NNPDF31_TuneCP5_13TeV-powheg-pythia8"] = 12.719;
   Label2Xsec["WWTo2L2Nu_NNPDF31_TuneCP5_PSweights_13TeV-powheg-pythia8"] = 12.719;
