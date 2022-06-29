@@ -362,7 +362,7 @@ cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
 
   VS bkg_rate;
   bkg_rate += "ttbar";
-  bkg_rate += "Wjets";
+  bkg_rate += "Wjets"; //removing scale wjets for hierarchy
   bkg_rate += "ZDY";
   bkg_rate += "QCD";
   bkg_rate += "DB";
@@ -377,9 +377,19 @@ cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
   CONFIG.AddFakeLeptonSys(cb, processes);
   CONFIG.AddSVSys(cb, processes);
   CONFIG.AddKinematicSys(cb, processes);
+<<<<<<< HEAD
   VS Wjets;
+=======
+
+  VS Wjets; //removing norm wjets for hierarchy leave VS for later hier call
+>>>>>>> crogan-main
   Wjets += "Wjets";
-  CONFIG.AddSJetNormSys("Wjets", Wjets, cb, processes);
+//  SystDict sm;
+//  CONFIG.initSystDict(sm);
+//  CONFIG.AddNormHierarchy( sm, Wjets, cb,processes) ;
+ // cb.PrintSysts();
+   CONFIG.AddSJetNormSys("Wjets", Wjets, cb, processes);
+
   VS QCD;
   QCD += "QCD";
   CONFIG.AddSJetNormSys("QCD", QCD, cb, processes);
@@ -390,12 +400,17 @@ cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
   Other += "ST";
   Other += "TB";
   CONFIG.AddSJetNormSys("Other", Other, cb, processes);
+<<<<<<< HEAD
 
   //VS tt;
   //tt += "ttbar";
   //CONFIG.AddSJetNormSys("ttJets",tt,cb,processes); 
   
   using ch::syst::SystMap;
+=======
+ 
+ using ch::syst::SystMap;
+>>>>>>> crogan-main
   using ch::syst::era;
   using ch::syst::channel;
   using ch::syst::bin_id;
@@ -403,6 +418,10 @@ cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
  
   SystematicsTool SYS;
   Systematics shapeToNorm = SYS.GetConvertedSystematics();
+<<<<<<< HEAD
+=======
+ 
+>>>>>>> crogan-main
  int Nsys = systematics.GetN();
   if(Nsys > 0){
     cout << "+ Adding shape systematics" << endl;

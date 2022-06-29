@@ -9,3 +9,7 @@
 AutoDict*
 *.pdf
 *.tgz
+
+B*.sh
+BFI_B*/
+BF_B*/
