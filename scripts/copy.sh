@@ -44,12 +44,19 @@ then
     exit 1
 fi
 
+echo "------------------------------------------------"
 echo "Copying files listed in $textFile to $outputDir."
+echo "------------------------------------------------"
 
 lines=$(cat $textFile)
 for line in $lines
 do
-    echo $line
+    #echo ${line}
+    path1="${inputURL}${line}"
+    path2="${outputURL}${outputDir}"
+    full_command="xrdcp ${path1} ${path2}"
+    echo ${full_command}
+    ${full_command}
 done
 
 # end time
@@ -58,7 +65,9 @@ end=$(date +%s)
 # run time
 run_time=$((end-start))
 
+echo "---------------------------"
 echo "start time: $start"
 echo "end time: $end"
 echo "run time: $run_time seconds"
+echo "---------------------------"
 
