@@ -274,25 +274,25 @@ std::map<std::string,double> XsecTool::InitMap_Xsec_BKG(){
   //
 
   Label2Xsec["WJetsToLNu_Pt-100To250_TuneCP5_13TeV-amcatnloFXFX-pythia8"] = 779.1;
-  Label2Xsec[""] = ;
-  Label2Xsec[""] = ;
-  Label2Xsec[""] = ;
-  Label2Xsec[""] = ;
-  Label2Xsec[""] = ;
-  Label2Xsec[""] = ;
-  Label2Xsec[""] = ;
-  Label2Xsec[""] = ;
-  Label2Xsec[""] = ;
-  Label2Xsec[""] = ;
-  Label2Xsec[""] = ;
-  Label2Xsec[""] = ;
-  Label2Xsec[""] = ;
-  Label2Xsec[""] = ;
-  Label2Xsec[""] = ;
-  Label2Xsec[""] = ;
-  Label2Xsec[""] = ;
-  Label2Xsec[""] = ;
-  Label2Xsec[""] = ;
+  //Label2Xsec[""] = ;
+  //Label2Xsec[""] = ;
+  //Label2Xsec[""] = ;
+  //Label2Xsec[""] = ;
+  //Label2Xsec[""] = ;
+  //Label2Xsec[""] = ;
+  //Label2Xsec[""] = ;
+  //Label2Xsec[""] = ;
+  //Label2Xsec[""] = ;
+  //Label2Xsec[""] = ;
+  //Label2Xsec[""] = ;
+  //Label2Xsec[""] = ;
+  //Label2Xsec[""] = ;
+  //Label2Xsec[""] = ;
+  //Label2Xsec[""] = ;
+  //Label2Xsec[""] = ;
+  //Label2Xsec[""] = ;
+  //Label2Xsec[""] = ;
+  //Label2Xsec[""] = ;
 
   Label2Xsec["WW_TuneCP5_13TeV-pythia8"] = 118.8;
   Label2Xsec["WWTo2L2Nu_NNPDF31_TuneCP5_13TeV-powheg-pythia8"] = 12.719;
