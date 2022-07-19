@@ -271,28 +271,19 @@ std::map<std::string,double> XsecTool::InitMap_Xsec_BKG(){
   Label2Xsec["WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8"] = 1.074 * 1.21 * 1.45;
   Label2Xsec["WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8"] = 0.008001 * 1.21 * 4.42;
 
-  //
-
+  // Wjets Pt binned, xsec should be NLO (from generator via XsecDB https://cms-gen-dev.cern.ch/xsdb
   Label2Xsec["WJetsToLNu_Pt-100To250_TuneCP5_13TeV-amcatnloFXFX-pythia8"] = 779.1;
-  //Label2Xsec[""] = ;
-  //Label2Xsec[""] = ;
-  //Label2Xsec[""] = ;
-  //Label2Xsec[""] = ;
-  //Label2Xsec[""] = ;
-  //Label2Xsec[""] = ;
-  //Label2Xsec[""] = ;
-  //Label2Xsec[""] = ;
-  //Label2Xsec[""] = ;
-  //Label2Xsec[""] = ;
-  //Label2Xsec[""] = ;
-  //Label2Xsec[""] = ;
-  //Label2Xsec[""] = ;
-  //Label2Xsec[""] = ;
-  //Label2Xsec[""] = ;
-  //Label2Xsec[""] = ;
-  //Label2Xsec[""] = ;
-  //Label2Xsec[""] = ;
-  //Label2Xsec[""] = ;
+  Label2Xsec["WJetsToLNu_Pt-250To400_TuneCP5_13TeV-amcatnloFXFX-pythia8"] = 27.98;
+  Label2Xsec["WJetsToLNu_Pt-400To600_TuneCP5_13TeV-amcatnloFXFX-pythia8"] = 3.604;
+  Label2Xsec["WJetsToLNu_Pt-50To100_TuneCP5_13TeV-amcatnloFXFX-pythia8"] = 3570.0;
+  Label2Xsec["WJetsToLNu_Pt-600ToInf_TuneCP5_13TeV-amcatnloFXFX-pythia8"] = 0.5545;
+ 
+  Label2Xsec["WJetsToLNu_Pt-100To250_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8"] = 627.1;
+  Label2Xsec["WJetsToLNu_Pt-250To400_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8"] = 21.83;
+  Label2Xsec["WJetsToLNu_Pt-400To600_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8"] = 2.635;
+  Label2Xsec["WJetsToLNu_Pt-50To100_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8"] = 3046.0;
+  Label2Xsec["WJetsToLNu_Pt-600ToInf_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8"] = 0.4102;
+  
 
   Label2Xsec["WW_TuneCP5_13TeV-pythia8"] = 118.8;
   Label2Xsec["WWTo2L2Nu_NNPDF31_TuneCP5_13TeV-powheg-pythia8"] = 12.719;
