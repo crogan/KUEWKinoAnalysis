@@ -344,7 +344,7 @@ int main(int argc, char* argv[]) {
 
   VS bkg_rate;
   bkg_rate += "ttbar";
-  bkg_rate += "Wjets"; //removing scale wjets for hierarchy
+//  bkg_rate += "Wjets"; //removing scale wjets for hierarchy
   bkg_rate += "ZDY";
   bkg_rate += "QCD";
   bkg_rate += "DB";
@@ -362,11 +362,18 @@ int main(int argc, char* argv[]) {
 
   VS Wjets; //removing norm wjets for hierarchy leave VS for later hier call
   Wjets += "Wjets";
-//  SystDict sm;
-//  CONFIG.initSystDict(sm);
-//  CONFIG.AddNormHierarchy( sm, Wjets, cb,processes) ;
- // cb.PrintSysts();
-   CONFIG.AddSJetNormSys("Wjets", Wjets, cb, processes);
+  SystDict sm;
+  CONFIG.initSystDict(sm);
+  CONFIG.AddNormHierarchy( sm, Wjets, cb,processes) ;
+//  cb.PrintSysts();
+//   CONFIG.AddSJetNormSys("Wjets", Wjets, cb, processes);
+
+
+/*
+  VS ttbar;
+  ttbar += "ttbar";
+  CONFIG.AddNormHierarchy( sm, ttbar, cb, processes) ;
+*/
 
   VS QCD;
   QCD += "QCD";
