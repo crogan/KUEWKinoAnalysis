@@ -2,13 +2,13 @@
 
 #include "../include/FitPlotter.hh"
 
-void PlotFits(const string& fold1 = "BF_allBkgs_data_TChiWZincl_allyears_allchan_maskSR_6_13_22", const string& fold2 = "datacards/all/TChiWZ/4000350", const string& shapesFile = "6_17_22wShapes.root",  int lepNum = 0){
+void PlotFits(const string& fold1 = "BF_allBkgs_data_TChiWZincl_2016_noSmoothing_allchan_maskSR_7_11_22", const string& fold2 = "datacards/all/TChiWZ/4000350", const string& shapesFile = "6_17_22wShapes.root",  int lepNum = 0){
   
 	string dateName = shapesFile.substr(0,8);
         string bfName = fold1.substr(2,fold1.size());
         string odir = "prePostStackPlots/prePostStackPlots"+bfName;
 
-        string inputfile1 = "BuildFits/"+fold1+"/FitInput_KUEWKino_2016.root";
+        string inputfile1 = "BuildFits/"+fold1+"/FitInput_KUEWKino_2017.root";
         string inputfile2 = "BuildFits/"+fold1+"/"+fold2+"/fitDiagnostics"+shapesFile;
         string lepName;
         if(fold2.find("L") != string::npos) lepName = fold2.substr(10,4);
@@ -29,7 +29,7 @@ bool prefit = true;
 bool bfit = true;
 bool sbfit = false;
 bool ratio = true;
-bool plotFormat = true;
+bool plotFormat = false;
 
   CategoryTreeTool CTTool;
 
