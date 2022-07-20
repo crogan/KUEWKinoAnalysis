@@ -204,51 +204,74 @@ void FitConfiguration::appSystDict( SystDict& sd , std::string label, std::vecto
 void FitConfiguration::initSystDict( SystDict& sd){
         //hardcoding structures for hierarchy
 
-        //wjets
-	/*
-        appSystDict(sd, "norm_Wjets_0L_0J", std::vector<int>{1,0, 0,0, 0,1, 0,2, -1,1 });
-        appSystDict(sd, "norm_Wjets_0L_1J", std::vector<int>{1,0, 0,1, 0,2, -1,0 });
-        appSystDict(sd, "norm_Wjets_0L_2J", std::vector<int>{1,0, 0,2, -1,0 });
-        appSystDict(sd, "norm_Wjets_0L_3J", std::vector<int>{1,0, 0,2, 0,3, -1,0 });
-        appSystDict(sd, "norm_Wjets_0L_4J", std::vector<int>{1,0, 0,2, 0,3, 0,4, -1,1 });
-        appSystDict(sd, "norm_Wjets_0L_5J", std::vector<int>{1,0, 0,2, 0,3, 0,4, 0,5, -1,1});
+	//wjets hierarchy        	
+	appSystDict(sd, "Wjets0L_0jS_d3", std::vector<int>{0,0, -1,1 });
+        appSystDict(sd, "Wjets0L_1jS_d2", std::vector<int>{0,1, 0,0, -1,0 });
+        appSystDict(sd, "Wjets0L_2jS_d1", std::vector<int>{1,0, 0,2, 0,0, 0,1, 0,3, 0,4, 0,5, -1,0 });
+        appSystDict(sd, "Wjets0L_3jS_d2", std::vector<int>{0,3, 0,4, 0,5, -1,0 });
+        appSystDict(sd, "Wjets0L_4jS_d3", std::vector<int>{0,4, 0,5, -1,1 });
+        appSystDict(sd, "Wjets0L_5jS_d4", std::vector<int>{0,5, -1,1});
 
-	appSystDict(sd, "norm_Wjets_1L_0J", std::vector<int>{1,0, -1,0 });
-	appSystDict(sd, "norm_Wjets_1L_1J", std::vector<int>{1,0, 1,1, -1,0 });
-	appSystDict(sd, "norm_Wjets_1L_2J", std::vector<int>{1,0, 1,1, 1,2, -1,0 });
-	appSystDict(sd, "norm_Wjets_1L_3J", std::vector<int>{1,0, 1,1, 1,2, 1,3, -1,1});
-	appSystDict(sd, "norm_Wjets_1L_4J", std::vector<int>{1,0, 1,1, 1,2, 1,3, 1,4, -1,1});
+	appSystDict(sd, "Wjets1L_0jS_d0", std::vector<int>{1,0, 1,1, 1,2, 1,3, 1,4, -1,0 });
+        appSystDict(sd, "Wjets1L_1jS_d1", std::vector<int>{1,1, 1,2, 1,3, 1,4, -1,0 });
+        appSystDict(sd, "Wjets1L_2jS_d2", std::vector<int>{1,2, 1,3, 1,4, -1,0 });
+        appSystDict(sd, "Wjets1L_3jS_d3", std::vector<int>{1,3, 1,4, -1,1});
+        appSystDict(sd, "Wjets1L_4jS_d4", std::vector<int>{1,4, -1,1});
 
-	appSystDict(sd, "norm_Wjets_2L_0J", std::vector<int>{1,0, 2,0, -1,0 });
-	appSystDict(sd, "norm_Wjets_2L_1J", std::vector<int>{1,0, 2,0, 2,1, -1,0 });
-	appSystDict(sd, "norm_Wjets_2L_2J", std::vector<int>{1,0, 2,0, 2,1, 2,2, -1,0 });
+	appSystDict(sd, "Wjets2L_0jS_d1", std::vector<int>{1,0, 2,0, 2,1, 2,2, -1,0 });
+        appSystDict(sd, "Wjets2L_1jS_d2", std::vector<int>{2,0, 2,1, -1,1 });
+        appSystDict(sd, "Wjets2L_2jS_d3", std::vector<int>{2,2, -1,1 });
+
+	appSystDict(sd, "Wjets3L_0jS_d1", std::vector<int>{1,0, 2,0, 3,0, 3,1, -1,1});
+        appSystDict(sd, "Wjets3L_1jS_d2", std::vector<int>{3,1, -1,1});
+
+/*
+	//ttjets decoupled norms
+	appSystDict(sd, "norm_ttbar0L_0jS", std::vector<int>{0,0, -1,1 });
+        appSystDict(sd, "norm_ttbar0L_1jS", std::vector<int>{0,1, -1,1 });
+        appSystDict(sd, "norm_ttbar0L_2jS", std::vector<int>{0,2, -1,1 });
+        appSystDict(sd, "norm_ttbar0L_3jS", std::vector<int>{0,3, -1,1 });
+        appSystDict(sd, "norm_ttbar0L_4jS", std::vector<int>{0,4, -1,1 });
+        appSystDict(sd, "norm_ttbar0L_5jS", std::vector<int>{0,5, -1,1 });
+
+        appSystDict(sd, "norm_ttbar1L_0jS", std::vector<int>{1,0, -1,1 });
+        appSystDict(sd, "norm_ttbar1L_1jS", std::vector<int>{1,1, -1,1 });
+        appSystDict(sd, "norm_ttbar1L_2jS", std::vector<int>{1,2, -1,1 });
+        appSystDict(sd, "norm_ttbar1L_3jS", std::vector<int>{1,3, -1,1 });
+        appSystDict(sd, "norm_ttbar1L_4jS", std::vector<int>{1,4, -1,1 });
+
+        appSystDict(sd, "norm_ttbar2L_0jS", std::vector<int>{2,0, -1,1 });
+        appSystDict(sd, "norm_ttbar2L_1jS", std::vector<int>{2,1, -1,1 });
+        appSystDict(sd, "norm_ttbar2L_2jS", std::vector<int>{2,2, -1,1 });
+
+        appSystDict(sd, "norm_ttbar3L_0jS", std::vector<int>{3,0, -1,1});
+        appSystDict(sd, "norm_ttbar3L_1jS", std::vector<int>{3,1, -1,1});
+*/
+/*
+	//ttbar hierarchy
+	appSystDict(sd, "norm_ttbar0L_0jS", std::vector<int>{0,0, -1,1 });
+        appSystDict(sd, "norm_ttbar0L_1jS", std::vector<int>{0,1, 0,0  -1,1 });
+        appSystDict(sd, "norm_ttbar0L_2jS", std::vector<int>{0,2, 0,1, 0,0, -1,0 });
+        appSystDict(sd, "norm_ttbar0L_3jS", std::vector<int>{2,2, 0,3, 0,2, 0,1, 0,0, 0,4, 0,5, -1,0 });
+        appSystDict(sd, "norm_ttbar0L_4jS", std::vector<int>{0,4, 0,5, -1,0 });
+        appSystDict(sd, "norm_ttbar0L_5jS", std::vector<int>{0,5, -1,1 });
+
+        appSystDict(sd, "norm_ttbar1L_0jS", std::vector<int>{1,0, -1,1 });
+        appSystDict(sd, "norm_ttbar1L_1jS", std::vector<int>{1,1, 1,0, -1,0 });
+        appSystDict(sd, "norm_ttbar1L_2jS", std::vector<int>{1,2, 1,1, 1,0, -1,0 });
+        appSystDict(sd, "norm_ttbar1L_3jS", std::vector<int>{2,2, 1,3, 1,2, 1,1, 1,0, 1,4, -1,0 });
+        appSystDict(sd, "norm_ttbar1L_4jS", std::vector<int>{1,4, -1,1 });
+
+        appSystDict(sd, "norm_ttbar2L_0jS", std::vector<int>{2,0, -1,1 });
+        appSystDict(sd, "norm_ttbar2L_1jS", std::vector<int>{2,1, 2,0, -1,0 });
+        appSystDict(sd, "norm_ttbar2L_2jS", std::vector<int>{2,2, 2,1, -1,0 });
+
+        appSystDict(sd, "norm_ttbar3L_0jS", std::vector<int>{3,0, -1,1});
+        appSystDict(sd, "norm_ttbar3L_1jS", std::vector<int>{2,2, 3,1, 3,0, -1,1});
+*/
 	
-	appSystDict(sd, "norm_Wjets_3L_0J", std::vector<int>{1,0, 3,0, -1,0});
-	appSystDict(sd, "norm_Wjets_3L_1J", std::vector<int>{1,0, 3,0, 3,1, -1,1});
-	*/
 
-	//inverted wjets hierarchy
-	appSystDict(sd, "norm_Wjets0L_0jS", std::vector<int>{0,0, -1,1 });
-        appSystDict(sd, "norm_Wjets0L_1jS", std::vector<int>{0,1, 0,0, -1,0 });
-        appSystDict(sd, "norm_Wjets0L_2jS", std::vector<int>{1,0, 0,2, 0,0, 0,1, 0,3, 0,4, 0,5, -1,0 });
-        appSystDict(sd, "norm_Wjets0L_3jS", std::vector<int>{0,3, 0,4, 0,5, -1,0 });
-        appSystDict(sd, "norm_Wjets0L_4jS", std::vector<int>{0,4, 0,5, -1,1 });
-        appSystDict(sd, "norm_Wjets0L_5jS", std::vector<int>{0,5, -1,1});
-
-	appSystDict(sd, "norm_Wjets1L_0jS", std::vector<int>{1,0, 1,1, 1,2, 1,3, 1,4, -1,0 });
-        appSystDict(sd, "norm_Wjets1L_1jS", std::vector<int>{1,1, 1,2, 1,3, 1,4, -1,0 });
-        appSystDict(sd, "norm_Wjets1L_2jS", std::vector<int>{1,2, 1,3, 1,4, -1,0 });
-        appSystDict(sd, "norm_Wjets1L_3jS", std::vector<int>{1,3, 1,4, -1,1});
-        appSystDict(sd, "norm_Wjets1L_4jS", std::vector<int>{1,4, -1,1});
-
-	appSystDict(sd, "norm_Wjets2L_0jS", std::vector<int>{1,0, 2,0, 2,1, 2,2, -1,0 });
-        appSystDict(sd, "norm_Wjets2L_1jS", std::vector<int>{2,0, 2,1, -1,0 });
-        appSystDict(sd, "norm_Wjets2L_2jS", std::vector<int>{2,2, -1,0 });
-
-	appSystDict(sd, "norm_Wjets3L_0jS", std::vector<int>{1,0, 3,0, 3,1, -1,0});
-        appSystDict(sd, "norm_Wjets3L_1jS", std::vector<int>{3,1, -1,1});
-
-
+	
 }
 void FitConfiguration::AddNormHierarchy( SystDict& sd, VS& proc, ch::CombineHarvester& cb, ProcessList& processes){
 	cb.SetFlag("filters-use-regex", true);
