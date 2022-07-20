@@ -2,11 +2,11 @@
 
 #include "../include/FitPlotter.hh"
 
-void PlotFits(const string& fold1 = "BF_allBkgs_data_TChiWZincl_2016_noSmoothing_allchan_maskSR_7_11_22", const string& fold2 = "datacards/all/TChiWZ/4000350", const string& shapesFile = "6_17_22wShapes.root",  int lepNum = 0){
+void PlotFits(const string& fold1 = "BF_allBkgs_data_TChiWZincl_2016_noSmoothing_allchan_maskSR_7_11_22", const string& fold2 = "datacards/all/TChiWZ/4000350", const string& shapesFile = "6_17_22wShapes.root",  int lepNum = 1){
   
 	string dateName = shapesFile.substr(0,8);
         string bfName = fold1.substr(2,fold1.size());
-        string odir = "prePostStackPlots/prePostStackPlots"+bfName;
+        string odir = "prePostStackPlots/TESTprePostStackPlots"+bfName;
 
         string inputfile1 = "BuildFits/"+fold1+"/FitInput_KUEWKino_2017.root";
         string inputfile2 = "BuildFits/"+fold1+"/"+fold2+"/fitDiagnostics"+shapesFile;
@@ -30,6 +30,7 @@ bool bfit = true;
 bool sbfit = false;
 bool ratio = true;
 bool plotFormat = false;
+bool fineSplit = true;
 
   CategoryTreeTool CTTool;
 
@@ -43,8 +44,14 @@ if(plotFormat){
   CT_2L = CTTool.GetCategories_2L_plotFormat();
   CT_3L = CTTool.GetCategories_3L_plotFormat();
 }
+else if(fineSplit){
+  CT_0L = CTTool.GetCategories_0L_fineSplit();
+  CT_1L = CTTool.GetCategories_1L_fineSplit();
+  CT_2L = CTTool.GetCategories_2L();
+  CT_3L = CTTool.GetCategories_3L();
+}
 else{
-  CT_0L = CTTool.GetCategories_0L();
+  CT_0L = CTTool.GetCategories_0L_fineSplit();
   CT_1L = CTTool.GetCategories_1L();
   CT_2L = CTTool.GetCategories_2L();
   CT_3L = CTTool.GetCategories_3L();
@@ -98,11 +105,12 @@ cout << "depth: " << depth0 << " size:" << CTs.size() << endl;
                 gSystem->Exec(("mkdir "+odir).c_str());
                 gSystem->Exec(("mkdir "+odir+"/"+lepName).c_str());
         }
-        //TFile* file = new TFile(fname.c_str(),"RECREATE");
+        TFile* file = new TFile(fname.c_str(),"RECREATE");
         //cout << "Writing to file: " << fname << endl;
         //file->cd();
   for(int i = 0; i < CTs.size(); i++){
     string dir = CTs[i]->GetPlainLabel(depth0-d);
+if(dir.find("1J") == string::npos) continue;
 while(dir.find(" ") != string::npos) dir.replace(dir.find(" "),1,"_"); 
     cout << dir  << endl;
     TCanvas* prefit_stack = nullptr;
