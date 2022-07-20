@@ -358,7 +358,7 @@ map<string,VC> catBins;
 
   VS bkg_rate;
   bkg_rate += "ttbar";
-  bkg_rate += "Wjets"; //removing scale wjets for hierarchy
+//  bkg_rate += "Wjets"; //removing scale wjets for hierarchy
   bkg_rate += "ZDY";
   bkg_rate += "QCD";
   bkg_rate += "DB";
@@ -376,11 +376,18 @@ map<string,VC> catBins;
 
   VS Wjets; //removing norm wjets for hierarchy leave VS for later hier call
   Wjets += "Wjets";
-//  SystDict sm;
-//  CONFIG.initSystDict(sm);
-//  CONFIG.AddNormHierarchy( sm, Wjets, cb,processes) ;
- // cb.PrintSysts();
-   CONFIG.AddSJetNormSys("Wjets", Wjets, cb, processes);
+  SystDict sm;
+  CONFIG.initSystDict(sm);
+  CONFIG.AddNormHierarchy( sm, Wjets, cb,processes) ;
+//  cb.PrintSysts();
+//   CONFIG.AddSJetNormSys("Wjets", Wjets, cb, processes);
+
+
+/*
+  VS ttbar;
+  ttbar += "ttbar";
+  CONFIG.AddNormHierarchy( sm, ttbar, cb, processes) ;
+*/
 
   VS QCD;
   QCD += "QCD";
