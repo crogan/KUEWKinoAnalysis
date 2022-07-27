@@ -2,7 +2,9 @@
 
 #include "../include/FitPlotter.hh"
 
-void PlotFits(const string& fold1 = "BF_allBkgs_data_TChiWZincl_2016_noSmoothing_allchan_maskSR_7_11_22", const string& fold2 = "datacards/all/TChiWZ/4000350", const string& shapesFile = "6_17_22wShapes.root",  int lepNum = 1){
+enum CatType{kFormat, kFine, kDefaultPlot};
+
+void PlotFits(const string& fold1 = "BF_allBkgs_data_TChiWZincl_2016_noSmoothing_allchan_maskSR_7_11_22", const string& fold2 = "datacards/all/TChiWZ/4000350", const string& shapesFile = "6_17_22wShapes.root",  int lepNum = 2){
   
 	string dateName = shapesFile.substr(0,8);
         string bfName = fold1.substr(2,fold1.size());
@@ -29,29 +31,29 @@ bool prefit = true;
 bool bfit = true;
 bool sbfit = false;
 bool ratio = true;
-bool plotFormat = false;
-bool fineSplit = true;
-
+//bool plotFormat = false;
+//bool fineSplit = true;
+CatType _catType = kFine; 
   CategoryTreeTool CTTool;
 
   CategoryTree CT_0L;
   CategoryTree CT_1L;
   CategoryTree CT_2L;
   CategoryTree CT_3L;
-if(plotFormat){
+if(_catType == kFormat){
   CT_0L = CTTool.GetCategories_0L_plotFormat();
   CT_1L = CTTool.GetCategories_1L_plotFormat();
   CT_2L = CTTool.GetCategories_2L_plotFormat();
   CT_3L = CTTool.GetCategories_3L_plotFormat();
 }
-else if(fineSplit){
+else if(_catType == kFine){
   CT_0L = CTTool.GetCategories_0L_fineSplit();
   CT_1L = CTTool.GetCategories_1L_fineSplit();
-  CT_2L = CTTool.GetCategories_2L();
+  CT_2L = CTTool.GetCategories_2L_fineSplit();
   CT_3L = CTTool.GetCategories_3L();
 }
 else{
-  CT_0L = CTTool.GetCategories_0L_fineSplit();
+  CT_0L = CTTool.GetCategories_0L();
   CT_1L = CTTool.GetCategories_1L();
   CT_2L = CTTool.GetCategories_2L();
   CT_3L = CTTool.GetCategories_3L();
@@ -76,7 +78,8 @@ else{
   else{ cout << "Invalid lepton number specified. Must be 0, 1, 2, or 3." << endl; return; } 
   vector<const CategoryTree*> CTs;
   int depth0, d, listDepth;
-  if(plotFormat) listDepth = 0;
+  if(_catType == kFormat) listDepth = 0;
+  if(_catType == kFine) listDepth = 1;
   else listDepth = 1;
   if(zeroL){
    depth0 = CT_0L.GetDepth();
@@ -110,7 +113,7 @@ cout << "depth: " << depth0 << " size:" << CTs.size() << endl;
         //file->cd();
   for(int i = 0; i < CTs.size(); i++){
     string dir = CTs[i]->GetPlainLabel(depth0-d);
-if(dir.find("1J") == string::npos) continue;
+//if(dir.find("0J") == string::npos) continue;
 while(dir.find(" ") != string::npos) dir.replace(dir.find(" "),1,"_"); 
     cout << dir  << endl;
     TCanvas* prefit_stack = nullptr;
