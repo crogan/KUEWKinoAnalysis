@@ -331,6 +331,54 @@ Systematics SystematicsTool::GetWeightSystematics() const {
   //list += "MET_TRIG_2L3L_01J";
   //list += "MET_TRIG_2L3L_2J";
   //
+  // v2
+  //list += "MET_TRIG_0L_0J";
+  //list += "MET_TRIG_0L_1J";
+  //list += "MET_TRIG_0L_2J";
+  //list += "MET_TRIG_0L_3J";
+  //list += "MET_TRIG_0L_4J";
+  //list += "MET_TRIG_0L_5J";
+  //list += "MET_TRIG_1Lel_0J";
+  //list += "MET_TRIG_1Lel_1J";
+  //list += "MET_TRIG_1Lel_2J";
+  //list += "MET_TRIG_1Lel_3J";
+  //list += "MET_TRIG_1Lel_4J";
+  //list += "MET_TRIG_1Lmu_0J";
+  //list += "MET_TRIG_1Lmu_1J";
+  //list += "MET_TRIG_1Lmu_2J";
+  //list += "MET_TRIG_1Lmu_3J";
+  //list += "MET_TRIG_1Lmu_4J";
+  //list += "MET_TRIG_2L_0J";
+  //list += "MET_TRIG_2L_1J";
+  //list += "MET_TRIG_2L_2J";
+  //list += "MET_TRIG_3L_0J";
+  //list += "MET_TRIG_3L_1J";
+  //
+  //v3
+  //list += "MET_TRIG_0L_0J";
+  //list += "MET_TRIG_0L_1J";
+  //list += "MET_TRIG_0L_2J";
+  //list += "MET_TRIG_0L_3J";
+  //list += "MET_TRIG_0L_4J";
+  //list += "MET_TRIG_0L_5J";
+  //list += "MET_TRIG_1L_0J";
+  //list += "MET_TRIG_1L_1J";
+  //list += "MET_TRIG_1L_2J";
+  //list += "MET_TRIG_1L_3J";
+  //list += "MET_TRIG_1L_4J";
+  //list += "MET_TRIG_2L_0J";
+  //list += "MET_TRIG_2L_1J";
+  //list += "MET_TRIG_2L_2J";
+  //list += "MET_TRIG_3L_0J";
+  //list += "MET_TRIG_3L_1J";
+  //
+  //v4
+  //list += "MET_TRIG_0L";
+  //list += "MET_TRIG_1L_el";
+  //list += "MET_TRIG_1L_mu";
+  //list += "MET_TRIG_2L3L_el";
+  //list += "MET_TRIG_2L3L_mu";
+  //v5
   //list += "MET_TRIG_0L";
   //list += "MET_TRIG_el";
   //list += "MET_TRIG_mu";
@@ -338,11 +386,12 @@ Systematics SystematicsTool::GetWeightSystematics() const {
   //list += "MET_TRIG_1L";
   //list += "MET_TRIG_2L3L";
   //
-  //list += "MET_TRIG_0L";
-  //list += "MET_TRIG_1Lel";
-  //list += "MET_TRIG_1Lmu";
-  //list += "MET_TRIG_2L3Lel";
-  //list += "MET_TRIG_2L3Lmu";
+  //v4
+  list += "MET_TRIG_0L";
+  list += "MET_TRIG_1L_el";
+  list += "MET_TRIG_1L_mu";
+  list += "MET_TRIG_2L3L_el";
+  list += "MET_TRIG_2L3L_mu";
   //
   //list += "MET_TRIG_0L_HTLow";
   //list += "MET_TRIG_0L_HTMed";
