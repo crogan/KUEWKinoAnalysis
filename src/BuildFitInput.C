@@ -222,11 +222,12 @@ int main(int argc, char* argv[]) {
   SystematicsTool SYS;
   
   METTriggerTool m_METTriggerTool;
-  m_METTriggerTool.BuildMap("Parameters.csv");
-  //m_METTriggerTool.BuildMap("csv/METTrigger/Parameters.csv");
+  //m_METTriggerTool.BuildMap("Parameters.csv");
+  m_METTriggerTool.BuildMap("csv/METTrigger/Parameters.csv");
 
   ScaleFactorTool SF;
-  SF.AddBtagFolder("./BtagSF");
+  //SF.AddBtagFolder("./BtagSF");
+  SF.AddBtagFolder("./csv/BtagSF");
 
   Systematics systematics(1);
   if(doSys)

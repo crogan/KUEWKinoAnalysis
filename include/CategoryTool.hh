@@ -31,6 +31,7 @@ public:
 protected:
   FitBin   GetFitBin(int Nlep, int index, bool maskSR = false) const;
   Hadronic GetHadronicRegion(int Njet, int index) const;
+  Hadronic GetHadronicRegionISR(int Njet, int index) const;
   
 };
 
