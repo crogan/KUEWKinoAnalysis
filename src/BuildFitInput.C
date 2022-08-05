@@ -374,7 +374,21 @@ int main(int argc, char* argv[]) {
 	LepList list_b;
 	  
 	int index;
-	  
+      /*
+	//max pt for alice bins/////////////////////////////
+	double maxptlep=0.0;
+	double ptup=1000000.0;
+	double ptdown=20.0;
+	///// testing bin configurations [0,5) [5,10) [10,20) [20,inf)
+	for(int i =0; i < Nlep; i++){
+		if( base->PT_lep->at(i) > maxptlep ){
+                maxptlep = base->PT_lep->at(i);
+  	         }
+	}
+	if( maxptlep < ptdown || maxptlep >= ptup)	
+		continue;
+	////////////////////////////////////////////////////
+      */	  
 	for(int i = 0; i < base->Nlep_a; i++){
 	  index = (*base->index_lep_a)[i];
 	    

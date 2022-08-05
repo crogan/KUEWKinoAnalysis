@@ -434,6 +434,7 @@ void SampleTool::InitProcMap(){
     Process ttbar("ttbar", kBkg);
     list.clear();
     list += m_Path + "Fall17_102X/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root";
+//    list += m_Path + "Summer20UL17_102X/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_Summer20UL17_102X.root";
     list += m_Path + "Fall17_102X/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root";
     list += m_Path + "Fall17_102X/TTJets_SingleLeptFromTbar_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root";
     list += m_Path + "Fall17_102X/TTGJets_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8_Fall17_102X.root";
@@ -444,6 +445,7 @@ void SampleTool::InitProcMap(){
     list += m_Path + "Fall17_102X/TTZToQQ_TuneCP5_13TeV-amcatnlo-pythia8_Fall17_102X.root";
     list += m_Path + "Fall17_102X/ttHToNonbb_M125_TuneCP5_13TeV-powheg-pythia8_Fall17_102X.root";
     list += m_Path + "Fall17_102X/ttHTobb_M125_TuneCP5_13TeV-powheg-pythia8_Fall17_102X.root";
+ //using only ttjets dilept sample for alice low pt elec analysis
     m_Proc[m_iYear][ttbar] = pair<vector<string>,string>(list, "KUAnalysis");
 
     Process ST("ST", kBkg);
@@ -540,6 +542,13 @@ void SampleTool::InitProcMap(){
     // -------------- //
     // --- Signal --- //
     // -------------- //
+
+    //Special 4bd sample for alice
+    InitSMS("T4bd_TuneCP2",m_Path+"Fall17_102X_SMS/SMS-T2-4bd_genMET-80_mStop-500_mLSP-490_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root",1,false,false);
+    InitSMS("T4bd_TuneCP5",m_Path+"Fall17_102X_SMS/SMS-T2-4bd_genMET-80_mStop-500_mLSP-490_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root",1,false,false);
+    InitSMS("T4bd_UL",m_Path+"Summer20UL17_102X_SMS/SMS-T2-4bd_genMET-80_mStop-500_mLSP-490_TuneCP5_13TeV-madgraphMLM-pythia8_Summer20UL17_102X.root",1,false,false);
+
+ 
 
     InitSMS("T2bW", m_Path+"Fall17_102X_SMS/SMS-T2bW_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
     InitSMS("T2bW", m_Path+"Fall17_102X_SMS/SMS-T2bW_X05_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);

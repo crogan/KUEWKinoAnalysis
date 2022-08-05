@@ -343,7 +343,7 @@ int main(int argc, char* argv[]) {
   //CONFIG.Configure(cb, processes);
 
   VS bkg_rate;
-  bkg_rate += "ttbar";
+  bkg_rate += "ttbar"; //removing for ttbar hierarchy testing
 //  bkg_rate += "Wjets"; //removing scale wjets for hierarchy
   bkg_rate += "ZDY";
   bkg_rate += "QCD";
@@ -369,23 +369,26 @@ int main(int argc, char* argv[]) {
 //   CONFIG.AddSJetNormSys("Wjets", Wjets, cb, processes);
 
 
-/*
-  VS ttbar;
-  ttbar += "ttbar";
-  CONFIG.AddNormHierarchy( sm, ttbar, cb, processes) ;
-*/
+
+//  VS ttbar;
+//  ttbar += "ttbar";
+//  CONFIG.AddNormHierarchy( sm, ttbar, cb, processes) ;
+
 
   VS QCD;
   QCD += "QCD";
   CONFIG.AddSJetNormSys("QCD", QCD, cb, processes);
+
   VS Other;
   Other += "ttbar";
   Other += "ZDY";
   Other += "DB";
   Other += "ST";
   Other += "TB";
-  CONFIG.AddSJetNormSys("Other", Other, cb, processes);
- 
+//  CONFIG.AddNormHierarchy( sm, Other, cb, processes);
+CONFIG.AddSJetNormSys("Other", Other, cb, processes); 
+//CONFIG.AddSJetNormSys("Rare", bkg_rare, cb, processes);
+
  using ch::syst::SystMap;
   using ch::syst::era;
   using ch::syst::channel;
