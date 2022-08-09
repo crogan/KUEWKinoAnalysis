@@ -86,7 +86,7 @@ Compile and run issues have been observed when compiling without CMSSW.
 ```
 cd KUEWKinoAnalysis
 source scripts/setup_RestFrames_connect.sh
-make cmssw -j8
+make clean && make cmssw -j8
 ```
 
 ### Running combineTool.py on cms connect syntax
