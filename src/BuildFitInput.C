@@ -222,16 +222,11 @@ int main(int argc, char* argv[]) {
   SystematicsTool SYS;
   
   METTriggerTool m_METTriggerTool;
-  // run on condor
   m_METTriggerTool.BuildMap("Parameters.csv");
-  // run locally
   //m_METTriggerTool.BuildMap("csv/METTrigger/Parameters.csv");
 
   ScaleFactorTool SF;
-  // run on condor
   SF.AddBtagFolder("./BtagSF");
-  // run locally
-  //SF.AddBtagFolder("./csv/BtagSF");
 
   Systematics systematics(1);
   if(doSys)
@@ -367,6 +362,7 @@ int main(int argc, char* argv[]) {
 	
 	int Nlep     = base->Nlep;
 	int NjetS    = base->Njet_S;
+	int Nbjet    = base->Nbjet;
 	int NbjetS   = base->Nbjet_S;
 	int NjetISR  = base->Njet_ISR;
 	int NbjetISR = base->Nbjet_ISR;
@@ -379,21 +375,7 @@ int main(int argc, char* argv[]) {
 	LepList list_b;
 	  
 	int index;
-      /*
-	//max pt for alice bins/////////////////////////////
-	double maxptlep=0.0;
-	double ptup=1000000.0;
-	double ptdown=20.0;
-	///// testing bin configurations [0,5) [5,10) [10,20) [20,inf)
-	for(int i =0; i < Nlep; i++){
-		if( base->PT_lep->at(i) > maxptlep ){
-                maxptlep = base->PT_lep->at(i);
-  	         }
-	}
-	if( maxptlep < ptdown || maxptlep >= ptup)	
-		continue;
-	////////////////////////////////////////////////////
-      */	  
+	  
 	for(int i = 0; i < base->Nlep_a; i++){
 	  index = (*base->index_lep_a)[i];
 	    
@@ -656,6 +638,7 @@ if(sys.Label().find("MET_TRIG") != std::string::npos)
 	  //
 	  // BTAG systematics on the fly (needs jet collection in reduced ntuples)
 	  //
+	 for(int b = 0; b <= Nbjet; b++){
 	  if(sys == Systematic("BTAGHF_SF")){
 	    if(sys.IsUp())
 	      btag_weight *= SF.GetBtagSFWeight(base, year, is_FastSim, true, 1);
@@ -673,6 +656,7 @@ if(sys.Label().find("MET_TRIG") != std::string::npos)
 	  } else {
 	    btag_weight *= SF.GetBtagSFWeight(base, year, is_FastSim, false, 0);
 	  }
+         }
 	  // turn off PU systematics for now
 	  // if(sys == Systematic("PU_SF"))
 	  //   if(sys.IsUp())
@@ -682,8 +666,8 @@ if(sys.Label().find("MET_TRIG") != std::string::npos)
 	  // else
 	  //   PU_weight = base->PUweight;
 
-	  weight *= btag_weight*PU_weight*trig_weight;
-	  //weight *= btag_weight*PU_weight;
+	  weight *= btag_weight*PU_weight;
+	  //weight *= btag_weight*PU_weight*trig_weight;
 
 	  if(is_data) weight = 1.;
 	  
