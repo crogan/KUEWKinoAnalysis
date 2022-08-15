@@ -69,32 +69,32 @@ void FitConfiguration::AddFakeLeptonSys(ch::CombineHarvester& cb, ProcessList& p
 
   cb.cp().backgrounds().process(VS().a(".*_Fakes_elf1.*"))
     .AddSyst(cb, "Fakes_elf1", "rateParam", SystMap<>::init(1.0));
-
+/* temporarily removing these until updated
   // // SFs for lepton ID factors
-  cb.cp().backgrounds().process(VS().a(".*_Fakes_muf0.*")).bin(VS().a(".*muB.*"))
+  cb.cp().backgrounds().process(VS().a(".*_Fakes_muf0.*")).bin(VS().a(".*mu.*bron.*"))
     .AddSyst(cb, "IDISO_muf0", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().process(VS().a(".*_Fakes_muf1.*")).bin(VS().a(".*muB.*"))
+  cb.cp().backgrounds().process(VS().a(".*_Fakes_muf1.*")).bin(VS().a(".*mu.*bron.*"))
     .AddSyst(cb, "IDISO_muf1", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().process(VS().a(".*_Fakes_elf0.*")).bin(VS().a(".*elB.*"))
+  cb.cp().backgrounds().process(VS().a(".*_Fakes_elf0.*")).bin(VS().a(".*el.*bron.*"))
     .AddSyst(cb, "IDISO_elf0", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().process(VS().a(".*_Fakes_elf1.*")).bin(VS().a(".*elB.*"))
+  cb.cp().backgrounds().process(VS().a(".*_Fakes_elf1.*")).bin(VS().a(".*el.*bron.*"))
     .AddSyst(cb, "IDISO_elf1", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().process(VS().a(".*_Fakes_muf0.*")).bin(VS().a(".*muS.*"))
+  cb.cp().backgrounds().process(VS().a(".*_Fakes_muf0.*")).bin(VS().a(".*mu.*slvr.*"))
     .AddSyst(cb, "SIP3D_muf0", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().process(VS().a(".*_Fakes_muf1.*")).bin(VS().a(".*muS.*"))
+  cb.cp().backgrounds().process(VS().a(".*_Fakes_muf1.*")).bin(VS().a(".*mu.*slvr.*"))
     .AddSyst(cb, "SIP3D_muf1", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().process(VS().a(".*_Fakes_elf0.*")).bin(VS().a(".*elS.*"))
+  cb.cp().backgrounds().process(VS().a(".*_Fakes_elf0.*")).bin(VS().a(".*el.*slvr.*"))
     .AddSyst(cb, "SIP3D_elf0", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().process(VS().a(".*_Fakes_elf1.*")).bin(VS().a(".*elS.*"))
+  cb.cp().backgrounds().process(VS().a(".*_Fakes_elf1.*")).bin(VS().a(".*el.*slvr.*"))
     .AddSyst(cb, "SIP3D_elf1", "rateParam", SystMap<>::init(1.0));
-  
+ */ 
   cb.SetFlag("filters-use-regex", false);
 }
 
@@ -246,8 +246,8 @@ void FitConfiguration::initSystDict( SystDict& sd){
 
         appSystDict(sd, "norm_ttbar3L_0jS", std::vector<int>{3,0, -1,1});
         appSystDict(sd, "norm_ttbar3L_1jS", std::vector<int>{3,1, -1,1});
-*/
-/*
+
+
 	//ttbar hierarchy
 	appSystDict(sd, "norm_ttbar0L_0jS", std::vector<int>{0,0, -1,1 });
         appSystDict(sd, "norm_ttbar0L_1jS", std::vector<int>{0,1, 0,0  -1,1 });
@@ -268,6 +268,14 @@ void FitConfiguration::initSystDict( SystDict& sd){
 
         appSystDict(sd, "norm_ttbar3L_0jS", std::vector<int>{3,0, -1,1});
         appSystDict(sd, "norm_ttbar3L_1jS", std::vector<int>{2,2, 3,1, 3,0, -1,1});
+*/
+/*
+	appSystDict(sd, "Other0L_0jS_d3", std::vector<int>{0,0, -1,1 });
+        appSystDict(sd, "Other0L_1jS_d2", std::vector<int>{0,1, 0,0, -1,0 });
+        appSystDict(sd, "Other0L_2jS_d1", std::vector<int>{2,2, 0,2, 0,0, 0,1, 0,3, 0,4, 0,5, -1,0 });
+        appSystDict(sd, "Other0L_3jS_d2", std::vector<int>{0,3, 0,4, 0,5, -1,0 });
+        appSystDict(sd, "Other0L_4jS_d3", std::vector<int>{0,4, 0,5, -1,0 });
+        appSystDict(sd, "Other0L_5jS_d4", std::vector<int>{0,5, -1,1});
 */
 	
 
