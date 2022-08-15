@@ -357,7 +357,7 @@ map<string,VC> catBins;
   //CONFIG.Configure(cb, processes);
 
   VS bkg_rate;
-  bkg_rate += "ttbar";
+//  bkg_rate += "ttbar"; //removing for ttbar hierarchy testing
 //  bkg_rate += "Wjets"; //removing scale wjets for hierarchy
   bkg_rate += "ZDY";
   bkg_rate += "QCD";
@@ -383,23 +383,40 @@ map<string,VC> catBins;
 //   CONFIG.AddSJetNormSys("Wjets", Wjets, cb, processes);
 
 
-/*
+
   VS ttbar;
   ttbar += "ttbar";
-  CONFIG.AddNormHierarchy( sm, ttbar, cb, processes) ;
-*/
+   CONFIG.AddNormHierarchy( sm, ttbar, cb, processes) ;
+   CONFIG.AddSJetNormSys("ttbar", ttbar, cb, processes);
 
   VS QCD;
   QCD += "QCD";
   CONFIG.AddSJetNormSys("QCD", QCD, cb, processes);
+
+/*
   VS Other;
   Other += "ttbar";
   Other += "ZDY";
   Other += "DB";
   Other += "ST";
   Other += "TB";
-  CONFIG.AddSJetNormSys("Other", Other, cb, processes);
+//  CONFIG.AddNormHierarchy( sm, Other, cb, processes);
+CONFIG.AddSJetNormSys("Other", Other, cb, processes); 
+//CONFIG.AddSJetNormSys("Rare", bkg_rare, cb, processes);
+*/
+
+
+ VS ZDYDB;
+ ZDYDB += "ZDY";
+ ZDYDB += "DB";
+ CONFIG.AddSJetNormSys("ZDYDB", ZDYDB, cb, processes);
  
+ VS STTB;
+ STTB += "ST";
+ STTB += "TB";
+ CONFIG.AddSJetNormSys("STTB", STTB, cb, processes);
+ 
+
  using ch::syst::SystMap;
   using ch::syst::era;
   using ch::syst::channel;

@@ -91,6 +91,14 @@ double XsecTool::GetXsec_SMS(const std::string& dataset, double MP) const {
       double y1 = m_Label2Xsec_SMS[label][i];
       double y2 = m_Label2Xsec_SMS[label][i+1];
       double beta = log(y1/y2)/(x2-x1);
+std::cout << "MP: " << MP << std::endl;
+std::cout << "x1: " << x1 << std::endl;
+std::cout << "x2: " << x2 << std::endl;
+std::cout << "y1: " << y1 << std::endl;
+std::cout << "y2: " << y2 << std::endl;
+std::cout << "beta: " << beta << std::endl;
+std::cout << "BR: " << BR << std::endl;
+std::cout << "xsec: " << BR*y1*exp(beta*(x1-MP)) << std::endl;
       return BR*y1*exp(beta*(x1-MP));
     }
   }
@@ -2644,7 +2652,7 @@ std::map<std::string,std::vector<double> > XsecTool::InitMap_Xsec_SMS(){
   Label2Xsec["StopStop"].push_back(1000.*0.593E+02);
   Label2Xsec["StopStop"].push_back(1000.*0.527E+02);
   Label2Xsec["StopStop"].push_back(1000.*0.470E+02);
-  Label2Xsec["StopStop"].push_back(1000.*0.420E+0);
+  Label2Xsec["StopStop"].push_back(1000.*0.420E+02);
   Label2Xsec["StopStop"].push_back(1000.*0.377E+02);
   Label2Xsec["StopStop"].push_back(1000.*0.338E+02);
   Label2Xsec["StopStop"].push_back(1000.*0.305E+02);
