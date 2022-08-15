@@ -1679,7 +1679,7 @@ TCanvas* FitPlotter::Plot1Dstack(const string& can_name,
   vector<int> Nbins;
   if(Nvis < 1)
     return nullptr;
-  
+ 
   CategoryList CatList = GetCategories();
   CategoryList dumcat = CatList.Filter(*CatTrees[0]);
   const FitBin& fitbin = dumcat[0].GetFitBin();
@@ -1752,9 +1752,9 @@ if(pType == kFull)
     }
     
     for(int v = 0; v < Nvis; v++){
-      CategoryList cat = CatList.Filter(*CatTrees[v]);
+     CategoryList cat = CatList.Filter(*CatTrees[v]);
       TH1D* h = nullptr;
-
+      
       if(pType == kFull)
 	h = GetAddedHist(Form("plothist_%d_%d_%s", i, v, can_name.c_str()), cat, procs);
       if(pType == kRISR || pType == kInv)
