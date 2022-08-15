@@ -4,13 +4,13 @@
 
 enum CatType{kFormat, kFine, kDefaultPlot};
 
-void PlotFits(const string& fold1 = "BF_allBkgs_data_TChiWZincl_2016_noSmoothing_allchan_maskSR_7_11_22", const string& fold2 = "datacards/all/TChiWZ/4000350", const string& shapesFile = "6_17_22wShapes.root",  int lepNum = 2){
+void PlotFits(const string& fold1 = "BF_allBkgs_data_TChiWZincl_2016_allchan_maskSR_7_19_22", const string& fold2 = "datacards/all/TChiWZ/4000350", const string& shapesFile = "7_27_22wShapes.root",  int lepNum = 3){
   
 	string dateName = shapesFile.substr(0,8);
         string bfName = fold1.substr(2,fold1.size());
-        string odir = "prePostStackPlots/TESTprePostStackPlots"+bfName;
+        string odir = "prePostStackPlots/prePostStackPlots"+bfName;
 
-        string inputfile1 = "BuildFits/"+fold1+"/FitInput_KUEWKino_2017.root";
+        string inputfile1 = "BuildFits/"+fold1+"/FitInput_KUEWKino_2016.root";
         string inputfile2 = "BuildFits/"+fold1+"/"+fold2+"/fitDiagnostics"+shapesFile;
         string lepName;
         if(fold2.find("L") != string::npos) lepName = fold2.substr(10,4);
@@ -31,8 +31,6 @@ bool prefit = true;
 bool bfit = true;
 bool sbfit = false;
 bool ratio = true;
-//bool plotFormat = false;
-//bool fineSplit = true;
 CatType _catType = kFine; 
   CategoryTreeTool CTTool;
 
@@ -79,12 +77,13 @@ else{
   vector<const CategoryTree*> CTs;
   int depth0, d, listDepth;
   if(_catType == kFormat) listDepth = 0;
-  if(_catType == kFine) listDepth = 1;
-  else listDepth = 1;
+  else if(_catType == kFine) listDepth = 1;
+  else listDepth = 0;
+cout << "listdepth: " << listDepth << endl;
   if(zeroL){
    depth0 = CT_0L.GetDepth();
    d = depth0;    
-   CT_0L.GetListDepth(CTs, 0);
+   CT_0L.GetListDepth(CTs, listDepth);
   }
   else if(oneL){
    depth0 = CT_1L.GetDepth()-3;
