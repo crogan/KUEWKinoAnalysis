@@ -69,7 +69,7 @@ void FitConfiguration::AddFakeLeptonSys(ch::CombineHarvester& cb, ProcessList& p
 
   cb.cp().backgrounds().process(VS().a(".*_Fakes_elf1.*"))
     .AddSyst(cb, "Fakes_elf1", "rateParam", SystMap<>::init(1.0));
-
+/* temporarily removing these until updated
   // // SFs for lepton ID factors
   cb.cp().backgrounds().process(VS().a(".*_Fakes_muf0.*")).bin(VS().a(".*mu.*bron.*"))
     .AddSyst(cb, "IDISO_muf0", "rateParam", SystMap<>::init(1.0));
@@ -94,7 +94,7 @@ void FitConfiguration::AddFakeLeptonSys(ch::CombineHarvester& cb, ProcessList& p
 
   cb.cp().backgrounds().process(VS().a(".*_Fakes_elf1.*")).bin(VS().a(".*el.*slvr.*"))
     .AddSyst(cb, "SIP3D_elf1", "rateParam", SystMap<>::init(1.0));
-  
+ */ 
   cb.SetFlag("filters-use-regex", false);
 }
 
