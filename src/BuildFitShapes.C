@@ -14,8 +14,8 @@ int main(int argc, char* argv[]) {
   string InputFile  = "";
   string OutputFile = "FitInput_new.root";
 
-  bool smoothFakes = true;
-  bool smoothQCD   = true;
+  bool smoothFakes = false;
+  bool smoothQCD   = false;
 
   bool shapeFakes = false;
   bool shapeQCD   = false;
