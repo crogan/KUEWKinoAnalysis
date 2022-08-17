@@ -68,10 +68,10 @@ int main(int argc, char* argv[]) {
     if(strncmp(argv[i],"-smoothQCD", 10) == 0){
       smoothQCD = true;
     }
-    if(strncmp(argv[i],"-shape", 7) == 0){
-      shapeFakes = true;
+    if(strncmp(argv[i],"-shape", 6) == 0){
+      //shapeFakes = true;
       shapeQCD   = true;
-      shapeWjets   = true;
+      //shapeWjets   = true;
     }
     if(strncmp(argv[i],"-shapeFakes", 11) == 0){
       shapeFakes = true;
