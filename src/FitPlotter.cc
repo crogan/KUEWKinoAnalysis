@@ -4705,13 +4705,12 @@ void FitPlotter::InitializeRecipes(){
   m_Strings["ttbar_Fakes"] += AddPrefix("ttbar",s_Fakes_LF);
   m_Strings["ttbar_Fakes"] += AddPrefix("ttbar",s_Fakes_HF);
   m_Color["ttbar_Fakes"] = 7020;
-  
+
   m_Title["Wjets_Fakes"] = "W+jets fakes";
   m_Strings["Wjets_Fakes"] = VS();
   m_Strings["Wjets_Fakes"] += AddPrefix("Wjets",s_Fakes_LF);
   m_Strings["Wjets_Fakes"] += AddPrefix("Wjets",s_Fakes_HF);
   m_Color["Wjets_Fakes"] = 7023;
-  
   m_Title["ST_Fakes"] = "single top fakes";
   m_Strings["ST_Fakes"] = VS();
   m_Strings["ST_Fakes"] += AddPrefix("ST",s_Fakes_LF);
@@ -4735,7 +4734,6 @@ void FitPlotter::InitializeRecipes(){
   m_Strings["ZDY_Fakes"] += AddPrefix("ZDY",s_Fakes_LF);
   m_Strings["ZDY_Fakes"] += AddPrefix("ZDY",s_Fakes_HF);
   m_Color["ZDY"] = 7014;
-
 
   m_Title["ttbar_Fakes_elf0"] = "HF el t #bar{t} + jets";
   m_Title["ttbar_Fakes_elf1"] = "LF+unm. el t #bar{t} + jets";
