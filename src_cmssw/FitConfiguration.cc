@@ -69,20 +69,20 @@ void FitConfiguration::AddFakeLeptonSys(ch::CombineHarvester& cb, ProcessList& p
 
   cb.cp().backgrounds().process(VS().a(".*_Fakes_elf1.*"))
     .AddSyst(cb, "Fakes_elf1", "rateParam", SystMap<>::init(1.0));
-/* temporarily removing these until updated
-  // // SFs for lepton ID factors
-  cb.cp().backgrounds().process(VS().a(".*_Fakes_muf0.*")).bin(VS().a(".*mu.*bron.*"))
+// temporarily removing these until updated
+   // SFs for lepton ID factors
+  cb.cp().backgrounds().process(processes.Filter("muf0B").GetProcesses())
     .AddSyst(cb, "IDISO_muf0", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().process(VS().a(".*_Fakes_muf1.*")).bin(VS().a(".*mu.*bron.*"))
+  cb.cp().backgrounds().process(processes.Filter("muf1B").GetProcesses())
     .AddSyst(cb, "IDISO_muf1", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().process(VS().a(".*_Fakes_elf0.*")).bin(VS().a(".*el.*bron.*"))
+  cb.cp().backgrounds().process(processes.Filter("elf0B").GetProcesses())
     .AddSyst(cb, "IDISO_elf0", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().process(VS().a(".*_Fakes_elf1.*")).bin(VS().a(".*el.*bron.*"))
+  cb.cp().backgrounds().process(processes.Filter("elf1B").GetProcesses())
     .AddSyst(cb, "IDISO_elf1", "rateParam", SystMap<>::init(1.0));
-
+/*
   cb.cp().backgrounds().process(VS().a(".*_Fakes_muf0.*")).bin(VS().a(".*mu.*slvr.*"))
     .AddSyst(cb, "SIP3D_muf0", "rateParam", SystMap<>::init(1.0));
 
@@ -94,8 +94,8 @@ void FitConfiguration::AddFakeLeptonSys(ch::CombineHarvester& cb, ProcessList& p
 
   cb.cp().backgrounds().process(VS().a(".*_Fakes_elf1.*")).bin(VS().a(".*el.*slvr.*"))
     .AddSyst(cb, "SIP3D_elf1", "rateParam", SystMap<>::init(1.0));
- */ 
   cb.SetFlag("filters-use-regex", false);
+*/
 }
 
 void FitConfiguration::AddSVSys(ch::CombineHarvester& cb, ProcessList& processes){
