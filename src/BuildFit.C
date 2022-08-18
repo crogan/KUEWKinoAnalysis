@@ -372,7 +372,7 @@ int main(int argc, char* argv[]) {
 
   VS ttbar;
   ttbar += "ttbar";
-   CONFIG.AddNormHierarchy( sm, ttbar, cb, processes) ;
+//   CONFIG.AddNormHierarchy( sm, ttbar, cb, processes) ;
    CONFIG.AddSJetNormSys("ttbar", ttbar, cb, processes);
 
   VS QCD;
