@@ -14,8 +14,8 @@ int main(int argc, char* argv[]) {
   string InputFile  = "";
   string OutputFile = "FitInput_new.root";
 
-  bool smoothFakes = true;
-  bool smoothQCD   = true;
+  bool smoothFakes = false;
+  bool smoothQCD   = false;
 
   bool shapeFakes = false;
   bool shapeQCD   = false;
@@ -58,7 +58,14 @@ int main(int argc, char* argv[]) {
       i++;
       InputFile = string(argv[i]);
     }
-    if(strncmp(argv[i],"-smooth", 7) == 0){
+    if(strncmp(argv[i],"-default", 8) == 0){
+      smoothFakes = true;
+      smoothQCD   = true;
+      shapeFakes  = true;
+      shapeQCD    = true;
+      shapeWjets  = true;
+    }
+    if(strncmp(argv[i],"-smoothAll", 10) == 0){
       smoothFakes = true;
       smoothQCD   = true;
     }
@@ -68,7 +75,7 @@ int main(int argc, char* argv[]) {
     if(strncmp(argv[i],"-smoothQCD", 10) == 0){
       smoothQCD = true;
     }
-    if(strncmp(argv[i],"-shape", 7) == 0){
+    if(strncmp(argv[i],"-shapeAll", 10) == 0){
       shapeFakes = true;
       shapeQCD   = true;
       shapeWjets   = true;
@@ -108,11 +115,14 @@ int main(int argc, char* argv[]) {
     cout << "   --verbose(-v)       increase verbosity" << endl;
     cout << "   --input(-i) [file]  input root file" << endl;
     cout << "   --output(-o) [fold] output root file" << endl;
-    cout << "   -smooth             smooth fake lep and QCD contributions" << endl;
+    cout << "   -default            runs the default smoothing and shape configuration as agreed upon by everyone" << endl;
+    cout << "                       currently the default is -smoothFakes -smoothQCD -shapeFakes -shapeQCD -shapeWjets" << endl;
+    cout << "   -smoothAll          smooth fake lep and QCD contributions" << endl;
     cout << "   -smoothFakes        smooth fake lep contributions" << endl;
     cout << "   -smoothQCD          smooth QCD contributions" << endl;
-    cout << "   -shape              add fake lep and QCD systematic shape variations" << endl;
+    cout << "   -shapeAll           add fake lep, Wjets and QCD systematic shape variations" << endl;
     cout << "   -shapeFakes         add fake lep systematic shape variations" << endl;
+    cout << "   -shapeWjets         add Wjets systematic shape variations" << endl;
     cout << "   -shapeQCD           add QCD systematic shape variations" << endl;
     cout << "   -fakedata           add data_obs as sum of MC backgrounds" << endl;
     cout << "   -sJetSplit          split fake lepton shape systematics by S-jet multiplicities" << endl;

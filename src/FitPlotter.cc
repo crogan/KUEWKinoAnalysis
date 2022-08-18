@@ -4702,11 +4702,42 @@ void FitPlotter::InitializeRecipes(){
   m_Strings["LF"] = VS().a("Fakes_elf1").a("Fakes_muf1");
 
   m_Title["ttbar_Fakes"] = "t #bar{t} fakes";
-  m_Strings["ttbar_Fakes"] = VS().a("ttbar_Fakes_elf0").a("ttbar_Fakes_elf1").a("ttbar_Fakes_muf0").a("ttbar_Fakes_muf1");
+  m_Strings["ttbar_Fakes"] = VS();
+  m_Strings["ttbar_Fakes"] += AddPrefix("ttbar",s_Fakes_LF);
+  m_Strings["ttbar_Fakes"] += AddPrefix("ttbar",s_Fakes_HF);
   m_Color["ttbar_Fakes"] = 7020;
-  
+
   m_Title["Wjets_Fakes"] = "W+jets fakes";
-  m_Strings["Wjets_Fakes"] = VS().a("Wjets_Fakes_elf0").a("Wjets_Fakes_elf1").a("Wjets_Fakes_muf0").a("Wjets_Fakes_muf1");
+  m_Strings["Wjets_Fakes"] = VS();
+  m_Strings["Wjets_Fakes"] += AddPrefix("Wjets",s_Fakes_LF);
+  m_Strings["Wjets_Fakes"] += AddPrefix("Wjets",s_Fakes_HF);
+  m_Color["Wjets_Fakes"] = 7023;
+
+  m_Title["ST_Fakes"] = "single top fakes";
+  m_Strings["ST_Fakes"] = VS();
+  m_Strings["ST_Fakes"] += AddPrefix("ST",s_Fakes_LF);
+  m_Strings["ST_Fakes"] += AddPrefix("ST",s_Fakes_HF);
+  m_Color["ST_Fakes"] = 7024;
+
+
+
+  m_Title["DB_Fakes"] = "di-boson fakes";
+  m_Strings["DB_Fakes"] = VS();
+  m_Strings["DB_Fakes"] += AddPrefix("DB",s_Fakes_LF);
+  m_Strings["DB_Fakes"] += AddPrefix("DB",s_Fakes_HF);
+  m_Color["DB_Fakes"] = 7012;
+
+  m_Title["TB_Fakes"] = "tri-boson fakes";
+  m_Strings["TB_Fakes"] = VS();
+  m_Strings["TB_Fakes"] += AddPrefix("TB",s_Fakes_LF);
+  m_Strings["TB_Fakes"] += AddPrefix("TB",s_Fakes_HF);
+  m_Color["TB"] = 7013;
+
+  m_Title["ZDY_Fakes"] = "Z / #gamma* + jets fakes";
+  m_Strings["ZDY_Fakes"] = VS();
+  m_Strings["ZDY_Fakes"] += AddPrefix("ZDY",s_Fakes_LF);
+  m_Strings["ZDY_Fakes"] += AddPrefix("ZDY",s_Fakes_HF);
+  m_Color["ZDY"] = 7014;
 
   m_Title["ttbar_Fakes_elf0"] = "HF el t #bar{t} + jets";
   m_Title["ttbar_Fakes_elf1"] = "LF+unm. el t #bar{t} + jets";
