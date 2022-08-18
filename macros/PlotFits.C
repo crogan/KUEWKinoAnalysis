@@ -4,7 +4,7 @@
 
 enum CatType{kFormat, kFine, kDefaultPlot};
 
-void PlotFits(const string& fold1 = "BF_allBkgs_data_TChiWZincl_2016_allchan_maskSR_7_19_22", const string& fold2 = "datacards/all/TChiWZ/4000350", const string& shapesFile = "7_27_22wShapes.root",  int lepNum = 3){
+void PlotFits(const string& fold1 = "BF_allBkgs_data_TChiWZincl_2016_noSmoothing_allchan_maskSR_7_11_22", const string& fold2 = "datacards/all/TChiWZ/4000350", const string& shapesFile = "8_15_22wShapes.root",  int lepNum = 1){
   
 	string dateName = shapesFile.substr(0,8);
         string bfName = fold1.substr(2,fold1.size());
@@ -31,7 +31,7 @@ bool prefit = true;
 bool bfit = true;
 bool sbfit = false;
 bool ratio = true;
-CatType _catType = kFine; 
+CatType _catType = kDefaultPlot; 
   CategoryTreeTool CTTool;
 
   CategoryTree CT_0L;
