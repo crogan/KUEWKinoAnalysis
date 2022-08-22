@@ -58,16 +58,16 @@ void FitConfiguration::AddFakeLeptonSys(ch::CombineHarvester& cb, ProcessList& p
   cb.SetFlag("filters-use-regex", true);
 
   // // overall factors for amount of each type of fake
-  cb.cp().backgrounds().process(VS().a(".*_Fakes_muf0.*"))
+  cb.cp().backgrounds().process(VS().a(".*_Fakes_.*muf0.*"))
     .AddSyst(cb, "Fakes_muf0", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().process(VS().a(".*_Fakes_muf1.*"))
+  cb.cp().backgrounds().process(VS().a(".*_Fakes_.*muf1.*"))
     .AddSyst(cb, "Fakes_muf1", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().process(VS().a(".*_Fakes_elf0.*"))
+  cb.cp().backgrounds().process(VS().a(".*_Fakes_.*elf0.*"))
     .AddSyst(cb, "Fakes_elf0", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().process(VS().a(".*_Fakes_elf1.*"))
+  cb.cp().backgrounds().process(VS().a(".*_Fakes_.*elf1.*"))
     .AddSyst(cb, "Fakes_elf1", "rateParam", SystMap<>::init(1.0));
 /* temporarily removing these until updated
   // // SFs for lepton ID factors
