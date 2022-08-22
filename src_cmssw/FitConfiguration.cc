@@ -98,6 +98,73 @@ void FitConfiguration::AddFakeLeptonSys(ch::CombineHarvester& cb, ProcessList& p
   cb.SetFlag("filters-use-regex", false);
 }
 
+void FitConfiguration::AddBJetSys(ch::CombineHarvester& cb, ProcessList& processes){
+  cb.SetFlag("filters-use-regex", true);
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*_0j.*1bISR.*").a(".*0L.*_1j.*1bISR.*"))
+     .AddSyst(cb, "BTAG_ISR_0L_01J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*_2j.*1bISR.*"))
+     .AddSyst(cb, "BTAG_ISR_0L_2J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*_3j.*1bISR.*").a(".*0L.*_4j.*1bISR.*").a(".*0L.*5j.*1bISR.*"))
+     .AddSyst(cb, "BTAG_ISR_0L_345J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*_1j.*1b.*S.*"))
+     .AddSyst(cb, "BTAG_S_0L_1J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*_2j.*1bS.*"))
+     .AddSyst(cb, "BTAG_S_0L_2J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*_2j.*2bS.*"))
+     .AddSyst(cb, "BTAG_S_0L_2J_2b", "rateParam", SystMapFunc<>::init
+         ("(@0*@0)","BTAG_S_0L_2J"));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*_3j.*1bS.*").a(".*0L.*_4j.*1bS.*").a(".*0L.*5j.*1bS.*"))
+     .AddSyst(cb, "BTAG_S_0L_345J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*_3j.*2bS.*").a(".*0L.*_4j.*2bS.*").a(".*0L.*5j.*2bS.*"))
+     .AddSyst(cb, "BTAG_S_0L_345J_2b", "rateParam", SystMapFunc<>::init
+         ("(@0*@0)","BTAG_S_0L_345J"));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*_0j.*1bISR.*").a(".*1L.*_1j.*1bISR.*"))
+     .AddSyst(cb, "BTAG_ISR_1L_01J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*_2j.*1bISR.*"))
+     .AddSyst(cb, "BTAG_ISR_1L_2J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*_3j.*1bISR.*").a(".*0L.*4j.*1bISR.*"))
+     .AddSyst(cb, "BTAG_ISR_1L_34J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*_1j.*1.*bS.*"))
+     .AddSyst(cb, "BTAG_S_1L_1J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*_2j.*1bS.*"))
+     .AddSyst(cb, "BTAG_S_1L_2J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*_2j.*2bS.*"))
+     .AddSyst(cb, "BTAG_S_1L_2J_2b", "rateParam", SystMapFunc<>::init
+         ("(@0*@0)","BTAG_S_1L_2J"));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*_3j.*1bS.*").a(".*1L.*4j.*1bS.*"))
+     .AddSyst(cb, "BTAG_S_1L_34J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*_3j.*2bS.*").a(".*1L.*4j.*2bS.*"))
+     .AddSyst(cb, "BTAG_S_1L_34J_2b", "rateParam", SystMapFunc<>::init
+         ("(@0*@0)","BTAG_S_1L_34J"));
+
+  cb.cp().backgrounds().bin(VS().a(".*2L.*1bISR.*"))
+     .AddSyst(cb, "BTAG_ISR_2L", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*2L.*1j1bS.*"))
+     .AddSyst(cb, "BTAG_S_2L_1J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*2L.*ge2jge1bS.*"))
+     .AddSyst(cb, "BTAG_S_2L_2J", "rateParam", SystMap<>::init(1.00));
+
+  cb.SetFlag("filters-use-regex", false);
+}
+
 void FitConfiguration::AddSVSys(ch::CombineHarvester& cb, ProcessList& processes){
   cb.SetFlag("filters-use-regex", true);
 
