@@ -4633,8 +4633,8 @@ void FitPlotter::InitializeRecipes(){
   m_Title["Wjets"] = "W + jets";
   m_Color["Wjets"] = 7001;
 
-  VS s_Fakes_HF;
-  s_Fakes_HF.a("Fakes_elf1G").a("Fakes_muf1G").a("Fakes_elf1S")
+  VS s_Fakes_LF;
+  s_Fakes_LF.a("Fakes_elf1G").a("Fakes_muf1G").a("Fakes_elf1S")
     .a("Fakes_muf1S").a("Fakes_elf1B").a("Fakes_muf1B")
     .a("Fakes_elf1Gelf1G").a("Fakes_muf1Gmuf1G").a("Fakes_elf1Gelf1S").a("Fakes_muf1Gmuf1S")
     .a("Fakes_elf1Gelf1B").a("Fakes_muf1Gmuf1B").a("Fakes_elf1Self1S").a("Fakes_muf1Smuf1S")
@@ -4650,8 +4650,8 @@ void FitPlotter::InitializeRecipes(){
     .a("Fakes_elf0Gmuf1G").a("Fakes_elf0Gmuf1S").a("Fakes_elf0Smuf1G").a("Fakes_elf0Gmuf1B")
     .a("Fakes_elf0Bmuf1G").a("Fakes_elf0Smuf1S").a("Fakes_elf0Smuf1B").a("Fakes_elf0Bmuf1S");
   
-  VS s_Fakes_LF;
-  s_Fakes_LF.a("Fakes_elf0G").a("Fakes_muf0G").a("Fakes_elf0S")
+  VS s_Fakes_HF;
+  s_Fakes_HF.a("Fakes_elf0G").a("Fakes_muf0G").a("Fakes_elf0S")
     .a("Fakes_muf0S").a("Fakes_elf0B").a("Fakes_muf0B")
     .a("Fakes_elf0Gelf0G").a("Fakes_muf0Gmuf0G").a("Fakes_elf0Gelf0S").a("Fakes_muf0Gmuf0S")
     .a("Fakes_elf0Gelf0B").a("Fakes_muf0Gmuf0B").a("Fakes_elf0Self0S").a("Fakes_muf0Smuf0S")

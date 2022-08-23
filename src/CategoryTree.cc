@@ -1165,6 +1165,16 @@ CategoryTree CategoryTreeTool::GetCategories_2L_flavorSplit() const {
   CategoryTree CT_0bISR(VS().a("0bISR"), "0 b #in ISR", "0b", kX_sub, true);
   CategoryTree CT_1bISR(VS().a("ge1bISR"), "#geq 1 b #in ISR", "1b", kX_sub, true);
   CategoryTree CT_inclbISR(VS().a("ge1jISR"), "incl. b #in ISR", "", kX_sub, true);
+  
+  CategoryTree CT_g0(VS().a("gamT0"), "", "#gamma-", kX_sup, false);
+  CategoryTree CT_g1(VS().a("gamT1"), "", "#gamma+", kX_sup, false);
+
+
+  CT_0bISR.AddSubCategory(CT_g0);
+  CT_0bISR.AddSubCategory(CT_g1);
+
+  CT_1bISR.AddSubCategory(CT_g0);
+  CT_1bISR.AddSubCategory(CT_g1); 
 
   CT_0b.AddSubCategory(CT_0bISR);
   CT_0b.AddSubCategory(CT_1bISR);
@@ -1180,26 +1190,6 @@ CategoryTree CategoryTreeTool::GetCategories_2L_flavorSplit() const {
   CategoryTree CT_0sv_notGold(VS().a("0svS"), "0sv", "0sv", kJ_sup, true);
   CategoryTree CT_1sv(VS().a("1svS"), "1sv", "1sv", kJ_sup, true);
 
-  CategoryTree CT_p0(VS().a("PTISR0"), "", "", kX_sup, false);
-  CategoryTree CT_p1(VS().a("PTISR1"), "", "p+", kX_sup, false);
-
-//  CategoryTree CT_g0(VS().a("gamT0"), "", "#gamma-", kX_sup, false);
-//  CategoryTree CT_g1(VS().a("gamT1"), "", "#gamma+", kX_sup, false);
-
- // CategoryTree CT_k0(VS().a("PTISR0_gamT0").a("PTISR0_gamT1").a("PTISR1_gamT0"), "", "k-", kX_sup, false);
-//  CategoryTree CT_k0(VS().a("PTISR0_gamT0").a("PTISR0_gamT1"), "", "k-", kX_sup, false);
-//  CategoryTree CT_k0_Z(VS().a("PTISR0_gamT0").a("PTISR0_gamT1"), "", "k-", kX_sup, false);
-  //CategoryTree CT_k1(VS().a("PTISR1_gamT1"), "", "k+", kX_sup, false);
-
-  //CategoryTree CT_k0_0(VS().a("PTISR0_gamT0").a("PTISR0_gamT1").a("PTISR1_gamT0"), "", "k-", kX_sup, false);
-//  CategoryTree CT_k0_0(VS().a("PTISR0_gamT0"), "", "k-", kX_sup, false);
-  //CategoryTree CT_k1_0(VS().a("PTISR1_gamT1"), "", "k+", kX_sup, false);
-
-  //CT_g0.AddSubCategory(CT_p0);
-  //CT_g0.AddSubCategory(CT_p1);
-  //CT_g1.AddSubCategory(CT_p0);
-  //CT_g1.AddSubCategory(CT_p1);
- 
   
   CT_1sv.AddSubCategory(CT_etaC);
   CT_1sv.AddSubCategory(CT_etaF);
