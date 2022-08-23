@@ -372,6 +372,7 @@ int main(int argc, char* argv[]) {
 
   VS ttbar;
   ttbar += "ttbar";
+ // ttbar += "ST";
 //   CONFIG.AddNormHierarchy( sm, ttbar, cb, processes) ;
    CONFIG.AddSJetNormSys("ttbar", ttbar, cb, processes);
 
@@ -396,13 +397,21 @@ CONFIG.AddSJetNormSys("Other", Other, cb, processes);
  ZDYDB += "ZDY";
  ZDYDB += "DB";
  CONFIG.AddSJetNormSys("ZDYDB", ZDYDB, cb, processes);
- 
+
  VS STTB;
  STTB += "ST";
  STTB += "TB";
  CONFIG.AddSJetNormSys("STTB", STTB, cb, processes);
- 
+/*
+VS ZDY;
+ZDY += "ZDY";
+CONFIG.AddSJetNormSys("ZDY",ZDY,cb, processes);
 
+VS DB;
+DB += "DB";
+//DBTB += "TB";
+CONFIG.AddSJetNormSys("DB",DB,cb, processes);
+*/
  using ch::syst::SystMap;
   using ch::syst::era;
   using ch::syst::channel;
