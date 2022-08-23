@@ -1165,6 +1165,15 @@ CategoryTree CategoryTreeTool::GetCategories_2L_flavorSplit() const {
   CategoryTree CT_0bISR(VS().a("0bISR"), "0 b #in ISR", "0b", kX_sub, true);
   CategoryTree CT_1bISR(VS().a("ge1bISR"), "#geq 1 b #in ISR", "1b", kX_sub, true);
   CategoryTree CT_inclbISR(VS().a("ge1jISR"), "incl. b #in ISR", "", kX_sub, true);
+CategoryTree CT_g0(VS().a("gamT0"), "", "#gamma-", kX_sup, false);
+  CategoryTree CT_g1(VS().a("gamT1"), "", "#gamma+", kX_sup, false);
+
+
+  CT_0bISR.AddSubCategory(CT_g0);
+  CT_0bISR.AddSubCategory(CT_g1);
+
+  CT_1bISR.AddSubCategory(CT_g0);
+  CT_1bISR.AddSubCategory(CT_g1);
 
   CT_0b.AddSubCategory(CT_0bISR);
   CT_0b.AddSubCategory(CT_1bISR);
