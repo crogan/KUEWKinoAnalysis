@@ -24,10 +24,24 @@ def checkKeys(data_1, data_2):
     result = (keys_1 == keys_2)
     return result
 
+# get mass difference: dm = mass_parent - mass_child 
+def getDM(mass_point):
+    masses = getMasses(mass_point)
+    dm = masses[0] - masses[1]
+    return dm
+
+# get masses from mass point: [parent mass, child mass]
+def getMasses(mass_point):
+    # remove ".0" from string
+    mass_point_clean = mass_point[:-2]
+    mass_parent = int(mass_point_clean[:-4]) 
+    mass_child  = int(mass_point_clean[-4:])
+    return [mass_parent, mass_child]
+
 def compare(data_1, data_2, output_csv_name):
     # check that dictionaries have the same keys 
     keysMatch = checkKeys(data_1, data_2)
-    output_column_titles = ["key", "r_1", "r_2", "r_2 - r_1", "r_2 / r_1", "(r_2 - r_1) / r_1"]
+    output_column_titles = ["key", "parent mass", "child mass", "dm", "r_1", "r_2", "r_2 - r_1", "r_2 / r_1", "(r_2 - r_1) / r_1"]
     if keysMatch:
         # output to csv file
         with open(output_csv_name, 'w') as output_csv:
@@ -38,13 +52,17 @@ def compare(data_1, data_2, output_csv_name):
             keys = list(data_1.keys())
             keys.sort()
             for key in keys:
+                masses      = getMasses(key)
+                mass_parent = masses[0]
+                mass_child  = masses[1]
+                dm          = getDM(key)
                 r_1         = data_1[key]["exp0"]
                 r_2         = data_2[key]["exp0"]
                 diff        = r_2 - r_1
                 ratio       = r_2 / r_1
                 perc_diff   = (r_2 - r_1) / r_1
-                #print("{0}: {1}, {2}, {3}, {4}, {5}".format(key, r_1, r_2, diff, ratio, perc_diff))
-                output_row = [key, r_1, r_2, diff, ratio, perc_diff]
+                #print("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}".format(key, mass_parent, mass_child, dm, r_1, r_2, diff, ratio, perc_diff))
+                output_row = [key, mass_parent, mass_child, dm, r_1, r_2, diff, ratio, perc_diff]
                 # write to csv file
                 output_writer.writerow(output_row)
     else:
