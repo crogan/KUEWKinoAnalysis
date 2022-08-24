@@ -27,7 +27,7 @@ def checkKeys(data_1, data_2):
 def compare(data_1, data_2, output_csv_name):
     # check that dictionaries have the same keys 
     keysMatch = checkKeys(data_1, data_2)
-    output_column_titles = ["key", "r_1", "r_2", "r_2 - r_1", "r_2 / r_1"]
+    output_column_titles = ["key", "r_1", "r_2", "r_2 - r_1", "r_2 / r_1", "(r_2 - r_1) / r_1"]
     if keysMatch:
         # output to csv file
         with open(output_csv_name, 'w') as output_csv:
@@ -38,12 +38,13 @@ def compare(data_1, data_2, output_csv_name):
             keys = list(data_1.keys())
             keys.sort()
             for key in keys:
-                exp0_1  = data_1[key]["exp0"]
-                exp0_2  = data_2[key]["exp0"]
-                diff    = exp0_2 - exp0_1
-                ratio   = exp0_2 / exp0_1
-                print("{0}: {1}, {2}, {3}, {4}".format(key, exp0_1, exp0_2, diff, ratio))
-                output_row = [key, exp0_1, exp0_2, diff, ratio]
+                r_1         = data_1[key]["exp0"]
+                r_2         = data_2[key]["exp0"]
+                diff        = r_2 - r_1
+                ratio       = r_2 / r_1
+                perc_diff   = (r_2 - r_1) / r_1
+                #print("{0}: {1}, {2}, {3}, {4}, {5}".format(key, r_1, r_2, diff, ratio, perc_diff))
+                output_row = [key, r_1, r_2, diff, ratio, perc_diff]
                 # write to csv file
                 output_writer.writerow(output_row)
     else:
