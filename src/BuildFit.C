@@ -359,6 +359,9 @@ int main(int argc, char* argv[]) {
   CONFIG.AddFakeLeptonSys(cb, processes);
   CONFIG.AddSVSys(cb, processes);
   CONFIG.AddBJetSys(cb, processes);
+  ProcessList proc_LF_Fakes = proc_fakes;
+  proc_LF_Fakes = proc_LF_Fakes.Filter("f1");
+  CONFIG.AddFakeSSSys(cb, proc_LF_Fakes);
   CONFIG.AddKinematicSys(cb, processes);
 
   VS Wjets; //removing norm wjets for hierarchy leave VS for later hier call

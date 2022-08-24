@@ -165,6 +165,15 @@ void FitConfiguration::AddBJetSys(ch::CombineHarvester& cb, ProcessList& process
   cb.SetFlag("filters-use-regex", false);
 }
 
+void FitConfiguration::AddFakeSSSys(ch::CombineHarvester& cb, ProcessList& processes){
+  cb.SetFlag("filters-use-regex", true);
+
+  cb.cp().backgrounds().bin(VS().a(".*2L.*SS.*"))
+     .AddSyst(cb, "Fake_LF_SS", "rateParam", SystMap<>::init(1.00));
+
+  cb.SetFlag("filters-use-regex", false);
+}
+
 void FitConfiguration::AddSVSys(ch::CombineHarvester& cb, ProcessList& processes){
   cb.SetFlag("filters-use-regex", true);
 
