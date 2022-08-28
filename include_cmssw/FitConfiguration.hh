@@ -39,7 +39,8 @@ public:
   void AddNormHierarchy( SystDict& sm, VS& proc, ch::CombineHarvester& cb, ProcessList& processes);
   
   void appSystDict( SystDict& sm , std::string label, std::vector<int> list);
-  void initSystDict( SystDict& sm );
+  void initSystDictW( SystDict& sm );
+  void initSystDictTtbar( SystDict& sm);
 };
 
 #endif

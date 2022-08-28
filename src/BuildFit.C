@@ -366,9 +366,9 @@ int main(int argc, char* argv[]) {
 
   VS Wjets; //removing norm wjets for hierarchy leave VS for later hier call
   Wjets += "Wjets";
-  SystDict sm;
-  CONFIG.initSystDict(sm);
-  CONFIG.AddNormHierarchy( sm, Wjets, cb,processes) ;
+  SystDict smW;
+  CONFIG.initSystDictW(smW);
+  CONFIG.AddNormHierarchy( smW, Wjets, cb,processes) ;
 //  cb.PrintSysts();
 //   CONFIG.AddSJetNormSys("Wjets", Wjets, cb, processes);
 
@@ -376,9 +376,11 @@ int main(int argc, char* argv[]) {
 
   VS ttbar;
   ttbar += "ttbar";
+  SystDict smtt;
  // ttbar += "ST";
-//   CONFIG.AddNormHierarchy( sm, ttbar, cb, processes) ;
-   CONFIG.AddSJetNormSys("ttbar", ttbar, cb, processes);
+   CONFIG.initSystDictTtbar(smtt);
+   CONFIG.AddNormHierarchy( smtt, ttbar, cb, processes) ;
+//   CONFIG.AddSJetNormSys("ttbar", ttbar, cb, processes);
 
   VS QCD;
   QCD += "QCD";

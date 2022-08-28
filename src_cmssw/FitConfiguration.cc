@@ -273,11 +273,12 @@ void FitConfiguration::AddKinematicSys(ch::CombineHarvester& cb, ProcessList& pr
 void FitConfiguration::appSystDict( SystDict& sd , std::string label, std::vector<int> list ){
         std::vector<std::pair<int,int>> plist{};
         for(int i=0; i< list.size(); i= i+2){
+	//	std::cout<<"DEBUG "<<label<<" "<<i<<"\n";
                 plist.push_back( std::pair<int,int>(list.at(i), list.at(i+1)));
         }
         sd[label] = plist;
 }
-void FitConfiguration::initSystDict( SystDict& sd){
+void FitConfiguration::initSystDictW( SystDict& sd){
         //hardcoding structures for hierarchy
 
 	//wjets hierarchy        	
@@ -301,8 +302,11 @@ void FitConfiguration::initSystDict( SystDict& sd){
 	appSystDict(sd, "Wjets3L_0jS_d1", std::vector<int>{1,0, 2,0, 3,0, 3,1, -1,1});
         appSystDict(sd, "Wjets3L_1jS_d2", std::vector<int>{3,1, -1,1});
 
-/*
+}
+void FitConfiguration::initSystDictTtbar( SystDict& sd){
+	std::cout<<"init ttbar"<<std::endl;
 	//ttjets decoupled norms
+/*
 	appSystDict(sd, "norm_ttbar0L_0jS", std::vector<int>{0,0, -1,1 });
         appSystDict(sd, "norm_ttbar0L_1jS", std::vector<int>{0,1, -1,1 });
         appSystDict(sd, "norm_ttbar0L_2jS", std::vector<int>{0,2, -1,1 });
@@ -322,11 +326,11 @@ void FitConfiguration::initSystDict( SystDict& sd){
 
         appSystDict(sd, "norm_ttbar3L_0jS", std::vector<int>{3,0, -1,1});
         appSystDict(sd, "norm_ttbar3L_1jS", std::vector<int>{3,1, -1,1});
-
+*/
 
 	//ttbar hierarchy
 	appSystDict(sd, "norm_ttbar0L_0jS", std::vector<int>{0,0, -1,1 });
-        appSystDict(sd, "norm_ttbar0L_1jS", std::vector<int>{0,1, 0,0  -1,1 });
+        appSystDict(sd, "norm_ttbar0L_1jS", std::vector<int>{0,1, 0,0,  -1,1 });
         appSystDict(sd, "norm_ttbar0L_2jS", std::vector<int>{0,2, 0,1, 0,0, -1,0 });
         appSystDict(sd, "norm_ttbar0L_3jS", std::vector<int>{2,2, 0,3, 0,2, 0,1, 0,0, 0,4, 0,5, -1,0 });
         appSystDict(sd, "norm_ttbar0L_4jS", std::vector<int>{0,4, 0,5, -1,0 });
@@ -340,11 +344,11 @@ void FitConfiguration::initSystDict( SystDict& sd){
 
         appSystDict(sd, "norm_ttbar2L_0jS", std::vector<int>{2,0, -1,1 });
         appSystDict(sd, "norm_ttbar2L_1jS", std::vector<int>{2,1, 2,0, -1,0 });
-        appSystDict(sd, "norm_ttbar2L_2jS", std::vector<int>{2,2, 2,1, -1,0 });
+        appSystDict(sd, "norm_ttbar2L_2jS", std::vector<int>{2,2, 2,1, 2,0, -1,0 });
 
         appSystDict(sd, "norm_ttbar3L_0jS", std::vector<int>{3,0, -1,1});
         appSystDict(sd, "norm_ttbar3L_1jS", std::vector<int>{2,2, 3,1, 3,0, -1,1});
-*/
+
 /*
 	appSystDict(sd, "Other0L_0jS_d3", std::vector<int>{0,0, -1,1 });
         appSystDict(sd, "Other0L_1jS_d2", std::vector<int>{0,1, 0,0, -1,0 });
@@ -353,8 +357,7 @@ void FitConfiguration::initSystDict( SystDict& sd){
         appSystDict(sd, "Other0L_4jS_d3", std::vector<int>{0,4, 0,5, -1,0 });
         appSystDict(sd, "Other0L_5jS_d4", std::vector<int>{0,5, -1,1});
 */
-	
-
+	std::cout<<"init ttbar end"<<std::endl;
 	
 }
 void FitConfiguration::AddNormHierarchy( SystDict& sd, VS& proc, ch::CombineHarvester& cb, ProcessList& processes){
