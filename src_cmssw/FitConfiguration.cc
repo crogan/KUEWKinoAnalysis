@@ -196,26 +196,38 @@ void FitConfiguration::AddSVSys(ch::CombineHarvester& cb, ProcessList& processes
 void FitConfiguration::AddKinematicSys(ch::CombineHarvester& cb, ProcessList& processes){
   cb.SetFlag("filters-use-regex", true);
 
-  cb.cp().backgrounds().bin(VS().a(".*0L.*.*0j.*S_.*.*gamT1.*").a(".*0L.*.*1j.*S_.*.*gamT1.*"))
-    .AddSyst(cb, "gamT_0L_01jS", "rateParam", SystMap<>::init(1.0));
+  cb.cp().backgrounds().bin(VS().a(".*0L.*.*2j.*S_.*.*gamT1.*"))
+    .AddSyst(cb, "gamT_0L_2jS", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().bin(VS().a(".*0L.*.*2j.*S_.*.*gamT1.*").a(".*0L.*.*3j.*S_.*.*gamT1.*").a(".*0L.*.*4j.*S_.*.*gamT1.*").a(".*0L.*.*5j.*S_.*.*gamT1.*"))
-    .AddSyst(cb, "gamT_0L_2345jS", "rateParam", SystMap<>::init(1.0));
+  cb.cp().backgrounds().bin(VS().a(".*0L.*.*3j.*S_.*.*gamT1.*"))
+    .AddSyst(cb, "gamT_0L_3jS", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().bin(VS().a(".*1L.*.*0j.*S_.*.*gamT1.*").a(".*1L.*.*1j.*S_.*.*gamT1.*"))
-    .AddSyst(cb, "gamT_1L_01jS", "rateParam", SystMap<>::init(1.0));
+  cb.cp().backgrounds().bin(VS().a(".*0L.*.*4j.*S_.*.*gamT1.*"))
+    .AddSyst(cb, "gamT_0L_4jS", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().bin(VS().a(".*1L.*.*2j.*S_.*.*gamT1.*").a(".*1L.*.*3j.*S_.*.*gamT1.*").a(".*1L.*.*4j.*S_.*.*gamT1.*"))
-    .AddSyst(cb, "gamT_1L_234jS", "rateParam", SystMap<>::init(1.0));
+  cb.cp().backgrounds().bin(VS().a(".*0L.*.*5j.*S_.*.*gamT1.*"))
+    .AddSyst(cb, "gamT_0L_5jS", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().bin(VS().a(".*2L.*.*0j.*S_.*.*gamT1.*").a(".*2L.*.*1j.*S_.*.*gamT1.*"))
-    .AddSyst(cb, "gamT_2L_01jS", "rateParam", SystMap<>::init(1.0));
+  cb.cp().backgrounds().bin(VS().a(".*1L.*.*1j.*S_.*.*gamT1.*"))
+    .AddSyst(cb, "gamT_1L_1jS", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().bin(VS().a(".*2L.*.*2j.*S_.*.*gamT1.*").a(".*2L.*.*3j.*S_.*.*gamT1.*"))
-    .AddSyst(cb, "gamT_2L_23jS", "rateParam", SystMap<>::init(1.0));
+  cb.cp().backgrounds().bin(VS().a(".*1L.*.*2j.*S_.*.*gamT1.*"))
+    .AddSyst(cb, "gamT_1L_2jS", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().bin(VS().a(".*3L.*.*0j.*S_.*.*gamT1.*").a(".*3L.*.*1j.*S_.*.*gamT1.*"))
-    .AddSyst(cb, "gamT_3L_01jS", "rateParam", SystMap<>::init(1.0));
+  cb.cp().backgrounds().bin(VS().a(".*1L.*.*3j.*S_.*.*gamT1.*"))
+    .AddSyst(cb, "gamT_1L_3jS", "rateParam", SystMap<>::init(1.0));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*.*4j.*S_.*.*gamT1.*"))
+    .AddSyst(cb, "gamT_1L_4jS", "rateParam", SystMap<>::init(1.0));
+
+  cb.cp().backgrounds().bin(VS().a(".*2L.*.*0j.*S_.*.*gamT1.*"))
+    .AddSyst(cb, "gamT_2L_0jS", "rateParam", SystMap<>::init(1.0));
+
+  cb.cp().backgrounds().bin(VS().a(".*2L.*.*1j.*S_.*.*gamT1.*"))
+    .AddSyst(cb, "gamT_2L_1jS", "rateParam", SystMap<>::init(1.0));
+
+  cb.cp().backgrounds().bin(VS().a(".*2L.*.*2j.*S_.*.*gamT1.*"))
+    .AddSyst(cb, "gamT_2L_2jS", "rateParam", SystMap<>::init(1.0));
 
   cb.cp().backgrounds().bin(VS().a(".*0L.*.*0j.*S_.*.*PTISR1.*"))
     .AddSyst(cb, "PTISR_0L_0jS", "rateParam", SystMap<>::init(1.0));
