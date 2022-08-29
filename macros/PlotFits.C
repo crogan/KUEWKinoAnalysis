@@ -2,9 +2,9 @@
 
 #include "../include/FitPlotter.hh"
 
-enum CatType{kFormat, kFine, kDefaultPlot};
+enum CatType{kFormat, kFine, kDefaultPlot, kFlavorSplit};
 
-void PlotFits(const string& fold1 = "BF_allBkgs_data_TChiWZincl_2016_noSmoothing_allchan_maskSR_7_11_22", const string& fold2 = "datacards/all/TChiWZ/4000350", const string& shapesFile = "8_15_22wShapes.root",  int lepNum = 1){
+void PlotFits(const string& fold1 = "BF_allBkgs_data_TChiWZincl_2016_noIDISO_allchan_maskSR_8_23_22", const string& fold2 = "datacards/all/TChiWZ/4000350", const string& shapesFile = "8_23_22wShapes.root",  int lepNum = 1){
   
 	string dateName = shapesFile.substr(0,8);
         string bfName = fold1.substr(2,fold1.size());
@@ -31,7 +31,7 @@ bool prefit = true;
 bool bfit = true;
 bool sbfit = false;
 bool ratio = true;
-CatType _catType = kDefaultPlot; 
+CatType _catType = kFine; 
   CategoryTreeTool CTTool;
 
   CategoryTree CT_0L;
@@ -49,6 +49,9 @@ else if(_catType == kFine){
   CT_1L = CTTool.GetCategories_1L_fineSplit();
   CT_2L = CTTool.GetCategories_2L_fineSplit();
   CT_3L = CTTool.GetCategories_3L();
+}
+else if(_catType == kFlavorSplit && lepNum == 2){
+  CT_2L = CTTool.GetCategories_2L_flavorSplit();
 }
 else{
   CT_0L = CTTool.GetCategories_0L();
@@ -77,7 +80,10 @@ else{
   vector<const CategoryTree*> CTs;
   int depth0, d, listDepth;
   if(_catType == kFormat) listDepth = 0;
-  else if(_catType == kFine) listDepth = 1;
+  else if(_catType == kFine && lepNum != 1) listDepth = 1;
+  else if(_catType == kFine && lepNum == 1) listDepth = 2;
+  else if(_catType == kFlavorSplit && lepNum != 2) {cout << "flavor split only for 2L" << endl; return;}
+  else if(_catType == kFlavorSplit && lepNum == 2) listDepth = 1;
   else listDepth = 0;
 cout << "listdepth: " << listDepth << endl;
   if(zeroL){
