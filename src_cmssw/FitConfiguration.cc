@@ -105,6 +105,82 @@ void FitConfiguration::AddFakeLeptonSys(ch::CombineHarvester& cb, ProcessList& p
 */
 }
 
+void FitConfiguration::AddBJetSys(ch::CombineHarvester& cb, ProcessList& processes){
+  cb.SetFlag("filters-use-regex", true);
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*_0j.*1bISR.*").a(".*0L.*_1j.*1bISR.*"))
+     .AddSyst(cb, "BTAG_ISR_0L_01J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*_2j.*1bISR.*"))
+     .AddSyst(cb, "BTAG_ISR_0L_2J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*_3j.*1bISR.*").a(".*0L.*_4j.*1bISR.*").a(".*0L.*5j.*1bISR.*"))
+     .AddSyst(cb, "BTAG_ISR_0L_345J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*_1j.*1b.*S.*"))
+     .AddSyst(cb, "BTAG_S_0L_1J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*_2j.*1bS.*"))
+     .AddSyst(cb, "BTAG_S_0L_2J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*_2j.*2bS.*"))
+     .AddSyst(cb, "BTAG_S_0L_2J_2b", "rateParam", SystMapFunc<>::init
+         ("(@0*@0)","BTAG_S_0L_2J"));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*_3j.*1bS.*").a(".*0L.*_4j.*1bS.*").a(".*0L.*5j.*1bS.*"))
+     .AddSyst(cb, "BTAG_S_0L_345J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*_3j.*2bS.*").a(".*0L.*_4j.*2bS.*").a(".*0L.*5j.*2bS.*"))
+     .AddSyst(cb, "BTAG_S_0L_345J_2b", "rateParam", SystMapFunc<>::init
+         ("(@0*@0)","BTAG_S_0L_345J"));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*_0j.*1bISR.*").a(".*1L.*_1j.*1bISR.*"))
+     .AddSyst(cb, "BTAG_ISR_1L_01J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*_2j.*1bISR.*"))
+     .AddSyst(cb, "BTAG_ISR_1L_2J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*_3j.*1bISR.*").a(".*0L.*4j.*1bISR.*"))
+     .AddSyst(cb, "BTAG_ISR_1L_34J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*_1j.*1.*bS.*"))
+     .AddSyst(cb, "BTAG_S_1L_1J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*_2j.*1bS.*"))
+     .AddSyst(cb, "BTAG_S_1L_2J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*_2j.*2bS.*"))
+     .AddSyst(cb, "BTAG_S_1L_2J_2b", "rateParam", SystMapFunc<>::init
+         ("(@0*@0)","BTAG_S_1L_2J"));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*_3j.*1bS.*").a(".*1L.*4j.*1bS.*"))
+     .AddSyst(cb, "BTAG_S_1L_34J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*_3j.*2bS.*").a(".*1L.*4j.*2bS.*"))
+     .AddSyst(cb, "BTAG_S_1L_34J_2b", "rateParam", SystMapFunc<>::init
+         ("(@0*@0)","BTAG_S_1L_34J"));
+
+  cb.cp().backgrounds().bin(VS().a(".*2L.*1bISR.*"))
+     .AddSyst(cb, "BTAG_ISR_2L", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*2L.*1j1bS.*"))
+     .AddSyst(cb, "BTAG_S_2L_1J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*2L.*ge2jge1bS.*"))
+     .AddSyst(cb, "BTAG_S_2L_2J", "rateParam", SystMap<>::init(1.00));
+
+  cb.SetFlag("filters-use-regex", false);
+}
+
+void FitConfiguration::AddFakeSSSys(ch::CombineHarvester& cb, ProcessList& processes){
+  cb.SetFlag("filters-use-regex", true);
+
+  cb.cp().backgrounds().bin(VS().a(".*2L.*SS.*"))
+     .AddSyst(cb, "Fake_LF_SS", "rateParam", SystMap<>::init(1.00));
+
+  cb.SetFlag("filters-use-regex", false);
+}
+
 void FitConfiguration::AddSVSys(ch::CombineHarvester& cb, ProcessList& processes){
   cb.SetFlag("filters-use-regex", true);
 
@@ -127,26 +203,38 @@ void FitConfiguration::AddSVSys(ch::CombineHarvester& cb, ProcessList& processes
 void FitConfiguration::AddKinematicSys(ch::CombineHarvester& cb, ProcessList& processes){
   cb.SetFlag("filters-use-regex", true);
 
-  cb.cp().backgrounds().bin(VS().a(".*0L.*.*0j.*S_.*.*gamT1.*").a(".*0L.*.*1j.*S_.*.*gamT1.*"))
-    .AddSyst(cb, "gamT_0L_01jS", "rateParam", SystMap<>::init(1.0));
+  cb.cp().backgrounds().bin(VS().a(".*0L.*.*2j.*S_.*.*gamT1.*"))
+    .AddSyst(cb, "gamT_0L_2jS", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().bin(VS().a(".*0L.*.*2j.*S_.*.*gamT1.*").a(".*0L.*.*3j.*S_.*.*gamT1.*").a(".*0L.*.*4j.*S_.*.*gamT1.*").a(".*0L.*.*5j.*S_.*.*gamT1.*"))
-    .AddSyst(cb, "gamT_0L_2345jS", "rateParam", SystMap<>::init(1.0));
+  cb.cp().backgrounds().bin(VS().a(".*0L.*.*3j.*S_.*.*gamT1.*"))
+    .AddSyst(cb, "gamT_0L_3jS", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().bin(VS().a(".*1L.*.*0j.*S_.*.*gamT1.*").a(".*1L.*.*1j.*S_.*.*gamT1.*"))
-    .AddSyst(cb, "gamT_1L_01jS", "rateParam", SystMap<>::init(1.0));
+  cb.cp().backgrounds().bin(VS().a(".*0L.*.*4j.*S_.*.*gamT1.*"))
+    .AddSyst(cb, "gamT_0L_4jS", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().bin(VS().a(".*1L.*.*2j.*S_.*.*gamT1.*").a(".*1L.*.*3j.*S_.*.*gamT1.*").a(".*1L.*.*4j.*S_.*.*gamT1.*"))
-    .AddSyst(cb, "gamT_1L_234jS", "rateParam", SystMap<>::init(1.0));
+  cb.cp().backgrounds().bin(VS().a(".*0L.*.*5j.*S_.*.*gamT1.*"))
+    .AddSyst(cb, "gamT_0L_5jS", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().bin(VS().a(".*2L.*.*0j.*S_.*.*gamT1.*").a(".*2L.*.*1j.*S_.*.*gamT1.*"))
-    .AddSyst(cb, "gamT_2L_01jS", "rateParam", SystMap<>::init(1.0));
+  cb.cp().backgrounds().bin(VS().a(".*1L.*.*1j.*S_.*.*gamT1.*"))
+    .AddSyst(cb, "gamT_1L_1jS", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().bin(VS().a(".*2L.*.*2j.*S_.*.*gamT1.*").a(".*2L.*.*3j.*S_.*.*gamT1.*"))
-    .AddSyst(cb, "gamT_2L_23jS", "rateParam", SystMap<>::init(1.0));
+  cb.cp().backgrounds().bin(VS().a(".*1L.*.*2j.*S_.*.*gamT1.*"))
+    .AddSyst(cb, "gamT_1L_2jS", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().bin(VS().a(".*3L.*.*0j.*S_.*.*gamT1.*").a(".*3L.*.*1j.*S_.*.*gamT1.*"))
-    .AddSyst(cb, "gamT_3L_01jS", "rateParam", SystMap<>::init(1.0));
+  cb.cp().backgrounds().bin(VS().a(".*1L.*.*3j.*S_.*.*gamT1.*"))
+    .AddSyst(cb, "gamT_1L_3jS", "rateParam", SystMap<>::init(1.0));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*.*4j.*S_.*.*gamT1.*"))
+    .AddSyst(cb, "gamT_1L_4jS", "rateParam", SystMap<>::init(1.0));
+
+  cb.cp().backgrounds().bin(VS().a(".*2L.*.*0j.*S_.*.*gamT1.*"))
+    .AddSyst(cb, "gamT_2L_0jS", "rateParam", SystMap<>::init(1.0));
+
+  cb.cp().backgrounds().bin(VS().a(".*2L.*.*1j.*S_.*.*gamT1.*"))
+    .AddSyst(cb, "gamT_2L_1jS", "rateParam", SystMap<>::init(1.0));
+
+  cb.cp().backgrounds().bin(VS().a(".*2L.*.*2j.*S_.*.*gamT1.*"))
+    .AddSyst(cb, "gamT_2L_2jS", "rateParam", SystMap<>::init(1.0));
 
   cb.cp().backgrounds().bin(VS().a(".*0L.*.*0j.*S_.*.*PTISR1.*"))
     .AddSyst(cb, "PTISR_0L_0jS", "rateParam", SystMap<>::init(1.0));
@@ -204,11 +292,12 @@ void FitConfiguration::AddKinematicSys(ch::CombineHarvester& cb, ProcessList& pr
 void FitConfiguration::appSystDict( SystDict& sd , std::string label, std::vector<int> list ){
         std::vector<std::pair<int,int>> plist{};
         for(int i=0; i< list.size(); i= i+2){
+	//	std::cout<<"DEBUG "<<label<<" "<<i<<"\n";
                 plist.push_back( std::pair<int,int>(list.at(i), list.at(i+1)));
         }
         sd[label] = plist;
 }
-void FitConfiguration::initSystDict( SystDict& sd){
+void FitConfiguration::initSystDictW( SystDict& sd){
         //hardcoding structures for hierarchy
 
 	//wjets hierarchy        	
@@ -232,8 +321,11 @@ void FitConfiguration::initSystDict( SystDict& sd){
 	appSystDict(sd, "Wjets3L_0jS_d1", std::vector<int>{1,0, 2,0, 3,0, 3,1, -1,1});
         appSystDict(sd, "Wjets3L_1jS_d2", std::vector<int>{3,1, -1,1});
 
-/*
+}
+void FitConfiguration::initSystDictTtbar( SystDict& sd){
+	std::cout<<"init ttbar"<<std::endl;
 	//ttjets decoupled norms
+/*
 	appSystDict(sd, "norm_ttbar0L_0jS", std::vector<int>{0,0, -1,1 });
         appSystDict(sd, "norm_ttbar0L_1jS", std::vector<int>{0,1, -1,1 });
         appSystDict(sd, "norm_ttbar0L_2jS", std::vector<int>{0,2, -1,1 });
@@ -253,11 +345,11 @@ void FitConfiguration::initSystDict( SystDict& sd){
 
         appSystDict(sd, "norm_ttbar3L_0jS", std::vector<int>{3,0, -1,1});
         appSystDict(sd, "norm_ttbar3L_1jS", std::vector<int>{3,1, -1,1});
-
+*/
 
 	//ttbar hierarchy
 	appSystDict(sd, "norm_ttbar0L_0jS", std::vector<int>{0,0, -1,1 });
-        appSystDict(sd, "norm_ttbar0L_1jS", std::vector<int>{0,1, 0,0  -1,1 });
+        appSystDict(sd, "norm_ttbar0L_1jS", std::vector<int>{0,1, 0,0,  -1,1 });
         appSystDict(sd, "norm_ttbar0L_2jS", std::vector<int>{0,2, 0,1, 0,0, -1,0 });
         appSystDict(sd, "norm_ttbar0L_3jS", std::vector<int>{2,2, 0,3, 0,2, 0,1, 0,0, 0,4, 0,5, -1,0 });
         appSystDict(sd, "norm_ttbar0L_4jS", std::vector<int>{0,4, 0,5, -1,0 });
@@ -271,11 +363,11 @@ void FitConfiguration::initSystDict( SystDict& sd){
 
         appSystDict(sd, "norm_ttbar2L_0jS", std::vector<int>{2,0, -1,1 });
         appSystDict(sd, "norm_ttbar2L_1jS", std::vector<int>{2,1, 2,0, -1,0 });
-        appSystDict(sd, "norm_ttbar2L_2jS", std::vector<int>{2,2, 2,1, -1,0 });
+        appSystDict(sd, "norm_ttbar2L_2jS", std::vector<int>{2,2, 2,1, 2,0, -1,0 });
 
         appSystDict(sd, "norm_ttbar3L_0jS", std::vector<int>{3,0, -1,1});
         appSystDict(sd, "norm_ttbar3L_1jS", std::vector<int>{2,2, 3,1, 3,0, -1,1});
-*/
+
 /*
 	appSystDict(sd, "Other0L_0jS_d3", std::vector<int>{0,0, -1,1 });
         appSystDict(sd, "Other0L_1jS_d2", std::vector<int>{0,1, 0,0, -1,0 });
@@ -284,8 +376,7 @@ void FitConfiguration::initSystDict( SystDict& sd){
         appSystDict(sd, "Other0L_4jS_d3", std::vector<int>{0,4, 0,5, -1,0 });
         appSystDict(sd, "Other0L_5jS_d4", std::vector<int>{0,5, -1,1});
 */
-	
-
+	std::cout<<"init ttbar end"<<std::endl;
 	
 }
 void FitConfiguration::AddNormHierarchy( SystDict& sd, VS& proc, ch::CombineHarvester& cb, ProcessList& processes){

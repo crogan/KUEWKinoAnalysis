@@ -1167,6 +1167,7 @@ CategoryTree CategoryTreeTool::GetCategories_2L_flavorSplit() const {
   CategoryTree CT_inclbISR(VS().a("ge1jISR"), "incl. b #in ISR", "", kX_sub, true);
   
   CategoryTree CT_g0(VS().a("gamT0"), "", "#gamma-", kX_sup, false);
+
   CategoryTree CT_g1(VS().a("gamT1"), "", "#gamma+", kX_sup, false);
 
 
@@ -1183,7 +1184,6 @@ CategoryTree CategoryTreeTool::GetCategories_2L_flavorSplit() const {
   
   CategoryTree CT_etaC(VS().a("SVeta0"), "|#eta^{SV}| #leq 1.5", "svc", kX_sup, true);
   CategoryTree CT_etaF(VS().a("SVeta1"), "|#eta^{SV}| > 1.5", "svf", kX_sup, true);
-  
   
   CategoryTree CT_0sv_OS(VS().a("0svS"), "0sv", "0sv", kJ_sup, true);
   CategoryTree CT_0sv_SS(VS().a("0svS"), "0sv", "0sv", kJ_sup, true);
@@ -1208,13 +1208,11 @@ CategoryTree CategoryTreeTool::GetCategories_2L_flavorSplit() const {
   CategoryTree CT_OSmumu(VS().a("_OSmumu"),"mumu","mumu",kL_sup,false);
   CategoryTree CT_OSelmu(VS().a("_OSelmu"),"elmu","elmu",kL_sup,false);
   CategoryTree CT_OSelel(VS().a("_OSelel"),"elel","elel",kL_sup,false);
-  
 
 //silver, bronze only
   CategoryTree CT_elel_0j(VS().a("elel"), "elel", "elel", kL_sup, true);
   CategoryTree CT_elmu_0j(VS().a("elmu"), "elmu", "elmu", kL_sup, true);
   CategoryTree CT_mumu_0j(VS().a("mumu"),"mumu","mumu",kL_sup, true);
- 
   CategoryTree CT_elel(VS().a("elel"), "elel", "elel", kL_sup, true);
   CategoryTree CT_elmu(VS().a("elmu"), "elmu", "elmu", kL_sup, true);
   CategoryTree CT_mumu(VS().a("mumu"),"mumu","mumu",kL_sup, true);
@@ -1251,15 +1249,12 @@ CategoryTree CategoryTreeTool::GetCategories_2L_flavorSplit() const {
   CT_elmu_0j.AddSubCategory(CT_0sv_notGold);
   CT_mumu_0j.AddSubCategory(CT_0sv_notGold);
 
-
-  
   CategoryTree CT_0j(VS().a("_0j"), "", "0J", kJ, true);
   CategoryTree CT_1j(VS().a("_1j"), "", "1J", kJ, true);
   CategoryTree CT_ge2j(VS().a("_ge2j"), "#geq 2 j #in S", "2J", kJ, true);
   CategoryTree CT_0j_notGold(VS().a("_0j"), "", "0J", kJ, true);
   CategoryTree CT_1j_notGold(VS().a("_1j"), "", "1J", kJ, true);
   CategoryTree CT_ge2j_notGold(VS().a("_ge2j"), "#geq 2 j #in S", "2J", kJ, true);
-  
   CT_0j.AddSubCategory(CT_ll);
   CT_0j.AddSubCategory(CT_SS_0);
   CT_0j.AddSubCategory(CT_OS);
@@ -1291,7 +1286,6 @@ CategoryTree CategoryTreeTool::GetCategories_2L_flavorSplit() const {
   CT_gold.AddSubCategory(CT_0j);
   CT_gold.AddSubCategory(CT_1j);
   CT_gold.AddSubCategory(CT_ge2j);
- 
   CT_silver.AddSubCategory(CT_0j_notGold);
   CT_silver.AddSubCategory(CT_1j_notGold);
   CT_silver.AddSubCategory(CT_ge2j_notGold);

@@ -138,6 +138,7 @@ public:
   CategoryTree GetCategories_2L_flavorSplit() const;
   CategoryTree GetCategories_2L_plotFormat() const;
   CategoryTree GetCategories_2L_fineSplit() const;
+  CategoryTree GetCategories_2L_flavorSplit() const;
   CategoryTree GetCategories_3L_plotFormat() const;
   CategoryTree GetCategories_Plot1L() const;
 };

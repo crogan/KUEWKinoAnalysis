@@ -62,8 +62,8 @@ int main(int argc, char* argv[]) {
       smoothFakes = true;
       smoothQCD   = true;
       shapeFakes  = true;
-      shapeQCD    = true;
-      shapeWjets  = true;
+      shapeQCD    = false;
+      shapeWjets  = false;
     }
     if(strncmp(argv[i],"-smoothAll", 10) == 0){
       smoothFakes = true;
@@ -78,7 +78,7 @@ int main(int argc, char* argv[]) {
     if(strncmp(argv[i],"-shapeAll", 10) == 0){
       shapeFakes = true;
       shapeQCD   = true;
-      shapeWjets   = true;
+      //shapeWjets   = true;
     }
     if(strncmp(argv[i],"-shapeFakes", 11) == 0){
       shapeFakes = true;
@@ -116,7 +116,7 @@ int main(int argc, char* argv[]) {
     cout << "   --input(-i) [file]  input root file" << endl;
     cout << "   --output(-o) [fold] output root file" << endl;
     cout << "   -default            runs the default smoothing and shape configuration as agreed upon by everyone" << endl;
-    cout << "                       currently the default is -smoothFakes -smoothQCD -shapeFakes -shapeQCD -shapeWjets" << endl;
+    cout << "                       currently the default is -smoothFakes -smoothQCD -shapeFakes" << endl;
     cout << "   -smoothAll          smooth fake lep and QCD contributions" << endl;
     cout << "   -smoothFakes        smooth fake lep contributions" << endl;
     cout << "   -smoothQCD          smooth QCD contributions" << endl;
