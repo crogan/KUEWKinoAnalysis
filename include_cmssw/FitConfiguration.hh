@@ -29,6 +29,8 @@ public:
   void AddCommonSys(ch::CombineHarvester& cb, ProcessList& processes);
   void AddFakeLeptonSys(ch::CombineHarvester& cb, ProcessList& processes);
   void AddSVSys(ch::CombineHarvester& cb, ProcessList& processes);
+  void AddBJetSys(ch::CombineHarvester& cb, ProcessList& processes);
+  void AddFakeSSSys(ch::CombineHarvester& cb, ProcessList& processes);
   void AddKinematicSys(ch::CombineHarvester& cb, ProcessList& processes);
   void AddSJetNormSys(const string& label, VS& procs, ch::CombineHarvester& cb, ProcessList& processes);
 
@@ -37,7 +39,8 @@ public:
   void AddNormHierarchy( SystDict& sm, VS& proc, ch::CombineHarvester& cb, ProcessList& processes);
   
   void appSystDict( SystDict& sm , std::string label, std::vector<int> list);
-  void initSystDict( SystDict& sm );
+  void initSystDictW( SystDict& sm );
+  void initSystDictTtbar( SystDict& sm);
 };
 
 #endif
