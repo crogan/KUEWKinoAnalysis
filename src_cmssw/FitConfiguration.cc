@@ -58,41 +58,48 @@ void FitConfiguration::AddFakeLeptonSys(ch::CombineHarvester& cb, ProcessList& p
   cb.SetFlag("filters-use-regex", true);
 
   // // overall factors for amount of each type of fake
-  cb.cp().backgrounds().process(VS().a(".*_Fakes_muf0.*"))
+  cb.cp().backgrounds().process(VS().a(".*_Fakes_.*muf0.*"))
     .AddSyst(cb, "Fakes_muf0", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().process(VS().a(".*_Fakes_muf1.*"))
+  cb.cp().backgrounds().process(VS().a(".*_Fakes_.*muf1.*"))
     .AddSyst(cb, "Fakes_muf1", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().process(VS().a(".*_Fakes_elf0.*"))
+  cb.cp().backgrounds().process(VS().a(".*_Fakes_.*elf0.*"))
     .AddSyst(cb, "Fakes_elf0", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().process(VS().a(".*_Fakes_elf1.*"))
+  cb.cp().backgrounds().process(VS().a(".*_Fakes_.*elf1.*"))
     .AddSyst(cb, "Fakes_elf1", "rateParam", SystMap<>::init(1.0));
 // temporarily removing these until updated
    // SFs for lepton ID factors
-  cb.cp().backgrounds().process(processes.Filter("muf0B").GetProcesses())
-    .AddSyst(cb, "IDISO_muf0", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().process(processes.Filter("muf1B").GetProcesses())
-    .AddSyst(cb, "IDISO_muf1", "rateParam", SystMap<>::init(1.0));
+ // cb.cp().backgrounds().process(VS().a(".*_Fakes_.*muf0B.*"))
+ //   .AddSyst(cb, "IDISO_muf0", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().process(processes.Filter("elf0B").GetProcesses())
-    .AddSyst(cb, "IDISO_elf0", "rateParam", SystMap<>::init(1.0));
+ // cb.cp().backgrounds().process(VS().a(".*_Fakes_.*muf1B.*"))
+ //   .AddSyst(cb, "IDISO_muf1", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().process(processes.Filter("elf1B").GetProcesses())
+ // cb.cp().backgrounds().bin(VS().a(".*Ch1L.*")).process(VS().a(".*_Fakes_.*elf0B.*"))
+ //   .AddSyst(cb, "IDISO_elf0_1L", "rateParam", SystMap<>::init(1.0));
+ // cb.cp().backgrounds().bin(VS().a(".*Ch2L.*")).process(VS().a(".*_Fakes_.*elf0B.*"))
+ //   .AddSyst(cb, "IDISO_elf0_2L", "rateParam", SystMap<>::init(1.0));
+ // cb.cp().backgrounds().bin(VS().a(".*Ch3L.*")).process(VS().a(".*_Fakes_.*elf0B.*"))
+ //   .AddSyst(cb, "IDISO_elf0_3L", "rateParam", SystMap<>::init(1.0));
+  //cb.cp().backgrounds().process(VS().a(".*_Fakes_.*elf0B.*"))
+  //  .AddSyst(cb, "IDISO_elf0", "rateParam", SystMap<>::init(1.0));
+
+  cb.cp().backgrounds().process(VS().a(".*_Fakes_.*elf1B.*"))
     .AddSyst(cb, "IDISO_elf1", "rateParam", SystMap<>::init(1.0));
 /*
-  cb.cp().backgrounds().process(VS().a(".*_Fakes_muf0.*")).bin(VS().a(".*mu.*slvr.*"))
+  cb.cp().backgrounds().process(VS().a(".*_Fakes_.*muf0S.*"))
     .AddSyst(cb, "SIP3D_muf0", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().process(VS().a(".*_Fakes_muf1.*")).bin(VS().a(".*mu.*slvr.*"))
+  cb.cp().backgrounds().process(VS().a(".*_Fakes_.*muf1S.*"))
     .AddSyst(cb, "SIP3D_muf1", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().process(VS().a(".*_Fakes_elf0.*")).bin(VS().a(".*el.*slvr.*"))
+  cb.cp().backgrounds().process(VS().a(".*_Fakes_.*elf0S.*"))
     .AddSyst(cb, "SIP3D_elf0", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().process(VS().a(".*_Fakes_elf1.*")).bin(VS().a(".*el.*slvr.*"))
+  cb.cp().backgrounds().process(VS().a(".*_Fakes_.*elf1S.*"))
     .AddSyst(cb, "SIP3D_elf1", "rateParam", SystMap<>::init(1.0));
   cb.SetFlag("filters-use-regex", false);
 */
