@@ -71,26 +71,18 @@ void FitConfiguration::AddFakeLeptonSys(ch::CombineHarvester& cb, ProcessList& p
     .AddSyst(cb, "Fakes_elf1", "rateParam", SystMap<>::init(1.0));
 // temporarily removing these until updated
    // SFs for lepton ID factors
+ cb.cp().backgrounds().process(VS().a(".*_Fakes_.*muf0B.*"))
+    .AddSyst(cb, "IDISO_muf0", "rateParam", SystMap<>::init(1.0));
 
- // cb.cp().backgrounds().process(VS().a(".*_Fakes_.*muf0B.*"))
- //   .AddSyst(cb, "IDISO_muf0", "rateParam", SystMap<>::init(1.0));
+  cb.cp().backgrounds().process(VS().a(".*_Fakes_.*muf1B.*"))
+    .AddSyst(cb, "IDISO_muf1", "rateParam", SystMap<>::init(1.0));
 
- // cb.cp().backgrounds().process(VS().a(".*_Fakes_.*muf1B.*"))
- //   .AddSyst(cb, "IDISO_muf1", "rateParam", SystMap<>::init(1.0));
-
- // cb.cp().backgrounds().bin(VS().a(".*Ch1L.*")).process(VS().a(".*_Fakes_.*elf0B.*"))
- //   .AddSyst(cb, "IDISO_elf0_1L", "rateParam", SystMap<>::init(1.0));
- // cb.cp().backgrounds().bin(VS().a(".*Ch2L.*")).process(VS().a(".*_Fakes_.*elf0B.*"))
- //   .AddSyst(cb, "IDISO_elf0_2L", "rateParam", SystMap<>::init(1.0));
- // cb.cp().backgrounds().bin(VS().a(".*Ch3L.*")).process(VS().a(".*_Fakes_.*elf0B.*"))
- //   .AddSyst(cb, "IDISO_elf0_3L", "rateParam", SystMap<>::init(1.0));
-  //cb.cp().backgrounds().process(VS().a(".*_Fakes_.*elf0B.*"))
-  //  .AddSyst(cb, "IDISO_elf0", "rateParam", SystMap<>::init(1.0));
+  cb.cp().backgrounds().process(VS().a(".*_Fakes_.*elf0B.*"))
+    .AddSyst(cb, "IDISO_elf0", "rateParam", SystMap<>::init(1.0));
 
   cb.cp().backgrounds().process(VS().a(".*_Fakes_.*elf1B.*"))
     .AddSyst(cb, "IDISO_elf1", "rateParam", SystMap<>::init(1.0));
-/*
-  cb.cp().backgrounds().process(VS().a(".*_Fakes_.*muf0S.*"))
+ cb.cp().backgrounds().process(VS().a(".*_Fakes_.*muf0S.*"))
     .AddSyst(cb, "SIP3D_muf0", "rateParam", SystMap<>::init(1.0));
 
   cb.cp().backgrounds().process(VS().a(".*_Fakes_.*muf1S.*"))
@@ -102,7 +94,7 @@ void FitConfiguration::AddFakeLeptonSys(ch::CombineHarvester& cb, ProcessList& p
   cb.cp().backgrounds().process(VS().a(".*_Fakes_.*elf1S.*"))
     .AddSyst(cb, "SIP3D_elf1", "rateParam", SystMap<>::init(1.0));
   cb.SetFlag("filters-use-regex", false);
-*/
+
 }
 
 void FitConfiguration::AddBJetSys(ch::CombineHarvester& cb, ProcessList& processes){
@@ -543,4 +535,101 @@ void FitConfiguration::AddShapeSysAsNorm(const Systematic& sys, ch::CombineHarve
   }
   
   cb.SetFlag("filters-use-regex", false);
+}
+
+
+void FitConfiguration::AddLeptonQualityNormSys(ch::CombineHarvester& cb, ProcessList& processes){
+  cb.SetFlag("filters-use-regex", true);
+
+
+  cb.cp().backgrounds().bin(VS().a(".*slvr.*"))
+    .AddSyst(cb, "norm_silver", "rateParam", SystMap<>::init(1.0));
+
+  cb.cp().backgrounds().bin(VS().a(".*bron.*"))
+    .AddSyst(cb, "norm_bronze", "rateParam", SystMap<>::init(1.0));
+
+
+  cb.SetFlag("filters-use-regex", false);
+
+}
+
+void FitConfiguration::AddSJetLeptonQualityNormSys(ch::CombineHarvester& cb, ProcessList& processes){
+  cb.SetFlag("filters-use-regex", true);
+    ProcessList plist = processes.Filter(kBkg).Remove("Fakes");
+
+  cb.cp().process(plist.GetProcesses()).bin(VS().a(".*1L.*slvr.*0j.*S_.*"))
+    .AddSyst(cb, "norm_silver_1L_0J", "rateParam", SystMap<>::init(1.0));
+  
+  cb.cp().backgrounds().bin(VS().a(".*1L.*slvr.*1j.*S_.*"))
+    .AddSyst(cb, "norm_silver_1L_1J", "rateParam", SystMap<>::init(1.0));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*slvr.*2j.*S_.*slvr"))
+    .AddSyst(cb, "norm_silver_1L_2J", "rateParam", SystMap<>::init(1.0));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*slvr.*3j.*S_.*"))
+    .AddSyst(cb, "norm_silver_1L_3J", "rateParam", SystMap<>::init(1.0));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*slvr.*4j.*S_.*"))
+    .AddSyst(cb, "norm_silver_1L_4J", "rateParam", SystMap<>::init(1.0));
+  
+  cb.cp().backgrounds().bin(VS().a(".*2L.*slvr.*0j.*S_.*"))
+    .AddSyst(cb, "norm_silver_2L_0J", "rateParam", SystMap<>::init(1.0));
+
+  cb.cp().backgrounds().bin(VS().a(".*2L.*slvr.*1j.*S_.*"))
+    .AddSyst(cb, "norm_silver_2L_1J", "rateParam", SystMap<>::init(1.0));
+
+  cb.cp().backgrounds().bin(VS().a(".*2L.*slvr.*2j.*S_.*"))
+    .AddSyst(cb, "norm_silver_2L_2J", "rateParam", SystMap<>::init(1.0));
+
+  cb.cp().backgrounds().bin(VS().a(".*2L.*slvr.*2j.*S_.*"))
+    .AddSyst(cb, "norm_silver_2L_2J", "rateParam", SystMap<>::init(1.0));
+
+  cb.cp().backgrounds().bin(VS().a(".*3L.*slvr.*0j.*S_.*"))
+    .AddSyst(cb, "norm_silver_3L_0J", "rateParam", SystMap<>::init(1.0));
+
+  cb.cp().backgrounds().bin(VS().a(".*3L.*slvr.*1j.*S_.*"))
+    .AddSyst(cb, "norm_silver_3L_1J", "rateParam", SystMap<>::init(1.0));
+
+  cb.cp().backgrounds().bin(VS().a(".*3L.*slvr.*inclS_.*"))
+    .AddSyst(cb, "norm_silver_3L_inclJ", "rateParam", SystMap<>::init(1.0));
+  
+  cb.cp().backgrounds().bin(VS().a(".*1L.*bron.*0j.*S_.*"))
+    .AddSyst(cb, "norm_bronze_1L_0J", "rateParam", SystMap<>::init(1.0));
+  
+  cb.cp().backgrounds().bin(VS().a(".*1L.*bron.*1j.*S_.*bron"))
+    .AddSyst(cb, "norm_bronze_1L_1J", "rateParam", SystMap<>::init(1.0));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*bron.*2j.*S_.*"))
+    .AddSyst(cb, "norm_bronze_1L_2J", "rateParam", SystMap<>::init(1.0));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*bron.*3j.*S_.*"))
+    .AddSyst(cb, "norm_bronze_1L_3J", "rateParam", SystMap<>::init(1.0));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*.bron.*4j.*S_.*"))
+    .AddSyst(cb, "norm_bronze_1L_4J", "rateParam", SystMap<>::init(1.0));
+  
+  cb.cp().backgrounds().bin(VS().a(".*2L.*bron.*0j.*S_.*"))
+    .AddSyst(cb, "norm_bronze_2L_0J", "rateParam", SystMap<>::init(1.0));
+
+  cb.cp().backgrounds().bin(VS().a(".*2L.*bron.*1j.*S_.*"))
+    .AddSyst(cb, "norm_bronze_2L_1J", "rateParam", SystMap<>::init(1.0));
+
+  cb.cp().backgrounds().bin(VS().a(".*2L.*bron.*2j.*S_.*"))
+    .AddSyst(cb, "norm_bronze_2L_2J", "rateParam", SystMap<>::init(1.0));
+
+  cb.cp().backgrounds().bin(VS().a(".*2L.*bron.*2j.*S_.*"))
+    .AddSyst(cb, "norm_bronze_2L_2J", "rateParam", SystMap<>::init(1.0));
+
+  cb.cp().backgrounds().bin(VS().a(".*3L.*bron.*0j.*S_.*"))
+    .AddSyst(cb, "norm_bronze_3L_0J", "rateParam", SystMap<>::init(1.0));
+
+  cb.cp().backgrounds().bin(VS().a(".*3L.*bron.*1j.*S_.*"))
+    .AddSyst(cb, "norm_bronze_3L_1J", "rateParam", SystMap<>::init(1.0));
+
+  cb.cp().backgrounds().bin(VS().a(".*3L.*bron.*inclS_.*"))
+    .AddSyst(cb, "norm_bronze_3L_inclJ", "rateParam", SystMap<>::init(1.0));
+
+
+  cb.SetFlag("filters-use-regex", false);
+
 }
