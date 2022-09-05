@@ -357,8 +357,8 @@ map<string,VC> catBins;
   //CONFIG.Configure(cb, processes);
 
   VS bkg_rate;
-//  bkg_rate += "ttbar"; //removing for ttbar hierarchy testing
-//  bkg_rate += "Wjets"; //removing scale wjets for hierarchy
+  bkg_rate += "ttbar"; //removing for ttbar hierarchy testing
+  bkg_rate += "Wjets"; //removing scale wjets for hierarchy
   bkg_rate += "ZDY";
   bkg_rate += "QCD";
   bkg_rate += "DB";
