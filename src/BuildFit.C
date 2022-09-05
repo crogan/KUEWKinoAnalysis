@@ -381,6 +381,8 @@ cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
   proc_LF_Fakes = proc_LF_Fakes.Filter("f1");
   CONFIG.AddFakeSSSys(cb, proc_LF_Fakes);
   CONFIG.AddKinematicSys(cb, processes);
+  //CONFIG.AddLeptonQualityNormSys(cb, processes);
+  CONFIG.AddSJetLeptonQualityNormSys(cb, processes);
 
   VS Wjets; //removing norm wjets for hierarchy leave VS for later hier call
   Wjets += "Wjets";
