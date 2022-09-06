@@ -107,7 +107,6 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
 if __name__ == "__main__":
     if not len(sys.argv) > 1 or '-h' in sys.argv or '--help' in sys.argv:
         print "Usage: %s [-q queue] [-tree treename] [-list listfile.list] [-maxN N] [-split S] [--sms] [--dryrun]" % sys.argv[0]
-        print
         sys.exit(1)
 
     argv_pos    = 1
@@ -145,11 +144,17 @@ if __name__ == "__main__":
         DRY_RUN = 1
         argv_pos += 1
         
-    
     if SPLIT <= 1:
         SPLIT = 1
     else:
         MAXN = 1
+    
+    print " --- Preparing condor submission to create ntuples."
+    if DO_DATA:
+        print "Processing Data"
+
+    if DO_SMS:
+        print "Processing SMS"
     
     # input sample list
     listfile = LIST
@@ -158,18 +163,6 @@ if __name__ == "__main__":
 
     NAME = listname.replace(".list",'')
     
-    if DO_DATA:
-        print "Processing Data"
-
-    if DO_SMS:
-        print "Processing as SMS"
-    
-    print "maxN is %d" % MAXN
-    print "split is %d" % SPLIT
-    print listname
-    print NAME
-    print RUN_DIR
-        
     # create and organize output folders
     TARGET  = RUN_DIR+"/"+NAME+"/"
     os.system("rm -rf "+TARGET)
@@ -227,9 +220,6 @@ if __name__ == "__main__":
     os.system("cp "+RESTFRAMES+" "+config+".")
     os.system("cp "+CMSSW_SETUP+" "+config+".")
 
-    print TARGET
-    #os.system("tar -czf "+TARGET+"/config.tgz "+config)
-
     # output root files
     ROOT = OUT+"/"+NAME+"/"
     if ROOT == TARGET:
@@ -245,7 +235,7 @@ if __name__ == "__main__":
         for flist in inputlist:
             if '#' in flist: continue
             flist = flist.strip('\n\r')
-            print "Processing list from %s" % flist
+            #print "Processing list from %s" % flist
 
             listfile = LIST
             listname = listfile.split("/")
@@ -307,10 +297,10 @@ if __name__ == "__main__":
         script_name = srcdir+'_'.join([dataset, filetag])+'.submit'
         write_sh(script_name, overlist_name, file_name+'.root', logfile, outfile, errfile, dataset, filetag, SPLIT)
 
-    print listdir
+    #print listdir
     os.system("cp -r "+listdir+" "+config)
-    print "creating tarbal from: ", TARGET
-    os.system("tar -C "+config+"/../ -czvf "+TARGET+"/config.tgz config")
+    #print "creating tarbal from: ", TARGET
+    os.system("tar -C "+config+"/../ -czf "+TARGET+"/config.tgz config")
 
     submit_dir  = srcdir        
     submit_list = [os.path.join(submit_dir, f) for f in os.listdir(submit_dir) if (os.path.isfile(os.path.join(submit_dir, f)) and ('.submit' in f))]
@@ -322,14 +312,16 @@ if __name__ == "__main__":
             os.system('condor_submit ' + f)
     
     # Summary
-    print "------------------------------"
+    print "------------------------"
     print "Submission Info"
-    print "------------------------------"
-    print "maxN  = {0}".format(MAXN)
-    print "split = {0}".format(SPLIT)
-    print "Number of condor submissions: {0}".format(n_submit)
-    print "Number of condor jobs: {0}".format(-1)
-    print "------------------------------"
+    print "------------------------"
+    print "maxN:                {0}".format(MAXN)
+    print "split:               {0}".format(SPLIT)
+    print "condor submissions:  {0}".format(n_submit)
+    print "condor jobs:         {0}".format(-1)
+    print "list name:           {0}".format(listname)
+    print "target directory:    {0}".format(TARGET)
+    print "------------------------"
 
     if DRY_RUN:
         print "The option --dryrun was used; no jobs were submitted."
