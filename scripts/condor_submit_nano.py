@@ -11,7 +11,6 @@ RUN_DIR = pwd
 TEMP    = pwd
 jobEXE  = "execute_script.sh"
 EXE     = "MakeReducedNtuple_NANO.x"
-#EXE  = "MakeEventCount_NANO.x"
 RESTFRAMES  = './scripts/setup_RestFrames_connect.sh'
 CMSSW_SETUP = './scripts/cmssw_setup_connect.sh'
 TREE    = "Events"
@@ -78,9 +77,6 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
     outlog = outfile+".out"
     errlog = errfile+".err"
     loglog = logfile+".log"
-    #fsrc.write('output = '+outlog.split('/')[-1]+" \n")
-    #fsrc.write('error = '+errlog.split('/')[-1]+" \n")
-    #fsrc.write('log = '+loglog.split('/')[-1]+" \n")
     fsrc.write('output = '+outlog+" \n")
     fsrc.write('error = '+errlog+" \n")
     fsrc.write('log = '+loglog+" \n")
@@ -97,31 +93,20 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
     fsrc.write('when_to_transfer_output = ON_EXIT\n')
 
     transfer_out_files = 'transfer_output_files = '+ofile.split('/')[-1]+'\n'
-    #transfer_out_files += ','+outlog.split('/')[-1]
-    #transfer_out_files += ','+errlog.split('/')[-1]
-    #transfer_out_files += ','+loglog.split('/')[-1]+' \n'
     fsrc.write(transfer_out_files)
 
     transfer_out_remap = 'transfer_output_remaps = "'+ofile.split('/')[-1]+'='+ofile
     transfer_out_remap += '"\n'
-    #transfer_out_remap += ';'
-    #transfer_out_remap += outlog.split('/')[-1]+' = '+outlog
-    #transfer_out_remap += ' ; '
-    #transfer_out_remap += errlog.split('/')[-1]+' = '+errlog
-    #transfer_out_remap += ' ; '
-    #transfer_out_remap += loglog.split('/')[-1]+' = '+loglog+'"\n'
     fsrc.write(transfer_out_remap)
     
     fsrc.write('+ProjectName="cms.org.ku"\n')
     fsrc.write('+REQUIRED_OS="rhel7"\n')
     fsrc.write('queue '+str(n)+' from '+ifile+'\n')
-    #fsrc.write('cd '+RUN_DIR+" \n")
-    #fsrc.write('source ../RestFrames/setup_RestFrames.sh \n')
     fsrc.close()
 
 if __name__ == "__main__":
     if not len(sys.argv) > 1 or '-h' in sys.argv or '--help' in sys.argv:
-        print "Usage: %s [-q queue] [-tree treename] [-list listfile.list] [-maxN N] [--sms] [--dryrun]" % sys.argv[0]
+        print "Usage: %s [-q queue] [-tree treename] [-list listfile.list] [-maxN N] [-split S] [--sms] [--dryrun]" % sys.argv[0]
         print
         sys.exit(1)
 
@@ -166,24 +151,22 @@ if __name__ == "__main__":
     else:
         MAXN = 1
     
-    print "maxN is %d" % MAXN
-    print "split is %d" % SPLIT
-
-    if DO_DATA:
-        print "Processing Data"
-
-    if DO_SMS:
-        print "Processing as SMS"
-
     # input sample list
     listfile = LIST
     listname = listfile.split("/")
     listname = listname[-1]
 
-    print listname
-
     NAME = listname.replace(".list",'')
     
+    if DO_DATA:
+        print "Processing Data"
+
+    if DO_SMS:
+        print "Processing as SMS"
+    
+    print "maxN is %d" % MAXN
+    print "split is %d" % SPLIT
+    print listname
     print NAME
     print RUN_DIR
         
@@ -318,25 +301,38 @@ if __name__ == "__main__":
         file_name = os.path.join(ROOT, dataset+'_'+filetag, overlist_name.split('/')[-1].replace('_list.list', '_$(ItemIndex)_$(Step)'))
 
         logfile = os.path.join(logdir, dataset+'_'+filetag, file_name.split('/')[-1])
-        outfile= os.path.join(outdir, dataset+'_'+filetag, file_name.split('/')[-1])
+        outfile = os.path.join(outdir, dataset+'_'+filetag, file_name.split('/')[-1])
         errfile = os.path.join(errdir, dataset+'_'+filetag, file_name.split('/')[-1])
 
         script_name = srcdir+'_'.join([dataset, filetag])+'.submit'
         write_sh(script_name, overlist_name, file_name+'.root', logfile, outfile, errfile, dataset, filetag, SPLIT)
-        #os.system('condor_submit '+script_name)
 
     print listdir
     os.system("cp -r "+listdir+" "+config)
     print "creating tarbal from: ", TARGET
-
     os.system("tar -C "+config+"/../ -czvf "+TARGET+"/config.tgz config")
 
-    submit_dir = srcdir        
+    submit_dir  = srcdir        
     submit_list = [os.path.join(submit_dir, f) for f in os.listdir(submit_dir) if (os.path.isfile(os.path.join(submit_dir, f)) and ('.submit' in f))]
+    n_submit    = len(submit_list)
 
     if not DRY_RUN:
         for f in submit_list:
             print "submitting: ", f
             os.system('condor_submit ' + f)
-   
+    
+    # Summary
+    print "------------------------------"
+    print "Submission Info"
+    print "------------------------------"
+    print "maxN  = {0}".format(MAXN)
+    print "split = {0}".format(SPLIT)
+    print "Number of condor submissions: {0}".format(n_submit)
+    print "Number of condor jobs: {0}".format(-1)
+    print "------------------------------"
+
+    if DRY_RUN:
+        print "The option --dryrun was used; no jobs were submitted."
+    else:
+        print "Congrats... jobs were submitted!"
 
