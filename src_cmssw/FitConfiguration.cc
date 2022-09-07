@@ -71,27 +71,28 @@ void FitConfiguration::AddFakeLeptonSys(ch::CombineHarvester& cb, ProcessList& p
     .AddSyst(cb, "Fakes_elf1", "rateParam", SystMap<>::init(1.0));
 // temporarily removing these until updated
    // SFs for lepton ID factors
- cb.cp().backgrounds().process(VS().a(".*_Fakes_.*muf0B.*"))
+ cb.cp().backgrounds().bin(VS().a(".*bron.*")).process(VS().a(".*_Fakes_.*muf0B.*"))
     .AddSyst(cb, "IDISO_muf0", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().process(VS().a(".*_Fakes_.*muf1B.*"))
+ cb.cp().backgrounds().bin(VS().a(".*bron.*")).process(VS().a(".*_Fakes_.*muf1B.*"))
     .AddSyst(cb, "IDISO_muf1", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().process(VS().a(".*_Fakes_.*elf0B.*"))
+ cb.cp().backgrounds().bin(VS().a(".*bron.*")).process(VS().a(".*_Fakes_.*elf0B.*"))
     .AddSyst(cb, "IDISO_elf0", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().process(VS().a(".*_Fakes_.*elf1B.*"))
+ cb.cp().backgrounds().bin(VS().a(".*bron.*")).process(VS().a(".*_Fakes_.*elf1B.*"))
     .AddSyst(cb, "IDISO_elf1", "rateParam", SystMap<>::init(1.0));
- cb.cp().backgrounds().process(VS().a(".*_Fakes_.*muf0S.*"))
+ 
+ cb.cp().backgrounds().bin(VS().a(".*slvr.*")).process(VS().a(".*_Fakes_.*muf0S.*"))
     .AddSyst(cb, "SIP3D_muf0", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().process(VS().a(".*_Fakes_.*muf1S.*"))
+ cb.cp().backgrounds().bin(VS().a(".*slvr.*")).process(VS().a(".*_Fakes_.*muf1S.*"))
     .AddSyst(cb, "SIP3D_muf1", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().process(VS().a(".*_Fakes_.*elf0S.*"))
+ cb.cp().backgrounds().bin(VS().a(".*slvr.*")).process(VS().a(".*_Fakes_.*elf0S.*"))
     .AddSyst(cb, "SIP3D_elf0", "rateParam", SystMap<>::init(1.0));
 
-  cb.cp().backgrounds().process(VS().a(".*_Fakes_.*elf1S.*"))
+ cb.cp().backgrounds().bin(VS().a(".*slvr.*")).process(VS().a(".*_Fakes_.*elf1S.*"))
     .AddSyst(cb, "SIP3D_elf1", "rateParam", SystMap<>::init(1.0));
   cb.SetFlag("filters-use-regex", false);
 
