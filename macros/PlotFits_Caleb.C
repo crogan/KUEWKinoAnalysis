@@ -3,227 +3,268 @@
 
 #include "../include/FitPlotter.hh"
 
+// Probably shouldn't use kFormat...???
 enum CatType{kFormat, kFine, kDefaultPlot};
-  //probably shouldn't use kFormat...???
 
 void DoPlotFits(const string& fold1 = "BF_TChiWZ_4000350_bkg_data_allchan_2018_maskSR_AllLogsToRates_5_31_2022", const string& fold2 = "datacards/all/TChiWZ/4000350", const string& shapesFile = "fitDiagnosticsShapes.root", const string& year = "2018", int lepNum = 0, bool prefit = false, bool bfit = false, bool sbfit = false, bool fakes = false, bool yields = false, CatType _catType = kDefaultPlot);
 
 void PlotFits_Caleb()
 {
 
- //DoPlotFits("BF_TChiWZ_4000350_bkg_data_allchan_2016_maskSR_sys_5_28_2022","datacards/all/TChiWZ/4000350","fitDiagnosticsShapes.root","2016",0,false,false,false,false,true,kFine);
- 
-// DoPlotFits("BF_TChiWZ_4000350_bkg_data_allchan_2016_maskSR_sys_5_28_2022","datacards/all/TChiWZ/4000350","fitDiagnosticsShapes.root","2016",0,true,false,false,false,false,kDefaultPlot);
-// DoPlotFits("BF_TChiWZ_4000350_bkg_data_allchan_2016_maskSR_sys_5_28_2022","datacards/all/TChiWZ/4000350","fitDiagnosticsShapes.root","2016",0,false,true,false,false,false,kDefaultPlot);
-// DoPlotFits("BF_TChiWZ_4000350_bkg_data_allchan_2016_maskSR_sys_5_28_2022","datacards/all/TChiWZ/4000350","fitDiagnosticsShapes.root","2016",1,true,false,false,false,false,kDefaultPlot);
-// DoPlotFits("BF_TChiWZ_4000350_bkg_data_allchan_2016_maskSR_sys_5_28_2022","datacards/all/TChiWZ/4000350","fitDiagnosticsShapes.root","2016",1,false,true,false,false,false,kDefaultPlot);
-// DoPlotFits("BF_TChiWZ_4000350_bkg_data_allchan_2016_maskSR_sys_5_28_2022","datacards/all/TChiWZ/4000350","fitDiagnosticsShapes.root","2016",2,true,false,false,false,false,kDefaultPlot);
-// DoPlotFits("BF_TChiWZ_4000350_bkg_data_allchan_2016_maskSR_sys_5_28_2022","datacards/all/TChiWZ/4000350","fitDiagnosticsShapes.root","2016",2,false,true,false,false,false,kDefaultPlot);
-// DoPlotFits("BF_TChiWZ_4000350_bkg_data_allchan_2016_maskSR_sys_5_28_2022","datacards/all/TChiWZ/4000350","fitDiagnosticsShapes.root","2016",3,true,false,false,false,false,kDefaultPlot);
-// DoPlotFits("BF_TChiWZ_4000350_bkg_data_allchan_2016_maskSR_sys_5_28_2022","datacards/all/TChiWZ/4000350","fitDiagnosticsShapes.root","2016",3,false,true,false,false,false,kDefaultPlot);
+    // DoPlotFits("BF_TChiWZ_4000350_bkg_data_allchan_2016_maskSR_sys_5_28_2022","datacards/all/TChiWZ/4000350","fitDiagnosticsShapes.root","2016",0,false,false,false,false,true,kFine);
+     
+    // DoPlotFits("BF_TChiWZ_4000350_bkg_data_allchan_2016_maskSR_sys_5_28_2022","datacards/all/TChiWZ/4000350","fitDiagnosticsShapes.root","2016",0,true,false,false,false,false,kDefaultPlot);
+    // DoPlotFits("BF_TChiWZ_4000350_bkg_data_allchan_2016_maskSR_sys_5_28_2022","datacards/all/TChiWZ/4000350","fitDiagnosticsShapes.root","2016",0,false,true,false,false,false,kDefaultPlot);
+    // DoPlotFits("BF_TChiWZ_4000350_bkg_data_allchan_2016_maskSR_sys_5_28_2022","datacards/all/TChiWZ/4000350","fitDiagnosticsShapes.root","2016",1,true,false,false,false,false,kDefaultPlot);
+    // DoPlotFits("BF_TChiWZ_4000350_bkg_data_allchan_2016_maskSR_sys_5_28_2022","datacards/all/TChiWZ/4000350","fitDiagnosticsShapes.root","2016",1,false,true,false,false,false,kDefaultPlot);
+    // DoPlotFits("BF_TChiWZ_4000350_bkg_data_allchan_2016_maskSR_sys_5_28_2022","datacards/all/TChiWZ/4000350","fitDiagnosticsShapes.root","2016",2,true,false,false,false,false,kDefaultPlot);
+    // DoPlotFits("BF_TChiWZ_4000350_bkg_data_allchan_2016_maskSR_sys_5_28_2022","datacards/all/TChiWZ/4000350","fitDiagnosticsShapes.root","2016",2,false,true,false,false,false,kDefaultPlot);
+    // DoPlotFits("BF_TChiWZ_4000350_bkg_data_allchan_2016_maskSR_sys_5_28_2022","datacards/all/TChiWZ/4000350","fitDiagnosticsShapes.root","2016",3,true,false,false,false,false,kDefaultPlot);
+    // DoPlotFits("BF_TChiWZ_4000350_bkg_data_allchan_2016_maskSR_sys_5_28_2022","datacards/all/TChiWZ/4000350","fitDiagnosticsShapes.root","2016",3,false,true,false,false,false,kDefaultPlot);
 
+    DoPlotFits("BF_TChiWZ_4000350_binsV1_run1","datacards/all/TChiWZ/4000350","fitDiagnosticsShapes.root","2016",0,true,false,false,false,false,kDefaultPlot);
+    DoPlotFits("BF_TChiWZ_4000350_binsV1_run1","datacards/all/TChiWZ/4000350","fitDiagnosticsShapes.root","2016",0,false,true,false,false,false,kDefaultPlot);
+    DoPlotFits("BF_TChiWZ_4000350_binsV1_run1","datacards/all/TChiWZ/4000350","fitDiagnosticsShapes.root","2016",1,true,false,false,false,false,kDefaultPlot);
+    DoPlotFits("BF_TChiWZ_4000350_binsV1_run1","datacards/all/TChiWZ/4000350","fitDiagnosticsShapes.root","2016",1,false,true,false,false,false,kDefaultPlot);
+    DoPlotFits("BF_TChiWZ_4000350_binsV1_run1","datacards/all/TChiWZ/4000350","fitDiagnosticsShapes.root","2016",2,true,false,false,false,false,kDefaultPlot);
+    DoPlotFits("BF_TChiWZ_4000350_binsV1_run1","datacards/all/TChiWZ/4000350","fitDiagnosticsShapes.root","2016",2,false,true,false,false,false,kDefaultPlot);
+    DoPlotFits("BF_TChiWZ_4000350_binsV1_run1","datacards/all/TChiWZ/4000350","fitDiagnosticsShapes.root","2016",3,true,false,false,false,false,kDefaultPlot);
+    DoPlotFits("BF_TChiWZ_4000350_binsV1_run1","datacards/all/TChiWZ/4000350","fitDiagnosticsShapes.root","2016",3,false,true,false,false,false,kDefaultPlot);
 
- DoPlotFits("BF_TChiWZ_4000350_binsV1_run1","datacards/all/TChiWZ/4000350","fitDiagnosticsShapes.root","2016",0,true,false,false,false,false,kDefaultPlot);
- DoPlotFits("BF_TChiWZ_4000350_binsV1_run1","datacards/all/TChiWZ/4000350","fitDiagnosticsShapes.root","2016",0,false,true,false,false,false,kDefaultPlot);
- DoPlotFits("BF_TChiWZ_4000350_binsV1_run1","datacards/all/TChiWZ/4000350","fitDiagnosticsShapes.root","2016",1,true,false,false,false,false,kDefaultPlot);
- DoPlotFits("BF_TChiWZ_4000350_binsV1_run1","datacards/all/TChiWZ/4000350","fitDiagnosticsShapes.root","2016",1,false,true,false,false,false,kDefaultPlot);
- DoPlotFits("BF_TChiWZ_4000350_binsV1_run1","datacards/all/TChiWZ/4000350","fitDiagnosticsShapes.root","2016",2,true,false,false,false,false,kDefaultPlot);
- DoPlotFits("BF_TChiWZ_4000350_binsV1_run1","datacards/all/TChiWZ/4000350","fitDiagnosticsShapes.root","2016",2,false,true,false,false,false,kDefaultPlot);
- DoPlotFits("BF_TChiWZ_4000350_binsV1_run1","datacards/all/TChiWZ/4000350","fitDiagnosticsShapes.root","2016",3,true,false,false,false,false,kDefaultPlot);
- DoPlotFits("BF_TChiWZ_4000350_binsV1_run1","datacards/all/TChiWZ/4000350","fitDiagnosticsShapes.root","2016",3,false,true,false,false,false,kDefaultPlot);
-
-gApplication->Terminate(0);
+    gApplication->Terminate(0);
 }
 
 
 //void DoPlotFits(const string& fold1 = "BF_TChiWZ_4000350_bkg_data_allchan_2018_maskSR_AllLogsToRates_5_31_2022", const string& fold2 = "datacards/all/TChiWZ/4000350", const string& shapesFile = "fitDiagnosticsShapes.root",  int lepNum = 0){
 
 void DoPlotFits(const string& fold1, const string& fold2, const string& shapesFile, const string& year, int lepNum, bool prefit, bool bfit, bool sbfit, bool fakes, bool yields, CatType _catType){
+    string dateName = shapesFile.substr(0,8);
+    string bfName = fold1.substr(2,fold1.size());
+    string odir = "prePostStackPlots/TESTprePostStackPlots"+bfName;
+
+    //string inputfile1 = "BuildFits/"+fold1+"/FitInput_KUEWKino_"+year+".root";
+    //string inputfile2 = "BuildFits/"+fold1+"/"+fold2+"/"+shapesFile;
+
+    string inputfile1 = "/uscms/home/caleb/nobackup/KU_Compressed_SUSY/CMSSW_10_6_5/src/KUEWKinoAnalysis/BuildFit/2022_08_24/binsV1/"+fold1+"/FitInput_KUEWKino_"+year+".root";
+    string inputfile2 = "/uscms/home/caleb/nobackup/KU_Compressed_SUSY/CMSSW_10_6_5/src/KUEWKinoAnalysis/BuildFit/2022_08_24/binsV1/"+fold1+"/"+fold2+"/"+shapesFile;
+    string lepName;
+    if(fold2.find("L") != string::npos) lepName = fold2.substr(10,4);
+    else                                lepName = "all";
+    string fname = odir+"/"+lepName+"/"+shapesFile;
+    cout << "input file: " << inputfile2 << endl;
+    cout << odir << endl;
+    cout << lepName << endl;
+    cout << "out directory: " << odir << "/" << lepName << "/" << endl;
   
-  string dateName = shapesFile.substr(0,8);
-        string bfName = fold1.substr(2,fold1.size());
-        string odir = "prePostStackPlots/TESTprePostStackPlots"+bfName;
+    if(gSystem->AccessPathName(inputfile2.c_str())){ cout << "file " << inputfile2 << " not found" << endl; return; }
+    if(gSystem->AccessPathName(inputfile1.c_str())){ cout << "file " << inputfile1 << " not found" << endl; return; }
+    FitPlotter* FITPlotter_pre      = new FitPlotter(inputfile1, inputfile2, "shapes_prefit");
+    FitPlotter* FITPlotter_bOnly    = new FitPlotter(inputfile1, inputfile2, "shapes_fit_b");
+    FitPlotter* FITPlotter_sb       = new FitPlotter(inputfile1, inputfile2, "shapes_fit_s");
 
-        //string inputfile1 = "BuildFits/"+fold1+"/FitInput_KUEWKino_"+year+".root";
-        //string inputfile2 = "BuildFits/"+fold1+"/"+fold2+"/"+shapesFile;
+    // prefit    = true;
+    // bfit      = false;
+    // sbfit     = false;
+    bool ratio = true;
 
-        string inputfile1 = "/uscms/home/caleb/nobackup/KU_Compressed_SUSY/CMSSW_10_6_5/src/KUEWKinoAnalysis/BuildFit/2022_08_24/binsV1/"+fold1+"/FitInput_KUEWKino_"+year+".root";
-        string inputfile2 = "/uscms/home/caleb/nobackup/KU_Compressed_SUSY/CMSSW_10_6_5/src/KUEWKinoAnalysis/BuildFit/2022_08_24/binsV1/"+fold1+"/"+fold2+"/"+shapesFile;
-        string lepName;
-        if(fold2.find("L") != string::npos) lepName = fold2.substr(10,4);
-        else lepName = "all";
-        string fname = odir+"/"+lepName+"/"+shapesFile;
-cout << "input file: " << inputfile2 << endl;
-cout << odir << endl;
-cout << lepName << endl;
-cout << "out directory: " << odir << "/" << lepName << "/" << endl;
-  
- if(gSystem->AccessPathName(inputfile2.c_str())){ cout << "file " << inputfile2 << " not found" << endl; return; }
- if(gSystem->AccessPathName(inputfile1.c_str())){ cout << "file " << inputfile1 << " not found" << endl; return; }
-        FitPlotter* FITPlotter_pre = new FitPlotter(inputfile1, inputfile2, "shapes_prefit");
-        FitPlotter* FITPlotter_bOnly = new FitPlotter(inputfile1, inputfile2, "shapes_fit_b");
-        FitPlotter* FITPlotter_sb = new FitPlotter(inputfile1, inputfile2, "shapes_fit_s");
+    CategoryTreeTool CTTool;
+    CategoryTree CT_0L;
+    CategoryTree CT_1L;
+    CategoryTree CT_2L;
+    CategoryTree CT_3L;
+    string plot_Type = "";
 
-//prefit = true;
-//bfit = false;
-//sbfit = false;
+    if(_catType == kFormat)
+    {
+        CT_0L = CTTool.GetCategories_0L_plotFormat();
+        CT_1L = CTTool.GetCategories_1L_plotFormat();
+        CT_2L = CTTool.GetCategories_2L_plotFormat();
+        CT_3L = CTTool.GetCategories_3L_plotFormat();
+        plot_Type = "Format_";
+    }
+    else if(_catType == kFine)
+    {
+        CT_0L = CTTool.GetCategories_0L_fineSplit();
+        CT_1L = CTTool.GetCategories_1L_fineSplit();
+        CT_2L = CTTool.GetCategories_2L_fineSplit();
+        CT_3L = CTTool.GetCategories_3L();
+        plot_Type = "Split_";
+    }
+    else
+    {
+        CT_0L = CTTool.GetCategories_0L();
+        CT_1L = CTTool.GetCategories_1L();
+        CT_2L = CTTool.GetCategories_2L();
+        CT_3L = CTTool.GetCategories_3L();
+        plot_Type = "DefaultPlot_";
+    }
 
-bool ratio = true;
-
-  CategoryTreeTool CTTool;
-
-
-  CategoryTree CT_0L;
-  CategoryTree CT_1L;
-  CategoryTree CT_2L;
-  CategoryTree CT_3L;
-  string plot_Type = "";
-
-  if(_catType == kFormat){
-    CT_0L = CTTool.GetCategories_0L_plotFormat();
-    CT_1L = CTTool.GetCategories_1L_plotFormat();
-    CT_2L = CTTool.GetCategories_2L_plotFormat();
-    CT_3L = CTTool.GetCategories_3L_plotFormat();
-    plot_Type = "Format_";
-  }
-  else if(_catType == kFine){
-    CT_0L = CTTool.GetCategories_0L_fineSplit();
-    CT_1L = CTTool.GetCategories_1L_fineSplit();
-    CT_2L = CTTool.GetCategories_2L_fineSplit();
-    CT_3L = CTTool.GetCategories_3L();
-    plot_Type = "Split_";
-  }
-  else{
-    CT_0L = CTTool.GetCategories_0L();
-    CT_1L = CTTool.GetCategories_1L();
-    CT_2L = CTTool.GetCategories_2L();
-    CT_3L = CTTool.GetCategories_3L();
-    plot_Type = "DefaultPlot_";
-  }
-
-  VS all;
-  if(fakes)
-    all.a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD").a("Wjets").a("HF_Fakes").a("LF_Fakes").a("Data");
-  else
-    all.a("ttbar_all").a("ST_all").a("DB_all").a("ZDY_all").a("TB_all").a("QCD").a("Wjets_all").a("Data");
-  //all.a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD").a("Wjets").a("ttbar_Fakes").a("ST_Fakes").a("DB_Fakes").a("ZDY_Fakes").a("TB_Fakes").a("QCD_Fakes").a("Wjets_Fakes").a("Data");
-  string sig;
- // sig = "T2tt_6000425";
-// sig = "TChiWZ_4000390";
- //all += sig; 
+    VS all;
+    if(fakes)
+    {
+        all.a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD").a("Wjets").a("HF_Fakes").a("LF_Fakes").a("Data");
+    }
+    else
+    {
+        all.a("ttbar_all").a("ST_all").a("DB_all").a("ZDY_all").a("TB_all").a("QCD").a("Wjets_all").a("Data");
+    }
+    
+    //all.a("ttbar").a("ST").a("DB").a("ZDY").a("TB").a("QCD").a("Wjets").a("ttbar_Fakes").a("ST_Fakes").a("DB_Fakes").a("ZDY_Fakes").a("TB_Fakes").a("QCD_Fakes").a("Wjets_Fakes").a("Data");
+    string sig;
+    // sig = "T2tt_6000425";
+    // sig = "TChiWZ_4000390";
+    //all += sig; 
  
- if(yields)
- {
-  TCanvas* Yields_0L_b = FITPlotter_bOnly->PlotYields("0Lyields", all, CT_0L);
-  Yields_0L_b->SaveAs((odir+"/all/Yields_0L_bfit.pdf").c_str());
-  TCanvas* Yields_1L_b = FITPlotter_bOnly->PlotYields("1Lyields", all, CT_1L);
-  Yields_1L_b->SaveAs((odir+"/all/Yields_1L_bfit.pdf").c_str());
-  TCanvas* Yields_2L_b = FITPlotter_bOnly->PlotYields("2Lyields", all, CT_2L);
-  Yields_2L_b->SaveAs((odir+"/all/Yields_2L_bfit.pdf").c_str());
-  TCanvas* Yields_3L_b = FITPlotter_bOnly->PlotYields("3Lyields", all, CT_3L);
-  Yields_3L_b->SaveAs((odir+"/all/Yields_3L_bfit.pdf").c_str());
-  TCanvas* Yields_0L_pre = FITPlotter_pre->PlotYields("0Lyields", all, CT_0L);
-  Yields_0L_pre->SaveAs((odir+"/all/Yields_0L_prefit.pdf").c_str());
-  TCanvas* Yields_1L_pre = FITPlotter_pre->PlotYields("1Lyields", all, CT_1L);
-  Yields_1L_pre->SaveAs((odir+"/all/Yields_1L_prefit.pdf").c_str());
-  TCanvas* Yields_2L_pre = FITPlotter_pre->PlotYields("2Lyields", all, CT_2L);
-  Yields_2L_pre->SaveAs((odir+"/all/Yields_2L_prefit.pdf").c_str());
-  TCanvas* Yields_3L_pre = FITPlotter_pre->PlotYields("3Lyields", all, CT_3L);
-  Yields_3L_pre->SaveAs((odir+"/all/Yields_3L_prefit.pdf").c_str());
- }
+    if(yields)
+    {
+        TCanvas* Yields_0L_b = FITPlotter_bOnly->PlotYields("0Lyields", all, CT_0L);
+        Yields_0L_b->SaveAs((odir+"/all/Yields_0L_bfit.pdf").c_str());
+        TCanvas* Yields_1L_b = FITPlotter_bOnly->PlotYields("1Lyields", all, CT_1L);
+        Yields_1L_b->SaveAs((odir+"/all/Yields_1L_bfit.pdf").c_str());
+        TCanvas* Yields_2L_b = FITPlotter_bOnly->PlotYields("2Lyields", all, CT_2L);
+        Yields_2L_b->SaveAs((odir+"/all/Yields_2L_bfit.pdf").c_str());
+        TCanvas* Yields_3L_b = FITPlotter_bOnly->PlotYields("3Lyields", all, CT_3L);
+        Yields_3L_b->SaveAs((odir+"/all/Yields_3L_bfit.pdf").c_str());
+        TCanvas* Yields_0L_pre = FITPlotter_pre->PlotYields("0Lyields", all, CT_0L);
+        Yields_0L_pre->SaveAs((odir+"/all/Yields_0L_prefit.pdf").c_str());
+        TCanvas* Yields_1L_pre = FITPlotter_pre->PlotYields("1Lyields", all, CT_1L);
+        Yields_1L_pre->SaveAs((odir+"/all/Yields_1L_prefit.pdf").c_str());
+        TCanvas* Yields_2L_pre = FITPlotter_pre->PlotYields("2Lyields", all, CT_2L);
+        Yields_2L_pre->SaveAs((odir+"/all/Yields_2L_prefit.pdf").c_str());
+        TCanvas* Yields_3L_pre = FITPlotter_pre->PlotYields("3Lyields", all, CT_3L);
+        Yields_3L_pre->SaveAs((odir+"/all/Yields_3L_prefit.pdf").c_str());
+    }
 
-  PlotType type = kFull;
-  bool zeroL = false;
-  bool oneL = false;
-  bool twoL = false;
-  bool threeL = false;
-  if(lepNum == 0) zeroL = true;
-  else if(lepNum == 1) oneL = true;
-  else if(lepNum == 2) twoL = true;
-  else if(lepNum == 3) threeL = true;
-  else{ cout << "Invalid lepton number specified. Must be 0, 1, 2, or 3." << endl; return; } 
-  vector<const CategoryTree*> CTs;
-  int depth0, d, listDepth;
-  if(_catType == kFormat) listDepth = 0;
-  //else if(_catType == kFine) listDepth = 1;
-  else if(_catType == kFine) listDepth = 0;
-  else listDepth = 0;
-  if(zeroL){
-   depth0 = CT_0L.GetDepth();
-   d = depth0;    
-   CT_0L.GetListDepth(CTs, listDepth);
-  }
-  else if(oneL){
-   depth0 = CT_1L.GetDepth()-3;
-   d = depth0;
-   //get list at 0 depth with plotFormat for s-jet bins
-   //get list at 1 depth without plotFormat for b-tag splits
-   CT_1L.GetListDepth(CTs, listDepth);
-  }
-  else if(twoL){
-   depth0 = CT_2L.GetDepth()-3;
-   d = depth0;
-   CT_2L.GetListDepth(CTs, listDepth);
-   }
-  else if(threeL){
-   depth0 = CT_3L.GetDepth();
-   d = 3;
-   CT_3L.GetListDepth(CTs, 0);
-  }
-cout << "depth: " << depth0 << " size:" << CTs.size() << endl;
- if(gSystem->AccessPathName((fname).c_str())){
-                gSystem->Exec(("mkdir -p "+odir).c_str());
-                gSystem->Exec(("mkdir -p "+odir+"/"+lepName).c_str());
+    PlotType type = kFull;
+    bool zeroL  = false;
+    bool oneL   = false;
+    bool twoL   = false;
+    bool threeL = false;
+    if(lepNum == 0)         zeroL   = true;
+    else if(lepNum == 1)    oneL    = true;
+    else if(lepNum == 2)    twoL    = true;
+    else if(lepNum == 3)    threeL  = true;
+    else{ cout << "Invalid lepton number specified. Must be 0, 1, 2, or 3." << endl; return; } 
+    vector<const CategoryTree*> CTs;
+    int depth0, d, listDepth;
+    if(_catType == kFormat)
+    {
+        listDepth = 0;
+    }
+    else if(_catType == kFine)
+    {
+        // listDepth = 1;
+        listDepth = 0;
+    }
+    else
+    {
+        listDepth = 0;
+    }
+    
+    if(zeroL)
+    {
+        depth0 = CT_0L.GetDepth();
+        d = depth0;    
+        CT_0L.GetListDepth(CTs, listDepth);
+    }
+    else if(oneL)
+    {
+        depth0 = CT_1L.GetDepth()-3;
+        d = depth0;
+        //get list at 0 depth with plotFormat for s-jet bins
+        //get list at 1 depth without plotFormat for b-tag splits
+        CT_1L.GetListDepth(CTs, listDepth);
+    }
+    else if(twoL)
+    {
+        depth0 = CT_2L.GetDepth()-3;
+        d = depth0;
+        CT_2L.GetListDepth(CTs, listDepth);
+    }
+    else if(threeL)
+    {
+        depth0 = CT_3L.GetDepth();
+        d = 3;
+        CT_3L.GetListDepth(CTs, 0);
+    }
+
+    cout << "depth: " << depth0 << " size:" << CTs.size() << endl;
+ 
+    if(gSystem->AccessPathName((fname).c_str()))
+    {
+        gSystem->Exec(("mkdir -p "+odir).c_str());
+        gSystem->Exec(("mkdir -p "+odir+"/"+lepName).c_str());
+    }
+    TFile* file = new TFile(fname.c_str(),"RECREATE");
+    cout << "Writing to file: " << fname << endl;
+    file->cd();
+    
+    for(int i = 0; i < int(CTs.size()); i++)
+    {
+        string dir = CTs[i]->GetPlainLabel(depth0-d);
+
+        while(dir.find(" ") != string::npos) dir.replace(dir.find(" "),1,"_"); 
+        cout << dir << endl;
+        TCanvas* prefit_stack   = nullptr;
+        TCanvas* b_fit_stack    = nullptr;
+        TCanvas* sb_fit_stack   = nullptr;
+        if(prefit)
+        {
+            cout << "---------- plot prefit ----------" << endl;
+            prefit_stack = FITPlotter_pre->Plot1Dstack(Form("pre_stack_%d",i),all,*CTs[i],type,ratio);
+            if(prefit_stack == nullptr)
+            {
+                cout << "ERROR: prefit null" << endl;
+                continue;
+            }
         }
-        TFile* file = new TFile(fname.c_str(),"RECREATE");
-        cout << "Writing to file: " << fname << endl;
+        if(bfit)
+        {
+            cout << "---------- plot b fit ----------" << endl;
+            b_fit_stack = FITPlotter_bOnly->Plot1Dstack(Form("bFit_stack_%d",i),all,*CTs[i],type,ratio);
+            if(b_fit_stack == nullptr)
+            {
+                cout << "ERROR: b fit null" << endl;
+                continue;
+            }
+        }
+        if(sbfit)
+        {
+            cout << "---------- plot s+b fit ----------" << endl;
+            sb_fit_stack = FITPlotter_sb->Plot1Dstack(Form("sbFit_stack_%d",i),all,*CTs[i],type,ratio);
+            if(sb_fit_stack == nullptr)
+            {
+                cout << "ERROR: s+b fit null" << endl;
+                continue;
+            }
+        }
+
+        // cout << "writing plots to file" << endl;
+        // if(!file->GetDirectory(dir.c_str()))
+        //     file->mkdir(dir.c_str());
+        // file->cd(dir.c_str());
+        // if(prefit)   prefit_stack->Write("prefit_stack",TObject::kOverwrite);
+        // if(bfit)     b_fit_stack->Write("bfit_stack",TObject::kOverwrite);
+        // if(sbfit)    sb_fit_stack->Write("sbfit_stack",TObject::kOverwrite);
+        cout << "saving plots as pdf" << endl;
+        if(all[0].find("all") != std::string::npos)
+        {
+            if(prefit)  prefit_stack->SaveAs((odir+"/"+lepName+"/"+dir+sig+plot_Type+"fakesIncl_prefit.pdf").c_str());
+            if(bfit)    b_fit_stack->SaveAs((odir+"/"+lepName+"/"+dir+sig+plot_Type+"fakesIncl_b-fit.pdf").c_str());
+            if(sbfit)   sb_fit_stack->SaveAs((odir+"/"+lepName+"/"+dir+sig+plot_Type+"fakesIncl_sb-fit.pdf").c_str());
+        }
+        else
+        {
+            if(prefit)  prefit_stack->SaveAs((odir+"/"+lepName+"/"+dir+sig+plot_Type+"prefit.pdf").c_str());
+            if(bfit)    b_fit_stack->SaveAs((odir+"/"+lepName+"/"+dir+sig+plot_Type+"b-fit.pdf").c_str());
+            if(sbfit)   sb_fit_stack->SaveAs((odir+"/"+lepName+"/"+dir+sig+plot_Type+"sb-fit.pdf").c_str());
+        }
+
+        if(prefit)  prefit_stack->Close();
+        if(bfit)    b_fit_stack->Close();
+        if(sbfit)   sb_fit_stack->Close();
+        
         file->cd();
-  for(int i = 0; i < int(CTs.size()); i++){
-    string dir = CTs[i]->GetPlainLabel(depth0-d);
-while(dir.find(" ") != string::npos) dir.replace(dir.find(" "),1,"_"); 
-    cout << dir  << endl;
-    TCanvas* prefit_stack = nullptr;
-    TCanvas* b_fit_stack = nullptr;
-    TCanvas* sb_fit_stack = nullptr;
-    if(prefit){
-    	cout << "##############plot prefit#############" << endl;
-    	prefit_stack = FITPlotter_pre->Plot1Dstack(Form("pre_stack_%d",i),all,*CTs[i],type,ratio);
-    	if(prefit_stack == nullptr){cout << "prefit null" << endl; continue;}
+        cout << "\n" << endl;
     }
-    if(bfit){
-    	cout << "##############plot b fit#############" << endl;
-    	b_fit_stack = FITPlotter_bOnly->Plot1Dstack(Form("bFit_stack_%d",i),all,*CTs[i],type,ratio);
-    	if(b_fit_stack == nullptr) continue;
-    }
-    if(sbfit){
-	cout << "##############plot s+b fit#############" << endl;
-    	sb_fit_stack = FITPlotter_sb->Plot1Dstack(Form("sbFit_stack_%d",i),all,*CTs[i],type,ratio);
-    	if(sb_fit_stack == nullptr) continue;
-    }
-//cout << "writing plots to file" << endl;
-//    if(!file->GetDirectory(dir.c_str()))
-//            file->mkdir(dir.c_str());
-//    file->cd(dir.c_str());
-//    if(prefit) prefit_stack->Write("prefit_stack",TObject::kOverwrite);
-//    if(bfit) b_fit_stack->Write("bfit_stack",TObject::kOverwrite);
-//    if(sbfit) sb_fit_stack->Write("sbfit_stack",TObject::kOverwrite);
- cout << "saving plots as pdf" << endl;
-   if(all[0].find("all") != std::string::npos){
-   if(prefit) prefit_stack->SaveAs((odir+"/"+lepName+"/"+dir+sig+plot_Type+"fakesIncl_prefit.pdf").c_str());
-   if(bfit) b_fit_stack->SaveAs((odir+"/"+lepName+"/"+dir+sig+plot_Type+"fakesIncl_b-fit.pdf").c_str());
-   if(sbfit) sb_fit_stack->SaveAs((odir+"/"+lepName+"/"+dir+sig+plot_Type+"fakesIncl_sb-fit.pdf").c_str());
-   }
-   else{
-   if(prefit) prefit_stack->SaveAs((odir+"/"+lepName+"/"+dir+sig+plot_Type+"prefit.pdf").c_str());
-   if(bfit) b_fit_stack->SaveAs((odir+"/"+lepName+"/"+dir+sig+plot_Type+"b-fit.pdf").c_str());
-   if(sbfit) sb_fit_stack->SaveAs((odir+"/"+lepName+"/"+dir+sig+plot_Type+"sb-fit.pdf").c_str());
-   }
-   if(prefit) prefit_stack->Close();
-   if(bfit) b_fit_stack->Close();
-   if(sbfit) sb_fit_stack->Close();
-
-   file->cd();
-   cout << "\n" << endl;
- }
-
 }
