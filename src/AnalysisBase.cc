@@ -1556,21 +1556,26 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET, int id){
   if(!passID)
     return ParticleList();
   
-  if(year == 2017)
-    MET.SetPtEtaPhi(METFixEE2017_pt,0.0,METFixEE2017_phi);
-  else
-    MET.SetPtEtaPhi(MET_pt,0.0,MET_phi);
+  // if(year == 2017)
+  //   MET.SetPtEtaPhi(METFixEE2017_pt,0.0,METFixEE2017_phi);
+  // else
+  //   MET.SetPtEtaPhi(MET_pt,0.0,MET_phi);
+  // Change for NANO AOD v9
+  MET.SetPtEtaPhi(MET_pt,0.0,MET_phi);
   
   deltaMET.SetZ(0.);
   MET += deltaMET;
   
   if(CurrentSystematic() == Systematic("METUncer_UnClust")){
-    if(year == 2017)
-      deltaMET.SetXYZ(delta*METFixEE2017_MetUnclustEnUpDeltaX,
-		      delta*METFixEE2017_MetUnclustEnUpDeltaY, 0.);
-    else
-      deltaMET.SetXYZ(delta*MET_MetUnclustEnUpDeltaX,
-		      delta*MET_MetUnclustEnUpDeltaY, 0.);
+    // if(year == 2017)
+    //     deltaMET.SetXYZ(delta*METFixEE2017_MetUnclustEnUpDeltaX,
+    //                     delta*METFixEE2017_MetUnclustEnUpDeltaY, 0.);
+    // else
+    //     deltaMET.SetXYZ(delta*MET_MetUnclustEnUpDeltaX,
+    //                     delta*MET_MetUnclustEnUpDeltaY, 0.);
+    // Change for NANO AOD v9
+    deltaMET.SetXYZ(delta*MET_MetUnclustEnUpDeltaX,
+                    delta*MET_MetUnclustEnUpDeltaY, 0.);
     MET += deltaMET;
   }
   
@@ -1653,7 +1658,9 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetElectrons(){
     // FO baseline criteria
     if(Electron_lostHits[i] == 0 && Electron_convVeto[i]){
 
-      double mva = Electron_mvaFall17V1noIso[i];
+      // double mva = Electron_mvaFall17V1noIso[i];
+      // Change for NANO AOD v9: Change V1 to V2:
+      double mva = Electron_mvaFall17V2noIso[i];
       if(year == 2016 || year == 2018)
 	mva = Electron_mvaFall17V2noIso[i];
 
