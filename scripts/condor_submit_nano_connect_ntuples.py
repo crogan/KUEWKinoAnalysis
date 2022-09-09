@@ -106,7 +106,7 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
 
 if __name__ == "__main__":
     if not len(sys.argv) > 1 or '-h' in sys.argv or '--help' in sys.argv:
-        print "Usage: %s [-q queue] [-tree treename] [-list listfile.list] [-maxN N] [-split S] [--sms] [--dryrun]" % sys.argv[0]
+        print "Usage: %s [-q queue] [-tree treename] [-list listfile.list] [-maxN N] [-split S] [--sms] [--data] [--dryrun]" % sys.argv[0]
         sys.exit(1)
 
     argv_pos    = 1
