@@ -107,13 +107,14 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
 
 if __name__ == "__main__":
     if not len(sys.argv) > 1 or '-h' in sys.argv or '--help' in sys.argv:
-        print "Usage: %s [-q queue] [-tree treename] [-list listfile.list] [-maxN N] [-split S] [--sms] [--data] [--dryrun]" % sys.argv[0]
+        print "Usage: %s [-q queue] [-tree treename] [-list listfile.list] [-maxN N] [-split S] [--sms] [--data] [--dryrun] [--verbose]" % sys.argv[0]
         sys.exit(1)
 
     argv_pos    = 1
     DO_SMS      = 0
     DO_DATA     = 0
     DRY_RUN     = 0
+    VERBOSE     = 0
   
     if '-q' in sys.argv:
         p = sys.argv.index('-q')
@@ -144,6 +145,9 @@ if __name__ == "__main__":
     if '--dryrun' in sys.argv:
         DRY_RUN = 1
         argv_pos += 1
+    if '--verbose' in sys.argv:
+        VERBOSE = 1
+        argv_pos += 1
         
     if SPLIT <= 1:
         SPLIT = 1
@@ -152,10 +156,10 @@ if __name__ == "__main__":
     
     print " --- Preparing condor submission to create ntuples."
     if DO_DATA:
-        print "Processing Data"
+        print " --- Processing Data"
 
     if DO_SMS:
-        print "Processing SMS"
+        print " --- Processing SMS"
     
     # input sample list
     listfile = LIST
@@ -228,7 +232,9 @@ if __name__ == "__main__":
 
     total_root_files = 0
 
-    datasetlist = []
+    datasetlist     = []
+    clean_inputlist = []
+    input_info      = {}
 
     knowntags = ["Fall17_94X","Autumn18_102X","Summer16_94X","Fall17_102X","Summer16_102X","Summer20UL16_102X","Summer20UL16APV_102X","Summer20UL17_102X","Summer20UL18_102X"]
     
@@ -236,9 +242,13 @@ if __name__ == "__main__":
         inputlist = mylist.readlines()
 
         for flist in inputlist:
-            if '#' in flist: continue
+            # skip commented lines (skip if # is anywhere in line)
+            if '#' in flist:
+                continue
+
             flist = flist.strip('\n\r')
-            print " --- Processing list from %s" % flist
+            clean_inputlist.append(flist)
+            input_info[flist] = {}
 
             listfile = LIST
             listname = listfile.split("/")
@@ -262,8 +272,12 @@ if __name__ == "__main__":
                     afile = afile.strip('\n\r')
                     rootlist.append(afile);
             
-            n_root_files = len(rootlist)
-            total_root_files += n_root_files
+            n_root_files        = len(rootlist)
+            n_jobs              = SPLIT * n_root_files
+            total_root_files    += n_root_files
+            
+            input_info[flist]["n_root_files"]   = n_root_files
+            input_info[flist]["n_jobs"]         = n_jobs
 
             if len(datasetlist) == 0:
                 datasetlist.append((dataset,filetag,rootlist))
@@ -311,26 +325,36 @@ if __name__ == "__main__":
 
     submit_dir  = srcdir        
     submit_list = [os.path.join(submit_dir, f) for f in os.listdir(submit_dir) if (os.path.isfile(os.path.join(submit_dir, f)) and ('.submit' in f))]
-    n_submit    = len(submit_list)
+    n_samples   = len(submit_list)
     total_jobs  = SPLIT * total_root_files
 
     # don't submit jobs if --dryrun is used
     if not DRY_RUN:
         for f in submit_list:
-            print "submitting: ", f
+            print "submitting: {0}".format(f)
             os.system('condor_submit ' + f)
     
-    # Summary
+    # Number of ROOT files and jobs per sample 
+    if VERBOSE:
+        for f in clean_inputlist:
+            n_root_files    = input_info[f]["n_root_files"] 
+            n_jobs          = input_info[f]["n_jobs"] 
+            n_jobs = SPLIT * n_root_files
+            print "sample: {0}".format(f)
+            print(" - number of root files  = {0}".format(n_root_files))
+            print(" - number of jobs        = {0}".format(n_jobs))
+    
+    # Summary Info
     print "----------------------------"
     print "Condor Submission Info"
     print "----------------------------"
-    print "sample list:             {0}".format(listname)
+    print "sample list:             {0}".format(LIST)
     print "working directory:       {0}".format(TARGET)
     print "output directory:        {0}".format(OUT_DIR)
+    print "number of samples:       {0}".format(n_samples)
     print "split:                   {0}".format(SPLIT)
     print "total input root files:  {0}".format(total_root_files)
-    print "condor jobs:             {0}".format(total_jobs)
-    print "condor submissions:      {0}".format(n_submit)
+    print "total condor jobs:       {0}".format(total_jobs)
     print "----------------------------"
 
     if DRY_RUN:
