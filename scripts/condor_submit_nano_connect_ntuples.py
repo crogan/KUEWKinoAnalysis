@@ -2,24 +2,25 @@
 
 import os, sys, commands, time
 
-#look for the current directory
-#######################################
-pwd     = os.environ['PWD']
-home    = os.environ['HOME']
-#######################################
-RUN_DIR = pwd
-TEMP    = pwd
-jobEXE  = "execute_script.sh"
-EXE     = "MakeReducedNtuple_NANO.x"
+
+# ----------------------------------------------------------- #
+# Parameters
+# ----------------------------------------------------------- #
+# current working directory
+pwd         = os.environ['PWD']
+RUN_DIR     = pwd
+jobEXE      = "execute_script.sh"
+EXE         = "MakeReducedNtuple_NANO.x"
 RESTFRAMES  = './scripts/setup_RestFrames_connect.sh'
 CMSSW_SETUP = './scripts/cmssw_setup_connect.sh'
-TREE    = "Events"
-USER    = os.environ['USER']
-OUT     = "/stash/user/"+USER+"/NTUPLES/Processing/"
-LIST    = "default.list"
-QUEUE   = ""
-MAXN    = 1
-SPLIT   = 1
+TREE        = "Events"
+USER        = os.environ['USER']
+OUT_BASE    = "/stash/user/"+USER+"/NTUPLES/Processing"
+LIST        = "default.list"
+QUEUE       = ""
+MAXN        = 1
+SPLIT       = 1
+# ----------------------------------------------------------- #
 
 def new_listfile(rootlist, listfile):
     mylist = open(listfile,'w')
@@ -221,9 +222,11 @@ if __name__ == "__main__":
     os.system("cp "+CMSSW_SETUP+" "+config+".")
 
     # output root files
-    ROOT = OUT+"/"+NAME+"/"
-    if ROOT == TARGET:
-        ROOT = ROOT+"root/"
+    OUT_DIR = OUT_BASE+"/"+NAME+"/"
+    if OUT_DIR == TARGET:
+        OUT_DIR = OUT_DIR+"root/"
+
+    total_root_files = 0
 
     datasetlist = []
 
@@ -235,7 +238,7 @@ if __name__ == "__main__":
         for flist in inputlist:
             if '#' in flist: continue
             flist = flist.strip('\n\r')
-            #print "Processing list from %s" % flist
+            print " --- Processing list from %s" % flist
 
             listfile = LIST
             listname = listfile.split("/")
@@ -250,25 +253,29 @@ if __name__ == "__main__":
                 if ktag in flist:
                     filetag = ktag
 
+            # get list of ROOT files 
             rootlist = []
             with open(flist,'r') as myflist:
-                inputfilelist = myflist.readlines();
+                inputfilelist = myflist.readlines()
 
                 for afile in inputfilelist:
                     afile = afile.strip('\n\r')
                     rootlist.append(afile);
+            
+            n_root_files = len(rootlist)
+            total_root_files += n_root_files
 
             if len(datasetlist) == 0:
                 datasetlist.append((dataset,filetag,rootlist))
-                os.system("rm -rf "+ROOT+dataset+"_"+filetag+"/")
-                os.system("mkdir -p "+ROOT+dataset+"_"+filetag+"/")
+                os.system("rm -rf "+OUT_DIR+dataset+"_"+filetag+"/")
+                os.system("mkdir -p "+OUT_DIR+dataset+"_"+filetag+"/")
                 continue
             
             tagtuple = [item for item in datasetlist if item[0] == dataset]
             if len(tagtuple) == 0:
                 datasetlist.append((dataset,filetag,rootlist))
-                os.system("rm -rf "+ROOT+dataset+"_"+filetag+"/")
-                os.system("mkdir -p "+ROOT+dataset+"_"+filetag+"/")
+                os.system("rm -rf "+OUT_DIR+dataset+"_"+filetag+"/")
+                os.system("mkdir -p "+OUT_DIR+dataset+"_"+filetag+"/")
                 continue
 
             p = datasetlist.index(tagtuple[0])
@@ -288,7 +295,7 @@ if __name__ == "__main__":
         os.system("mkdir -p "+os.path.join(outdir, dataset+'_'+filetag))
         os.system("mkdir -p "+os.path.join(errdir, dataset+'_'+filetag))
 
-        file_name = os.path.join(ROOT, dataset+'_'+filetag, overlist_name.split('/')[-1].replace('_list.list', '_$(ItemIndex)_$(Step)'))
+        file_name = os.path.join(OUT_DIR, dataset+'_'+filetag, overlist_name.split('/')[-1].replace('_list.list', '_$(ItemIndex)_$(Step)'))
 
         logfile = os.path.join(logdir, dataset+'_'+filetag, file_name.split('/')[-1])
         outfile = os.path.join(outdir, dataset+'_'+filetag, file_name.split('/')[-1])
@@ -305,6 +312,7 @@ if __name__ == "__main__":
     submit_dir  = srcdir        
     submit_list = [os.path.join(submit_dir, f) for f in os.listdir(submit_dir) if (os.path.isfile(os.path.join(submit_dir, f)) and ('.submit' in f))]
     n_submit    = len(submit_list)
+    total_jobs  = SPLIT * total_root_files
 
     if not DRY_RUN:
         for f in submit_list:
@@ -312,19 +320,20 @@ if __name__ == "__main__":
             os.system('condor_submit ' + f)
     
     # Summary
-    print "------------------------"
+    print "----------------------------"
     print "Submission Info"
-    print "------------------------"
-    print "maxN:                {0}".format(MAXN)
-    print "split:               {0}".format(SPLIT)
-    print "condor submissions:  {0}".format(n_submit)
-    print "condor jobs:         {0}".format(-1)
-    print "list name:           {0}".format(listname)
-    print "target directory:    {0}".format(TARGET)
-    print "------------------------"
+    print "----------------------------"
+    print "split:                   {0}".format(SPLIT)
+    print "total input root files:  {0}".format(total_root_files)
+    print "condor jobs:             {0}".format(total_jobs)
+    print "condor submissions:      {0}".format(n_submit)
+    print "list name:               {0}".format(listname)
+    print "working directory:       {0}".format(TARGET)
+    print "output directory:        {0}".format(OUT_DIR)
+    print "----------------------------"
 
     if DRY_RUN:
         print "The option --dryrun was used; no jobs were submitted."
     else:
-        print "Congrats... jobs were submitted!"
+        print "Congrats... your jobs were submitted!"
 
