@@ -314,6 +314,7 @@ if __name__ == "__main__":
     n_submit    = len(submit_list)
     total_jobs  = SPLIT * total_root_files
 
+    # don't submit jobs if --dryrun is used
     if not DRY_RUN:
         for f in submit_list:
             print "submitting: ", f
@@ -321,15 +322,15 @@ if __name__ == "__main__":
     
     # Summary
     print "----------------------------"
-    print "Submission Info"
+    print "Condor Submission Info"
     print "----------------------------"
+    print "sample list:             {0}".format(listname)
+    print "working directory:       {0}".format(TARGET)
+    print "output directory:        {0}".format(OUT_DIR)
     print "split:                   {0}".format(SPLIT)
     print "total input root files:  {0}".format(total_root_files)
     print "condor jobs:             {0}".format(total_jobs)
     print "condor submissions:      {0}".format(n_submit)
-    print "list name:               {0}".format(listname)
-    print "working directory:       {0}".format(TARGET)
-    print "output directory:        {0}".format(OUT_DIR)
     print "----------------------------"
 
     if DRY_RUN:
