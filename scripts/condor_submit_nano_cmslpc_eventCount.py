@@ -18,7 +18,6 @@ OUT  = "/uscms/home/"+USER+"/nobackup/EventCount/root/"
 LIST = "default.list"
 QUEUE = ""
 MAXN = 1
-SPLIT = 1
 CONNECT = False
 
 def new_listfile(rootlist, listfile):
@@ -102,8 +101,7 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag):
 
 if __name__ == "__main__":
     if not len(sys.argv) > 1 or '-h' in sys.argv or '--help' in sys.argv:
-        print "Usage: %s [-q queue] [-tree treename] [-list listfile.list] [--sms]" % sys.argv[0]
-        print
+        print "Usage: %s [-q queue] [-tree treename] [-list listfile.list] [--sms] [--connect]" % sys.argv[0]
         sys.exit(1)
 
     argv_pos = 1
@@ -129,8 +127,6 @@ if __name__ == "__main__":
         CONNECT = True
         argv_pos += 1
     
-    print "split is %d" % SPLIT
-
     if DO_DATA:
         print "Processing Data"
 
