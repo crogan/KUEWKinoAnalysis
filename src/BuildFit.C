@@ -225,7 +225,6 @@ int main(int argc, char* argv[]) {
   else 
     channels = FIT.GetChannels().FilterOR(chan_to_add);
   channels = channels.RemoveOR(chan_to_rem);
- 
   CategoryList categories;
   if(addCat)
     categories = FIT.GetCategories();
@@ -240,6 +239,20 @@ int main(int argc, char* argv[]) {
     systematics = FIT.GetSystematics().FilterOR(sys_to_add);
   if(systematics.GetN() > 0)
     systematics = systematics.RemoveOR(sys_to_rem);
+//cout << "systematics" << endl;
+//  for(int s = 0; s < systematics.GetN(); s++)
+//    cout << systematics[s].Label() << endl;
+
+CategoryTree CT_Fakes1L;
+vector<const CategoryTree*> catTrees;
+CT_Fakes1L.GetListDepth(catTrees,1);
+vector<string> catLabels;
+map<string,VC> catBins;
+//for(int i = 0; i < int(catTrees.size()); i++) catBins[catTrees[i]->GetSpecLabel()] = categories.Filter(*catTrees[i]).GetCategories();
+//if(catBins.count("1Lel1J") > 0) cout << catBins["1Lel1J"].size() << endl;
+
+
+
 
   ////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////
@@ -271,6 +284,7 @@ int main(int argc, char* argv[]) {
       cout << " with categories/bins:" << endl;
     
     VC cats = chanMap[c].GetCategories();
+ //cout << "# categories for AddObservations: " << cats.size() << endl;
     
     if(verbose){
       cout << "  $BIN_ID   $BIN" << endl; 
@@ -278,11 +292,13 @@ int main(int argc, char* argv[]) {
 	cout << "     " << p.first << "      " << p.second << endl;
       cout << endl;
     }
-
-    cb.AddObservations({"*"}, {Ana}, {Era}, {c}, cats);
+   cb.AddObservations({"*"}, {Ana}, {Era}, {c}, cats);
   }
-  
-  // Add all the background processes
+ 
+
+
+VC total_cats;
+ // Add all the background processes
   int Nbkg = backgrounds.GetN();
   for(int b = 0; b < Nbkg; b++){
     Process proc = backgrounds[b];
@@ -305,7 +321,8 @@ int main(int argc, char* argv[]) {
 	continue;
 
       VC cats = filled.GetCategories();
-      cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
+	for(auto c : cats) total_cats.push_back(c);      
+cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
 
     }
   }
@@ -333,6 +350,7 @@ int main(int argc, char* argv[]) {
         continue;
 
       VC cats = filled.GetCategories();
+	for(auto c : cats) total_cats.push_back(c);      
       SM sig  = proc.GetSM();
       cb.AddProcesses(sig.second, {Ana}, {Era}, {ch}, {sig.first+"_"}, cats, true);
 
@@ -363,6 +381,9 @@ int main(int argc, char* argv[]) {
   proc_LF_Fakes = proc_LF_Fakes.Filter("f1");
   CONFIG.AddFakeSSSys(cb, proc_LF_Fakes);
   CONFIG.AddKinematicSys(cb, processes);
+  //CONFIG.AddLeptonQualityNormSys(cb, processes);
+  //CONFIG.AddSJetLeptonQualityNormSys(cb, processes);
+  CONFIG.AddLeptonCategoryNormSys(cb, processes);
 
   VS Wjets; //removing norm wjets for hierarchy leave VS for later hier call
   Wjets += "Wjets";
@@ -423,26 +444,26 @@ CONFIG.AddSJetNormSys("DB",DB,cb, processes);
   using ch::syst::channel;
   using ch::syst::bin_id;
   using ch::syst::process;
-
+ 
   SystematicsTool SYS;
   Systematics shapeToNorm = SYS.GetConvertedSystematics();
  
  int Nsys = systematics.GetN();
   if(Nsys > 0){
     cout << "+ Adding shape systematics" << endl;
-    for(int s = 0; s < Nsys; s++){
+    for(int s = 0; s < Nsys; s++){  
       Systematic& sys = systematics[s];
-if(shapeToNorm.Contains(sys)){
+      if(shapeToNorm.Contains(sys)){ 
         CONFIG.AddShapeSysAsNorm(sys,cb,FIT); continue;
-      }  
-    ProcessList proc_sys;
+      }
+      ProcessList proc_sys;
 
       for(int p = 0; p < Nbkg; p++)
 	if(FIT.HasSystematic(backgrounds[p], sys))
 	  proc_sys += backgrounds[p];
-      for(int p = 0; p < Nsig; p++)
-	if(FIT.HasSystematic(signals[p], sys))
-	  proc_sys += signals[p];
+//      for(int p = 0; p < Nsig; p++)
+//	if(FIT.HasSystematic(signals[p], sys))
+//	  proc_sys += signals[p];
 
       if(proc_sys.GetN() > 0){
 	cout << "  + " << sys.Label() << endl;
@@ -452,6 +473,7 @@ if(shapeToNorm.Contains(sys)){
 	  Process proc = proc_sys[p];
 	  // looping through categories to check that process/sys/cat is filled
 	  VS cat_names;
+//cout << "proc: " << proc.Name() << " with sys: " << sys.Label() << endl;
 	  for(auto ch : channels){
 	    int Ncat = chanMap[ch].GetN();
 	    for(int c = 0; c < Ncat; c++){
@@ -461,6 +483,7 @@ if(shapeToNorm.Contains(sys)){
 	      }
 	    }
 	  }
+	  if(cat_names.size() > 0)
 	  cb.cp().process(VS().a(proc.Name())).bin(cat_names)
 		  .AddSyst(cb, sys.Label(), "shape", SystMap<>::init(1.00));
 	}
@@ -505,7 +528,26 @@ if(shapeToNorm.Contains(sys)){
 
   // Loop through all signals and write a datacard, create output
   
-  VC cats = categories.GetCategories();
+//  VC cats = categories.GetCategories();
+
+//set<pair<int,string>> VC_set(total_cats.begin(),total_cats.end());
+//cout << "# categories for AddProcesses: " << VC_set.size() << " " << total_cats.size()<< endl;
+//cout << "bin_set: " << cb.bin_set().size() << endl;
+//cout << "bin set from Observations: " << cb.SetFromObs(std::mem_fn(&ch::Process::bin)).size() << endl;
+//cout << "bin set from Systematics: " << cb.SetFromSysts(std::mem_fn(&ch::Process::bin)).size() << endl;
+//cout << "imax: " << cb.SetFromProcs(std::mem_fn(&ch::Process::bin)).size() << endl;
+//
+//vector<string> binSet;
+//vector<string> setFromProcs;
+//for(auto b : cb.bin_set()) binSet.push_back(b);//cout << b << endl;
+//for(auto b : cb.SetFromProcs(std::mem_fn(&ch::Process::bin))) setFromProcs.push_back(b);//cout << b << endl;
+//int len = min(binSet.size(),setFromProcs.size());
+//for(int i = 0; i < len; i++){
+//  if(binSet[i] == setFromProcs[i]) continue;
+//  else{ cout << i << endl; cout << "binSet"  << endl; cout << binSet[i-1] << " " << binSet[i] << " " << binSet[i+1] << endl;
+//    cout << "setFromProcs" << endl; cout << setFromProcs[i-1] << " " << setFromProcs[i] << " " << setFromProcs[i+1] << endl; break; }
+//
+//}
 
   cout << "* Writing ouput to " << OutputFold << endl;
   string OutputFile = "";
@@ -546,7 +588,8 @@ if(shapeToNorm.Contains(sys)){
       fold = OutputFold+"/all/"+sm.first+"/"+m;
       if(connect)
         fold = "datacards/all/"+sm.first+"/"+m;
-      gSystem->Exec(("mkdir -p "+fold).c_str());
+      //cout << "making directory: " << fold << endl;
+	gSystem->Exec(("mkdir -p "+fold).c_str());
       
       if(verbose)
 	cout << "    * all channels " << sm.first+"_"+m << endl;

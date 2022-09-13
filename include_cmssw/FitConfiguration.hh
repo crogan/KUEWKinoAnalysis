@@ -33,6 +33,9 @@ public:
   void AddFakeSSSys(ch::CombineHarvester& cb, ProcessList& processes);
   void AddKinematicSys(ch::CombineHarvester& cb, ProcessList& processes);
   void AddSJetNormSys(const string& label, VS& procs, ch::CombineHarvester& cb, ProcessList& processes);
+  void AddLeptonQualityNormSys(ch::CombineHarvester& cb, ProcessList& processes);
+  void AddSJetLeptonQualityNormSys(ch::CombineHarvester& cb, ProcessList& processes);
+  void AddLeptonCategoryNormSys(ch::CombineHarvester& cb, ProcessList& processes);
 
   void AddShapeSysAsNorm(const Systematic& sys, ch::CombineHarvester& cb, FitReader& FIT);
 
