@@ -2,25 +2,25 @@
 
 import os, sys, commands, time
 
-#look for the current directory
-#######################################
-pwd = os.environ['PWD']
-home = os.environ['HOME']
-#######################################
-RUN_DIR = pwd
-TEMP = pwd
-jobEXE  = "execute_script.sh"
-EXE  = "MakeReducedNtuple_NANO.x"
-#EXE  = "MakeEventCount_NANO.x"
-RESTFRAMES = './scripts/setup_RestFrames_connect.sh'
+
+# ----------------------------------------------------------- #
+# Parameters
+# ----------------------------------------------------------- #
+# current working directory
+pwd         = os.environ['PWD']
+RUN_DIR     = pwd
+jobEXE      = "execute_script.sh"
+EXE         = "MakeReducedNtuple_NANO.x"
+RESTFRAMES  = './scripts/setup_RestFrames_connect.sh'
 CMSSW_SETUP = './scripts/cmssw_setup_connect.sh'
-TREE = "Events"
-USER = os.environ['USER']
-OUT  = "/stash/user/"+USER+"/NTUPLES/Processing/"
-LIST = "default.list"
-QUEUE = ""
-MAXN = 1
-SPLIT = 1
+TREE        = "Events"
+USER        = os.environ['USER']
+OUT_BASE    = "/stash/user/"+USER+"/NTUPLES/Processing"
+LIST        = "default.list"
+QUEUE       = ""
+MAXN        = 1
+SPLIT       = 1
+# ----------------------------------------------------------- #
 
 def new_listfile(rootlist, listfile):
     mylist = open(listfile,'w')
@@ -78,9 +78,6 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
     outlog = outfile+".out"
     errlog = errfile+".err"
     loglog = logfile+".log"
-    #fsrc.write('output = '+outlog.split('/')[-1]+" \n")
-    #fsrc.write('error = '+errlog.split('/')[-1]+" \n")
-    #fsrc.write('log = '+loglog.split('/')[-1]+" \n")
     fsrc.write('output = '+outlog+" \n")
     fsrc.write('error = '+errlog+" \n")
     fsrc.write('log = '+loglog+" \n")
@@ -97,37 +94,27 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
     fsrc.write('when_to_transfer_output = ON_EXIT\n')
 
     transfer_out_files = 'transfer_output_files = '+ofile.split('/')[-1]+'\n'
-    #transfer_out_files += ','+outlog.split('/')[-1]
-    #transfer_out_files += ','+errlog.split('/')[-1]
-    #transfer_out_files += ','+loglog.split('/')[-1]+' \n'
     fsrc.write(transfer_out_files)
 
     transfer_out_remap = 'transfer_output_remaps = "'+ofile.split('/')[-1]+'='+ofile
     transfer_out_remap += '"\n'
-    #transfer_out_remap += ';'
-    #transfer_out_remap += outlog.split('/')[-1]+' = '+outlog
-    #transfer_out_remap += ' ; '
-    #transfer_out_remap += errlog.split('/')[-1]+' = '+errlog
-    #transfer_out_remap += ' ; '
-    #transfer_out_remap += loglog.split('/')[-1]+' = '+loglog+'"\n'
     fsrc.write(transfer_out_remap)
     
     fsrc.write('+ProjectName="cms.org.ku"\n')
     fsrc.write('+REQUIRED_OS="rhel7"\n')
     fsrc.write('queue '+str(n)+' from '+ifile+'\n')
-    #fsrc.write('cd '+RUN_DIR+" \n")
-    #fsrc.write('source ../RestFrames/setup_RestFrames.sh \n')
     fsrc.close()
 
 if __name__ == "__main__":
     if not len(sys.argv) > 1 or '-h' in sys.argv or '--help' in sys.argv:
-        print "Usage: %s [-q queue] [-tree treename] [-list listfile.list] [-maxN N] [--sms]" % sys.argv[0]
-        print
+        print "Usage: %s [-q queue] [-tree treename] [-list listfile.list] [-maxN N] [-split S] [--sms] [--data] [--dryrun] [--verbose]" % sys.argv[0]
         sys.exit(1)
 
-    argv_pos = 1
-    DO_SMS = 0
-    DO_DATA = 0
+    argv_pos    = 1
+    DO_SMS      = 0
+    DO_DATA     = 0
+    DRY_RUN     = 0
+    VERBOSE     = 0
   
     if '-q' in sys.argv:
         p = sys.argv.index('-q')
@@ -155,34 +142,32 @@ if __name__ == "__main__":
     if '--data' in sys.argv:
         DO_DATA = 1
         argv_pos += 1
+    if '--dryrun' in sys.argv:
+        DRY_RUN = 1
+        argv_pos += 1
+    if '--verbose' in sys.argv:
+        VERBOSE = 1
+        argv_pos += 1
         
-    
     if SPLIT <= 1:
         SPLIT = 1
     else:
         MAXN = 1
     
-    print "maxN is %d" % MAXN
-    print "split is %d" % SPLIT
-
+    print " --- Preparing condor submission to create ntuples."
     if DO_DATA:
-        print "Processing Data"
+        print " --- Processing Data"
 
     if DO_SMS:
-        print "Processing as SMS"
-
+        print " --- Processing SMS"
+    
     # input sample list
     listfile = LIST
     listname = listfile.split("/")
     listname = listname[-1]
 
-    print listname
-
     NAME = listname.replace(".list",'')
     
-    print NAME
-    print RUN_DIR
-        
     # create and organize output folders
     TARGET  = RUN_DIR+"/"+NAME+"/"
     os.system("rm -rf "+TARGET)
@@ -240,15 +225,16 @@ if __name__ == "__main__":
     os.system("cp "+RESTFRAMES+" "+config+".")
     os.system("cp "+CMSSW_SETUP+" "+config+".")
 
-    print TARGET
-    #os.system("tar -czf "+TARGET+"/config.tgz "+config)
-
     # output root files
-    ROOT = OUT+"/"+NAME+"/"
-    if ROOT == TARGET:
-        ROOT = ROOT+"root/"
+    OUT_DIR = OUT_BASE+"/"+NAME+"/"
+    if OUT_DIR == TARGET:
+        OUT_DIR = OUT_DIR+"root/"
 
-    datasetlist = []
+    total_root_files = 0
+
+    datasetlist     = []
+    clean_inputlist = []
+    input_info      = {}
 
     knowntags = ["Fall17_94X","Autumn18_102X","Summer16_94X","Fall17_102X","Summer16_102X","Summer20UL16_102X","Summer20UL16APV_102X","Summer20UL17_102X","Summer20UL18_102X"]
     
@@ -256,9 +242,13 @@ if __name__ == "__main__":
         inputlist = mylist.readlines()
 
         for flist in inputlist:
-            if '#' in flist: continue
+            # skip commented lines (skip if # is anywhere in line)
+            if '#' in flist:
+                continue
+
             flist = flist.strip('\n\r')
-            print "Processing list from %s" % flist
+            clean_inputlist.append(flist)
+            input_info[flist] = {}
 
             listfile = LIST
             listname = listfile.split("/")
@@ -273,25 +263,33 @@ if __name__ == "__main__":
                 if ktag in flist:
                     filetag = ktag
 
+            # get list of ROOT files 
             rootlist = []
             with open(flist,'r') as myflist:
-                inputfilelist = myflist.readlines();
+                inputfilelist = myflist.readlines()
 
                 for afile in inputfilelist:
                     afile = afile.strip('\n\r')
                     rootlist.append(afile);
+            
+            n_root_files        = len(rootlist)
+            n_jobs              = SPLIT * n_root_files
+            total_root_files    += n_root_files
+            
+            input_info[flist]["n_root_files"]   = n_root_files
+            input_info[flist]["n_jobs"]         = n_jobs
 
             if len(datasetlist) == 0:
                 datasetlist.append((dataset,filetag,rootlist))
-                os.system("rm -rf "+ROOT+dataset+"_"+filetag+"/")
-                os.system("mkdir -p "+ROOT+dataset+"_"+filetag+"/")
+                os.system("rm -rf "+OUT_DIR+dataset+"_"+filetag+"/")
+                os.system("mkdir -p "+OUT_DIR+dataset+"_"+filetag+"/")
                 continue
             
             tagtuple = [item for item in datasetlist if item[0] == dataset]
             if len(tagtuple) == 0:
                 datasetlist.append((dataset,filetag,rootlist))
-                os.system("rm -rf "+ROOT+dataset+"_"+filetag+"/")
-                os.system("mkdir -p "+ROOT+dataset+"_"+filetag+"/")
+                os.system("rm -rf "+OUT_DIR+dataset+"_"+filetag+"/")
+                os.system("mkdir -p "+OUT_DIR+dataset+"_"+filetag+"/")
                 continue
 
             p = datasetlist.index(tagtuple[0])
@@ -311,30 +309,56 @@ if __name__ == "__main__":
         os.system("mkdir -p "+os.path.join(outdir, dataset+'_'+filetag))
         os.system("mkdir -p "+os.path.join(errdir, dataset+'_'+filetag))
 
-        file_name = os.path.join(ROOT, dataset+'_'+filetag, overlist_name.split('/')[-1].replace('_list.list', '_$(ItemIndex)_$(Step)'))
+        file_name = os.path.join(OUT_DIR, dataset+'_'+filetag, overlist_name.split('/')[-1].replace('_list.list', '_$(ItemIndex)_$(Step)'))
 
         logfile = os.path.join(logdir, dataset+'_'+filetag, file_name.split('/')[-1])
-        outfile= os.path.join(outdir, dataset+'_'+filetag, file_name.split('/')[-1])
+        outfile = os.path.join(outdir, dataset+'_'+filetag, file_name.split('/')[-1])
         errfile = os.path.join(errdir, dataset+'_'+filetag, file_name.split('/')[-1])
 
         script_name = srcdir+'_'.join([dataset, filetag])+'.submit'
         write_sh(script_name, overlist_name, file_name+'.root', logfile, outfile, errfile, dataset, filetag, SPLIT)
-        #os.system('condor_submit '+script_name)
 
-    print listdir
+    #print listdir
     os.system("cp -r "+listdir+" "+config)
-    print "creating tarbal from: ", TARGET
+    #print "creating tarbal from: ", TARGET
+    os.system("tar -C "+config+"/../ -czf "+TARGET+"/config.tgz config")
 
-    os.system("tar -C "+config+"/../ -czvf "+TARGET+"/config.tgz config")
-
-    submit_dir = srcdir        
+    submit_dir  = srcdir        
     submit_list = [os.path.join(submit_dir, f) for f in os.listdir(submit_dir) if (os.path.isfile(os.path.join(submit_dir, f)) and ('.submit' in f))]
+    n_samples   = len(submit_list)
+    total_jobs  = SPLIT * total_root_files
 
-    for f in submit_list:
-        print "submitting: ", f
-        os.system('condor_submit ' + f)
-   
+    # don't submit jobs if --dryrun is used
+    if not DRY_RUN:
+        for f in submit_list:
+            print "submitting: {0}".format(f)
+            os.system('condor_submit ' + f)
+    
+    # Number of ROOT files and jobs per sample 
+    if VERBOSE:
+        for f in clean_inputlist:
+            n_root_files    = input_info[f]["n_root_files"] 
+            n_jobs          = input_info[f]["n_jobs"] 
+            n_jobs = SPLIT * n_root_files
+            print "sample: {0}".format(f)
+            print(" - number of root files  = {0}".format(n_root_files))
+            print(" - number of jobs        = {0}".format(n_jobs))
+    
+    # Summary Info
+    print "----------------------------"
+    print "Condor Submission Info"
+    print "----------------------------"
+    print "sample list:             {0}".format(LIST)
+    print "working directory:       {0}".format(TARGET)
+    print "output directory:        {0}".format(OUT_DIR)
+    print "number of samples:       {0}".format(n_samples)
+    print "split:                   {0}".format(SPLIT)
+    print "total input root files:  {0}".format(total_root_files)
+    print "total condor jobs:       {0}".format(total_jobs)
+    print "----------------------------"
 
+    if DRY_RUN:
+        print "The option --dryrun was used; no jobs were submitted."
+    else:
+        print "Congrats... your jobs were submitted!"
 
-
- 
