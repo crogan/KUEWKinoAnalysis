@@ -187,12 +187,17 @@ if __name__ == "__main__":
     config = TARGET+"config/"
     os.system("mkdir -p "+config)
 
+    # NOTE: there is a bug for setting the hadd verbosity level, "hadd -v 0".
+    # The hadd verbosity option only works in ROOT 6.18/00 and later.
+    # https://github.com/root-project/root/issues/11372
+    # https://github.com/root-project/root/pull/3914
+
     # make EventCount file
-    os.system("hadd "+config+"EventCount.root root/EventCount/*.root")
+    os.system("hadd "+config+"EventCount.root root/EventCount/*.root > /dev/null")
     EVTCNT = "./config/EventCount.root"
 
     # make FilterEff file 
-    os.system("hadd "+config+"FilterEff.root root/FilterEff/*.root")
+    os.system("hadd "+config+"FilterEff.root root/FilterEff/*.root > /dev/null")
     FILTEREFF = "./config/FilterEff.root"
 
     # make json file
