@@ -18,7 +18,6 @@ USER        = os.environ['USER']
 OUT_BASE    = "/stash/user/"+USER+"/NTUPLES/Processing"
 LIST        = "default.list"
 QUEUE       = ""
-MAXN        = 1
 SPLIT       = 1
 # ----------------------------------------------------------- #
 
@@ -35,7 +34,7 @@ def create_filelist(rootlist, dataset, filetag):
     sublist = []
     for f in rootlist:
         sublist.append(f)
-        if len(sublist) >= MAXN and MAXN > 0:
+        if len(sublist) >= 1:
             listfile = "%s/%s_%s_%d.list" % (listdir_sam, dataset, filetag, listcount)
             new_listfile(sublist, listfile)
             listlist.append(listfile)
@@ -107,7 +106,7 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
 
 if __name__ == "__main__":
     if not len(sys.argv) > 1 or '-h' in sys.argv or '--help' in sys.argv:
-        print "Usage: %s [-q queue] [-tree treename] [-list listfile.list] [-maxN N] [-split S] [--sms] [--data] [--dry-run] [--verbose]" % sys.argv[0]
+        print "Usage: %s [-q queue] [-tree treename] [-list listfile.list] [-split S] [--sms] [--data] [--dry-run] [--verbose]" % sys.argv[0]
         sys.exit(1)
 
     argv_pos    = 1
@@ -128,10 +127,6 @@ if __name__ == "__main__":
         p = sys.argv.index('-tree')
         TREE = sys.argv[p+1]
         argv_pos += 2
-    if '-maxN' in sys.argv:
-        p = sys.argv.index('-maxN')
-        MAXN = int(sys.argv[p+1])
-        argv_pos += 2
     if '-split' in sys.argv:
         p = sys.argv.index('-split')
         SPLIT = int(sys.argv[p+1])
@@ -151,8 +146,6 @@ if __name__ == "__main__":
         
     if SPLIT <= 1:
         SPLIT = 1
-    else:
-        MAXN = 1
     
     print " --- Preparing condor submission to create ntuples."
     if DO_DATA:
