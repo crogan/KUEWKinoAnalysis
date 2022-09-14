@@ -107,7 +107,7 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
 
 if __name__ == "__main__":
     if not len(sys.argv) > 1 or '-h' in sys.argv or '--help' in sys.argv:
-        print "Usage: %s [-q queue] [-tree treename] [-list listfile.list] [-maxN N] [-split S] [--sms] [--data] [--dryrun] [--verbose]" % sys.argv[0]
+        print "Usage: %s [-q queue] [-tree treename] [-list listfile.list] [-maxN N] [-split S] [--sms] [--data] [--dry-run] [--verbose]" % sys.argv[0]
         sys.exit(1)
 
     argv_pos    = 1
@@ -142,7 +142,7 @@ if __name__ == "__main__":
     if '--data' in sys.argv:
         DO_DATA = 1
         argv_pos += 1
-    if '--dryrun' in sys.argv:
+    if '--dry-run' in sys.argv:
         DRY_RUN = 1
         argv_pos += 1
     if '--verbose' in sys.argv:
@@ -328,7 +328,7 @@ if __name__ == "__main__":
     n_samples   = len(submit_list)
     total_jobs  = SPLIT * total_root_files
 
-    # don't submit jobs if --dryrun is used
+    # don't submit jobs if --dry-run is used
     if not DRY_RUN:
         for f in submit_list:
             print "submitting: {0}".format(f)
@@ -358,7 +358,7 @@ if __name__ == "__main__":
     print "----------------------------"
 
     if DRY_RUN:
-        print "The option --dryrun was used; no jobs were submitted."
+        print "The option --dry-run was used; no jobs were submitted."
     else:
         print "Congrats... your jobs were submitted!"
 
