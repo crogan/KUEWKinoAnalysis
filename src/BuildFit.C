@@ -364,7 +364,7 @@ cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
 //  bkg_rate += "ttbar"; //removing for ttbar hierarchy testing
 //  bkg_rate += "Wjets"; //removing scale wjets for hierarchy
   bkg_rate += "ZDY";
-  bkg_rate += "QCD";
+//  bkg_rate += "QCD";
   bkg_rate += "DB";
   CONFIG.AddFloatingNorms(bkg_rate, cb, processes);
   
