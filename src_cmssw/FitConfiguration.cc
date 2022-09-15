@@ -645,18 +645,18 @@ void FitConfiguration::initSystDictTtbar( SystDict& sd){
 
 */
 	//ttbar hierarchy
-	appSystDict(sd, "ttbar0L_0jS_d3", std::vector<int>{0,0, -1,1 });
-        appSystDict(sd, "ttbar0L_1jS_d2", std::vector<int>{0,1, 0,0,  -1,1 });
-        appSystDict(sd, "ttbar0L_2jS_d1", std::vector<int>{0,2, 0,1, 0,0, -1,0 });
-        appSystDict(sd, "ttbar0L_3jS_d2", std::vector<int>{0,3, 0,2, 0,1, 0,0, 0,4, 0,5, -1,0 });
-        appSystDict(sd, "ttbar0L_4jS_d3", std::vector<int>{0,4, 0,5, -1,0 });
-        appSystDict(sd, "ttbar0L_5jS_d4", std::vector<int>{0,5, -1,1 });
+	appSystDict(sd, "ttbar0L_0jS_d4", std::vector<int>{0,0, -1,1 });
+        appSystDict(sd, "ttbar0L_1jS_d3", std::vector<int>{0,1, 0,0,  -1,1 });
+        appSystDict(sd, "ttbar0L_2jS_d2", std::vector<int>{0,2, 0,1, 0,0, -1,0 });
+        appSystDict(sd, "ttbar0L_3jS_d1", std::vector<int>{0,3, 0,2, 0,1, 0,0, 0,4, 0,5, -1,0 });
+        appSystDict(sd, "ttbar0L_4jS_d2", std::vector<int>{0,4, 0,5, -1,0 });
+        appSystDict(sd, "ttbar0L_5jS_d3", std::vector<int>{0,5, -1,1 });
 
-        appSystDict(sd, "ttbar1L_0jS_d3", std::vector<int>{1,0, -1,1 });
-        appSystDict(sd, "ttbar1L_1jS_d2", std::vector<int>{1,1, 1,0, -1,0 });
-        appSystDict(sd, "ttbar1L_2jS_d1", std::vector<int>{1,2, 1,1, 1,0, -1,0 });
-        appSystDict(sd, "ttbar1L_3jS_d2", std::vector<int>{1,3, 1,2, 1,1, 1,0, 1,4, -1,0 });
-        appSystDict(sd, "ttbar1L_4jS_d3", std::vector<int>{1,4, -1,1 });
+        appSystDict(sd, "ttbar1L_0jS_d4", std::vector<int>{1,0, -1,1 });
+        appSystDict(sd, "ttbar1L_1jS_d3", std::vector<int>{1,1, 1,0, -1,0 });
+        appSystDict(sd, "ttbar1L_2jS_d2", std::vector<int>{1,2, 1,1, 1,0, -1,0 });
+        appSystDict(sd, "ttbar1L_3jS_d1", std::vector<int>{1,3, 1,2, 1,1, 1,0, 1,4, -1,0 });
+        appSystDict(sd, "ttbar1L_4jS_d2", std::vector<int>{1,4, -1,1 });
 
         appSystDict(sd, "ttbar2L_0jS_d2", std::vector<int>{2,0, -1,1 });
         appSystDict(sd, "ttbar2L_1jS_d1", std::vector<int>{2,1, 2,0, -1,0 });
