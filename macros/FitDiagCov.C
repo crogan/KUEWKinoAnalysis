@@ -17,7 +17,7 @@ void FitDiagCov(){
 			x1 = sqrt(m(i,i));
 			x2 = sqrt(m(j,j));
 			rho = x/(x1*x2);
-			if( fabs(rho) > 0.7){
+			if( fabs(rho) > 0.5){
 				std::cout<<"("<<i<<","<<j<<") Cov: "<< x <<" CorrCoeff: "<<rho<<"\n";
 				l[i].Print();
 				l[j].Print();
