@@ -567,6 +567,14 @@ void FitConfiguration::appSystDict( SystDict& sd , std::string label, std::vecto
         }
         sd[label] = plist;
 }
+void FitConfiguration::initSystDictW0L( SystDict& sd){
+	appSystDict(sd, "WjetsDY0L_0jS_d3", std::vector<int>{0,0, -1,1 });
+        appSystDict(sd, "WjetsDY0L_1jS_d2", std::vector<int>{0,1, 0,0, -1,0 });
+        appSystDict(sd, "WjetsDY0L_2jS_d1", std::vector<int>{0,2, 0,0, 0,1, 0,3, 0,4, 0,5, -1,0 });
+        appSystDict(sd, "WjetsDY0L_3jS_d2", std::vector<int>{0,3, 0,4, 0,5, -1,0 });
+        appSystDict(sd, "WjetsDY0L_4jS_d3", std::vector<int>{0,4, 0,5, -1,1 });
+        appSystDict(sd, "WjetsDY0L_5jS_d4", std::vector<int>{0,5, -1,1});
+}
 void FitConfiguration::initSystDictW( SystDict& sd){
         //hardcoding structures for hierarchy
 /*
@@ -593,6 +601,7 @@ void FitConfiguration::initSystDictW( SystDict& sd){
 
 	//wjets hierarchy     
 */   	
+
 	appSystDict(sd, "Wjets0L_0jS_d3", std::vector<int>{0,0, -1,1 });
         appSystDict(sd, "Wjets0L_1jS_d2", std::vector<int>{0,1, 0,0, -1,0 });
         appSystDict(sd, "Wjets0L_2jS_d1", std::vector<int>{0,2, 0,0, 0,1, 0,3, 0,4, 0,5, -1,0 });
@@ -752,6 +761,34 @@ void FitConfiguration::AddNormHierarchy( SystDict& sd, VS& proc, ch::CombineHarv
  cb.SetFlag("filters-use-regex", false);
 
 }
+//this function maps processes to a particular lep channel based on which ones you pass in with Nlep
+void FitConfiguration::AddLNormSys(const string& label, VS& procs, ch::CombineHarvester& cb, ProcessList& processes, std::vector<std::string> Nlep, double errorInit){
+
+cb.SetFlag("filters-use-regex", true);
+
+std::map<std::string, std::string> Lmap;
+Lmap["0L"] = ".*0L.*";
+Lmap["1L"] = ".*1L.*";
+Lmap["2L"] = ".*2L.*";
+Lmap["3L"] = ".*3L.*";
+
+ProcessList plist;
+        for(auto p : procs){
+        plist += processes.Filter(kBkg).Filter(p);
+        }
+
+VS systRegex;
+
+for(auto s : Nlep){
+	string name = "norm_" + label + s;
+	systRegex.a( Lmap[s] );
+	cb.cp().process(plist.GetProcesses()).bin(VS(systRegex)).AddSyst(cb, name, "lnN", SystMap<>::init(errorInit));
+}
+
+
+cb.SetFlag("filters-use-regex", false);
+}
+
 void FitConfiguration::AddSJetNormSys(const string& label, VS& procs, ch::CombineHarvester& cb, ProcessList& processes){
   cb.SetFlag("filters-use-regex", true);
 

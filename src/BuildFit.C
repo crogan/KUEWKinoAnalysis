@@ -386,10 +386,18 @@ cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
   CONFIG.AddLeptonCategoryNormSys(cb, processes);
 
   VS Wjets; //removing norm wjets for hierarchy leave VS for later hier call
+  VS WjetsDY0L;
   Wjets += "Wjets";
+  WjetsDY0L += "Wjets";
+  WjetsDY0L += "ZDY";
   SystDict smW;
+  SystDict smW0L;
   CONFIG.initSystDictW(smW);
   CONFIG.AddNormHierarchy( smW, Wjets, cb,processes) ;
+
+  CONFIG.initSystDictW0L(smW0L);
+  CONFIG.AddNormHierarchy( smW0L, WjetsDY0L, cb, processes);
+
 //  cb.PrintSysts();
 //   CONFIG.AddSJetNormSys("Wjets", Wjets, cb, processes);
 
@@ -423,12 +431,15 @@ CONFIG.AddSJetNormSys("Other", Other, cb, processes);
  VS ZDYDB;
  ZDYDB += "ZDY";
  ZDYDB += "DB";
- CONFIG.AddSJetNormSys("ZDYDB", ZDYDB, cb, processes);
+// CONFIG.AddSJetNormSys("ZDYDB", ZDYDB, cb, processes);
+ CONFIG.AddLNormSys("ZDYDB", ZDYDB, cb, processes, std::vector<std::string>{"1L","2L","3L" }, 1.2);
 
  VS STTB;
  STTB += "ST";
  STTB += "TB";
- CONFIG.AddSJetNormSys("STTB", STTB, cb, processes);
+ CONFIG.AddLNormSys("STTB", STTB, cb, processes, std::vector<std::string>{"0L","1L","2L","3L"}, 1.4);
+// CONFIG.AddSJetNormSys("STTB", STTB, cb, processes);
+
 /*
 VS ZDY;
 ZDY += "ZDY";

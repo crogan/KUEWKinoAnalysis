@@ -39,10 +39,12 @@ public:
 
   void AddShapeSysAsNorm(const Systematic& sys, ch::CombineHarvester& cb, FitReader& FIT);
 
+  void AddLNormSys(const string& label, VS& procs, ch::CombineHarvester& cb, ProcessList& processes, std::vector<std::string> Nlep, double errorInit);
   void AddNormHierarchy( SystDict& sm, VS& proc, ch::CombineHarvester& cb, ProcessList& processes);
   
   void appSystDict( SystDict& sm , std::string label, std::vector<int> list);
   void initSystDictW( SystDict& sm );
+  void initSystDictW0L( SystDict& sd);
   void initSystDictTtbar( SystDict& sm);
 };
 
