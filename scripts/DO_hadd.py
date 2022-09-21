@@ -50,7 +50,9 @@ if __name__ == "__main__":
 
         #print target
         #haddcmd = "hadd -f "+OUT_DIR+"/"+target+".root "
-        haddcmd = "LD_PRELOAD=scripts/startup_C.so hadd -f "+OUT_DIR+"/"+target+".root "
+        #haddcmd = "LD_PRELOAD=scripts/startup_C.so hadd -f "+OUT_DIR+"/"+target+".root "
+        # use -k to skip corrupt input files
+        haddcmd = "LD_PRELOAD=scripts/startup_C.so hadd -f -k "+OUT_DIR+"/"+target+".root "
         haddcmd += IN_DIR+"/"+target+"/*.root"
         print haddcmd
         os.system(haddcmd)
