@@ -234,7 +234,7 @@ if __name__ == "__main__":
     clean_inputlist = []
     input_info      = {}
 
-    knowntags = ["Fall17_94X","Autumn18_102X","Summer16_94X","Fall17_102X","Summer16_102X","Summer20UL16_102X","Summer20UL16APV_102X","Summer20UL17_102X","Summer20UL18_102X"]
+    knowntags = ["Fall17_94X","Autumn18_102X","Summer16_94X","Fall17_102X","Summer16_102X","Summer20UL16_102X","Summer20UL16APV_102X","Summer20UL17_102X","Summer20UL18_102X","RunIISummer20UL17NanoAODv9"]
     
     with open(listfile,'r') as mylist:
         inputlist = mylist.readlines()
@@ -318,7 +318,7 @@ if __name__ == "__main__":
 
     #print listdir
     os.system("cp -r "+listdir+" "+config)
-    #print "creating tarbal from: ", TARGET
+    #print "creating tarball from: ", TARGET
     os.system("tar -C "+config+"/../ -czf "+TARGET+"/config.tgz config")
 
     submit_dir  = srcdir        
