@@ -23,7 +23,7 @@ int main(int argc, char* argv[]) {
 
   bool addFakeData = false;
 
-  bool sJetSysSplit = true;
+  bool sJetSysSplit = false;
   bool procSysSplit = false;
 
   bool bprint  = false;
