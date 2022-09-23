@@ -538,57 +538,56 @@ int main(int argc, char* argv[]) {
       // |_|  |_|______|_|  \_\______| |____/|______| |_____/|_|  \_\/_/    \_\_____|\____/|_| \_|_____/ 
       //                                                                                                 
       // ------------------------------------------------------------------------------------------------ //
-      //                         ^    ^
-      //                        / \  //\
-      //          |\___/|      /   \//  .\
-      //          /O  O  \__  /    //  | \ \
-      //         /     /  \/_/    //   |  \  \
-      //         @___@'    \/_   //    |   \   \ 
-      //            |       \/_ //     |    \    \ 
-      //            |        \///      |     \     \ 
-      //           _|_ /   )  //       |      \     _\
-      //          '/,_ _ _/  ( ; -.    |    _ _\.-~        .-~~~^-.
-      //          ,-{        _      `-.|.-~-.           .~         `.
-      //           '/\      /                 ~-. _ .-~      .-~^-.  \
-      //              `.   {            }                   /      \  \
-      //            .----~-.\        \-'                 .~         \  `. \^-.
-      //           ///.----..>    c   \             _ -~             `.  ^-`   ^-_
-      //             ///-._ _ _ _ _ _ _}^ - - - - ~                     ~--,   .-~
-      //                                                                   /.-'
-      //         
+      //                               ^    ^
+      //                              / \  //\
+      //                |\___/|      /   \//  .\
+      //                /O  O  \__  /    //  | \ \
+      //               /     /  \/_/    //   |  \  \
+      //               @___@'    \/_   //    |   \   \ 
+      //                  |       \/_ //     |    \    \ 
+      //                  |        \///      |     \     \ 
+      //                 _|_ /   )  //       |      \     _\
+      //                '/,_ _ _/  ( ; -.    |    _ _\.-~        .-~~~^-.
+      //                ,-{        _      `-.|.-~-.           .~         `.
+      //                 '/\      /                 ~-. _ .-~      .-~^-.  \
+      //                    `.   {            }                   /      \  \
+      //                  .----~-.\        \-'                 .~         \  `. \^-.
+      //                 ///.----..>    c   \             _ -~             `.  ^-`   ^-_
+      //                   ///-._ _ _ _ _ _ _}^ - - - - ~                     ~--,   .-~
+      //                                                                         /.-'
+      //               
       // ------------------------------------------------------------------------------------------------ //
-      //                                                                                                 
-      //     |>>>                                                      |>>>
-      //     |                     |>>>          |>>>                  |
-      //     *                     |             |                     *
-      //    / \                    *             *                    / \
-      //   /___\                 _/ \           / \_                 /___\
-      //   [   ]                |/   \_________/   \|                [   ]
-      //   [ I ]                /     \       /     \                [ I ]
-      //   [   ]_ _ _          /       \     /       \          _ _ _[   ]
-      //   [   ] U U |        {#########}   {#########}        | U U [   ]
-      //   [   ]====/          \=======/     \=======/          \====[   ]
-      //   [   ]    |           |   I |_ _ _ _| I   |           |    [   ]
-      //   [___]    |_ _ _ _ _ _|     | U U U |     |_ _ _ _ _ _|    [___]
-      //   \===/  I | U U U U U |     |=======|     | U U U U U | I  \===/
-      //    \=/     |===========| I   | + W + |   I |===========|     \=/
-      //     |  I   |           |     |_______|     |           |   I  |
-      //     |      |           |     |||||||||     |           |      |
-      //     |      |           |   I ||vvvvv|| I   |           |      |
-      // _-_-|______|-----------|_____||     ||_____|-----------|______|-_-_
-      //    /________\         /______||     ||______\         /________\
-      //   |__________|-------|________\_____/________|-------|__________|
-      //                                                                                                 
+      //                                                                                                            
+      //                |>>>                                                      |>>>
+      //                |                     |>>>          |>>>                  |
+      //                *                     |             |                     *
+      //               / \                    *             *                    / \
+      //              /___\                 _/ \           / \_                 /___\
+      //              [   ]                |/   \_________/   \|                [   ]
+      //              [ I ]                /     \       /     \                [ I ]
+      //              [   ]_ _ _          /       \     /       \          _ _ _[   ]
+      //              [   ] U U |        {#########}   {#########}        | U U [   ]
+      //              [   ]====/          \=======/     \=======/          \====[   ]
+      //              [   ]    |           |   I |_ _ _ _| I   |           |    [   ]
+      //              [___]    |_ _ _ _ _ _|     | U U U |     |_ _ _ _ _ _|    [___]
+      //              \===/  I | U U U U U |     |=======|     | U U U U U | I  \===/
+      //               \=/     |===========| I   | + W + |   I |===========|     \=/
+      //                |  I   |           |     |_______|     |           |   I  |
+      //                |      |           |     |||||||||     |           |      |
+      //                |      |           |   I ||vvvvv|| I   |           |      |
+      //            _-_-|______|-----------|_____||     ||_____|-----------|______|-_-_
+      //               /________\         /______||     ||______\         /________\
+      //              |__________|-------|________\_____/________|-------|__________|
+      //                                                                                                            
       // ------------------------------------------------------------------------------------------------ //
-      //                                                                                                 
-      //                                                                                                 
 
-      trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
-      if(is_FastSim)
-      {
-        trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0)
-                    * m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
-      }
+      // HACK: Skip for NANO AOD v9
+      // trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
+      // if(is_FastSim)
+      // {
+      //   trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0)
+      //               * m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
+      // }
 
       //cout << "event " << e << endl;
       //cout << "  sys: " << sys.Label() << endl;
@@ -632,31 +631,31 @@ if(sys.Label().find("MET_TRIG") != std::string::npos)
   
   correct_sys = sys.Label();
 
-
-  if(sys.IsUp())
-  {
-    if(is_FastSim)
-    {
-      trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1)
-                  * m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1);
-    }
-    else
-    {
-      trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1);
-    }
-  }
-  else
-  {
-    if(is_FastSim)
-    {
-      trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1)
-                  * m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
-    }
-    else
-    {
-      trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
-    }
-  }
+  // HACK: Skip for NANO AOD v9
+  // if(sys.IsUp())
+  // {
+  //   if(is_FastSim)
+  //   {
+  //     trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1)
+  //                 * m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1);
+  //   }
+  //   else
+  //   {
+  //     trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1);
+  //   }
+  // }
+  // else
+  // {
+  //   if(is_FastSim)
+  //   {
+  //     trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1)
+  //                 * m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
+  //   }
+  //   else
+  //   {
+  //     trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
+  //   }
+  // }
 }
           
 //if(sys.IsUp()) cout << "    up: " << trig_weight << endl;

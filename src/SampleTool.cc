@@ -328,8 +328,6 @@ void SampleTool::InitProcMap(){
     list += m_Path + "Summer16_102X/VHToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_Summer16_102X.root";
     m_Proc[m_iYear][DB] = pair<vector<string>,string>(list, "KUAnalysis");
 
-
-
     Process Wjets("Wjets", kBkg);
     list.clear();
     list += m_Path + "Summer16_102X/WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root";
@@ -341,7 +339,6 @@ void SampleTool::InitProcMap(){
     list += m_Path + "Summer16_102X/WJetsToLNu_HT-2500ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root";
     list += m_Path + "Summer16_102X/WJetsToLNu_HT-70To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root";
     m_Proc[m_iYear][Wjets] = pair<vector<string>,string>(list, "KUAnalysis");
-
 
 /*
 
@@ -429,7 +426,6 @@ void SampleTool::InitProcMap(){
     
     Process data_obs("data_obs", kData);
     list.clear();
-      
     list += m_Path + "Summer16_102X_Data/MET_Run2016B-02Apr2020_ver2-v1_2016_Summer16_102X.root";
     list += m_Path + "Summer16_102X_Data/MET_Run2016C-02Apr2020-v1_2016_Summer16_102X.root";
     list += m_Path + "Summer16_102X_Data/MET_Run2016D-02Apr2020-v1_2016_Summer16_102X.root";
@@ -437,9 +433,6 @@ void SampleTool::InitProcMap(){
     list += m_Path + "Summer16_102X_Data/MET_Run2016F-02Apr2020-v1_2016_Summer16_102X.root";
     list += m_Path + "Summer16_102X_Data/MET_Run2016G-02Apr2020-v1_2016_Summer16_102X.root";
     list += m_Path + "Summer16_102X_Data/MET_Run2016H-02Apr2020-v2_2016_Summer16_102X.root";
-
-
-
     m_Proc[m_iYear][data_obs] = pair<vector<string>,string>(list, "KUAnalysis");
 
   }
@@ -575,13 +568,13 @@ void SampleTool::InitProcMap(){
     Process Wjets("Wjets", kBkg);
     list.clear();
     list += m_Path + "RunIISummer20UL17NanoAODv9_v2/WJetsToLNu_HT-70To100_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root"; 
-    list += m_Path + "RunIISummer20UL17NanoAODv9_v2/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
-    list += m_Path + "RunIISummer20UL17NanoAODv9_v2/WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
-    list += m_Path + "RunIISummer20UL17NanoAODv9_v2/WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
-    list += m_Path + "RunIISummer20UL17NanoAODv9_v2/WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
-    list += m_Path + "RunIISummer20UL17NanoAODv9_v2/WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
-    list += m_Path + "RunIISummer20UL17NanoAODv9_v2/WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
-    list += m_Path + "RunIISummer20UL17NanoAODv9_v2/WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_v2/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_v2/WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_v2/WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_v2/WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_v2/WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_v2/WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_v2/WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
     m_Proc[m_iYear][Wjets] = pair<vector<string>,string>(list, "KUAnalysis");
 
     // NANO AOD v9 Wjets (Pt binned)
@@ -671,6 +664,7 @@ void SampleTool::InitProcMap(){
     
     Process data_obs("data_obs", kData);
     list.clear();
+
     //list += m_Path + "Fall17_102X_Data/MET_Run2017B-Nano25Oct2019-v1_2017_Fall17_102X.root";
     //list += m_Path + "Fall17_102X_Data/MET_Run2017C-Nano25Oct2019-v1_2017_Fall17_102X.root";
     //list += m_Path + "Fall17_102X_Data/MET_Run2017D-Nano25Oct2019-v1_2017_Fall17_102X.root";
@@ -713,7 +707,6 @@ void SampleTool::InitProcMap(){
     // list += m_Path + "SingleMuon_Run2017D-02Apr2020-v1_2017_Fall17_102X.root";
     // list += m_Path + "SingleMuon_Run2017E-02Apr2020-v1_2017_Fall17_102X.root";
     // list += m_Path + "SingleMuon_Run2017F-02Apr2020-v1_2017_Fall17_102X.root";
-
 
     m_Proc[m_iYear][data_obs] = pair<vector<string>,string>(list, "KUAnalysis");
 
@@ -892,12 +885,10 @@ void SampleTool::InitProcMap(){
 
     Process data_obs("data_obs", kData);
     list.clear();
-      
     list += m_Path + "Autumn18_102X_Data/MET_Run2018A-02Apr2020-v1_2018_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X_Data/MET_Run2018B-02Apr2020-v1_2018_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X_Data/MET_Run2018C-02Apr2020-v1_2018_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X_Data/MET_Run2018D-02Apr2020-v2_2018_Autumn18_102X.root";
-
     m_Proc[m_iYear][data_obs] = pair<vector<string>,string>(list, "KUAnalysis");
 
   }
