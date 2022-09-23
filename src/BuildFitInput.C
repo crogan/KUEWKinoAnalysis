@@ -311,7 +311,7 @@ int main(int argc, char* argv[]) {
 
       int Nentry = base->fChain->GetEntries();
       
-      int SKIP = 1;
+      int SKIP = 1000;
 
       // event loop
       for(int e = 0; e < Nentry; e += SKIP){
@@ -736,6 +736,11 @@ if(sys.Label().find("MET_TRIG") != std::string::npos)
     
       double RISR  = base->RISR;
 
+      //printf("e = %d, Mperp = %.3f, RISR = %.3f\n", e, Mperp, RISR);
+      
+      // HACK: set weight = 1 for samples that don't have weights
+      weight = 1.0;
+
       if(Fakes.GetN() > 0 && is_bkg){
         VS flabels = Fakes.GetFakeLabels(2); // processes w/ up to 2 "fake" leps
         int Nf = flabels.size();
@@ -745,6 +750,7 @@ if(sys.Label().find("MET_TRIG") != std::string::npos)
           //    FITBuilder.AddEvent(weight/double(Nf), Mperp, RISR,
           //                Categories[eindex], FITBuilder.FakeProcess(flabels[fl]), sys);
           
+          printf("e = %d, weight = %.3f, Nf = %d, Mperp = %.3f, RISR = %.3f\n", e, weight, Nf, Mperp, RISR);
           FITBuilder.AddEvent(weight/double(Nf), Mperp, RISR,
                   Categories[eindex], proc.FakeProcess(flabels[fl]), sys);
         }
