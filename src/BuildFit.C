@@ -369,7 +369,7 @@ cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
   CONFIG.AddFloatingNorms(bkg_rate, cb, processes);
   
   VS bkg_rare;
-  bkg_rare += "ST";
+  //bkg_rare += "ST";
   bkg_rare += "TB";
   CONFIG.AddRareNorms(bkg_rare, 0.4, cb, processes);
   
@@ -434,10 +434,10 @@ CONFIG.AddSJetNormSys("Other", Other, cb, processes);
 // CONFIG.AddSJetNormSys("ZDYDB", ZDYDB, cb, processes);
  CONFIG.AddLNormSys("ZDYDB", ZDYDB, cb, processes, std::vector<std::string>{"1L","2L","3L" }, 1.2);
 
- VS STTB;
- STTB += "ST";
- STTB += "TB";
- CONFIG.AddLNormSys("STTB", STTB, cb, processes, std::vector<std::string>{"0L","1L","2L","3L"}, 1.4);
+ VS ST;
+ ST += "ST";
+ //ST += "TB";
+ CONFIG.AddLNormSys("ST", ST, cb, processes, std::vector<std::string>{"0L","1L","2L"}, 1.2);
 // CONFIG.AddSJetNormSys("STTB", STTB, cb, processes);
 
 /*
