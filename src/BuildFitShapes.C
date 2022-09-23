@@ -64,6 +64,7 @@ int main(int argc, char* argv[]) {
       shapeFakes  = true;
       shapeQCD    = false;
       shapeWjets  = false;
+      sJetSysSplit = true;
     }
     if(strncmp(argv[i],"-smoothAll", 10) == 0){
       smoothFakes = true;
