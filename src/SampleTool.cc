@@ -466,7 +466,7 @@ void SampleTool::InitProcMap(){
     // NANO AOD v9 ttbar
     Process ttbar("ttbar", kBkg);
     list.clear();
-    list += m_Path + "RunIISummer20UL17NanoAODv9_v2/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    list += m_Path + "RunIISummer20UL17NanoAODv9_v3/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
     m_Proc[m_iYear][ttbar] = pair<vector<string>,string>(list, "KUAnalysis");
 
     Process ST("ST", kBkg);
@@ -505,13 +505,13 @@ void SampleTool::InitProcMap(){
     // NANO AOD v9 ZDY
     Process ZDY("ZDY", kBkg);
     list.clear();
-    list += m_Path + "RunIISummer20UL17NanoAODv9_v2/ZJetsToNuNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root"; 
-    list += m_Path + "RunIISummer20UL17NanoAODv9_v2/ZJetsToNuNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
-    list += m_Path + "RunIISummer20UL17NanoAODv9_v2/ZJetsToNuNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
-    list += m_Path + "RunIISummer20UL17NanoAODv9_v2/ZJetsToNuNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
-    list += m_Path + "RunIISummer20UL17NanoAODv9_v2/ZJetsToNuNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
-    list += m_Path + "RunIISummer20UL17NanoAODv9_v2/ZJetsToNuNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
-    list += m_Path + "RunIISummer20UL17NanoAODv9_v2/ZJetsToNuNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    list += m_Path + "RunIISummer20UL17NanoAODv9_v3/ZJetsToNuNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root"; 
+    list += m_Path + "RunIISummer20UL17NanoAODv9_v3/ZJetsToNuNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    list += m_Path + "RunIISummer20UL17NanoAODv9_v3/ZJetsToNuNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    list += m_Path + "RunIISummer20UL17NanoAODv9_v3/ZJetsToNuNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    list += m_Path + "RunIISummer20UL17NanoAODv9_v3/ZJetsToNuNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    list += m_Path + "RunIISummer20UL17NanoAODv9_v3/ZJetsToNuNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    list += m_Path + "RunIISummer20UL17NanoAODv9_v3/ZJetsToNuNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
     m_Proc[m_iYear][ZDY] = pair<vector<string>,string>(list, "KUAnalysis");
 
     Process DB("DB", kBkg);
@@ -567,23 +567,23 @@ void SampleTool::InitProcMap(){
     // NANO AOD v9 Wjets (HT binned)
     Process Wjets("Wjets", kBkg);
     list.clear();
-    list += m_Path + "RunIISummer20UL17NanoAODv9_v2/WJetsToLNu_HT-70To100_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root"; 
-    //list += m_Path + "RunIISummer20UL17NanoAODv9_v2/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
-    //list += m_Path + "RunIISummer20UL17NanoAODv9_v2/WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
-    //list += m_Path + "RunIISummer20UL17NanoAODv9_v2/WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
-    //list += m_Path + "RunIISummer20UL17NanoAODv9_v2/WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
-    //list += m_Path + "RunIISummer20UL17NanoAODv9_v2/WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
-    //list += m_Path + "RunIISummer20UL17NanoAODv9_v2/WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
-    //list += m_Path + "RunIISummer20UL17NanoAODv9_v2/WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    list += m_Path + "RunIISummer20UL17NanoAODv9_v3/WJetsToLNu_HT-70To100_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root"; 
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_v3/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_v3/WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_v3/WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_v3/WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_v3/WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_v3/WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_v3/WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
     m_Proc[m_iYear][Wjets] = pair<vector<string>,string>(list, "KUAnalysis");
 
     // NANO AOD v9 Wjets (Pt binned)
     //Process Wjets("Wjets", kBkg);
     //list.clear();
-    //list += m_Path + "RunIISummer20UL17NanoAODv9_v2/WJetsToLNu_Pt-100To250_MatchEWPDG20_TuneCP5_13TeV-amcatnloFXFX-pythia8_UL2017_NanoAODv9_.root"; 
-    //list += m_Path + "RunIISummer20UL17NanoAODv9_v2/WJetsToLNu_Pt-250To400_MatchEWPDG20_TuneCP5_13TeV-amcatnloFXFX-pythia8_UL2017_NanoAODv9_.root";
-    //list += m_Path + "RunIISummer20UL17NanoAODv9_v2/WJetsToLNu_Pt-400To600_MatchEWPDG20_TuneCP5_13TeV-amcatnloFXFX-pythia8_UL2017_NanoAODv9_.root";
-    //list += m_Path + "RunIISummer20UL17NanoAODv9_v2/WJetsToLNu_Pt-600ToInf_MatchEWPDG20_TuneCP5_13TeV-amcatnloFXFX-pythia8_UL2017_NanoAODv9_.root";
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_v3/WJetsToLNu_Pt-100To250_MatchEWPDG20_TuneCP5_13TeV-amcatnloFXFX-pythia8_UL2017_NanoAODv9_.root"; 
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_v3/WJetsToLNu_Pt-250To400_MatchEWPDG20_TuneCP5_13TeV-amcatnloFXFX-pythia8_UL2017_NanoAODv9_.root";
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_v3/WJetsToLNu_Pt-400To600_MatchEWPDG20_TuneCP5_13TeV-amcatnloFXFX-pythia8_UL2017_NanoAODv9_.root";
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_v3/WJetsToLNu_Pt-600ToInf_MatchEWPDG20_TuneCP5_13TeV-amcatnloFXFX-pythia8_UL2017_NanoAODv9_.root";
     //m_Proc[m_iYear][Wjets] = pair<vector<string>,string>(list, "KUAnalysis");
 
     Process TB("TB", kBkg);
