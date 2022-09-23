@@ -7,7 +7,7 @@ TString RmSpace(TString str);
 void PlotStackAndSignificance(){
 
   //Input BFI file
-  string inputFile = "/home/t3-ku/aabreuna/WorkDir/CMSSW_10_6_12/src/KUEWKinoAnalysis/BFI_batch_hist_v2.root";
+  string inputFile = "/uscms/home/mlazarov/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis/BFI_allBkgs_data_TChiWZ_2017_allchan_maskSR_12_9_21/root/BFI.root";//"/home/t3-ku/aabreuna/WorkDir/CMSSW_10_6_12/src/KUEWKinoAnalysis/BFI_batch_hist_v2.root";
 
   //Create FitPlotter object to call stack and significance plotting functions
   FitPlotter* FITPlotter = new FitPlotter(inputFile, "", "");
@@ -38,18 +38,18 @@ void PlotStackAndSignificance(){
   //Loop over all regions at specified depth
   for(int i = 0; i < int(CTs_1L.size()); i++){ 
 
-    //significance plot with Mperp binning    
-    FITPlotter->PlotRegionSignificance(string(RmSpace(CTs_1L[i]->GetPlainLabel(depth0))+"ratioZbin_chargeSep_RISR_Mperp"),
-				       bkgs,                                                                                                                 
-				       sigs,
-				       *CTs_1L[i]);
-
-    //significance plot integrated over Mperp 
-    FITPlotter->PlotRegionSignificance(string(RmSpace(CTs_1L[i]->GetPlainLabel(depth0))+"ratioZbin_chargeSep_RISR"),
-                                       bkgs,
-                                       sigs,
-                                       *CTs_1L[i],
-				       kRISR);
+//    //significance plot with Mperp binning    
+//    FITPlotter->PlotRegionSignificance(string(RmSpace(CTs_1L[i]->GetPlainLabel(depth0))+"ratioZbin_chargeSep_RISR_Mperp"),
+//				       bkgs,                                                                                                                 
+//				       sigs,
+//				       *CTs_1L[i]);
+//
+//    //significance plot integrated over Mperp 
+//    FITPlotter->PlotRegionSignificance(string(RmSpace(CTs_1L[i]->GetPlainLabel(depth0))+"ratioZbin_chargeSep_RISR"),
+//                                       bkgs,
+//                                       sigs,
+//                                       *CTs_1L[i],
+//				       kRISR);
     //stack plot with Mperp binning 
     FITPlotter->Plot1Dstack(string(RmSpace(CTs_1L[i]->GetPlainLabel(depth0))+"stack_chargeSep_RISR_Mperp"),
 			    all,                                                                                                          
