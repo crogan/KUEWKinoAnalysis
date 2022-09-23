@@ -223,8 +223,10 @@ int main(int argc, char* argv[]) {
   SystematicsTool SYS;
   
   METTriggerTool m_METTriggerTool;
-  m_METTriggerTool.BuildMap("Parameters.csv");
-  //m_METTriggerTool.BuildMap("csv/METTrigger/Parameters.csv");
+  // path to run on condor:
+  //m_METTriggerTool.BuildMap("Parameters.csv");
+  // path to run locally:
+  m_METTriggerTool.BuildMap("csv/METTrigger/Parameters.csv");
 
   ScaleFactorTool SF;
   SF.AddBtagFolder("./BtagSF");
@@ -581,13 +583,13 @@ int main(int argc, char* argv[]) {
       //                                                                                                            
       // ------------------------------------------------------------------------------------------------ //
 
-      // HACK: Skip for NANO AOD v9
-      // trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
-      // if(is_FastSim)
-      // {
-      //   trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0)
-      //               * m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
-      // }
+      // Assign trigger weight
+      trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
+      if(is_FastSim)
+      {
+        trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0)
+                    * m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
+      }
 
       //cout << "event " << e << endl;
       //cout << "  sys: " << sys.Label() << endl;
@@ -631,31 +633,31 @@ if(sys.Label().find("MET_TRIG") != std::string::npos)
   
   correct_sys = sys.Label();
 
-  // HACK: Skip for NANO AOD v9
-  // if(sys.IsUp())
-  // {
-  //   if(is_FastSim)
-  //   {
-  //     trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1)
-  //                 * m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1);
-  //   }
-  //   else
-  //   {
-  //     trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1);
-  //   }
-  // }
-  // else
-  // {
-  //   if(is_FastSim)
-  //   {
-  //     trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1)
-  //                 * m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
-  //   }
-  //   else
-  //   {
-  //     trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
-  //   }
-  // }
+  // Assign trigger weight
+  if(sys.IsUp())
+  {
+    if(is_FastSim)
+    {
+      trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1)
+                  * m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1);
+    }
+    else
+    {
+      trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1);
+    }
+  }
+  else
+  {
+    if(is_FastSim)
+    {
+      trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1)
+                  * m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
+    }
+    else
+    {
+      trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
+    }
+  }
 }
           
 //if(sys.IsUp()) cout << "    up: " << trig_weight << endl;
