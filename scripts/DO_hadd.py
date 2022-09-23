@@ -49,12 +49,17 @@ if __name__ == "__main__":
             continue
 
         #print target
+        
+        # basic
         #haddcmd = "hadd -f "+OUT_DIR+"/"+target+".root "
-        #haddcmd = "LD_PRELOAD=scripts/startup_C.so hadd -f "+OUT_DIR+"/"+target+".root "
+        # using startup file to increase output file size limit
+        haddcmd = "LD_PRELOAD=scripts/startup_C.so hadd -f "+OUT_DIR+"/"+target+".root "
         # use -k to skip corrupt input files
-        haddcmd = "LD_PRELOAD=scripts/startup_C.so hadd -f -k "+OUT_DIR+"/"+target+".root "
+        #haddcmd = "LD_PRELOAD=scripts/startup_C.so hadd -f -k "+OUT_DIR+"/"+target+".root "
+        
         haddcmd += IN_DIR+"/"+target+"/*.root"
         print haddcmd
         os.system(haddcmd)
 
-    print("Finished Merging Files")
+    print("Finished merging all files! Let's go!")
+
