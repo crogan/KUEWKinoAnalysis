@@ -323,14 +323,14 @@ void FitConfiguration::initSystDictW( SystDict& sd){
 
 	//wjets hierarchy     
 */   	
-
+/* remove 0L because of DY pairing
 	appSystDict(sd, "Wjets0L_0jS_d3", std::vector<int>{0,0, -1,1 });
         appSystDict(sd, "Wjets0L_1jS_d2", std::vector<int>{0,1, 0,0, -1,0 });
         appSystDict(sd, "Wjets0L_2jS_d1", std::vector<int>{0,2, 0,0, 0,1, 0,3, 0,4, 0,5, -1,0 });
         appSystDict(sd, "Wjets0L_3jS_d2", std::vector<int>{0,3, 0,4, 0,5, -1,0 });
         appSystDict(sd, "Wjets0L_4jS_d3", std::vector<int>{0,4, 0,5, -1,1 });
         appSystDict(sd, "Wjets0L_5jS_d4", std::vector<int>{0,5, -1,1});
-
+*/
 	//root of roots wjets
 	appSystDict(sd, "Wjets1L_0jS_d0", std::vector<int>{1,0, 1,1, 1,2, 1,3, 1,4, 
 							   0,2, 0,0, 0,1, 0,3, 0,4, 0,5,
