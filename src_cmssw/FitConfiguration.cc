@@ -100,66 +100,107 @@ void FitConfiguration::AddFakeLeptonSys(ch::CombineHarvester& cb, ProcessList& p
 void FitConfiguration::AddBJetSys(ch::CombineHarvester& cb, ProcessList& processes){
   cb.SetFlag("filters-use-regex", true);
 
-  cb.cp().backgrounds().bin(VS().a(".*0L.*_0j.*1bISR.*").a(".*0L.*_1j.*1bISR.*"))
-     .AddSyst(cb, "BTAG_ISR_0L_01J", "rateParam", SystMap<>::init(1.00));
+  cb.cp().backgrounds().bin(VS().a(".*0L.*_1j.*0b.*S.*1bISR.*"))
+     .AddSyst(cb, "BTAG_ISR_0L_1J", "rateParam", SystMap<>::init(1.00));
 
-  cb.cp().backgrounds().bin(VS().a(".*0L.*_2j.*1bISR.*"))
-     .AddSyst(cb, "BTAG_ISR_0L_2J", "rateParam", SystMap<>::init(1.00));
-
-  cb.cp().backgrounds().bin(VS().a(".*0L.*_3j.*1bISR.*").a(".*0L.*_4j.*1bISR.*").a(".*0L.*5j.*1bISR.*"))
-     .AddSyst(cb, "BTAG_ISR_0L_345J", "rateParam", SystMap<>::init(1.00));
-
-  cb.cp().backgrounds().bin(VS().a(".*0L.*_1j.*1b.*S.*"))
+  cb.cp().backgrounds().bin(VS().a(".*0L.*_1j.*1b.*S.*0bISR.*"))
      .AddSyst(cb, "BTAG_S_0L_1J", "rateParam", SystMap<>::init(1.00));
 
-  cb.cp().backgrounds().bin(VS().a(".*0L.*_2j.*1bS.*"))
+  cb.cp().backgrounds().bin(VS().a(".*0L.*_1j.*1b.*S.*1bISR.*"))
+     .AddSyst(cb, "BTAG_S_ISR_0L_1J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*_2j.*0b.*S.*1bISR.*"))
+     .AddSyst(cb, "BTAG_ISR_0L_2J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*_2j.*1b.*S.*0bISR.*"))
      .AddSyst(cb, "BTAG_S_0L_2J", "rateParam", SystMap<>::init(1.00));
 
-  cb.cp().backgrounds().bin(VS().a(".*0L.*_2j.*2bS.*"))
-     .AddSyst(cb, "BTAG_S_0L_2J_2b", "rateParam", SystMapFunc<>::init
-         ("(@0*@0)","BTAG_S_0L_2J"));
+  cb.cp().backgrounds().bin(VS().a(".*0L.*_2j.*1b.*S.*1bISR.*"))
+     .AddSyst(cb, "BTAG_S_ISR_0L_2J", "rateParam", SystMap<>::init(1.00));
 
-  cb.cp().backgrounds().bin(VS().a(".*0L.*_3j.*1bS.*").a(".*0L.*_4j.*1bS.*").a(".*0L.*5j.*1bS.*"))
-     .AddSyst(cb, "BTAG_S_0L_345J", "rateParam", SystMap<>::init(1.00));
+  cb.cp().backgrounds().bin(VS().a(".*0L.*_2j.*2bS.*1bISR.*"))
+     .AddSyst(cb, "BTAG_S_ISR_0L_2J_2b", "rateParam", SystMap<>::init(1.00));
 
-  cb.cp().backgrounds().bin(VS().a(".*0L.*_3j.*2bS.*").a(".*0L.*_4j.*2bS.*").a(".*0L.*5j.*2bS.*"))
-     .AddSyst(cb, "BTAG_S_0L_345J_2b", "rateParam", SystMapFunc<>::init
-         ("(@0*@0)","BTAG_S_0L_345J"));
+  cb.cp().backgrounds().bin(VS().a(".*0L.*_3j.*0b.*S.*1bISR.*"))
+     .AddSyst(cb, "BTAG_ISR_0L_3J", "rateParam", SystMap<>::init(1.00));
 
-  cb.cp().backgrounds().bin(VS().a(".*1L.*_0j.*1bISR.*").a(".*1L.*_1j.*1bISR.*"))
-     .AddSyst(cb, "BTAG_ISR_1L_01J", "rateParam", SystMap<>::init(1.00));
+  cb.cp().backgrounds().bin(VS().a(".*0L.*_3j.*1b.*S.*0bISR.*"))
+     .AddSyst(cb, "BTAG_S_0L_3J", "rateParam", SystMap<>::init(1.00));
 
-  cb.cp().backgrounds().bin(VS().a(".*1L.*_2j.*1bISR.*"))
-     .AddSyst(cb, "BTAG_ISR_1L_2J", "rateParam", SystMap<>::init(1.00));
+  cb.cp().backgrounds().bin(VS().a(".*0L.*_3j.*1b.*S.*1bISR.*"))
+     .AddSyst(cb, "BTAG_S_ISR_0L_3J", "rateParam", SystMap<>::init(1.00));
 
-  cb.cp().backgrounds().bin(VS().a(".*0L.*_3j.*1bISR.*").a(".*0L.*4j.*1bISR.*"))
-     .AddSyst(cb, "BTAG_ISR_1L_34J", "rateParam", SystMap<>::init(1.00));
+  cb.cp().backgrounds().bin(VS().a(".*0L.*_3j.*2bS.*1bISR.*"))
+     .AddSyst(cb, "BTAG_S_ISR_0L_3J_2b", "rateParam", SystMap<>::init(1.00));
 
-  cb.cp().backgrounds().bin(VS().a(".*1L.*_1j.*1.*bS.*"))
+  cb.cp().backgrounds().bin(VS().a(".*0L.*_4j.*0b.*S.*1bISR.*"))
+     .AddSyst(cb, "BTAG_ISR_0L_4J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*_4j.*1b.*S.*0bISR.*"))
+     .AddSyst(cb, "BTAG_S_0L_4J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*_4j.*1b.*S.*1bISR.*"))
+     .AddSyst(cb, "BTAG_S_ISR_0L_4J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*_4j.*2bS.*1bISR.*"))
+     .AddSyst(cb, "BTAG_S_ISR_0L_4J_2b", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*5j.*0b.*S.*1bISR.*"))
+     .AddSyst(cb, "BTAG_ISR_0L_5J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*5j.*1b.*S.*0bISR.*"))
+     .AddSyst(cb, "BTAG_S_0L_5J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*5j.*1b.*S.*1bISR.*"))
+     .AddSyst(cb, "BTAG_S_ISR_0L_5J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*0L.*_5j.*2bS.*1bISR.*"))
+     .AddSyst(cb, "BTAG_S_ISR_0L_5J_2b", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*_1j.*0b.*S.*1bISR.*"))
+     .AddSyst(cb, "BTAG_ISR_1L_1J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*_1j.*1b.*S.*0bISR.*"))
      .AddSyst(cb, "BTAG_S_1L_1J", "rateParam", SystMap<>::init(1.00));
 
-  cb.cp().backgrounds().bin(VS().a(".*1L.*_2j.*1bS.*"))
+  cb.cp().backgrounds().bin(VS().a(".*1L.*_1j.*1b.*S.*1bISR.*"))
+     .AddSyst(cb, "BTAG_S_ISR_1L_1J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*_2j.*0b.*S.*1bISR.*"))
+     .AddSyst(cb, "BTAG_ISR_1L_2J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*_2j.*1b.*S.*0bISR.*"))
      .AddSyst(cb, "BTAG_S_1L_2J", "rateParam", SystMap<>::init(1.00));
 
-  cb.cp().backgrounds().bin(VS().a(".*1L.*_2j.*2bS.*"))
-     .AddSyst(cb, "BTAG_S_1L_2J_2b", "rateParam", SystMapFunc<>::init
-         ("(@0*@0)","BTAG_S_1L_2J"));
+  cb.cp().backgrounds().bin(VS().a(".*1L.*_2j.*1b.*S.*1bISR.*"))
+     .AddSyst(cb, "BTAG_S_ISR_1L_2J", "rateParam", SystMap<>::init(1.00));
 
-  cb.cp().backgrounds().bin(VS().a(".*1L.*_3j.*1bS.*").a(".*1L.*4j.*1bS.*"))
-     .AddSyst(cb, "BTAG_S_1L_34J", "rateParam", SystMap<>::init(1.00));
+  cb.cp().backgrounds().bin(VS().a(".*1L.*_2j.*2bS.*1bISR.*"))
+     .AddSyst(cb, "BTAG_S_ISR_1L_2J_2b", "rateParam", SystMap<>::init(1.00));
 
-  cb.cp().backgrounds().bin(VS().a(".*1L.*_3j.*2bS.*").a(".*1L.*4j.*2bS.*"))
-     .AddSyst(cb, "BTAG_S_1L_34J_2b", "rateParam", SystMapFunc<>::init
-         ("(@0*@0)","BTAG_S_1L_34J"));
+  cb.cp().backgrounds().bin(VS().a(".*1L.*_3j.*0b.*S.*1bISR.*"))
+     .AddSyst(cb, "BTAG_ISR_1L_3J", "rateParam", SystMap<>::init(1.00));
 
-  cb.cp().backgrounds().bin(VS().a(".*2L.*1bISR.*"))
-     .AddSyst(cb, "BTAG_ISR_2L", "rateParam", SystMap<>::init(1.00));
+  cb.cp().backgrounds().bin(VS().a(".*1L.*_3j.*1b.*S.*0bISR.*"))
+     .AddSyst(cb, "BTAG_S_1L_3J", "rateParam", SystMap<>::init(1.00));
 
-  cb.cp().backgrounds().bin(VS().a(".*2L.*1j1bS.*"))
-     .AddSyst(cb, "BTAG_S_2L_1J", "rateParam", SystMap<>::init(1.00));
+  cb.cp().backgrounds().bin(VS().a(".*1L.*_3j.*1b.*S.*1bISR.*"))
+     .AddSyst(cb, "BTAG_S_ISR_1L_3J", "rateParam", SystMap<>::init(1.00));
 
-  cb.cp().backgrounds().bin(VS().a(".*2L.*ge2jge1bS.*"))
-     .AddSyst(cb, "BTAG_S_2L_2J", "rateParam", SystMap<>::init(1.00));
+  cb.cp().backgrounds().bin(VS().a(".*1L.*_3j.*2bS.*1bISR.*"))
+     .AddSyst(cb, "BTAG_S_ISR_1L_3J_2b", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*4j.*0b.*S.*1bISR.*"))
+     .AddSyst(cb, "BTAG_ISR_1L_4J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*4j.*1b.*S.*0bISR.*"))
+     .AddSyst(cb, "BTAG_S_1L_4J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*4j.*1b.*S.*1bISR.*"))
+     .AddSyst(cb, "BTAG_S_ISR_1L_4J", "rateParam", SystMap<>::init(1.00));
+
+  cb.cp().backgrounds().bin(VS().a(".*1L.*_4j.*2bS.*1bISR.*"))
+     .AddSyst(cb, "BTAG_S_ISR_1L_4J_2b", "rateParam", SystMap<>::init(1.00));
 
   cb.SetFlag("filters-use-regex", false);
 }
@@ -323,7 +364,8 @@ void FitConfiguration::initSystDictW( SystDict& sd){
 
 	//wjets hierarchy     
 */   	
-/* remove 0L because of DY pairing
+/*
+
 	appSystDict(sd, "Wjets0L_0jS_d3", std::vector<int>{0,0, -1,1 });
         appSystDict(sd, "Wjets0L_1jS_d2", std::vector<int>{0,1, 0,0, -1,0 });
         appSystDict(sd, "Wjets0L_2jS_d1", std::vector<int>{0,2, 0,0, 0,1, 0,3, 0,4, 0,5, -1,0 });
