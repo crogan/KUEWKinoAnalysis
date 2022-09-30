@@ -199,7 +199,7 @@ void FitConfiguration::AddBJetSys(ch::CombineHarvester& cb, ProcessList& process
   cb.cp().backgrounds().bin(VS().a(".*1L.*4j.*1b.*S.*1bISR.*"))
      .AddSyst(cb, "BTAG_S_ISR_1L_4J", "rateParam", SystMap<>::init(1.00));
 
-  cb.cp().backgrounds().bin(VS().a(".*1L.*_4j.*2bS.*1bISR.*"))
+  cb.cp().backgrounds().bin(VS().a(".*1L.*4j.*2bS.*1bISR.*"))
      .AddSyst(cb, "BTAG_S_ISR_1L_4J_2b", "rateParam", SystMap<>::init(1.00));
 
   cb.SetFlag("filters-use-regex", false);
