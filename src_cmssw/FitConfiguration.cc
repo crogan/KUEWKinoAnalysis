@@ -154,7 +154,7 @@ void FitConfiguration::AddBJetSys(ch::CombineHarvester& cb, ProcessList& process
   cb.cp().backgrounds().bin(VS().a(".*0L.*5j.*1b.*S.*1bISR.*"))
      .AddSyst(cb, "BTAG_S_ISR_0L_5J", "rateParam", SystMap<>::init(1.00));
 
-  cb.cp().backgrounds().bin(VS().a(".*0L.*_5j.*2bS.*1bISR.*"))
+  cb.cp().backgrounds().bin(VS().a(".*0L.*5j.*2bS.*1bISR.*"))
      .AddSyst(cb, "BTAG_S_ISR_0L_5J_2b", "rateParam", SystMap<>::init(1.00));
 
   cb.cp().backgrounds().bin(VS().a(".*1L.*_1j.*0b.*S.*1bISR.*"))
