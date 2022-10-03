@@ -224,9 +224,9 @@ int main(int argc, char* argv[]) {
   
   METTriggerTool m_METTriggerTool;
   // path to run on condor:
-  m_METTriggerTool.BuildMap("Parameters.csv");
+  //m_METTriggerTool.BuildMap("Parameters.csv");
   // path to run locally:
-  //m_METTriggerTool.BuildMap("csv/METTrigger/Parameters.csv");
+  m_METTriggerTool.BuildMap("csv/METTrigger/Parameters.csv");
 
   ScaleFactorTool SF;
   SF.AddBtagFolder("./BtagSF");
