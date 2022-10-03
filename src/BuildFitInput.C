@@ -35,18 +35,24 @@ int main(int argc, char* argv[]) {
   int ifile = -1;
   //string NtuplePath = "root://xrootd.unl.edu//store/user/zflowers/crogan/";
   //string NtuplePath = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v0/";
+  
+  // Caleb: NanoAODv9
   string NtuplePath = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_NanoAODv9_Standard_v1/";
+  
+  // Alice: NanoAODv9
+  //string NtuplePath = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_NanoAODv9/";
+  
   string OutFile    = "BuildFitInput_output.root";
 
   bool doSigFile = false;
   string SigFile = "";
 
-  bool bprint = false;
-  int  year   = 2017;
-  bool addBkg  = false;
-  bool addSig  = false;
-  bool addData = false;
-  bool extrahist = false;
+  bool bprint       = false;
+  int  year         = 2017;
+  bool addBkg       = false;
+  bool addSig       = false;
+  bool addData      = false;
+  bool extrahist    = false;
   
   vector<string> proc_to_add;
 
@@ -301,9 +307,9 @@ int main(int argc, char* argv[]) {
       cout << "   Processing file " << file << " w/ tree " << tree << endl;
       cout << "      Sample weight is " << sample_weight << endl;
       if(is_FastSim)
-    cout << "      Is FastSim" << endl;
+        cout << "      Is FastSim" << endl;
       if(do_FilterDilepton)
-    cout << "      Filter Out dilepton events" << endl;
+        cout << "      Filter Out dilepton events" << endl;
     
       TChain* chain = ST.Tree(proc, f);
 
@@ -311,16 +317,19 @@ int main(int argc, char* argv[]) {
 
       int Nentry = base->fChain->GetEntries();
       
-      int SKIP = 1000;
+      // skip events (only run every n_th event)
+      int SKIP = 1;
 
-      // event loop
+      // ------------------ //
+      // --- event loop --- //
+      // ------------------ //
       for(int e = 0; e < Nentry; e += SKIP){
-    base->GetEntry(e);
+        base->GetEntry(e);
 
     if((e/SKIP)%(std::max(1, int(Nentry/SKIP/10))) == 0)
       cout << "      event " << e << " | " << Nentry << endl;
 
-        if(base->Charge_lep->size() != base->Nlep ) {cout << "branches be fucked..." << endl; return -1;}
+        if(base->Charge_lep->size() != base->Nlep ) {cout << "The branches are messed up, my friend!!!" << endl; return -1;}
 
     if(!base->EventFilter)
       continue;
@@ -750,7 +759,7 @@ if(sys.Label().find("MET_TRIG") != std::string::npos)
           //    FITBuilder.AddEvent(weight/double(Nf), Mperp, RISR,
           //                Categories[eindex], FITBuilder.FakeProcess(flabels[fl]), sys);
           
-          printf("e = %d, weight = %.3f, Nf = %d, Mperp = %.3f, RISR = %.3f\n", e, weight, Nf, Mperp, RISR);
+          //printf("e = %d, weight = %.3f, Nf = %d, Mperp = %.3f, RISR = %.3f\n", e, weight, Nf, Mperp, RISR);
           FITBuilder.AddEvent(weight/double(Nf), Mperp, RISR,
                   Categories[eindex], proc.FakeProcess(flabels[fl]), sys);
         }

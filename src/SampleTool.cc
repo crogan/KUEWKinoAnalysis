@@ -463,11 +463,17 @@ void SampleTool::InitProcMap(){
     //list += m_Path + "Fall17_102X/ttHTobb_M125_TuneCP5_13TeV-powheg-pythia8_Fall17_102X.root";
     //m_Proc[m_iYear][ttbar] = pair<vector<string>,string>(list, "KUAnalysis");
     
-    // NANO AOD v9 ttbar
+    // Caleb: NANO AOD v9 ttbar
     Process ttbar("ttbar", kBkg);
     list.clear();
     list += m_Path + "RunIISummer20UL17NanoAODv9_v3/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
     m_Proc[m_iYear][ttbar] = pair<vector<string>,string>(list, "KUAnalysis");
+    
+    // Alice: NANO AOD v9 ttbar
+    //Process ttbar("ttbar", kBkg);
+    //list.clear();
+    //list += m_Path + "TTjets_DILEP.root";
+    //m_Proc[m_iYear][ttbar] = pair<vector<string>,string>(list, "KUAnalysis");
 
     Process ST("ST", kBkg);
     list.clear();
@@ -612,8 +618,10 @@ void SampleTool::InitProcMap(){
     // --- Signal --- //
     // -------------- //
     
-    // NANO AOD v9 T4bd
+    // Caleb: NANO AOD v9 T4bd
     InitSMS("T4bd",m_Path+"RunIISummer20UL17NanoAODv9_SMS_v1/SMS-T2-4bd_genMET-80_mStop-500_mLSP-490_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root",1,false,false);
+    // Alice: NANO AOD v9 T4bd
+    //InitSMS("T4bd",m_Path+"SMS-T2-4bd_genMET-80_mStop-500_mLSP-490_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root",1,false,false);
     
     if (not SKIP_SMS)
     {
