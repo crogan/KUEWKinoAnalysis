@@ -28,7 +28,7 @@ def caclWeights():
     print("Let's go!")
     info_json_2017 = "json/samples/Info_UL2017_NanoAODv9.json"
     eras = ["2016", "2017", "2018", "Run2"]
-    samples = ["name"]
+    samples = ["TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8", "T2-4bd"]
     sample_data = loadJson(info_json_2017)
     
     for era in eras:
