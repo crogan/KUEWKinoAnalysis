@@ -18,7 +18,6 @@ USER        = os.environ['USER']
 OUT_BASE    = "/stash/user/"+USER+"/NTUPLES/Processing"
 LIST        = "default.list"
 QUEUE       = ""
-MAXN        = 1
 SPLIT       = 1
 # ----------------------------------------------------------- #
 
@@ -35,7 +34,7 @@ def create_filelist(rootlist, dataset, filetag):
     sublist = []
     for f in rootlist:
         sublist.append(f)
-        if len(sublist) >= MAXN and MAXN > 0:
+        if len(sublist) >= 1:
             listfile = "%s/%s_%s_%d.list" % (listdir_sam, dataset, filetag, listcount)
             new_listfile(sublist, listfile)
             listlist.append(listfile)
@@ -107,7 +106,7 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
 
 if __name__ == "__main__":
     if not len(sys.argv) > 1 or '-h' in sys.argv or '--help' in sys.argv:
-        print "Usage: %s [-q queue] [-tree treename] [-list listfile.list] [-maxN N] [-split S] [--sms] [--data] [--dryrun] [--verbose]" % sys.argv[0]
+        print "Usage: %s [-q queue] [-tree treename] [-list listfile.list] [-split S] [--sms] [--data] [--dry-run] [--verbose]" % sys.argv[0]
         sys.exit(1)
 
     argv_pos    = 1
@@ -128,10 +127,6 @@ if __name__ == "__main__":
         p = sys.argv.index('-tree')
         TREE = sys.argv[p+1]
         argv_pos += 2
-    if '-maxN' in sys.argv:
-        p = sys.argv.index('-maxN')
-        MAXN = int(sys.argv[p+1])
-        argv_pos += 2
     if '-split' in sys.argv:
         p = sys.argv.index('-split')
         SPLIT = int(sys.argv[p+1])
@@ -142,7 +137,7 @@ if __name__ == "__main__":
     if '--data' in sys.argv:
         DO_DATA = 1
         argv_pos += 1
-    if '--dryrun' in sys.argv:
+    if '--dry-run' in sys.argv:
         DRY_RUN = 1
         argv_pos += 1
     if '--verbose' in sys.argv:
@@ -151,8 +146,6 @@ if __name__ == "__main__":
         
     if SPLIT <= 1:
         SPLIT = 1
-    else:
-        MAXN = 1
     
     print " --- Preparing condor submission to create ntuples."
     if DO_DATA:
@@ -187,12 +180,17 @@ if __name__ == "__main__":
     config = TARGET+"config/"
     os.system("mkdir -p "+config)
 
+    # NOTE: there is a bug for setting the hadd verbosity level, "hadd -v 0".
+    # The hadd verbosity option only works in ROOT 6.18/00 and later.
+    # https://github.com/root-project/root/issues/11372
+    # https://github.com/root-project/root/pull/3914
+
     # make EventCount file
-    os.system("hadd "+config+"EventCount.root root/EventCount/*.root")
+    os.system("hadd "+config+"EventCount.root root/EventCount/*.root > /dev/null")
     EVTCNT = "./config/EventCount.root"
 
     # make FilterEff file 
-    os.system("hadd "+config+"FilterEff.root root/FilterEff/*.root")
+    os.system("hadd "+config+"FilterEff.root root/FilterEff/*.root > /dev/null")
     FILTEREFF = "./config/FilterEff.root"
 
     # make json file
@@ -236,7 +234,7 @@ if __name__ == "__main__":
     clean_inputlist = []
     input_info      = {}
 
-    knowntags = ["Fall17_94X","Autumn18_102X","Summer16_94X","Fall17_102X","Summer16_102X","Summer20UL16_102X","Summer20UL16APV_102X","Summer20UL17_102X","Summer20UL18_102X"]
+    knowntags = ["Fall17_94X","Autumn18_102X","Summer16_94X","Fall17_102X","Summer16_102X","Summer20UL16_102X","Summer20UL16APV_102X","Summer20UL17_102X","Summer20UL18_102X","RunIISummer20UL17NanoAODv9"]
     
     with open(listfile,'r') as mylist:
         inputlist = mylist.readlines()
@@ -320,7 +318,7 @@ if __name__ == "__main__":
 
     #print listdir
     os.system("cp -r "+listdir+" "+config)
-    #print "creating tarbal from: ", TARGET
+    #print "creating tarball from: ", TARGET
     os.system("tar -C "+config+"/../ -czf "+TARGET+"/config.tgz config")
 
     submit_dir  = srcdir        
@@ -328,7 +326,7 @@ if __name__ == "__main__":
     n_samples   = len(submit_list)
     total_jobs  = SPLIT * total_root_files
 
-    # don't submit jobs if --dryrun is used
+    # don't submit jobs if --dry-run is used
     if not DRY_RUN:
         for f in submit_list:
             print "submitting: {0}".format(f)
@@ -358,7 +356,7 @@ if __name__ == "__main__":
     print "----------------------------"
 
     if DRY_RUN:
-        print "The option --dryrun was used; no jobs were submitted."
+        print "The option --dry-run was used; no jobs were submitted."
     else:
         print "Congrats... your jobs were submitted!"
 

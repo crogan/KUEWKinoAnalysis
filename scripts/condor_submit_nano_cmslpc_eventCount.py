@@ -1,24 +1,26 @@
 #! /usr/bin/env python
 import os, sys, commands, time
 
-#look for the current directory
-#######################################
-pwd = os.environ['PWD']
-home = os.environ['HOME']
-#######################################
-RUN_DIR = pwd
-TEMP = pwd
-jobEXE  = "execute_script_EventCount.sh"
-EXE  = "MakeEventCount_NANO.x"
-RESTFRAMES = './scripts/setup_RestFrames_connect.sh'
+
+# ----------------------------------------------------------- #
+# Parameters
+# ----------------------------------------------------------- #
+# current working directory
+pwd         = os.environ['PWD']
+RUN_DIR     = pwd
+TEMP        = pwd
+jobEXE      = "execute_script_EventCount.sh"
+EXE         = "MakeEventCount_NANO.x"
+RESTFRAMES  = './scripts/setup_RestFrames_connect.sh'
 CMSSW_SETUP = './scripts/cmssw_setup_connect.sh'
-TREE = "Events"
-USER = os.environ['USER']
-OUT  = "/uscms/home/"+USER+"/nobackup/EventCount/root/"
-LIST = "default.list"
-QUEUE = ""
-MAXN = 1
-CONNECT = False
+TREE        = "Events"
+USER        = os.environ['USER']
+OUT         = "/uscms/home/"+USER+"/nobackup/EventCount/root/"
+LIST        = "default.list"
+QUEUE       = ""
+MAXN        = 1
+CONNECT     = False
+# ----------------------------------------------------------- #
 
 def new_listfile(rootlist, listfile):
     mylist = open(listfile,'w')
@@ -138,11 +140,10 @@ if __name__ == "__main__":
     listname = listfile.split("/")
     listname = listname[-1]
 
-    print listname
-
     NAME = listname.replace(".list",'')
     NAME += "_EventCount"
     
+    print listname
     print NAME
     print RUN_DIR
         
@@ -169,9 +170,6 @@ if __name__ == "__main__":
     os.system("cp "+RESTFRAMES+" "+config+".")
     os.system("cp "+CMSSW_SETUP+" "+config+".")
 
-    print TARGET
-    #os.system("tar -czf "+TARGET+"/config.tgz "+config)
-
     if CONNECT is True:
         OUT  = "/stash/user/"+USER+"/EventCount/root/"
 
@@ -182,13 +180,15 @@ if __name__ == "__main__":
 
     datasetlist = []
 
-    knowntags = ["Fall17_94X","Autumn18_102X","Summer16_94X","Fall17_102X","Summer16_102X","Summer20UL16_102X","Summer20UL16APV_102X","Summer20UL17_102X","Summer20UL18_102X"]
+    knowntags = ["Fall17_94X","Autumn18_102X","Summer16_94X","Fall17_102X","Summer16_102X","Summer20UL16_102X","Summer20UL16APV_102X","Summer20UL17_102X","Summer20UL18_102X","RunIISummer20UL17NanoAODv9"]
     
     with open(listfile,'r') as mylist:
         inputlist = mylist.readlines()
 
         for flist in inputlist:
-            if '#' in flist: continue
+            # skip commented lines (skip if # is anywhere in line)
+            if '#' in flist:
+                continue
             flist = flist.strip('\n\r')
             print "Processing list from %s" % flist
 
@@ -253,11 +253,10 @@ if __name__ == "__main__":
         script_name = srcdir+'_'.join([dataset, filetag])+'.submit'
         write_sh(script_name, overlist_name, file_name+'.root', logfile, outfile, errfile, dataset, filetag)
 
-    print listdir
+    #print listdir
     os.system("cp -r "+listdir+" "+config)
-    print "creating tarbal from: ", TARGET
-
-    os.system("tar -C "+config+"/../ -czvf "+TARGET+"/config.tgz config")
+    #print "creating tarball from: ", TARGET
+    os.system("tar -C "+config+"/../ -czf "+TARGET+"/config.tgz config")
 
     submit_dir  = srcdir        
     submit_list = [os.path.join(submit_dir, f) for f in os.listdir(submit_dir) if (os.path.isfile(os.path.join(submit_dir, f)) and ('.submit' in f))]
