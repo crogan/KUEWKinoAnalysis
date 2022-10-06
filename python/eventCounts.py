@@ -40,7 +40,10 @@ def getNtupleEvents(root_file, tree_name, is_signal):
 
 # create csv with number of events
 def createCSV(output_csv, samples):
+    print("Creating {0}".format(output_csv))
+    
     column_titles = ["sample", "nevents_processed", "nevents_ntuple", "acceptance"]
+    
     with open(output_csv, 'w') as f:
         csv_writer = csv.writer(f)
         csv_writer.writerow(column_titles)
@@ -61,6 +64,7 @@ def eventCounts():
     # LowPtElectron UL 2017 NanoAODv9 samples
     era         = "2017"
     output_csv  = "csv/samples/LowPtElectron_UL{0}_NanoAODv9_nEvents.csv".format(era)
+    
     samples = {}
     samples["TTJets_DiLept"]    = {}
     samples["T2_4bd_500_490"]   = {}
@@ -70,6 +74,7 @@ def eventCounts():
     samples["T2_4bd_500_490"]["tree_name"]  = "SMS_500_490"
     samples["TTJets_DiLept"]["path"]        = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_NanoAODv9/TTjets_DILEP.root"
     samples["T2_4bd_500_490"]["path"]       = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_NanoAODv9/SMS-T2-4bd_genMET-80_mStop-500_mLSP-490_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root"
+    
     createCSV(output_csv, samples)
 
 def main():

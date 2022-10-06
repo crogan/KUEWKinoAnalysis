@@ -16,6 +16,8 @@ def caclWeights():
     lumi        = tools.getLumi(era, lumi_json)
     sample_data = tools.loadJson(info_json)
     
+    print("Creating {0}".format(output_csv))
+    
     column_titles = ["sample", "kfactor", "xsec", "lumi", "nevents", "weight"]
     
     with open(output_csv, 'w', newline='') as f:
