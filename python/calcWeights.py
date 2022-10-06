@@ -26,18 +26,15 @@ def getWeight(kfactor, xsec, lumi, nevents):
     return weight
 
 def caclWeights():
-    info_json_2017  = "json/samples/Info_UL2017_NanoAODv9.json"
-    output_csv      = "csv/samples/Weights_UL2017_NanoAODv9.csv"
-    eras            = ["2016", "2017", "2018", "Run2"]
-    sample_data = loadJson(info_json_2017)
-    
-    #for era in eras:
-    #    lumi = getLumi(era)
-    #    print("era: {0}, lumi: {1:.3f}".format(era, lumi))
+    # LowPtElectron UL 2017 NanoAODv9 samples
+    era         = "2017"
+    info_json   = "json/samples/LowPtElectron_UL{0}_NanoAODv9.json".format(era)
+    output_csv  = "csv/samples/LowPtElectron_UL{0}_NanoAODv9_Weights.csv".format(era)
+    lumi        = getLumi(era)
+    sample_data = loadJson(info_json)
     
     column_titles = ["sample", "kfactor", "xsec", "lumi", "nevents", "weight"]
-    era = "2017"
-    lumi = getLumi(era)
+    
     with open(output_csv, 'w', newline='') as f:
         csv_writer = csv.writer(f)
         csv_writer.writerow(column_titles)
@@ -49,7 +46,6 @@ def caclWeights():
             row     = [sample, kfactor, xsec, lumi, nevents, weight]
             csv_writer.writerow(row)
             print(row)
-            #print("sample: {0}, weight: {1:.3f}".format(sample, weight))
 
 def main():
     caclWeights()

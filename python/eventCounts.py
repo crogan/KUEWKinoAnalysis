@@ -56,10 +56,9 @@ def createCSV(output_csv, samples):
             print(row)
 
 def eventCounts():
-    # NANO AOD v9 samples
-    # 2017
+    # LowPtElectron UL 2017 NanoAODv9 samples
     era         = "2017"
-    output_csv  = "csv/samples/nEvents_UL{0}_NanoAODv9.csv".format(era)
+    output_csv  = "csv/samples/LowPtElectron_UL{0}_NanoAODv9_nEvents.csv".format(era)
     samples = {}
     samples["TTJets_DiLept"]    = {}
     samples["T2_4bd_500_490"]   = {}
