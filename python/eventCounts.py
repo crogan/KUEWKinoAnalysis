@@ -10,6 +10,13 @@ ROOT.gROOT.SetBatch(ROOT.kTRUE)
 # Tell ROOT not to be in charge of memory, fix issue of histograms being deleted when ROOT file is closed:
 ROOT.TH1.AddDirectory(False)
 
+def getProcessedEvents(root_file):
+    nevents = -1
+    return nevents
+
+def getNtupleEvents(root_file):
+    nevents = -1
+    return nevents
 
 def createCSV(output_csv, samples):
     column_titles = ["sample", "nevents_processed", "nevents_ntuple"]
@@ -17,7 +24,13 @@ def createCSV(output_csv, samples):
         csv_writer = csv.writer(f)
         csv_writer.writerow(column_titles)
         for sample in samples:
-            row = [sample, 1, 1]
+            is_signal       = samples[sample]["is_signal"] 
+            path            = samples[sample]["path"] 
+            
+            nevents_processed   = getProcessedEvents(path)
+            nevents_ntuple      = getNtupleEvents(path)
+            
+            row = [sample, nevents_processed, nevents_ntuple]
             csv_writer.writerow(row)
             print(row)
 
@@ -31,8 +44,8 @@ def eventCounts():
     samples["T2_4bd_500_490"]   = {}
     samples["TTJets_DiLept"]["is_signal"]   = False
     samples["T2_4bd_500_490"]["is_signal"]  = True
-    samples["TTJets_DiLept"]["file"]        = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_NanoAODv9/TTjets_DILEP.root"
-    samples["T2_4bd_500_490"]["file"]       = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_NanoAODv9/SMS-T2-4bd_genMET-80_mStop-500_mLSP-490_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root"
+    samples["TTJets_DiLept"]["path"]        = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_NanoAODv9/TTjets_DILEP.root"
+    samples["T2_4bd_500_490"]["path"]       = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_NanoAODv9/SMS-T2-4bd_genMET-80_mStop-500_mLSP-490_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root"
     createCSV(output_csv, samples)
 
 def main():
