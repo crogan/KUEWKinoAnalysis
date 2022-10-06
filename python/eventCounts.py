@@ -38,8 +38,9 @@ def getNtupleEvents(root_file, tree_name, is_signal):
     nevents = int(nevents)
     return nevents
 
+# create csv with number of events
 def createCSV(output_csv, samples):
-    column_titles = ["sample", "nevents_processed", "nevents_ntuple"]
+    column_titles = ["sample", "nevents_processed", "nevents_ntuple", "acceptance"]
     with open(output_csv, 'w') as f:
         csv_writer = csv.writer(f)
         csv_writer.writerow(column_titles)
@@ -50,8 +51,9 @@ def createCSV(output_csv, samples):
             
             nevents_processed   = getProcessedEvents(path, "EventCount", is_signal)
             nevents_ntuple      = getNtupleEvents(path, tree_name, is_signal)
+            acceptance          = float(nevents_ntuple) / float(nevents_processed)
             
-            row = [sample, nevents_processed, nevents_ntuple]
+            row = [sample, nevents_processed, nevents_ntuple, acceptance]
             csv_writer.writerow(row)
             print(row)
 

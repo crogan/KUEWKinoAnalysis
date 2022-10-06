@@ -1,16 +1,11 @@
 # calcWeights.py
 
-import json
 import csv
-
-def loadJson(input_json):
-    with open(input_json, 'r') as f:
-        data = json.load(f)
-        return data
+import tools
 
 def getLumi(era):
     lumi_json   = "json/samples/Lumis.json"
-    lumi_data   = loadJson(lumi_json)
+    lumi_data   = tools.loadJson(lumi_json)
     lumi        = -999
     
     if era.lower() == "run2":
@@ -31,7 +26,7 @@ def caclWeights():
     info_json   = "json/samples/LowPtElectron_UL{0}_NanoAODv9.json".format(era)
     output_csv  = "csv/samples/LowPtElectron_UL{0}_NanoAODv9_Weights.csv".format(era)
     lumi        = getLumi(era)
-    sample_data = loadJson(info_json)
+    sample_data = tools.loadJson(info_json)
     
     column_titles = ["sample", "kfactor", "xsec", "lumi", "nevents", "weight"]
     
