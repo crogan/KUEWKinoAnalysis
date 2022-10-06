@@ -634,7 +634,7 @@ void FitInputEditor::AddShapeSysQCD(){
   vector<CategoryTree> CTs;
   
   CTs.push_back(CTTool.GetCategories_QCD0L());
-  CTs.push_back(CTTool.GetCategories_QCD1L());
+  //CTs.push_back(CTTool.GetCategories_QCD1L());
   
   ProcessList processes = GetProcesses();
   int Nproc = processes.GetN();
@@ -654,7 +654,7 @@ void FitInputEditor::AddShapeSysQCD(){
 
   for(int i = 0; i < 2; i++){
     CT_groups.clear();
-    CTs[i].GetListDepth(CT_groups,1);
+    CTs[i].GetListDepth(CT_groups,0);
   //  for(int j = 0; j < int(catTrees.size()); j++)
   //    CT_groups.push_back(catTrees[j]);
    //string sgroup = Form("QCD_%dL",i+1);
