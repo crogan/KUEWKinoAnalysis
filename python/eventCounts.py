@@ -12,12 +12,26 @@ ROOT.TH1.AddDirectory(False)
 
 # number of processed events (run over when creating ntuples, before cuts)
 def getProcessedEvents(root_file, tree_name, is_signal):
-    nevents = -1
+    nevents  = 0
+    chain    = ROOT.TChain(tree_name)
+    chain.Add(root_file)
+    nentries = chain.GetEntries()
+    nentries = int(nentries)
+    for i in range(nentries):
+        # select entry
+        chain.GetEntry(i)
+        # get branch
+        Nevent = chain.Nevent
+        Nevent = int(Nevent)
+        # add to total
+        nevents += Nevent
+        #print(i, Nevent)
+    nevents = int(nevents)
     return nevents
 
 # number of ntuple events (saved in ntuples after cuts)
 def getNtupleEvents(root_file, tree_name, is_signal):
-    nevents = -1
+    nevents = 0
     chain   = ROOT.TChain(tree_name)
     chain.Add(root_file)
     nevents = chain.GetEntries()
@@ -34,7 +48,7 @@ def createCSV(output_csv, samples):
             tree_name       = samples[sample]["tree_name"] 
             is_signal       = samples[sample]["is_signal"] 
             
-            nevents_processed   = getProcessedEvents(path, tree_name, is_signal)
+            nevents_processed   = getProcessedEvents(path, "EventCount", is_signal)
             nevents_ntuple      = getNtupleEvents(path, tree_name, is_signal)
             
             row = [sample, nevents_processed, nevents_ntuple]
