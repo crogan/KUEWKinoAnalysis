@@ -614,6 +614,11 @@ void SampleTool::InitProcMap(){
     list += m_Path + "Fall17_102X/QCD_HT700to1000_TuneCP5_13TeV-madgraph-pythia8_Fall17_102X.root";
     m_Proc[m_iYear][QCD] = pair<vector<string>,string>(list, "KUAnalysis");
     
+    Process T4bd("T4bd", kBkg);
+    list.clear();
+    list += m_Path + "RunIISummer20UL17NanoAODv9_SMS_v1/SMS-T2-4bd_genMET-80_mStop-500_mLSP-490_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    m_Proc[m_iYear][T4bd] = pair<vector<string>,string>(list, "SMS_500_490");
+    
     // -------------- //
     // --- Signal --- //
     // -------------- //
