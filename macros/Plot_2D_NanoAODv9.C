@@ -273,11 +273,14 @@ void Plot_2D_NanoAODv9()
         if(Nlep + NjetS + NSV < 1)
           continue;
 
-        // Lepton and Sjet selection
-        //if(Nlep != 1)
-        //    continue;
-        if(Nlep != 2)
-          continue;
+        // --------------------------------- //
+        // --- Lepton and Sjet selection --- //
+        // --------------------------------- //
+        
+        if(Nlep != 1)
+            continue;
+        //if(Nlep != 2)
+        //  continue;
         if(NjetS != 0)
           continue;
 
@@ -416,7 +419,7 @@ void Plot_2D_NanoAODv9()
     }
   }
 
-  cout << "Total " << hist->Integral()*137. << endl;
+  cout << "Total events (scaled to lumi): " << hist->Integral()*137. << endl;
   
   hist->Scale(137.);
   
