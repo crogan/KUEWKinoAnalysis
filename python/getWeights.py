@@ -1,5 +1,6 @@
 # getWeights.py
 
+import ROOT
 import csv
 import tools
 
@@ -7,6 +8,21 @@ import tools
 # - Get event weights from PreUL samples
 
 # DONE
+
+# Make sure ROOT.TFile.Open(fileURL) does not seg fault when $ is in sys.argv (e.g. $ passed in as argument)
+ROOT.PyConfig.IgnoreCommandLineOptions = True
+# Make plots faster without displaying them
+ROOT.gROOT.SetBatch(ROOT.kTRUE)
+# Tell ROOT not to be in charge of memory, fix issue of histograms being deleted when ROOT file is closed:
+ROOT.TH1.AddDirectory(False)
+
+def getWeight(root_file, tree_name, is_signal):
+    weight  = 0.0
+    chain   = ROOT.TChain(tree_name)
+    chain.Add(root_file)
+    chain.GetEntry(0)
+    weight  = chain.weight
+    return weight
 
 # create csv with number of events
 def createCSV(output_csv, samples, lumi):
@@ -22,7 +38,7 @@ def createCSV(output_csv, samples, lumi):
             tree_name       = samples[sample]["tree_name"] 
             is_signal       = samples[sample]["is_signal"] 
 
-            weight_ntuple   = 1.0
+            weight_ntuple   = getWeight(path, tree_name, is_signal)
             weight_lumi     = lumi * weight_ntuple
             
             #nevents_processed   = getProcessedEvents(path, "EventCount", is_signal)
