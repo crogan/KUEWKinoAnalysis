@@ -65,7 +65,8 @@ void Plot_2D_cjs(){
   vector<const CategoryTree*> CTs;
   CT_1L.GetListDepth(CTs, depth0-2);
 
-  int iCAT = 1;
+  //int iCAT = 1;
+  int iCAT = 2;
 
   //const CategoryTree* myCT = CTs[iCAT];
   const CategoryTree* myCT = &CT_0L;
@@ -264,8 +265,12 @@ ProcessList signals;
 	if(Nlep + NjetS + NSV < 1)
 	  continue;
 
-	g_Label = "1L 0J";
-	if(Nlep != 1)
+	//g_Label = "1L 0J";
+	g_Label = "2L 0J";
+	
+    //if(Nlep != 1)
+    //    continue;
+    if(Nlep != 2)
         continue;
 	if(NjetS != 0)
         continue;
@@ -457,7 +462,8 @@ ProcessList signals;
   l.SetTextFont(42);
   l.DrawLatex(0.7,0.04,g_Label.c_str());
 
-  can->SaveAs("T2_4bd_500_490_1L_0J.pdf");
+  //can->SaveAs("T2_4bd_500_490_1L_0J.pdf");
+  can->SaveAs("T2_4bd_500_490_2L_0J.pdf");
   TFile* file = new TFile("output_Plot_2D.root","RECREATE");
   can->Write();
   file->Close();
