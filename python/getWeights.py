@@ -49,9 +49,11 @@ def createCSV(output_csv, sample_list, samples, lumi):
 
 def getWeights():
     # PreUL 2017 samples
-    era         = "2017"
+    # era for luminosity
+    #era         = "2017"
+    era         = "Run2"
     lumi_json   = "json/samples/Lumis.json"
-    output_csv  = "csv/samples/PreUL{0}_Weights.csv".format(era)
+    output_csv  = "csv/samples/PreUL2017_Lumi{0}_Weights.csv".format(era)
     ntuple_path = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v0"
     lumi        = tools.getLumi(era, lumi_json)
 
