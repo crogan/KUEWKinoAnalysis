@@ -263,7 +263,7 @@ int main(int argc, char* argv[])
       if(!keep)
     continue;
     }
-    cout << "processing sample " << proc.Name() << endl;
+    cout << "Processing sample " << proc.Name() << endl;
   }
 
   for(int s = 0; s < Nsample; s++){
@@ -304,7 +304,7 @@ int main(int argc, char* argv[])
       double sample_weight = ST.GetSampleWeight(proc, f);
 
       if(is_signal)
-    sample_weight *= SF.GetX20BRSF(file, tree);
+        sample_weight *= SF.GetX20BRSF(file, tree);
       
       cout << "   Processing file " << file << " w/ tree " << tree << endl;
       cout << "      Sample weight is " << sample_weight << endl;
