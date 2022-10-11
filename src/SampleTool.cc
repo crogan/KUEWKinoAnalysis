@@ -197,24 +197,26 @@ void SampleTool::InitFileWeights()
 {
   m_FileWeightsInit = true;
   // Event weights from PreUL 2017 ntuples (lumi not included)
-  m_FileWeights["T2_4bd_500_490"]             = 0.00025199677645947803;
-  m_FileWeights["TTJets_DiLept"]              = 0.0019129376669455235;
-  m_FileWeights["ZJetsToNuNu_HT-100To200"]    = 0.015097984809404864;
-  m_FileWeights["ZJetsToNuNu_HT-200To400"]    = 0.004381523923402139;
-  m_FileWeights["ZJetsToNuNu_HT-400To600"]    = 0.0006933878696967197;
-  m_FileWeights["ZJetsToNuNu_HT-600To800"]    = 0.00027205031787863777;
-  m_FileWeights["ZJetsToNuNu_HT-800To1200"]   = 0.0006509185019534435;
-  m_FileWeights["ZJetsToNuNu_HT-1200To2500"]  = 0.0004654471904347865;
-  m_FileWeights["ZJetsToNuNu_HT-2500ToInf"]   = 0.0016909771331058017;
-  m_FileWeights["WJetsToLNu_HT-70To100"]      = 0.07374022664873679;
-  m_FileWeights["WJetsToLNu_HT-100To200"]     = 0.04681335005258958;
-  m_FileWeights["WJetsToLNu_HT-200To400"]     = 0.023336220935135082;
-  m_FileWeights["WJetsToLNu_HT-400To600"]     = 0.0049246453186269235;
-  m_FileWeights["WJetsToLNu_HT-600To800"]     = 0.0008081352185255064;
-  m_FileWeights["WJetsToLNu_HT-800To1200"]    = 0.0003849662886431651;
-  m_FileWeights["WJetsToLNu_HT-1200To2500"]   = 8.658446534224976e-05;
-  m_FileWeights["WJetsToLNu_HT-2500ToInf"]    = 1.9710082388957415e-06;
+  // Names must match ROOT file names
+  m_FileWeights["SMS-T2-4bd_genMET-80_mStop-500_mLSP-490"]  = 0.00025199677645947803;
+  m_FileWeights["TTJets_DiLept"]                            = 0.0019129376669455235;
+  m_FileWeights["ZJetsToNuNu_HT-100To200"]                  = 0.015097984809404864;
+  m_FileWeights["ZJetsToNuNu_HT-200To400"]                  = 0.004381523923402139;
+  m_FileWeights["ZJetsToNuNu_HT-400To600"]                  = 0.0006933878696967197;
+  m_FileWeights["ZJetsToNuNu_HT-600To800"]                  = 0.00027205031787863777;
+  m_FileWeights["ZJetsToNuNu_HT-800To1200"]                 = 0.0006509185019534435;
+  m_FileWeights["ZJetsToNuNu_HT-1200To2500"]                = 0.0004654471904347865;
+  m_FileWeights["ZJetsToNuNu_HT-2500ToInf"]                 = 0.0016909771331058017;
+  m_FileWeights["WJetsToLNu_HT-70To100"]                    = 0.07374022664873679;
+  m_FileWeights["WJetsToLNu_HT-100To200"]                   = 0.04681335005258958;
+  m_FileWeights["WJetsToLNu_HT-200To400"]                   = 0.023336220935135082;
+  m_FileWeights["WJetsToLNu_HT-400To600"]                   = 0.0049246453186269235;
+  m_FileWeights["WJetsToLNu_HT-600To800"]                   = 0.0008081352185255064;
+  m_FileWeights["WJetsToLNu_HT-800To1200"]                  = 0.0003849662886431651;
+  m_FileWeights["WJetsToLNu_HT-1200To2500"]                 = 8.658446534224976e-05;
+  m_FileWeights["WJetsToLNu_HT-2500ToInf"]                  = 1.9710082388957415e-06;
 }
+
 double SampleTool::GetFileWeight(const string& key)
 {
   double weight = -999.0;
@@ -227,6 +229,42 @@ double SampleTool::GetFileWeight(const string& key)
   {
     printf("ERROR: The key '%s' was not found in the map m_FileWeights!\n", key.c_str());
   }
+  return weight;
+}
+
+string SampleTool::GetKeyForFile(const string& file_name)
+{
+  string answer;
+  vector<string>matches;
+  for(const auto& [key, val]: m_FileWeights)
+  {
+    //printf("key: %s, val: %f\n", key.c_str(), val);
+    // check if key is in file_name
+    if(file_name.find(key) != string::npos)
+    {
+      printf("Matching key found: key: %s, val: %f\n", key.c_str(), val);
+      matches.push_back(key);
+    }
+  }
+  if(matches.size() < 1)
+  {
+    printf("ERROR: No matching keys found for the file '%s'.\n", file_name.c_str());
+  }
+  else if(matches.size() > 1)
+  {
+    printf("ERROR: Multiple matching keys found for the file '%s'.\n", file_name.c_str());
+  }
+  else
+  {
+    answer = matches[0];
+  }
+  return answer;
+}
+
+double SampleTool::GetWeightForFile(const string& file_name)
+{
+  string key    = GetKeyForFile(file_name);
+  double weight = GetFileWeight(key);
   return weight;
 }
 

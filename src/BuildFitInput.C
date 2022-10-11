@@ -304,7 +304,8 @@ int main(int argc, char* argv[])
       double sample_weight      = ST.GetSampleWeight(proc, f);
       //double file_weight        = ST.GetFileWeight("example");
       //double file_weight        = ST.GetFileWeight("T2_4bd_500_490");
-      double file_weight        = ST.GetFileWeight("TTJets_DiLept");
+      //double file_weight        = ST.GetFileWeight("TTJets_DiLept");
+      double file_weight        = ST.GetWeightForFile(file);;
 
       if(is_signal)
         sample_weight *= SF.GetX20BRSF(file, tree);

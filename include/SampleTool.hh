@@ -36,6 +36,8 @@ public:
   bool FilterDilepton(const Process& proc, int itree);
   double GetSampleWeight(const Process& proc, int itree);
   double GetFileWeight(const string& key);
+  string GetKeyForFile(const string& file_name);
+  double GetWeightForFile(const string& file_name);
   
 private:
   string m_Path;
