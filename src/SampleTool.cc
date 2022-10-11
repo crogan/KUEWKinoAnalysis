@@ -215,6 +215,20 @@ void SampleTool::InitFileWeights()
   m_FileWeights["WJetsToLNu_HT-1200To2500"]   = 8.658446534224976e-05;
   m_FileWeights["WJetsToLNu_HT-2500ToInf"]    = 1.9710082388957415e-06;
 }
+double SampleTool::GetFileWeight(const string& key)
+{
+  double weight = -999.0;
+  // check for key in map
+  if (m_FileWeights.find(key) != m_FileWeights.end())
+  {
+    weight = m_FileWeights[key];
+  }
+  else
+  {
+    printf("ERROR: The key '%s' was not found in the map m_FileWeights!\n", key.c_str());
+  }
+  return weight;
+}
 
 void SampleTool::InitSMS(const string& prefix, const string& filename, double weight, bool FS, bool DL){
   //TFile file;

@@ -299,9 +299,11 @@ int main(int argc, char* argv[])
       string file = ST.FileName(proc, f);
       string tree = ST.TreeName(proc, f);
 
-      bool is_FastSim = ST.IsFastSim(proc, f);
-      bool do_FilterDilepton = ST.FilterDilepton(proc, f);
-      double sample_weight = ST.GetSampleWeight(proc, f);
+      bool is_FastSim           = ST.IsFastSim(proc, f);
+      bool do_FilterDilepton    = ST.FilterDilepton(proc, f);
+      double sample_weight      = ST.GetSampleWeight(proc, f);
+      //double file_weight        = ST.GetFileWeight("example");
+      double file_weight        = ST.GetFileWeight("T2_4bd_500_490");
 
       if(is_signal)
         sample_weight *= SF.GetX20BRSF(file, tree);
@@ -312,6 +314,8 @@ int main(int argc, char* argv[])
         cout << "      Is FastSim" << endl;
       if(do_FilterDilepton)
         cout << "      Filter Out dilepton events" << endl;
+     
+      printf("file_weight = %f\n", file_weight);
     
       TChain* chain = ST.Tree(proc, f);
 
