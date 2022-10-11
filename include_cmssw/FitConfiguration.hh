@@ -32,6 +32,8 @@ public:
   void AddBJetSys(ch::CombineHarvester& cb, ProcessList& processes);
   void AddFakeSSSys(ch::CombineHarvester& cb, ProcessList& processes);
   void AddKinematicSys(ch::CombineHarvester& cb, ProcessList& processes);
+  void AddPTISRSys(ch::CombineHarvester& cb, ProcessList& processes, string label);
+  void AddgamTSys(ch::CombineHarvester& cb, ProcessList& processes, string label);
   void AddSJetNormSys(const string& label, VS& procs, ch::CombineHarvester& cb, ProcessList& processes);
   void AddLeptonQualityNormSys(ch::CombineHarvester& cb, ProcessList& processes);
   void AddSJetLeptonQualityNormSys(ch::CombineHarvester& cb, ProcessList& processes);

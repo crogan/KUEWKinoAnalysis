@@ -376,11 +376,23 @@ cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
   CONFIG.AddCommonSys(cb, processes);
   CONFIG.AddFakeLeptonSys(cb, processes);
   CONFIG.AddSVSys(cb, processes);
-  CONFIG.AddBJetSys(cb, processes);
   ProcessList proc_LF_Fakes = proc_fakes;
   proc_LF_Fakes = proc_LF_Fakes.Filter("f1");
   CONFIG.AddFakeSSSys(cb, proc_LF_Fakes);
-  CONFIG.AddKinematicSys(cb, processes);
+
+  //CONFIG.AddKinematicSys(cb, processes);
+  //ProcessList bkg_noQCD = backgrounds.Remove("QCD");
+  //ProcessList QCD_only = backgrounds.Filter("QCD");
+  //CONFIG.AddBJetSys(cb, bkg_noQCD, "other_");
+  //CONFIG.AddBJetSys(cb, QCD_only, "QCD_");
+  CONFIG.AddBJetSys(cb, backgrounds);
+  CONFIG.AddPTISRSys(cb, backgrounds, "");
+  CONFIG.AddgamTSys(cb, backgrounds, "");
+  //CONFIG.AddPTISRSys(cb, bkg_noQCD, "other_");
+  //CONFIG.AddgamTSys(cb, bkg_noQCD, "other_");
+  //CONFIG.AddPTISRSys(cb, QCD_only, "QCD_");
+  //CONFIG.AddgamTSys(cb, QCD_only, "QCD_");
+
   //CONFIG.AddLeptonQualityNormSys(cb, processes);
   //CONFIG.AddSJetLeptonQualityNormSys(cb, processes);
   CONFIG.AddLeptonCategoryNormSys(cb, processes);
@@ -398,7 +410,6 @@ cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
   CONFIG.initSystDictW0L(smW0L);
   CONFIG.AddNormHierarchy( smW0L, WjetsDY0L, cb, processes);
 
-//  cb.PrintSysts();
 //   CONFIG.AddSJetNormSys("Wjets", Wjets, cb, processes);
 
 
@@ -450,6 +461,10 @@ DB += "DB";
 //DBTB += "TB";
 CONFIG.AddSJetNormSys("DB",DB,cb, processes);
 */
+
+
+  cb.PrintSysts();
+
  using ch::syst::SystMap;
   using ch::syst::era;
   using ch::syst::channel;
@@ -465,7 +480,8 @@ CONFIG.AddSJetNormSys("DB",DB,cb, processes);
     for(int s = 0; s < Nsys; s++){  
       Systematic& sys = systematics[s];
       if(shapeToNorm.Contains(sys)){ 
-        CONFIG.AddShapeSysAsNorm(sys,cb,FIT); continue;
+        //CONFIG.AddShapeSysAsNorm(sys,cb,FIT); continue;
+        continue;
       }
       ProcessList proc_sys;
 
