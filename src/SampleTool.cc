@@ -11,6 +11,9 @@ SampleTool::SampleTool(const string& ntuple_path, int year){
 
   if(!m_ProcInit)
     InitProcMap();
+  
+  if(!m_FileWeightsInit)
+    InitFileWeights();
 
   m_iYear = YearMap(year);
 }
@@ -188,6 +191,29 @@ int SampleTool::YearMap(int year){
     return year - 2016;
 
   return ydef;
+}
+
+void SampleTool::InitFileWeights()
+{
+  m_FileWeightsInit = true;
+  // Event weights from PreUL 2017 ntuples (lumi not included)
+  m_FileWeights["T2_4bd_500_490"]             = 0.00025199677645947803;
+  m_FileWeights["TTJets_DiLept"]              = 0.0019129376669455235;
+  m_FileWeights["ZJetsToNuNu_HT-100To200"]    = 0.015097984809404864;
+  m_FileWeights["ZJetsToNuNu_HT-200To400"]    = 0.004381523923402139;
+  m_FileWeights["ZJetsToNuNu_HT-400To600"]    = 0.0006933878696967197;
+  m_FileWeights["ZJetsToNuNu_HT-600To800"]    = 0.00027205031787863777;
+  m_FileWeights["ZJetsToNuNu_HT-800To1200"]   = 0.0006509185019534435;
+  m_FileWeights["ZJetsToNuNu_HT-1200To2500"]  = 0.0004654471904347865;
+  m_FileWeights["ZJetsToNuNu_HT-2500ToInf"]   = 0.0016909771331058017;
+  m_FileWeights["WJetsToLNu_HT-70To100"]      = 0.07374022664873679;
+  m_FileWeights["WJetsToLNu_HT-100To200"]     = 0.04681335005258958;
+  m_FileWeights["WJetsToLNu_HT-200To400"]     = 0.023336220935135082;
+  m_FileWeights["WJetsToLNu_HT-400To600"]     = 0.0049246453186269235;
+  m_FileWeights["WJetsToLNu_HT-600To800"]     = 0.0008081352185255064;
+  m_FileWeights["WJetsToLNu_HT-800To1200"]    = 0.0003849662886431651;
+  m_FileWeights["WJetsToLNu_HT-1200To2500"]   = 8.658446534224976e-05;
+  m_FileWeights["WJetsToLNu_HT-2500ToInf"]    = 1.9710082388957415e-06;
 }
 
 void SampleTool::InitSMS(const string& prefix, const string& filename, double weight, bool FS, bool DL){
@@ -913,7 +939,8 @@ void SampleTool::InitProcMap(){
   }
 }  
 
-bool SampleTool::m_ProcInit = false;
+bool SampleTool::m_ProcInit         = false;
+bool SampleTool::m_FileWeightsInit  = false;
 
 std::map<Process, pair<vector<string>,string> > SampleTool::m_Proc[3];
 std::map<Process, bool> SampleTool::m_SProcInit[3]; // checked combined normalizations already?
