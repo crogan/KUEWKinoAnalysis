@@ -303,7 +303,8 @@ int main(int argc, char* argv[])
       bool do_FilterDilepton    = ST.FilterDilepton(proc, f);
       double sample_weight      = ST.GetSampleWeight(proc, f);
       //double file_weight        = ST.GetFileWeight("example");
-      double file_weight        = ST.GetFileWeight("T2_4bd_500_490");
+      //double file_weight        = ST.GetFileWeight("T2_4bd_500_490");
+      double file_weight        = ST.GetFileWeight("TTJets_DiLept");
 
       if(is_signal)
         sample_weight *= SF.GetX20BRSF(file, tree);
@@ -534,9 +535,21 @@ int main(int argc, char* argv[])
     double PU_weight    = 1.;
     double trig_weight  = 1.;
 
-    if(!is_data){
-      weight = (setLumi ? lumi : ST.Lumi())*base->weight*sample_weight;
+    // for ntuples that have event weight = 0.0, 
+    // use hardcoded file_weight values for select samples
+    if(!is_data)
+    {
+      if (base->weight != 0.0)
+      {
+        weight = (setLumi ? lumi : ST.Lumi()) * base->weight * sample_weight;
+      }
+      else
+      {
+        weight = (setLumi ? lumi : ST.Lumi()) * file_weight * sample_weight;
+      }
     }
+    
+    printf("e = %d, event weight (including lumi) = %.6f\n", e, weight);
     
     // systematics loop
     // do down sys first
@@ -756,15 +769,16 @@ int main(int argc, char* argv[])
       // else
       //   PU_weight = base->PUweight;
 
-      weight *= btag_weight*PU_weight;
+      // turn off trigger weight for now
       //weight *= btag_weight*PU_weight*trig_weight;
+      weight *= (btag_weight * PU_weight);
 
       if(is_data) weight = 1.;
       
       // HACK: set weight = 1 for samples that don't have weights
       //weight = 1.0;
       
-      printf("e = %d, weight = %.3f\n", e, weight);
+      printf("e = %d, final event weight = %.6f\n", e, weight);
       
       LepList Fakes  = list_a.GetFakes();
       Fakes         += list_b.GetFakes();
