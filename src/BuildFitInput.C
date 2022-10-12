@@ -327,8 +327,8 @@ int main(int argc, char* argv[])
       
       // skip events (only run every n_th event)
       // set SKIP = 1 to run over all events
-      //int SKIP = 1;
-      int SKIP = 10000;
+      //int SKIP = 10000;
+      int SKIP = 1;
       printf("SKIP = %d\n", SKIP); 
 
       // ------------------ //
@@ -550,7 +550,7 @@ int main(int argc, char* argv[])
       }
     }
     
-    printf("e = %d, event weight (including lumi) = %.6f\n", e, weight);
+    //printf("e = %d, event weight (including lumi) = %.6f\n", e, weight);
     
     // systematics loop
     // do down sys first
@@ -779,7 +779,7 @@ int main(int argc, char* argv[])
       // HACK: set weight = 1 for samples that don't have weights
       //weight = 1.0;
       
-      printf("e = %d, final event weight = %.6f\n", e, weight);
+      //printf("e = %d, final event weight = %.6f\n", e, weight);
       
       LepList Fakes  = list_a.GetFakes();
       Fakes         += list_b.GetFakes();
