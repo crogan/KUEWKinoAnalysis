@@ -11,6 +11,9 @@ SampleTool::SampleTool(const string& ntuple_path, int year){
 
   if(!m_ProcInit)
     InitProcMap();
+  
+  if(!m_FileWeightsInit)
+    InitFileWeights();
 
   m_iYear = YearMap(year);
 }
@@ -188,6 +191,81 @@ int SampleTool::YearMap(int year){
     return year - 2016;
 
   return ydef;
+}
+
+void SampleTool::InitFileWeights()
+{
+  m_FileWeightsInit = true;
+  // Event weights from PreUL 2017 ntuples (lumi not included)
+  // Names must match ROOT file names
+  m_FileWeights["SMS-T2-4bd_genMET-80_mStop-500_mLSP-490"]  = 0.00025199677645947803;
+  m_FileWeights["TTJets_DiLept"]                            = 0.0019129376669455235;
+  m_FileWeights["ZJetsToNuNu_HT-100To200"]                  = 0.015097984809404864;
+  m_FileWeights["ZJetsToNuNu_HT-200To400"]                  = 0.004381523923402139;
+  m_FileWeights["ZJetsToNuNu_HT-400To600"]                  = 0.0006933878696967197;
+  m_FileWeights["ZJetsToNuNu_HT-600To800"]                  = 0.00027205031787863777;
+  m_FileWeights["ZJetsToNuNu_HT-800To1200"]                 = 0.0006509185019534435;
+  m_FileWeights["ZJetsToNuNu_HT-1200To2500"]                = 0.0004654471904347865;
+  m_FileWeights["ZJetsToNuNu_HT-2500ToInf"]                 = 0.0016909771331058017;
+  m_FileWeights["WJetsToLNu_HT-70To100"]                    = 0.07374022664873679;
+  m_FileWeights["WJetsToLNu_HT-100To200"]                   = 0.04681335005258958;
+  m_FileWeights["WJetsToLNu_HT-200To400"]                   = 0.023336220935135082;
+  m_FileWeights["WJetsToLNu_HT-400To600"]                   = 0.0049246453186269235;
+  m_FileWeights["WJetsToLNu_HT-600To800"]                   = 0.0008081352185255064;
+  m_FileWeights["WJetsToLNu_HT-800To1200"]                  = 0.0003849662886431651;
+  m_FileWeights["WJetsToLNu_HT-1200To2500"]                 = 8.658446534224976e-05;
+  m_FileWeights["WJetsToLNu_HT-2500ToInf"]                  = 1.9710082388957415e-06;
+}
+
+double SampleTool::GetFileWeight(const string& key)
+{
+  double weight = -999.0;
+  // check for key in map
+  if (m_FileWeights.find(key) != m_FileWeights.end())
+  {
+    weight = m_FileWeights[key];
+  }
+  else
+  {
+    printf("ERROR: The key '%s' was not found in the map m_FileWeights!\n", key.c_str());
+  }
+  return weight;
+}
+
+string SampleTool::GetKeyForFile(const string& file_name)
+{
+  string answer;
+  vector<string>matches;
+  for(const auto& [key, val]: m_FileWeights)
+  {
+    //printf("key: %s, val: %f\n", key.c_str(), val);
+    // check if key is in file_name
+    if(file_name.find(key) != string::npos)
+    {
+      printf("Matching key found: key: %s, val: %f\n", key.c_str(), val);
+      matches.push_back(key);
+    }
+  }
+  if(matches.size() < 1)
+  {
+    printf("ERROR: No matching keys found for the file '%s'.\n", file_name.c_str());
+  }
+  else if(matches.size() > 1)
+  {
+    printf("ERROR: Multiple matching keys found for the file '%s'.\n", file_name.c_str());
+  }
+  else
+  {
+    answer = matches[0];
+  }
+  return answer;
+}
+
+double SampleTool::GetWeightForFile(const string& file_name)
+{
+  string key    = GetKeyForFile(file_name);
+  double weight = GetFileWeight(key);
+  return weight;
 }
 
 void SampleTool::InitSMS(const string& prefix, const string& filename, double weight, bool FS, bool DL){
@@ -614,15 +692,17 @@ void SampleTool::InitProcMap(){
     list += m_Path + "Fall17_102X/QCD_HT700to1000_TuneCP5_13TeV-madgraph-pythia8_Fall17_102X.root";
     m_Proc[m_iYear][QCD] = pair<vector<string>,string>(list, "KUAnalysis");
     
-    Process T4bd("T4bd", kBkg);
-    list.clear();
-    list += m_Path + "RunIISummer20UL17NanoAODv9_SMS_v1/SMS-T2-4bd_genMET-80_mStop-500_mLSP-490_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
-    m_Proc[m_iYear][T4bd] = pair<vector<string>,string>(list, "SMS_500_490");
+    // HACK: Add T4bd as background process (yes, this is sneaky) for 2D plotting macro
+    //Process T4bd("T4bd", kBkg);
+    //list.clear();
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_SMS_v1/SMS-T2-4bd_genMET-80_mStop-500_mLSP-490_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    //m_Proc[m_iYear][T4bd] = pair<vector<string>,string>(list, "SMS_500_490");
     
     // -------------- //
     // --- Signal --- //
     // -------------- //
     
+    // HACK: Initialize T4bd before SKIP_SMS... we want to use this one and not skip it!
     // Caleb: NANO AOD v9 T4bd
     InitSMS("T4bd",m_Path+"RunIISummer20UL17NanoAODv9_SMS_v1/SMS-T2-4bd_genMET-80_mStop-500_mLSP-490_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root",1,false,false);
     // Alice: NANO AOD v9 T4bd
@@ -911,7 +991,8 @@ void SampleTool::InitProcMap(){
   }
 }  
 
-bool SampleTool::m_ProcInit = false;
+bool SampleTool::m_ProcInit         = false;
+bool SampleTool::m_FileWeightsInit  = false;
 
 std::map<Process, pair<vector<string>,string> > SampleTool::m_Proc[3];
 std::map<Process, bool> SampleTool::m_SProcInit[3]; // checked combined normalizations already?

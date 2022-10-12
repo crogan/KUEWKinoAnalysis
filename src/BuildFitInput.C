@@ -31,7 +31,8 @@
 
 using namespace std;
 
-int main(int argc, char* argv[]) {
+int main(int argc, char* argv[])
+{
   int ifile = -1;
   //string NtuplePath = "root://xrootd.unl.edu//store/user/zflowers/crogan/";
   //string NtuplePath = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v0/";
@@ -71,7 +72,8 @@ int main(int argc, char* argv[]) {
 
   bool maskSR = false;
   
-  for(int i = 0; i < argc; i++){
+  for(int i = 0; i < argc; i++)
+  {
     if(strncmp(argv[i],"--help", 6) == 0){
       bprint = true;
     }
@@ -261,7 +263,7 @@ int main(int argc, char* argv[]) {
       if(!keep)
     continue;
     }
-    cout << "processing sample " << proc.Name() << endl;
+    cout << "Processing sample " << proc.Name() << endl;
   }
 
   for(int s = 0; s < Nsample; s++){
@@ -297,12 +299,16 @@ int main(int argc, char* argv[]) {
       string file = ST.FileName(proc, f);
       string tree = ST.TreeName(proc, f);
 
-      bool is_FastSim = ST.IsFastSim(proc, f);
-      bool do_FilterDilepton = ST.FilterDilepton(proc, f);
-      double sample_weight = ST.GetSampleWeight(proc, f);
+      bool is_FastSim           = ST.IsFastSim(proc, f);
+      bool do_FilterDilepton    = ST.FilterDilepton(proc, f);
+      double sample_weight      = ST.GetSampleWeight(proc, f);
+      //double file_weight        = ST.GetFileWeight("example");
+      //double file_weight        = ST.GetFileWeight("T2_4bd_500_490");
+      //double file_weight        = ST.GetFileWeight("TTJets_DiLept");
+      double file_weight        = ST.GetWeightForFile(file);
 
       if(is_signal)
-    sample_weight *= SF.GetX20BRSF(file, tree);
+        sample_weight *= SF.GetX20BRSF(file, tree);
       
       cout << "   Processing file " << file << " w/ tree " << tree << endl;
       cout << "      Sample weight is " << sample_weight << endl;
@@ -310,6 +316,8 @@ int main(int argc, char* argv[]) {
         cout << "      Is FastSim" << endl;
       if(do_FilterDilepton)
         cout << "      Filter Out dilepton events" << endl;
+     
+      printf("file_weight = %f\n", file_weight);
     
       TChain* chain = ST.Tree(proc, f);
 
@@ -318,22 +326,33 @@ int main(int argc, char* argv[]) {
       int Nentry = base->fChain->GetEntries();
       
       // skip events (only run every n_th event)
+      // set SKIP = 1 to run over all events
+      //int SKIP = 10000;
       int SKIP = 1;
+      printf("SKIP = %d\n", SKIP); 
 
       // ------------------ //
       // --- event loop --- //
       // ------------------ //
-      for(int e = 0; e < Nentry; e += SKIP){
+      for(int e = 0; e < Nentry; e += SKIP)
+      {
         base->GetEntry(e);
 
+    // print event iterator
     if((e/SKIP)%(std::max(1, int(Nentry/SKIP/10))) == 0)
       cout << "      event " << e << " | " << Nentry << endl;
 
-        if(base->Charge_lep->size() != base->Nlep ) {cout << "The branches are messed up, my friend!!!" << endl; return -1;}
+        if(base->Charge_lep->size() != base->Nlep)
+        {
+          cout << "ERROR: The lepton branches are messed up, my friend!!!" << endl;
+          cout << "Quitting now." << endl;
+          return -1;
+        }
 
     if(!base->EventFilter)
       continue;
 
+       // HEM Veto for data
         if(base->runnum >= 319077 && is_data && year == 2018)
           if(base->HEM_Veto)
             continue;
@@ -388,7 +407,8 @@ int main(int argc, char* argv[]) {
       
     int index;
       
-    for(int i = 0; i < base->Nlep_a; i++){
+    for(int i = 0; i < base->Nlep_a; i++)
+    {
       index = (*base->index_lep_a)[i];
         
       int PDGID = base->PDGID_lep->at(index);
@@ -413,7 +433,8 @@ int main(int argc, char* argv[]) {
         
       list_a += Lep(flavor, charge, id, source);
     }
-    for(int i = 0; i < base->Nlep_b; i++){
+    for(int i = 0; i < base->Nlep_b; i++)
+    {
       index = (*base->index_lep_b)[i];
       
       int PDGID = base->PDGID_lep->at(index);
@@ -451,9 +472,6 @@ int main(int argc, char* argv[]) {
       sqrt(base->MX3b_BoostT*base->MX3b_BoostT+base->PX3_BoostT*base->PX3_BoostT);
     double gammaT = 2.*base->Mperp / MST;
 
-
-
-    
     Category Event(Leptonic(list_a, list_b),
                Hadronic(NjetS, NbjetS, NSV),
                Hadronic(NjetISR, NbjetISR, base->NSV_ISR));
@@ -463,7 +481,8 @@ int main(int argc, char* argv[]) {
     
     int eindex = Categories.Find(Event);
 
-    if(eindex < 0){
+    if(eindex < 0)
+    {
       continue;
       if(Nlep > 3)
         continue;
@@ -493,7 +512,8 @@ int main(int argc, char* argv[]) {
         continue;
       
       cout << "Nlep = " << Nlep << " PTISR = " << base->PTISR << " NjetS = " << NjetS << " NSV = " << NSV << endl;
-      for(int i = 0; i < Nlep; i++){
+      for(int i = 0; i < Nlep; i++)
+      {
         if(i < base->Nlep_a)
           cout << list_a[i].ID() << " " << list_a[i].IDLabel() << " " << list_a[i].Charge() << " a" << endl;
         else
@@ -511,14 +531,26 @@ int main(int argc, char* argv[]) {
 
     double PTISR = base->PTISR;
     double PTISR_to_HT = PTISR*2.-150.;
-    double weight = 1.;
-    double btag_weight = 1.;
-    double PU_weight = 1.;
-    double trig_weight = 1.;
+    double weight       = 1.;
+    double btag_weight  = 1.;
+    double PU_weight    = 1.;
+    double trig_weight  = 1.;
 
-    if(!is_data){
-      weight = (setLumi ? lumi : ST.Lumi())*base->weight*sample_weight;
+    // for ntuples that have event weight = 0.0, 
+    // use hardcoded file_weight values for select samples
+    if(!is_data)
+    {
+      if (base->weight != 0.0)
+      {
+        weight = (setLumi ? lumi : ST.Lumi()) * base->weight * sample_weight;
+      }
+      else
+      {
+        weight = (setLumi ? lumi : ST.Lumi()) * file_weight * sample_weight;
+      }
     }
+    
+    //printf("e = %d, event weight (including lumi) = %.6f\n", e, weight);
     
     // systematics loop
     // do down sys first
@@ -533,11 +565,10 @@ int main(int argc, char* argv[]) {
           sys.Up();
         }
       }
-      
 
-      btag_weight = 1.;
-      PU_weight = 1.;
-      trig_weight = 1.;
+      btag_weight   = 1.;
+      PU_weight     = 1.;
+      trig_weight   = 1.;
       if(!(!sys) && is_data) continue;
 
       // ------------------------------------------------------------------------------------------------ //
@@ -603,118 +634,133 @@ int main(int argc, char* argv[]) {
       //cout << "event " << e << endl;
       //cout << "  sys: " << sys.Label() << endl;
       //cout << "    nom: " << trig_weight << endl;
-/*         
+      /*         
            if(base->Nlep == 0) correct_sys = "MET_TRIG_0L";
            else if(base->Nele == 1 && base->Nmu == 0) correct_sys = "MET_TRIG_1L_el";
            else if(base->Nele == 0 && base->Nmu == 1) correct_sys = "MET_TRIG_1L_mu";
            else if(base->Nlep > 1 && base->Nmu == 0) correct_sys = "MET_TRIG_2L3L_el";
            else if(base->Nlep > 1 && base->Nmu > 0) correct_sys = "MET_TRIG_2L3L_mu";
            if(!(!sys) && sys.Label() != correct_sys && sys.Label().find("MET_TRIG") != std::string::npos) continue;
-*/
+      */
 
-if(sys.Label().find("MET_TRIG") != std::string::npos)
-{
-  if(sys.Label() != correct_sys && correct_sys != "") continue;
-  string scat = Categories[eindex].FullLabel();
-  if(sys.Label() == "MET_TRIG_0L")
-    if(scat.find("0L") == std::string::npos)
-        continue;
-  if(sys.Label() == "MET_TRIG_1L_mu")
-        if(scat.find("1L") == std::string::npos ||
-           (scat.find("_mu") == std::string::npos && scat.find("_lp") == std::string::npos && scat.find("_lm") == std::string::npos))
-                continue;
-  if(sys.Label() == "MET_TRIG_1L_el")
-    if(scat.find("1L") == std::string::npos ||
-       (scat.find("_el") == std::string::npos && scat.find("_lp") == std::string::npos && scat.find("_lm") == std::string::npos))
-        continue;
-
-  if(sys.Label() == "MET_TRIG_2L3L_el")
-    if((scat.find("2L") == std::string::npos && scat.find("3L") == std::string::npos) ||
-       (scat.find("elel") == std::string::npos && scat.find("_ll") == std::string::npos && scat.find("3L") == std::string::npos &&
-            scat.find("_noZ") == std::string::npos && scat.find("_Zstar") == std::string::npos && scat.find("_SS") == std::string::npos))
-        continue;
-
-  if(sys.Label() == "MET_TRIG_2L3L_mu")
-    if((scat.find("2L") == std::string::npos && scat.find("3L") == std::string::npos) ||
-       (scat.find("elmu") == std::string::npos && scat.find("mumu") == std::string::npos && scat.find("_ll") == std::string::npos && scat.find("3L") == std::string::npos &&
-            scat.find("_noZ") == std::string::npos && scat.find("_Zstar") == std::string::npos && scat.find("_SS") == std::string::npos))
-        continue;
-  
-  correct_sys = sys.Label();
-
-  // Assign trigger weight
-  if(sys.IsUp())
-  {
-    if(is_FastSim)
-    {
-      trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1)
-                  * m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1);
-    }
-    else
-    {
-      trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1);
-    }
-  }
-  else
-  {
-    if(is_FastSim)
-    {
-      trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1)
-                  * m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
-    }
-    else
-    {
-      trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
-    }
-  }
-}
+      if(sys.Label().find("MET_TRIG") != std::string::npos)
+      {
+        if(sys.Label() != correct_sys && correct_sys != "") continue;
+        string scat = Categories[eindex].FullLabel();
+        if(sys.Label() == "MET_TRIG_0L")
+          if(scat.find("0L") == std::string::npos)
+              continue;
+        if(sys.Label() == "MET_TRIG_1L_mu")
+              if(scat.find("1L") == std::string::npos ||
+                 (scat.find("_mu") == std::string::npos && scat.find("_lp") == std::string::npos && scat.find("_lm") == std::string::npos))
+                      continue;
+        if(sys.Label() == "MET_TRIG_1L_el")
+          if(scat.find("1L") == std::string::npos ||
+             (scat.find("_el") == std::string::npos && scat.find("_lp") == std::string::npos && scat.find("_lm") == std::string::npos))
+              continue;
+      
+        if(sys.Label() == "MET_TRIG_2L3L_el")
+          if((scat.find("2L") == std::string::npos && scat.find("3L") == std::string::npos) ||
+             (scat.find("elel") == std::string::npos && scat.find("_ll") == std::string::npos && scat.find("3L") == std::string::npos &&
+                  scat.find("_noZ") == std::string::npos && scat.find("_Zstar") == std::string::npos && scat.find("_SS") == std::string::npos))
+              continue;
+      
+        if(sys.Label() == "MET_TRIG_2L3L_mu")
+          if((scat.find("2L") == std::string::npos && scat.find("3L") == std::string::npos) ||
+             (scat.find("elmu") == std::string::npos && scat.find("mumu") == std::string::npos && scat.find("_ll") == std::string::npos && scat.find("3L") == std::string::npos &&
+                  scat.find("_noZ") == std::string::npos && scat.find("_Zstar") == std::string::npos && scat.find("_SS") == std::string::npos))
+              continue;
+        
+        correct_sys = sys.Label();
+      
+        // Assign trigger weight
+        if(sys.IsUp())
+        {
+          if(is_FastSim)
+          {
+            trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1)
+                        * m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1);
+          }
+          else
+          {
+            trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1);
+          }
+        }
+        else
+        {
+          if(is_FastSim)
+          {
+            trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1)
+                        * m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
+          }
+          else
+          {
+            trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
+          }
+        }
+      }
           
-//if(sys.IsUp()) cout << "    up: " << trig_weight << endl;
-//else cout << "    down: " << trig_weight << endl;
+      //if(sys.IsUp()) cout << "    up: " << trig_weight << endl;
+      //else cout << "    down: " << trig_weight << endl;
 
       //
       // BTAG systematics from the ntuples
       //
       /*
-        if(sys == Systematic("BTAGHF_SF"))
-        if(sys.IsUp())
-        btag_weight *= base->BtagSFweight_up;
-        else
-        btag_weight *= base->BtagSFweight_down;
-        else 
-        btag_weight *= base->BtagSFweight;
+      if(sys == Systematic("BTAGHF_SF"))
+      if(sys.IsUp())
+      btag_weight *= base->BtagSFweight_up;
+      else
+      btag_weight *= base->BtagSFweight_down;
+      else 
+      btag_weight *= base->BtagSFweight;
 
-        if(sys == Systematic("BTAGLF_SF"))
-        if(sys.IsUp())
-        btag_weight *= base->BtagSFweight_up;
-        else
-        btag_weight *= base->BtagSFweight_down;
-        else 
-        btag_weight *= base->BtagSFweight;
+      if(sys == Systematic("BTAGLF_SF"))
+      if(sys.IsUp())
+      btag_weight *= base->BtagSFweight_up;
+      else
+      btag_weight *= base->BtagSFweight_down;
+      else 
+      btag_weight *= base->BtagSFweight;
       */
 
       //
       // BTAG systematics on the fly (needs jet collection in reduced ntuples)
       //
-     for(int b = 0; b <= Nbjet; b++){
-      if(sys == Systematic("BTAGHF_SF")){
-        if(sys.IsUp())
-          btag_weight *= SF.GetBtagSFWeight(base, year, is_FastSim, true, 1);
+      for(int b = 0; b <= Nbjet; b++)
+      {
+        if(sys == Systematic("BTAGHF_SF"))
+        {
+          if(sys.IsUp())
+          {
+            btag_weight *= SF.GetBtagSFWeight(base, year, is_FastSim, true, 1);
+          }
+          else
+          {
+            btag_weight *= SF.GetBtagSFWeight(base, year, is_FastSim, true, -1);
+          }
+        }
         else
-          btag_weight *= SF.GetBtagSFWeight(base, year, is_FastSim, true, -1);
-      } else {
-        btag_weight *= SF.GetBtagSFWeight(base, year, is_FastSim, true, 0);
-      }
-      
-      if(sys == Systematic("BTAGLF_SF")){
-        if(sys.IsUp())
-          btag_weight *= SF.GetBtagSFWeight(base, year, is_FastSim, false, 1);
+        {
+          btag_weight *= SF.GetBtagSFWeight(base, year, is_FastSim, true, 0);
+        }
+        
+        if(sys == Systematic("BTAGLF_SF"))
+        {
+          if(sys.IsUp())
+          {
+            btag_weight *= SF.GetBtagSFWeight(base, year, is_FastSim, false, 1);
+          }
+          else
+          {
+            btag_weight *= SF.GetBtagSFWeight(base, year, is_FastSim, false, -1);
+          }
+        }
         else
-          btag_weight *= SF.GetBtagSFWeight(base, year, is_FastSim, false, -1);
-      } else {
-        btag_weight *= SF.GetBtagSFWeight(base, year, is_FastSim, false, 0);
+        {
+          btag_weight *= SF.GetBtagSFWeight(base, year, is_FastSim, false, 0);
+        }
       }
-         }
       // turn off PU systematics for now
       // if(sys == Systematic("PU_SF"))
       //   if(sys.IsUp())
@@ -724,10 +770,16 @@ if(sys.Label().find("MET_TRIG") != std::string::npos)
       // else
       //   PU_weight = base->PUweight;
 
-      weight *= btag_weight*PU_weight;
+      // turn off trigger weight for now
       //weight *= btag_weight*PU_weight*trig_weight;
+      weight *= (btag_weight * PU_weight);
 
       if(is_data) weight = 1.;
+      
+      // HACK: set weight = 1 for samples that don't have weights
+      //weight = 1.0;
+      
+      //printf("e = %d, final event weight = %.6f\n", e, weight);
       
       LepList Fakes  = list_a.GetFakes();
       Fakes         += list_b.GetFakes();
@@ -746,15 +798,14 @@ if(sys.Label().find("MET_TRIG") != std::string::npos)
       double RISR  = base->RISR;
 
       //printf("e = %d, Mperp = %.3f, RISR = %.3f\n", e, Mperp, RISR);
-      
-      // HACK: set weight = 1 for samples that don't have weights
-      weight = 1.0;
 
-      if(Fakes.GetN() > 0 && is_bkg){
+      if(Fakes.GetN() > 0 && is_bkg)
+      {
         VS flabels = Fakes.GetFakeLabels(2); // processes w/ up to 2 "fake" leps
         int Nf = flabels.size();
       
-        for(int fl = 0; fl < Nf; fl++){
+        for(int fl = 0; fl < Nf; fl++)
+        {
           // if(title.find("QCD") == string::npos)
           //    FITBuilder.AddEvent(weight/double(Nf), Mperp, RISR,
           //                Categories[eindex], FITBuilder.FakeProcess(flabels[fl]), sys);
@@ -763,7 +814,9 @@ if(sys.Label().find("MET_TRIG") != std::string::npos)
           FITBuilder.AddEvent(weight/double(Nf), Mperp, RISR,
                   Categories[eindex], proc.FakeProcess(flabels[fl]), sys);
         }
-      } else {
+      }
+      else
+      {
         FITBuilder.AddEvent(weight, Mperp, RISR,
                 Categories[eindex], proc, sys);
       }
@@ -773,11 +826,11 @@ if(sys.Label().find("MET_TRIG") != std::string::npos)
       //   FITBuilder.AddEvent(weight, Mperp, RISR,
       //            Categories[eindex], data_obs, sys);
     }
-      }
-      delete base;
-      delete chain;
-      if(ifile != -1)
-        break;
+    }
+    delete base;
+    delete chain;
+    if(ifile != -1)
+      break;
     }
   }
 

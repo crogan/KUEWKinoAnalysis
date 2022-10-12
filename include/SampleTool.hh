@@ -35,6 +35,9 @@ public:
   bool IsFastSim(const Process& proc, int itree);
   bool FilterDilepton(const Process& proc, int itree);
   double GetSampleWeight(const Process& proc, int itree);
+  double GetFileWeight(const string& key);
+  string GetKeyForFile(const string& file_name);
+  double GetWeightForFile(const string& file_name);
   
 private:
   string m_Path;
@@ -44,9 +47,13 @@ private:
 
   void InitSMS(const string& prefix, const string& filename, double weight = 1., bool FS = false, bool DL = false);
   void InitProcMap();
+  void InitFileWeights();
   static bool m_ProcInit;
+  static bool m_FileWeightsInit;
   static std::map<Process, pair<vector<string>,string> > m_Proc[3];
   static double m_Lumi[3];
+  // WARNING: Do not make m_FileWeights static! It will break InitFileWeights(). We need to write to m_FileWeights.
+  std::map<string, double> m_FileWeights;
 
   // signal only
   void InitSignalProc(const Process& proc);
