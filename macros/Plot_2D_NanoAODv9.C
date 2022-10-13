@@ -1,4 +1,6 @@
 #include <iostream>
+#include <iomanip>
+#include <sstream>
 #include <string>
 
 #include <TFile.h>
@@ -63,15 +65,31 @@ void Plot_2D_NanoAODv9()
   int depth0 = CT_1L.GetDepth();
   vector<const CategoryTree*> CTs;
   CT_1L.GetListDepth(CTs, depth0-2);
-
-  int iCAT = 1;
-  //int iCAT = 2;
   
-  string g_Label = "1L 0J";
+  double lumi = 137.0; 
+  // convert lumi to string with specific precision
+  stringstream stream;
+  stream << fixed << setprecision(1) << lumi;
+  string lumi_string = stream.str();
+  lumi_string += " fb^{-1}";
+  
+  string plot_dir           = "UL2017_NanoAODv9_Plots";
+  //string sample_name        = "ZDY";
+  string sample_name        = "Wjets";
+  string selection          = "1L_0J";  // lepton and Sjet selection
+  int Nlep_selection        = 1;        // lepton selection
+  int NjetS_selection       = 0;        // Sjet selection
+  string g_Label            = selection.replace(selection.begin(), selection.end(), '_', ' ');
+  ProcessList backgrounds   = ST.Get(kBkg).Filter(sample_name);
+
+  printf("lumi = %f, lumi_string = %s\n", lumi, lumi_string.c_str());
+  
+  //string g_Label = "1L 0J";
   //string g_Label = "2L 0J";
 
+  //int iCAT = 1; // lepton selection
   //const CategoryTree* myCT = CTs[iCAT];
-  const CategoryTree* myCT = &CT_0L;
+  //const CategoryTree* myCT  = &CT_0L;
   
   //Categories = Categories.Filter(CT_2L);
 
@@ -93,7 +111,7 @@ void Plot_2D_NanoAODv9()
   //ProcessList backgrounds = ST.Get(kBkg).Remove("QCD");
   
   //ProcessList backgrounds = ST.Get(kBkg).Filter("T4bd");
-  ProcessList backgrounds = ST.Get(kBkg).Filter("ttbar");
+  //ProcessList backgrounds = ST.Get(kBkg).Filter("ttbar");
   
   /* 
   ProcessList signals;
@@ -137,9 +155,10 @@ void Plot_2D_NanoAODv9()
   );
   
   int SKIP = 1;
-  //ProcessList samples = signals;
- 
+  printf("SKIP = %d\n", SKIP); 
+  
   ProcessList samples = backgrounds;
+  //ProcessList samples = signals;
   //samples += backgrounds;
 
   g_PlotTitle = samples[0].Name();
@@ -277,11 +296,14 @@ void Plot_2D_NanoAODv9()
         // --- Lepton and Sjet selection --- //
         // --------------------------------- //
         
-        if(Nlep != 1)
-            continue;
-        //if(Nlep != 2)
+        //if(Nlep != 1)
+        //    continue;
+        //if(NjetS != 0)
         //  continue;
-        if(NjetS != 0)
+        
+        if(Nlep != Nlep_selection)
+            continue;
+        if(NjetS != NjetS_selection)
           continue;
 
         double minDR  = 1000;
@@ -419,9 +441,13 @@ void Plot_2D_NanoAODv9()
     }
   }
 
-  cout << "Total events (scaled to lumi): " << hist->Integral()*137. << endl;
+  double n_events = hist->Integral() * lumi;
   
-  hist->Scale(137.);
+  printf("Total events (scaled to %s): %f", lumi_string.c_str(), n_events);
+
+  string z_axis_title = "N_{events} / " + lumi_string;
+  
+  hist->Scale(lumi);
   
   gStyle->SetOptTitle(0);
   gStyle->SetOptStat(0);
@@ -457,7 +483,7 @@ void Plot_2D_NanoAODv9()
   hist->GetZaxis()->SetTitleOffset(1.05);
   hist->GetZaxis()->SetLabelFont(42);
   hist->GetZaxis()->SetLabelSize(0.05);
-  hist->GetZaxis()->SetTitle("N_{events} / 137 fb^{-1}");
+  hist->GetZaxis()->SetTitle(z_axis_title.c_str());
   hist->GetZaxis()->SetRangeUser(0.9*hist->GetMinimum(0.0),1.1*hist->GetMaximum());
 
   TLatex l;
@@ -477,11 +503,16 @@ void Plot_2D_NanoAODv9()
 
   //can->SaveAs("T2_4bd_500_490_1L_0J.pdf");
   //can->SaveAs("T2_4bd_500_490_2L_0J.pdf");
-  can->SaveAs("TTJets_DiLept_1L_0J.pdf");
+  //can->SaveAs("TTJets_DiLept_1L_0J.pdf");
   //can->SaveAs("TTJets_DiLept_2L_0J.pdf");
+  
+  //can->SaveAs("UL2017_NanoAODv9_Plots/ZJets_1L_0J.pdf");
+  
+  string plot_name = plot_dir + "/" + sample_name + "_" + selection + ".pdf";
+  can->SaveAs(plot_name.c_str());
   
   TFile* file = new TFile("output_Plot_2D.root","RECREATE");
   can->Write();
   file->Close();
-  //delete can;
+  delete can;
 }
