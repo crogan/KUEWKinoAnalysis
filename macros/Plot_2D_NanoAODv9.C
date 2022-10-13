@@ -73,11 +73,11 @@ void Plot_2D_NanoAODv9()
   string lumi_string = stream.str();
   lumi_string += " fb^{-1}";
   
-  string plot_dir           = "UL2017_NanoAODv9_Plots";
+  string plot_dir           = "UL2017_NanoAODv9_Plots_weight_1";
   //string sample_name        = "ZDY";
   string sample_name        = "Wjets";
-  string selection          = "1L_0J";  // lepton and Sjet selection
-  int Nlep_selection        = 1;        // lepton selection
+  string selection          = "3L_0J";  // lepton and Sjet selection
+  int Nlep_selection        = 3;        // lepton selection
   int NjetS_selection       = 0;        // Sjet selection
   string g_Label            = selection.replace(selection.begin(), selection.end(), '_', ' ');
   ProcessList backgrounds   = ST.Get(kBkg).Filter(sample_name);
