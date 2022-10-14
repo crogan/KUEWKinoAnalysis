@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <sstream>
 #include <string>
+#include <algorithm>
 
 #include <TFile.h>
 #include <TTree.h>
@@ -73,16 +74,23 @@ void Plot_2D_NanoAODv9()
   string lumi_string = stream.str();
   lumi_string += " fb^{-1}";
   
+  // set parameters
   string plot_dir           = "UL2017_NanoAODv9_Plots_weight_1";
-  //string sample_name        = "ZDY";
-  string sample_name        = "Wjets";
-  string selection          = "3L_0J";  // lepton and Sjet selection
-  int Nlep_selection        = 3;        // lepton selection
+  string sample_name        = "ZDY";
+  //string sample_name        = "Wjets";
+  string selection          = "0L_0J";  // lepton and Sjet selection
+  int Nlep_selection        = 0;        // lepton selection
   int NjetS_selection       = 0;        // Sjet selection
-  string g_Label            = selection.replace(selection.begin(), selection.end(), '_', ' ');
-  ProcessList backgrounds   = ST.Get(kBkg).Filter(sample_name);
+  string g_Label            = selection;
+  replace(g_Label.begin(), g_Label.end(), '_', ' ');
+  string plot_name          = plot_dir + "/" + sample_name + "_" + selection + ".pdf";
 
   printf("lumi = %f, lumi_string = %s\n", lumi, lumi_string.c_str());
+  printf("sample_name = %s, selection = %s, g_Label = %s\n", sample_name.c_str(), selection.c_str(), g_Label.c_str());
+  printf("Nlep_selection = %d, NjetS_selection = %d\n", Nlep_selection, NjetS_selection);
+  printf("plot_name = %s\n", plot_name.c_str());
+  
+  ProcessList backgrounds   = ST.Get(kBkg).Filter(sample_name);
   
   //string g_Label = "1L 0J";
   //string g_Label = "2L 0J";
@@ -154,6 +162,7 @@ void Plot_2D_NanoAODv9()
                         g_NY, g_Ymin, g_Ymax
   );
   
+  //int SKIP = 1e6;
   int SKIP = 1;
   printf("SKIP = %d\n", SKIP); 
   
@@ -508,7 +517,6 @@ void Plot_2D_NanoAODv9()
   
   //can->SaveAs("UL2017_NanoAODv9_Plots/ZJets_1L_0J.pdf");
   
-  string plot_name = plot_dir + "/" + sample_name + "_" + selection + ".pdf";
   can->SaveAs(plot_name.c_str());
   
   TFile* file = new TFile("output_Plot_2D.root","RECREATE");
