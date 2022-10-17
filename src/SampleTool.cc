@@ -693,10 +693,10 @@ void SampleTool::InitProcMap(){
     m_Proc[m_iYear][QCD] = pair<vector<string>,string>(list, "KUAnalysis");
     
     // HACK: Add T4bd as background process (yes, this is sneaky) for 2D plotting macro
-    //Process T4bd("T4bd", kBkg);
-    //list.clear();
-    //list += m_Path + "RunIISummer20UL17NanoAODv9_SMS_v1/SMS-T2-4bd_genMET-80_mStop-500_mLSP-490_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
-    //m_Proc[m_iYear][T4bd] = pair<vector<string>,string>(list, "SMS_500_490");
+    Process T4bd("T4bd", kBkg);
+    list.clear();
+    list += m_Path + "RunIISummer20UL17NanoAODv9_SMS_v1/SMS-T2-4bd_genMET-80_mStop-500_mLSP-490_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    m_Proc[m_iYear][T4bd] = pair<vector<string>,string>(list, "SMS_500_490");
     
     // -------------- //
     // --- Signal --- //
@@ -704,7 +704,7 @@ void SampleTool::InitProcMap(){
     
     // HACK: Initialize T4bd before SKIP_SMS... we want to use this one and not skip it!
     // Caleb: NANO AOD v9 T4bd
-    InitSMS("T4bd",m_Path+"RunIISummer20UL17NanoAODv9_SMS_v1/SMS-T2-4bd_genMET-80_mStop-500_mLSP-490_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root",1,false,false);
+    //InitSMS("T4bd",m_Path+"RunIISummer20UL17NanoAODv9_SMS_v1/SMS-T2-4bd_genMET-80_mStop-500_mLSP-490_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root",1,false,false);
     // Alice: NANO AOD v9 T4bd
     //InitSMS("T4bd",m_Path+"SMS-T2-4bd_genMET-80_mStop-500_mLSP-490_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root",1,false,false);
     

@@ -67,8 +67,8 @@ void Plot_2D_NanoAODv9()
   vector<const CategoryTree*> CTs;
   CT_1L.GetListDepth(CTs, depth0-2);
   
-  int SKIP = 1e4;
-  //int SKIP = 1;
+  //int SKIP = 1e6;
+  int SKIP = 1;
   double lumi = 137.0; 
   // convert lumi to string with specific precision
   stringstream stream;
@@ -79,19 +79,16 @@ void Plot_2D_NanoAODv9()
   // set parameters
   //string plot_dir           = "UL2017_NanoAODv9_Plots_weight_1";
   string plot_dir           = "UL2017_NanoAODv9_Plots_weight_PreUL";
+  string sample_name        = "T4bd";
+  //string sample_name        = "ttbar";
   //string sample_name        = "ZDY";
-  string sample_name        = "Wjets";
+  //string sample_name        = "Wjets";
   string selection          = "1L_0J";  // lepton and Sjet selection
   int Nlep_selection        = 1;        // lepton selection
   int NjetS_selection       = 0;        // Sjet selection
   string g_Label            = selection;
   replace(g_Label.begin(), g_Label.end(), '_', ' ');
   string plot_name          = plot_dir + "/" + sample_name + "_" + selection + ".pdf";
-  
-  //printf("lumi = %f, lumi_string = %s\n", lumi, lumi_string.c_str());
-  //printf("sample_name = %s, selection = %s, g_Label = %s\n", sample_name.c_str(), selection.c_str(), g_Label.c_str());
-  //printf("Nlep_selection = %d, NjetS_selection = %d\n", Nlep_selection, NjetS_selection);
-  //printf("plot_name = %s\n", plot_name.c_str());
   
   printf("------------------------------\n");
   printf("Parameters:\n");
@@ -108,9 +105,6 @@ void Plot_2D_NanoAODv9()
   
   ProcessList backgrounds   = ST.Get(kBkg).Filter(sample_name);
   
-  //string g_Label = "1L 0J";
-  //string g_Label = "2L 0J";
-
   //int iCAT = 1; // lepton selection
   //const CategoryTree* myCT = CTs[iCAT];
   //const CategoryTree* myCT  = &CT_0L;
@@ -177,11 +171,6 @@ void Plot_2D_NanoAODv9()
                         g_NX, g_Xmin, g_Xmax,
                         g_NY, g_Ymin, g_Ymax
   );
-  
-  //int SKIP = 1e6;
-  //int SKIP = 1e4;
-  //int SKIP = 1;
-  //printf("SKIP = %d\n", SKIP); 
   
   ProcessList samples = backgrounds;
   //ProcessList samples = signals;
@@ -455,8 +444,6 @@ void Plot_2D_NanoAODv9()
         
         // weights
         
-        //double weight = (base->weight != 0.) ? base->weight : 1.;
-        
         double weight = 1.;
         
         // for ntuples that have event weight = 0.0, 
@@ -476,7 +463,7 @@ void Plot_2D_NanoAODv9()
         // if(base->RISR->at(1) < 0.975)
         //   continue;
       
-        printf("e = %d, event weight = %.6f\n", e, weight);
+        //printf("e = %d, event weight = %.6f\n", e, weight);
         
         hist->Fill(RISR, Mperp, weight*double(SKIP));
       }
@@ -488,7 +475,7 @@ void Plot_2D_NanoAODv9()
 
   double n_events = hist->Integral() * lumi;
   
-  printf("Total events (scaled to %s): %f", lumi_string.c_str(), n_events);
+  printf("Total events (scaled to %s): %f\n", lumi_string.c_str(), n_events);
 
   string z_axis_title = "N_{events} / " + lumi_string;
   
@@ -514,6 +501,7 @@ void Plot_2D_NanoAODv9()
   hist->GetXaxis()->SetTitleOffset(1.06);
   hist->GetXaxis()->SetLabelFont(42);
   hist->GetXaxis()->SetLabelSize(0.05);
+  hist->GetXaxis()->SetNdivisions(5, 5, 0, true);
   hist->GetXaxis()->SetTitle(g_Xname.c_str());
   hist->GetYaxis()->CenterTitle();
   hist->GetYaxis()->SetTitleFont(42);
