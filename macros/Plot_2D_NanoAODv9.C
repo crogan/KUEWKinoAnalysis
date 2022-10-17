@@ -67,6 +67,8 @@ void Plot_2D_NanoAODv9()
   vector<const CategoryTree*> CTs;
   CT_1L.GetListDepth(CTs, depth0-2);
   
+  int SKIP = 1e4;
+  //int SKIP = 1;
   double lumi = 137.0; 
   // convert lumi to string with specific precision
   stringstream stream;
@@ -75,20 +77,34 @@ void Plot_2D_NanoAODv9()
   lumi_string += " fb^{-1}";
   
   // set parameters
-  string plot_dir           = "UL2017_NanoAODv9_Plots_weight_1";
-  string sample_name        = "ZDY";
-  //string sample_name        = "Wjets";
-  string selection          = "0L_0J";  // lepton and Sjet selection
-  int Nlep_selection        = 0;        // lepton selection
+  //string plot_dir           = "UL2017_NanoAODv9_Plots_weight_1";
+  string plot_dir           = "UL2017_NanoAODv9_Plots_weight_PreUL";
+  //string sample_name        = "ZDY";
+  string sample_name        = "Wjets";
+  string selection          = "1L_0J";  // lepton and Sjet selection
+  int Nlep_selection        = 1;        // lepton selection
   int NjetS_selection       = 0;        // Sjet selection
   string g_Label            = selection;
   replace(g_Label.begin(), g_Label.end(), '_', ' ');
   string plot_name          = plot_dir + "/" + sample_name + "_" + selection + ".pdf";
-
-  printf("lumi = %f, lumi_string = %s\n", lumi, lumi_string.c_str());
-  printf("sample_name = %s, selection = %s, g_Label = %s\n", sample_name.c_str(), selection.c_str(), g_Label.c_str());
-  printf("Nlep_selection = %d, NjetS_selection = %d\n", Nlep_selection, NjetS_selection);
+  
+  //printf("lumi = %f, lumi_string = %s\n", lumi, lumi_string.c_str());
+  //printf("sample_name = %s, selection = %s, g_Label = %s\n", sample_name.c_str(), selection.c_str(), g_Label.c_str());
+  //printf("Nlep_selection = %d, NjetS_selection = %d\n", Nlep_selection, NjetS_selection);
+  //printf("plot_name = %s\n", plot_name.c_str());
+  
+  printf("------------------------------\n");
+  printf("Parameters:\n");
+  printf("SKIP = %d\n", SKIP); 
+  printf("lumi = %f\n", lumi);
+  printf("lumi_string = %s\n", lumi_string.c_str());
+  printf("sample_name = %s\n", sample_name.c_str());
+  printf("selection = %s\n", selection.c_str());
+  printf("g_Label = %s\n", g_Label.c_str());
+  printf("Nlep_selection = %d\n", Nlep_selection);
+  printf("NjetS_selection = %d\n", NjetS_selection);
   printf("plot_name = %s\n", plot_name.c_str());
+  printf("------------------------------\n");
   
   ProcessList backgrounds   = ST.Get(kBkg).Filter(sample_name);
   
@@ -163,8 +179,9 @@ void Plot_2D_NanoAODv9()
   );
   
   //int SKIP = 1e6;
-  int SKIP = 1;
-  printf("SKIP = %d\n", SKIP); 
+  //int SKIP = 1e4;
+  //int SKIP = 1;
+  //printf("SKIP = %d\n", SKIP); 
   
   ProcessList samples = backgrounds;
   //ProcessList samples = signals;
@@ -193,9 +210,10 @@ void Plot_2D_NanoAODv9()
       string file = ST.FileName(proc, f);
       string tree = ST.TreeName(proc, f);
       
-      bool is_FastSim = ST.IsFastSim(proc, f);
-      bool do_FilterDilepton = ST.FilterDilepton(proc, f);
-      double sample_weight = ST.GetSampleWeight(proc, f);
+      bool is_FastSim           = ST.IsFastSim(proc, f);
+      bool do_FilterDilepton    = ST.FilterDilepton(proc, f);
+      double sample_weight      = ST.GetSampleWeight(proc, f);
+      double file_weight        = ST.GetWeightForFile(file);
       
       if(is_signal)
         sample_weight *= SF.GetX20BRSF(file, tree);
@@ -206,6 +224,8 @@ void Plot_2D_NanoAODv9()
         cout << "      Is FastSim" << endl;
       if(do_FilterDilepton)
         cout << "      Filter Out dilepton events" << endl;
+      
+      printf("file_weight = %f\n", file_weight);
       
       TChain* chain = ST.Tree(proc, f);
       
@@ -304,11 +324,6 @@ void Plot_2D_NanoAODv9()
         // --------------------------------- //
         // --- Lepton and Sjet selection --- //
         // --------------------------------- //
-        
-        //if(Nlep != 1)
-        //    continue;
-        //if(NjetS != 0)
-        //  continue;
         
         if(Nlep != Nlep_selection)
             continue;
@@ -431,16 +446,37 @@ void Plot_2D_NanoAODv9()
         Event.AddGenericVal(SVmaxeta);
         
         int eindex = Categories.Find(Event);
-        if(eindex < 0){
+        if(eindex < 0)
+        {
           continue;
         }   
 
         /////////////////
         
-        double weight = (base->weight != 0.) ? base->weight : 1.;
+        // weights
+        
+        //double weight = (base->weight != 0.) ? base->weight : 1.;
+        
+        double weight = 1.;
+        
+        // for ntuples that have event weight = 0.0, 
+        // use hardcoded file_weight values for select samples
+        if(!is_data)
+        {
+          if (base->weight != 0.0)
+          {
+            weight = base->weight * sample_weight;
+          }
+          else
+          {
+            weight = file_weight * sample_weight;
+          }
+        }
 
         // if(base->RISR->at(1) < 0.975)
         //   continue;
+      
+        printf("e = %d, event weight = %.6f\n", e, weight);
         
         hist->Fill(RISR, Mperp, weight*double(SKIP));
       }
