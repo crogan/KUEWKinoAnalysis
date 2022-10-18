@@ -48,10 +48,15 @@ void Plot_2D_NanoAODv9()
 {
   RestFrames::SetStyle();
 
-  string NtuplePath = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_NanoAODv9_Standard_v1/";
+  // Caleb: NANO AOD v9
+  //string NtuplePath = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_NanoAODv9_Standard_v1/";
+  // Alice: NANO AOD v9
+  string NtuplePath = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_NanoAODv9/";
 
-  cout << "Initializing sample maps from path " << NtuplePath << " for year " << 2017 << endl;
-  SampleTool ST(NtuplePath, 2017);
+  int year = 2017; 
+
+  cout << "Initializing sample maps from path " << NtuplePath << " for year " << year << endl;
+  SampleTool ST(NtuplePath, year);
   
   ScaleFactorTool SF;
   CategoryTool CT;
@@ -67,8 +72,8 @@ void Plot_2D_NanoAODv9()
   vector<const CategoryTree*> CTs;
   CT_1L.GetListDepth(CTs, depth0-2);
   
-  //int SKIP = 1e6;
-  int SKIP = 1;
+  int SKIP = 1e5;
+  //int SKIP = 1;
   double lumi = 137.0; 
   // convert lumi to string with specific precision
   stringstream stream;
@@ -78,11 +83,12 @@ void Plot_2D_NanoAODv9()
   
   // set parameters
   //string plot_dir           = "UL2017_NanoAODv9_Plots_weight_1";
-  string plot_dir           = "UL2017_NanoAODv9_Plots_weight_PreUL";
-  string sample_name        = "T4bd";
+  //string plot_dir           = "UL2017_NanoAODv9_Plots_weight_PreUL";
+  string plot_dir           = "LowPtElectron_UL2017_NanoAODv9_Plots_weight_PreUL";
+  //string sample_name        = "T4bd";
   //string sample_name        = "ttbar";
   //string sample_name        = "ZDY";
-  //string sample_name        = "Wjets";
+  string sample_name        = "Wjets";
   string selection          = "1L_0J";  // lepton and Sjet selection
   int Nlep_selection        = 1;        // lepton selection
   int NjetS_selection       = 0;        // Sjet selection
@@ -463,7 +469,7 @@ void Plot_2D_NanoAODv9()
         // if(base->RISR->at(1) < 0.975)
         //   continue;
       
-        //printf("e = %d, event weight = %.6f\n", e, weight);
+        printf("e = %d, event weight = %.6f\n", e, weight);
         
         hist->Fill(RISR, Mperp, weight*double(SKIP));
       }

@@ -198,8 +198,29 @@ void SampleTool::InitFileWeights()
   m_FileWeightsInit = true;
   // Event weights from PreUL 2017 ntuples (lumi not included)
   // Names must match ROOT file names
+  
+  // Caleb: NANO AOD v9 
+  //m_FileWeights["SMS-T2-4bd_genMET-80_mStop-500_mLSP-490"]  = 0.00025199677645947803;
+  //m_FileWeights["TTJets_DiLept"]                            = 0.0019129376669455235;
+  //m_FileWeights["ZJetsToNuNu_HT-100To200"]                  = 0.015097984809404864;
+  //m_FileWeights["ZJetsToNuNu_HT-200To400"]                  = 0.004381523923402139;
+  //m_FileWeights["ZJetsToNuNu_HT-400To600"]                  = 0.0006933878696967197;
+  //m_FileWeights["ZJetsToNuNu_HT-600To800"]                  = 0.00027205031787863777;
+  //m_FileWeights["ZJetsToNuNu_HT-800To1200"]                 = 0.0006509185019534435;
+  //m_FileWeights["ZJetsToNuNu_HT-1200To2500"]                = 0.0004654471904347865;
+  //m_FileWeights["ZJetsToNuNu_HT-2500ToInf"]                 = 0.0016909771331058017;
+  //m_FileWeights["WJetsToLNu_HT-70To100"]                    = 0.07374022664873679;
+  //m_FileWeights["WJetsToLNu_HT-100To200"]                   = 0.04681335005258958;
+  //m_FileWeights["WJetsToLNu_HT-200To400"]                   = 0.023336220935135082;
+  //m_FileWeights["WJetsToLNu_HT-400To600"]                   = 0.0049246453186269235;
+  //m_FileWeights["WJetsToLNu_HT-600To800"]                   = 0.0008081352185255064;
+  //m_FileWeights["WJetsToLNu_HT-800To1200"]                  = 0.0003849662886431651;
+  //m_FileWeights["WJetsToLNu_HT-1200To2500"]                 = 8.658446534224976e-05;
+  //m_FileWeights["WJetsToLNu_HT-2500ToInf"]                  = 1.9710082388957415e-06;
+  
+  // Alice: NANO AOD v9 
   m_FileWeights["SMS-T2-4bd_genMET-80_mStop-500_mLSP-490"]  = 0.00025199677645947803;
-  m_FileWeights["TTJets_DiLept"]                            = 0.0019129376669455235;
+  m_FileWeights["TTjets_DILEP"]                             = 0.0019129376669455235;
   m_FileWeights["ZJetsToNuNu_HT-100To200"]                  = 0.015097984809404864;
   m_FileWeights["ZJetsToNuNu_HT-200To400"]                  = 0.004381523923402139;
   m_FileWeights["ZJetsToNuNu_HT-400To600"]                  = 0.0006933878696967197;
@@ -207,14 +228,14 @@ void SampleTool::InitFileWeights()
   m_FileWeights["ZJetsToNuNu_HT-800To1200"]                 = 0.0006509185019534435;
   m_FileWeights["ZJetsToNuNu_HT-1200To2500"]                = 0.0004654471904347865;
   m_FileWeights["ZJetsToNuNu_HT-2500ToInf"]                 = 0.0016909771331058017;
-  m_FileWeights["WJetsToLNu_HT-70To100"]                    = 0.07374022664873679;
-  m_FileWeights["WJetsToLNu_HT-100To200"]                   = 0.04681335005258958;
-  m_FileWeights["WJetsToLNu_HT-200To400"]                   = 0.023336220935135082;
-  m_FileWeights["WJetsToLNu_HT-400To600"]                   = 0.0049246453186269235;
-  m_FileWeights["WJetsToLNu_HT-600To800"]                   = 0.0008081352185255064;
-  m_FileWeights["WJetsToLNu_HT-800To1200"]                  = 0.0003849662886431651;
-  m_FileWeights["WJetsToLNu_HT-1200To2500"]                 = 8.658446534224976e-05;
-  m_FileWeights["WJetsToLNu_HT-2500ToInf"]                  = 1.9710082388957415e-06;
+  m_FileWeights["Wjets_HT_70to100"]                         = 0.07374022664873679;
+  m_FileWeights["Wjets_HT_100to200"]                        = 0.04681335005258958;
+  m_FileWeights["Wjets_HT_200to400"]                        = 0.023336220935135082;
+  m_FileWeights["Wjets_HT_400to600"]                        = 0.0049246453186269235;
+  m_FileWeights["Wjets_HT_600to800"]                        = 0.0008081352185255064;
+  m_FileWeights["Wjets_HT_800to1200"]                       = 0.0003849662886431651;
+  m_FileWeights["Wjets_HT_1200to2500"]                      = 8.658446534224976e-05;
+  m_FileWeights["Wjets_HT_2500toInf"]                       = 1.9710082388957415e-06;
 }
 
 double SampleTool::GetFileWeight(const string& key)
@@ -523,8 +544,6 @@ void SampleTool::InitProcMap(){
     // --- Background --- //
     // ------------------ //
     
-    // TODO: Update NANO AOD v9 paths when latest ntuples are available
-    
     // Standard ttbar
     //Process ttbar("ttbar", kBkg);
     //list.clear();
@@ -542,16 +561,16 @@ void SampleTool::InitProcMap(){
     //m_Proc[m_iYear][ttbar] = pair<vector<string>,string>(list, "KUAnalysis");
     
     // Caleb: NANO AOD v9 ttbar
-    Process ttbar("ttbar", kBkg);
-    list.clear();
-    list += m_Path + "RunIISummer20UL17NanoAODv9_v3/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
-    m_Proc[m_iYear][ttbar] = pair<vector<string>,string>(list, "KUAnalysis");
-    
-    // Alice: NANO AOD v9 ttbar
     //Process ttbar("ttbar", kBkg);
     //list.clear();
-    //list += m_Path + "TTjets_DILEP.root";
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_v3/TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
     //m_Proc[m_iYear][ttbar] = pair<vector<string>,string>(list, "KUAnalysis");
+    
+    // Alice: NANO AOD v9 ttbar
+    Process ttbar("ttbar", kBkg);
+    list.clear();
+    list += m_Path + "TTjets_DILEP.root";
+    m_Proc[m_iYear][ttbar] = pair<vector<string>,string>(list, "KUAnalysis");
 
     Process ST("ST", kBkg);
     list.clear();
@@ -586,16 +605,28 @@ void SampleTool::InitProcMap(){
     //list += m_Path + "Fall17_102X/ZJetsToNuNu_HT-800To1200_13TeV-madgraph_Fall17_102X.root";
     //m_Proc[m_iYear][ZDY] = pair<vector<string>,string>(list, "KUAnalysis");
     
-    // NANO AOD v9 ZDY
+    // Caleb: NANO AOD v9 ZDY
+    //Process ZDY("ZDY", kBkg);
+    //list.clear();
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_v3/ZJetsToNuNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root"; 
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_v3/ZJetsToNuNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_v3/ZJetsToNuNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_v3/ZJetsToNuNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_v3/ZJetsToNuNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_v3/ZJetsToNuNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_v3/ZJetsToNuNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    //m_Proc[m_iYear][ZDY] = pair<vector<string>,string>(list, "KUAnalysis");
+    
+    // Alice: NANO AOD v9 ZDY
     Process ZDY("ZDY", kBkg);
     list.clear();
-    list += m_Path + "RunIISummer20UL17NanoAODv9_v3/ZJetsToNuNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root"; 
-    list += m_Path + "RunIISummer20UL17NanoAODv9_v3/ZJetsToNuNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
-    list += m_Path + "RunIISummer20UL17NanoAODv9_v3/ZJetsToNuNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
-    list += m_Path + "RunIISummer20UL17NanoAODv9_v3/ZJetsToNuNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
-    list += m_Path + "RunIISummer20UL17NanoAODv9_v3/ZJetsToNuNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
-    list += m_Path + "RunIISummer20UL17NanoAODv9_v3/ZJetsToNuNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
-    list += m_Path + "RunIISummer20UL17NanoAODv9_v3/ZJetsToNuNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    list += m_Path + "ZJetsToNuNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root"; 
+    list += m_Path + "ZJetsToNuNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    list += m_Path + "ZJetsToNuNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    list += m_Path + "ZJetsToNuNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    list += m_Path + "ZJetsToNuNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    list += m_Path + "ZJetsToNuNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    list += m_Path + "ZJetsToNuNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
     m_Proc[m_iYear][ZDY] = pair<vector<string>,string>(list, "KUAnalysis");
 
     Process DB("DB", kBkg);
@@ -623,20 +654,18 @@ void SampleTool::InitProcMap(){
     list += m_Path + "Fall17_102X/VHToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_Fall17_102X.root";
     m_Proc[m_iYear][DB] = pair<vector<string>,string>(list, "KUAnalysis");
 
-/*
     // Standard Wjets (HT binned)
-    Process Wjets("Wjets", kBkg);
-    list.clear();
-    list += m_Path + "Fall17_102X/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root";
-    list += m_Path + "Fall17_102X/WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root";
-    list += m_Path + "Fall17_102X/WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root";
-    list += m_Path + "Fall17_102X/WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root";
-    list += m_Path + "Fall17_102X/WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root";
-    list += m_Path + "Fall17_102X/WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root";
-    list += m_Path + "Fall17_102X/WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root";
-    list += m_Path + "Fall17_102X/WJetsToLNu_HT-70To100_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root";
-    m_Proc[m_iYear][Wjets] = pair<vector<string>,string>(list, "KUAnalysis");
-*/
+    //Process Wjets("Wjets", kBkg);
+    //list.clear();
+    //list += m_Path + "Fall17_102X/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root";
+    //list += m_Path + "Fall17_102X/WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root";
+    //list += m_Path + "Fall17_102X/WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root";
+    //list += m_Path + "Fall17_102X/WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root";
+    //list += m_Path + "Fall17_102X/WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root";
+    //list += m_Path + "Fall17_102X/WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root";
+    //list += m_Path + "Fall17_102X/WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root";
+    //list += m_Path + "Fall17_102X/WJetsToLNu_HT-70To100_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root";
+    //m_Proc[m_iYear][Wjets] = pair<vector<string>,string>(list, "KUAnalysis");
 
     // Standard Wjets (Pt binned)
     //Process Wjets("Wjets", kBkg);
@@ -648,17 +677,30 @@ void SampleTool::InitProcMap(){
     //list += m_Path + "Fall17_102X/WJetsToLNu_Pt-600ToInf_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17_102X.root";
     //m_Proc[m_iYear][Wjets] = pair<vector<string>,string>(list, "KUAnalysis");
 
-    // NANO AOD v9 Wjets (HT binned)
+    // Caleb: NANO AOD v9 Wjets (HT binned)
+    //Process Wjets("Wjets", kBkg);
+    //list.clear();
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_v3/WJetsToLNu_HT-70To100_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root"; 
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_v3/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_v3/WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_v3/WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_v3/WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_v3/WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_v3/WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_v3/WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    //m_Proc[m_iYear][Wjets] = pair<vector<string>,string>(list, "KUAnalysis");
+    
+    // Alice: NANO AOD v9 Wjets (HT binned)
     Process Wjets("Wjets", kBkg);
     list.clear();
-    list += m_Path + "RunIISummer20UL17NanoAODv9_v3/WJetsToLNu_HT-70To100_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root"; 
-    list += m_Path + "RunIISummer20UL17NanoAODv9_v3/WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
-    list += m_Path + "RunIISummer20UL17NanoAODv9_v3/WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
-    list += m_Path + "RunIISummer20UL17NanoAODv9_v3/WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
-    list += m_Path + "RunIISummer20UL17NanoAODv9_v3/WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
-    list += m_Path + "RunIISummer20UL17NanoAODv9_v3/WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
-    list += m_Path + "RunIISummer20UL17NanoAODv9_v3/WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
-    list += m_Path + "RunIISummer20UL17NanoAODv9_v3/WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    list += m_Path + "Wjets_HT_70to100.root"; 
+    list += m_Path + "Wjets_HT_100to200.root";
+    list += m_Path + "Wjets_HT_200to400.root";
+    list += m_Path + "Wjets_HT_400to600.root";
+    list += m_Path + "Wjets_HT_600to800.root";
+    list += m_Path + "Wjets_HT_800to1200.root";
+    list += m_Path + "Wjets_HT_1200to2500.root";
+    list += m_Path + "Wjets_HT_2500toInf.root";
     m_Proc[m_iYear][Wjets] = pair<vector<string>,string>(list, "KUAnalysis");
 
     // NANO AOD v9 Wjets (Pt binned)
@@ -693,9 +735,17 @@ void SampleTool::InitProcMap(){
     m_Proc[m_iYear][QCD] = pair<vector<string>,string>(list, "KUAnalysis");
     
     // HACK: Add T4bd as background process (yes, this is sneaky) for 2D plotting macro
+    
+    // Caleb: NANO AOD v9 T4bd
+    //Process T4bd("T4bd", kBkg);
+    //list.clear();
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_SMS_v1/SMS-T2-4bd_genMET-80_mStop-500_mLSP-490_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    //m_Proc[m_iYear][T4bd] = pair<vector<string>,string>(list, "SMS_500_490");
+    
+    // Alice: NANO AOD v9 T4bd
     Process T4bd("T4bd", kBkg);
     list.clear();
-    list += m_Path + "RunIISummer20UL17NanoAODv9_SMS_v1/SMS-T2-4bd_genMET-80_mStop-500_mLSP-490_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    list += m_Path + "SMS-T2-4bd_genMET-80_mStop-500_mLSP-490_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
     m_Proc[m_iYear][T4bd] = pair<vector<string>,string>(list, "SMS_500_490");
     
     // -------------- //
@@ -703,8 +753,10 @@ void SampleTool::InitProcMap(){
     // -------------- //
     
     // HACK: Initialize T4bd before SKIP_SMS... we want to use this one and not skip it!
+    
     // Caleb: NANO AOD v9 T4bd
     //InitSMS("T4bd",m_Path+"RunIISummer20UL17NanoAODv9_SMS_v1/SMS-T2-4bd_genMET-80_mStop-500_mLSP-490_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root",1,false,false);
+    
     // Alice: NANO AOD v9 T4bd
     //InitSMS("T4bd",m_Path+"SMS-T2-4bd_genMET-80_mStop-500_mLSP-490_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root",1,false,false);
     
