@@ -72,8 +72,8 @@ void Plot_2D_NanoAODv9()
   vector<const CategoryTree*> CTs;
   CT_1L.GetListDepth(CTs, depth0-2);
   
-  int SKIP = 1e5;
-  //int SKIP = 1;
+  //int SKIP = 1e5;
+  int SKIP = 1;
   double lumi = 137.0; 
   // convert lumi to string with specific precision
   stringstream stream;
@@ -87,10 +87,10 @@ void Plot_2D_NanoAODv9()
   string plot_dir           = "LowPtElectron_UL2017_NanoAODv9_Plots_weight_PreUL";
   //string sample_name        = "T4bd";
   //string sample_name        = "ttbar";
-  //string sample_name        = "ZDY";
-  string sample_name        = "Wjets";
-  string selection          = "1L_0J";  // lepton and Sjet selection
-  int Nlep_selection        = 1;        // lepton selection
+  string sample_name        = "ZDY";
+  //string sample_name        = "Wjets";
+  string selection          = "2L_0J";  // lepton and Sjet selection
+  int Nlep_selection        = 2;        // lepton selection
   int NjetS_selection       = 0;        // Sjet selection
   string g_Label            = selection;
   replace(g_Label.begin(), g_Label.end(), '_', ' ');
@@ -469,7 +469,7 @@ void Plot_2D_NanoAODv9()
         // if(base->RISR->at(1) < 0.975)
         //   continue;
       
-        printf("e = %d, event weight = %.6f\n", e, weight);
+        //printf("e = %d, event weight = %.6f\n", e, weight);
         
         hist->Fill(RISR, Mperp, weight*double(SKIP));
       }
