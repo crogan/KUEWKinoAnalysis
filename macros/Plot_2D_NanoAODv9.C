@@ -49,9 +49,9 @@ void Plot_2D_NanoAODv9()
   RestFrames::SetStyle();
 
   // Caleb: NANO AOD v9
-  //string NtuplePath = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_NanoAODv9_Standard_v1/";
+  string NtuplePath = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_NanoAODv9_Standard_v1/";
   // Alice: NANO AOD v9
-  string NtuplePath = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_NanoAODv9/";
+  //string NtuplePath = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_NanoAODv9/";
 
   int year = 2017; 
 
@@ -82,12 +82,13 @@ void Plot_2D_NanoAODv9()
   lumi_string += " fb^{-1}";
   
   // set parameters
-  //string plot_dir           = "UL2017_NanoAODv9_Plots_weight_1";
+  string plot_dir           = "UL2017_NanoAODv9_Plots_weight_1";
   //string plot_dir           = "UL2017_NanoAODv9_Plots_weight_PreUL";
-  string plot_dir           = "LowPtElectron_UL2017_NanoAODv9_Plots_weight_PreUL";
+  //string plot_dir           = "LowPtElectron_UL2017_NanoAODv9_Plots_weight_PreUL";
   //string sample_name        = "T4bd";
+  string sample_name        = "TChiWZ";
   //string sample_name        = "ttbar";
-  string sample_name        = "ZDY";
+  //string sample_name        = "ZDY";
   //string sample_name        = "Wjets";
   string selection          = "2L_0J";  // lepton and Sjet selection
   int Nlep_selection        = 2;        // lepton selection
