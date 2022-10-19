@@ -480,7 +480,7 @@ CONFIG.AddSJetNormSys("DB",DB,cb, processes);
     for(int s = 0; s < Nsys; s++){  
       Systematic& sys = systematics[s];
       if(shapeToNorm.Contains(sys)){ 
-        //CONFIG.AddShapeSysAsNorm(sys,cb,FIT); continue;
+        CONFIG.AddShapeSysAsNorm(sys,cb,FIT);
         continue;
       }
       ProcessList proc_sys;

@@ -100,6 +100,9 @@ void FitConfiguration::AddFakeLeptonSys(ch::CombineHarvester& cb, ProcessList& p
 void FitConfiguration::AddBJetSys(ch::CombineHarvester& cb, ProcessList& processes){
   cb.SetFlag("filters-use-regex", true);
 
+  ProcessList bkg_noQCD = processes.Remove("QCD");
+  ProcessList QCD_only = processes.Filter("QCD");
+
   cb.cp().backgrounds().bin(VS().a(".*0L.*_1j.*0b.*S.*1bISR.*"))
      .AddSyst(cb, "BTAG_ISR_0L_1J", "lnN", SystMap<>::init(1.20));
 
@@ -133,6 +136,12 @@ void FitConfiguration::AddBJetSys(ch::CombineHarvester& cb, ProcessList& process
 
   cb.cp().backgrounds().bin(VS().a(".*0L.*_3j.*2bS.*"))
      .AddSyst(cb, "BTAG_S_ISR_0L_3J_2b", "lnN", SystMap<>::init(1.20));
+
+//  cb.cp().process(bkg_noQCD.GetProcesses()).bin(VS().a(".*0L.*_3j.*2bS.*"))
+//     .AddSyst(cb, "other_BTAG_S_ISR_0L_3J_2b", "lnN", SystMap<>::init(1.20));
+
+//  cb.cp().process(QCD_only.GetProcesses()).bin(VS().a(".*0L.*_3j.*2bS.*"))
+//     .AddSyst(cb, "QCD_BTAG_S_ISR_0L_3J_2b", "lnN", SystMap<>::init(1.20));
 
   cb.cp().backgrounds().bin(VS().a(".*0L.*_4j.*0b.*S.*1bISR.*"))
      .AddSyst(cb, "BTAG_ISR_0L_4J", "lnN", SystMap<>::init(1.20));
@@ -204,6 +213,26 @@ void FitConfiguration::AddBJetSys(ch::CombineHarvester& cb, ProcessList& process
   cb.cp().backgrounds().bin(VS().a(".*1L.*4j.*2bS.*"))
      .AddSyst(cb, "BTAG_S_ISR_1L_4J_2b", "lnN", SystMap<>::init(1.20));
 
+
+  cb.cp().backgrounds().bin(VS().a(".*2L.*1j.*0bS.*1bISR.*"))
+     .AddSyst(cb, "BTAG_ISR_2L_1J", "lnN", SystMap<>::init(1.20));
+
+  cb.cp().backgrounds().bin(VS().a(".*2L.*1j.*1bS.*0bISR.*"))
+     .AddSyst(cb, "BTAG_S_2L_1J", "lnN", SystMap<>::init(1.20));
+
+  cb.cp().backgrounds().bin(VS().a(".*2L.*1j.*1bS.*1bISR.*"))
+     .AddSyst(cb, "BTAG_S_ISR_2L_1J", "lnN", SystMap<>::init(1.20));
+
+  cb.cp().backgrounds().bin(VS().a(".*2L.*ge2j0bS.*1bISR.*"))
+     .AddSyst(cb, "BTAG_ISR_2L_2J", "lnN", SystMap<>::init(1.20));
+
+  cb.cp().backgrounds().bin(VS().a(".*2L.*ge2j0bS.*0bISR.*"))
+     .AddSyst(cb, "BTAG_S_2L_2J", "lnN", SystMap<>::init(1.20));
+
+  cb.cp().backgrounds().bin(VS().a(".*2L.*ge2jge1bS.*1bISR.*"))
+     .AddSyst(cb, "BTAG_S_ISR_2L_2J", "lnN", SystMap<>::init(1.20));
+
+
   cb.SetFlag("filters-use-regex", false);
 }
 
@@ -239,55 +268,55 @@ void FitConfiguration::AddPTISRSys(ch::CombineHarvester& cb, ProcessList& proces
   cb.SetFlag("filters-use-regex", true);
 
   cb.cp().process(processes.GetProcesses()).bin(VS().a(".*0L.*.*0j.*S_.*.*PTISR1.*"))
-    .AddSyst(cb, label+"PTISR_0L_0jS", "lnN", SystMap<>::init(1.50));
+    .AddSyst(cb, label+"PTISR_0L_0jS", "lnN", SystMap<>::init(1.20));
 
   cb.cp().process(processes.GetProcesses()).bin(VS().a(".*0L.*.*1j.*S_.*.*PTISR1.*"))
-    .AddSyst(cb, label+"PTISR_0L_1jS", "lnN", SystMap<>::init(1.50));
+    .AddSyst(cb, label+"PTISR_0L_1jS", "lnN", SystMap<>::init(1.20));
 
   cb.cp().process(processes.GetProcesses()).bin(VS().a(".*0L.*.*2j.*S_.*.*PTISR1.*"))
-    .AddSyst(cb, label+"PTISR_0L_2jS", "lnN", SystMap<>::init(1.50));
+    .AddSyst(cb, label+"PTISR_0L_2jS", "lnN", SystMap<>::init(1.20));
 
   cb.cp().process(processes.GetProcesses()).bin(VS().a(".*0L.*.*3j.*S_.*.*PTISR1.*"))
-    .AddSyst(cb, label+"PTISR_0L_3jS", "lnN", SystMap<>::init(1.50));
+    .AddSyst(cb, label+"PTISR_0L_3jS", "lnN", SystMap<>::init(1.20));
 
   cb.cp().process(processes.GetProcesses()).bin(VS().a(".*0L.*.*4j.*S_.*.*PTISR1.*"))
-    .AddSyst(cb, label+"PTISR_0L_4jS", "lnN", SystMap<>::init(1.50));
+    .AddSyst(cb, label+"PTISR_0L_4jS", "lnN", SystMap<>::init(1.20));
 
   cb.cp().process(processes.GetProcesses()).bin(VS().a(".*0L.*.*5j.*S_.*.*PTISR1.*"))
-    .AddSyst(cb, label+"PTISR_0L_5jS", "lnN", SystMap<>::init(1.50));
+    .AddSyst(cb, label+"PTISR_0L_5jS", "lnN", SystMap<>::init(1.20));
 
   cb.cp().process(processes.GetProcesses()).bin(VS().a(".*1L.*.*0j.*S_.*.*PTISR1.*"))
-    .AddSyst(cb, label+"PTISR_1L_0jS", "lnN", SystMap<>::init(1.10));
+    .AddSyst(cb, label+"PTISR_1L_0jS", "lnN", SystMap<>::init(1.20));
 
   cb.cp().process(processes.GetProcesses()).bin(VS().a(".*1L.*.*1j.*S_.*.*PTISR1.*"))
-    .AddSyst(cb, label+"PTISR_1L_1jS", "lnN", SystMap<>::init(1.10));
+    .AddSyst(cb, label+"PTISR_1L_1jS", "lnN", SystMap<>::init(1.20));
 
   cb.cp().process(processes.GetProcesses()).bin(VS().a(".*1L.*.*2j.*S_.*.*PTISR1.*"))
-    .AddSyst(cb, label+"PTISR_1L_2jS", "lnN", SystMap<>::init(1.10));
+    .AddSyst(cb, label+"PTISR_1L_2jS", "lnN", SystMap<>::init(1.20));
 
   cb.cp().process(processes.GetProcesses()).bin(VS().a(".*1L.*.*3j.*S_.*.*PTISR1.*"))
-    .AddSyst(cb, label+"PTISR_1L_3jS", "lnN", SystMap<>::init(1.10));
+    .AddSyst(cb, label+"PTISR_1L_3jS", "lnN", SystMap<>::init(1.20));
 
   cb.cp().process(processes.GetProcesses()).bin(VS().a(".*1L.*.*4j.*S_.*.*PTISR1.*"))
-    .AddSyst(cb, label+"PTISR_1L_4jS", "lnN", SystMap<>::init(1.10));
+    .AddSyst(cb, label+"PTISR_1L_4jS", "lnN", SystMap<>::init(1.20));
 
   cb.cp().process(processes.GetProcesses()).bin(VS().a(".*2L.*.*0j.*S_.*.*PTISR1.*"))
-    .AddSyst(cb, label+"PTISR_2L_0jS", "lnN", SystMap<>::init(1.10));
+    .AddSyst(cb, label+"PTISR_2L_0jS", "lnN", SystMap<>::init(1.20));
 
   cb.cp().process(processes.GetProcesses()).bin(VS().a(".*2L.*.*1j.*S_.*.*PTISR1.*"))
-    .AddSyst(cb, label+"PTISR_2L_1jS", "lnN", SystMap<>::init(1.10));
+    .AddSyst(cb, label+"PTISR_2L_1jS", "lnN", SystMap<>::init(1.20));
 
   cb.cp().process(processes.GetProcesses()).bin(VS().a(".*2L.*.*2j.*S_.*.*PTISR1.*"))
-    .AddSyst(cb, label+"PTISR_2L_2jS", "lnN", SystMap<>::init(1.10));
+    .AddSyst(cb, label+"PTISR_2L_2jS", "lnN", SystMap<>::init(1.20));
 
   cb.cp().process(processes.GetProcesses()).bin(VS().a(".*2L.*.*3j.*S_.*.*PTISR1.*"))
-    .AddSyst(cb, label+"PTISR_2L_3jS", "lnN", SystMap<>::init(1.10));
+    .AddSyst(cb, label+"PTISR_2L_3jS", "lnN", SystMap<>::init(1.20));
 
   cb.cp().process(processes.GetProcesses()).bin(VS().a(".*3L.*.*0j.*S_.*.*PTISR1.*"))
-    .AddSyst(cb, label+"PTISR_3L_0jS", "lnN", SystMap<>::init(1.10));
+    .AddSyst(cb, label+"PTISR_3L_0jS", "lnN", SystMap<>::init(1.20));
 
   cb.cp().process(processes.GetProcesses()).bin(VS().a(".*3L.*.*1j.*S_.*.*PTISR1.*"))
-    .AddSyst(cb, label+"PTISR_3L_1jS", "lnN", SystMap<>::init(1.10));
+    .AddSyst(cb, label+"PTISR_3L_1jS", "lnN", SystMap<>::init(1.20));
 
   cb.SetFlag("filters-use-regex", false);
 }
@@ -296,31 +325,37 @@ void FitConfiguration::AddgamTSys(ch::CombineHarvester& cb, ProcessList& process
   cb.SetFlag("filters-use-regex", true);
 
   cb.cp().process(processes.GetProcesses()).bin(VS().a(".*0L.*.*2j.*S_.*.*gamT1.*"))
-    .AddSyst(cb, label+"gamT_0L_2jS", "lnN", SystMap<>::init(1.1));
+    .AddSyst(cb, label+"gamT_0L_2jS", "lnN", SystMap<>::init(1.20));
 
   cb.cp().process(processes.GetProcesses()).bin(VS().a(".*0L.*.*3j.*S_.*.*gamT1.*"))
-    .AddSyst(cb, label+"gamT_0L_3jS", "lnN", SystMap<>::init(1.1));
+    .AddSyst(cb, label+"gamT_0L_3jS", "lnN", SystMap<>::init(1.20));
 
   cb.cp().process(processes.GetProcesses()).bin(VS().a(".*0L.*.*4j.*S_.*.*gamT1.*"))
-    .AddSyst(cb, label+"gamT_0L_4jS", "lnN", SystMap<>::init(1.1));
+    .AddSyst(cb, label+"gamT_0L_4jS", "lnN", SystMap<>::init(1.20));
 
   cb.cp().process(processes.GetProcesses()).bin(VS().a(".*0L.*.*5j.*S_.*.*gamT1.*"))
-    .AddSyst(cb, label+"gamT_0L_5jS", "lnN", SystMap<>::init(1.1));
+    .AddSyst(cb, label+"gamT_0L_5jS", "lnN", SystMap<>::init(1.20));
 
   cb.cp().process(processes.GetProcesses()).bin(VS().a(".*1L.*.*1j.*S_.*.*gamT1.*"))
-    .AddSyst(cb, label+"gamT_1L_1jS", "lnN", SystMap<>::init(1.1));
+    .AddSyst(cb, label+"gamT_1L_1jS", "lnN", SystMap<>::init(1.20));
 
   cb.cp().process(processes.GetProcesses()).bin(VS().a(".*1L.*.*2j.*S_.*.*gamT1.*"))
-    .AddSyst(cb, label+"gamT_1L_2jS", "lnN", SystMap<>::init(1.1));
+    .AddSyst(cb, label+"gamT_1L_2jS", "lnN", SystMap<>::init(1.20));
 
   cb.cp().process(processes.GetProcesses()).bin(VS().a(".*1L.*.*3j.*S_.*.*gamT1.*"))
-    .AddSyst(cb, label+"gamT_1L_3jS", "lnN", SystMap<>::init(1.1));
+    .AddSyst(cb, label+"gamT_1L_3jS", "lnN", SystMap<>::init(1.20));
 
   cb.cp().process(processes.GetProcesses()).bin(VS().a(".*1L.*.*4j.*S_.*.*gamT1.*"))
-    .AddSyst(cb, label+"gamT_1L_4jS", "lnN", SystMap<>::init(1.1));
+    .AddSyst(cb, label+"gamT_1L_4jS", "lnN", SystMap<>::init(1.20));
 
-  cb.cp().process(processes.GetProcesses()).bin(VS().a(".*2L.*gamT1.*"))
-    .AddSyst(cb, label+"gamT_2L", "lnN", SystMap<>::init(1.1));
+  cb.cp().process(processes.GetProcesses()).bin(VS().a(".*2L.*.*0j.*S_.*.*gamT1.*"))
+    .AddSyst(cb, "gamT_2L_0jS", "lnN", SystMap<>::init(1.20));
+
+  cb.cp().process(processes.GetProcesses()).bin(VS().a(".*2L.*.*1j.*S_.*.*gamT1.*"))
+    .AddSyst(cb, "gamT_2L_1jS", "lnN", SystMap<>::init(1.20));
+
+  cb.cp().process(processes.GetProcesses()).bin(VS().a(".*2L.*.*2j.*S_.*.*gamT1.*"))
+    .AddSyst(cb, "gamT_2L_2jS", "lnN", SystMap<>::init(1.20));
 
   cb.SetFlag("filters-use-regex", false);
 }
