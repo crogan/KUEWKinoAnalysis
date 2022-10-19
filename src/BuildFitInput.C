@@ -638,25 +638,23 @@ if(sys.Label().find("MET_TRIG") != std::string::npos)
 	  //
 	  // BTAG systematics on the fly (needs jet collection in reduced ntuples)
 	  //
-	 for(int b = 0; b <= Nbjet; b++){
 	  if(sys == Systematic("BTAGHF_SF")){
 	    if(sys.IsUp())
-	      btag_weight *= SF.GetBtagSFWeight(base, year, is_FastSim, true, 1);
+	      btag_weight = SF.GetBtagSFWeight(base, year, is_FastSim, true, 1);
 	    else
-	      btag_weight *= SF.GetBtagSFWeight(base, year, is_FastSim, true, -1);
+	      btag_weight = SF.GetBtagSFWeight(base, year, is_FastSim, true, -1);
 	  } else {
-	    btag_weight *= SF.GetBtagSFWeight(base, year, is_FastSim, true, 0);
+	    btag_weight = SF.GetBtagSFWeight(base, year, is_FastSim, true, 0);
 	  }
 	  
 	  if(sys == Systematic("BTAGLF_SF")){
 	    if(sys.IsUp())
-	      btag_weight *= SF.GetBtagSFWeight(base, year, is_FastSim, false, 1);
+	      btag_weight = SF.GetBtagSFWeight(base, year, is_FastSim, false, 1);
 	    else
-	      btag_weight *= SF.GetBtagSFWeight(base, year, is_FastSim, false, -1);
+	      btag_weight = SF.GetBtagSFWeight(base, year, is_FastSim, false, -1);
 	  } else {
-	    btag_weight *= SF.GetBtagSFWeight(base, year, is_FastSim, false, 0);
+	    btag_weight = SF.GetBtagSFWeight(base, year, is_FastSim, false, 0);
 	  }
-         }
 	  // turn off PU systematics for now
 	  // if(sys == Systematic("PU_SF"))
 	  //   if(sys.IsUp())
