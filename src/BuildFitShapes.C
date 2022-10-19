@@ -62,7 +62,7 @@ int main(int argc, char* argv[]) {
       smoothFakes = true;
       smoothQCD   = true;
       shapeFakes  = true;
-      shapeQCD    = true;
+      //shapeQCD    = true;
       shapeWjets  = false;
       sJetSysSplit = true;
     }
