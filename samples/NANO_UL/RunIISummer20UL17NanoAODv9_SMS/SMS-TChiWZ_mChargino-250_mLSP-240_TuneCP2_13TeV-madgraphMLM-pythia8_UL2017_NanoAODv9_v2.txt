@@ -1,0 +1,10 @@
+root://cmseos.fnal.gov//store/user/lpcsusylep/NanoAODv9/SMS-TChiWZ_mChargino-250_mLSP-240_TuneCP2_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_v2/TChiWZ_NANOAODSIM_2017_1.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NanoAODv9/SMS-TChiWZ_mChargino-250_mLSP-240_TuneCP2_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_v2/TChiWZ_NANOAODSIM_2017_2.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NanoAODv9/SMS-TChiWZ_mChargino-250_mLSP-240_TuneCP2_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_v2/TChiWZ_NANOAODSIM_2017_3.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NanoAODv9/SMS-TChiWZ_mChargino-250_mLSP-240_TuneCP2_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_v2/TChiWZ_NANOAODSIM_2017_4.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NanoAODv9/SMS-TChiWZ_mChargino-250_mLSP-240_TuneCP2_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_v2/TChiWZ_NANOAODSIM_2017_5.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NanoAODv9/SMS-TChiWZ_mChargino-250_mLSP-240_TuneCP2_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_v2/TChiWZ_NANOAODSIM_2017_6.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NanoAODv9/SMS-TChiWZ_mChargino-250_mLSP-240_TuneCP2_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_v2/TChiWZ_NANOAODSIM_2017_7.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NanoAODv9/SMS-TChiWZ_mChargino-250_mLSP-240_TuneCP2_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_v2/TChiWZ_NANOAODSIM_2017_8.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NanoAODv9/SMS-TChiWZ_mChargino-250_mLSP-240_TuneCP2_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_v2/TChiWZ_NANOAODSIM_2017_9.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NanoAODv9/SMS-TChiWZ_mChargino-250_mLSP-240_TuneCP2_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_v2/TChiWZ_NANOAODSIM_2017_10.root
