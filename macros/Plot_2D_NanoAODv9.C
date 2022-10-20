@@ -46,6 +46,7 @@ using namespace RestFrames;
 
 void Plot_2D_NanoAODv9()
 {
+  gROOT->SetBatch(kTRUE);
   RestFrames::SetStyle();
 
   // Caleb: NANO AOD v9

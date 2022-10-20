@@ -754,7 +754,7 @@ void SampleTool::InitProcMap(){
     // Caleb: NANO AOD v9 TChiWZ
     Process TChiWZ("TChiWZ", kBkg);
     list.clear();
-    list += m_Path + "RunIISummer20UL17NanoAODv9_SMS_v1/SMS-TChiWZ_mChargino-250_mLSP-240_TuneCP2_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_v1_RunIISummer20UL17NanoAODv9.root";
+    list += m_Path + "RunIISummer20UL17NanoAODv9_SMS_v1/SMS-TChiWZ_mChargino-250_mLSP-240_TuneCP2_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_v2_RunIISummer20UL17NanoAODv9.root";
     m_Proc[m_iYear][TChiWZ] = pair<vector<string>,string>(list, "SMS_250_240");
     
     // -------------- //
@@ -770,7 +770,7 @@ void SampleTool::InitProcMap(){
     //InitSMS("T4bd",m_Path+"SMS-T2-4bd_genMET-80_mStop-500_mLSP-490_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root",1,false,false);
     
     // Caleb: NANO AOD v9 TChiWZ
-    //InitSMS("TChiWZ",m_Path+"RunIISummer20UL17NanoAODv9_SMS_v1/SMS-TChiWZ_mChargino-250_mLSP-240_TuneCP2_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_v1_RunIISummer20UL17NanoAODv9.root",1,false,false);
+    //InitSMS("TChiWZ",m_Path+"RunIISummer20UL17NanoAODv9_SMS_v1/SMS-TChiWZ_mChargino-250_mLSP-240_TuneCP2_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_v2_RunIISummer20UL17NanoAODv9.root",1,false,false);
     
     if (not SKIP_SMS)
     {
