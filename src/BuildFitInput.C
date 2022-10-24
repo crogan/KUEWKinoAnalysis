@@ -772,12 +772,12 @@ int main(int argc, char* argv[])
 
       // turn off trigger weight for now
       //weight *= btag_weight*PU_weight*trig_weight;
-      weight *= (btag_weight * PU_weight);
+      //weight *= (btag_weight * PU_weight);
 
       if(is_data) weight = 1.;
       
       // HACK: set weight = 1 for samples that don't have weights
-      //weight = 1.0;
+      weight = 1.0;
       
       //printf("e = %d, final event weight = %.6f\n", e, weight);
       
