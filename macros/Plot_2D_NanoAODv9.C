@@ -557,13 +557,6 @@ void Plot_2D_NanoAODv9()
   l.SetTextSize(0.045);
   l.SetTextFont(42);
   l.DrawLatex(0.7,0.04,g_Label.c_str());
-
-  //can->SaveAs("T2_4bd_500_490_1L_0J.pdf");
-  //can->SaveAs("T2_4bd_500_490_2L_0J.pdf");
-  //can->SaveAs("TTJets_DiLept_1L_0J.pdf");
-  //can->SaveAs("TTJets_DiLept_2L_0J.pdf");
-  
-  //can->SaveAs("UL2017_NanoAODv9_Plots/ZJets_1L_0J.pdf");
   
   can->SaveAs(plot_name.c_str());
   

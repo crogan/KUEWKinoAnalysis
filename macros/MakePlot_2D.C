@@ -72,7 +72,7 @@ void MakePlot_2D()
   string g_Label            = selection;
   replace(g_Label.begin(), g_Label.end(), '_', ' ');
   string plot_name          = plot_dir + "/" + sample_name + "_" + selection + ".pdf";
-  string output_name        = hist_dir + "/" + sample_name + "_" + selection + ".root";
+  string input_name         = hist_dir + "/" + sample_name + "_" + selection + ".root";
   
   printf("------------------------------\n");
   printf("Parameters:\n");
@@ -84,7 +84,7 @@ void MakePlot_2D()
   printf("Nlep_selection = %d\n", Nlep_selection);
   printf("NjetS_selection = %d\n", NjetS_selection);
   printf("plot_name = %s\n", plot_name.c_str());
-  printf("output_name = %s\n", output_name.c_str());
+  printf("input_name = %s\n", input_name.c_str());
   printf("------------------------------\n");
   
   // x axis
@@ -98,11 +98,15 @@ void MakePlot_2D()
   g_Ymin    = 0.;
   g_Ymax    = 64.;
   g_NY      = 32;
+  
+  // get hist from file
+  unique_ptr<TFile> file(TFile::Open(input_name.c_str(), "READ"));
+  unique_ptr<TH2D>  hist((TH2D*)file->Get("hist"));
  
-  TH2D* hist = new TH2D("hist", "hist",
-                        g_NX, g_Xmin, g_Xmax,
-                        g_NY, g_Ymin, g_Ymax
-  );
+  //TH2D* hist = new TH2D("hist", "hist",
+  //                      g_NX, g_Xmin, g_Xmax,
+  //                      g_NY, g_Ymin, g_Ymax
+  //);
   
   g_PlotTitle = sample_name;
   
@@ -173,9 +177,5 @@ void MakePlot_2D()
 
   can->SaveAs(plot_name.c_str());
   
-  TFile* file = new TFile(output_name.c_str(), "RECREATE");
-  hist->Write();
-  can->Write();
-  file->Close();
   delete can;
 }
