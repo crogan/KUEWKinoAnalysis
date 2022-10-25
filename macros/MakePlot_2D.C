@@ -48,20 +48,7 @@ void MakePlot_2D()
 {
   gROOT->SetBatch(kTRUE);
   RestFrames::SetStyle();
-
-  // Caleb: NANO AOD v9
-  string NtuplePath = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_NanoAODv9_Standard_v1/";
-  // Alice: NANO AOD v9
-  //string NtuplePath = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_NanoAODv9/";
-
-  int year = 2017; 
-
-  cout << "Initializing sample maps from path " << NtuplePath << " for year " << year << endl;
   
-  SampleTool ST(NtuplePath, year);
-  
-  //int SKIP = 1e5;
-  int SKIP = 1;
   double lumi = 137.0; 
   // convert lumi to string with specific precision
   stringstream stream;
@@ -89,7 +76,6 @@ void MakePlot_2D()
   
   printf("------------------------------\n");
   printf("Parameters:\n");
-  printf("SKIP = %d\n", SKIP); 
   printf("lumi = %f\n", lumi);
   printf("lumi_string = %s\n", lumi_string.c_str());
   printf("sample_name = %s\n", sample_name.c_str());
@@ -101,8 +87,6 @@ void MakePlot_2D()
   printf("output_name = %s\n", output_name.c_str());
   printf("------------------------------\n");
   
-  ProcessList backgrounds   = ST.Get(kBkg).Filter(sample_name);
-
   // x axis
   g_Xname   = "R_{ISR}";
   g_Xmin    = 0.8;
@@ -120,11 +104,7 @@ void MakePlot_2D()
                         g_NY, g_Ymin, g_Ymax
   );
   
-  ProcessList samples = backgrounds;
-  //ProcessList samples = signals;
-  //samples += backgrounds;
-
-  g_PlotTitle = samples[0].Name();
+  g_PlotTitle = sample_name;
   
   // ----------------- //
   // --- Make Plot --- //
@@ -141,7 +121,7 @@ void MakePlot_2D()
   gStyle->SetOptTitle(0);
   gStyle->SetOptStat(0);
   gStyle->SetOptFit(11111111);
-  TCanvas* can = (TCanvas*) new TCanvas("can","can",700.,600);
+  TCanvas* can = (TCanvas*) new TCanvas("can", "can", 700., 600.);
 
   can->SetLeftMargin(0.15);
   can->SetRightMargin(0.18);
@@ -174,26 +154,26 @@ void MakePlot_2D()
   hist->GetZaxis()->SetLabelFont(42);
   hist->GetZaxis()->SetLabelSize(0.05);
   hist->GetZaxis()->SetTitle(z_axis_title.c_str());
-  hist->GetZaxis()->SetRangeUser(0.9*hist->GetMinimum(0.0),1.1*hist->GetMaximum());
+  hist->GetZaxis()->SetRangeUser(0.9 * hist->GetMinimum(0.0), 1.1 * hist->GetMaximum());
 
   TLatex l;
   l.SetTextFont(42);
   l.SetNDC();
   l.SetTextSize(0.035);
   l.SetTextFont(42);
-  // l.DrawLatex(0.17,0.855,g_PlotTitle.c_str());
-  l.DrawLatex(0.71,0.943,g_PlotTitle.c_str());
+  //l.DrawLatex(0.17, 0.855, g_PlotTitle.c_str());
+  l.DrawLatex(0.71, 0.943, g_PlotTitle.c_str());
   l.SetTextSize(0.04);
   l.SetTextFont(42);
-  l.DrawLatex(0.01,0.943,"#bf{CMS} Simulation Preliminary");
+  l.DrawLatex(0.01, 0.943, "#bf{CMS} Simulation Preliminary");
 
   l.SetTextSize(0.045);
   l.SetTextFont(42);
-  l.DrawLatex(0.7,0.04,g_Label.c_str());
+  l.DrawLatex(0.7, 0.04, g_Label.c_str());
 
   can->SaveAs(plot_name.c_str());
   
-  TFile* file = new TFile(output_name.c_str(),"RECREATE");
+  TFile* file = new TFile(output_name.c_str(), "RECREATE");
   hist->Write();
   can->Write();
   file->Close();
