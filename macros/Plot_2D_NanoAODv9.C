@@ -192,6 +192,9 @@ void Plot_2D_NanoAODv9()
    
   int Nsample = samples.GetN();
   
+  // ------------------- //
+  // --- Sample Loop --- //
+  // ------------------- //
   for(int s = 0; s < Nsample; s++)
   {
     Process proc = samples[s];
@@ -205,6 +208,10 @@ void Plot_2D_NanoAODv9()
     int Nfile = ST.NTrees(proc);
     
     cout << "Processing " << Nfile << " files for process " << title << endl;
+    
+    // ----------------- //
+    // --- File Loop --- //
+    // ----------------- //
     for(int f = 0; f < Nfile; f++)
     {
       string file = ST.FileName(proc, f);
@@ -233,7 +240,9 @@ void Plot_2D_NanoAODv9()
       
       int Nentry = base->fChain->GetEntries(); 
       
-      // event loop
+      // ------------------ //
+      // --- Event Loop --- //
+      // ------------------ //
       for(int e = 0; e < Nentry; e += SKIP)
       {
         base->GetEntry(e);
@@ -483,6 +492,10 @@ void Plot_2D_NanoAODv9()
       delete chain;
     }
   }
+  
+  // ----------------- //
+  // --- Make Plot --- //
+  // ----------------- //
 
   double n_events = hist->Integral() * lumi;
   
