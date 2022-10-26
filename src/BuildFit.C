@@ -401,14 +401,10 @@ cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
   CONFIG.Add1LBJetSys(cb, Top_only, "top_");
 
   CONFIG.Add0LPTISRSys(cb, backgrounds, "");
-  CONFIG.Add0LPTISRSys(cb, backgrounds, "");
-  CONFIG.Add1LPTISRSys(cb, backgrounds, "");
   CONFIG.Add1LPTISRSys(cb, backgrounds, "");
 
   CONFIG.AddCommongamTSys(cb, backgrounds);
   CONFIG.Add0LgamTSys(cb, backgrounds, "");
-  CONFIG.Add0LgamTSys(cb, backgrounds, "");
-  CONFIG.Add1LgamTSys(cb, backgrounds, "");
   CONFIG.Add1LgamTSys(cb, backgrounds, "");
 
   //CONFIG.AddLeptonQualityNormSys(cb, processes);
