@@ -67,8 +67,6 @@ void MakePlot_2D()
   //string sample_name        = "ZDY";
   //string sample_name        = "Wjets";
   string selection          = "1L_0J";  // lepton and Sjet selection
-  int Nlep_selection        = 1;        // lepton selection
-  int NjetS_selection       = 0;        // Sjet selection
   string g_Label            = selection;
   replace(g_Label.begin(), g_Label.end(), '_', ' ');
   string plot_name          = plot_dir + "/" + sample_name + "_" + selection + ".pdf";
@@ -81,8 +79,6 @@ void MakePlot_2D()
   printf("sample_name = %s\n", sample_name.c_str());
   printf("selection = %s\n", selection.c_str());
   printf("g_Label = %s\n", g_Label.c_str());
-  printf("Nlep_selection = %d\n", Nlep_selection);
-  printf("NjetS_selection = %d\n", NjetS_selection);
   printf("plot_name = %s\n", plot_name.c_str());
   printf("input_name = %s\n", input_name.c_str());
   printf("------------------------------\n");
@@ -90,13 +86,13 @@ void MakePlot_2D()
   // x axis
   g_Xname   = "R_{ISR}";
   g_Xmin    = 0.8;
-  g_Xmax    = 1.; 
+  g_Xmax    = 1.0; 
   g_NX      = 32;
   
   // y axis
   g_Yname   = "M_{#perp} [GeV]";
-  g_Ymin    = 0.;
-  g_Ymax    = 64.;
+  g_Ymin    = 0.0;
+  g_Ymax    = 64.0;
   g_NY      = 32;
   
   // get hist from file
