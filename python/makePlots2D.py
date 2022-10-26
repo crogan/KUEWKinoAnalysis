@@ -15,6 +15,7 @@ ROOT.gStyle.SetOptTitle(0)
 ROOT.gStyle.SetOptStat(0)
 ROOT.gStyle.SetOptFit(11111111)
 
+# Make 2D plot
 def Plot2D(sample_name, selection, g_Xname, g_Yname):
     lumi = 137.0 
     lumi_string = "{0:.1f} fb^{{-1}}".format(lumi)
@@ -22,24 +23,27 @@ def Plot2D(sample_name, selection, g_Xname, g_Yname):
     print("lumi: {0:.1f}".format(lumi))
     print("lumi_string: {0}".format(lumi_string))
   
-    plot_dir    = "UL2017_NanoAODv9_CustomPlots_weight_1"
-    hist_dir    = "UL2017_NanoAODv9_Hists_weight_1"
+    #plot_dir    = "UL2017_NanoAODv9_CustomPlots_weight_1"
+    #hist_dir    = "UL2017_NanoAODv9_Hists_weight_1"
+    plot_dir    = "UL2017_NanoAODv9_CustomPlots_weight_PreUL"
+    hist_dir    = "UL2017_NanoAODv9_Hists_weight_PreUL"
     plot_name   = plot_dir + "/" + sample_name + "_" + selection + ".pdf"
     input_name  = hist_dir + "/" + sample_name + "_" + selection + ".root"
 
-    g_PlotTitle = sample_name
-    g_Label     = selection
+    g_PlotTitle     = sample_name
+    g_Label         = selection
+    z_axis_title    = "N_{events} / " + lumi_string
     
     tools.makeDir(plot_dir)
+    # load hist from ROOT file
     input_file  = ROOT.TFile.Open(input_name, "READ")
     hist        = input_file.Get("hist")
   
-    z_axis_title = "N_{events} / " + lumi_string
-    
+    # scale hist to lumi
     hist.Scale(lumi)
 
+    # setup canvas
     can = ROOT.TCanvas("can", "can", 700, 600)
-  
     can.SetLeftMargin(0.15)
     can.SetRightMargin(0.18)
     can.SetBottomMargin(0.15)
@@ -48,6 +52,7 @@ def Plot2D(sample_name, selection, g_Xname, g_Yname):
     can.SetLogz()
     can.Draw()
     can.cd()
+    # setup hist 
     hist.Draw("COLZ")
     hist.GetXaxis().CenterTitle()
     hist.GetXaxis().SetTitleFont(42)
@@ -73,13 +78,16 @@ def Plot2D(sample_name, selection, g_Xname, g_Yname):
     hist.GetZaxis().SetTitle(z_axis_title)
     hist.GetZaxis().SetRangeUser(0.9 * hist.GetMinimum(0.0), 1.1 * hist.GetMaximum())
     
+    # text
     l = ROOT.TLatex()
     l.SetTextFont(42)
     l.SetNDC()
+    
     l.SetTextSize(0.035)
     l.SetTextFont(42)
     # l.DrawLatex(0.17, 0.855, g_PlotTitle)
     l.DrawLatex(0.71, 0.943, g_PlotTitle)
+    
     l.SetTextSize(0.04)
     l.SetTextFont(42)
     l.DrawLatex(0.01, 0.943, "#bf{CMS} Simulation Preliminary")
@@ -88,12 +96,16 @@ def Plot2D(sample_name, selection, g_Xname, g_Yname):
     l.SetTextFont(42)
     l.DrawLatex(0.7, 0.04, g_Label)
     
+    # save plot
     can.SaveAs(plot_name)
 
 def makePlots2D():
     print("Go make 2D plots!")
-    sample_name = "TChiWZ"
-    selection   = "1L_0J"   # lepton and Sjet selection
+    
+    sample_name = "T4bd"
+    #sample_name = "TChiWZ"
+    selections  = ["1L_0J", "2L_0J"]    # lepton and Sjet selections
+    
     # x axis
     g_Xname = "R_{ISR}"
     g_Xmin  = 0.8
@@ -105,11 +117,14 @@ def makePlots2D():
     g_Ymin  = 0.0
     g_Ymax  = 64.0
     g_NY    = 32
+    
     #hist = ROOT.TH2D("hist", "hist",
     #                 g_NX, g_Xmin, g_Xmax,
     #                 g_NY, g_Ymin, g_Ymax
     #)
-    Plot2D(sample_name, selection, g_Xname, g_Yname)
+    
+    for selection in selections:
+        Plot2D(sample_name, selection, g_Xname, g_Yname)
 
 def main():
     makePlots2D()

@@ -83,17 +83,18 @@ void Plot_2D_NanoAODv9()
   lumi_string += " fb^{-1}";
   
   // set parameters
-  string plot_dir           = "UL2017_NanoAODv9_Plots_weight_1";
-  string hist_dir           = "UL2017_NanoAODv9_Hists_weight_1";
-  //string plot_dir           = "UL2017_NanoAODv9_Plots_weight_PreUL";
+  //string plot_dir           = "UL2017_NanoAODv9_Plots_weight_1";
+  //string hist_dir           = "UL2017_NanoAODv9_Hists_weight_1";
+  string plot_dir           = "UL2017_NanoAODv9_Plots_weight_PreUL";
+  string hist_dir           = "UL2017_NanoAODv9_Hists_weight_PreUL";
   //string plot_dir           = "LowPtElectron_UL2017_NanoAODv9_Plots_weight_PreUL";
-  //string sample_name        = "T4bd";
-  string sample_name        = "TChiWZ";
+  string sample_name        = "T4bd";
+  //string sample_name        = "TChiWZ";
   //string sample_name        = "ttbar";
   //string sample_name        = "ZDY";
   //string sample_name        = "Wjets";
-  string selection          = "1L_0J";  // lepton and Sjet selection
-  int Nlep_selection        = 1;        // lepton selection
+  string selection          = "2L_0J";  // lepton and Sjet selection
+  int Nlep_selection        = 2;        // lepton selection
   int NjetS_selection       = 0;        // Sjet selection
   string g_Label            = selection;
   replace(g_Label.begin(), g_Label.end(), '_', ' ');
