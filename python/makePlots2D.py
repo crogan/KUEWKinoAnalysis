@@ -15,18 +15,15 @@ ROOT.gStyle.SetOptTitle(0)
 ROOT.gStyle.SetOptStat(0)
 ROOT.gStyle.SetOptFit(11111111)
 
-# Make 2D plot
-def Plot2D(hist, sample_name, selection, plot_name, g_Xname, g_Yname):
-    # WARNING: If hist is already scaled to lumi, do not scale again!
-    lumi = 137.0 
-    lumi_string = "{0:.1f} fb^{{-1}}".format(lumi)
-    
-    #print("lumi: {0:.1f}".format(lumi))
-    #print("lumi_string: {0}".format(lumi_string))
+# get lumi label
+def getLumiLabel(lumi):
+    label = "{0:.1f} fb^{{-1}}".format(lumi)
+    return label
 
+# Make 2D plot
+def Plot2D(hist, sample_name, selection, plot_name, g_Xname, g_Yname, g_Zname):
     g_PlotTitle     = sample_name
     g_Label         = selection
-    z_axis_title    = "N_{events} / " + lumi_string
     
     # setup canvas
     can = ROOT.TCanvas("can", "can", 700, 600)
@@ -66,7 +63,7 @@ def Plot2D(hist, sample_name, selection, plot_name, g_Xname, g_Yname):
     hist.GetZaxis().SetTitleOffset(1.05)
     hist.GetZaxis().SetLabelFont(42)
     hist.GetZaxis().SetLabelSize(0.05)
-    hist.GetZaxis().SetTitle(z_axis_title)
+    hist.GetZaxis().SetTitle(g_Zname)
     hist.GetZaxis().SetRangeUser(0.9 * hist.GetMinimum(0.0), 1.1 * hist.GetMaximum())
     
     # text
@@ -107,6 +104,15 @@ def makePlots2D():
         }
     }
     
+    # WARNING: If hist is already scaled to lumi, do not scale again!
+    lumi = 137.0 
+    lumi_label = getLumiLabel(lumi) 
+    z_axis_title = "N_{events} / " + lumi_label
+    
+    print("lumi: {0:.1f}".format(lumi))
+    print("lumi_label: {0}".format(lumi_label))
+    print("z_axis_title: {0}".format(z_axis_title))
+    
     # x axis
     g_Xname = "R_{ISR}"
     g_Xmin  = 0.8
@@ -118,6 +124,11 @@ def makePlots2D():
     g_Ymin  = 0.0
     g_Ymax  = 64.0
     g_NY    = 32
+
+    # z axis
+    g_Zname = z_axis_title
+    g_Zmin  = 0.0
+    g_Zmax  = 1.0e3
     
     #hist = ROOT.TH2D("hist", "hist",
     #                 g_NX, g_Xmin, g_Xmax,
@@ -134,7 +145,7 @@ def makePlots2D():
             # load hist from ROOT file
             input_file  = ROOT.TFile.Open(input_name, "READ")
             hist        = input_file.Get("hist")
-            Plot2D(hist, sample_name, selection, plot_name, g_Xname, g_Yname)
+            Plot2D(hist, sample_name, selection, plot_name, g_Xname, g_Yname, g_Zname)
 
 # Make 2D ratio plots for datasets
 def makeRatioPlots2D():
@@ -148,6 +159,7 @@ def makeRatioPlots2D():
     
     g_Xname = "R_{ISR}"
     g_Yname = "M_{#perp} [GeV]"
+    g_Zname = "LowPtElec / Standard"
 
     for selection in selections:
         plot_name       = plot_dir   + "/" + sample_name + "_" + selection + ".pdf"
@@ -161,10 +173,10 @@ def makeRatioPlots2D():
         # take ratio of hists
         hist_ratio      = hist_2.Clone("hist_ratio")
         hist_ratio.Divide(hist_1)
-        Plot2D(hist_ratio, sample_name, selection, plot_name, g_Xname, g_Yname)
+        Plot2D(hist_ratio, sample_name, selection, plot_name, g_Xname, g_Yname, g_Zname)
 
 def main():
-    #makePlots2D()
+    makePlots2D()
     makeRatioPlots2D()
 
 if __name__ == "__main__":
