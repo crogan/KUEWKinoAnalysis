@@ -20,13 +20,15 @@ def Plot2D(sample_name, selection, g_Xname, g_Yname):
     lumi = 137.0 
     lumi_string = "{0:.1f} fb^{{-1}}".format(lumi)
     
-    print("lumi: {0:.1f}".format(lumi))
-    print("lumi_string: {0}".format(lumi_string))
+    #print("lumi: {0:.1f}".format(lumi))
+    #print("lumi_string: {0}".format(lumi_string))
   
     #plot_dir    = "UL2017_NanoAODv9_CustomPlots_weight_1"
     #hist_dir    = "UL2017_NanoAODv9_Hists_weight_1"
-    plot_dir    = "UL2017_NanoAODv9_CustomPlots_weight_PreUL"
-    hist_dir    = "UL2017_NanoAODv9_Hists_weight_PreUL"
+    #plot_dir    = "UL2017_NanoAODv9_CustomPlots_weight_PreUL"
+    #hist_dir    = "UL2017_NanoAODv9_Hists_weight_PreUL"
+    plot_dir    = "LowPtElectron_UL2017_NanoAODv9_CustomPlots_weight_PreUL"
+    hist_dir    = "LowPtElectron_UL2017_NanoAODv9_Hists_weight_PreUL"
     plot_name   = plot_dir + "/" + sample_name + "_" + selection + ".pdf"
     input_name  = hist_dir + "/" + sample_name + "_" + selection + ".root"
 
@@ -98,10 +100,9 @@ def Plot2D(sample_name, selection, g_Xname, g_Yname):
     
     # save plot
     can.SaveAs(plot_name)
+    del can
 
 def makePlots2D():
-    print("Go make 2D plots!")
-    
     sample_name = "T4bd"
     #sample_name = "TChiWZ"
     selections  = ["1L_0J", "2L_0J"]    # lepton and Sjet selections

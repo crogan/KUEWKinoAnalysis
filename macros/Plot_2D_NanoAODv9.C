@@ -50,9 +50,9 @@ void Plot_2D_NanoAODv9()
   RestFrames::SetStyle();
 
   // Caleb: NANO AOD v9
-  string NtuplePath = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_NanoAODv9_Standard_v1/";
+  //string NtuplePath = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_NanoAODv9_Standard_v1/";
   // Alice: NANO AOD v9
-  //string NtuplePath = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_NanoAODv9/";
+  string NtuplePath = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_NanoAODv9/";
 
   int year = 2017; 
 
@@ -85,9 +85,10 @@ void Plot_2D_NanoAODv9()
   // set parameters
   //string plot_dir           = "UL2017_NanoAODv9_Plots_weight_1";
   //string hist_dir           = "UL2017_NanoAODv9_Hists_weight_1";
-  string plot_dir           = "UL2017_NanoAODv9_Plots_weight_PreUL";
-  string hist_dir           = "UL2017_NanoAODv9_Hists_weight_PreUL";
-  //string plot_dir           = "LowPtElectron_UL2017_NanoAODv9_Plots_weight_PreUL";
+  //string plot_dir           = "UL2017_NanoAODv9_Plots_weight_PreUL";
+  //string hist_dir           = "UL2017_NanoAODv9_Hists_weight_PreUL";
+  string plot_dir           = "LowPtElectron_UL2017_NanoAODv9_Plots_weight_PreUL";
+  string hist_dir           = "LowPtElectron_UL2017_NanoAODv9_Hists_weight_PreUL";
   string sample_name        = "T4bd";
   //string sample_name        = "TChiWZ";
   //string sample_name        = "ttbar";

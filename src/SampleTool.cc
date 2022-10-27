@@ -740,22 +740,22 @@ void SampleTool::InitProcMap(){
     // HACK: Add T4bd and TChiWZ as background processes (yes, this is sneaky) for 2D plotting macro!
     
     // Caleb: NANO AOD v9 T4bd
-    Process T4bd("T4bd", kBkg);
-    list.clear();
-    list += m_Path + "RunIISummer20UL17NanoAODv9_SMS_v1/SMS-T2-4bd_genMET-80_mStop-500_mLSP-490_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
-    m_Proc[m_iYear][T4bd] = pair<vector<string>,string>(list, "SMS_500_490");
-    
-    // Alice: NANO AOD v9 T4bd
     //Process T4bd("T4bd", kBkg);
     //list.clear();
-    //list += m_Path + "SMS-T2-4bd_genMET-80_mStop-500_mLSP-490_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_SMS_v1/SMS-T2-4bd_genMET-80_mStop-500_mLSP-490_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
     //m_Proc[m_iYear][T4bd] = pair<vector<string>,string>(list, "SMS_500_490");
     
-    // Caleb: NANO AOD v9 TChiWZ
-    Process TChiWZ("TChiWZ", kBkg);
+    // Alice: NANO AOD v9 T4bd
+    Process T4bd("T4bd", kBkg);
     list.clear();
-    list += m_Path + "RunIISummer20UL17NanoAODv9_SMS_v1/SMS-TChiWZ_mChargino-250_mLSP-240_TuneCP2_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_v2_RunIISummer20UL17NanoAODv9.root";
-    m_Proc[m_iYear][TChiWZ] = pair<vector<string>,string>(list, "SMS_250_240");
+    list += m_Path + "SMS-T2-4bd_genMET-80_mStop-500_mLSP-490_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    m_Proc[m_iYear][T4bd] = pair<vector<string>,string>(list, "SMS_500_490");
+    
+    // Caleb: NANO AOD v9 TChiWZ
+    //Process TChiWZ("TChiWZ", kBkg);
+    //list.clear();
+    //list += m_Path + "RunIISummer20UL17NanoAODv9_SMS_v1/SMS-TChiWZ_mChargino-250_mLSP-240_TuneCP2_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_v2_RunIISummer20UL17NanoAODv9.root";
+    //m_Proc[m_iYear][TChiWZ] = pair<vector<string>,string>(list, "SMS_250_240");
     
     // -------------- //
     // --- Signal --- //
