@@ -16,32 +16,18 @@ ROOT.gStyle.SetOptStat(0)
 ROOT.gStyle.SetOptFit(11111111)
 
 # Make 2D plot
-def Plot2D(sample_name, selection, g_Xname, g_Yname):
+def Plot2D(hist, sample_name, selection, plot_name, g_Xname, g_Yname):
     # WARNING: If hist is already scaled to lumi, do not scale again!
     lumi = 137.0 
     lumi_string = "{0:.1f} fb^{{-1}}".format(lumi)
     
     #print("lumi: {0:.1f}".format(lumi))
     #print("lumi_string: {0}".format(lumi_string))
-  
-    #plot_dir    = "UL2017_NanoAODv9_CustomPlots_weight_1"
-    #hist_dir    = "UL2017_NanoAODv9_Hists_weight_1"
-    #plot_dir    = "UL2017_NanoAODv9_CustomPlots_weight_PreUL"
-    #hist_dir    = "UL2017_NanoAODv9_Hists_weight_PreUL"
-    plot_dir    = "LowPtElectron_UL2017_NanoAODv9_CustomPlots_weight_PreUL"
-    hist_dir    = "LowPtElectron_UL2017_NanoAODv9_Hists_weight_PreUL"
-    plot_name   = plot_dir + "/" + sample_name + "_" + selection + ".pdf"
-    input_name  = hist_dir + "/" + sample_name + "_" + selection + ".root"
 
     g_PlotTitle     = sample_name
     g_Label         = selection
     z_axis_title    = "N_{events} / " + lumi_string
     
-    tools.makeDir(plot_dir)
-    # load hist from ROOT file
-    input_file  = ROOT.TFile.Open(input_name, "READ")
-    hist        = input_file.Get("hist")
-
     # setup canvas
     can = ROOT.TCanvas("can", "can", 700, 600)
     can.SetLeftMargin(0.15)
@@ -52,16 +38,20 @@ def Plot2D(sample_name, selection, g_Xname, g_Yname):
     can.SetLogz()
     can.Draw()
     can.cd()
-    # setup hist 
+    
+    # draw hist
     hist.Draw("COLZ")
+    
+    # setup hist 
     hist.GetXaxis().CenterTitle()
     hist.GetXaxis().SetTitleFont(42)
     hist.GetXaxis().SetTitleSize(0.06)
     hist.GetXaxis().SetTitleOffset(1.06)
     hist.GetXaxis().SetLabelFont(42)
     hist.GetXaxis().SetLabelSize(0.05)
-    hist.GetXaxis().SetNdivisions(5, 5, 0, True)
     hist.GetXaxis().SetTitle(g_Xname)
+    hist.GetXaxis().SetNdivisions(5, 5, 0, True)
+    
     hist.GetYaxis().CenterTitle()
     hist.GetYaxis().SetTitleFont(42)
     hist.GetYaxis().SetTitleSize(0.06)
@@ -69,6 +59,7 @@ def Plot2D(sample_name, selection, g_Xname, g_Yname):
     hist.GetYaxis().SetLabelFont(42)
     hist.GetYaxis().SetLabelSize(0.05)
     hist.GetYaxis().SetTitle(g_Yname)
+    
     hist.GetZaxis().CenterTitle()
     hist.GetZaxis().SetTitleFont(42)
     hist.GetZaxis().SetTitleSize(0.055)
@@ -104,6 +95,16 @@ def makePlots2D():
     sample_name = "T4bd"
     #sample_name = "TChiWZ"
     selections  = ["1L_0J", "2L_0J"]    # lepton and Sjet selections
+    datasets = {
+        "Standard" : {
+            "plot_dir" : "UL2017_NanoAODv9_CustomPlots_weight_PreUL",
+            "hist_dir" : "UL2017_NanoAODv9_Hists_weight_PreUL"
+        },
+        "LowPtElectron" : {
+            "plot_dir" : "LowPtElectron_UL2017_NanoAODv9_CustomPlots_weight_PreUL",
+            "hist_dir" : "LowPtElectron_UL2017_NanoAODv9_Hists_weight_PreUL"
+        }
+    }
     
     # x axis
     g_Xname = "R_{ISR}"
@@ -121,9 +122,18 @@ def makePlots2D():
     #                 g_NX, g_Xmin, g_Xmax,
     #                 g_NY, g_Ymin, g_Ymax
     #)
-    
-    for selection in selections:
-        Plot2D(sample_name, selection, g_Xname, g_Yname)
+
+    for dataset in datasets:
+        plot_dir = datasets[dataset]["plot_dir"]
+        hist_dir = datasets[dataset]["hist_dir"]
+        tools.makeDir(plot_dir)
+        for selection in selections:
+            plot_name   = plot_dir + "/" + sample_name + "_" + selection + ".pdf"
+            input_name  = hist_dir + "/" + sample_name + "_" + selection + ".root"
+            # load hist from ROOT file
+            input_file  = ROOT.TFile.Open(input_name, "READ")
+            hist        = input_file.Get("hist")
+            Plot2D(hist, sample_name, selection, plot_name, g_Xname, g_Yname)
 
 def main():
     makePlots2D()

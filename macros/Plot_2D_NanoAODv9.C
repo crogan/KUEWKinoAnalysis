@@ -520,15 +520,18 @@ void Plot_2D_NanoAODv9()
   can->SetLogz();
   can->Draw();
   can->cd();
+  
   hist->Draw("COLZ");
+  
   hist->GetXaxis()->CenterTitle();
   hist->GetXaxis()->SetTitleFont(42);
   hist->GetXaxis()->SetTitleSize(0.06);
   hist->GetXaxis()->SetTitleOffset(1.06);
   hist->GetXaxis()->SetLabelFont(42);
   hist->GetXaxis()->SetLabelSize(0.05);
-  hist->GetXaxis()->SetNdivisions(5, 5, 0, true);
   hist->GetXaxis()->SetTitle(g_Xname.c_str());
+  hist->GetXaxis()->SetNdivisions(5, 5, 0, true);
+  
   hist->GetYaxis()->CenterTitle();
   hist->GetYaxis()->SetTitleFont(42);
   hist->GetYaxis()->SetTitleSize(0.06);
@@ -536,6 +539,7 @@ void Plot_2D_NanoAODv9()
   hist->GetYaxis()->SetLabelFont(42);
   hist->GetYaxis()->SetLabelSize(0.05);
   hist->GetYaxis()->SetTitle(g_Yname.c_str());
+  
   hist->GetZaxis()->CenterTitle();
   hist->GetZaxis()->SetTitleFont(42);
   hist->GetZaxis()->SetTitleSize(0.055);
