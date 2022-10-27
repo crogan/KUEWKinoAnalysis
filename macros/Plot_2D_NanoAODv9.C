@@ -89,11 +89,11 @@ void Plot_2D_NanoAODv9()
   //string hist_dir           = "UL2017_NanoAODv9_Hists_weight_PreUL";
   string plot_dir           = "LowPtElectron_UL2017_NanoAODv9_Plots_weight_PreUL";
   string hist_dir           = "LowPtElectron_UL2017_NanoAODv9_Hists_weight_PreUL";
-  string sample_name        = "T4bd";
+  //string sample_name        = "T4bd";
   //string sample_name        = "TChiWZ";
   //string sample_name        = "ttbar";
   //string sample_name        = "ZDY";
-  //string sample_name        = "Wjets";
+  string sample_name        = "Wjets";
   string selection          = "2L_0J";  // lepton and Sjet selection
   int Nlep_selection        = 2;        // lepton selection
   int NjetS_selection       = 0;        // Sjet selection
@@ -566,7 +566,6 @@ void Plot_2D_NanoAODv9()
   
   can->SaveAs(plot_name.c_str());
   
-  //TFile* file = new TFile("output_Plot_2D.root","RECREATE");
   TFile* file = new TFile(output_name.c_str(),"RECREATE");
   hist->Write();
   can->Write();
