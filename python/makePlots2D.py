@@ -91,6 +91,7 @@ def Plot2D(hist, sample_name, selection, plot_name, g_Xname, g_Yname):
     can.SaveAs(plot_name)
     del can
 
+# Make 2D plots for datasets
 def makePlots2D():
     sample_name = "T4bd"
     #sample_name = "TChiWZ"
@@ -135,8 +136,36 @@ def makePlots2D():
             hist        = input_file.Get("hist")
             Plot2D(hist, sample_name, selection, plot_name, g_Xname, g_Yname)
 
+# Make 2D ratio plots for datasets
+def makeRatioPlots2D():
+    sample_name = "T4bd"
+    selections  = ["1L_0J", "2L_0J"]    # lepton and Sjet selections
+    plot_dir    = "UL2017_NanoAODv9_RatioPlots_weight_PreUL"
+    hist_dir_1  = "UL2017_NanoAODv9_Hists_weight_PreUL"
+    hist_dir_2  = "LowPtElectron_UL2017_NanoAODv9_Hists_weight_PreUL"
+        
+    tools.makeDir(plot_dir)
+    
+    g_Xname = "R_{ISR}"
+    g_Yname = "M_{#perp} [GeV]"
+
+    for selection in selections:
+        plot_name       = plot_dir   + "/" + sample_name + "_" + selection + ".pdf"
+        input_name_1    = hist_dir_1 + "/" + sample_name + "_" + selection + ".root"
+        input_name_2    = hist_dir_2 + "/" + sample_name + "_" + selection + ".root"
+        # load hists from ROOT file
+        input_file_1    = ROOT.TFile.Open(input_name_1, "READ")
+        input_file_2    = ROOT.TFile.Open(input_name_2, "READ")
+        hist_1          = input_file_1.Get("hist")
+        hist_2          = input_file_2.Get("hist")
+        # take ratio of hists
+        hist_ratio      = hist_2.Clone("hist_ratio")
+        hist_ratio.Divide(hist_1)
+        Plot2D(hist_ratio, sample_name, selection, plot_name, g_Xname, g_Yname)
+
 def main():
-    makePlots2D()
+    #makePlots2D()
+    makeRatioPlots2D()
 
 if __name__ == "__main__":
     main()
