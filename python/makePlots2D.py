@@ -120,7 +120,7 @@ def makePlots2D():
         }
     }
     
-    # WARNING: If hist is already scaled to lumi, do not scale again!
+    # WARNING: If hist was already scaled to lumi, do not scale again!
     lumi = 137.0 
     lumi_label = getLumiLabel(lumi) 
     z_axis_title = "N_{events} / " + lumi_label
@@ -144,8 +144,12 @@ def makePlots2D():
     # z axis
     setLog  = True
     g_Zname = z_axis_title
-    g_Zmin  = 0.0
-    g_Zmax  = 1.0e3
+    
+    # z axis ranges for each selection
+    z_limits_map = {
+        "1L_0J" : [0.01, 200.0],
+        "2L_0J" : [0.01, 20.0]
+    }
     
     #hist = ROOT.TH2D("hist", "hist",
     #                 g_NX, g_Xmin, g_Xmax,
@@ -162,7 +166,8 @@ def makePlots2D():
             # load hist from ROOT file
             input_file  = ROOT.TFile.Open(input_name, "READ")
             hist        = input_file.Get("hist")
-            Plot2D(hist, sample_name, selection, plot_name, g_Xname, g_Yname, g_Zname, setLog)
+            z_limits    = z_limits_map[selection]
+            Plot2D(hist, sample_name, selection, plot_name, g_Xname, g_Yname, g_Zname, setLog, z_limits)
 
 # Make 2D ratio plots for datasets
 def makeRatioPlots2D():
@@ -176,27 +181,33 @@ def makeRatioPlots2D():
     
     g_Xname     = "R_{ISR}"
     g_Yname     = "M_{#perp} [GeV]"
-    #g_Zname     = "LowPtElec / Standard"
     g_Zname     = "N_{low pt elec} / N_{standard}"
     
     setLog      = False
-    g_Zmin      = 0.0
-    #g_Zmax      = 2.0
-    g_Zmax      = 10.0
-    z_limits    = [g_Zmin, g_Zmax]
+    
+    # z axis ranges for each selection
+    z_limits_map = {
+        "1L_0J" : [0.0, 2.0],
+        "2L_0J" : [0.0, 10.0]
+    }
 
     for selection in selections:
         plot_name       = plot_dir   + "/" + sample_name + "_" + selection + ".pdf"
         input_name_1    = hist_dir_1 + "/" + sample_name + "_" + selection + ".root"
         input_name_2    = hist_dir_2 + "/" + sample_name + "_" + selection + ".root"
+        
         # load hists from ROOT file
         input_file_1    = ROOT.TFile.Open(input_name_1, "READ")
         input_file_2    = ROOT.TFile.Open(input_name_2, "READ")
         hist_1          = input_file_1.Get("hist")
         hist_2          = input_file_2.Get("hist")
+        
         # take ratio of hists
         hist_ratio      = hist_2.Clone("hist_ratio")
         hist_ratio.Divide(hist_1)
+        
+        z_limits = z_limits_map[selection]
+        
         Plot2D(hist_ratio, sample_name, selection, plot_name, g_Xname, g_Yname, g_Zname, setLog, z_limits)
 
 def main():
