@@ -17,6 +17,7 @@ ROOT.gStyle.SetOptFit(11111111)
 
 # Make 2D plot
 def Plot2D(sample_name, selection, g_Xname, g_Yname):
+    # WARNING: If hist is already scaled to lumi, do not scale again!
     lumi = 137.0 
     lumi_string = "{0:.1f} fb^{{-1}}".format(lumi)
     
@@ -40,9 +41,6 @@ def Plot2D(sample_name, selection, g_Xname, g_Yname):
     # load hist from ROOT file
     input_file  = ROOT.TFile.Open(input_name, "READ")
     hist        = input_file.Get("hist")
-  
-    # scale hist to lumi
-    hist.Scale(lumi)
 
     # setup canvas
     can = ROOT.TCanvas("can", "can", 700, 600)
