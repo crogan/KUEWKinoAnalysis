@@ -35,9 +35,9 @@ def Plot2D(hist, sample_name, selection, plot_name, g_Xname, g_Yname, g_Zname, s
         z_min = 0.9 * hist.GetMinimum(0.0)
         z_max = 1.1 * hist.GetMaximum()
     
-    print("plot_name = {0}".format(plot_name))
-    print("z_min = {0:.3f}".format(z_min))
-    print("z_max = {0:.3f}".format(z_max))
+    #print("plot_name = {0}".format(plot_name))
+    #print("z_min = {0:.3f}".format(z_min))
+    #print("z_max = {0:.3f}".format(z_max))
     
     # setup canvas
     can = ROOT.TCanvas("can", "can", 700, 600)
@@ -126,9 +126,9 @@ def makePlots2D():
     lumi_label = getLumiLabel(lumi) 
     z_axis_title = "N_{events} / " + lumi_label
     
-    print("lumi: {0:.1f}".format(lumi))
-    print("lumi_label: {0}".format(lumi_label))
-    print("z_axis_title: {0}".format(z_axis_title))
+    #print("lumi: {0:.1f}".format(lumi))
+    #print("lumi_label: {0}".format(lumi_label))
+    #print("z_axis_title: {0}".format(z_axis_title))
     
     # x axis
     g_Xname = "R_{ISR}"
@@ -179,19 +179,23 @@ def makePlots2D():
             for selection in selections:
                 plot_name   = plot_dir + "/" + sample_name + "_" + selection + ".pdf"
                 input_name  = hist_dir + "/" + sample_name + "_" + selection + ".root"
+                
                 # load hist from ROOT file
                 input_file  = ROOT.TFile.Open(input_name, "READ")
                 hist        = input_file.Get("hist")
+                
                 z_limits    = z_limits_map[sample_name][selection]
+                
                 Plot2D(hist, sample_name, selection, plot_name, g_Xname, g_Yname, g_Zname, setLog, z_limits)
 
 # Make 2D ratio plots for datasets
 def makeRatioPlots2D():
-    sample_name = "T4bd"
-    selections  = ["1L_0J", "2L_0J"]    # lepton and Sjet selections
-    plot_dir    = "UL2017_NanoAODv9_RatioPlots_weight_PreUL"
-    hist_dir_1  = "UL2017_NanoAODv9_Hists_weight_PreUL"
-    hist_dir_2  = "LowPtElectron_UL2017_NanoAODv9_Hists_weight_PreUL"
+    #sample_name = "T4bd"
+    sample_names    = ["T4bd", "ttbar", "ZDY", "Wjets"]
+    selections      = ["1L_0J", "2L_0J"]    # lepton and Sjet selections
+    plot_dir        = "UL2017_NanoAODv9_RatioPlots_weight_PreUL"
+    hist_dir_1      = "UL2017_NanoAODv9_Hists_weight_PreUL"
+    hist_dir_2      = "LowPtElectron_UL2017_NanoAODv9_Hists_weight_PreUL"
         
     tools.makeDir(plot_dir)
     
@@ -201,30 +205,45 @@ def makeRatioPlots2D():
     
     setLog      = False
     
-    # z axis ranges for each selection
+    # z axis ranges for each sample and selection
     z_limits_map = {
-        "1L_0J" : [0.0, 2.0],
-        "2L_0J" : [0.0, 10.0]
+        "T4bd" : {
+            "1L_0J" : [0.0, 5.0],
+            "2L_0J" : [0.0, 10.0]
+        },
+        "ttbar" : {
+            "1L_0J" : [0.0, 5.0],
+            "2L_0J" : [0.0, 5.0]
+        },
+        "ZDY" : {
+            "1L_0J" : [0.0, 5.0],
+            "2L_0J" : [0.0, 10.0]
+        },
+        "Wjets" : {
+            "1L_0J" : [0.0, 5.0],
+            "2L_0J" : [0.0, 5.0]
+        }
     }
 
-    for selection in selections:
-        plot_name       = plot_dir   + "/" + sample_name + "_" + selection + ".pdf"
-        input_name_1    = hist_dir_1 + "/" + sample_name + "_" + selection + ".root"
-        input_name_2    = hist_dir_2 + "/" + sample_name + "_" + selection + ".root"
-        
-        # load hists from ROOT file
-        input_file_1    = ROOT.TFile.Open(input_name_1, "READ")
-        input_file_2    = ROOT.TFile.Open(input_name_2, "READ")
-        hist_1          = input_file_1.Get("hist")
-        hist_2          = input_file_2.Get("hist")
-        
-        # take ratio of hists
-        hist_ratio      = hist_2.Clone("hist_ratio")
-        hist_ratio.Divide(hist_1)
-        
-        z_limits = z_limits_map[selection]
-        
-        Plot2D(hist_ratio, sample_name, selection, plot_name, g_Xname, g_Yname, g_Zname, setLog, z_limits)
+    for sample_name in sample_names:
+        for selection in selections:
+            plot_name       = plot_dir   + "/" + sample_name + "_" + selection + ".pdf"
+            input_name_1    = hist_dir_1 + "/" + sample_name + "_" + selection + ".root"
+            input_name_2    = hist_dir_2 + "/" + sample_name + "_" + selection + ".root"
+            
+            # load hists from ROOT file
+            input_file_1    = ROOT.TFile.Open(input_name_1, "READ")
+            input_file_2    = ROOT.TFile.Open(input_name_2, "READ")
+            hist_1          = input_file_1.Get("hist")
+            hist_2          = input_file_2.Get("hist")
+            
+            # take ratio of hists
+            hist_ratio      = hist_2.Clone("hist_ratio")
+            hist_ratio.Divide(hist_1)
+            
+            z_limits = z_limits_map[sample_name][selection]
+            
+            Plot2D(hist_ratio, sample_name, selection, plot_name, g_Xname, g_Yname, g_Zname, setLog, z_limits)
 
 def main():
     makePlots2D()
