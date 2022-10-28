@@ -108,7 +108,7 @@ def Plot2D(hist, sample_name, selection, plot_name, g_Xname, g_Yname, g_Zname, s
 def makePlots2D():
     #sample_name = "T4bd"
     #sample_name = "TChiWZ"
-    sample_names    = ["T4bd", "ttbar", "ZDY", "Wjets"]
+    sample_names    = ["T4bd", "AllBkg", "ttbar", "ZDY", "Wjets"]
     selections      = ["1L_0J", "2L_0J"]    # lepton and Sjet selections
     datasets        = {
         "Standard" : {
@@ -152,6 +152,10 @@ def makePlots2D():
             "1L_0J" : [0.01, 200.0],
             "2L_0J" : [0.01, 20.0]
         },
+        "AllBkg" : {
+            "1L_0J" : [0.01, 1.0e4],
+            "2L_0J" : [0.01, 1.0e3]
+        },
         "ttbar" : {
             "1L_0J" : [0.01, 20.0],
             "2L_0J" : [0.01, 10.0]
@@ -191,7 +195,7 @@ def makePlots2D():
 # Make 2D ratio plots for datasets
 def makeRatioPlots2D():
     #sample_name = "T4bd"
-    sample_names    = ["T4bd", "ttbar", "ZDY", "Wjets"]
+    sample_names    = ["T4bd", "AllBkg", "ttbar", "ZDY", "Wjets"]
     selections      = ["1L_0J", "2L_0J"]    # lepton and Sjet selections
     plot_dir        = "UL2017_NanoAODv9_RatioPlots_weight_PreUL"
     hist_dir_1      = "UL2017_NanoAODv9_Hists_weight_PreUL"
@@ -210,6 +214,10 @@ def makeRatioPlots2D():
         "T4bd" : {
             "1L_0J" : [0.0, 5.0],
             "2L_0J" : [0.0, 10.0]
+        },
+        "AllBkg" : {
+            "1L_0J" : [0.0, 5.0],
+            "2L_0J" : [0.0, 5.0]
         },
         "ttbar" : {
             "1L_0J" : [0.0, 5.0],
