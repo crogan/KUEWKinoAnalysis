@@ -106,8 +106,9 @@ def Plot2D(hist, sample_name, selection, plot_name, g_Xname, g_Yname, g_Zname, s
 
 # Make 2D plots for datasets
 def makePlots2D():
-    sample_name = "T4bd"
+    #sample_name = "T4bd"
     #sample_name = "TChiWZ"
+    sample_names = ["T4bd", "ttbar", "ZDY", "Wjets"]
     selections  = ["1L_0J", "2L_0J"]    # lepton and Sjet selections
     datasets = {
         "Standard" : {
@@ -160,14 +161,15 @@ def makePlots2D():
         plot_dir = datasets[dataset]["plot_dir"]
         hist_dir = datasets[dataset]["hist_dir"]
         tools.makeDir(plot_dir)
-        for selection in selections:
-            plot_name   = plot_dir + "/" + sample_name + "_" + selection + ".pdf"
-            input_name  = hist_dir + "/" + sample_name + "_" + selection + ".root"
-            # load hist from ROOT file
-            input_file  = ROOT.TFile.Open(input_name, "READ")
-            hist        = input_file.Get("hist")
-            z_limits    = z_limits_map[selection]
-            Plot2D(hist, sample_name, selection, plot_name, g_Xname, g_Yname, g_Zname, setLog, z_limits)
+        for sample_name in sample_names:
+            for selection in selections:
+                plot_name   = plot_dir + "/" + sample_name + "_" + selection + ".pdf"
+                input_name  = hist_dir + "/" + sample_name + "_" + selection + ".root"
+                # load hist from ROOT file
+                input_file  = ROOT.TFile.Open(input_name, "READ")
+                hist        = input_file.Get("hist")
+                z_limits    = z_limits_map[selection]
+                Plot2D(hist, sample_name, selection, plot_name, g_Xname, g_Yname, g_Zname, setLog, z_limits)
 
 # Make 2D ratio plots for datasets
 def makeRatioPlots2D():
