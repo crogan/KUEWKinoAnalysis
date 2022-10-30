@@ -253,9 +253,57 @@ def makeRatioPlots2D():
             
             Plot2D(hist_ratio, sample_name, selection, plot_name, g_Xname, g_Yname, g_Zname, setLog, z_limits)
 
+# Make 2D double ratio plots for datasets
+def makeDoubleRatioPlots2D():
+    signal      = "T4bd"
+    background  = "AllBkg"
+    sample_name = "DoubleRatio"
+    selections  = ["1L_0J", "2L_0J"]    # lepton and Sjet selections
+    plot_dir    = "UL2017_NanoAODv9_DoubleRatioPlots_weight_PreUL"
+    hist_dir_1  = "UL2017_NanoAODv9_Hists_weight_PreUL"
+    hist_dir_2  = "LowPtElectron_UL2017_NanoAODv9_Hists_weight_PreUL"
+    
+    tools.makeDir(plot_dir)
+    
+    g_Xname     = "R_{ISR}"
+    g_Yname     = "M_{#perp} [GeV]"
+    g_Zname     = "N_{low pt elec} / N_{standard}"
+    
+    setLog      = False
+
+    z_limits    = [0.0, 2.0]
+    
+    for selection in selections:
+        plot_name           = plot_dir   + "/" + sample_name + "_" + selection + ".pdf"
+        signal_name_1       = hist_dir_1 + "/" + signal      + "_" + selection + ".root"
+        signal_name_2       = hist_dir_2 + "/" + signal      + "_" + selection + ".root"
+        background_name_1   = hist_dir_1 + "/" + background  + "_" + selection + ".root"
+        background_name_2   = hist_dir_2 + "/" + background  + "_" + selection + ".root"
+        
+        # load hists from ROOT file
+        signal_file_1       = ROOT.TFile.Open(signal_name_1, "READ")
+        signal_file_2       = ROOT.TFile.Open(signal_name_2, "READ")
+        background_file_1   = ROOT.TFile.Open(background_name_1, "READ")
+        background_file_2   = ROOT.TFile.Open(background_name_2, "READ")
+        signal_hist_1       = signal_file_1.Get("hist")
+        signal_hist_2       = signal_file_2.Get("hist")
+        background_hist_1   = background_file_1.Get("hist")
+        background_hist_2   = background_file_2.Get("hist")
+        
+        # take ratio of hists
+        signal_hist_ratio       = signal_hist_2.Clone("signal_hist_ratio")
+        signal_hist_ratio.Divide(signal_hist_1)
+        background_hist_ratio   = background_hist_2.Clone("background_hist_ratio")
+        background_hist_ratio.Divide(background_hist_1)
+        hist_double_ratio       = signal_hist_ratio.Clone("hist_double_ratio")
+        hist_double_ratio.Divide(background_hist_ratio)
+        
+        Plot2D(hist_double_ratio, sample_name, selection, plot_name, g_Xname, g_Yname, g_Zname, setLog, z_limits)
+
 def main():
     makePlots2D()
     makeRatioPlots2D()
+    makeDoubleRatioPlots2D()
 
 if __name__ == "__main__":
     main()
