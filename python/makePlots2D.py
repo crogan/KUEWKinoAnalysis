@@ -21,9 +21,21 @@ def getLumiLabel(lumi):
     return label
 
 # Make 2D plot
-def Plot2D(hist, sample_name, selection, plot_name, g_Xname, g_Yname, g_Zname, setLog=False, z_limits=[]):
+def Plot2D(hist, sample_name, selection, plot_name, g_Xname, g_Yname, g_Zname, setLog=False, x_limits=[], y_limits=[], z_limits=[]):
     g_PlotTitle     = sample_name
     g_Label         = selection
+    
+    # x axis range
+    if x_limits:
+        # if x_limits is given, use for x axis range
+        x_min = x_limits[0]
+        x_max = x_limits[1]
+    
+    # y axis range
+    if y_limits:
+        # if y_limits is given, use for y axis range
+        y_min = y_limits[0]
+        y_max = y_limits[1]
     
     # z axis range
     if z_limits:
@@ -63,6 +75,8 @@ def Plot2D(hist, sample_name, selection, plot_name, g_Xname, g_Yname, g_Zname, s
     hist.GetXaxis().SetLabelSize(0.05)
     hist.GetXaxis().SetTitle(g_Xname)
     hist.GetXaxis().SetNdivisions(5, 5, 0, True)
+    if x_limits:
+        hist.GetXaxis().SetRangeUser(x_min, x_max)
     
     hist.GetYaxis().CenterTitle()
     hist.GetYaxis().SetTitleFont(42)
@@ -71,6 +85,8 @@ def Plot2D(hist, sample_name, selection, plot_name, g_Xname, g_Yname, g_Zname, s
     hist.GetYaxis().SetLabelFont(42)
     hist.GetYaxis().SetLabelSize(0.05)
     hist.GetYaxis().SetTitle(g_Yname)
+    if y_limits:
+        hist.GetYaxis().SetRangeUser(y_min, y_max)
     
     hist.GetZaxis().CenterTitle()
     hist.GetZaxis().SetTitleFont(42)
@@ -79,7 +95,6 @@ def Plot2D(hist, sample_name, selection, plot_name, g_Xname, g_Yname, g_Zname, s
     hist.GetZaxis().SetLabelFont(42)
     hist.GetZaxis().SetLabelSize(0.05)
     hist.GetZaxis().SetTitle(g_Zname)
-    #hist.GetZaxis().SetRangeUser(0.9 * hist.GetMinimum(0.0), 1.1 * hist.GetMaximum())
     hist.GetZaxis().SetRangeUser(z_min, z_max)
     
     # text
@@ -130,21 +145,31 @@ def makePlots2D():
     #print("lumi_label: {0}".format(lumi_label))
     #print("z_axis_title: {0}".format(z_axis_title))
     
-    # x axis
-    g_Xname = "R_{ISR}"
-    g_Xmin  = 0.8
-    g_Xmax  = 1.0 
-    g_NX    = 32
+    # # x axis
+    # g_Xname = "R_{ISR}"
+    # g_Xmin  = 0.8
+    # g_Xmax  = 1.0 
+    # g_NX    = 32
+    # 
+    # # y axis
+    # g_Yname = "M_{#perp} [GeV]"
+    # g_Ymin  = 0.0
+    # g_Ymax  = 64.0
+    # g_NY    = 32
     
-    # y axis
+    # hist = ROOT.TH2D("hist", "hist",
+    #                  g_NX, g_Xmin, g_Xmax,
+    #                  g_NY, g_Ymin, g_Ymax
+    # )
+    
+    g_Xname = "R_{ISR}"
     g_Yname = "M_{#perp} [GeV]"
-    g_Ymin  = 0.0
-    g_Ymax  = 64.0
-    g_NY    = 32
-
-    # z axis
-    setLog  = True
     g_Zname = z_axis_title
+
+    setLog  = True
+
+    x_limits = [0.9, 1.0]
+    y_limits = [0.0, 32.0]
     
     # z axis ranges for each sample and selection
     z_limits_map = {
@@ -170,10 +195,6 @@ def makePlots2D():
         }
     }
     
-    #hist = ROOT.TH2D("hist", "hist",
-    #                 g_NX, g_Xmin, g_Xmax,
-    #                 g_NY, g_Ymin, g_Ymax
-    #)
 
     for dataset in datasets:
         plot_dir = datasets[dataset]["plot_dir"]
@@ -190,7 +211,7 @@ def makePlots2D():
                 
                 z_limits    = z_limits_map[sample_name][selection]
                 
-                Plot2D(hist, sample_name, selection, plot_name, g_Xname, g_Yname, g_Zname, setLog, z_limits)
+                Plot2D(hist, sample_name, selection, plot_name, g_Xname, g_Yname, g_Zname, setLog, x_limits, y_limits, z_limits)
 
 # Make 2D ratio plots for datasets
 def makeRatioPlots2D():
@@ -208,6 +229,9 @@ def makeRatioPlots2D():
     g_Zname     = "N_{low pt elec} / N_{standard}"
     
     setLog      = False
+    
+    x_limits = [0.9, 1.0]
+    y_limits = [0.0, 32.0]
     
     # z axis ranges for each sample and selection
     z_limits_map = {
@@ -251,7 +275,7 @@ def makeRatioPlots2D():
             
             z_limits = z_limits_map[sample_name][selection]
             
-            Plot2D(hist_ratio, sample_name, selection, plot_name, g_Xname, g_Yname, g_Zname, setLog, z_limits)
+            Plot2D(hist_ratio, sample_name, selection, plot_name, g_Xname, g_Yname, g_Zname, setLog, x_limits, y_limits, z_limits)
 
 # Make 2D double ratio plots for datasets
 def makeDoubleRatioPlots2D():
@@ -271,6 +295,8 @@ def makeDoubleRatioPlots2D():
     
     setLog      = False
 
+    x_limits    = [0.9, 1.0]
+    y_limits    = [0.0, 32.0]
     z_limits    = [0.0, 2.0]
     
     for selection in selections:
@@ -298,7 +324,7 @@ def makeDoubleRatioPlots2D():
         hist_double_ratio       = signal_hist_ratio.Clone("hist_double_ratio")
         hist_double_ratio.Divide(background_hist_ratio)
         
-        Plot2D(hist_double_ratio, sample_name, selection, plot_name, g_Xname, g_Yname, g_Zname, setLog, z_limits)
+        Plot2D(hist_double_ratio, sample_name, selection, plot_name, g_Xname, g_Yname, g_Zname, setLog, x_limits, y_limits, z_limits)
 
 def main():
     makePlots2D()
