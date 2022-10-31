@@ -297,7 +297,10 @@ def makeDoubleRatioPlots2D():
 
     x_limits    = [0.9, 1.0]
     y_limits    = [0.0, 32.0]
-    z_limits    = [0.0, 2.0]
+    z_limits_map = {
+        "1L_0J" : [0.0, 2.0],
+        "2L_0J" : [0.0, 2.0]
+    }
     
     for selection in selections:
         plot_name           = plot_dir   + "/" + sample_name + "_" + selection + ".pdf"
@@ -323,6 +326,8 @@ def makeDoubleRatioPlots2D():
         background_hist_ratio.Divide(background_hist_1)
         hist_double_ratio       = signal_hist_ratio.Clone("hist_double_ratio")
         hist_double_ratio.Divide(background_hist_ratio)
+            
+        z_limits = z_limits_map[selection]
         
         Plot2D(hist_double_ratio, sample_name, selection, plot_name, g_Xname, g_Yname, g_Zname, setLog, x_limits, y_limits, z_limits)
 
