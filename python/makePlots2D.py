@@ -3,6 +3,7 @@
 import os
 import ROOT
 import tools
+import numpy as np
 
 # Make sure ROOT.TFile.Open(fileURL) does not seg fault when $ is in sys.argv (e.g. $ passed in as argument)
 ROOT.PyConfig.IgnoreCommandLineOptions = True
@@ -19,6 +20,20 @@ ROOT.gStyle.SetOptFit(11111111)
 def getLumiLabel(lumi):
     label = "{0:.1f} fb^{{-1}}".format(lumi)
     return label
+
+# take square root of hist
+def sqrtHist(hist):
+    nbins_x = hist.GetNbinsX()
+    nbins_y = hist.GetNbinsY()
+    #print("nbins_x = {0}".format(nbins_x))
+    #print("nbins_y = {0}".format(nbins_y))
+    for bin_x in range(1, nbins_x + 1):
+        for bin_y in range(1, nbins_y + 1):
+            bin_val         = hist.GetBinContent(bin_x, bin_y)
+            sqrt_bin_val    = np.sqrt(bin_val)
+            #print("bin_x = {0}, bin_y = {1}, bin_val = {2:.3f}, sqrt_bin_val = {3:.3f}".format(bin_x, bin_y, bin_val, sqrt_bin_val))
+            hist.SetBinContent(bin_x, bin_y, sqrt_bin_val)
+    return
 
 # Make 2D plot
 def Plot2D(hist, sample_name, selection, plot_name, g_Xname, g_Yname, g_Zname, setLog=False, x_limits=[], y_limits=[], z_limits=[]):
@@ -291,15 +306,17 @@ def makeDoubleRatioPlots2D():
     
     g_Xname     = "R_{ISR}"
     g_Yname     = "M_{#perp} [GeV]"
-    g_Zname     = "N_{low pt elec} / N_{standard}"
+    g_Zname     = "(S/\sqrt{B})_{2} / (S/\sqrt{B})_{1}"
     
     setLog      = False
 
-    x_limits    = [0.9, 1.0]
-    y_limits    = [0.0, 32.0]
+    #x_limits    = [0.9, 1.0]
+    #y_limits    = [0.0, 32.0]
+    x_limits    = [0.8, 1.0]
+    y_limits    = [0.0, 64.0]
     z_limits_map = {
         "1L_0J" : [0.0, 2.0],
-        "2L_0J" : [0.0, 2.0]
+        "2L_0J" : [0.0, 5.0]
     }
     
     for selection in selections:
@@ -318,12 +335,24 @@ def makeDoubleRatioPlots2D():
         signal_hist_2       = signal_file_2.Get("hist")
         background_hist_1   = background_file_1.Get("hist")
         background_hist_2   = background_file_2.Get("hist")
+
+        # rebin 2D hists
+        signal_hist_1.Rebin2D(2)
+        signal_hist_2.Rebin2D(2)
+        background_hist_1.Rebin2D(2)
+        background_hist_2.Rebin2D(2)
+        
+        # take square root of background
+        sqrtHist(background_hist_1)
+        sqrtHist(background_hist_2)
         
         # take ratio of hists
         signal_hist_ratio       = signal_hist_2.Clone("signal_hist_ratio")
         signal_hist_ratio.Divide(signal_hist_1)
+        
         background_hist_ratio   = background_hist_2.Clone("background_hist_ratio")
         background_hist_ratio.Divide(background_hist_1)
+        
         hist_double_ratio       = signal_hist_ratio.Clone("hist_double_ratio")
         hist_double_ratio.Divide(background_hist_ratio)
             
@@ -332,8 +361,8 @@ def makeDoubleRatioPlots2D():
         Plot2D(hist_double_ratio, sample_name, selection, plot_name, g_Xname, g_Yname, g_Zname, setLog, x_limits, y_limits, z_limits)
 
 def main():
-    makePlots2D()
-    makeRatioPlots2D()
+    #makePlots2D()
+    #makeRatioPlots2D()
     makeDoubleRatioPlots2D()
 
 if __name__ == "__main__":
