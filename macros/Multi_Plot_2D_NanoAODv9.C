@@ -48,10 +48,15 @@ void Plot_2D_NanoAODv9(string sample_name, string selection, int Nlep_selection,
 
 void Multi_Plot_2D_NanoAODv9() 
 {
-  string sample_name = "T4bd";
-  //Plot_2D_NanoAODv9(sample_name, "1L_0J_gold",   1, 0, kGold);
-  //Plot_2D_NanoAODv9(sample_name, "1L_0J_silver", 1, 0, kSilver);
-  //Plot_2D_NanoAODv9(sample_name, "1L_0J_bronze", 1, 0, kBronze);
+  //string sample_name = "T4bd";
+  //string sample_name = "TChiWZ";
+  //string sample_name = "ttbar";
+  //string sample_name = "ZDY";
+  string sample_name = "Wjets";
+  
+  Plot_2D_NanoAODv9(sample_name, "1L_0J_gold",   1, 0, kGold);
+  Plot_2D_NanoAODv9(sample_name, "1L_0J_silver", 1, 0, kSilver);
+  Plot_2D_NanoAODv9(sample_name, "1L_0J_bronze", 1, 0, kBronze);
   Plot_2D_NanoAODv9(sample_name, "2L_0J_gold",   2, 0, kGold);
   Plot_2D_NanoAODv9(sample_name, "2L_0J_silver", 2, 0, kSilver);
   Plot_2D_NanoAODv9(sample_name, "2L_0J_bronze", 2, 0, kBronze);
@@ -63,9 +68,9 @@ void Plot_2D_NanoAODv9(string sample_name, string selection, int Nlep_selection,
   RestFrames::SetStyle();
 
   // Caleb: NANO AOD v9
-  //string NtuplePath = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_NanoAODv9_Standard_v1/";
+  string NtuplePath = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_NanoAODv9_Standard_v1/";
   // Alice: NANO AOD v9
-  string NtuplePath = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_NanoAODv9/";
+  //string NtuplePath = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_NanoAODv9/";
 
   int year = 2017; 
 
@@ -86,6 +91,8 @@ void Plot_2D_NanoAODv9(string sample_name, string selection, int Nlep_selection,
   vector<const CategoryTree*> CTs;
   CT_1L.GetListDepth(CTs, depth0-2);
   
+  // set parameters
+  
   //int SKIP = 1e4;
   int SKIP = 1;
   double lumi = 137.0; 
@@ -95,31 +102,12 @@ void Plot_2D_NanoAODv9(string sample_name, string selection, int Nlep_selection,
   string lumi_string = stream.str();
   lumi_string += " fb^{-1}";
   
-  // set parameters
   //string plot_dir           = "UL2017_NanoAODv9_Plots_weight_1";
   //string hist_dir           = "UL2017_NanoAODv9_Hists_weight_1";
-  //string plot_dir           = "UL2017_NanoAODv9_Plots_weight_PreUL";
-  //string hist_dir           = "UL2017_NanoAODv9_Hists_weight_PreUL";
-  string plot_dir           = "LowPtElectron_UL2017_NanoAODv9_Plots_weight_PreUL";
-  string hist_dir           = "LowPtElectron_UL2017_NanoAODv9_Hists_weight_PreUL";
-  
-  //string sample_name        = "T4bd";
-  //string sample_name        = "TChiWZ";
-  //string sample_name        = "ttbar";
-  //string sample_name        = "ZDY";
-  //string sample_name        = "Wjets";
-  
-  //string selection          = "2L_0J";          // lepton and Sjet selection
-  //string selection          = "2L_0J_gold";     // num lepton, num S jet, and lepton ID selections 
-  //string selection          = "2L_0J_silver";   // num lepton, num S jet, and lepton ID selections 
-  //string selection          = "2L_0J_bronze";   // num lepton, num S jet, and lepton ID selections 
-  
-  //int Nlep_selection        = 2;                // num lepton selection
-  //int NjetS_selection       = 0;                // num S jet selection
-  
-  //LepID LepID_selection     = kGold;            // lepton ID selection 
-  //LepID LepID_selection     = kSilver;          // lepton ID selection 
-  //LepID LepID_selection     = kBronze;          // lepton ID selection 
+  string plot_dir           = "UL2017_NanoAODv9_Plots_weight_PreUL";
+  string hist_dir           = "UL2017_NanoAODv9_Hists_weight_PreUL";
+  //string plot_dir           = "LowPtElectron_UL2017_NanoAODv9_Plots_weight_PreUL";
+  //string hist_dir           = "LowPtElectron_UL2017_NanoAODv9_Hists_weight_PreUL";
   
   string g_Label            = selection;
   replace(g_Label.begin(), g_Label.end(), '_', ' ');
