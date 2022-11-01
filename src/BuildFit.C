@@ -380,32 +380,18 @@ cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
   proc_LF_Fakes = proc_LF_Fakes.Filter("f1");
   CONFIG.AddFakeSSSys(cb, proc_LF_Fakes);
 
-  VS top;
-  top += "ST";
-  top += "ttbar";
-  VS TopQCD;
-  TopQCD += "QCD";
-  TopQCD += "ttbar";
-  TopQCD += "ST";
-  ProcessList bkg_noTopQCD = backgrounds.RemoveOR(TopQCD);
-  ProcessList bkg_noTop = backgrounds.RemoveOR(top);
-  ProcessList bkg_noQCD = backgrounds.Remove("QCD");
-  ProcessList Top_only = backgrounds.FilterOR(top);
-  ProcessList QCD_only = backgrounds.Filter("QCD");
-  //CONFIG.AddBJetSys(cb, backgrounds, "");
-  //CONFIG.AddPTISRSys(cb, backgrounds, "");
-  //CONFIG.AddgamTSys(cb, backgrounds, "");
-  CONFIG.AddCommonBJetSys(cb, backgrounds);
-  CONFIG.Add0LBJetSys(cb, QCD_only, "QCD_");
-  CONFIG.Add0LBJetSys(cb, Top_only, "top_");
-  CONFIG.Add1LBJetSys(cb, Top_only, "top_");
-
-  CONFIG.Add0LPTISRSys(cb, backgrounds, "");
-  CONFIG.Add1LPTISRSys(cb, backgrounds, "");
-
-  CONFIG.AddCommongamTSys(cb, backgrounds);
-  CONFIG.Add0LgamTSys(cb, backgrounds, "");
-  CONFIG.Add1LgamTSys(cb, backgrounds, "");
+  //CONFIG.AddKinematicSys(cb, processes);
+  //ProcessList bkg_noQCD = backgrounds.Remove("QCD");
+  //ProcessList QCD_only = backgrounds.Filter("QCD");
+  //CONFIG.AddBJetSys(cb, bkg_noQCD, "other_");
+  //CONFIG.AddBJetSys(cb, QCD_only, "QCD_");
+  CONFIG.AddBJetSys(cb, backgrounds);
+  CONFIG.AddPTISRSys(cb, backgrounds, "");
+  CONFIG.AddgamTSys(cb, backgrounds, "");
+  //CONFIG.AddPTISRSys(cb, bkg_noQCD, "other_");
+  //CONFIG.AddgamTSys(cb, bkg_noQCD, "other_");
+  //CONFIG.AddPTISRSys(cb, QCD_only, "QCD_");
+  //CONFIG.AddgamTSys(cb, QCD_only, "QCD_");
 
   //CONFIG.AddLeptonQualityNormSys(cb, processes);
   //CONFIG.AddSJetLeptonQualityNormSys(cb, processes);
@@ -438,7 +424,7 @@ cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
 
   VS QCD;
   QCD += "QCD";
-  CONFIG.AddQCDNormSys("QCD", QCD, cb, processes);
+  CONFIG.AddSJetNormSys("QCD", QCD, cb, processes);
 
 /*
   VS Other;

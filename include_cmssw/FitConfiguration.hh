@@ -29,13 +29,16 @@ public:
   void AddCommonSys(ch::CombineHarvester& cb, ProcessList& processes);
   void AddFakeLeptonSys(ch::CombineHarvester& cb, ProcessList& processes);
   void AddSVSys(ch::CombineHarvester& cb, ProcessList& processes);
+  void AddBJetSys(ch::CombineHarvester& cb, ProcessList& processes);
   void Add0LBJetSys(ch::CombineHarvester& cb, ProcessList& processes, string label);
   void Add1LBJetSys(ch::CombineHarvester& cb, ProcessList& processes, string label);
   void AddCommonBJetSys(ch::CombineHarvester& cb, ProcessList& processes);
   void AddFakeSSSys(ch::CombineHarvester& cb, ProcessList& processes);
   void AddKinematicSys(ch::CombineHarvester& cb, ProcessList& processes);
+  void AddPTISRSys(ch::CombineHarvester& cb, ProcessList& processes, string label);
   void Add0LPTISRSys(ch::CombineHarvester& cb, ProcessList& processes, string label);
   void Add1LPTISRSys(ch::CombineHarvester& cb, ProcessList& processes, string label);
+  void AddgamTSys(ch::CombineHarvester& cb, ProcessList& processes, string label);
   void Add0LgamTSys(ch::CombineHarvester& cb, ProcessList& processes, string label);
   void Add1LgamTSys(ch::CombineHarvester& cb, ProcessList& processes, string label);
   void AddCommongamTSys(ch::CombineHarvester& cb, ProcessList& processes);
