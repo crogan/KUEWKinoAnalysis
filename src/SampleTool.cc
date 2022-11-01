@@ -746,10 +746,10 @@ void SampleTool::InitProcMap(){
     //m_Proc[m_iYear][T4bd] = pair<vector<string>,string>(list, "SMS_500_490");
     
     // Alice: NANO AOD v9 T4bd
-    //Process T4bd("T4bd", kBkg);
-    //list.clear();
-    //list += m_Path + "SMS-T2-4bd_genMET-80_mStop-500_mLSP-490_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
-    //m_Proc[m_iYear][T4bd] = pair<vector<string>,string>(list, "SMS_500_490");
+    Process T4bd("T4bd", kBkg);
+    list.clear();
+    list += m_Path + "SMS-T2-4bd_genMET-80_mStop-500_mLSP-490_TuneCP5_13TeV-madgraphMLM-pythia8_UL2017_NanoAODv9_.root";
+    m_Proc[m_iYear][T4bd] = pair<vector<string>,string>(list, "SMS_500_490");
     
     // Caleb: NANO AOD v9 TChiWZ
     //Process TChiWZ("TChiWZ", kBkg);

@@ -73,7 +73,7 @@ void Plot_2D_NanoAODv9()
   vector<const CategoryTree*> CTs;
   CT_1L.GetListDepth(CTs, depth0-2);
   
-  //int SKIP = 1e5;
+  //int SKIP = 1e3;
   int SKIP = 1;
   double lumi = 137.0; 
   // convert lumi to string with specific precision
@@ -94,9 +94,15 @@ void Plot_2D_NanoAODv9()
   //string sample_name        = "ttbar";
   //string sample_name        = "ZDY";
   string sample_name        = "Wjets";
-  string selection          = "2L_0J";  // lepton and Sjet selection
-  int Nlep_selection        = 2;        // lepton selection
-  int NjetS_selection       = 0;        // Sjet selection
+  //string selection          = "1L_0J";          // lepton and Sjet selection
+  //string selection          = "1L_0J_gold";     // num lepton, num S jet, and lepton ID selections 
+  //string selection          = "1L_0J_silver";   // num lepton, num S jet, and lepton ID selections 
+  string selection          = "1L_0J_bronze";   // num lepton, num S jet, and lepton ID selections 
+  int Nlep_selection        = 1;                // num lepton selection
+  int NjetS_selection       = 0;                // num S jet selection
+  //LepID LepID_selection     = kGold;            // lepton ID selection 
+  //LepID LepID_selection     = kSilver;          // lepton ID selection 
+  LepID LepID_selection     = kBronze;          // lepton ID selection 
   string g_Label            = selection;
   replace(g_Label.begin(), g_Label.end(), '_', ' ');
   string plot_name          = plot_dir + "/" + sample_name + "_" + selection + ".pdf";
@@ -112,6 +118,7 @@ void Plot_2D_NanoAODv9()
   printf("g_Label = %s\n", g_Label.c_str());
   printf("Nlep_selection = %d\n", Nlep_selection);
   printf("NjetS_selection = %d\n", NjetS_selection);
+  printf("LepID_selection = %d\n", LepID_selection);
   printf("plot_name = %s\n", plot_name.c_str());
   printf("output_name = %s\n", output_name.c_str());
   printf("------------------------------\n");
@@ -395,9 +402,17 @@ void Plot_2D_NanoAODv9()
             flavor = kElectron;
           else
             flavor = kMuon;
+          
           LepCharge charge = (base->Charge_lep->at(index) > 0 ? kPos : kNeg);
+          
           //LepSource source = LepSource(base->SourceID_lep->at(index));
           LepSource source = LepSource(base->ID_lep->at(index*2+1));
+          
+          // lepton ID selection
+          if(id != LepID_selection)
+          {
+              continue;
+          }
             
           list_a += Lep(flavor, charge, id, source);
         }
@@ -421,9 +436,17 @@ void Plot_2D_NanoAODv9()
             flavor = kElectron;
           else
             flavor = kMuon;
+          
           LepCharge charge = (base->Charge_lep->at(index) > 0 ? kPos : kNeg);
+          
           //LepSource source = LepSource(base->SourceID_lep->at(index));
           LepSource source = LepSource(base->ID_lep->at(index*2+1));
+          
+          // lepton ID selection
+          if(id != LepID_selection)
+          {
+              continue;
+          }
           
           list_b += Lep(flavor, charge, id, source);
         }
