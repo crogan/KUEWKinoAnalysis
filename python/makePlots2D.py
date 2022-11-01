@@ -296,7 +296,8 @@ def makeRatioPlots2D():
 def makeDoubleRatioPlots2D():
     signal      = "T4bd"
     background  = "AllBkg"
-    sample_name = "DoubleRatio"
+    #sample_name = "SigOverBack"
+    sample_name = "SigOverSqrtBack"
     selections  = ["1L_0J", "2L_0J"]    # lepton and Sjet selections
     plot_dir    = "UL2017_NanoAODv9_DoubleRatioPlots_weight_PreUL"
     hist_dir_1  = "UL2017_NanoAODv9_Hists_weight_PreUL"
@@ -306,9 +307,12 @@ def makeDoubleRatioPlots2D():
     
     g_Xname     = "R_{ISR}"
     g_Yname     = "M_{#perp} [GeV]"
-    g_Zname     = "(S/\sqrt{B})_{2} / (S/\sqrt{B})_{1}"
+    #g_Zname     = "(S/B)_{2} / (S/B)_{1}"
+    g_Zname     = "(S/#sqrt{B})_{2} / (S/#sqrt{B})_{1}"
     
     setLog      = False
+    rebin       = True
+    sqrtBack    = True
 
     #x_limits    = [0.9, 1.0]
     #y_limits    = [0.0, 32.0]
@@ -337,14 +341,16 @@ def makeDoubleRatioPlots2D():
         background_hist_2   = background_file_2.Get("hist")
 
         # rebin 2D hists
-        signal_hist_1.Rebin2D(2)
-        signal_hist_2.Rebin2D(2)
-        background_hist_1.Rebin2D(2)
-        background_hist_2.Rebin2D(2)
+        if rebin:
+            signal_hist_1.Rebin2D(2)
+            signal_hist_2.Rebin2D(2)
+            background_hist_1.Rebin2D(2)
+            background_hist_2.Rebin2D(2)
         
         # take square root of background
-        sqrtHist(background_hist_1)
-        sqrtHist(background_hist_2)
+        if sqrtBack:
+            sqrtHist(background_hist_1)
+            sqrtHist(background_hist_2)
         
         # take ratio of hists
         signal_hist_ratio       = signal_hist_2.Clone("signal_hist_ratio")
