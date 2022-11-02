@@ -38,7 +38,8 @@ def sqrtHist(hist):
 # Make 2D plot
 def Plot2D(hist, sample_name, selection, plot_name, g_Xname, g_Yname, g_Zname, setLog=False, x_limits=[], y_limits=[], z_limits=[]):
     g_PlotTitle     = sample_name
-    g_Label         = selection
+    #g_Label         = selection
+    g_Label         = selection.replace("_", " ")
     
     # x axis range
     if x_limits:
@@ -296,9 +297,10 @@ def makeRatioPlots2D():
 def makeDoubleRatioPlots2D():
     signal      = "T4bd"
     background  = "AllBkg"
-    #sample_name = "SigOverBack"
-    sample_name = "SigOverSqrtBack"
+    sample_name = "SigOverBack"
+    #sample_name = "SigOverSqrtBack"
     selections  = ["1L_0J", "2L_0J"]    # lepton and Sjet selections
+    lepton_ids  = ["gold", "silver", "bronze"]
     plot_dir    = "UL2017_NanoAODv9_DoubleRatioPlots_weight_PreUL"
     hist_dir_1  = "UL2017_NanoAODv9_Hists_weight_PreUL"
     hist_dir_2  = "LowPtElectron_UL2017_NanoAODv9_Hists_weight_PreUL"
@@ -307,64 +309,67 @@ def makeDoubleRatioPlots2D():
     
     g_Xname     = "R_{ISR}"
     g_Yname     = "M_{#perp} [GeV]"
-    #g_Zname     = "(S/B)_{2} / (S/B)_{1}"
-    g_Zname     = "(S/#sqrt{B})_{2} / (S/#sqrt{B})_{1}"
+    g_Zname     = "(S/B)_{2} / (S/B)_{1}"
+    #g_Zname     = "(S/#sqrt{B})_{2} / (S/#sqrt{B})_{1}"
     
     setLog      = False
     rebin       = True
-    sqrtBack    = True
+    sqrtBack    = False
 
-    #x_limits    = [0.9, 1.0]
-    #y_limits    = [0.0, 32.0]
     x_limits    = [0.8, 1.0]
     y_limits    = [0.0, 64.0]
+    #x_limits    = [0.9, 1.0]
+    #y_limits    = [0.0, 32.0]
     z_limits_map = {
         "1L_0J" : [0.0, 2.0],
         "2L_0J" : [0.0, 5.0]
     }
     
     for selection in selections:
-        plot_name           = plot_dir   + "/" + sample_name + "_" + selection + ".pdf"
-        signal_name_1       = hist_dir_1 + "/" + signal      + "_" + selection + ".root"
-        signal_name_2       = hist_dir_2 + "/" + signal      + "_" + selection + ".root"
-        background_name_1   = hist_dir_1 + "/" + background  + "_" + selection + ".root"
-        background_name_2   = hist_dir_2 + "/" + background  + "_" + selection + ".root"
-        
-        # load hists from ROOT file
-        signal_file_1       = ROOT.TFile.Open(signal_name_1, "READ")
-        signal_file_2       = ROOT.TFile.Open(signal_name_2, "READ")
-        background_file_1   = ROOT.TFile.Open(background_name_1, "READ")
-        background_file_2   = ROOT.TFile.Open(background_name_2, "READ")
-        signal_hist_1       = signal_file_1.Get("hist")
-        signal_hist_2       = signal_file_2.Get("hist")
-        background_hist_1   = background_file_1.Get("hist")
-        background_hist_2   = background_file_2.Get("hist")
-
-        # rebin 2D hists
-        if rebin:
-            signal_hist_1.Rebin2D(2)
-            signal_hist_2.Rebin2D(2)
-            background_hist_1.Rebin2D(2)
-            background_hist_2.Rebin2D(2)
-        
-        # take square root of background
-        if sqrtBack:
-            sqrtHist(background_hist_1)
-            sqrtHist(background_hist_2)
-        
-        # take ratio of hists
-        signal_hist_ratio       = signal_hist_2.Clone("signal_hist_ratio")
-        signal_hist_ratio.Divide(signal_hist_1)
-        
-        background_hist_ratio   = background_hist_2.Clone("background_hist_ratio")
-        background_hist_ratio.Divide(background_hist_1)
-        
-        hist_double_ratio       = signal_hist_ratio.Clone("hist_double_ratio")
-        hist_double_ratio.Divide(background_hist_ratio)
+        for lepton_id in lepton_ids:
+            plot_name           = plot_dir   + "/" + sample_name + "_" + selection + "_" + lepton_id + ".pdf"
+            signal_name_1       = hist_dir_1 + "/" + signal      + "_" + selection + "_" + lepton_id + ".root"
+            signal_name_2       = hist_dir_2 + "/" + signal      + "_" + selection + "_" + lepton_id + ".root"
+            background_name_1   = hist_dir_1 + "/" + background  + "_" + selection + "_" + lepton_id + ".root"
+            background_name_2   = hist_dir_2 + "/" + background  + "_" + selection + "_" + lepton_id + ".root"
             
-        z_limits = z_limits_map[selection]
-        
-        Plot2D(hist_double_ratio, sample_name, selection, plot_name, g_Xname, g_Yname, g_Zname, setLog, x_limits, y_limits, z_limits)
+            # load hists from ROOT file
+            signal_file_1       = ROOT.TFile.Open(signal_name_1, "READ")
+            signal_file_2       = ROOT.TFile.Open(signal_name_2, "READ")
+            background_file_1   = ROOT.TFile.Open(background_name_1, "READ")
+            background_file_2   = ROOT.TFile.Open(background_name_2, "READ")
+            signal_hist_1       = signal_file_1.Get("hist")
+            signal_hist_2       = signal_file_2.Get("hist")
+            background_hist_1   = background_file_1.Get("hist")
+            background_hist_2   = background_file_2.Get("hist")
+
+            # rebin 2D hists
+            if rebin:
+                signal_hist_1.Rebin2D(2)
+                signal_hist_2.Rebin2D(2)
+                background_hist_1.Rebin2D(2)
+                background_hist_2.Rebin2D(2)
+            
+            # take square root of background
+            if sqrtBack:
+                sqrtHist(background_hist_1)
+                sqrtHist(background_hist_2)
+            
+            # take ratio of hists
+            signal_hist_ratio       = signal_hist_2.Clone("signal_hist_ratio")
+            signal_hist_ratio.Divide(signal_hist_1)
+            
+            background_hist_ratio   = background_hist_2.Clone("background_hist_ratio")
+            background_hist_ratio.Divide(background_hist_1)
+            
+            hist_double_ratio       = signal_hist_ratio.Clone("hist_double_ratio")
+            hist_double_ratio.Divide(background_hist_ratio)
+                
+            z_limits = z_limits_map[selection]
+            
+            label = selection + "_" + lepton_id
+
+            Plot2D(hist_double_ratio, sample_name, label, plot_name, g_Xname, g_Yname, g_Zname, setLog, x_limits, y_limits, z_limits)
 
 def main():
     #makePlots2D()
