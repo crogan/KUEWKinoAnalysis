@@ -688,6 +688,7 @@ void FitConfiguration::AddShapeSysAsNorm(const Systematic& sys, ch::CombineHarve
   cb.SetFlag("filters-use-regex", true);
 
   ProcessList processes = FIT.GetProcesses();
+  processes = processes.Filter(kBkg);
   CategoryList categories = FIT.GetCategories();
   VS channels = FIT.GetChannels();
 
