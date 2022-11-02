@@ -19,20 +19,20 @@ double BtagSFTool::EFF(double pT, int year, int flavor, bool FastSim){
 	return m_BtagEff2016_FastSim[flavor]->GetEfficiency(m_BtagEff2016[flavor]->FindFixBin(pT));
     if(year == 2017)
       if(m_BtagEff2017_FastSim[flavor] != nullptr)
-	return m_BtagEff2017_FastSim[flavor]->GetEfficiency(m_BtagEff2016[flavor]->FindFixBin(pT));
+	return m_BtagEff2017_FastSim[flavor]->GetEfficiency(m_BtagEff2017[flavor]->FindFixBin(pT));
     if(year == 2018)
       if(m_BtagEff2018_FastSim[flavor] != nullptr)
-	return m_BtagEff2018_FastSim[flavor]->GetEfficiency(m_BtagEff2016[flavor]->FindFixBin(pT));
+	return m_BtagEff2018_FastSim[flavor]->GetEfficiency(m_BtagEff2018[flavor]->FindFixBin(pT));
   } else {
     if(year == 2016)
       if(m_BtagEff2016[flavor] != nullptr)
 	return m_BtagEff2016[flavor]->GetEfficiency(m_BtagEff2016[flavor]->FindFixBin(pT));
     if(year == 2017)
       if(m_BtagEff2017[flavor] != nullptr)
-	return m_BtagEff2017[flavor]->GetEfficiency(m_BtagEff2016[flavor]->FindFixBin(pT));
+	return m_BtagEff2017[flavor]->GetEfficiency(m_BtagEff2017[flavor]->FindFixBin(pT));
     if(year == 2018)
       if(m_BtagEff2018[flavor] != nullptr)
-	return m_BtagEff2018[flavor]->GetEfficiency(m_BtagEff2016[flavor]->FindFixBin(pT));
+	return m_BtagEff2018[flavor]->GetEfficiency(m_BtagEff2018[flavor]->FindFixBin(pT));
   }
   
   return 0.;

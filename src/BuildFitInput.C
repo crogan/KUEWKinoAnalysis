@@ -611,9 +611,6 @@ if(sys.Label().find("MET_TRIG") != std::string::npos)
 
 }
 	      
-//if(sys.IsUp()) cout << "    up: " << trig_weight << endl;
-//else cout << "    down: " << trig_weight << endl;
-
 	  //
 	  // BTAG systematics from the ntuples
 	  //
@@ -638,30 +635,26 @@ if(sys.Label().find("MET_TRIG") != std::string::npos)
 	  //
 	  // BTAG systematics on the fly (needs jet collection in reduced ntuples)
 	  //
+	  
 	  if(sys == Systematic("BTAGHF_SF")){
-	    if(sys.IsUp()){
-	      btag_weight = SF.GetBtagSFWeight(base, year, is_FastSim, true, 1);
-	  //    std::cout<<"HF get weight up\n";}
-	    else{
-	      btag_weight = SF.GetBtagSFWeight(base, year, is_FastSim, true, -1);
-	  //   std::cout<<"HF get weight down\n";}
+	    if(sys.IsUp())
+	      btag_weight *= SF.GetBtagSFWeight(base, year, is_FastSim, true, 1);
+	    else
+	      btag_weight *= SF.GetBtagSFWeight(base, year, is_FastSim, true, -1);
 	  } else {
-	    btag_weight = SF.GetBtagSFWeight(base, year, is_FastSim, true, 0);
-	  //  std::cout<<"HF get weight nom\n";
+	    btag_weight *= SF.GetBtagSFWeight(base, year, is_FastSim, true, 0);
 	  }
 	  
 	  if(sys == Systematic("BTAGLF_SF")){
-	    if(sys.IsUp()){
-	      btag_weight = SF.GetBtagSFWeight(base, year, is_FastSim, false, 1);
- 	   //   std::cout<<"LF get weight up\n";}
-	    else{
-	      btag_weight = SF.GetBtagSFWeight(base, year, is_FastSim, false, -1);
-	   //   std::cout<<"LF get weight down\n";}
+	    if(sys.IsUp())
+	      btag_weight *= SF.GetBtagSFWeight(base, year, is_FastSim, false, 1);
+	    else
+	      btag_weight *= SF.GetBtagSFWeight(base, year, is_FastSim, false, -1);
 	  } else {
-	    btag_weight = SF.GetBtagSFWeight(base, year, is_FastSim, false, 0);
-	   //   std::cout<<"LF get weight nom\n";
+	    btag_weight *= SF.GetBtagSFWeight(base, year, is_FastSim, false, 0);
 	  }
-	  std::cout<<"BtagWeight: "<< btag_weight <<std::endl;
+
+
 	  // turn off PU systematics for now
 	  // if(sys == Systematic("PU_SF"))
 	  //   if(sys.IsUp())
@@ -670,6 +663,10 @@ if(sys.Label().find("MET_TRIG") != std::string::npos)
 	  // 	PU_weight = base->PUweight_down;
 	  // else
 	  //   PU_weight = base->PUweight;
+
+
+
+
 
 	  weight *= btag_weight*PU_weight;
 	  //weight *= btag_weight*PU_weight*trig_weight;

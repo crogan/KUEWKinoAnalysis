@@ -100,6 +100,8 @@ double ScaleFactorTool::GetBtagSFWeight(ReducedBase* base, int year, bool fastsi
       iflavor = 1;
     else
       iflavor = 2;
+
+
    
     if(HForLF && iflavor == 2)
       continue;
@@ -127,7 +129,7 @@ double ScaleFactorTool::GetBtagSFWeight(ReducedBase* base, int year, bool fastsi
 
   if(probMC <= 0. || probDATA <= 0.)
     return 1.;
-  
+ 
   return probDATA/probMC;
 
 }
