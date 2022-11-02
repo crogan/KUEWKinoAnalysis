@@ -669,13 +669,14 @@ void FitConfiguration::AddShapeSysAsNorm(const Systematic& sys, ch::CombineHarve
  double dn  = FIT.Integral(c, p, sys.Down());
 //cout << "down: " << dn << endl;     
       double err = up - dn;
-  //   cout << "up: " << up << " down: " << dn << " err: " << err << endl; 
-      if(fabs(err) < fabs(up-nom)) err = up - nom;
-      if(fabs(err) < fabs(nom-dn)) err = nom - dn;
+//     cout << "up: " << up << " down: " << dn << " err: " << err << endl; 
+//      if(fabs(err) < fabs(up-nom)) err = up - nom;
+//      if(fabs(err) < fabs(nom-dn)) err = nom - dn;
 
-    // cout << "1 err: " << err << endl;
-      err = 1. + err/2./nom;
-    // cout << "2 err: " << err << endl;
+//     cout << "1 err: " << err << endl;
+      //err = 1. + err/2./nom;
+       err =1. + (up-dn)/(up+dn);
+//     cout << "2 err: " << err << endl;
       if(err > 0.)
       cb.cp().process(VS().a(p.Name())).bin(VS().a(c.FullLabel()))
 	.AddSyst(cb, "norm_"+sys.Label(), "lnN", SystMap<>::init(err));
