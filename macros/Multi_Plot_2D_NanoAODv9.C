@@ -44,7 +44,7 @@ double g_NY;
 
 using namespace RestFrames;
 
-void Plot_2D_NanoAODv9(string sample_name, string selection, int Nlep_selection, int NjetS_selection, LepID LepID_selection);
+void Plot_2D_NanoAODv9(string sample_name, string selection, int Nlep_selection, int NjetS_selection, bool maskBronze);
 
 void Multi_Plot_2D_NanoAODv9() 
 {
@@ -54,23 +54,20 @@ void Multi_Plot_2D_NanoAODv9()
   //string sample_name = "ZDY";
   string sample_name = "Wjets";
   
-  Plot_2D_NanoAODv9(sample_name, "1L_0J_gold",   1, 0, kGold);
-  Plot_2D_NanoAODv9(sample_name, "1L_0J_silver", 1, 0, kSilver);
-  Plot_2D_NanoAODv9(sample_name, "1L_0J_bronze", 1, 0, kBronze);
-  Plot_2D_NanoAODv9(sample_name, "2L_0J_gold",   2, 0, kGold);
-  Plot_2D_NanoAODv9(sample_name, "2L_0J_silver", 2, 0, kSilver);
-  Plot_2D_NanoAODv9(sample_name, "2L_0J_bronze", 2, 0, kBronze);
+  // WARNING: Only run one at at time! There is a bug (memory leak...) when more that one are run! Leads to weight = -999.0 for all but first function call.
+  //Plot_2D_NanoAODv9(sample_name, "1L_0J_maskBronze", 1, 0, true);
+  Plot_2D_NanoAODv9(sample_name, "2L_0J_maskBronze", 2, 0, true);
 }
 
-void Plot_2D_NanoAODv9(string sample_name, string selection, int Nlep_selection, int NjetS_selection, LepID LepID_selection)
+void Plot_2D_NanoAODv9(string sample_name, string selection, int Nlep_selection, int NjetS_selection, bool maskBronze)
 {
   gROOT->SetBatch(kTRUE);
   RestFrames::SetStyle();
 
   // Caleb: NANO AOD v9
-  string NtuplePath = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_NanoAODv9_Standard_v1/";
+  //string NtuplePath = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_NanoAODv9_Standard_v1/";
   // Alice: NANO AOD v9
-  //string NtuplePath = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_NanoAODv9/";
+  string NtuplePath = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_NanoAODv9/";
 
   int year = 2017; 
 
@@ -93,7 +90,7 @@ void Plot_2D_NanoAODv9(string sample_name, string selection, int Nlep_selection,
   
   // set parameters
   
-  //int SKIP = 1e4;
+  //int SKIP = 1e3;
   int SKIP = 1;
   double lumi = 137.0; 
   // convert lumi to string with specific precision
@@ -102,12 +99,14 @@ void Plot_2D_NanoAODv9(string sample_name, string selection, int Nlep_selection,
   string lumi_string = stream.str();
   lumi_string += " fb^{-1}";
   
+  // Caleb: NANO AOD v9
   //string plot_dir           = "UL2017_NanoAODv9_Plots_weight_1";
   //string hist_dir           = "UL2017_NanoAODv9_Hists_weight_1";
-  string plot_dir           = "UL2017_NanoAODv9_Plots_weight_PreUL";
-  string hist_dir           = "UL2017_NanoAODv9_Hists_weight_PreUL";
-  //string plot_dir           = "LowPtElectron_UL2017_NanoAODv9_Plots_weight_PreUL";
-  //string hist_dir           = "LowPtElectron_UL2017_NanoAODv9_Hists_weight_PreUL";
+  //string plot_dir           = "UL2017_NanoAODv9_Plots_weight_PreUL";
+  //string hist_dir           = "UL2017_NanoAODv9_Hists_weight_PreUL";
+  // Alice: NANO AOD v9
+  string plot_dir           = "LowPtElectron_UL2017_NanoAODv9_Plots_weight_PreUL";
+  string hist_dir           = "LowPtElectron_UL2017_NanoAODv9_Hists_weight_PreUL";
   
   string g_Label            = selection;
   replace(g_Label.begin(), g_Label.end(), '_', ' ');
@@ -124,7 +123,7 @@ void Plot_2D_NanoAODv9(string sample_name, string selection, int Nlep_selection,
   printf("g_Label = %s\n", g_Label.c_str());
   printf("Nlep_selection = %d\n", Nlep_selection);
   printf("NjetS_selection = %d\n", NjetS_selection);
-  printf("LepID_selection = %d\n", LepID_selection);
+  printf("maskBronze = %d\n", maskBronze);
   printf("plot_name = %s\n", plot_name.c_str());
   printf("output_name = %s\n", output_name.c_str());
   printf("------------------------------\n");
@@ -415,7 +414,7 @@ void Plot_2D_NanoAODv9(string sample_name, string selection, int Nlep_selection,
           LepSource source = LepSource(base->ID_lep->at(index*2+1));
           
           // lepton ID selection
-          if(id != LepID_selection)
+          if(maskBronze && id == kBronze)
           {
               continue;
           }
@@ -449,7 +448,7 @@ void Plot_2D_NanoAODv9(string sample_name, string selection, int Nlep_selection,
           LepSource source = LepSource(base->ID_lep->at(index*2+1));
           
           // lepton ID selection
-          if(id != LepID_selection)
+          if(maskBronze && id == kBronze)
           {
               continue;
           }
@@ -486,6 +485,10 @@ void Plot_2D_NanoAODv9(string sample_name, string selection, int Nlep_selection,
         Event.AddGenericVal(SVmaxeta);
         
         int eindex = Categories.Find(Event);
+        
+        //printf("e = %d, eindex = %d\n", e, eindex);
+        
+        // cut: only keep events with eindex >= 0
         if(eindex < 0)
         {
           continue;

@@ -141,7 +141,8 @@ def makePlots2D():
     sample_names    = ["T4bd", "AllBkg", "ttbar", "ZDY", "Wjets"]
     selections      = ["1L_0J", "2L_0J"]            # lepton and Sjet selections
     #lepton_ids      = ["all"]                       # lepton ID selections
-    lepton_ids      = ["gold", "silver", "bronze"]  # lepton ID selections
+    #lepton_ids      = ["gold", "silver", "bronze"]  # lepton ID selections
+    lepton_ids      = ["all", "maskBronze"]  # lepton ID selections
     datasets        = {
         "Standard" : {
             "plot_dir" : "UL2017_NanoAODv9_CustomPlots_weight_PreUL",
@@ -380,9 +381,9 @@ def makeDoubleRatioPlots2D():
             Plot2D(hist_double_ratio, sample_name, label, plot_name, g_Xname, g_Yname, g_Zname, setLog, x_limits, y_limits, z_limits)
 
 def main():
-    #makePlots2D()
+    makePlots2D()
     #makeRatioPlots2D()
-    makeDoubleRatioPlots2D()
+    #makeDoubleRatioPlots2D()
 
 if __name__ == "__main__":
     main()
