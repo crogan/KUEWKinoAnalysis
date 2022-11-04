@@ -36,10 +36,9 @@ def sqrtHist(hist):
     return
 
 # Make 2D plot
-def Plot2D(hist, sample_name, selection, plot_name, g_Xname, g_Yname, g_Zname, setLog=False, x_limits=[], y_limits=[], z_limits=[]):
+def Plot2D(hist, sample_name, label, plot_name, g_Xname, g_Yname, g_Zname, setLog=False, x_limits=[], y_limits=[], z_limits=[]):
     g_PlotTitle     = sample_name
-    #g_Label         = selection
-    g_Label         = selection.replace("_", " ")
+    g_Label         = label.replace("_", " ")
     
     # x axis range
     if x_limits:
@@ -140,7 +139,9 @@ def makePlots2D():
     #sample_name = "T4bd"
     #sample_name = "TChiWZ"
     sample_names    = ["T4bd", "AllBkg", "ttbar", "ZDY", "Wjets"]
-    selections      = ["1L_0J", "2L_0J"]    # lepton and Sjet selections
+    selections      = ["1L_0J", "2L_0J"]            # lepton and Sjet selections
+    #lepton_ids      = ["all"]                       # lepton ID selections
+    lepton_ids      = ["gold", "silver", "bronze"]  # lepton ID selections
     datasets        = {
         "Standard" : {
             "plot_dir" : "UL2017_NanoAODv9_CustomPlots_weight_PreUL",
@@ -184,8 +185,10 @@ def makePlots2D():
 
     setLog  = True
 
-    x_limits = [0.9, 1.0]
-    y_limits = [0.0, 32.0]
+    x_limits = [0.8, 1.0]
+    y_limits = [0.0, 64.0]
+    #x_limits = [0.9, 1.0]
+    #y_limits = [0.0, 32.0]
     
     # z axis ranges for each sample and selection
     z_limits_map = {
@@ -210,7 +213,6 @@ def makePlots2D():
             "2L_0J" : [0.01, 300.0]
         }
     }
-    
 
     for dataset in datasets:
         plot_dir = datasets[dataset]["plot_dir"]
@@ -218,16 +220,23 @@ def makePlots2D():
         tools.makeDir(plot_dir)
         for sample_name in sample_names:
             for selection in selections:
-                plot_name   = plot_dir + "/" + sample_name + "_" + selection + ".pdf"
-                input_name  = hist_dir + "/" + sample_name + "_" + selection + ".root"
-                
-                # load hist from ROOT file
-                input_file  = ROOT.TFile.Open(input_name, "READ")
-                hist        = input_file.Get("hist")
-                
-                z_limits    = z_limits_map[sample_name][selection]
-                
-                Plot2D(hist, sample_name, selection, plot_name, g_Xname, g_Yname, g_Zname, setLog, x_limits, y_limits, z_limits)
+                for lepton_id in lepton_ids:
+                    if lepton_id == "all":
+                        plot_name   = plot_dir + "/" + sample_name + "_" + selection + ".pdf"
+                        input_name  = hist_dir + "/" + sample_name + "_" + selection + ".root"
+                        label       = selection
+                    else:
+                        plot_name   = plot_dir + "/" + sample_name + "_" + selection + "_" + lepton_id + ".pdf"
+                        input_name  = hist_dir + "/" + sample_name + "_" + selection + "_" + lepton_id + ".root"
+                        label       = selection + "_" + lepton_id
+                    
+                    # load hist from ROOT file
+                    input_file  = ROOT.TFile.Open(input_name, "READ")
+                    hist        = input_file.Get("hist")
+                    
+                    z_limits    = z_limits_map[sample_name][selection]
+                    
+                    Plot2D(hist, sample_name, label, plot_name, g_Xname, g_Yname, g_Zname, setLog, x_limits, y_limits, z_limits)
 
 # Make 2D ratio plots for datasets
 def makeRatioPlots2D():
@@ -297,10 +306,10 @@ def makeRatioPlots2D():
 def makeDoubleRatioPlots2D():
     signal      = "T4bd"
     background  = "AllBkg"
-    sample_name = "SigOverBack"
-    #sample_name = "SigOverSqrtBack"
-    selections  = ["1L_0J", "2L_0J"]    # lepton and Sjet selections
-    lepton_ids  = ["gold", "silver", "bronze"]
+    #sample_name = "SigOverBack"
+    sample_name = "SigOverSqrtBack"
+    selections  = ["1L_0J", "2L_0J"]            # lepton and Sjet selections
+    lepton_ids  = ["gold", "silver", "bronze"]  # lepton ID selections
     plot_dir    = "UL2017_NanoAODv9_DoubleRatioPlots_weight_PreUL"
     hist_dir_1  = "UL2017_NanoAODv9_Hists_weight_PreUL"
     hist_dir_2  = "LowPtElectron_UL2017_NanoAODv9_Hists_weight_PreUL"
@@ -309,12 +318,12 @@ def makeDoubleRatioPlots2D():
     
     g_Xname     = "R_{ISR}"
     g_Yname     = "M_{#perp} [GeV]"
-    g_Zname     = "(S/B)_{2} / (S/B)_{1}"
-    #g_Zname     = "(S/#sqrt{B})_{2} / (S/#sqrt{B})_{1}"
+    #g_Zname     = "(S/B)_{2} / (S/B)_{1}"
+    g_Zname     = "(S/#sqrt{B})_{2} / (S/#sqrt{B})_{1}"
     
     setLog      = False
     rebin       = True
-    sqrtBack    = False
+    sqrtBack    = True
 
     x_limits    = [0.8, 1.0]
     y_limits    = [0.0, 64.0]
@@ -332,6 +341,7 @@ def makeDoubleRatioPlots2D():
             signal_name_2       = hist_dir_2 + "/" + signal      + "_" + selection + "_" + lepton_id + ".root"
             background_name_1   = hist_dir_1 + "/" + background  + "_" + selection + "_" + lepton_id + ".root"
             background_name_2   = hist_dir_2 + "/" + background  + "_" + selection + "_" + lepton_id + ".root"
+            label               = selection + "_" + lepton_id
             
             # load hists from ROOT file
             signal_file_1       = ROOT.TFile.Open(signal_name_1, "READ")
@@ -367,8 +377,6 @@ def makeDoubleRatioPlots2D():
                 
             z_limits = z_limits_map[selection]
             
-            label = selection + "_" + lepton_id
-
             Plot2D(hist_double_ratio, sample_name, label, plot_name, g_Xname, g_Yname, g_Zname, setLog, x_limits, y_limits, z_limits)
 
 def main():
