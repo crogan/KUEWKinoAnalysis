@@ -3,7 +3,6 @@
 import os
 import ROOT
 import tools
-import numpy as np
 
 # Make sure ROOT.TFile.Open(fileURL) does not seg fault when $ is in sys.argv (e.g. $ passed in as argument)
 ROOT.PyConfig.IgnoreCommandLineOptions = True
@@ -20,20 +19,6 @@ ROOT.gStyle.SetOptFit(11111111)
 def getLumiLabel(lumi):
     label = "{0:.1f} fb^{{-1}}".format(lumi)
     return label
-
-# take square root of hist
-def sqrtHist(hist):
-    nbins_x = hist.GetNbinsX()
-    nbins_y = hist.GetNbinsY()
-    #print("nbins_x = {0}".format(nbins_x))
-    #print("nbins_y = {0}".format(nbins_y))
-    for bin_x in range(1, nbins_x + 1):
-        for bin_y in range(1, nbins_y + 1):
-            bin_val         = hist.GetBinContent(bin_x, bin_y)
-            sqrt_bin_val    = np.sqrt(bin_val)
-            #print("bin_x = {0}, bin_y = {1}, bin_val = {2:.3f}, sqrt_bin_val = {3:.3f}".format(bin_x, bin_y, bin_val, sqrt_bin_val))
-            hist.SetBinContent(bin_x, bin_y, sqrt_bin_val)
-    return
 
 # Make 2D plot
 def Plot2D(hist, sample_name, label, plot_name, g_Xname, g_Yname, g_Zname, setLog=False, x_limits=[], y_limits=[], z_limits=[]):
@@ -332,14 +317,14 @@ def makeDoubleRatioPlots2D():
     rebin       = True
     
     # Use S / B
-    sqrtBack    = False
-    sample_name = "SigOverBack"
-    g_Zname     = "(S/B)_{2} / (S/B)_{1}"
+    #sqrtBack    = False
+    #sample_name = "SigOverBack"
+    #g_Zname     = "(S/B)_{2} / (S/B)_{1}"
     
     # Use S / sqrt(B)
-    #sqrtBack    = True
-    #sample_name = "SigOverSqrtBack"
-    #g_Zname     = "(S/#sqrt{B})_{2} / (S/#sqrt{B})_{1}"
+    sqrtBack    = True
+    sample_name = "SigOverSqrtBack"
+    g_Zname     = "(S/#sqrt{B})_{2} / (S/#sqrt{B})_{1}"
 
     x_limits    = [0.8, 1.0]
     y_limits    = [0.0, 64.0]
@@ -386,8 +371,8 @@ def makeDoubleRatioPlots2D():
             
             # take square root of background
             if sqrtBack:
-                sqrtHist(background_hist_1)
-                sqrtHist(background_hist_2)
+                tools.sqrtHist(background_hist_1)
+                tools.sqrtHist(background_hist_2)
             
             # take ratio of hists
             signal_hist_ratio       = signal_hist_2.Clone("signal_hist_ratio")
