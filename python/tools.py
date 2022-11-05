@@ -44,12 +44,17 @@ def sqrtHist(hist):
 
 # get 1D hist from 2D hist
 def get1DHist(hist2D):
-    #nbins_x = hist2D.GetNbinsX()
-    #nbins_y = hist2D.GetNbinsY()
-    #for bin_x in range(1, nbins_x + 1):
-    #    for bin_y in range(1, nbins_y + 1):
-    #        bin_val = hist.GetBinContent(bin_x, bin_y)
+    # project to 1D
     hist1D = hist2D.ProjectionX()
+    # to set custom values
+    nbins_x = hist2D.GetNbinsX()
+    nbins_y = hist2D.GetNbinsY()
+    for bin_x in range(1, nbins_x + 1):
+        y_total = 0.0
+        for bin_y in range(1, nbins_y + 1):
+            bin_val = hist2D.GetBinContent(bin_x, bin_y)
+            y_total += bin_val
+        hist1D.SetBinContent(bin_x, y_total)
     return hist1D
 
 
