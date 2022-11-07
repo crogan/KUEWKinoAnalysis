@@ -49,9 +49,11 @@ def get1DHist(hist2D):
     # to set custom values
     nbins_x = hist2D.GetNbinsX()
     nbins_y = hist2D.GetNbinsY()
+    max_y   = nbins_y
+    #max_y   = 3
     for bin_x in range(1, nbins_x + 1):
         y_total = 0.0
-        for bin_y in range(1, nbins_y + 1):
+        for bin_y in range(1, max_y + 1):
             bin_val = hist2D.GetBinContent(bin_x, bin_y)
             y_total += bin_val
         hist1D.SetBinContent(bin_x, y_total)

@@ -69,6 +69,16 @@ def makePlots():
     sample_names    = ["T4bd", "AllBkg", "ttbar", "ZDY", "Wjets"]
     selections      = ["1L_0J", "2L_0J"]    # lepton and Sjet selections
     lepton_ids      = ["all", "maskBronze"] # lepton ID selections
+    #datasets        = {
+    #    "Standard" : {
+    #        "plot_dir" : "UL2017_NanoAODv9_Plots1D_weight_PreUL_Mperp6",
+    #        "hist_dir" : "UL2017_NanoAODv9_Hists_weight_PreUL"
+    #    },
+    #    "LowPtElectron" : {
+    #        "plot_dir" : "LowPtElectron_UL2017_NanoAODv9_Plots1D_weight_PreUL_Mperp6",
+    #        "hist_dir" : "LowPtElectron_UL2017_NanoAODv9_Hists_weight_PreUL"
+    #    }
+    #}
     datasets        = {
         "Standard" : {
             "plot_dir" : "UL2017_NanoAODv9_Plots1D_weight_PreUL",
@@ -112,8 +122,58 @@ def makePlots():
     
                     Plot(hist1D, info, plot_name)
 
+# Make ratio plots
+def makeRatioPlots():
+    sample_names    = ["T4bd", "AllBkg", "ttbar", "ZDY", "Wjets"]
+    selections      = ["1L_0J", "2L_0J"]    # lepton and Sjet selections
+    lepton_ids      = ["all", "maskBronze"] # lepton ID selections
+    #plot_dir        = "UL2017_NanoAODv9_RatioPlots1D_weight_PreUL_Mperp6"
+    plot_dir        = "UL2017_NanoAODv9_RatioPlots1D_weight_PreUL"
+    hist_dir_1      = "UL2017_NanoAODv9_Hists_weight_PreUL"
+    hist_dir_2      = "LowPtElectron_UL2017_NanoAODv9_Hists_weight_PreUL"
+    
+    tools.makeDir(plot_dir)
+    
+    variable = "RISR"
+    
+    info = {}
+    info["x_label"] = "R_{ISR}"
+    info["y_label"] = "N_{low pt elec} / N_{standard}"
+    
+    for sample_name in sample_names:
+        for selection in selections:
+            for lepton_id in lepton_ids:
+                if lepton_id == "all":
+                    plot_name       = plot_dir   + "/" + sample_name + "_" + selection + ".pdf"
+                    input_name_1    = hist_dir_1 + "/" + sample_name + "_" + selection + ".root"
+                    input_name_2    = hist_dir_2 + "/" + sample_name + "_" + selection + ".root"
+                    label           = selection
+                else:
+                    plot_name       = plot_dir   + "/" + sample_name + "_" + selection + "_" + lepton_id + ".pdf"
+                    input_name_1    = hist_dir_1 + "/" + sample_name + "_" + selection + "_" + lepton_id + ".root"
+                    input_name_2    = hist_dir_2 + "/" + sample_name + "_" + selection + "_" + lepton_id + ".root"
+                    label           = selection + "_" + lepton_id
+                
+                # load hists from ROOT file
+                input_file_1    = ROOT.TFile.Open(input_name_1, "READ")
+                input_file_2    = ROOT.TFile.Open(input_name_2, "READ")
+                hist2D_1        = input_file_1.Get("hist")
+                hist2D_2        = input_file_2.Get("hist")
+                hist1D_1        = tools.get1DHist(hist2D_1)
+                hist1D_2        = tools.get1DHist(hist2D_2)
+                
+                # take ratio of hists
+                hist1D_ratio    = hist1D_2.Clone("hist1D_ratio")
+                hist1D_ratio.Divide(hist1D_1)
+                    
+                info["sample"]  = sample_name
+                info["label"]   = label
+    
+                Plot(hist1D_ratio, info, plot_name)
+
 def main():
     makePlots()
+    makeRatioPlots()
 
 if __name__ == "__main__":
     main()
