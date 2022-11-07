@@ -12,22 +12,24 @@ ROOT.gROOT.SetBatch(ROOT.kTRUE)
 # Tell ROOT not to be in charge of memory, fix issue of histograms being deleted when ROOT file is closed:
 ROOT.TH1.AddDirectory(False)
 # ROOT Style
-ROOT.gStyle.SetOptTitle(0)
+#ROOT.gStyle.SetOptTitle(0)
 ROOT.gStyle.SetOptStat(0)
 ROOT.gStyle.SetOptFit(11111111)
 
 # Make plot
 def Plot(hist, info, plot_name):
-    title   = info["title"]
+    sample  = info["sample"]
+    label   = info["label"]
     x_label = info["x_label"]
     y_label = info["y_label"]
     label   = info["label"]
-    print("Plotting {0}: {1}".format(title, label))
+    title   = "{0}_{1}".format(sample, label) 
+    print("Plotting {0}".format(title))
     
     # setup canvas
     can = ROOT.TCanvas("can", "can", 600, 600)
-    can.SetLeftMargin(0.15)
-    can.SetRightMargin(0.18)
+    can.SetLeftMargin(0.25)
+    can.SetRightMargin(0.05)
     can.SetBottomMargin(0.15)
     can.SetGridx()
     can.SetGridy()
@@ -35,7 +37,28 @@ def Plot(hist, info, plot_name):
     can.cd()
     
     # draw hist
-    hist.Draw("")
+    hist.Draw("hist error")
+    
+    # setup hist 
+    hist.SetTitle(title)
+
+    hist.GetXaxis().CenterTitle()
+    hist.GetXaxis().SetTitle(x_label)
+    hist.GetXaxis().SetTitleFont(42)
+    hist.GetXaxis().SetTitleSize(0.06)
+    hist.GetXaxis().SetTitleOffset(1.06)
+    hist.GetXaxis().SetLabelFont(42)
+    hist.GetXaxis().SetLabelSize(0.05)
+    hist.GetXaxis().SetNdivisions(5, 5, 0, True)
+    
+    hist.GetYaxis().CenterTitle()
+    hist.GetYaxis().SetTitle(y_label)
+    hist.GetYaxis().SetTitleFont(42)
+    hist.GetYaxis().SetTitleSize(0.06)
+    hist.GetYaxis().SetTitleOffset(2.00)
+    hist.GetYaxis().SetLabelFont(42)
+    hist.GetYaxis().SetLabelSize(0.05)
+    hist.GetYaxis().SetNdivisions(5, 5, 0, True)
     
     # save plot
     can.SaveAs(plot_name)
@@ -43,7 +66,6 @@ def Plot(hist, info, plot_name):
 
 # Make plots
 def makePlots():
-    print("Howdy!")
     sample_names    = ["T4bd", "AllBkg", "ttbar", "ZDY", "Wjets"]
     selections      = ["1L_0J", "2L_0J"]    # lepton and Sjet selections
     lepton_ids      = ["all", "maskBronze"] # lepton ID selections
@@ -85,8 +107,8 @@ def makePlots():
                     hist2D      = input_file.Get("hist")
                     hist1D      = tools.get1DHist(hist2D)
     
-                    info["title"] = sample_name
-                    info["label"] = label
+                    info["sample"]  = sample_name
+                    info["label"]   = label
     
                     Plot(hist1D, info, plot_name)
 

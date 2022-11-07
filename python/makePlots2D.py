@@ -68,33 +68,33 @@ def Plot2D(hist, sample_name, label, plot_name, g_Xname, g_Yname, g_Zname, setLo
     
     # setup hist 
     hist.GetXaxis().CenterTitle()
+    hist.GetXaxis().SetTitle(g_Xname)
     hist.GetXaxis().SetTitleFont(42)
     hist.GetXaxis().SetTitleSize(0.06)
     hist.GetXaxis().SetTitleOffset(1.06)
     hist.GetXaxis().SetLabelFont(42)
     hist.GetXaxis().SetLabelSize(0.05)
-    hist.GetXaxis().SetTitle(g_Xname)
     hist.GetXaxis().SetNdivisions(5, 5, 0, True)
     if x_limits:
         hist.GetXaxis().SetRangeUser(x_min, x_max)
     
     hist.GetYaxis().CenterTitle()
+    hist.GetYaxis().SetTitle(g_Yname)
     hist.GetYaxis().SetTitleFont(42)
     hist.GetYaxis().SetTitleSize(0.06)
     hist.GetYaxis().SetTitleOffset(1.12)
     hist.GetYaxis().SetLabelFont(42)
     hist.GetYaxis().SetLabelSize(0.05)
-    hist.GetYaxis().SetTitle(g_Yname)
     if y_limits:
         hist.GetYaxis().SetRangeUser(y_min, y_max)
     
     hist.GetZaxis().CenterTitle()
+    hist.GetZaxis().SetTitle(g_Zname)
     hist.GetZaxis().SetTitleFont(42)
     hist.GetZaxis().SetTitleSize(0.055)
     hist.GetZaxis().SetTitleOffset(1.05)
     hist.GetZaxis().SetLabelFont(42)
     hist.GetZaxis().SetLabelSize(0.05)
-    hist.GetZaxis().SetTitle(g_Zname)
     hist.GetZaxis().SetRangeUser(z_min, z_max)
     
     # text
