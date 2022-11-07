@@ -303,7 +303,7 @@ def makeDoubleRatioPlots2D():
     background  = "AllBkg"
     selections  = ["1L_0J", "2L_0J"]            # lepton and Sjet selections
     #lepton_ids  = ["gold", "silver", "bronze"]  # lepton ID selections
-    lepton_ids  = ["all", "maskBronze"] # lepton ID selections
+    lepton_ids  = ["all", "maskBronze"]         # lepton ID selections
     plot_dir    = "UL2017_NanoAODv9_DoubleRatioPlots_weight_PreUL"
     hist_dir_1  = "UL2017_NanoAODv9_Hists_weight_PreUL"
     hist_dir_2  = "LowPtElectron_UL2017_NanoAODv9_Hists_weight_PreUL"
@@ -371,8 +371,8 @@ def makeDoubleRatioPlots2D():
             
             # take square root of background
             if sqrtBack:
-                tools.sqrtHist(background_hist_1)
-                tools.sqrtHist(background_hist_2)
+                tools.sqrtHist2D(background_hist_1)
+                tools.sqrtHist2D(background_hist_2)
             
             # take ratio of hists
             signal_hist_ratio       = signal_hist_2.Clone("signal_hist_ratio")

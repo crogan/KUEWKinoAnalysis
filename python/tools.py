@@ -28,12 +28,27 @@ def getLumi(era, lumi_json):
         print("ERROR: The era '{0}' was not found in the file '{1}'.".format(era, lumi_json))
     return lumi
 
-# take square root of hist
-def sqrtHist(hist):
+# take square root of 1D hist
+def sqrtHist1D(hist):
+    nbins_x = hist.GetNbinsX()
+    #print("nbins_x = {0}".format(nbins_x))
+    # set bin contents to new values
+    # bin errors are not set to new values yet
+    for bin_x in range(1, nbins_x + 1):
+        bin_val         = hist.GetBinContent(bin_x)
+        sqrt_bin_val    = np.sqrt(bin_val)
+        #print("bin_x = {0}, bin_val = {1:.3f}, sqrt_bin_val = {2:.3f}".format(bin_x, bin_val, sqrt_bin_val))
+        hist.SetBinContent(bin_x, sqrt_bin_val)
+    return
+
+# take square root of 2D hist
+def sqrtHist2D(hist):
     nbins_x = hist.GetNbinsX()
     nbins_y = hist.GetNbinsY()
     #print("nbins_x = {0}".format(nbins_x))
     #print("nbins_y = {0}".format(nbins_y))
+    # set bin contents to new values
+    # bin errors are not set to new values yet
     for bin_x in range(1, nbins_x + 1):
         for bin_y in range(1, nbins_y + 1):
             bin_val         = hist.GetBinContent(bin_x, bin_y)
@@ -47,13 +62,16 @@ def get1DHist(hist2D):
     # project to 1D
     hist1D = hist2D.ProjectionX()
     # to set custom values
-    nbins_x = hist2D.GetNbinsX()
-    nbins_y = hist2D.GetNbinsY()
-    max_y   = nbins_y
-    #max_y   = 3
+    nbins_x     = hist2D.GetNbinsX()
+    nbins_y     = hist2D.GetNbinsY()
+    # place cut on y bins; include max bin
+    max_bin_y   = nbins_y
+    #max_bin_y   = 3
+    # set bin contents to new values
+    # bin errors are not set to new values yet
     for bin_x in range(1, nbins_x + 1):
         y_total = 0.0
-        for bin_y in range(1, max_y + 1):
+        for bin_y in range(1, max_bin_y + 1):
             bin_val = hist2D.GetBinContent(bin_x, bin_y)
             y_total += bin_val
         hist1D.SetBinContent(bin_x, y_total)
