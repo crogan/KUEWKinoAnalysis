@@ -48,15 +48,18 @@ void Plot_2D_NanoAODv9(string sample_name, string selection, int Nlep_selection,
 
 void Multi_Plot_2D_NanoAODv9() 
 {
-  //string sample_name = "T4bd";
+  string sample_name = "T4bd";
   //string sample_name = "TChiWZ";
   //string sample_name = "ttbar";
   //string sample_name = "ZDY";
-  string sample_name = "Wjets";
+  //string sample_name = "Wjets";
   
-  // WARNING: Only run one at at time! There is a bug (memory leak...) when more that one are run! Leads to weight = -999.0 for all but first function call.
+  // WARNING:   Only run one at at time! There is a bug (memory leak...) when more that one are run!
+  //            Leads to weight = -999.0 for all but first function call.
+  Plot_2D_NanoAODv9(sample_name, "1L_0J", 1, 0, false);
+  //Plot_2D_NanoAODv9(sample_name, "2L_0J", 2, 0, false);
   //Plot_2D_NanoAODv9(sample_name, "1L_0J_maskBronze", 1, 0, true);
-  Plot_2D_NanoAODv9(sample_name, "2L_0J_maskBronze", 2, 0, true);
+  //Plot_2D_NanoAODv9(sample_name, "2L_0J_maskBronze", 2, 0, true);
 }
 
 void Plot_2D_NanoAODv9(string sample_name, string selection, int Nlep_selection, int NjetS_selection, bool maskBronze)
@@ -66,8 +69,14 @@ void Plot_2D_NanoAODv9(string sample_name, string selection, int Nlep_selection,
 
   // Caleb: NANO AOD v9
   //string NtuplePath = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_NanoAODv9_Standard_v1/";
+  //string plot_dir   = "UL2017_NanoAODv9_Plots_weight_1";
+  //string hist_dir   = "UL2017_NanoAODv9_Hists_weight_1";
+  //string plot_dir   = "UL2017_NanoAODv9_Plots_weight_PreUL";
+  //string hist_dir   = "UL2017_NanoAODv9_Hists_weight_PreUL";
   // Alice: NANO AOD v9
   string NtuplePath = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_NanoAODv9/";
+  string plot_dir   = "LowPtElectron_UL2017_NanoAODv9_Plots_weight_PreUL";
+  string hist_dir   = "LowPtElectron_UL2017_NanoAODv9_Hists_weight_PreUL";
 
   int year = 2017; 
 
@@ -90,23 +99,15 @@ void Plot_2D_NanoAODv9(string sample_name, string selection, int Nlep_selection,
   
   // set parameters
   
-  //int SKIP = 1e3;
-  int SKIP = 1;
+  int SKIP = 1e3;
+  //int SKIP = 1;
   double lumi = 137.0; 
+  
   // convert lumi to string with specific precision
   stringstream stream;
   stream << fixed << setprecision(1) << lumi;
   string lumi_string = stream.str();
   lumi_string += " fb^{-1}";
-  
-  // Caleb: NANO AOD v9
-  //string plot_dir           = "UL2017_NanoAODv9_Plots_weight_1";
-  //string hist_dir           = "UL2017_NanoAODv9_Hists_weight_1";
-  //string plot_dir           = "UL2017_NanoAODv9_Plots_weight_PreUL";
-  //string hist_dir           = "UL2017_NanoAODv9_Hists_weight_PreUL";
-  // Alice: NANO AOD v9
-  string plot_dir           = "LowPtElectron_UL2017_NanoAODv9_Plots_weight_PreUL";
-  string hist_dir           = "LowPtElectron_UL2017_NanoAODv9_Hists_weight_PreUL";
   
   string g_Label            = selection;
   replace(g_Label.begin(), g_Label.end(), '_', ' ');
@@ -486,13 +487,23 @@ void Plot_2D_NanoAODv9(string sample_name, string selection, int Nlep_selection,
         
         int eindex = Categories.Find(Event);
         
-        //printf("e = %d, eindex = %d\n", e, eindex);
+        printf("e = %d, eindex = %d\n", e, eindex);
         
         // cut: only keep events with eindex >= 0
         if(eindex < 0)
         {
           continue;
         }   
+        else
+        {
+          Category EventCategory = Categories[eindex];
+          string label      = EventCategory.Label();
+          string get_label  = EventCategory.GetLabel();
+          string full_label = EventCategory.FullLabel();
+          printf("label = %s\n",        label.c_str());
+          printf("get_label = %s\n",    get_label.c_str());
+          printf("full_label = %s\n",   full_label.c_str());
+        }
 
         /////////////////
         
