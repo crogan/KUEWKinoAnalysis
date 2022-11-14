@@ -44,7 +44,6 @@ data = {}
 with open(args.json) as jsonfile:
     data = json.load(jsonfile)
 
-sysLabels = systematicLabels()
 
 
 # We will assume the first POI is the one to plot
