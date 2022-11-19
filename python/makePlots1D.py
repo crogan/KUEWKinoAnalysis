@@ -64,7 +64,8 @@ def Plot(hist, info, plot_name):
     
     # save plot
     can.SaveAs(plot_name)
-    del can
+    can.Clear()
+    can.Close()
 
 # Make plots
 def makePlots():
