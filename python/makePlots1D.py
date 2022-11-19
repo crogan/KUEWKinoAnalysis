@@ -22,7 +22,8 @@ def Plot(hist, info, plot_name):
     label   = info["label"]
     x_label = info["x_label"]
     y_label = info["y_label"]
-    label   = info["label"]
+    x_min   = info["x_min"]
+    x_max   = info["x_max"]
     title   = "{0}_{1}".format(sample, label) 
     title   = title.replace('_', ' ')
     print("Plotting {0}".format(title))
@@ -43,7 +44,7 @@ def Plot(hist, info, plot_name):
     # setup hist 
     color       = "coral"
     line_width  = 3
-    tools.setupHist(hist, title, x_label, y_label, color, line_width)
+    tools.setupHist(hist, title, x_label, y_label, x_min, x_max, color, line_width)
     hist.SetMarkerSize(0)
 
     hist.GetXaxis().CenterTitle()
@@ -99,6 +100,8 @@ def makePlots():
     info            = {}
     info["x_label"] = "R_{ISR}"
     info["y_label"] = "Events"
+    info["x_min"]   = 0.85
+    info["x_max"]   = 1.00
     
     for dataset in datasets:
         plot_dir = datasets[dataset]["plot_dir"]
@@ -144,6 +147,8 @@ def makeRatioPlots():
     info            = {}
     info["x_label"] = "R_{ISR}"
     info["y_label"] = "N_{low pt elec} / N_{standard}"
+    info["x_min"]   = 0.85
+    info["x_max"]   = 1.00
     
     for sample_name in sample_names:
         for selection in selections:
@@ -189,7 +194,8 @@ def makeDoubleRatioPlots():
     
     tools.makeDir(plot_dir)
     
-    rebin       = False
+    rebin       = True
+    rebin_num   = 8
     variable    = "RISR"
     
     # Use S / B
@@ -206,6 +212,8 @@ def makeDoubleRatioPlots():
     info["x_label"] = "R_{ISR}"
     info["y_label"] = y_label
     info["sample"]  = sample_name
+    info["x_min"]   = 0.85
+    info["x_max"]   = 1.00
     
     for selection in selections:
         for lepton_id in lepton_ids:
@@ -240,10 +248,10 @@ def makeDoubleRatioPlots():
             
             # rebin 1D hists
             if rebin:
-                signal_hist1D_1.Rebin(2)
-                signal_hist1D_2.Rebin(2)
-                background_hist1D_1.Rebin(2)
-                background_hist1D_2.Rebin(2)
+                signal_hist1D_1.Rebin(rebin_num)
+                signal_hist1D_2.Rebin(rebin_num)
+                background_hist1D_1.Rebin(rebin_num)
+                background_hist1D_2.Rebin(rebin_num)
             
             # take square root of background
             if sqrtBack:

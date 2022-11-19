@@ -18,7 +18,7 @@ def loadJson(input_json):
         return data
 
 # setup histogram
-def setupHist(hist, title, x_title, y_title, color, line_width):
+def setupHist(hist, title, x_title, y_title, x_min, x_max, color, line_width):
     hist.SetStats(ROOT.kFALSE)
 
     x_axis = hist.GetXaxis()
@@ -27,6 +27,7 @@ def setupHist(hist, title, x_title, y_title, color, line_width):
     hist.SetTitle(title)
     x_axis.SetTitle(x_title)
     y_axis.SetTitle(y_title)
+    x_axis.SetRangeUser(x_min, x_max)
     hist.SetLineColor(colors.getColorIndex(color))
     hist.SetLineWidth(line_width)
 
