@@ -41,10 +41,12 @@ def Plot(hist, info, plot_name):
     hist.Draw("hist error")
     
     # setup hist 
-    hist.SetTitle(title)
+    color       = "coral"
+    line_width  = 3
+    tools.setupHist(hist, title, x_label, y_label, color, line_width)
+    hist.SetMarkerSize(0)
 
     hist.GetXaxis().CenterTitle()
-    hist.GetXaxis().SetTitle(x_label)
     hist.GetXaxis().SetTitleFont(42)
     hist.GetXaxis().SetTitleSize(0.06)
     hist.GetXaxis().SetTitleOffset(1.06)
@@ -53,7 +55,6 @@ def Plot(hist, info, plot_name):
     hist.GetXaxis().SetNdivisions(5, 5, 0, True)
     
     hist.GetYaxis().CenterTitle()
-    hist.GetYaxis().SetTitle(y_label)
     hist.GetYaxis().SetTitleFont(42)
     hist.GetYaxis().SetTitleSize(0.06)
     hist.GetYaxis().SetTitleOffset(2.00)
@@ -69,7 +70,8 @@ def Plot(hist, info, plot_name):
 def makePlots():
     sample_names    = ["T4bd", "AllBkg", "ttbar", "ZDY", "Wjets"]
     selections      = ["1L_0J", "2L_0J"]    # lepton and Sjet selections
-    lepton_ids      = ["all", "maskBronze"] # lepton ID selections
+    #lepton_ids      = ["all", "maskBronze"] # lepton ID selections
+    lepton_ids      = ["all"]               # lepton ID selections
     #datasets        = {
     #    "Standard" : {
     #        "plot_dir" : "UL2017_NanoAODv9_Plots1D_weight_PreUL_Mperp6",
@@ -127,7 +129,8 @@ def makePlots():
 def makeRatioPlots():
     sample_names    = ["T4bd", "AllBkg", "ttbar", "ZDY", "Wjets"]
     selections      = ["1L_0J", "2L_0J"]    # lepton and Sjet selections
-    lepton_ids      = ["all", "maskBronze"] # lepton ID selections
+    #lepton_ids      = ["all", "maskBronze"] # lepton ID selections
+    lepton_ids      = ["all"]               # lepton ID selections
     #plot_dir        = "UL2017_NanoAODv9_RatioPlots1D_weight_PreUL_Mperp6"
     plot_dir        = "UL2017_NanoAODv9_RatioPlots1D_weight_PreUL"
     hist_dir_1      = "UL2017_NanoAODv9_Hists_weight_PreUL"
@@ -176,8 +179,9 @@ def makeRatioPlots():
 def makeDoubleRatioPlots():
     signal      = "T4bd"
     background  = "AllBkg"
-    selections  = ["1L_0J", "2L_0J"]            # lepton and Sjet selections
-    lepton_ids  = ["all", "maskBronze"] # lepton ID selections
+    selections  = ["1L_0J", "2L_0J"]    # lepton and Sjet selections
+    #lepton_ids  = ["all", "maskBronze"] # lepton ID selections
+    lepton_ids  = ["all"]               # lepton ID selections
     plot_dir    = "UL2017_NanoAODv9_DoubleRatioPlots1D_weight_PreUL"
     hist_dir_1  = "UL2017_NanoAODv9_Hists_weight_PreUL"
     hist_dir_2  = "LowPtElectron_UL2017_NanoAODv9_Hists_weight_PreUL"
@@ -188,14 +192,14 @@ def makeDoubleRatioPlots():
     variable    = "RISR"
     
     # Use S / B
-    #sqrtBack    = False
-    #sample_name = "SigOverBack"
-    #y_label     = "(S/B)_{2} / (S/B)_{1}"
+    sqrtBack    = False
+    sample_name = "SigOverBack"
+    y_label     = "(S/B)_{2} / (S/B)_{1}"
     
     # Use S / sqrt(B)
-    sqrtBack    = True
-    sample_name = "SigOverSqrtBack"
-    y_label     = "(S/#sqrt{B})_{2} / (S/#sqrt{B})_{1}"
+    #sqrtBack    = True
+    #sample_name = "SigOverSqrtBack"
+    #y_label     = "(S/#sqrt{B})_{2} / (S/#sqrt{B})_{1}"
     
     info            = {}
     info["x_label"] = "R_{ISR}"

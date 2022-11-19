@@ -1,8 +1,10 @@
 # tools.py
 
+import ROOT
 import os
 import json
 import numpy as np
+import colors
 
 # creates directory if it does not exist
 def makeDir(dir_name):
@@ -14,6 +16,19 @@ def loadJson(input_json):
     with open(input_json, 'r') as f:
         data = json.load(f)
         return data
+
+# setup histogram
+def setupHist(hist, title, x_title, y_title, color, line_width):
+    hist.SetStats(ROOT.kFALSE)
+
+    x_axis = hist.GetXaxis()
+    y_axis = hist.GetYaxis()
+    
+    hist.SetTitle(title)
+    x_axis.SetTitle(x_title)
+    y_axis.SetTitle(y_title)
+    hist.SetLineColor(colors.getColorIndex(color))
+    hist.SetLineWidth(line_width)
 
 # get luminosity for era from json file
 def getLumi(era, lumi_json):
