@@ -147,7 +147,7 @@ def makeRatioPlots():
     
     info            = {}
     info["x_label"] = "R_{ISR}"
-    info["y_label"] = "N_{low pt elec} / N_{standard}"
+    info["y_label"] = "N_{with low p_{T} e^{\pm}} / N_{without low p_{T} e^{\pm}}"
     info["x_min"]   = 0.85
     info["x_max"]   = 1.00
     
@@ -209,16 +209,16 @@ def makeDoubleRatioPlots():
     rebin_xbins     = np.array([0.8000, 0.8500, 0.9000, 0.9250, 0.9500, 0.9625, 0.9750, 0.9875, 1.0000])
     nbins           = len(rebin_xbins) - 1
     variable        = "RISR"
+    sqrtBack        = True
     
-    # Use S / B
-    sqrtBack    = False
-    sample_name = "SigOverBack"
-    y_label     = "(S/B)_{with low pt e} / (S/B)_{without low pt e}"
-    
-    # Use S / sqrt(B)
-    #sqrtBack    = True
-    #sample_name = "SigOverSqrtBack"
-    #y_label     = "(S/#sqrt{B})_{with low pt e} / (S/#sqrt{B})_{without low pt e}"
+    if sqrtBack:
+        # Use S / sqrt(B)
+        sample_name = "SigOverSqrtBack"
+        y_label     = "(S/#sqrt{B})_{with low p_{T} e^{\pm}} / (S/#sqrt{B})_{without low p_{T} e^{\pm}}"
+    else:
+        # Use S / B
+        sample_name = "SigOverBack"
+        y_label     = "(S/B)_{with low p_{T} e^{\pm}} / (S/B)_{without low p_{T} e^{\pm}}"
     
     info            = {}
     info["x_label"] = "R_{ISR}"
@@ -287,18 +287,6 @@ def makeDoubleRatioPlots():
                 if sqrtBack:
                     tools.sqrtHist1D(background_hist1D_1)
                     tools.sqrtHist1D(background_hist1D_2)
-                
-                # # take ratio of hists
-                # signal_hist1D_ratio       = signal_hist1D_2.Clone("signal_hist1D_ratio")
-                # signal_hist1D_ratio.Divide(signal_hist1D_1)
-                # 
-                # background_hist1D_ratio   = background_hist1D_2.Clone("background_hist1D_ratio")
-                # background_hist1D_ratio.Divide(background_hist1D_1)
-                # 
-                # hist1D_double_ratio       = signal_hist1D_ratio.Clone("hist1D_double_ratio")
-                # hist1D_double_ratio.Divide(background_hist1D_ratio)
-                # 
-                # Plot(hist1D_double_ratio, info, plot_name)
 
                 plotDoubleRatio(signal_hist1D_1, signal_hist1D_2, background_hist1D_1, background_hist1D_2, info, plot_name) 
 

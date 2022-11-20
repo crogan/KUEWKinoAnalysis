@@ -48,13 +48,19 @@ def getLumi(era, lumi_json):
 def sqrtHist1D(hist):
     nbins_x = hist.GetNbinsX()
     #print("nbins_x = {0}".format(nbins_x))
-    # set bin contents to new values
-    # bin errors are not set to new values yet
+    # set bin content to new value:             f = sqrt(A)
+    # set bin error based on error propagation: sigma_f = abs(sigma_A / (2 sqrt(A))) 
     for bin_x in range(1, nbins_x + 1):
         bin_val         = hist.GetBinContent(bin_x)
-        sqrt_bin_val    = np.sqrt(bin_val)
-        #print("bin_x = {0}, bin_val = {1:.3f}, sqrt_bin_val = {2:.3f}".format(bin_x, bin_val, sqrt_bin_val))
-        hist.SetBinContent(bin_x, sqrt_bin_val)
+        bin_error       = hist.GetBinError(bin_x)
+        if bin_val <= 0.0:
+            print("WARNING: In sqrtHist1D(), bin_x = {0}, bin_val = {1}; skipping bin!".format(bin_x, bin_val))
+        else:
+            sqrt_bin_val    = np.sqrt(bin_val)
+            new_bin_error   = abs(bin_error / (2 * sqrt_bin_val))
+            print("bin_x = {0}, bin_val = {1:.3f}, bin_error = {2:.3f}, sqrt_bin_val = {3:.3f}, new_bin_error = {4:.3f}".format(bin_x, bin_val, bin_error, sqrt_bin_val, new_bin_error))
+            hist.SetBinContent(bin_x, sqrt_bin_val)
+            hist.SetBinError(bin_x, new_bin_error)
     return
 
 # take square root of 2D hist
