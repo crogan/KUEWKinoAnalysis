@@ -119,13 +119,14 @@ def makePlots():
                         input_name  = hist_dir + "/" + sample_name + "_" + selection + "_" + lepton_id + ".root"
                         label       = selection + "_" + lepton_id
                     
+                    # set info
+                    info["sample"]  = sample_name
+                    info["label"]   = label
+                    
                     # load hist from ROOT file
                     input_file  = ROOT.TFile.Open(input_name, "READ")
                     hist2D      = input_file.Get("hist")
                     hist1D      = tools.get1DHist(hist2D)
-    
-                    info["sample"]  = sample_name
-                    info["label"]   = label
     
                     Plot(hist1D, info, plot_name)
 
@@ -164,6 +165,10 @@ def makeRatioPlots():
                     input_name_2    = hist_dir_2 + "/" + sample_name + "_" + selection + "_" + lepton_id + ".root"
                     label           = selection + "_" + lepton_id
                 
+                # set info
+                info["sample"]  = sample_name
+                info["label"]   = label
+
                 # load hists from ROOT file
                 input_file_1    = ROOT.TFile.Open(input_name_1, "READ")
                 input_file_2    = ROOT.TFile.Open(input_name_2, "READ")
@@ -176,8 +181,6 @@ def makeRatioPlots():
                 hist1D_ratio    = hist1D_2.Clone("hist1D_ratio")
                 hist1D_ratio.Divide(hist1D_1)
                     
-                info["sample"]  = sample_name
-                info["label"]   = label
     
                 Plot(hist1D_ratio, info, plot_name)
 
@@ -194,19 +197,28 @@ def makeDoubleRatioPlots():
     
     tools.makeDir(plot_dir)
     
-    rebin       = True
-    rebin_num   = 8
-    variable    = "RISR"
+    # parameters
+    # original 2D histograms:
+    # x: R_ISR;     [0.8, 1.0],     32 bins
+    # y: M_perp;    [0.0, 64.0],    32 bins
+    # for variable binning, the new bin edges should match the original histogram
+    constant_rebin  = False
+    variable_rebin  = True
+    rebin_num       = 8
+    #rebin_xbins     = np.array([0.80, 0.85, 0.90, 0.95, 1.00])
+    rebin_xbins     = np.array([0.8000, 0.8500, 0.9000, 0.9250, 0.9500, 0.9625, 0.9750, 0.9875, 1.0000])
+    nbins           = len(rebin_xbins) - 1
+    variable        = "RISR"
     
     # Use S / B
     sqrtBack    = False
     sample_name = "SigOverBack"
-    y_label     = "(S/B)_{2} / (S/B)_{1}"
+    y_label     = "(S/B)_{with low pt e} / (S/B)_{without low pt e}"
     
     # Use S / sqrt(B)
     #sqrtBack    = True
     #sample_name = "SigOverSqrtBack"
-    #y_label     = "(S/#sqrt{B})_{2} / (S/#sqrt{B})_{1}"
+    #y_label     = "(S/#sqrt{B})_{with low pt e} / (S/#sqrt{B})_{without low pt e}"
     
     info            = {}
     info["x_label"] = "R_{ISR}"
@@ -232,6 +244,9 @@ def makeDoubleRatioPlots():
                 background_name_2   = hist_dir_2 + "/" + background  + "_" + selection + "_" + lepton_id + ".root"
                 label               = selection + "_" + lepton_id
             
+            # set info
+            info["label"] = label
+            
             # load hists from ROOT file
             signal_file_1       = ROOT.TFile.Open(signal_name_1, "READ")
             signal_file_2       = ROOT.TFile.Open(signal_name_2, "READ")
@@ -246,32 +261,62 @@ def makeDoubleRatioPlots():
             background_hist1D_1 = tools.get1DHist(background_hist2D_1)
             background_hist1D_2 = tools.get1DHist(background_hist2D_2)
             
-            # rebin 1D hists
-            if rebin:
-                signal_hist1D_1.Rebin(rebin_num)
-                signal_hist1D_2.Rebin(rebin_num)
-                background_hist1D_1.Rebin(rebin_num)
-                background_hist1D_2.Rebin(rebin_num)
-            
-            # take square root of background
-            if sqrtBack:
-                tools.sqrtHist1D(background_hist1D_1)
-                tools.sqrtHist1D(background_hist1D_2)
-            
-            # take ratio of hists
-            signal_hist1D_ratio       = signal_hist1D_2.Clone("signal_hist1D_ratio")
-            signal_hist1D_ratio.Divide(signal_hist1D_1)
-            
-            background_hist1D_ratio   = background_hist1D_2.Clone("background_hist1D_ratio")
-            background_hist1D_ratio.Divide(background_hist1D_1)
-            
-            hist1D_double_ratio       = signal_hist1D_ratio.Clone("hist1D_double_ratio")
-            hist1D_double_ratio.Divide(background_hist1D_ratio)
-            
-            info["label"] = label
-            
-            Plot(hist1D_double_ratio, info, plot_name)
+            # variable bin size rebin
+            if variable_rebin:
+                signal_hist1D_rebin_1       = signal_hist1D_1.Rebin(nbins,      "signal_hist1D_rebin_1",        rebin_xbins)
+                signal_hist1D_rebin_2       = signal_hist1D_2.Rebin(nbins,      "signal_hist1D_rebin_2",        rebin_xbins)
+                background_hist1D_rebin_1   = background_hist1D_1.Rebin(nbins,  "background_hist1D_rebin_1",    rebin_xbins)
+                background_hist1D_rebin_2   = background_hist1D_2.Rebin(nbins,  "background_hist1D_rebin_2",    rebin_xbins)
+                
+                # take square root of background
+                if sqrtBack:
+                    tools.sqrtHist1D(background_hist1D_rebin_1)
+                    tools.sqrtHist1D(background_hist1D_rebin_2)
+                
+                plotDoubleRatio(signal_hist1D_rebin_1, signal_hist1D_rebin_2, background_hist1D_rebin_1, background_hist1D_rebin_2, info, plot_name) 
+           
+            else:
+                # constant bin size rebin 
+                if constant_rebin:
+                    signal_hist1D_1.Rebin(rebin_num)
+                    signal_hist1D_2.Rebin(rebin_num)
+                    background_hist1D_1.Rebin(rebin_num)
+                    background_hist1D_2.Rebin(rebin_num)
+                
+                # take square root of background
+                if sqrtBack:
+                    tools.sqrtHist1D(background_hist1D_1)
+                    tools.sqrtHist1D(background_hist1D_2)
+                
+                # # take ratio of hists
+                # signal_hist1D_ratio       = signal_hist1D_2.Clone("signal_hist1D_ratio")
+                # signal_hist1D_ratio.Divide(signal_hist1D_1)
+                # 
+                # background_hist1D_ratio   = background_hist1D_2.Clone("background_hist1D_ratio")
+                # background_hist1D_ratio.Divide(background_hist1D_1)
+                # 
+                # hist1D_double_ratio       = signal_hist1D_ratio.Clone("hist1D_double_ratio")
+                # hist1D_double_ratio.Divide(background_hist1D_ratio)
+                # 
+                # Plot(hist1D_double_ratio, info, plot_name)
 
+                plotDoubleRatio(signal_hist1D_1, signal_hist1D_2, background_hist1D_1, background_hist1D_2, info, plot_name) 
+
+# plot double ratio using input histograms
+# double ratio = (s2 / s1) / (b2 / b1)
+def plotDoubleRatio(hist_s1, hist_s2, hist_b1, hist_b2, info, plot_name):
+    signal_ratio = hist_s2.Clone("signal_ratio")
+    signal_ratio.Divide(hist_s1)
+    
+    background_ratio = hist_b2.Clone("background_ratio")
+    background_ratio.Divide(hist_b1)
+    
+    double_ratio = signal_ratio.Clone("double_ratio")
+    double_ratio.Divide(background_ratio)
+
+    Plot(double_ratio, info, plot_name)
+
+# main
 def main():
     makePlots()
     makeRatioPlots()
@@ -279,5 +324,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-
 
