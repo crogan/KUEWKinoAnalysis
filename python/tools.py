@@ -58,7 +58,7 @@ def sqrtHist1D(hist):
         else:
             sqrt_bin_val    = np.sqrt(bin_val)
             new_bin_error   = abs(bin_error / (2 * sqrt_bin_val))
-            print("bin_x = {0}, bin_val = {1:.3f}, bin_error = {2:.3f}, sqrt_bin_val = {3:.3f}, new_bin_error = {4:.3f}".format(bin_x, bin_val, bin_error, sqrt_bin_val, new_bin_error))
+            #print("bin_x = {0}, bin_val = {1:.3f}, bin_error = {2:.3f}, sqrt_bin_val = {3:.3f}, new_bin_error = {4:.3f}".format(bin_x, bin_val, bin_error, sqrt_bin_val, new_bin_error))
             hist.SetBinContent(bin_x, sqrt_bin_val)
             hist.SetBinError(bin_x, new_bin_error)
     return
@@ -82,15 +82,15 @@ def sqrtHist2D(hist):
 # get 1D hist from 2D hist
 def get1DHist(hist2D):
     # project to 1D
-    hist1D = hist2D.ProjectionX()
+    hist1D      = hist2D.ProjectionX()
     # to set custom values
     nbins_x     = hist2D.GetNbinsX()
     nbins_y     = hist2D.GetNbinsY()
     # place cut on y bins; include max bin
     max_bin_y   = nbins_y
     #max_bin_y   = 3
-    # set bin contents to new values
-    # bin errors are not set to new values yet
+    # set bin contents to new values based on cut
+    # bin errors are set from projection, but not updated based on cut; should fix this!
     for bin_x in range(1, nbins_x + 1):
         y_total = 0.0
         for bin_y in range(1, max_bin_y + 1):

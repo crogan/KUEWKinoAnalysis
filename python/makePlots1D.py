@@ -209,7 +209,7 @@ def makeDoubleRatioPlots():
     rebin_xbins     = np.array([0.8000, 0.8500, 0.9000, 0.9250, 0.9500, 0.9625, 0.9750, 0.9875, 1.0000])
     nbins           = len(rebin_xbins) - 1
     variable        = "RISR"
-    sqrtBack        = True
+    sqrtBack        = False
     
     if sqrtBack:
         # Use S / sqrt(B)
