@@ -91,6 +91,7 @@ def get1DHist(hist2D):
     #max_bin_y   = 3
     # set bin contents to new values based on cut
     # bin errors are set from projection, but not updated based on cut; should fix this!
+    # you can use addition error propagation to get the correct total error
     for bin_x in range(1, nbins_x + 1):
         y_total = 0.0
         for bin_y in range(1, max_bin_y + 1):

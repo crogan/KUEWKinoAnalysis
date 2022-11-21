@@ -143,7 +143,18 @@ def makeRatioPlots():
     
     tools.makeDir(plot_dir)
     
-    variable = "RISR"
+    # parameters
+    # original 2D histograms:
+    # x: R_ISR;     [0.8, 1.0],     32 bins
+    # y: M_perp;    [0.0, 64.0],    32 bins
+    # for variable binning, the new bin edges should match the original histogram
+    constant_rebin  = False
+    variable_rebin  = True
+    rebin_num       = 8
+    #rebin_xbins     = np.array([0.80, 0.85, 0.90, 0.95, 1.00])
+    rebin_xbins     = np.array([0.8000, 0.8500, 0.9000, 0.9250, 0.9500, 0.9625, 0.9750, 0.9875, 1.0000])
+    nbins           = len(rebin_xbins) - 1
+    variable        = "RISR"
     
     info            = {}
     info["x_label"] = "R_{ISR}"
@@ -176,13 +187,30 @@ def makeRatioPlots():
                 hist2D_2        = input_file_2.Get("hist")
                 hist1D_1        = tools.get1DHist(hist2D_1)
                 hist1D_2        = tools.get1DHist(hist2D_2)
-                
-                # take ratio of hists
-                hist1D_ratio    = hist1D_2.Clone("hist1D_ratio")
-                hist1D_ratio.Divide(hist1D_1)
+            
+                # variable bin size rebin
+                if variable_rebin:
+                    hist1D_rebin_1  = hist1D_1.Rebin(nbins, "hist1D_rebin_1", rebin_xbins)
+                    hist1D_rebin_2  = hist1D_2.Rebin(nbins, "hist1D_rebin_2", rebin_xbins)
                     
+                    plotRatio(hist1D_rebin_1, hist1D_rebin_2, info, plot_name)
+                else:
+                    # constant bin size rebin 
+                    if constant_rebin:
+                        hist1D_1.Rebin(rebin_num)
+                        hist1D_2.Rebin(rebin_num)
+                    
+                    plotRatio(hist1D_1, hist1D_2, info, plot_name)
+
+
+# Plot ratio using input histograms
+# ratio = hist_2 / hist_1
+def plotRatio(hist_1, hist_2, info, plot_name):
+    # take ratio of hists
+    ratio = hist_2.Clone("ratio")
+    ratio.Divide(hist_1)
     
-                Plot(hist1D_ratio, info, plot_name)
+    Plot(ratio, info, plot_name)
 
 # Make double ratio plots
 def makeDoubleRatioPlots():
