@@ -16,6 +16,7 @@ parser.add_argument('--output', '-o', help='path of the output file')
 parser.add_argument('--cat0L',help='plot 0L NPs',action='store_true')
 parser.add_argument('--cat1L',help='plot 1L NPs',action='store_true')
 parser.add_argument('--cat2L',help='plot 2L and NPs',action='store_true')
+parser.add_argument('--cat3L',help='plot 3L NPs',action='store_true')
 args = parser.parse_args()
 
 odir = ""
@@ -31,19 +32,22 @@ if args.sys is None:
 if 'BTAG' in args.sys and not args.cat1L and not args.cat2L and not args.cat0L:
 	print 'Need lepton number for BTAG systematics: --cat0L or --cat1L or --cat2L'
 	exit()
-if args.cat1L and args.cat2L and args.cat0L:
+if args.cat1L and args.cat2L and args.cat0L and args.cat3L:
 	print 'Pick either 0L, 1L, or 2L to plot'
 	exit()
 #set lepton # for btags
 cut_0L = False
 cut_1L = False
 cut_2L = False
+cut_3L = False
 if args.cat0L:
 	cut_0L = True
 elif args.cat1L:
 	cut_1L = True
 elif args.cat2L:
 	cut_2L = True
+elif args.cat3L:
+	cut_3L = True
 
 
 if "/" not in args.datacard:
@@ -122,11 +126,14 @@ for i, s in enumerate(syst_groups):
 			if cut_0L:
 				if "0L" not in p['name']:
 					continue
-			if cut_1L:
+			elif cut_1L:
 				if "1L" not in p['name']:
 					continue
 			elif cut_2L:
 				if "2L" not in p['name']:
+					continue 
+			elif cut_3L:
+				if "3L" not in p['name']:
 					continue 
 			syst.append(p['name'])
 	systs.append(syst)
@@ -266,7 +273,7 @@ for i in range(len(names)):
 		sup = "^{"
 		#Mperp/RISR for fake shapes
 		if "Mperp" in check:
-			sup += "M_\perp"
+			sup += "M_{\perp}"
 		elif "RISR" in check:
 			sup += "R_{ISR}"
 		#btag s/isr/2b
@@ -375,6 +382,8 @@ for i in range(len(syst_group)):
 		leg_label += " 1L"
 	elif cut_2L:
 		leg_label += " 2L"
+	elif cut_3L:
+		leg_label += " 3L"
 	leg.AddEntry(gr,leg_label)
 
 if gr_m.GetListOfGraphs().GetEntries() < len(syst_group):
@@ -460,6 +469,8 @@ elif args.cat1L:
 	oname = odir+"{}1L_Impacts".format("_".join(args.sys))
 elif args.cat2L:
 	oname = odir+"{}2L_Impacts".format("_".join(args.sys))
+elif args.cat3L:
+	oname = odir+"{}3L_Impacts".format("_".join(args.sys))
 else:
 	oname = odir+"{}_Impacts".format("_".join(args.sys))
 
