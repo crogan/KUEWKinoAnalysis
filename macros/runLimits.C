@@ -445,12 +445,14 @@ void Save2DContour(TGraph* graph, string csv_name)
   ouput_file << "x,y\n";
   
   int n = graph->GetN();
-  printf("n = %d\n", n);
+  printf("number of points in contour: n = %d\n", n);
   for (int i = 0; i < n; ++i)
   {
     double x = graph->GetX()[i];
     double y = graph->GetY()[i];
-    printf("i = %d, x = %f, y = %f\n", i, x, y);
+    
+    //printf("i = %d, x = %f, y = %f\n", i, x, y);
+    
     // write row to output file
     ouput_file << x << ",";
     ouput_file << y << "\n";
@@ -487,7 +489,11 @@ void runLimits(const string& json, string plot_name, string output_name, bool in
   TGraph* gr_exp_MC_obs = limit_def->Get2DContour_MCvMP(kObs);
   
   // save contours
-  Save2DContour(gr_exp_MC, output_name + "_exp_central.csv");
+  Save2DContour(gr_exp_MC,      output_name + "_exp_central.csv");
+  Save2DContour(gr_exp_MC_up,   output_name + "_exp_up.csv");
+  Save2DContour(gr_exp_MC_dn,   output_name + "_exp_down.csv");
+  
+  if (inclObs) Save2DContour(gr_exp_MC_obs, output_name + "_obs.csv");
   
   TCanvas* can_MC = Plot2DHist_MCvMP("can_MC", hist_exp_MC, ptype);
   can_MC->cd();
@@ -538,11 +544,20 @@ void runLimits(const string& json, string plot_name, string output_name, bool in
   ///////////////
   // dM vs. MP //
   ///////////////
+  
+  // get contours
   TH2D*   hist_exp_dM   = limit_def->Get2DHist_dMvMP("h_exp_dM", kExp);
   TGraph* gr_exp_dM     = limit_def->Get2DContour_dMvMP(kExp);
   TGraph* gr_exp_dM_up  = limit_def->Get2DContour_dMvMP(kExpUp);
   TGraph* gr_exp_dM_dn  = limit_def->Get2DContour_dMvMP(kExpDn);
   TGraph* gr_exp_dM_obs = limit_def->Get2DContour_dMvMP(kObs);
+  
+  // save contours
+  Save2DContour(gr_exp_dM,      output_name + "_dM_exp_central.csv");
+  Save2DContour(gr_exp_dM_up,   output_name + "_dM_exp_up.csv");
+  Save2DContour(gr_exp_dM_dn,   output_name + "_dM_exp_down.csv");
+  
+  if (inclObs) Save2DContour(gr_exp_dM_obs, output_name + "_dM_obs.csv");
   
   TCanvas* can_dM = Plot2DHist_dMvMP("can_dM", hist_exp_dM, ptype);
   can_dM->cd();
