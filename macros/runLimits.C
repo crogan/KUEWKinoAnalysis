@@ -437,6 +437,13 @@ private:
 void Save2DContour(TGraph* graph, string csv_name)
 {
   printf("Saving contour to '%s'.\n", csv_name.c_str());
+  
+  // Create an output filestream object
+  ofstream ouput_file(csv_name);
+
+  // write header to output file
+  ouput_file << "x,y\n";
+  
   int n = graph->GetN();
   printf("n = %d\n", n);
   for (int i = 0; i < n; ++i)
@@ -444,7 +451,13 @@ void Save2DContour(TGraph* graph, string csv_name)
     double x = graph->GetX()[i];
     double y = graph->GetY()[i];
     printf("i = %d, x = %f, y = %f\n", i, x, y);
+    // write row to output file
+    ouput_file << x << ",";
+    ouput_file << y << "\n";
   }
+
+  // Close output file
+  ouput_file.close();
 }
 
 // run limits: plot limits and save contours to csv files
