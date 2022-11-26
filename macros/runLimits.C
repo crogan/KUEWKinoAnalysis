@@ -23,7 +23,6 @@
 
 #include "../include/XsecTool.hh"
 
-//gSystem->Load("/home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/lib/libKUEWKino.so");
 using namespace std;
 using namespace RestFrames;
 
@@ -106,7 +105,7 @@ public:
         if(m_MP[mass]-m_MC[mass] < m_min_dM || m_min_dM < 0)
           m_min_dM = m_MP[mass]-m_MC[mass];
       
-        cout << "MP = " << m_MP[mass] << " MC = " << m_MC[mass] << endl;
+        //cout << "MP = " << m_MP[mass] << " MC = " << m_MC[mass] << endl;
         continue;
       }
       if(line.find("exp0") != string::npos){
@@ -604,7 +603,6 @@ void Invert2DHist(TH2D* hist){
 }
 
 TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist, PlotType ptype){
-//gSystem->Load("/home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/lib/libKUEWKino.so");
   TCanvas* can = (TCanvas*) new TCanvas(name.c_str(),name.c_str(),700.,600);
 
   string xlabel = "m_{P} [GeV]";
@@ -731,7 +729,6 @@ TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist, PlotType ptype){
 }
 
 TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
-//gSystem->Load("/home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/lib/libKUEWKino.so");
   TCanvas* can = (TCanvas*) new TCanvas(name.c_str(),name.c_str(),700.,600);
 
   string xlabel = "m_{P} [GeV]";
