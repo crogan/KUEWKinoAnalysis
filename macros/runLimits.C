@@ -433,13 +433,21 @@ private:
   
 };
 
-// save contour in csv file
-void Save2DContour(TGraph* graph, string output_name)
+// save contour to csv file
+void Save2DContour(TGraph* graph, string csv_name)
 {
-  printf("Saving contour to '%s'.\n", output_name.c_str());
+  printf("Saving contour to '%s'.\n", csv_name.c_str());
+  int n = graph->GetN();
+  printf("n = %d\n", n);
+  for (int i = 0; i < n; ++i)
+  {
+    double x = graph->GetX()[i];
+    double y = graph->GetY()[i];
+    printf("i = %d, x = %f, y = %f\n", i, x, y);
+  }
 }
 
-// run limits: plot limits and save contours in csv files
+// run limits: plot limits and save contours to csv files
 void runLimits(const string& json, string plot_name, string output_name, bool inclObs = false, PlotType ptype = kT2tt){
   gROOT->SetBatch(kTRUE);
   
