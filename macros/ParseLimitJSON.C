@@ -434,7 +434,9 @@ private:
   
 };
 
-void ParseLimitJSON(const string& json, bool inclObs = false, PlotType ptype = kT2tt){
+void ParseLimitJSON(const string& json, TString name, bool inclObs = false, PlotType ptype = kT2tt){
+  gROOT->SetBatch(kTRUE);
+  
   RestFrames::SetStyle();
   
   Limit* limit_def = new Limit(json);
@@ -444,14 +446,14 @@ void ParseLimitJSON(const string& json, bool inclObs = false, PlotType ptype = k
   l.SetNDC();
   TLine* line = new TLine();
 
-  /////////////
-  // MC vs. MP
-  /////////////
-  TH2D*   hist_exp_MC = limit_def->Get2DHist_MCvMP("h_exp_MC", kExp);
-  TGraph* gr_exp_MC   = limit_def->Get2DContour_MCvMP(kExp);
-  TGraph* gr_exp_MC_up   = limit_def->Get2DContour_MCvMP(kExpUp);
-  TGraph* gr_exp_MC_dn   = limit_def->Get2DContour_MCvMP(kExpDn);
-  TGraph* gr_exp_MC_obs   = limit_def->Get2DContour_MCvMP(kObs);
+  ///////////////
+  // MC vs. MP //
+  ///////////////
+  TH2D*   hist_exp_MC   = limit_def->Get2DHist_MCvMP("h_exp_MC", kExp);
+  TGraph* gr_exp_MC     = limit_def->Get2DContour_MCvMP(kExp);
+  TGraph* gr_exp_MC_up  = limit_def->Get2DContour_MCvMP(kExpUp);
+  TGraph* gr_exp_MC_dn  = limit_def->Get2DContour_MCvMP(kExpDn);
+  TGraph* gr_exp_MC_obs = limit_def->Get2DContour_MCvMP(kObs);
   
   TCanvas* can_MC = Plot2DHist_MCvMP("can_MC", hist_exp_MC, ptype);
   can_MC->cd();
@@ -496,14 +498,16 @@ void ParseLimitJSON(const string& json, bool inclObs = false, PlotType ptype = k
   line->SetLineStyle(1);
   line->DrawLineNDC(0.18, 0.78, 0.22, 0.78);
 
-  /////////////
-  // dM vs. MP
-  /////////////
-  TH2D*   hist_exp_dM = limit_def->Get2DHist_dMvMP("h_exp_dM", kExp);
-  TGraph* gr_exp_dM   = limit_def->Get2DContour_dMvMP(kExp);
-  TGraph* gr_exp_dM_up   = limit_def->Get2DContour_dMvMP(kExpUp);
-  TGraph* gr_exp_dM_dn   = limit_def->Get2DContour_dMvMP(kExpDn);
-  TGraph* gr_exp_dM_obs   = limit_def->Get2DContour_dMvMP(kObs);
+  can_MC->SaveAs(name + ".pdf");
+
+  ///////////////
+  // dM vs. MP //
+  ///////////////
+  TH2D*   hist_exp_dM   = limit_def->Get2DHist_dMvMP("h_exp_dM", kExp);
+  TGraph* gr_exp_dM     = limit_def->Get2DContour_dMvMP(kExp);
+  TGraph* gr_exp_dM_up  = limit_def->Get2DContour_dMvMP(kExpUp);
+  TGraph* gr_exp_dM_dn  = limit_def->Get2DContour_dMvMP(kExpDn);
+  TGraph* gr_exp_dM_obs = limit_def->Get2DContour_dMvMP(kObs);
   
   TCanvas* can_dM = Plot2DHist_dMvMP("can_dM", hist_exp_dM, ptype);
   can_dM->cd();
@@ -547,6 +551,8 @@ void ParseLimitJSON(const string& json, bool inclObs = false, PlotType ptype = k
   line->SetLineWidth(2);
   line->SetLineStyle(1);
   line->DrawLineNDC(0.18, 0.78, 0.22, 0.78);
+  
+  can_dM->SaveAs(name + "_dM.pdf");
 }
 
 double popdouble(std::string& line){
