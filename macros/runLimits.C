@@ -28,11 +28,11 @@ using namespace RestFrames;
 
 XsecTool g_Xsec;
 
-double popdouble(std::string& line);
-std::string popstring(std::string& line);
+double popdouble(string& line);
+string popstring(string& line);
 
-enum LimitType { kObs, kExp, kExpUp, kExpDn };
-enum PlotType { kTChiWZ, kT2tt, kT2bW, kT2bb, kTSlSl};
+enum LimitType {kObs, kExp, kExpUp, kExpDn};
+enum PlotType {kTChiWZ, kT2tt, kT2bW, kT2bb, kTSlSl};
 
 TCanvas* Plot2DHist_MCvMP(const string& can, TH2D* hist, PlotType ptype);
 TCanvas* Plot2DHist_dMvMP(const string& can, TH2D* hist, PlotType ptype);
@@ -433,10 +433,19 @@ private:
   
 };
 
-void runLimits(const string& json, TString name, bool inclObs = false, PlotType ptype = kT2tt){
+// save contour in csv file
+void Save2DContour(TGraph* graph, string output_name)
+{
+  printf("Saving contour to '%s'.\n", output_name.c_str());
+}
+
+// run limits: plot limits and save contours in csv files
+void runLimits(const string& json, string plot_name, string output_name, bool inclObs = false, PlotType ptype = kT2tt){
   gROOT->SetBatch(kTRUE);
   
   RestFrames::SetStyle();
+
+  string full_plot_name = "";
   
   Limit* limit_def = new Limit(json);
   if(limit_def == NULL) return;
@@ -448,11 +457,16 @@ void runLimits(const string& json, TString name, bool inclObs = false, PlotType 
   ///////////////
   // MC vs. MP //
   ///////////////
+  
+  // get contours
   TH2D*   hist_exp_MC   = limit_def->Get2DHist_MCvMP("h_exp_MC", kExp);
   TGraph* gr_exp_MC     = limit_def->Get2DContour_MCvMP(kExp);
   TGraph* gr_exp_MC_up  = limit_def->Get2DContour_MCvMP(kExpUp);
   TGraph* gr_exp_MC_dn  = limit_def->Get2DContour_MCvMP(kExpDn);
   TGraph* gr_exp_MC_obs = limit_def->Get2DContour_MCvMP(kObs);
+  
+  // save contours
+  Save2DContour(gr_exp_MC, output_name + "_exp_central.csv");
   
   TCanvas* can_MC = Plot2DHist_MCvMP("can_MC", hist_exp_MC, ptype);
   can_MC->cd();
@@ -497,7 +511,8 @@ void runLimits(const string& json, TString name, bool inclObs = false, PlotType 
   line->SetLineStyle(1);
   line->DrawLineNDC(0.18, 0.78, 0.22, 0.78);
 
-  can_MC->SaveAs(name + ".pdf");
+  full_plot_name = plot_name + ".pdf"; 
+  can_MC->SaveAs(full_plot_name.c_str());
 
   ///////////////
   // dM vs. MP //
@@ -551,10 +566,11 @@ void runLimits(const string& json, TString name, bool inclObs = false, PlotType 
   line->SetLineStyle(1);
   line->DrawLineNDC(0.18, 0.78, 0.22, 0.78);
   
-  can_dM->SaveAs(name + "_dM.pdf");
+  full_plot_name = plot_name + "_dM.pdf"; 
+  can_dM->SaveAs(full_plot_name.c_str());
 }
 
-double popdouble(std::string& line){
+double popdouble(string& line){
   // remove leading whitespace
   while(line[0] == string(" ")[0])
     line.erase(0,1);
@@ -572,7 +588,7 @@ double popdouble(std::string& line){
   return stod(num);
 }
 
-std::string popstring(std::string& line){
+string popstring(string& line){
   // remove leading whitespace
   while(line[0] == string(" ")[0])
     line.erase(0,1);
