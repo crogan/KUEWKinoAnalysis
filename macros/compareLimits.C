@@ -75,64 +75,64 @@ public:
     getline(ifile,line);
     while(getline(ifile,line)){
       if(line.find("}") != string::npos)
-	continue;
+        continue;
       while(line.find("\"") != string::npos){
-	found = line.find("\"");
-	line.replace(found,1," ");
+        found = line.find("\"");
+        line.replace(found,1," ");
       }
       while(line.find(":") != string::npos){
-	found = line.find(":");
-	line.replace(found,1," ");
+        found = line.find(":");
+        line.replace(found,1," ");
       }
       while(line.find(",") != string::npos){
-	found = line.find(",");
-	line.replace(found,1," ");
+        found = line.find(",");
+        line.replace(found,1," ");
       }
       
       if(line.find("{") != string::npos){
-	mass = int(popdouble(line));
-	m_MP[mass] = mass/10000;
-	m_MC[mass] = mass%10000;
-	
-	if(m_MP[mass] > m_max_MP || m_max_MP < 0)
-	  m_max_MP = m_MP[mass];
-	if(m_MP[mass] < m_min_MP || m_min_MP < 0)
-	  min_MP = MP[mass];
-	if(m_MC[mass] > m_max_MC || m_max_MC < 0)
-	  m_max_MC = m_MC[mass];
-	if(m_MC[mass] < m_min_MC || m_min_MC < 0)
-	  m_min_MC = m_MC[mass];
-	if(m_MP[mass]-m_MC[mass] > m_max_dM || m_max_dM < 0)
-	  m_max_dM = m_MP[mass]-m_MC[mass];
-	if(m_MP[mass]-m_MC[mass] < m_min_dM || m_min_dM < 0)
-	  m_min_dM = m_MP[mass]-m_MC[mass];
+        mass = int(popdouble(line));
+        m_MP[mass] = mass/10000;
+        m_MC[mass] = mass%10000;
+        
+        if(m_MP[mass] > m_max_MP || m_max_MP < 0)
+          m_max_MP = m_MP[mass];
+        if(m_MP[mass] < m_min_MP || m_min_MP < 0)
+          min_MP = MP[mass];
+        if(m_MC[mass] > m_max_MC || m_max_MC < 0)
+          m_max_MC = m_MC[mass];
+        if(m_MC[mass] < m_min_MC || m_min_MC < 0)
+          m_min_MC = m_MC[mass];
+        if(m_MP[mass]-m_MC[mass] > m_max_dM || m_max_dM < 0)
+          m_max_dM = m_MP[mass]-m_MC[mass];
+        if(m_MP[mass]-m_MC[mass] < m_min_dM || m_min_dM < 0)
+          m_min_dM = m_MP[mass]-m_MC[mass];
       
-	cout << "MP = " << m_MP[mass] << " MC = " << m_MC[mass] << endl;
-	continue;
+        cout << "MP = " << m_MP[mass] << " MC = " << m_MC[mass] << endl;
+        continue;
       }
       if(line.find("exp0") != string::npos){
-	popstring(line);
-	double r = popdouble(line);
-	m_R_exp0.push_back(pair<int,double>(mass, r));
-	m_iR_exp0.push_back(pair<int,double>(mass, 1./r));
+        popstring(line);
+        double r = popdouble(line);
+        m_R_exp0.push_back(pair<int,double>(mass, r));
+        m_iR_exp0.push_back(pair<int,double>(mass, 1./r));
       }
       if(line.find("exp+1") != string::npos){
-	popstring(line);
-	double r = popdouble(line);
-	m_R_exp_p1.push_back(pair<int,double>(mass, r));
-	m_iR_exp_p1.push_back(pair<int,double>(mass, 1./r));
+        popstring(line);
+        double r = popdouble(line);
+        m_R_exp_p1.push_back(pair<int,double>(mass, r));
+        m_iR_exp_p1.push_back(pair<int,double>(mass, 1./r));
       }
       if(line.find("exp-1") != string::npos){
-	popstring(line);
-	double r = popdouble(line);
-	m_R_exp_m1.push_back(pair<int,double>(mass, r));
-	m_iR_exp_m1.push_back(pair<int,double>(mass, 1./r));
+        popstring(line);
+        double r = popdouble(line);
+        m_R_exp_m1.push_back(pair<int,double>(mass, r));
+        m_iR_exp_m1.push_back(pair<int,double>(mass, 1./r));
       }
       if(line.find("obs") != string::npos){
-	popstring(line);
-	double r = popdouble(line);
-	m_R_obs.push_back(pair<int,double>(mass, r));
-	m_iR_obs.push_back(pair<int,double>(mass, 1./r));
+        popstring(line);
+        double r = popdouble(line);
+        m_R_obs.push_back(pair<int,double>(mass, r));
+        m_iR_obs.push_back(pair<int,double>(mass, 1./r));
       }
     } 
   }
@@ -152,41 +152,41 @@ public:
       bool b_zero = false;
       bool b_on = false;
       for(int x = 0; x < Nx; x++){
-	if(hist->GetBinContent(x+1,y+1) <= 0.){
-	  b_zero = true;
-	  b_on = false;
-	}
-	if(hist->GetBinContent(x+1,y+1) > 0. && b_zero){
-	  if(hist->GetBinContent(x+1,y+1) <= 1.){
-	    X.push_back(hist->GetXaxis()->GetBinCenter(x+1));
-	    Y.push_back(hist->GetYaxis()->GetBinCenter(y+1));
-	    break;
-	  } else {
-	    b_zero = false;
-	    b_on = true;
-	  }
-	}
-	if(hist->GetBinContent(x+1,y+1) <= 1. && b_on){
-	  X.push_back(hist->GetXaxis()->GetBinCenter(x+1));
-	  Y.push_back(hist->GetYaxis()->GetBinCenter(y+1));
-	  break;
-	}
+        if(hist->GetBinContent(x+1,y+1) <= 0.){
+          b_zero = true;
+          b_on = false;
+        }
+        if(hist->GetBinContent(x+1,y+1) > 0. && b_zero){
+          if(hist->GetBinContent(x+1,y+1) <= 1.){
+            X.push_back(hist->GetXaxis()->GetBinCenter(x+1));
+            Y.push_back(hist->GetYaxis()->GetBinCenter(y+1));
+            break;
+          } else {
+            b_zero = false;
+            b_on = true;
+          }
+        }
+        if(hist->GetBinContent(x+1,y+1) <= 1. && b_on){
+          X.push_back(hist->GetXaxis()->GetBinCenter(x+1));
+          Y.push_back(hist->GetYaxis()->GetBinCenter(y+1));
+          break;
+        }
       }
     }
     for(int y = Ny-1; y >= 0; y--){
       bool b_on = false;
       for(int x = Nx-1; x >= 0; x--){
-	if(hist->GetBinContent(x+1,y+1) > 1.)
-	  b_on = true;
-	if(hist->GetBinContent(x+1,y+1) <= 1. &&
-	   hist->GetBinContent(x+1,y+1) > 0. && b_on){
-	  X.push_back(hist->GetXaxis()->GetBinCenter(x+1));
-	  Y.push_back(hist->GetYaxis()->GetBinCenter(y+1));
-	  break;
-	}
+        if(hist->GetBinContent(x+1,y+1) > 1.)
+          b_on = true;
+        if(hist->GetBinContent(x+1,y+1) <= 1. &&
+           hist->GetBinContent(x+1,y+1) > 0. && b_on){
+          X.push_back(hist->GetXaxis()->GetBinCenter(x+1));
+          Y.push_back(hist->GetYaxis()->GetBinCenter(y+1));
+          break;
+        }
       }
     }
-	
+        
     delete hist;
     TGraph* gr = new TGraph(X.size(), &X[0], &Y[0]);
     return gr;
@@ -205,48 +205,48 @@ public:
       bool b_zero = false;
       bool b_on = false;
       for(int x = 0; x < Nx; x++){
-	if(hist->GetBinContent(x+1,y+1) <= 0.){
-	  b_zero = true;
-	  b_on = false;
-	}
-	if(hist->GetBinContent(x+1,y+1) > 0. && b_zero){
-	  if(hist->GetBinContent(x+1,y+1) <= 1.){
-	    X.push_back(hist->GetXaxis()->GetBinCenter(x+1));
-	    Y.push_back(hist->GetYaxis()->GetBinCenter(y+1));
-	    break;
-	  } else {
-	    b_zero = false;
-	    b_on = true;
-	  }
-	}
-	if(hist->GetBinContent(x+1,y+1) <= 1. && b_on){
-	  X.push_back(hist->GetXaxis()->GetBinCenter(x+1));
-	  Y.push_back(hist->GetYaxis()->GetBinCenter(y+1));
-	  break;
-	}
+        if(hist->GetBinContent(x+1,y+1) <= 0.){
+          b_zero = true;
+          b_on = false;
+        }
+        if(hist->GetBinContent(x+1,y+1) > 0. && b_zero){
+          if(hist->GetBinContent(x+1,y+1) <= 1.){
+            X.push_back(hist->GetXaxis()->GetBinCenter(x+1));
+            Y.push_back(hist->GetYaxis()->GetBinCenter(y+1));
+            break;
+          } else {
+            b_zero = false;
+            b_on = true;
+          }
+        }
+        if(hist->GetBinContent(x+1,y+1) <= 1. && b_on){
+          X.push_back(hist->GetXaxis()->GetBinCenter(x+1));
+          Y.push_back(hist->GetYaxis()->GetBinCenter(y+1));
+          break;
+        }
       }
     }
     for(int y = Ny-1; y >= 0; y--){
       bool b_on = false;
       for(int x = Nx-1; x >= 0; x--){
-	if(hist->GetBinContent(x+1,y+1) > 1.)
-	  b_on = true;
-	if(hist->GetBinContent(x+1,y+1) <= 1. &&
-	   hist->GetBinContent(x+1,y+1) > 0. && b_on){
-	  X.push_back(hist->GetXaxis()->GetBinCenter(x+1));
-	  Y.push_back(hist->GetYaxis()->GetBinCenter(y+1));
-	  break;
-	}
+        if(hist->GetBinContent(x+1,y+1) > 1.)
+          b_on = true;
+        if(hist->GetBinContent(x+1,y+1) <= 1. &&
+           hist->GetBinContent(x+1,y+1) > 0. && b_on){
+          X.push_back(hist->GetXaxis()->GetBinCenter(x+1));
+          Y.push_back(hist->GetYaxis()->GetBinCenter(y+1));
+          break;
+        }
       }
     }
-	
+        
     delete hist;
     TGraph* gr = new TGraph(X.size(), &X[0], &Y[0]);
     return gr;
   }
   
   TH2D* Get2DHist_MCvMP(const string& name, LimitType type = kExp){
-	bool b_inv = true;
+        bool b_inv = true;
     
     vector<pair<int,double> > vec;
 
@@ -263,10 +263,10 @@ public:
     TGraph2D* gr = new TGraph2D();
     for(int i = 0; i < N; i++){
       if(b_inv && vec[i].second > 0)
-	gr->SetPoint(i, m_MP[vec[i].first], m_MC[vec[i].first], 1./vec[i].second);
+        gr->SetPoint(i, m_MP[vec[i].first], m_MC[vec[i].first], 1./vec[i].second);
       else
-	gr->SetPoint(i, m_MP[vec[i].first], m_MC[vec[i].first], vec[i].second);
-	}
+        gr->SetPoint(i, m_MP[vec[i].first], m_MC[vec[i].first], vec[i].second);
+        }
     int Nx = m_max_MP+1 - m_min_MP;
     int Ny = m_max_MP+1 - m_min_MC;
     double xmin = m_min_MP+1;
@@ -274,17 +274,17 @@ public:
     double ymin = m_min_MC+1;
     double ymax = m_max_MC+1;
     TH2D* hist = new TH2D(name.c_str(),name.c_str(),
-			  Nx, xmin, xmax,
-			  Ny, ymin, ymax);
+                          Nx, xmin, xmax,
+                          Ny, ymin, ymax);
   
     for(int x = 0; x < Nx; x++){
       double mp = hist->GetXaxis()->GetBinCenter(x+1);
       for(int y = 0; y < Ny; y++){
-	double mc = hist->GetYaxis()->GetBinCenter(y+1);
-	bool doBreak = mp-mc < m_min_dM;
-	if(mp-mc < m_min_dM)
-	  break;
-	hist->SetBinContent(x+1,y+1,gr->Interpolate(mp,mc));
+        double mc = hist->GetYaxis()->GetBinCenter(y+1);
+        bool doBreak = mp-mc < m_min_dM;
+        if(mp-mc < m_min_dM)
+          break;
+        hist->SetBinContent(x+1,y+1,gr->Interpolate(mp,mc));
       }
     }
   
@@ -292,33 +292,33 @@ public:
     for(int x = 0; x < Nx; x++){
       bool filled = false;
       for(int y = Ny-1; y >= 0; y--){
-	if(hist->GetBinContent(x+1,y+1) > 0)
-	  filled = true;
+        if(hist->GetBinContent(x+1,y+1) > 0)
+          filled = true;
       
-	if(hist->GetBinContent(x+1,y+1) <= 0 && filled){
-	  for(int xx = x+1; xx < Nx; xx++){
-	    if(hist->GetBinContent(xx+1,y+1) > 0){
-	      hist->SetBinContent(x+1,y+1, hist->GetBinContent(xx+1,y+1));
-	      break;
-	    }
-	  }
-	}
+        if(hist->GetBinContent(x+1,y+1) <= 0 && filled){
+          for(int xx = x+1; xx < Nx; xx++){
+            if(hist->GetBinContent(xx+1,y+1) > 0){
+              hist->SetBinContent(x+1,y+1, hist->GetBinContent(xx+1,y+1));
+              break;
+            }
+          }
+        }
       }
     }
     for(int y = 0; y < Ny; y++){
       bool filled = false;
       for(int x = 0; x < Nx; x++){
-	if(hist->GetBinContent(x+1,y+1) > 0)
-	  filled = true;
+        if(hist->GetBinContent(x+1,y+1) > 0)
+          filled = true;
       
-	if(hist->GetBinContent(x+1,y+1) <= 0 && filled){
-	  for(int yy = y+1; yy < Ny; yy++){
-	    if(hist->GetBinContent(x+1,yy+1) > 0){
-	      hist->SetBinContent(x+1,y+1, hist->GetBinContent(x+1,yy+1));
-	      break;
-	    }
-	  }
-	}
+        if(hist->GetBinContent(x+1,y+1) <= 0 && filled){
+          for(int yy = y+1; yy < Ny; yy++){
+            if(hist->GetBinContent(x+1,yy+1) > 0){
+              hist->SetBinContent(x+1,y+1, hist->GetBinContent(x+1,yy+1));
+              break;
+            }
+          }
+        }
       }
     }
 
@@ -348,9 +348,9 @@ public:
     
     for(int i = 0; i < N; i++){
       if(b_inv && vec[i].second > 0)
-	gr->SetPoint(i, m_MP[vec[i].first], m_MP[vec[i].first]-m_MC[vec[i].first], 1./vec[i].second);
+        gr->SetPoint(i, m_MP[vec[i].first], m_MP[vec[i].first]-m_MC[vec[i].first], 1./vec[i].second);
       else
-	gr->SetPoint(i, m_MP[vec[i].first], m_MP[vec[i].first]-m_MC[vec[i].first], vec[i].second);
+        gr->SetPoint(i, m_MP[vec[i].first], m_MP[vec[i].first]-m_MC[vec[i].first], vec[i].second);
     }
 
     int Nx = m_max_MP+1 - m_min_MP;
@@ -361,14 +361,14 @@ public:
     double ymax = m_max_dM+1;
     
     TH2D* hist = new TH2D(name.c_str(),name.c_str(),
-			  Nx, xmin, xmax,
-			  Ny, ymin, ymax);
+                          Nx, xmin, xmax,
+                          Ny, ymin, ymax);
 
     for(int x = 0; x < Nx; x++){
       double mp = hist->GetXaxis()->GetBinCenter(x+1);
       for(int y = 0; y < Ny; y++){
-	double dm = hist->GetYaxis()->GetBinCenter(y+1);
-	hist->SetBinContent(x+1,y+1,gr->Interpolate(mp,dm));
+        double dm = hist->GetYaxis()->GetBinCenter(y+1);
+        hist->SetBinContent(x+1,y+1,gr->Interpolate(mp,dm));
       }
     }
   
@@ -376,33 +376,33 @@ public:
     for(int x = 0; x < Nx; x++){
       bool filled = false;
       for(int y = Ny-1; y >= 0; y--){
-	if(hist->GetBinContent(x+1,y+1) > 0)
-	  filled = true;
+        if(hist->GetBinContent(x+1,y+1) > 0)
+          filled = true;
       
-	if(hist->GetBinContent(x+1,y+1) <= 0 && filled){
-	  for(int xx = x+1; xx < Nx; xx++){
-	    if(hist->GetBinContent(xx+1,y+1) > 0){
-	      hist->SetBinContent(x+1,y+1, hist->GetBinContent(xx+1,y+1));
-	      break;
-	    }
-	  }
-	}
+        if(hist->GetBinContent(x+1,y+1) <= 0 && filled){
+          for(int xx = x+1; xx < Nx; xx++){
+            if(hist->GetBinContent(xx+1,y+1) > 0){
+              hist->SetBinContent(x+1,y+1, hist->GetBinContent(xx+1,y+1));
+              break;
+            }
+          }
+        }
       }
     }
     for(int y = 0; y < Ny; y++){
       bool filled = false;
       for(int x = 0; x < Nx; x++){
-	if(hist->GetBinContent(x+1,y+1) > 0)
-	  filled = true;
+        if(hist->GetBinContent(x+1,y+1) > 0)
+          filled = true;
       
-	if(hist->GetBinContent(x+1,y+1) <= 0 && filled){
-	  for(int yy = y+1; yy < Ny; yy++){
-	    if(hist->GetBinContent(x+1,yy+1) > 0){
-	      hist->SetBinContent(x+1,y+1, hist->GetBinContent(x+1,yy+1));
-	      break;
-	    }
-	  }
-	}
+        if(hist->GetBinContent(x+1,y+1) <= 0 && filled){
+          for(int yy = y+1; yy < Ny; yy++){
+            if(hist->GetBinContent(x+1,yy+1) > 0){
+              hist->SetBinContent(x+1,y+1, hist->GetBinContent(x+1,yy+1));
+              break;
+            }
+          }
+        }
       }
     }
 
@@ -541,8 +541,7 @@ void compareLimits(const string& json1, const string& json2, TString name, PlotT
   line->DrawLineNDC(0.18, 0.792, 0.22, 0.792);
   line->DrawLineNDC(0.18, 0.768, 0.22, 0.768);
 
-  can_dM->SaveAs(name+"_dM.pdf");
- 
+  can_dM->SaveAs(name + "_dM.pdf");
 }
 
 double popdouble(std::string& line){
@@ -588,7 +587,7 @@ void Invert2DHist(TH2D* hist){
   for(int x = 0; x < Nx; x++){
     for(int y = 0; y < Ny; y++){
       if(hist->GetBinContent(x+1,y+1) > 0.)
-	hist->SetBinContent(x+1,y+1, 1./hist->GetBinContent(x+1,y+1));
+        hist->SetBinContent(x+1,y+1, 1./hist->GetBinContent(x+1,y+1));
     }
   }
 }
@@ -653,7 +652,7 @@ TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist, PlotType ptype){
  
     for(int y = 0; y < Ny; y++){
       if(hist->GetBinContent(x+1,y+1) > 0.){
-	hist->SetBinContent(x+1,y+1, hist->GetBinContent(x+1,y+1)*xsec);
+        hist->SetBinContent(x+1,y+1, hist->GetBinContent(x+1,y+1)*xsec);
       }
     }
   }
@@ -795,7 +794,7 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
     
     for(int y = 0; y < Ny; y++){
       if(hist->GetBinContent(x+1,y+1) > 0.){
-	hist->SetBinContent(x+1,y+1, hist->GetBinContent(x+1,y+1)*xsec);
+        hist->SetBinContent(x+1,y+1, hist->GetBinContent(x+1,y+1)*xsec);
       }
     }
   }
@@ -997,7 +996,7 @@ TCanvas* combinedCanvas(const string& name, TH2D* hist, PlotType ptype){
 //   for(int x = 0; x < Nx; x++){
 //     for(int y = 0; y < Ny; y++){
 //       if(h->GetBinContent(x+1,y+1) <= 0.)
-// 	h->SetBinContent(x+1,y+1,1000.);
+//      h->SetBinContent(x+1,y+1,1000.);
 //     }
 //   }
 
