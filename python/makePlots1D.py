@@ -40,7 +40,7 @@ def Plot(hist, info, plot_name):
     can.cd()
     
     # setup hist 
-    color       = "coral"
+    color       = "pastel red"
     line_width  = 3
     x_limits    = [x_min, x_max]
     tools.setupHist(hist, title, x_label, y_label, color, line_width, x_limits)
@@ -304,7 +304,7 @@ def makeDoubleRatioPlots():
     hist_dir_1  = "UL2017_NanoAODv9_Hists_weight_PreUL"
     hist_dir_2  = "LowPtElectron_UL2017_NanoAODv9_Hists_weight_PreUL"
 
-    colors = ["light red", "dark sky blue"]
+    colors = ["pastel red", "dark sky blue"]
     
     tools.makeDir(plot_dir)
     
