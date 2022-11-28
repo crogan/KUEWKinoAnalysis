@@ -26,11 +26,12 @@ def Plot(hist, info, plot_name):
     x_max   = info["x_max"]
     title   = "{0}_{1}".format(sample, label) 
     title   = title.replace('_', ' ')
+    
     print("Plotting {0}".format(title))
     
     # setup canvas
     can = ROOT.TCanvas("can", "can", 600, 600)
-    can.SetLeftMargin(0.25)
+    can.SetLeftMargin(0.15)
     can.SetRightMargin(0.05)
     can.SetBottomMargin(0.15)
     can.SetGridx()
@@ -41,7 +42,8 @@ def Plot(hist, info, plot_name):
     # setup hist 
     color       = "coral"
     line_width  = 3
-    tools.setupHist(hist, title, x_label, y_label, x_min, x_max, color, line_width)
+    x_limits    = [x_min, x_max]
+    tools.setupHist(hist, title, x_label, y_label, color, line_width, x_limits)
     
     # draw hist
     hist.Draw("hist error")
@@ -59,12 +61,13 @@ def Plot(hist, info, plot_name):
     hist.GetYaxis().CenterTitle()
     hist.GetYaxis().SetTitleFont(42)
     hist.GetYaxis().SetTitleSize(0.06)
-    hist.GetYaxis().SetTitleOffset(2.00)
+    hist.GetYaxis().SetTitleOffset(1.06)
     hist.GetYaxis().SetLabelFont(42)
     hist.GetYaxis().SetLabelSize(0.05)
     hist.GetYaxis().SetNdivisions(5, 5, 0, True)
     
     # save plot
+    can.Update()
     can.SaveAs(plot_name)
     can.Clear()
     can.Close()
@@ -76,16 +79,32 @@ def PlotMultiple(hist_info, plot_info, plot_name):
     y_label = plot_info["y_label"]
     x_min   = plot_info["x_min"]
     x_max   = plot_info["x_max"]
+    y_min   = plot_info["y_min"]
+    y_max   = plot_info["y_max"]
+    
+    print("Plotting {0}".format(title))
 
     # setup canvas
     can = ROOT.TCanvas("can", "can", 600, 600)
-    can.SetLeftMargin(0.25)
+    can.SetLeftMargin(0.15)
     can.SetRightMargin(0.05)
     can.SetBottomMargin(0.15)
     can.SetGridx()
     can.SetGridy()
     can.Draw()
     can.cd()
+    
+    # legend: TLegend(x1,y1,x2,y2)
+    legend_x1 = 0.75
+    legend_x2 = 0.95
+    legend_y1 = 0.79
+    legend_y2 = 0.89
+    legend = ROOT.TLegend(legend_x1, legend_y1, legend_x2, legend_y2)
+    legend.SetFillStyle(0)
+    legend.SetBorderSize(0)
+    legend.SetLineWidth(1)
+    legend.SetNColumns(1)
+    legend.SetTextFont(42)
 
     for key in hist_info:
         hist    = hist_info[key]["hist"]
@@ -94,9 +113,12 @@ def PlotMultiple(hist_info, plot_info, plot_name):
 
         # setup hist 
         line_width  = 3
-        tools.setupHist(hist, title, x_label, y_label, x_min, x_max, color, line_width)
+        x_limits    = [x_min, x_max]
+        y_limits    = [y_min, y_max]
+        tools.setupHist(hist, title, x_label, y_label, color, line_width, x_limits, y_limits)
         
         # legend
+        legend.AddEntry(hist, label, "l")
 
         # draw hist
         hist.Draw("same hist error")
@@ -114,14 +136,15 @@ def PlotMultiple(hist_info, plot_info, plot_name):
         hist.GetYaxis().CenterTitle()
         hist.GetYaxis().SetTitleFont(42)
         hist.GetYaxis().SetTitleSize(0.06)
-        hist.GetYaxis().SetTitleOffset(2.00)
+        hist.GetYaxis().SetTitleOffset(1.06)
         hist.GetYaxis().SetLabelFont(42)
         hist.GetYaxis().SetLabelSize(0.05)
         hist.GetYaxis().SetNdivisions(5, 5, 0, True)
         
-    # legend
-    
+    legend.Draw()
+
     # save plot
+    can.Update()
     can.SaveAs(plot_name)
     can.Clear()
     can.Close()
@@ -280,6 +303,8 @@ def makeDoubleRatioPlots():
     plot_dir    = "UL2017_NanoAODv9_DoubleRatioPlots1D_weight_PreUL"
     hist_dir_1  = "UL2017_NanoAODv9_Hists_weight_PreUL"
     hist_dir_2  = "LowPtElectron_UL2017_NanoAODv9_Hists_weight_PreUL"
+
+    colors = ["light red", "dark sky blue"]
     
     tools.makeDir(plot_dir)
     
@@ -300,22 +325,28 @@ def makeDoubleRatioPlots():
     if sqrtBack:
         # Use S / sqrt(B)
         sample_name = "SigOverSqrtBack"
-        y_label     = "(S/#sqrt{B})_{with low p_{T} e^{\pm}} / (S/#sqrt{B})_{without low p_{T} e^{\pm}}"
+        #y_label     = "(S/#sqrt{B})_{with low p_{T} e^{\pm}} / (S/#sqrt{B})_{without low p_{T} e^{\pm}}"
+        y_label     = "(S/#sqrt{B})_{new} / (S/#sqrt{B})_{old}"
     else:
         # Use S / B
         sample_name = "SigOverBack"
-        y_label     = "(S/B)_{with low p_{T} e^{\pm}} / (S/B)_{without low p_{T} e^{\pm}}"
+        #y_label     = "(S/B)_{with low p_{T} e^{\pm}} / (S/B)_{without low p_{T} e^{\pm}}"
+        y_label     = "(S/B)_{new} / (S/B)_{old}"
     
     info            = {}
-    info["title"]   = sample_name
+    info["title"]   = ""
     info["x_label"] = "R_{ISR}"
     info["y_label"] = y_label
     info["sample"]  = sample_name
     info["x_min"]   = 0.85
     info["x_max"]   = 1.00
+    info["y_min"]   = 0.00
+    info["y_max"]   = 3.00
 
     hist_info = {}
     
+    i = 0
+
     for selection in selections:
         for lepton_id in lepton_ids:
             if lepton_id == "all":
@@ -335,7 +366,7 @@ def makeDoubleRatioPlots():
         
             hist_info[label] = {}
             hist_info[label]["label"] = label
-            hist_info[label]["color"] = "red"
+            hist_info[label]["color"] = colors[i]
             
             # set info
             info["label"] = label
@@ -383,6 +414,9 @@ def makeDoubleRatioPlots():
 
                 plotDoubleRatio(signal_hist1D_1, signal_hist1D_2, background_hist1D_1, background_hist1D_2, hist_info, info, plot_name)
 
+            # increment
+            i += 1
+    
     plot_multi_name = plot_dir + "/" + sample_name + "_combined.pdf"
     PlotMultiple(hist_info, info, plot_multi_name)
 

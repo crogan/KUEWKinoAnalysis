@@ -18,18 +18,21 @@ def loadJson(input_json):
         return data
 
 # setup histogram
-def setupHist(hist, title, x_title, y_title, x_min, x_max, color, line_width):
+def setupHist(hist, title, x_title, y_title, color, line_width, x_limits=[], y_limits=[]):
     hist.SetStats(ROOT.kFALSE)
-
+    hist.SetTitle(title)
+    hist.SetLineColor(colors.getColorIndex(color))
+    hist.SetLineWidth(line_width)
+    
     x_axis = hist.GetXaxis()
     y_axis = hist.GetYaxis()
     
-    hist.SetTitle(title)
     x_axis.SetTitle(x_title)
     y_axis.SetTitle(y_title)
-    x_axis.SetRangeUser(x_min, x_max)
-    hist.SetLineColor(colors.getColorIndex(color))
-    hist.SetLineWidth(line_width)
+    if x_limits:
+        x_axis.SetRangeUser(x_limits[0], x_limits[1])
+    if y_limits:
+        y_axis.SetRangeUser(y_limits[0], y_limits[1])
 
 # get luminosity for era from json file
 def getLumi(era, lumi_json):
