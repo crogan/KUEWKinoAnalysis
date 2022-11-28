@@ -16,7 +16,7 @@ ROOT.TH1.AddDirectory(False)
 ROOT.gStyle.SetOptStat(0)
 ROOT.gStyle.SetOptFit(11111111)
 
-# Make plot
+# Plot one histogram
 def Plot(hist, info, plot_name):
     sample  = info["sample"]
     label   = info["label"]
@@ -38,13 +38,14 @@ def Plot(hist, info, plot_name):
     can.Draw()
     can.cd()
     
-    # draw hist
-    hist.Draw("hist error")
-    
     # setup hist 
     color       = "coral"
     line_width  = 3
     tools.setupHist(hist, title, x_label, y_label, x_min, x_max, color, line_width)
+    
+    # draw hist
+    hist.Draw("hist error")
+    
     hist.SetMarkerSize(0)
 
     hist.GetXaxis().CenterTitle()
@@ -62,6 +63,63 @@ def Plot(hist, info, plot_name):
     hist.GetYaxis().SetLabelFont(42)
     hist.GetYaxis().SetLabelSize(0.05)
     hist.GetYaxis().SetNdivisions(5, 5, 0, True)
+    
+    # save plot
+    can.SaveAs(plot_name)
+    can.Clear()
+    can.Close()
+
+# Plot multiple histograms
+def PlotMultiple(hist_info, plot_info, plot_name):
+    title   = plot_info["title"]
+    x_label = plot_info["x_label"]
+    y_label = plot_info["y_label"]
+    x_min   = plot_info["x_min"]
+    x_max   = plot_info["x_max"]
+
+    # setup canvas
+    can = ROOT.TCanvas("can", "can", 600, 600)
+    can.SetLeftMargin(0.25)
+    can.SetRightMargin(0.05)
+    can.SetBottomMargin(0.15)
+    can.SetGridx()
+    can.SetGridy()
+    can.Draw()
+    can.cd()
+
+    for key in hist_info:
+        hist    = hist_info[key]["hist"]
+        label   = hist_info[key]["label"]
+        color   = hist_info[key]["color"]
+
+        # setup hist 
+        line_width  = 3
+        tools.setupHist(hist, title, x_label, y_label, x_min, x_max, color, line_width)
+        
+        # legend
+
+        # draw hist
+        hist.Draw("same hist error")
+    
+        hist.SetMarkerSize(0)
+
+        hist.GetXaxis().CenterTitle()
+        hist.GetXaxis().SetTitleFont(42)
+        hist.GetXaxis().SetTitleSize(0.06)
+        hist.GetXaxis().SetTitleOffset(1.06)
+        hist.GetXaxis().SetLabelFont(42)
+        hist.GetXaxis().SetLabelSize(0.05)
+        hist.GetXaxis().SetNdivisions(5, 5, 0, True)
+        
+        hist.GetYaxis().CenterTitle()
+        hist.GetYaxis().SetTitleFont(42)
+        hist.GetYaxis().SetTitleSize(0.06)
+        hist.GetYaxis().SetTitleOffset(2.00)
+        hist.GetYaxis().SetLabelFont(42)
+        hist.GetYaxis().SetLabelSize(0.05)
+        hist.GetYaxis().SetNdivisions(5, 5, 0, True)
+        
+    # legend
     
     # save plot
     can.SaveAs(plot_name)
@@ -249,11 +307,14 @@ def makeDoubleRatioPlots():
         y_label     = "(S/B)_{with low p_{T} e^{\pm}} / (S/B)_{without low p_{T} e^{\pm}}"
     
     info            = {}
+    info["title"]   = sample_name
     info["x_label"] = "R_{ISR}"
     info["y_label"] = y_label
     info["sample"]  = sample_name
     info["x_min"]   = 0.85
     info["x_max"]   = 1.00
+
+    hist_info = {}
     
     for selection in selections:
         for lepton_id in lepton_ids:
@@ -271,6 +332,10 @@ def makeDoubleRatioPlots():
                 background_name_1   = hist_dir_1 + "/" + background  + "_" + selection + "_" + lepton_id + ".root"
                 background_name_2   = hist_dir_2 + "/" + background  + "_" + selection + "_" + lepton_id + ".root"
                 label               = selection + "_" + lepton_id
+        
+            hist_info[label] = {}
+            hist_info[label]["label"] = label
+            hist_info[label]["color"] = "red"
             
             # set info
             info["label"] = label
@@ -301,7 +366,7 @@ def makeDoubleRatioPlots():
                     tools.sqrtHist1D(background_hist1D_rebin_1)
                     tools.sqrtHist1D(background_hist1D_rebin_2)
                 
-                plotDoubleRatio(signal_hist1D_rebin_1, signal_hist1D_rebin_2, background_hist1D_rebin_1, background_hist1D_rebin_2, info, plot_name) 
+                plotDoubleRatio(signal_hist1D_rebin_1, signal_hist1D_rebin_2, background_hist1D_rebin_1, background_hist1D_rebin_2, hist_info, info, plot_name)
            
             else:
                 # constant bin size rebin 
@@ -316,11 +381,14 @@ def makeDoubleRatioPlots():
                     tools.sqrtHist1D(background_hist1D_1)
                     tools.sqrtHist1D(background_hist1D_2)
 
-                plotDoubleRatio(signal_hist1D_1, signal_hist1D_2, background_hist1D_1, background_hist1D_2, info, plot_name) 
+                plotDoubleRatio(signal_hist1D_1, signal_hist1D_2, background_hist1D_1, background_hist1D_2, hist_info, info, plot_name)
+
+    plot_multi_name = plot_dir + "/" + sample_name + "_combined.pdf"
+    PlotMultiple(hist_info, info, plot_multi_name)
 
 # plot double ratio using input histograms
 # double ratio = (s2 / s1) / (b2 / b1)
-def plotDoubleRatio(hist_s1, hist_s2, hist_b1, hist_b2, info, plot_name):
+def plotDoubleRatio(hist_s1, hist_s2, hist_b1, hist_b2, hist_info, info, plot_name):
     signal_ratio = hist_s2.Clone("signal_ratio")
     signal_ratio.Divide(hist_s1)
     
@@ -329,6 +397,9 @@ def plotDoubleRatio(hist_s1, hist_s2, hist_b1, hist_b2, info, plot_name):
     
     double_ratio = signal_ratio.Clone("double_ratio")
     double_ratio.Divide(background_ratio)
+
+    label = info["label"]
+    hist_info[label]["hist"] = double_ratio
 
     Plot(double_ratio, info, plot_name)
 
