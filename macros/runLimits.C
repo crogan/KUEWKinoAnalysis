@@ -770,7 +770,7 @@ TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist, PlotType ptype){
   }
   if(ptype == kTSlSl){
     SMS =  "pp #rightarrow #tilde{#it{l}}_{L/R} #tilde{#it{l}}_{L/R}; ";
-    SMS += "#tilde{{#it{l}}_{L/R} #rightarrow #it{l} #tilde{#chi}_{1}^{0}";
+    SMS += "#tilde{#it{l}}_{L/R} #rightarrow #it{l} #tilde{#chi}_{1}^{0}";
   }
 
   l.SetTextSize(0.035);
@@ -896,7 +896,7 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
   }
   if(ptype == kTSlSl){
     SMS =  "pp #rightarrow #tilde{#it{l}}_{L/R} #tilde{#it{l}}_{L/R}; ";
-    SMS += "#tilde{{#it{l}}_{L/R} #rightarrow #it{l} #tilde{#chi}_{1}^{0}";
+    SMS += "#tilde{#it{l}}_{L/R} #rightarrow #it{l} #tilde{#chi}_{1}^{0}";
   }
 
   l.SetTextSize(0.035);
