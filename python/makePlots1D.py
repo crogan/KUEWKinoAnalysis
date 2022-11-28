@@ -222,6 +222,8 @@ def makeRatioPlots():
     hist_dir_1      = "UL2017_NanoAODv9_Hists_weight_PreUL"
     hist_dir_2      = "LowPtElectron_UL2017_NanoAODv9_Hists_weight_PreUL"
     
+    colors = ["pastel red", "dark sky blue"]
+    
     tools.makeDir(plot_dir)
     
     # parameters
@@ -238,12 +240,18 @@ def makeRatioPlots():
     variable        = "RISR"
     
     info            = {}
+    info["title"]   = ""
     info["x_label"] = "R_{ISR}"
-    info["y_label"] = "N_{with low p_{T} e^{\pm}} / N_{without low p_{T} e^{\pm}}"
+    #info["y_label"] = "N_{with low p_{T} e^{\pm}} / N_{without low p_{T} e^{\pm}}"
+    info["y_label"] = "N_{new} / N_{old}"
     info["x_min"]   = 0.85
     info["x_max"]   = 1.00
+    info["y_min"]   = 0.00
+    info["y_max"]   = 5.00
     
     for sample_name in sample_names:
+        hist_info = {}
+        i = 0
         for selection in selections:
             for lepton_id in lepton_ids:
                 if lepton_id == "all":
@@ -257,7 +265,13 @@ def makeRatioPlots():
                     input_name_2    = hist_dir_2 + "/" + sample_name + "_" + selection + "_" + lepton_id + ".root"
                     label           = selection + "_" + lepton_id
                 
+                # set hist info
+                hist_info[label] = {}
+                hist_info[label]["label"] = label
+                hist_info[label]["color"] = colors[i]
+                
                 # set info
+                info["title"]   = sample_name
                 info["sample"]  = sample_name
                 info["label"]   = label
 
@@ -274,22 +288,31 @@ def makeRatioPlots():
                     hist1D_rebin_1  = hist1D_1.Rebin(nbins, "hist1D_rebin_1", rebin_xbins)
                     hist1D_rebin_2  = hist1D_2.Rebin(nbins, "hist1D_rebin_2", rebin_xbins)
                     
-                    plotRatio(hist1D_rebin_1, hist1D_rebin_2, info, plot_name)
+                    plotRatio(hist1D_rebin_1, hist1D_rebin_2, hist_info, info, plot_name)
                 else:
                     # constant bin size rebin 
                     if constant_rebin:
                         hist1D_1.Rebin(rebin_num)
                         hist1D_2.Rebin(rebin_num)
                     
-                    plotRatio(hist1D_1, hist1D_2, info, plot_name)
+                    plotRatio(hist1D_1, hist1D_2, hist_info, info, plot_name)
+                
+                # increment
+                i += 1
+        
+        plot_multi_name = plot_dir + "/" + sample_name + "_combined.pdf"
+        PlotMultiple(hist_info, info, plot_multi_name)
 
 
 # Plot ratio using input histograms
 # ratio = hist_2 / hist_1
-def plotRatio(hist_1, hist_2, info, plot_name):
+def plotRatio(hist_1, hist_2, hist_info, info, plot_name):
     # take ratio of hists
     ratio = hist_2.Clone("ratio")
     ratio.Divide(hist_1)
+    
+    label = info["label"]
+    hist_info[label]["hist"] = ratio
     
     Plot(ratio, info, plot_name)
 
@@ -344,7 +367,6 @@ def makeDoubleRatioPlots():
     info["y_max"]   = 3.00
 
     hist_info = {}
-    
     i = 0
 
     for selection in selections:
@@ -364,6 +386,7 @@ def makeDoubleRatioPlots():
                 background_name_2   = hist_dir_2 + "/" + background  + "_" + selection + "_" + lepton_id + ".root"
                 label               = selection + "_" + lepton_id
         
+            # set hist info
             hist_info[label] = {}
             hist_info[label]["label"] = label
             hist_info[label]["color"] = colors[i]
