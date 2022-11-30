@@ -43,6 +43,8 @@ int main(int argc, char* argv[]) {
   bool verbose = false;
   int  year    = 2017;
 
+  double xsec_norm = -999.0;
+
   bool workspace = false;
 
   bool doMCstats = false;
@@ -150,6 +152,10 @@ int main(int argc, char* argv[]) {
     if(strncmp(argv[i],"--connect", 9) == 0){
       batch = true;
       connect = true;
+    }
+    if(strncmp(argv[i],"--setXsec", 9) == 0){
+      i++;
+      xsec_norm = std::stod(argv[i]);
     }
      
   }
@@ -480,7 +486,7 @@ CONFIG.AddSJetNormSys("DB",DB,cb, processes);
 */
 
 
-  cb.PrintSysts();
+  //cb.PrintSysts();
 
  using ch::syst::SystMap;
   using ch::syst::era;
@@ -488,6 +494,12 @@ CONFIG.AddSJetNormSys("DB",DB,cb, processes);
   using ch::syst::bin_id;
   using ch::syst::process;
  
+if(xsec_norm != -999.0){
+  cout << "Setting signal cross section to: " << xsec_norm << endl;
+  cb.cp().AddSyst(cb, "xsec_norm","rateParam",SystMap<>::init(xsec_norm));
+  cb.AddDatacardLineAtEnd("nuisance edit freeze xsec_norm "+std::to_string(xsec_norm));
+ }
+else cout << "Nominal signal cross section: " << xsec_norm << endl;
   SystematicsTool SYS;
   Systematics shapeToNorm = SYS.GetConvertedSystematics();
  
@@ -544,7 +556,6 @@ CONFIG.AddSJetNormSys("DB",DB,cb, processes);
   // autoMCStats
   if(doMCstats)
     cb.cp().SetAutoMCStats(cb, -1.);
-  
   /*
     auto bbb = ch::BinByBinFactory()
     .SetAddThreshold(0.1)

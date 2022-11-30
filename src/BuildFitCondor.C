@@ -53,6 +53,7 @@ int main(int argc, char* argv[]) {
   bool bprint  = false;
   bool verbose = false;
   int  year    = 2017;
+  double xsec_norm = -999.0;
 
   bool doMCstats = false;
 
@@ -158,6 +159,10 @@ int main(int argc, char* argv[]) {
     if(strncmp(argv[i],"--connect", 9) == 0){
       connect = true;
     } 
+    if(strncmp(argv[i],"--setXsec", 9) == 0){
+      i++;
+      xsec_norm = std::stod(argv[i]);
+    }
   }
     
   if(!addBkg && !addSig && (proc_to_add.size() == 0))
@@ -281,7 +286,8 @@ int main(int argc, char* argv[]) {
     BuildFitCmd += "-sepchan ";
   if(connect)
     BuildFitCmd += "--connect ";
-  
+  BuildFitCmd += Form("--setXsec %f ", xsec_norm);
+ 
   string SrcFold = OutputFold+"/src/";
   string LogFold = OutputFold+"/log/";
   gSystem->Exec(("mkdir -p "+SrcFold).c_str());
