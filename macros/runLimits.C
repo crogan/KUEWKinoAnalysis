@@ -34,8 +34,8 @@ string popstring(string& line);
 enum LimitType {kObs, kExp, kExpUp, kExpDn};
 enum PlotType {kTChiWZ, kT2tt, kT2bW, kT2bb, kTSlSl};
 
-TCanvas* Plot2DHist_MCvMP(const string& can, TH2D* hist, PlotType ptype);
-TCanvas* Plot2DHist_dMvMP(const string& can, TH2D* hist, PlotType ptype);
+TCanvas* Plot2DHist_MCvMP(const string& can, TH2D* hist, PlotType ptype, bool scaleLumi);
+TCanvas* Plot2DHist_dMvMP(const string& can, TH2D* hist, PlotType ptype, bool scaleLumi);
 
 void Invert2DHist(TH2D* hist);
 
@@ -50,7 +50,7 @@ int max_dM = -1;
 
 class Limit {
 public:
-  Limit(const string& json){
+  Limit(const string& json, bool scaleLumi){
     
     m_min_MP = -1;
     m_max_MP = -1;
@@ -68,6 +68,9 @@ public:
     string line, name;
     size_t found, end;
     int mass;
+    double lumi_1 = 137.0;
+    double lumi_2 = 300.0;
+    double lumiFactor = sqrt(lumi_2 / lumi_1);
     
     //discard first line
     getline(ifile,line);
@@ -111,24 +114,32 @@ public:
       if(line.find("exp0") != string::npos){
         popstring(line);
         double r = popdouble(line);
+        if (scaleLumi) r = r / lumiFactor;
+        printf("(%d, %d): exp0: r = %f\n", m_MP[mass], m_MC[mass], r);
         m_R_exp0.push_back(pair<int,double>(mass, r));
         m_iR_exp0.push_back(pair<int,double>(mass, 1./r));
       }
       if(line.find("exp+1") != string::npos){
         popstring(line);
         double r = popdouble(line);
+        if (scaleLumi) r = r / lumiFactor;
+        printf("(%d, %d): exp+1: r = %f\n", m_MP[mass], m_MC[mass], r);
         m_R_exp_p1.push_back(pair<int,double>(mass, r));
         m_iR_exp_p1.push_back(pair<int,double>(mass, 1./r));
       }
       if(line.find("exp-1") != string::npos){
         popstring(line);
         double r = popdouble(line);
+        if (scaleLumi) r = r / lumiFactor;
+        printf("(%d, %d): exp-1: r = %f\n", m_MP[mass], m_MC[mass], r);
         m_R_exp_m1.push_back(pair<int,double>(mass, r));
         m_iR_exp_m1.push_back(pair<int,double>(mass, 1./r));
       }
       if(line.find("obs") != string::npos){
         popstring(line);
         double r = popdouble(line);
+        if (scaleLumi) r = r / lumiFactor;
+        printf("(%d, %d): obs: r = %f\n", m_MP[mass], m_MC[mass], r);
         m_R_obs.push_back(pair<int,double>(mass, r));
         m_iR_obs.push_back(pair<int,double>(mass, 1./r));
       }
@@ -469,8 +480,11 @@ void runLimits(const string& json, string plot_name, string output_name, bool in
   RestFrames::SetStyle();
 
   string full_plot_name = "";
+    
+  // scale luminosity to new value
+  bool scaleLumi = true;
   
-  Limit* limit_def = new Limit(json);
+  Limit* limit_def = new Limit(json, scaleLumi);
   if(limit_def == NULL) return;
   TLatex l;
   l.SetTextFont(42);
@@ -495,7 +509,7 @@ void runLimits(const string& json, string plot_name, string output_name, bool in
   
   if (inclObs) Save2DContour(gr_exp_MC_obs, output_name + "_obs.csv");
   
-  TCanvas* can_MC = Plot2DHist_MCvMP("can_MC", hist_exp_MC, ptype);
+  TCanvas* can_MC = Plot2DHist_MCvMP("can_MC", hist_exp_MC, ptype, scaleLumi);
   can_MC->cd();
   gr_exp_MC->SetLineColor(7043);
   gr_exp_MC->SetLineWidth(5);
@@ -559,7 +573,7 @@ void runLimits(const string& json, string plot_name, string output_name, bool in
   
   if (inclObs) Save2DContour(gr_exp_dM_obs, output_name + "_dM_obs.csv");
   
-  TCanvas* can_dM = Plot2DHist_dMvMP("can_dM", hist_exp_dM, ptype);
+  TCanvas* can_dM = Plot2DHist_dMvMP("can_dM", hist_exp_dM, ptype, scaleLumi);
   can_dM->cd();
   
   gr_exp_dM->SetLineColor(7043);
@@ -654,7 +668,7 @@ void Invert2DHist(TH2D* hist){
   }
 }
 
-TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist, PlotType ptype){
+TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist, PlotType ptype, bool scaleLumi){
   TCanvas* can = (TCanvas*) new TCanvas(name.c_str(),name.c_str(),700.,600);
 
   string xlabel = "m_{P} [GeV]";
@@ -742,7 +756,8 @@ TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist, PlotType ptype){
   l.SetTextAlign(31);
   l.SetTextSize(0.04);
   l.SetTextFont(42);
-  l.DrawLatex(0.8, 0.95, "137 fb^{-1} (13 TeV)");
+  if (scaleLumi)    l.DrawLatex(0.8, 0.95, "300 fb^{-1} (13 TeV)");
+  else              l.DrawLatex(0.8, 0.95, "137 fb^{-1} (13 TeV)");
   l.SetTextAlign(11);
   l.SetTextSize(0.04);
   l.SetTextFont(42);
@@ -780,7 +795,7 @@ TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist, PlotType ptype){
   return can;
 }
 
-TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
+TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype, bool scaleLumi){
   TCanvas* can = (TCanvas*) new TCanvas(name.c_str(),name.c_str(),700.,600);
 
   string xlabel = "m_{P} [GeV]";
@@ -868,7 +883,8 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
   l.SetTextAlign(31);
   l.SetTextSize(0.04);
   l.SetTextFont(42);
-  l.DrawLatex(0.8, 0.95, "137 fb^{-1} (13 TeV)");
+  if (scaleLumi)    l.DrawLatex(0.8, 0.95, "300 fb^{-1} (13 TeV)");
+  else              l.DrawLatex(0.8, 0.95, "137 fb^{-1} (13 TeV)");
   l.SetTextAlign(11);
   l.SetTextSize(0.04);
   l.SetTextFont(42);
