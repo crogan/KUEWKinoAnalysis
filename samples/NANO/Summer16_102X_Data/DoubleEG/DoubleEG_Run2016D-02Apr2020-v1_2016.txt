@@ -13,10 +13,10 @@ root://cmsxrootd.fnal.gov//store/data/Run2016D/DoubleEG/NANOAOD/02Apr2020-v1/400
 root://cmsxrootd.fnal.gov//store/data/Run2016D/DoubleEG/NANOAOD/02Apr2020-v1/40000/5E27EC7A-48FE-ED48-B9A2-60F854258732.root
 root://cmsxrootd.fnal.gov//store/data/Run2016D/DoubleEG/NANOAOD/02Apr2020-v1/40000/4DD7EA8B-A70A-094C-9ECA-01349CC302E9.root
 root://cmsxrootd.fnal.gov//store/data/Run2016D/DoubleEG/NANOAOD/02Apr2020-v1/40000/4D5E6665-E50A-5E48-8BA7-9037666B3B8C.root
-root://cmsxrootd.fnal.gov//store/data/Run2016D/DoubleEG/NANOAOD/02Apr2020-v1/40000/FCA55519-73D3-A949-95E0-E10230B8D558.root
 root://cmsxrootd.fnal.gov//store/data/Run2016D/DoubleEG/NANOAOD/02Apr2020-v1/40000/2F2608FB-781E-6C4D-829D-6CBD56FA4C1A.root
 root://cmsxrootd.fnal.gov//store/data/Run2016D/DoubleEG/NANOAOD/02Apr2020-v1/40000/0236BD5D-0ACA-A842-8B0D-CDD60A32F5CB.root
 root://cmsxrootd.fnal.gov//store/data/Run2016D/DoubleEG/NANOAOD/02Apr2020-v1/40000/DA117210-84AC-AC4E-8FA4-B8417BFF83FF.root
+root://cmsxrootd.fnal.gov//store/data/Run2016D/DoubleEG/NANOAOD/02Apr2020-v1/40000/FCA55519-73D3-A949-95E0-E10230B8D558.root
 root://cmsxrootd.fnal.gov//store/data/Run2016D/DoubleEG/NANOAOD/02Apr2020-v1/40000/11B9C5B5-A521-BD4E-A65F-37FB39272549.root
 root://cmsxrootd.fnal.gov//store/data/Run2016D/DoubleEG/NANOAOD/02Apr2020-v1/40000/0551CAA7-6FFB-324C-A7AC-575F2997D945.root
 root://cmsxrootd.fnal.gov//store/data/Run2016D/DoubleEG/NANOAOD/02Apr2020-v1/40000/0478D638-CA44-B549-ABCC-B014D513408C.root
@@ -31,10 +31,10 @@ root://cmsxrootd.fnal.gov//store/data/Run2016D/DoubleEG/NANOAOD/02Apr2020-v1/230
 root://cmsxrootd.fnal.gov//store/data/Run2016D/DoubleEG/NANOAOD/02Apr2020-v1/230000/5F6863BF-87BF-B84E-A1F6-D98D82EE7868.root
 root://cmsxrootd.fnal.gov//store/data/Run2016D/DoubleEG/NANOAOD/02Apr2020-v1/230000/05746292-F240-564E-9413-2C7A35301815.root
 root://cmsxrootd.fnal.gov//store/data/Run2016D/DoubleEG/NANOAOD/02Apr2020-v1/230000/D6F1F396-6A9F-884B-96C6-54B25F834B37.root
-root://cmsxrootd.fnal.gov//store/data/Run2016D/DoubleEG/NANOAOD/02Apr2020-v1/230000/12D387BD-BA2A-1E4A-91A3-00F3E10979BE.root
 root://cmsxrootd.fnal.gov//store/data/Run2016D/DoubleEG/NANOAOD/02Apr2020-v1/230000/3E932F61-3964-5745-94BB-7E7D12345D2B.root
 root://cmsxrootd.fnal.gov//store/data/Run2016D/DoubleEG/NANOAOD/02Apr2020-v1/230000/B4309F1B-E18D-4445-B08B-8F182ADDF92C.root
 root://cmsxrootd.fnal.gov//store/data/Run2016D/DoubleEG/NANOAOD/02Apr2020-v1/230000/F85FDED8-3264-634D-B1B6-E0F550766755.root
+root://cmsxrootd.fnal.gov//store/data/Run2016D/DoubleEG/NANOAOD/02Apr2020-v1/230000/12D387BD-BA2A-1E4A-91A3-00F3E10979BE.root
 root://cmsxrootd.fnal.gov//store/data/Run2016D/DoubleEG/NANOAOD/02Apr2020-v1/230000/F86D65FF-0154-1E40-B99E-610919DEEF42.root
 root://cmsxrootd.fnal.gov//store/data/Run2016D/DoubleEG/NANOAOD/02Apr2020-v1/230000/A612C619-64FC-464E-B670-EB9C1B5BF9B0.root
 root://cmsxrootd.fnal.gov//store/data/Run2016D/DoubleEG/NANOAOD/02Apr2020-v1/230000/26651CAF-3120-884C-8CAD-13C468326FB9.root
