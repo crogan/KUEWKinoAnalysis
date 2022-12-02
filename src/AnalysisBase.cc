@@ -161,6 +161,17 @@ void AnalysisBase<Base>::AddMETTriggerFile(const string& csvfile){
 }
 
 template <class Base>
+void AnalysisBase<Base>::AddPrefireFile(const string& prefirefile){
+  int year = 2016;
+  if(m_FileTag.find("17") != std::string::npos)
+    year = 2017;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+  bool UseEMpT = false; // seems to always be false from: https://twiki.cern.ch/twiki/bin/viewauth/CMS/L1PrefiringWeightRecipe
+  m_PrefireTool = PrefireTool(year,UseEMpT,prefirefile);
+}
+
+template <class Base>
 void AnalysisBase<Base>::InitializeHistograms(vector<TH1D*>& histos){}
 
 template <class Base>
@@ -206,6 +217,21 @@ long AnalysisBase<Base>::GetEventNum(){
 template <class Base>
 bool AnalysisBase<Base>::PassEventFilter(){
   return true;
+}
+
+template <class Base>
+bool AnalysisBase<Base>::FastSimEventVeto(const ParticleList& GenJets){
+  return true;
+}
+
+template <class Base>
+double AnalysisBase<Base>::GetPrefireWeight(int updown){
+  return 1.;
+}
+
+template <class Base>
+double AnalysisBase<Base>::EGvalue(int jetIndex, int updown){
+  return 1.;
 }
 
 template <class Base>
@@ -837,6 +863,104 @@ bool AnalysisBase<SUSYNANOBase>::PassEventFilter(){
   }
   
   return true;
+}
+
+template<>
+bool AnalysisBase<SUSYNANOBase>::FastSimEventVeto(const ParticleList& GenJets){
+
+ ParticleList jets;
+  for(int i = 0; i < nJet; i++){
+    if(Jet_pt[i] < 20. || fabs(Jet_eta[i]) > 2.5)
+      continue;  
+    if(Jet_chEmEF[i] > 0.1)
+      continue;
+
+    Particle jet;
+    float mass = Jet_mass[i];
+    if(std::isnan(mass))
+      mass = 0;
+    if(std::isinf(mass))
+      mass = 0;
+    if(mass < 0.)
+      mass = 0.;
+    jet.SetPtEtaPhiM(Jet_pt[i], Jet_eta[i],
+		     Jet_phi[i], mass);
+    jets.push_back(jet);
+  }
+  jets.RemoveOverlap(GenJets, 0.3);
+  if(jets.size() > 0)
+    return false;
+
+  return true;
+}
+
+template<>
+double AnalysisBase<SUSYNANOBase>::EGvalue(int jetIndex, int updown){
+ double PhotonMinPt = 20.;
+ double PhotonMaxPt = 500.;
+ double PhotonMinEta = 2.;
+ double PhotonMaxEta = 3.;
+ double phopf = 1.;
+
+ vector<int> PhotonInJet;
+
+ for(int p = 0; p < nPhoton; p++)
+ {
+  if(Photon_jetIdx[p] == jetIndex){
+   if(Photon_pt[p] >= PhotonMinPt && fabs(Photon_eta[p]) <= PhotonMaxEta && fabs(Photon_eta[p]) >= PhotonMinEta){
+    double phopf_temp = 1. - m_PrefireTool.GetPrefireProbability(false, Photon_eta[p], Photon_pt[p], PhotonMaxPt, updown);
+    double elepf_temp = 1.;
+    if(Photon_electronIdx[p] > -1){
+     if(Electron_pt[Photon_electronIdx[p]] >= PhotonMinPt && fabs(Electron_eta[Photon_electronIdx[p]]) <= PhotonMaxEta && fabs(Electron_eta[Photon_electronIdx[p]]) >= PhotonMinEta){
+      elepf_temp = 1. - m_PrefireTool.GetPrefireProbability(false, Electron_eta[Photon_electronIdx[p]], Electron_pt[Photon_electronIdx[p]], PhotonMaxPt, updown);
+     }
+    }
+    phopf *= min(phopf_temp,elepf_temp);
+    PhotonInJet.push_back(p);
+   }   
+  }
+ }
+ for(int e = 0; e < nElectron; e++)
+ {
+  if(Electron_jetIdx[e] == jetIndex && std::count(PhotonInJet.begin(), PhotonInJet.end(), Electron_photonIdx[e]) == 0){
+   if(Electron_pt[e] >= PhotonMinPt && fabs(Electron_eta[e]) <= PhotonMaxEta && fabs(Electron_eta[e]) >= PhotonMinEta){
+    phopf *= 1. - m_PrefireTool.GetPrefireProbability(false, Electron_eta[e], Electron_pt[e], PhotonMaxPt, updown);
+   }
+  }
+ }
+ return phopf;
+}
+
+template<>
+double AnalysisBase<SUSYNANOBase>::GetPrefireWeight(int updown){
+ int year = 2016;
+ if(m_FileTag.find("17") != std::string::npos)
+   year = 2017;
+ if(m_FileTag.find("18") != std::string::npos)
+  return 1.; // no prefire weight for 2018
+
+  double JetMinPt = 20.;
+  double JetMaxPt = 500.;
+  double JetMinEta = 2.;
+  double JetMaxEta = 3.;
+
+
+ double prefw = 1.;
+
+ // loop over jets
+ for(int j = 0; j < nJet; j++){
+   double jetpf = 1.0;
+   double jetpt = Jet_pt[j];
+   if(m_PrefireTool.Get_UseEMpT())
+      jetpt *= Jet_chEmEF[j] + Jet_neEmEF[j];
+   if(jetpt >= JetMinPt && fabs(Jet_eta[j]) <= JetMaxEta && fabs(Jet_eta[j]) >= JetMinEta)
+     jetpf *= 1. - m_PrefireTool.GetPrefireProbability(true, Jet_eta[j], jetpt, JetMaxPt, updown);
+   double phopf = EGvalue(j,updown);
+   prefw *= std::min(jetpf,phopf);
+ }
+ prefw *= EGvalue(-1,updown); //loop over all photons/electrons not associated to jets
+ 
+ return prefw;
 }
 
 template <>
@@ -1573,6 +1697,9 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET, int id){
 		      delta*MET_MetUnclustEnUpDeltaY, 0.);
     MET += deltaMET;
   }
+
+  if(CurrentSystematic() == Systematic("METUncer_GenMET"))
+    MET.SetPtEtaPhi(GenMET_pt,0.,GenMET_phi);
   
   return list;
 }

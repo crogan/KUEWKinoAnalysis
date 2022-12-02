@@ -50,9 +50,12 @@ if __name__ == "__main__":
 
         #print target
         #haddcmd = "hadd -f "+OUT_DIR+"/"+target+".root "
-        haddcmd = "LD_PRELOAD=scripts/startup_C.so hadd -f "+OUT_DIR+"/"+target+".root "
-        haddcmd += IN_DIR+"/"+target+"/*.root"
+        for i in range(0,10):
+            os.system("mkdir "+IN_DIR+"/"+target+"/"+target+"_"+str(i))
+            os.system("mv "+IN_DIR+"/"+target+"_*"+str(i)+".root "+IN_DIR+"/"+target+"/"+target+"_"+str(i))
+            os.system("LD_PRELOAD=scripts/startup_C.so hadd -f "+IN_DIR+"/"+target+"/"+target+"_"+str(i)+".root "+IN_DIR+"/"+target+"/"+target+"_"+str(i)+"/*.root")
+        haddcmd = "LD_PRELOAD=scripts/startup_C.so hadd -f "+OUT_DIR+"/"+target+".root "+IN_DIR+"/"+target+"/*.root"
         print haddcmd
-        os.system(haddcmd)
+        #os.system(haddcmd)
 
     print("Finished Merging Files")

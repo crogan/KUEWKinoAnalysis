@@ -61,6 +61,8 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
         fsrc.write('--sms ')
     if DO_DATA == 1:
         fsrc.write('--data ')
+    if SYS == 1:
+        fsrc.write('--sys ')
     fsrc.write('-dataset='+dataset+" ")
     fsrc.write('-filetag='+filetag+" ")
     fsrc.write('-eventcount='+EVTCNT+" ")
@@ -71,6 +73,7 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
     fsrc.write('-jme='+JMEFOLD+" ")
     fsrc.write('-svfile='+SVFILE+" ")
     fsrc.write('-metfile='+METFILE+" ")
+    fsrc.write('-prefirefile='+PREFIREFILE+" ")
     splitstring = '-split=%s,%d\n' % ('$$([$(Step)+1])', n)
     fsrc.write(splitstring)
 
@@ -106,7 +109,7 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
 
 if __name__ == "__main__":
     if not len(sys.argv) > 1 or '-h' in sys.argv or '--help' in sys.argv:
-        print "Usage: %s [-q queue] [-tree treename] [-list listfile.list] [-split S] [--sms] [--data] [--dry-run] [--verbose]" % sys.argv[0]
+        print "Usage: %s [-q queue] [-tree treename] [-list listfile.list] [-split S] [--sms] [--data] [--sys] [--dry-run] [--verbose]" % sys.argv[0]
         sys.exit(1)
 
     argv_pos    = 1
@@ -114,6 +117,7 @@ if __name__ == "__main__":
     DO_DATA     = 0
     DRY_RUN     = 0
     VERBOSE     = 0
+    SYS         = 0
   
     if '-q' in sys.argv:
         p = sys.argv.index('-q')
@@ -143,6 +147,9 @@ if __name__ == "__main__":
     if '--verbose' in sys.argv:
         VERBOSE = 1
         argv_pos += 1
+    if '--sys' in sys.argv:
+        SYS = 1
+        argv_pos += 1
         
     if SPLIT <= 1:
         SPLIT = 1
@@ -154,6 +161,9 @@ if __name__ == "__main__":
     if DO_SMS:
         print " --- Processing SMS"
     
+    if SYS:
+        print " --- Processing SYS"
+
     # input sample list
     listfile = LIST
     listname = listfile.split("/")
@@ -214,6 +224,10 @@ if __name__ == "__main__":
     # copy MET trigger files
     os.system("cp -r csv/METTrigger "+config+".")
     METFILE = "./config/METTrigger/Parameters.csv"
+
+    # copy Prefire files
+    os.system("cp -r root/Prefire "+config+".")
+    PREFIREFILE = "./config/Prefire/Prefire.root"
 
     # copy SV NN model
     os.system("cat json/lwtnn/nano_train_model.json > "+config+"NNmodel.json")
