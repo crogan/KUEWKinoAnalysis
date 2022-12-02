@@ -50,7 +50,7 @@ int max_dM = -1;
 
 class Limit {
 public:
-  Limit(const string& json, bool scaleLumi){
+  Limit(const string& json, bool scaleLumi, bool scaleXsec){
     
     m_min_MP = -1;
     m_max_MP = -1;
@@ -111,10 +111,18 @@ public:
         //cout << "MP = " << m_MP[mass] << " MC = " << m_MC[mass] << endl;
         continue;
       }
+      // test xsec scaling
+      double xsec_TChiWZ    = g_Xsec.GetXsec_SMS("TChiWZ",  m_MP[mass]);
+      double xsec_N2C1      = g_Xsec.GetXsec_SMS("N2C1",    m_MP[mass]);
+      double xsecFactor     = xsec_N2C1 / xsec_TChiWZ;
+      
       if(line.find("exp0") != string::npos){
         popstring(line);
         double r = popdouble(line);
+        //double new_r          = r / xsecFactor;
+        //printf("(%d, %d): xsec_TChiWZ = %f, xsec_N2C1 = %f, xsecFactor = %f, r = %f, new_r = %f\n", m_MP[mass], m_MC[mass], xsec_TChiWZ, xsec_N2C1, xsecFactor, r, new_r);
         if (scaleLumi) r = r / lumiFactor;
+        if (scaleXsec) r = r / xsecFactor;
         printf("(%d, %d): exp0: r = %f\n", m_MP[mass], m_MC[mass], r);
         m_R_exp0.push_back(pair<int,double>(mass, r));
         m_iR_exp0.push_back(pair<int,double>(mass, 1./r));
@@ -123,6 +131,7 @@ public:
         popstring(line);
         double r = popdouble(line);
         if (scaleLumi) r = r / lumiFactor;
+        if (scaleXsec) r = r / xsecFactor;
         printf("(%d, %d): exp+1: r = %f\n", m_MP[mass], m_MC[mass], r);
         m_R_exp_p1.push_back(pair<int,double>(mass, r));
         m_iR_exp_p1.push_back(pair<int,double>(mass, 1./r));
@@ -131,6 +140,7 @@ public:
         popstring(line);
         double r = popdouble(line);
         if (scaleLumi) r = r / lumiFactor;
+        if (scaleXsec) r = r / xsecFactor;
         printf("(%d, %d): exp-1: r = %f\n", m_MP[mass], m_MC[mass], r);
         m_R_exp_m1.push_back(pair<int,double>(mass, r));
         m_iR_exp_m1.push_back(pair<int,double>(mass, 1./r));
@@ -139,6 +149,7 @@ public:
         popstring(line);
         double r = popdouble(line);
         if (scaleLumi) r = r / lumiFactor;
+        if (scaleXsec) r = r / xsecFactor;
         printf("(%d, %d): obs: r = %f\n", m_MP[mass], m_MC[mass], r);
         m_R_obs.push_back(pair<int,double>(mass, r));
         m_iR_obs.push_back(pair<int,double>(mass, 1./r));
@@ -482,9 +493,14 @@ void runLimits(const string& json, string plot_name, string output_name, bool in
   string full_plot_name = "";
     
   // scale luminosity to new value
+  // scale cross section to new value
   bool scaleLumi = true;
+  bool scaleXsec = true;
+
+  printf("scaleLumi = %d\n", scaleLumi);
+  printf("scaleXsec = %d\n", scaleXsec);
   
-  Limit* limit_def = new Limit(json, scaleLumi);
+  Limit* limit_def = new Limit(json, scaleLumi, scaleXsec);
   if(limit_def == NULL) return;
   TLatex l;
   l.SetTextFont(42);
