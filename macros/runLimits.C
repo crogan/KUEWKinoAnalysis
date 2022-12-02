@@ -495,7 +495,7 @@ void runLimits(const string& json, string plot_name, string output_name, bool in
   // scale luminosity to new value
   // scale cross section to new value
   bool scaleLumi = true;
-  bool scaleXsec = true;
+  bool scaleXsec = false;
 
   printf("scaleLumi = %d\n", scaleLumi);
   printf("scaleXsec = %d\n", scaleXsec);
