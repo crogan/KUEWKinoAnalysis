@@ -61,7 +61,7 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
         fsrc.write('--sms ')
     if DO_DATA == 1:
         fsrc.write('--data ')
-    if SYS == 1:
+    if SYS == 1 and DO_DATA != 1:
         fsrc.write('--sys ')
     fsrc.write('-dataset='+dataset+" ")
     fsrc.write('-filetag='+filetag+" ")
