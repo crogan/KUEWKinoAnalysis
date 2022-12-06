@@ -17,6 +17,8 @@ parser.add_argument('--cat0L',help='plot 0L NPs',action='store_true')
 parser.add_argument('--cat1L',help='plot 1L NPs',action='store_true')
 parser.add_argument('--cat2L',help='plot 2L and NPs',action='store_true')
 parser.add_argument('--cat3L',help='plot 3L NPs',action='store_true')
+parser.add_argument('--SFs',help='plot process SFs',action='store_true')
+parser.add_argument('--catNorms',help='plot lepton category normalizations',action='store_true')
 args = parser.parse_args()
 
 odir = ""
@@ -27,9 +29,13 @@ if args.datacard is None:
 	print "Need input datacard, -d [datacard]"
 	exit()
 if args.sys is None:
-	print "Need string(s) to match for systematics, -s [sys1, sys2...]"
+	if not args.SFs and not args.catNorms:
+		print "Need string(s) to match for systematics, -s [sys1, sys2...]"
+		exit()
+if args.catNorms and args.SFs:
+	print "Choose to plot either SFs or lepton category norms"
 	exit()
-if 'BTAG' in args.sys and not args.cat1L and not args.cat2L and not args.cat0L:
+if args.sys is not None and'BTAG' in args.sys and not args.cat1L and not args.cat2L and not args.cat0L:
 	print 'Need lepton number for BTAG systematics: --cat0L or --cat1L or --cat2L'
 	exit()
 if args.cat1L and args.cat2L and args.cat0L and args.cat3L:
@@ -59,7 +65,6 @@ else:
 	if not os.path.isdir(odir):
 		os.mkdir(odir)
 		#odir = "./"
-print 'out directory:',odir
 
 if args.output is None:
 	args.output = "output"
@@ -71,7 +76,18 @@ if ANfit:
 	print 'Using AN fit - /uscms/home/z374f439/nobackup/CMSSW_10_6_5/src/FitDev_KUEWKinoAnalysis/BuildFits/BF_TChiWZ_4000350_bkg_data_allYears_v120_allChan_11_2_2022/datacards/all/TChiWZ/4000350/'
 	args.json = '/uscms/home/z374f439/nobackup/CMSSW_10_6_5/src/FitDev_KUEWKinoAnalysis/BuildFits/BF_TChiWZ_4000350_bkg_data_allYears_v120_allChan_11_2_2022/datacards/all/TChiWZ/4000350/'+args.json
 	args.datacard = '/uscms/home/z374f439/nobackup/CMSSW_10_6_5/src/FitDev_KUEWKinoAnalysis/BuildFits/BF_TChiWZ_4000350_bkg_data_allYears_v120_allChan_11_2_2022/datacards/all/TChiWZ/4000350/'+args.datacard
-	odir = 'AN_impacts/'
+	odir = "AN_impacts/"
+
+print 'out directory:',odir
+
+procs = ['ST','norm_QCD','DB','TB','scale_ZDY','ttbar','Wjets']
+if args.SFs:
+	args.sys = procs
+
+
+elif args.catNorms:
+	args.sys = ['norm_1L','norm_2L','norm_3L']
+
 
 # Load the json output of combineTool.py -M Impacts
 data = {}
@@ -121,21 +137,39 @@ for p in data['params']:
 for i, s in enumerate(syst_groups):
 	syst = []
 	for p in data['params']:
-		if p['name'].find(s) == 0 or p['name'].find('other_'+s) == 0:
-			#do lepcut if specified
-			if cut_0L:
-				if "0L" not in p['name']:
-					continue
-			elif cut_1L:
-				if "1L" not in p['name']:
-					continue
-			elif cut_2L:
-				if "2L" not in p['name']:
-					continue 
-			elif cut_3L:
-				if "3L" not in p['name']:
-					continue 
-			syst.append(p['name'])
+		if 'gamT' in s or 'PTISR' in s:
+			if p['name'].find(s) == 0:
+				#do lepcut if specified
+				if cut_0L:
+					if "0L" not in p['name']:
+						continue
+				elif cut_1L:
+					if "1L" not in p['name']:
+						continue
+				elif cut_2L:
+					if "2L" not in p['name']:
+						continue 
+				elif cut_3L:
+					if "3L" not in p['name']:
+						continue 
+				print s, p['name']
+				syst.append(p['name'])
+		else:
+			if p['name'].find(s) != -1:
+				#do lepcut if specified
+				if cut_0L:
+					if "0L" not in p['name']:
+						continue
+				elif cut_1L:
+					if "1L" not in p['name']:
+						continue
+				elif cut_2L:
+					if "2L" not in p['name']:
+						continue 
+				elif cut_3L:
+					if "3L" not in p['name']:
+						continue 
+				syst.append(p['name'])
 	systs.append(syst)
 
 #combine 'other' NPs with 'default' NPs (ie other_BTAG* with BTAG*)
@@ -144,15 +178,29 @@ for i, s in enumerate(syst_groups):
 	if 'other' in s:
 		other_idx = i
 		break
+
+default_idx = 999
+for i, s in enumerate(syst_groups):
+	if "_" not in s:
+		default_idx = i
+		break
+
 syst_group = zip(syst_groups,systs)
+print syst_group
+print '\n'
 if other_idx != 999:
 	#syst_group = syst_group[0:other_idx]+syst_group[other_idx+1:]
+	for s in syst_group[other_idx][1]:
+		syst_group[default_idx][1].append(s)
 	syst_group.pop(other_idx)
 
+
 #check for empty groups
-for i, sys in enumerate(syst_group):
-	if bool(sys[1]) is False:
-		syst_group.pop(i)
+syst_group = [s for s in syst_group if s[1]]
+
+print syst_group
+#print len(syst_group)
+
 
 for i, s_group in enumerate(syst_group):
 	vals_group = []
@@ -160,10 +208,11 @@ for i, s_group in enumerate(syst_group):
 	vals_lo_group = []
 	name_group = []
 	sym_group = []
-	shape = False
 	for j, sys in enumerate(s_group[1]):
 		#print sys
 		for p in data['params']:
+			shape = False
+			procNorm = False
 			pre = p['prefit']
 			fit = p['fit']
 			#calculate vals for lnN NPs
@@ -182,7 +231,10 @@ for i, s_group in enumerate(syst_group):
 				if pre_err < 0:
 					print "Error: pre_err = ", pre_err, "< 0"
 					break
-			
+				for proc in procs:
+					if proc in p['name']:
+						procNorm = True
+						break
 				a = fit[1]
 				a_hi = fit[2] - fit[1]
 			        a_lo = fit[1] - fit[0]
@@ -196,6 +248,10 @@ for i, s_group in enumerate(syst_group):
 				        val_hi = (pre_err)**(a + a_hi)
 				        val_lo = (pre_err)**(a - a_lo)
 		
+				if abs(val_hi-val) == 0:
+					val_hi = val_lo
+				if abs(val_lo-val) == 0:
+					val_lo = val_hi
 	#			print p['name'], p['type'], 'val', val, 'val_lo', val_lo, 'val_hi', val_hi
 				vals_group.append(val)
 				vals_hi_group.append(val_hi)
@@ -203,6 +259,8 @@ for i, s_group in enumerate(syst_group):
 				name_group.append(p['name'])
 				if shape:
 					sym_group.append("Delta")
+				elif procNorm:
+					sym_group.append("theta")
 				else:
 					sym_group.append("kappa")
 			#calculate vals for rateParams
@@ -210,13 +268,26 @@ for i, s_group in enumerate(syst_group):
 				val = fit[1]
 				val_hi = fit[2] - fit[1]
 			        val_lo = fit[1] - fit[0]
+				if abs(val_hi-val) == 0:
+					val_hi = val_lo
+				if abs(val_lo-val) == 0:
+					val_lo = val_hi
 		
+				for proc in procs:
+					if proc in p['name']:
+						procNorm = True
+						break
 	#			print p['name'], p['type'], 'val', val, 'val_lo', val_lo, 'val_hi', val_hi
 				vals_group.append(val)
 				vals_hi_group.append(val_hi+val)
 				vals_lo_group.append(val_lo+val)
 				name_group.append(p['name'])
-				sym_group.append("theta")
+				if shape:
+					sym_group.append("Delta")
+				elif procNorm:
+					sym_group.append("theta")
+				else:
+					sym_group.append("kappa")
 	vals.append(zip(name_group,vals_group))
 	vals_hi.append(zip(name_group,vals_hi_group))
 	vals_lo.append(zip(name_group,vals_lo_group))
@@ -226,8 +297,6 @@ for i, s_group in enumerate(syst_group):
 		print sys, "not found in json"
 		exit()
 	#create a new TMultigraph for each group of NPs
-
-
 
 #set x-axis labels - common to all graphs in tmultigraph
 if len(names) != len(syst_group):
@@ -246,11 +315,12 @@ for i in range(len(names)):
 #		print names[i][j][0],names[i][j][1]
 		check = names[i][j][0].replace(match,"")
 		check = check.replace("other","")
-		#print "match:",match, "check:", check
-		sym = '\_'+names[i][j][1]
+#		print "match:",match, "check:", check
+		sym = '#_'+names[i][j][1]
 		sym = sym.replace("_","")
+		check = check.replace("scale","")
 		##subscripts
-		sub = "_{"
+		sub = "_{#scale[0.8]{"
 		lep = "lep"
 		jet = "jet"
 		#check for lepton split
@@ -268,12 +338,12 @@ for i in range(len(names)):
 			sub += jet
 		if re.findall('[0-9]jS',sub,re.IGNORECASE):
 			sub = sub[:-1]
-		sub += '}'
+		sub += '}}'
 		##superscripts
-		sup = "^{"
+		sup = "^{#scale[0.8]{"
 		#Mperp/RISR for fake shapes
 		if "Mperp" in check:
-			sup += "M_{\perp}"
+			sup += "M_{#perp}"
 		elif "RISR" in check:
 			sup += "R_{ISR}"
 		#btag s/isr/2b
@@ -285,27 +355,37 @@ for i in range(len(names)):
 			sup += "B_{S,ISR}"
 		elif 'BTAG' in match and "_S_ISR" in check and "2b" in check:
 			sup += "B_{2b}"
-		elif lep not in check and jet not in check:
-			sup += check
-			if "eta" not in check:
-				sup = sup.replace("_","")
-		if re.search("gold",check,re.IGNORECASE):
-			sup += "gold"
-		elif "notGold" in check:
-			sup = sup.replace("gold","!gold")
-		if "DY" in check:
-			sup += "DY"	
-		if "QCD" in check:
-			sup += "QCD"
-		if "other" in check:
-			sup += "other"
-		sup += '}'
+		elif lep not in check and jet not in check or re.search("gold",check,re.IGNORECASE):
+			sup += check[1:]
+			sup = sup.replace("_",",")
+	#	if re.search("gold",check,re.IGNORECASE):
+	#		sup += "gold"
+		if "notGold" in check:
+			sup = sup.replace("notGold","!gold")
+		if "el" in sup:
+			sup = sup.replace("el","e")	
+		if "mu" in sup:
+			sup = sup.replace("mu","#mu")
+		if "star" in sup:
+			sup = sup.replace("star","*")	
+
+	#	if "DY" in check:
+	#		sup += "DY"	
+		if "ST" in check:
+			sup += "ST"	
+#		if "QCD" in check:
+#			sup += "QCD"
+#		if "other" in check:
+#			sup += "other"
+		sup = sup.replace("eta","#eta")
+		sup = sup.replace("#etatop","#eta_{top}")
+		sup += '}}'
 		sym += sub+sup
 		if sym in x_labels:
 			continue
+#		print sym,"\n"
 		x_labels.append(sym)	
 		diffs.append(check)
-		#print "sym:",sym,"sub:",sub,"sup:",sup	
 	x_labels_all.append(x_labels)
 	x_labels_raw.append(diffs)
 
@@ -363,19 +443,29 @@ for i in range(len(syst_group)):
 	gr.SetMarkerStyle(20+i*2)
 	gr.SetMarkerColor(800+i*20 + 9)
 	gr.SetLineColor(800+i*20 + 9)
-	x = ROOT.Double(999.0)
-	y = ROOT.Double(999.0)
 	gr_m.Add(gr)
 	leg_label = syst_group[i][0]
 	leg_label = leg_label.replace("_"," ")
 	if "PTISR" in syst_group[i][0]:
 		leg_label = leg_label.replace("PTISR",r"p_{T}^{ISR}")
 	elif "gamT" in syst_group[i][0]:
-		leg_label = leg_label.replace("gamT",r"\gamma_{\perp}")
+		leg_label = leg_label.replace("gamT",r"#gamma_{#perp}")
 	if "Wjets" in syst_group[i][0]:
-		leg_label = leg_label.replace("Wjets","W+jets")
+		leg_label = leg_label.replace("Wjets","W + jets and Z / #gamma * + jets")
 	if "ttbar" in syst_group[i][0]:
-		leg_label = leg_label.replace("ttbar",r"t\bar{t}")
+		leg_label = leg_label.replace("ttbar",r"t#bar{t} + jets")
+	if "scale_DB" in syst_group[i][0]:
+		leg_label = leg_label.replace("scale_DB","di-bosons")
+	if "TB" in syst_group[i][0]:
+		leg_label = leg_label.replace("tri-bosons")
+	if "norm_QCD" in syst_group[i][0]:
+		leg_label = leg_label.replace("norm_QCD","QCD multi-jets")
+	if "ST" in syst_group[i][0]:
+		leg_label = leg_label.replace("ST","single top")
+	if "elf" in syst_group[i][0]:
+		leg_label = leg_label.replace("elf","#it{e}")
+	if "muf" in syst_group[i][0]:
+		leg_label = leg_label.replace("muf","#mu")
 	if cut_0L:
 		leg_label += " 0L"
 	elif cut_1L:
@@ -400,9 +490,9 @@ hto = 0.07
 
 cv = ROOT.TCanvas(args.output,"_".join(args.sys))
 cv.cd()
-cv.SetRightMargin(0.09);
-cv.SetLeftMargin(0.15);
-cv.SetBottomMargin(0.15);
+cv.SetRightMargin(0.09)
+cv.SetLeftMargin(0.15)
+cv.SetBottomMargin(0.15)
 gr_m.Draw("ap")
 leg.Draw("same")
 
@@ -431,10 +521,9 @@ l.SetTextSize(0.04)
 l.SetTextFont(42)
 l.DrawLatex(1-hlo+eps*4,1-hto-0.02,"CR Fit, 137 fb^{-1} (13 TeV)")
 
-
 xax_m = gr_m.GetXaxis()
 xax_m.SetLabelSize(0.055)
-xax_m.SetTickLength(0.)
+#xax_m.SetTickLength(0.2)
 count = 0
 last = 0
 #set x-axis labels based on differences bw systematic groups
@@ -451,18 +540,23 @@ if last < len(bin_labels)-1:
 gr_m.GetYaxis().SetRangeUser(gr_m.GetYaxis().GetXmin(),gr_m.GetYaxis().GetXmax()+0.15)
 #gr_m.GetXaxis().SetRangeUser(-0.5,len(x_labels))
 gr_m.GetXaxis().SetTitle("")
-gr_m.GetYaxis().SetTitle("post-fit value \pm error")
+gr_m.GetYaxis().SetTitle("postfit value #pm error")
 gr_m.GetYaxis().SetLabelFont(42)
 gr_m.GetYaxis().SetTitleFont(42)
 gr_m.GetXaxis().SetLabelFont(42)
 gr_m.GetXaxis().SetTitleFont(42)
 gr_m.GetXaxis().SetTitleSize(0.04)
 gr_m.GetYaxis().SetTitleSize(0.04)
-line = ROOT.TLine(0,1,xax_m.GetXmax(),1)
+
+
+if "Delta" in bin_labels[0]:
+	line = ROOT.TLine(0,0,xax_m.GetXmax(),0)
+else:
+	line = ROOT.TLine(0,1,xax_m.GetXmax(),1)
 line.SetLineStyle(7)
 line.Draw("same")
 
-olabel = ""
+oname = ""
 if args.cat0L:
 	oname = odir+"{}0L_Impacts".format("_".join(args.sys))
 elif args.cat1L:
@@ -474,9 +568,8 @@ elif args.cat3L:
 else:
 	oname = odir+"{}_Impacts".format("_".join(args.sys))
 
-cv.Print(oname+'.root')
-cv.Print(oname+'.pdf')
-
+cv.Print(oname+".root")
+cv.Print(oname+".pdf")
 
 
 
