@@ -23,7 +23,7 @@ int main(int argc, char* argv[]) {
 
   bool addFakeData = false;
 
-  bool sJetSysSplit = true;
+  bool sJetSysSplit = false;
   bool procSysSplit = false;
 
   bool bprint  = false;
@@ -62,8 +62,9 @@ int main(int argc, char* argv[]) {
       smoothFakes = true;
       smoothQCD   = true;
       shapeFakes  = true;
-      shapeQCD    = false;
+      //shapeQCD    = true;
       shapeWjets  = false;
+      sJetSysSplit = true;
     }
     if(strncmp(argv[i],"-smoothAll", 10) == 0){
       smoothFakes = true;

@@ -526,7 +526,7 @@ void FitInputEditor::AddShapeSysFakes(bool sJetSplit){
   // loop through lepton multiplicity
   for(int i = 0; i < 3; i++){
     string sgroup = Form("Fake_%dL", i+1);
-
+//    string sgroup = "Fake_";
     CT_groups.clear();
     CTs[i].GetListDepth(CT_groups,1);
 
@@ -546,7 +546,9 @@ void FitInputEditor::AddShapeSysFakes(bool sJetSplit){
 	int Nproc = procs.GetN();
 	bool b_addSys_RISR  = false;
 	bool b_addSys_Mperp = false;
-	string sys_name = pr->first+"_"+sgroup;
+	string proc_name = pr->first;
+	proc_name.pop_back();
+	string sys_name = proc_name+"_"+sgroup;
 	if(sJetSplit) sys_name += "_"+CT_groups[g]->GetSpecLabel();
 	Systematic sys_RISR(sys_name+"_RISR");
 	Systematic sys_Mperp(sys_name+"_Mperp");
@@ -632,7 +634,7 @@ void FitInputEditor::AddShapeSysQCD(){
   vector<CategoryTree> CTs;
   
   CTs.push_back(CTTool.GetCategories_QCD0L());
-  CTs.push_back(CTTool.GetCategories_QCD1L());
+  //CTs.push_back(CTTool.GetCategories_QCD1L());
   
   ProcessList processes = GetProcesses();
   int Nproc = processes.GetN();
@@ -652,7 +654,7 @@ void FitInputEditor::AddShapeSysQCD(){
 
   for(int i = 0; i < 2; i++){
     CT_groups.clear();
-    CTs[i].GetListDepth(CT_groups,1);
+    CTs[i].GetListDepth(CT_groups,0);
   //  for(int j = 0; j < int(catTrees.size()); j++)
   //    CT_groups.push_back(catTrees[j]);
    //string sgroup = Form("QCD_%dL",i+1);

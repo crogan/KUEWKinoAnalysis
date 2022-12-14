@@ -43,6 +43,8 @@ int main(int argc, char* argv[]) {
   bool verbose = false;
   int  year    = 2017;
 
+  double xsec_norm = -999.0;
+
   bool workspace = false;
 
   bool doMCstats = false;
@@ -151,6 +153,10 @@ int main(int argc, char* argv[]) {
       batch = true;
       connect = true;
     }
+    if(strncmp(argv[i],"--setXsec", 9) == 0){
+      i++;
+      xsec_norm = std::stod(argv[i]);
+    }
      
   }
     
@@ -225,7 +231,6 @@ int main(int argc, char* argv[]) {
   else 
     channels = FIT.GetChannels().FilterOR(chan_to_add);
   channels = channels.RemoveOR(chan_to_rem);
- 
   CategoryList categories;
   if(addCat)
     categories = FIT.GetCategories();
@@ -240,6 +245,20 @@ int main(int argc, char* argv[]) {
     systematics = FIT.GetSystematics().FilterOR(sys_to_add);
   if(systematics.GetN() > 0)
     systematics = systematics.RemoveOR(sys_to_rem);
+//cout << "systematics" << endl;
+//  for(int s = 0; s < systematics.GetN(); s++)
+//    cout << systematics[s].Label() << endl;
+
+CategoryTree CT_Fakes1L;
+vector<const CategoryTree*> catTrees;
+CT_Fakes1L.GetListDepth(catTrees,1);
+vector<string> catLabels;
+map<string,VC> catBins;
+//for(int i = 0; i < int(catTrees.size()); i++) catBins[catTrees[i]->GetSpecLabel()] = categories.Filter(*catTrees[i]).GetCategories();
+//if(catBins.count("1Lel1J") > 0) cout << catBins["1Lel1J"].size() << endl;
+
+
+
 
   ////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////
@@ -271,6 +290,7 @@ int main(int argc, char* argv[]) {
       cout << " with categories/bins:" << endl;
     
     VC cats = chanMap[c].GetCategories();
+ //cout << "# categories for AddObservations: " << cats.size() << endl;
     
     if(verbose){
       cout << "  $BIN_ID   $BIN" << endl; 
@@ -278,11 +298,13 @@ int main(int argc, char* argv[]) {
 	cout << "     " << p.first << "      " << p.second << endl;
       cout << endl;
     }
-
-    cb.AddObservations({"*"}, {Ana}, {Era}, {c}, cats);
+   cb.AddObservations({"*"}, {Ana}, {Era}, {c}, cats);
   }
-  
-  // Add all the background processes
+ 
+
+
+VC total_cats;
+ // Add all the background processes
   int Nbkg = backgrounds.GetN();
   for(int b = 0; b < Nbkg; b++){
     Process proc = backgrounds[b];
@@ -305,7 +327,8 @@ int main(int argc, char* argv[]) {
 	continue;
 
       VC cats = filled.GetCategories();
-      cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
+	for(auto c : cats) total_cats.push_back(c);      
+cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
 
     }
   }
@@ -333,6 +356,7 @@ int main(int argc, char* argv[]) {
         continue;
 
       VC cats = filled.GetCategories();
+	for(auto c : cats) total_cats.push_back(c);      
       SM sig  = proc.GetSM();
       cb.AddProcesses(sig.second, {Ana}, {Era}, {ch}, {sig.first+"_"}, cats, true);
 
@@ -343,33 +367,72 @@ int main(int argc, char* argv[]) {
   //CONFIG.Configure(cb, processes);
 
   VS bkg_rate;
-  bkg_rate += "ttbar"; //removing for ttbar hierarchy testing
-  bkg_rate += "Wjets"; //removing scale wjets for hierarchy
+//  bkg_rate += "ttbar"; //removing for ttbar hierarchy testing
+//  bkg_rate += "Wjets"; //removing scale wjets for hierarchy
   bkg_rate += "ZDY";
-  bkg_rate += "QCD";
+//  bkg_rate += "QCD";
   bkg_rate += "DB";
   CONFIG.AddFloatingNorms(bkg_rate, cb, processes);
   
   VS bkg_rare;
-  bkg_rare += "ST";
+  //bkg_rare += "ST";
   bkg_rare += "TB";
   CONFIG.AddRareNorms(bkg_rare, 0.4, cb, processes);
   
   CONFIG.AddCommonSys(cb, processes);
   CONFIG.AddFakeLeptonSys(cb, processes);
   CONFIG.AddSVSys(cb, processes);
-  CONFIG.AddBJetSys(cb, processes);
   ProcessList proc_LF_Fakes = proc_fakes;
   proc_LF_Fakes = proc_LF_Fakes.Filter("f1");
   CONFIG.AddFakeSSSys(cb, proc_LF_Fakes);
-  CONFIG.AddKinematicSys(cb, processes);
+
+  VS top;
+  top += "ST";
+  top += "ttbar";
+  VS TopQCD;
+  TopQCD += "QCD";
+  TopQCD += "ttbar";
+  TopQCD += "ST";
+  ProcessList bkg_noTopQCD = backgrounds.RemoveOR(TopQCD);
+  ProcessList bkg_noTop = backgrounds.RemoveOR(top);
+  ProcessList bkg_noQCD = backgrounds.Remove("QCD");
+  ProcessList Top_only = backgrounds.FilterOR(top);
+  ProcessList QCD_only = backgrounds.Filter("QCD");
+  //CONFIG.AddBJetSys(cb, backgrounds, "");
+  //CONFIG.AddPTISRSys(cb, backgrounds, "");
+  //CONFIG.AddgamTSys(cb, backgrounds, "");
+  CONFIG.AddCommonBJetSys(cb, backgrounds);
+  CONFIG.Add0LBJetSys(cb, bkg_noTop, "other_");
+  CONFIG.Add0LBJetSys(cb, Top_only, "top_");
+  CONFIG.Add1LBJetSys(cb, bkg_noTop, "other_");
+  CONFIG.Add1LBJetSys(cb, Top_only, "top_");
+
+  CONFIG.Add0LPTISRSys(cb, bkg_noQCD, "other_");
+  CONFIG.Add0LPTISRSys(cb, QCD_only, "QCD_");
+  CONFIG.Add1LPTISRSys(cb, backgrounds, "");
+
+  CONFIG.Add0LgamTSys(cb, bkg_noQCD, "other_");
+  CONFIG.Add0LgamTSys(cb, QCD_only, "QCD_");
+  CONFIG.Add1LgamTSys(cb, backgrounds, "");
+  CONFIG.AddCommongamTSys(cb, backgrounds);
+
+  //CONFIG.AddLeptonQualityNormSys(cb, processes);
+  //CONFIG.AddSJetLeptonQualityNormSys(cb, processes);
+  CONFIG.AddLeptonCategoryNormSys(cb, processes);
 
   VS Wjets; //removing norm wjets for hierarchy leave VS for later hier call
+  VS WjetsDY0L;
   Wjets += "Wjets";
+  WjetsDY0L += "Wjets";
+  WjetsDY0L += "ZDY";
   SystDict smW;
+  SystDict smW0L;
   CONFIG.initSystDictW(smW);
   CONFIG.AddNormHierarchy( smW, Wjets, cb,processes) ;
-//  cb.PrintSysts();
+
+  CONFIG.initSystDictW0L(smW0L);
+  CONFIG.AddNormHierarchy( smW0L, WjetsDY0L, cb, processes);
+
 //   CONFIG.AddSJetNormSys("Wjets", Wjets, cb, processes);
 
 
@@ -384,7 +447,7 @@ int main(int argc, char* argv[]) {
 
   VS QCD;
   QCD += "QCD";
-  CONFIG.AddSJetNormSys("QCD", QCD, cb, processes);
+  CONFIG.AddQCDNormSys("QCD", QCD, cb, processes);
 
 /*
   VS Other;
@@ -402,12 +465,15 @@ CONFIG.AddSJetNormSys("Other", Other, cb, processes);
  VS ZDYDB;
  ZDYDB += "ZDY";
  ZDYDB += "DB";
- CONFIG.AddSJetNormSys("ZDYDB", ZDYDB, cb, processes);
+// CONFIG.AddSJetNormSys("ZDYDB", ZDYDB, cb, processes);
+ CONFIG.AddLNormSys("ZDYDB", ZDYDB, cb, processes, std::vector<std::string>{"1L","2L","3L" }, 1.2);
 
- VS STTB;
- STTB += "ST";
- STTB += "TB";
- CONFIG.AddSJetNormSys("STTB", STTB, cb, processes);
+ VS ST;
+ ST += "ST";
+ //ST += "TB";
+ CONFIG.AddLNormSys("ST", ST, cb, processes, std::vector<std::string>{"0L","1L","2L"}, 1.2);
+// CONFIG.AddSJetNormSys("STTB", STTB, cb, processes);
+
 /*
 VS ZDY;
 ZDY += "ZDY";
@@ -418,31 +484,42 @@ DB += "DB";
 //DBTB += "TB";
 CONFIG.AddSJetNormSys("DB",DB,cb, processes);
 */
+
+
+  //cb.PrintSysts();
+
  using ch::syst::SystMap;
   using ch::syst::era;
   using ch::syst::channel;
   using ch::syst::bin_id;
   using ch::syst::process;
-
+ 
+if(xsec_norm != -999.0){
+  cout << "Setting signal cross section to: " << xsec_norm << endl;
+  cb.cp().AddSyst(cb, "xsec_norm","rateParam",SystMap<>::init(xsec_norm));
+  cb.AddDatacardLineAtEnd("nuisance edit freeze xsec_norm "+std::to_string(xsec_norm));
+ }
+else cout << "Nominal signal cross section: " << xsec_norm << endl;
   SystematicsTool SYS;
   Systematics shapeToNorm = SYS.GetConvertedSystematics();
  
  int Nsys = systematics.GetN();
   if(Nsys > 0){
     cout << "+ Adding shape systematics" << endl;
-    for(int s = 0; s < Nsys; s++){
+    for(int s = 0; s < Nsys; s++){  
       Systematic& sys = systematics[s];
-if(shapeToNorm.Contains(sys)){
-        CONFIG.AddShapeSysAsNorm(sys,cb,FIT); continue;
-      }  
-    ProcessList proc_sys;
+      if(shapeToNorm.Contains(sys)){ 
+        CONFIG.AddShapeSysAsNorm(sys,cb,FIT);
+        continue;
+      }
+      ProcessList proc_sys;
 
       for(int p = 0; p < Nbkg; p++)
 	if(FIT.HasSystematic(backgrounds[p], sys))
 	  proc_sys += backgrounds[p];
-      for(int p = 0; p < Nsig; p++)
-	if(FIT.HasSystematic(signals[p], sys))
-	  proc_sys += signals[p];
+//      for(int p = 0; p < Nsig; p++)
+//	if(FIT.HasSystematic(signals[p], sys))
+//	  proc_sys += signals[p];
 
       if(proc_sys.GetN() > 0){
 	cout << "  + " << sys.Label() << endl;
@@ -452,6 +529,7 @@ if(shapeToNorm.Contains(sys)){
 	  Process proc = proc_sys[p];
 	  // looping through categories to check that process/sys/cat is filled
 	  VS cat_names;
+//cout << "proc: " << proc.Name() << " with sys: " << sys.Label() << endl;
 	  for(auto ch : channels){
 	    int Ncat = chanMap[ch].GetN();
 	    for(int c = 0; c < Ncat; c++){
@@ -461,6 +539,7 @@ if(shapeToNorm.Contains(sys)){
 	      }
 	    }
 	  }
+	  if(cat_names.size() > 0)
 	  cb.cp().process(VS().a(proc.Name())).bin(cat_names)
 		  .AddSyst(cb, sys.Label(), "shape", SystMap<>::init(1.00));
 	}
@@ -477,7 +556,6 @@ if(shapeToNorm.Contains(sys)){
   // autoMCStats
   if(doMCstats)
     cb.cp().SetAutoMCStats(cb, -1.);
-  
   /*
     auto bbb = ch::BinByBinFactory()
     .SetAddThreshold(0.1)
@@ -505,7 +583,26 @@ if(shapeToNorm.Contains(sys)){
 
   // Loop through all signals and write a datacard, create output
   
-  VC cats = categories.GetCategories();
+//  VC cats = categories.GetCategories();
+
+//set<pair<int,string>> VC_set(total_cats.begin(),total_cats.end());
+//cout << "# categories for AddProcesses: " << VC_set.size() << " " << total_cats.size()<< endl;
+//cout << "bin_set: " << cb.bin_set().size() << endl;
+//cout << "bin set from Observations: " << cb.SetFromObs(std::mem_fn(&ch::Process::bin)).size() << endl;
+//cout << "bin set from Systematics: " << cb.SetFromSysts(std::mem_fn(&ch::Process::bin)).size() << endl;
+//cout << "imax: " << cb.SetFromProcs(std::mem_fn(&ch::Process::bin)).size() << endl;
+//
+//vector<string> binSet;
+//vector<string> setFromProcs;
+//for(auto b : cb.bin_set()) binSet.push_back(b);//cout << b << endl;
+//for(auto b : cb.SetFromProcs(std::mem_fn(&ch::Process::bin))) setFromProcs.push_back(b);//cout << b << endl;
+//int len = min(binSet.size(),setFromProcs.size());
+//for(int i = 0; i < len; i++){
+//  if(binSet[i] == setFromProcs[i]) continue;
+//  else{ cout << i << endl; cout << "binSet"  << endl; cout << binSet[i-1] << " " << binSet[i] << " " << binSet[i+1] << endl;
+//    cout << "setFromProcs" << endl; cout << setFromProcs[i-1] << " " << setFromProcs[i] << " " << setFromProcs[i+1] << endl; break; }
+//
+//}
 
   cout << "* Writing ouput to " << OutputFold << endl;
   string OutputFile = "";
@@ -546,7 +643,8 @@ if(shapeToNorm.Contains(sys)){
       fold = OutputFold+"/all/"+sm.first+"/"+m;
       if(connect)
         fold = "datacards/all/"+sm.first+"/"+m;
-      gSystem->Exec(("mkdir -p "+fold).c_str());
+      //cout << "making directory: " << fold << endl;
+	gSystem->Exec(("mkdir -p "+fold).c_str());
       
       if(verbose)
 	cout << "    * all channels " << sm.first+"_"+m << endl;

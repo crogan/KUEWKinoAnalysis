@@ -113,7 +113,8 @@ double ScaleFactorTool::GetBtagSFWeight(ReducedBase* base, int year, bool fastsi
     EFF = m_BtagSFTool.EFF(PT, year, iflavor, fastsim);
     SF  = m_BtagSFTool.SF(PT, year, iflavor, updown);
 
-    //std::cout << iflavor << " " << PT << " " << EFF << " " << SF << " " << base->BtagID_jet->at(i) << std::endl;
+//    std::cout << "year: "<< year<< " fastsim: " << fastsim << " HForLF: " << HForLF << " updown: "<< updown <<"\n";
+//    std::cout << "iflavor:" <<iflavor << " PT:  " << PT << " EFF: " << EFF << " SF: " << SF << " base:  " << base->BtagID_jet->at(i) << std::endl;
     if(fastsim)
       SF *= m_BtagSFTool.SF(PT, year, iflavor, updown, fastsim);
 
