@@ -68,14 +68,21 @@ void NtupleBase<Base>::WriteNtuple(const string& filename, int ichunk, int nchun
       m_Label2Tree[sample] = std::vector<TTree*>();
 
       for(int s = 0; s < Nsys; s++){
-	TTree* tree = InitOutputTree(AnalysisBase<Base>::m_Systematics[s].Up().TreeName(sample));
-	m_Label2Tree[sample].push_back(tree);
-	m_Trees.push_back(tree);
-	if(!(!AnalysisBase<Base>::m_Systematics[s])){
-	  tree = InitOutputTree(AnalysisBase<Base>::m_Systematics[s].Down().TreeName(sample));
-	  m_Label2Tree[sample].push_back(tree);
-	  m_Trees.push_back(tree);
-	}
+        if(AnalysisBase<Base>::m_Systematics[s].Label().compare("METUncer_GenMET") == 0){
+	 TTree* tree = InitOutputTree(AnalysisBase<Base>::m_Systematics[s].Up().TreeName(sample));
+	 m_Label2Tree[sample].push_back(tree);
+	 m_Trees.push_back(tree);
+        }
+        else{
+	 TTree* tree = InitOutputTree(AnalysisBase<Base>::m_Systematics[s].Up().TreeName(sample));
+	 m_Label2Tree[sample].push_back(tree);
+	 m_Trees.push_back(tree);
+	 if(!(!AnalysisBase<Base>::m_Systematics[s])){
+	   tree = InitOutputTree(AnalysisBase<Base>::m_Systematics[s].Down().TreeName(sample));
+	   m_Label2Tree[sample].push_back(tree);
+	   m_Trees.push_back(tree);
+	 }
+        }
       }
     }
     

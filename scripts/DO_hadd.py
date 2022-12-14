@@ -25,14 +25,37 @@ if __name__ == "__main__":
     print "Output Directory: %s" % (OUT_DIR)
         
     # create and organize output folders
-    #os.system("rm -rf "+OUT_DIR)
     os.system("mkdir -p "+OUT_DIR)
 
+    skip_list = [
+        #"SMS-T2bW_TuneCP2_13TeV-madgraphMLM-pythia8",
+        #"SMS-T2tt_mStop-400to1200_TuneCP2_13TeV-madgraphMLM-pythia8",
+    ]
+
+    isFirstDir = True
+    if os.path.exists("scripts/startup_C.so") is False:
+        os.system("cd scripts && root.exe -b -l -q startup.C+ && cd ..")
     for dirs in os.walk(IN_DIR):
+        skip = False
         target = dirs[0].split("/")
         target = target[-1]
-        print target
-        haddcmd = "hadd -f "+OUT_DIR+"/"+target+".root "
-        haddcmd += IN_DIR+"/"+target+"/*.root"
-        print haddcmd
+        if isFirstDir:
+            isFirstDir = False
+            continue
+        for dataset in skip_list:
+            if dataset in target:
+                skip = True
+        if skip:
+            continue
+
+        #print target
+        #haddcmd = "hadd -f "+OUT_DIR+"/"+target+".root "
+        for i in range(0,10):
+            os.system("mkdir -p "+IN_DIR+"/"+target+"/"+target+"_"+str(i))
+            os.system("mv "+IN_DIR+"/"+target+"/"+target+"_*"+str(i)+".root "+IN_DIR+"/"+target+"/"+target+"_"+str(i))
+            os.system("LD_PRELOAD=scripts/startup_C.so hadd -f "+IN_DIR+"/"+target+"/"+target+"_"+str(i)+".root "+IN_DIR+"/"+target+"/"+target+"_"+str(i)+"/*.root")
+        haddcmd = "LD_PRELOAD=scripts/startup_C.so hadd -f "+OUT_DIR+"/"+target+".root "+IN_DIR+"/"+target+"/*.root"
+        #print haddcmd
         os.system(haddcmd)
+
+    print("Finished Merging Files")

@@ -36,13 +36,13 @@ root://cmsxrootd.fnal.gov//store/data/Run2017C/DoubleMuonLowMass/NANOAOD/02Apr20
 root://cmsxrootd.fnal.gov//store/data/Run2017C/DoubleMuonLowMass/NANOAOD/02Apr2020-v1/250000/8DDE902C-3541-8142-B6E8-D1A391C06BC8.root
 root://cmsxrootd.fnal.gov//store/data/Run2017C/DoubleMuonLowMass/NANOAOD/02Apr2020-v1/250000/79ABF6AF-9BD6-954D-A3A4-6C1B0FF83615.root
 root://cmsxrootd.fnal.gov//store/data/Run2017C/DoubleMuonLowMass/NANOAOD/02Apr2020-v1/250000/23017C9B-72FF-1844-A103-E8B7837CDC6A.root
-root://cmsxrootd.fnal.gov//store/data/Run2017C/DoubleMuonLowMass/NANOAOD/02Apr2020-v1/230000/E001EBBE-F1B5-1E4D-9D86-BD87A5F367F9.root
 root://cmsxrootd.fnal.gov//store/data/Run2017C/DoubleMuonLowMass/NANOAOD/02Apr2020-v1/230000/A944DDA6-706E-7049-A041-46BBF819C461.root
 root://cmsxrootd.fnal.gov//store/data/Run2017C/DoubleMuonLowMass/NANOAOD/02Apr2020-v1/230000/870F6658-84CD-3A49-8A10-84851C0EDF76.root
 root://cmsxrootd.fnal.gov//store/data/Run2017C/DoubleMuonLowMass/NANOAOD/02Apr2020-v1/230000/442FEF45-3056-9A43-A4F6-8B3B22FD97EE.root
+root://cmsxrootd.fnal.gov//store/data/Run2017C/DoubleMuonLowMass/NANOAOD/02Apr2020-v1/230000/E001EBBE-F1B5-1E4D-9D86-BD87A5F367F9.root
 root://cmsxrootd.fnal.gov//store/data/Run2017C/DoubleMuonLowMass/NANOAOD/02Apr2020-v1/230000/7588DE89-6496-124D-AF85-C9801B95CAFE.root
 root://cmsxrootd.fnal.gov//store/data/Run2017C/DoubleMuonLowMass/NANOAOD/02Apr2020-v1/230000/2B0D9EC2-9504-3345-A269-613CEF2D3756.root
 root://cmsxrootd.fnal.gov//store/data/Run2017C/DoubleMuonLowMass/NANOAOD/02Apr2020-v1/230000/D3628BFD-4B44-A44D-8205-C6BDCA9A0F1F.root
 root://cmsxrootd.fnal.gov//store/data/Run2017C/DoubleMuonLowMass/NANOAOD/02Apr2020-v1/230000/F54FA96D-6642-D94D-B194-606C42BFBDFB.root
-root://cmsxrootd.fnal.gov//store/data/Run2017C/DoubleMuonLowMass/NANOAOD/02Apr2020-v1/70000/D40CD56C-76F9-834C-A95F-A28A643017DB.root
 root://cmsxrootd.fnal.gov//store/data/Run2017C/DoubleMuonLowMass/NANOAOD/02Apr2020-v1/710000/354C7AC0-9CC7-4647-8864-E42194C8364C.root
+root://cmsxrootd.fnal.gov//store/data/Run2017C/DoubleMuonLowMass/NANOAOD/02Apr2020-v1/70000/D40CD56C-76F9-834C-A95F-A28A643017DB.root

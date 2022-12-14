@@ -18,6 +18,7 @@
 #include "JMETool.hh"
 #include "SVDiscrTool.hh"
 #include "METTriggerTool.hh"
+#include "PrefireTool.hh"
 
 #include "Particle.hh"
 #include "Systematics.hh"
@@ -42,6 +43,7 @@ public:
   void AddJMEFolder(const string& jmefold);
   void AddSVDiscrFile(const string& svfile);
   void AddMETTriggerFile(const string& csvfile);
+  void AddPrefireFile(const string& prefirefile);
   #ifdef _CMSSW_
   void AddLHAPDF();
   #endif
@@ -65,6 +67,9 @@ public:
   virtual long GetEventNum();
 
   virtual bool PassEventFilter();
+  virtual bool FastSimEventVeto(const ParticleList& GenJets);
+  virtual double EGvalue(int jetIndex, int updown);
+  virtual double GetPrefireWeight(int updown);
   
   // analysis functions
   virtual int GetNPV();
@@ -152,6 +157,7 @@ private:
   SVDiscrTool     m_SVDiscrTool;
   SystematicsTool m_SysTool;
   METTriggerTool  m_METTriggerTool;
+  PrefireTool     m_PrefireTool;
 
   int m_SampleIndex;
   virtual int GetSampleIndex();

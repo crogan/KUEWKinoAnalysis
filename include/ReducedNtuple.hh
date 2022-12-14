@@ -76,12 +76,17 @@ private:
   double m_HT_eta5_id;
   
   bool m_EventFilter;
+  bool m_FastSimEventVeto;
 
   bool m_EventFlag_FailJetID;
   bool m_EventFlag_JetInHEM;
   bool m_EventFlag_JetInHEM_Pt20;
   bool m_EventFlag_JetInHEM_Pt20_JetID;
   bool m_HEM_Veto;
+
+  double m_PrefireWeight;
+  double m_PrefireWeight_up;
+  double m_PrefireWeight_down;
   
   bool m_METtrigger;
   bool m_METHTtrigger;

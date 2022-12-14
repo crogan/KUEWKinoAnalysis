@@ -80,7 +80,8 @@ bool Systematic::operator > (const Systematic& sys) const {
 }
 
 std::string Systematic::TreeName(const string& name) const {
-
+  if(m_Label.compare("METUncer_GenMET") == 0)
+    return name+"_"+m_Label;
   if(this->IsDefault())
     return name;
   else
@@ -362,6 +363,7 @@ Systematics SystematicsTool::GetTreeSystematics() const {
   
   list += "JESUncer_Total";
   list += "METUncer_UnClust";
+  list += "METUncer_GenMET";
   // list += "JESUncer_CorrelationGroupMPFInSitu";
   // list += "JESUncer_CorrelationGroupIntercalibration";
   // list += "JESUncer_CorrelationGroupbJES";
@@ -451,6 +453,7 @@ void SystematicsTool::Init(){
   m_EESSys += "EESUncer_Total";
   
   m_METSys += "METUncer_UnClust";
+  m_METSys += "METUncer_GenMET";
   m_METSys.Add(m_JESSys);
 
 }

@@ -36,10 +36,10 @@ root://cmsxrootd.fnal.gov//store/data/Run2017E/SingleElectron/NANOAOD/02Apr2020-
 root://cmsxrootd.fnal.gov//store/data/Run2017E/SingleElectron/NANOAOD/02Apr2020-v1/40000/B34DD250-3A3D-0B49-BBB2-A99E427E19EF.root
 root://cmsxrootd.fnal.gov//store/data/Run2017E/SingleElectron/NANOAOD/02Apr2020-v1/40000/00B14BC5-7A6F-A243-900D-AC525FA7A263.root
 root://cmsxrootd.fnal.gov//store/data/Run2017E/SingleElectron/NANOAOD/02Apr2020-v1/40000/5869B887-3615-8F4C-8BD5-65AC7E7A10F7.root
-root://cmsxrootd.fnal.gov//store/data/Run2017E/SingleElectron/NANOAOD/02Apr2020-v1/40000/07C7C75B-DFF9-624C-B0E1-7182D9799619.root
 root://cmsxrootd.fnal.gov//store/data/Run2017E/SingleElectron/NANOAOD/02Apr2020-v1/40000/5C2FEC47-EFF1-984C-AF84-5C4E06AFE1DD.root
 root://cmsxrootd.fnal.gov//store/data/Run2017E/SingleElectron/NANOAOD/02Apr2020-v1/40000/C8C41137-5D0E-7846-A2E6-561E378904ED.root
 root://cmsxrootd.fnal.gov//store/data/Run2017E/SingleElectron/NANOAOD/02Apr2020-v1/40000/3D4E6F64-C1C7-724F-9D31-43934508720B.root
+root://cmsxrootd.fnal.gov//store/data/Run2017E/SingleElectron/NANOAOD/02Apr2020-v1/40000/07C7C75B-DFF9-624C-B0E1-7182D9799619.root
 root://cmsxrootd.fnal.gov//store/data/Run2017E/SingleElectron/NANOAOD/02Apr2020-v1/40000/4F1F58C2-37FB-5C4D-A754-C993A3E114FF.root
 root://cmsxrootd.fnal.gov//store/data/Run2017E/SingleElectron/NANOAOD/02Apr2020-v1/40000/DA2732F5-7460-B749-8987-82A8F2CE0943.root
 root://cmsxrootd.fnal.gov//store/data/Run2017E/SingleElectron/NANOAOD/02Apr2020-v1/40000/90341297-C821-EF42-84FD-FD30F3DCEC10.root
