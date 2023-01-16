@@ -1,3 +1,4 @@
+.lf 1 ../ListMaker/DataSetsList/bkg/Datasets_2018.txt
 GJets_DR-0p4_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8
 ZZTo2L2Nu_TuneCP5_13TeV_powheg_pythia8
 TTZToQQ_TuneCP5_13TeV-amcatnlo-pythia8
@@ -104,3 +105,6 @@ WJetsToLNu_Pt-250To400_TuneCP5_13TeV-amcatnloFXFX-pythia8
 WJetsToLNu_Pt-400To600_TuneCP5_13TeV-amcatnloFXFX-pythia8
 WJetsToLNu_Pt-50To100_TuneCP5_13TeV-amcatnloFXFX-pythia8
 WJetsToLNu_Pt-600ToInf_TuneCP5_13TeV-amcatnloFXFX-pythia8
+TTToHadronic_TuneCP5_13TeV-powheg-pythia8
+TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8
+TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8

@@ -49,6 +49,9 @@ samples/NANO/Autumn18_102X/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pyth
 samples/NANO/Autumn18_102X/TTJets_SingleLeptFromTbar_TuneCP5_13TeV-madgraphMLM-pythia8.txt
 #samples/NANO/Autumn18_102X/TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8.txt
 #samples/NANO/Autumn18_102X/TTJets_TuneCP5_13TeV-madgraphMLM-pythia8.txt
+#samples/NANO/Autumn18_102X/TTTo2L2Nu_TuneCP5_13TeV-powheg-pythia8.txt
+#samples/NANO/Autumn18_102X/TTToHadronic_TuneCP5_13TeV-powheg-pythia8.txt
+#samples/NANO/Autumn18_102X/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8.txt
 samples/NANO/Autumn18_102X/TTTT_TuneCP5_13TeV-amcatnlo-pythia8.txt
 samples/NANO/Autumn18_102X/TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8.txt
 samples/NANO/Autumn18_102X/TTWJetsToQQ_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8.txt
