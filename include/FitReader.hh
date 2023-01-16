@@ -81,8 +81,10 @@ public:
   const CategoryList& GetCategories(const string& channel = "") const;         
   const Systematics&  GetSystematics() const;
 
-map<string,VS> m_Strings;
+  map<string,VS> m_Strings;
   mutable map<Process,Systematics> m_ProcSys;
+
+  static double CalculateZbi(double Nsig, double Nbkg, double deltaNbkg);
 
 protected:
   mutable TFile  m_File;
@@ -105,6 +107,8 @@ protected:
   
   CategoryBranch m_CatBranch;
   void ReadCategories();
+
+  double SuperBinValue(vector<double> sig_yields, vector<double> bkg_yields, double sys, vector<string> cat_label, bool verbose=false);  
   
 };
 

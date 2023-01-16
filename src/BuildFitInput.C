@@ -392,7 +392,7 @@ int main(int argc, char* argv[]) {
 	    id = kGold;
 	  LepFlavor flavor;
 	  if(abs(PDGID) == 11)
-	    flavor = kElectron;
+	    flavor = kElec;
 	  else
 	    flavor = kMuon;
 	  LepCharge charge = (base->Charge_lep->at(index) > 0 ? kPos : kNeg);
@@ -417,7 +417,7 @@ int main(int argc, char* argv[]) {
 	    id = kGold;
 	  LepFlavor flavor;
 	  if(abs(PDGID) == 11)
-	    flavor = kElectron;
+	    flavor = kElec;
 	  else
 	    flavor = kMuon;
 	  LepCharge charge = (base->Charge_lep->at(index) > 0 ? kPos : kNeg);

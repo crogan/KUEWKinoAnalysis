@@ -113,6 +113,10 @@ CriteriaList& CriteriaList::operator += (const CriteriaList& criteria){
 
 VS::VS() {}
 
+VS::VS(const string s){
+  *this += s;
+}
+
 VS::VS(const vector<string>& vs){
   for(auto s : vs)
     *this += s;

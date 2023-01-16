@@ -736,7 +736,6 @@ CategoryTree CategoryTreeTool::GetCategories_1L_fineSplit() const {
   CT_1bISR_1j.AddSubCategory(CT_p0);
   CT_1bISR_1j.AddSubCategory(CT_p1);
 
-
   CT_0bISR.AddSubCategory(CT_p0);
   CT_0bISR.AddSubCategory(CT_p1);
   CT_1bISR.AddSubCategory(CT_p0);
@@ -807,11 +806,16 @@ CategoryTree CategoryTreeTool::GetCategories_1L_fineSplit() const {
   CategoryTree CT_2j(VS().a("_2j"), "2 j #in S", "2J", kJ, true);
   CategoryTree CT_3j(VS().a("_3j"), "3 j #in S", "3J", kJ, true);
   CategoryTree CT_ge4j(VS().a("_ge4j"), "#geq 4 j #in S", "4J", kJ, true);
+
+  CategoryTree CT_elp(VS().a("elp"), "elp", "e^{+}", kL_sub, true);
+  CategoryTree CT_elm(VS().a("elm"), "elm", "e^{-}", kL_sub, true);
+  CategoryTree CT_mup(VS().a("mup"), "mup", "#mu^{+}", kL_sub, true);
+  CategoryTree CT_mum(VS().a("mum"), "mum", "#mu^{-}", kL_sub, true);
   
   CT_0j.AddSubCategory(CT_gold_0j);
   CT_0j.AddSubCategory(CT_silver_01j);
   CT_0j.AddSubCategory(CT_bronze_01j);
-
+  
   CT_1j.AddSubCategory(CT_gold_1j);
   CT_1j.AddSubCategory(CT_silver_01j);
   CT_1j.AddSubCategory(CT_bronze_01j);
@@ -819,10 +823,11 @@ CategoryTree CategoryTreeTool::GetCategories_1L_fineSplit() const {
   CT_2j.AddSubCategory(CT_gold_ge2j);
   CT_2j.AddSubCategory(CT_silver_ge2j);
   CT_2j.AddSubCategory(CT_bronze_ge2j);
- 
+  
   CT_3j.AddSubCategory(CT_gold_ge2j);
   CT_3j.AddSubCategory(CT_silver_ge2j);
   CT_3j.AddSubCategory(CT_bronze_ge2j);
+  
   CT_ge4j.AddSubCategory(CT_gold_ge2j);
   CT_ge4j.AddSubCategory(CT_silver_ge2j);
   CT_ge4j.AddSubCategory(CT_bronze_ge2j);
@@ -833,7 +838,6 @@ CategoryTree CategoryTreeTool::GetCategories_1L_fineSplit() const {
   CT_1L.AddSubCategory(CT_2j);
   CT_1L.AddSubCategory(CT_3j);
   CT_1L.AddSubCategory(CT_ge4j);
-
 
   return CT_1L;
 }
@@ -1016,6 +1020,7 @@ CategoryTree CategoryTreeTool::GetCategories_1L_plotFormat() const {
 
 
 CategoryTree CategoryTreeTool::GetCategories_2L_fineSplit() const {
+
   CategoryTree CT_0b(VS().a("j0bS"), "0b", "0b", kJ_sub, false);
   CategoryTree CT_1b(VS().a("j1bS").a("jge1bS"), "1b", "1b", kJ_sub, false);
  
@@ -1158,6 +1163,7 @@ CategoryTree CategoryTreeTool::GetCategories_2L_fineSplit() const {
   return CT_2L;
   
 }
+
 CategoryTree CategoryTreeTool::GetCategories_2L_flavorSplit() const {
   CategoryTree CT_0b(VS().a("j0bS"), "0b", "0b", kJ_sub, false);
   CategoryTree CT_1b(VS().a("j1bS").a("jge1bS"), "1b", "1b", kJ_sub, false);
@@ -1165,7 +1171,7 @@ CategoryTree CategoryTreeTool::GetCategories_2L_flavorSplit() const {
   CategoryTree CT_0bISR(VS().a("0bISR"), "0 b #in ISR", "0b", kX_sub, true);
   CategoryTree CT_1bISR(VS().a("ge1bISR"), "#geq 1 b #in ISR", "1b", kX_sub, true);
   CategoryTree CT_inclbISR(VS().a("ge1jISR"), "incl. b #in ISR", "", kX_sub, true);
-CategoryTree CT_g0(VS().a("gamT0"), "", "#gamma-", kX_sup, false);
+  CategoryTree CT_g0(VS().a("gamT0"), "", "#gamma-", kX_sup, false);
   CategoryTree CT_g1(VS().a("gamT1"), "", "#gamma+", kX_sup, false);
 
 
@@ -1191,22 +1197,23 @@ CategoryTree CT_g0(VS().a("gamT0"), "", "#gamma-", kX_sup, false);
 
   CategoryTree CT_p0(VS().a("PTISR0"), "", "", kX_sup, false);
   CategoryTree CT_p1(VS().a("PTISR1"), "", "p+", kX_sup, false);
- CT_1sv.AddSubCategory(CT_etaC);
+
+  CT_1sv.AddSubCategory(CT_etaC);
   CT_1sv.AddSubCategory(CT_etaF);
   CT_0sv_notGold.AddSubCategory(CT_inclbISR);
   CT_0sv_OS.AddSubCategory(CT_0bISR);
   CT_0sv_OS.AddSubCategory(CT_1bISR);
   CT_0sv_SS.AddSubCategory(CT_inclbISR);
-
-CT_1sv.AddSubCategory(CT_etaC);
+  /*
+  CT_1sv.AddSubCategory(CT_etaC);
   CT_1sv.AddSubCategory(CT_etaF);
   CT_0sv_notGold.AddSubCategory(CT_inclbISR);
   CT_0sv_OS.AddSubCategory(CT_0bISR);
   CT_0sv_OS.AddSubCategory(CT_1bISR);
   CT_0sv_SS.AddSubCategory(CT_inclbISR);
-
-//gold only
-CategoryTree CT_Z(VS().a("Zstar"), "Z*", "Z*", kL_sup, true);
+  */
+  //gold only
+  CategoryTree CT_Z(VS().a("Zstar"), "Z*", "Z*", kL_sup, true);
   CategoryTree CT_noZ(VS().a("noZ"), "noZ*", "noZ*", kL_sup, true);
   CategoryTree CT_SS_0(VS().a("SS"), "SS", "SS", kL_sup, true);
   CategoryTree CT_SS(VS().a("SS"), "SS", "SS", kL_sup, true);
@@ -1216,7 +1223,7 @@ CategoryTree CT_Z(VS().a("Zstar"), "Z*", "Z*", kL_sup, true);
   CategoryTree CT_OSelmu(VS().a("_OSelmu"),"elmu","elmu",kL_sup,false);
   CategoryTree CT_OSelel(VS().a("_OSelel"),"elel","elel",kL_sup,false);
 
-//silver, bronze only
+  //silver, bronze only
   CategoryTree CT_elel_0j(VS().a("elel"), "elel", "elel", kL_sup, true);
   CategoryTree CT_elmu_0j(VS().a("elmu"), "elmu", "elmu", kL_sup, true);
   CategoryTree CT_mumu_0j(VS().a("mumu"),"mumu","mumu",kL_sup, true);
@@ -1224,10 +1231,10 @@ CategoryTree CT_Z(VS().a("Zstar"), "Z*", "Z*", kL_sup, true);
   CategoryTree CT_elel(VS().a("elel"), "elel", "elel", kL_sup, true);
   CategoryTree CT_elmu(VS().a("elmu"), "elmu", "elmu", kL_sup, true);
   CategoryTree CT_mumu(VS().a("mumu"),"mumu","mumu",kL_sup, true);
-//gold, silver, and bronze
-CategoryTree CT_ll(VS().a("ll"),"ll","ll",kL_sup,true);
+  //gold, silver, and bronze
+  CategoryTree CT_ll(VS().a("ll"),"ll","ll",kL_sup,true);
 
-//gold
+  //gold
   CT_Z.AddSubCategory(CT_0b);
   CT_Z.AddSubCategory(CT_1b);
   CT_noZ.AddSubCategory(CT_0b);
@@ -2162,6 +2169,7 @@ CategoryTree CategoryTreeTool::GetCategories_QCD1L() const {
 
   return CT_1L;
 }
+
 CategoryTree CategoryTreeTool::GetCategories_Plot1L() const {
   
   CategoryTree CT_0b(VS().a("j0b").a("j0bS"), "0 b #in S", "0b", kJ_sub, true);
@@ -2318,3 +2326,14 @@ CategoryTree CategoryTreeTool::GetCategories_Plot1L() const {
   return CT_1L;
 }
 
+CategoryTree CategoryTreeTool::GetCategories_All() const {
+  CategoryTree CT_0L = GetCategories_0L_fineSplit();
+  CategoryTree CT_1L = GetCategories_1L_fineSplit();
+
+  CategoryTree CT_all(VS().a("Ch"), "", "", kNorm, false);
+
+  CT_all.AddSubCategory(CT_0L);
+  CT_all.AddSubCategory(CT_1L);
+  
+  return CT_all;
+}

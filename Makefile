@@ -51,8 +51,8 @@ SOBJ_FILES = $(filter-out ./obj/AnalysisBase.o ./obj/SVDiscrTool.o ./obj/Reduced
 all : GLIBS += -L/cvmfs/cms.cern.ch/slc7_amd64_gcc700/external/lwtnn/2.4-gnimlf3/lib -llwtnn
 all : CXX   += -I/cvmfs/cms.cern.ch/slc7_amd64_gcc700/external/lwtnn/2.4-gnimlf3/include/
 
-local : GLIBS += -L/Users/christopherrogan/GitHub/lwtnn/lib -llwtnn
-local : CXX   += -I/Users/christopherrogan/GitHub/lwtnn/include 
+local : GLIBS += -L/Users/andres/SUSYKU/lwtnn/lib -llwtnn
+local : CXX   += -I/Users/andres/SUSYKU/lwtnn/include 
 
 cmssw : GLIBS += -L../../lib/slc7_amd64_gcc700 -lCombineHarvesterCombinePdfs -lHiggsAnalysisCombinedLimit -lCombineHarvesterCombineTools
 cmssw : GLIBS += -L/cvmfs/cms.cern.ch/slc7_amd64_gcc700/external/lwtnn/2.4-gnimlf3/lib -llwtnn

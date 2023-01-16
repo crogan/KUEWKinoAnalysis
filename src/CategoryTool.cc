@@ -910,8 +910,8 @@ CategoryList CategoryTool::GetCategories_1L(bool maskSR) const {
   cout << "Creating 1L Categories" << endl;
 
   // define leptons
-  Lep elp(kElectron, kPos);
-  Lep elm(kElectron, kNeg);
+  Lep elp(kElec, kPos);
+  Lep elm(kElec, kNeg);
   Lep mup(kMuon, kPos);
   Lep mum(kMuon, kNeg);
 
@@ -1271,8 +1271,8 @@ CategoryList CategoryTool::GetCategories_2L(bool maskSR) const {
   cout << "Creating 2L Categories" << endl;
 
   // define leptons
-  Lep elp(kElectron, kPos);
-  Lep elm(kElectron, kNeg);
+  Lep elp(kElec, kPos);
+  Lep elm(kElec, kNeg);
   Lep mup(kMuon, kPos);
   Lep mum(kMuon, kNeg);
 
@@ -1776,8 +1776,8 @@ CategoryList CategoryTool::GetCategories_3L(bool maskSR) const {
   cout << "Creating 3L Categories" << endl;
 
   // define leptons
-  Lep elp(kElectron, kPos);
-  Lep elm(kElectron, kNeg);
+  Lep elp(kElec, kPos);
+  Lep elm(kElec, kNeg);
   Lep mup(kMuon, kPos);
   Lep mum(kMuon, kNeg);
 

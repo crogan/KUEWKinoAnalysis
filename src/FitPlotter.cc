@@ -13,6 +13,7 @@
 #include "FitPlotter.hh"
 #include "shapeComparison.hh"
 #include "plotShapeComparison.hh"
+#include "SuperBin.hh"
 
 #include "RestFrames/RestFrames.hh"
 
@@ -27,9 +28,7 @@ FitPlotter::FitPlotter(const string& inputfile,
   InitializeRecipes();
 }
 
-FitPlotter::~FitPlotter(){
-  
-}
+FitPlotter::~FitPlotter(){}
 
 TGraphErrors* FitPlotter::GetTotalBackground(const CategoryList& cat){
   TH1D* hist = nullptr;
@@ -1990,7 +1989,7 @@ int offset = 0;
 			     Form("can_%s", can_name.c_str()),
 			     1200, 700);
 
-  double yline = can->GetBottomMargin() - 0.02;
+  double yline = -999.;
   double hlo = 0.105;
   double hhi = 0.2;
   double hbo = 0.19;
@@ -2000,7 +1999,14 @@ int offset = 0;
   
   can->SetLeftMargin(hlo);
   can->SetRightMargin(hhi);
-  can->SetBottomMargin(hbo);
+  if(pType == kInv){
+    can->SetBottomMargin(hbo+0.05);
+    yline = can->GetBottomMargin() - 0.02;
+  }
+  else{
+    yline = can->GetBottomMargin() - 0.02;
+    can->SetBottomMargin(hbo);
+  }
   can->SetTopMargin(hto);
   can->SetGridy();
   can->SetLogy();
@@ -2013,8 +2019,12 @@ int offset = 0;
 
   if(b_ratio)
     pad->SetBottomMargin(hbo+ratio_h);
-  else
-    pad->SetBottomMargin(hbo);
+  else{
+    if(pType == kInv)
+      pad->SetBottomMargin(hbo+0.05);
+    else
+      pad->SetBottomMargin(hbo);
+  }
   pad->SetLeftMargin(hlo);
   pad->SetRightMargin(hhi);
   pad->SetTopMargin(hto);
@@ -2151,9 +2161,15 @@ rlabels += tmpcat[0].GetFitBin()[r].GetRBinLabel();
     string label;
     double xpos, ypos;
     if(pType == kInv){
+      //<<<<<<< HEAD
+      label = rlabels[b%Nbin];
+      xpos = hlo+(1.-hhi-hlo)/double(Nvis*Nbin)*(0.5+b);
+      ypos = yline;
+      /*=======
       label = rlabels[b];
       xpos = hlo+(1.-hhi-hlo)/double(Nbins_total)*(0.5+b);
       ypos = yline+0.015;
+      >>>>>>> 14c451b0b1162ef0a47f3f5fe742065b0f6bee6d*/
     }
     else{
       label = CatTrees[b%Nvis]->GetPlainLabel(Depth);
@@ -2341,7 +2357,7 @@ void FitPlotter::DrawMR(const FitBin& fitbin, TCanvas* can, TPad* pad, TPad* pad
   l.SetTextAngle(90);
   l.SetTextAlign(32);
   for(int b = 0; b < NB; b++){
-    l.DrawLatex(hlo + (1.-hhi-hlo)*(0.5+b)/double(NB), hbo - 4*eps, mlabels[b].c_str());
+    l.DrawLatex(hlo + (1.-hhi-hlo)*(0.5+b)/double(NB), hbo - 8*eps, mlabels[b].c_str());
     if(b > 0){
       line->DrawLineNDC(hlo + (1.-hhi-hlo)/double(NB)*b , hbo , hlo + (1.-hhi-hlo)/double(NB)*b, 1.-hto);
       if(pad_ratio){
@@ -2457,7 +2473,6 @@ void FitPlotter::DrawRM(vector<CategoryList> cats, TCanvas* can, TPad* pad, VS l
   TLatex l;
   l.SetTextFont(42);
   l.SetNDC();
-
 
   vector<int> NR;// fitbin.NBins();
   vector<int> NB; //fitbin.NRBins();
@@ -2587,7 +2602,7 @@ void FitPlotter::DrawRM(const FitBin& fitbin, TCanvas* can, TPad* pad, VS labels
       }
     }
 
-    l.DrawLatex(hlo + (1.-hhi-hlo)*(0.5+r)/double(Nl), 1 - hto - 4*eps, labels[r].c_str());
+    l.DrawLatex(hlo + (1.-hhi-hlo)*(0.5+r)/double(Nl), 1. - hto - 4*eps, labels[r].c_str());
   }
   
   l.SetTextAngle(0);
@@ -5387,7 +5402,8 @@ TCanvas* FitPlotter::PlotRegionSignificance(const string& can_name,
                              Form("can_%s", can_name.c_str()),
                              1200, 700);
 
-  double yline = can->GetBottomMargin() - 0.02;
+
+  double yline = -999.;
   double hlo = 0.1;
   double hhi = 0.25;
   double hto = 0.07;
@@ -5395,7 +5411,14 @@ TCanvas* FitPlotter::PlotRegionSignificance(const string& can_name,
 
   can->SetLeftMargin(hlo);
   can->SetRightMargin(hhi);
-  can->SetBottomMargin(hbo);
+  if(pType == kInv){
+    can->SetBottomMargin(hbo+0.05);
+    yline = can->GetBottomMargin() - 0.02;
+  }
+  else{
+    yline = can->GetBottomMargin() - 0.02;
+    can->SetBottomMargin(hbo);
+  }
   can->SetTopMargin(hto);
   can->SetGridx();
   can->SetGridy();
@@ -5469,7 +5492,7 @@ TCanvas* FitPlotter::PlotRegionSignificance(const string& can_name,
     if(pType == kInv){
       label = rlabels[b%Nbin];
       xpos = hlo+(1.-hhi-hlo)/double(Nvis*Nbin)*(0.5+b);
-      ypos = yline+0.015;
+      ypos = yline+0.008;
     }
     else{
       label = CatTrees[b%Nvis]->GetPlainLabel(Depth);
@@ -5493,6 +5516,243 @@ TCanvas* FitPlotter::PlotRegionSignificance(const string& can_name,
   can->SaveAs("plots/"+TString(can_name)+".pdf");
   can->SaveAs("plots/"+TString(can_name)+".gif");
   return can;
+}
+
+void FitPlotter::CombineBins(const string& can_name,
+			     const VS& proc_bkg,
+			     const VS& proc_sig,
+			     const CategoryTree& CT,
+			     CombineType cType,
+			     PlotType pType){
+
+  RestFrames::SetStyle();
+
+  CategoryList CatList = GetCategories();
+
+  vector<const CategoryTree*> CatTrees;
+  CT.GetListDeepest(CatTrees);
+
+  int Nbkg = proc_bkg.size();
+  int Nsig = proc_sig.size();
+  int Nvis = CatTrees.size();
+  int Ncat = CatList.GetN();
+
+  int Depth = CT.GetDepth();
+
+  if(Nsig == 0 ||
+     Nbkg == 0 ||
+     Nvis == 0 ||
+     Ncat == 0)
+    return;
+
+  CategoryList dumcat = CatList.Filter(*CatTrees[0]);
+  const FitBin& fitbin = dumcat[0].GetFitBin();
+
+  int Nbin;
+  if(pType == kFull)
+    Nbin = fitbin.NBins();
+  if(pType == kRISR || pType == kInv)
+    Nbin = fitbin.NRBins();
+
+  int NR = fitbin.NBins();
+  int NB = fitbin.NRBins();
+
+  ProcessList bkgs = FetchProcs(proc_bkg);
+  ProcessList sigs = FetchProcs(proc_sig);
+
+  //store background yields
+  double nBkgEvts[Nvis][Nbin];
+  for(int v = 0; v < Nvis; v++){
+
+    CategoryList cat = CatList.Filter(*CatTrees[v]);
+
+    vector<double> hbkgVec;
+    if(pType == kFull)
+      hbkgVec = GetAddedHistValues(cat, bkgs);
+    if(pType == kRISR || pType == kInv)
+      hbkgVec = IntegrateMperp(fitbin, GetAddedHistValues(cat, bkgs));
+    for(int b = 0; b < Nbin; b++)
+      nBkgEvts[v][b] = hbkgVec[b];
+  }
+
+  //store signal yields
+  double nSigEvts[Nsig][Nvis][Nbin];
+  for(int s = 0; s < Nsig; s++){
+    ProcessList list;
+    list += sigs[s];
+
+    for(int v = 0; v < Nvis; v++){
+
+      CategoryList cat = CatList.Filter(*CatTrees[v]);
+
+      vector<double> hsigVec;
+      if(pType == kFull)
+        hsigVec = GetAddedHistValues(cat, list);
+      if(pType == kRISR || pType == kInv)
+        hsigVec = IntegrateMperp(fitbin, GetAddedHistValues(cat, list));
+
+      for(int b = 0; b < Nbin; b++)
+        nSigEvts[s][v][b] = hsigVec[b];
+    }
+  }
+
+  /*
+  cout << string("Regions "+CT.GetSpectroscopicLabel()).c_str() << endl;
+  for(int s = 0; s < Nsig; s++){
+    cout << "Processing Signal " << proc_sig[s] << ": " << endl;
+    for(int b = 0; b < Nbin; b++){
+      vector<double> sig_yields;
+      vector<double> bkg_yields;
+      vector<string> cat_labels;
+      for(int v = 0; v < Nvis; v++){
+	sig_yields.push_back(nSigEvts[s][v][b]);
+	bkg_yields.push_back(nBkgEvts[v][b]);
+	cat_labels.push_back(CatTrees[v]->GetPlainLabel(Depth));
+      }
+      SuperBinValue(sig_yields, bkg_yields, 0.2, cat_labels, true);  
+    }
+  }
+  */
+  /*
+  cout << string("\nRegion "+CT.GetPlainLabel(Depth)).c_str() << endl;
+  for(int s = 0; s < Nsig; s++){
+    int index = 0;
+    cout << "Processing Signal " << proc_sig[s] << ": " << endl;
+    cout << endl;
+    for(int r = 0; r < NB; r++){
+      int NM = fitbin[r].NBins();
+      rlabel += fitbin[r].GetRBinLabel();
+      mlabel = fitbin[r].GetMBinLabels();
+      for(int m = 0; m < NM; m++){
+	cout << "RISR: " << rlabel[r] << endl;
+	cout << "Mperp: " << mlabel[m] << endl;
+	vector<double> sig_yields;
+        vector<double> bkg_yields;
+        vector<string> cat_labels;
+	for(int v = 0; v < Nvis; v++){
+	  sig_yields.push_back(nSigEvts[s][v][index+m]);
+	  bkg_yields.push_back(nBkgEvts[v][index+m]);
+	  cat_labels.push_back(CatTrees[v]->GetPlainLabel(Depth));
+	}
+	SuperBinValue(sig_yields, bkg_yields, 0.2, cat_labels, true);
+	cout << endl;
+      }
+      index += NM;
+    }
+  }
+  */
+  /*
+  cout << string("\nRegion "+CT.GetPlainLabel(Depth)).c_str() << endl;
+  for(int s = 0; s < Nsig; s++){
+    cout << "Processing Signal " << proc_sig[s] << ": " << endl;
+    cout << endl;
+    for(int v = 0; v < Nvis; v++){
+      vector<double> sig_yields;
+      vector<double> bkg_yields;
+      vector<string> cat_labels;
+      int NM = 0;
+      int index = 0;
+      for(int r = 0; r < NB; r++){
+	NM = fitbin[r].NBins();
+	rlabel += fitbin[r].GetRBinLabel();
+	mlabel = fitbin[r].GetMBinLabels();
+	for(int m = 0; m < NM; m++){
+	  cout << "RISR: " << rlabel[r] << endl;
+	  cout << "Mperp: " << mlabel[m] << endl;
+
+	  cout << index << endl;
+
+          sig_yields.push_back(nSigEvts[s][v][index+m]);
+          bkg_yields.push_back(nBkgEvts[v][index+m]);
+          cat_labels.push_back(CatTrees[v]->GetPlainLabel(Depth));
+        }
+	index += NM;
+      }
+
+      SuperBinValue(sig_yields, bkg_yields, 0.2, cat_labels, true);
+      
+      cout << endl;
+    }
+  }
+*/
+
+  double sys = 0.2;
+
+  if(cType == kVis){
+    for(int s = 0; s < Nsig; s++){
+      SuperBinList mergedBinList;
+      mergedBinList.SetIdentifier(CT.GetSpectroscopicLabel().c_str());
+
+      for(int v = 0; v < Nvis; v++){
+	int NM = 0;
+	int index = 0;
+	VS rlabel;
+	SuperBinList sBinList;
+	for(int r = 0; r < NB; r++){
+	  NM = fitbin[r].NBins();
+	  
+	  VS mlabel; 
+	  rlabel += fitbin[r].GetRBinLabel();
+	  for(int m = 0; m < NM; m++){
+	    mlabel += fitbin[r].GetMBinLabels();
+	    
+	    VI vidx(index+m);
+	    VS ml((string(mlabel[m])));
+	    VS rl((string(rlabel[r])));
+	    VS vis((string(CatTrees[v]->GetPlainLabel(Depth))));
+	    
+	    SuperBin* sb = new SuperBin(vidx,nSigEvts[s][v][index+m],nBkgEvts[v][index+m],ml,rl,vis);
+	    
+	    sBinList += sb;
+	  }
+	  index += NM;
+	}
+	sBinList.sortByZbi(sys);
+	//sBinList.sortBySoverB();
+	
+	SuperBin* mergedBin = sBinList.MergeBins(sys);
+	mergedBinList += mergedBin;
+      }
+      mergedBinList.PrintSummary(sys);
+      //mergedBinList.PlotListZbi(("test_modified_sys20_"+proc_sig[s]+"_"+can_name).c_str(), sys);
+    }
+  }
+
+  if(cType == kMR){
+    for(int s = 0; s < Nsig; s++){
+      SuperBinList mergedBinList;
+      mergedBinList.SetIdentifier(CT.GetSpectroscopicLabel().c_str());
+
+      int index = 0;
+      VS rlabel;
+      for(int r = 0; r < NB; r++){
+	int NM = fitbin[r].NBins();
+	VS mlabel;
+	rlabel += fitbin[r].GetRBinLabel();
+	VS rl((string(rlabel[r])));
+	for(int m = 0; m < NM; m++){
+	  mlabel += fitbin[r].GetMBinLabels();
+	  VS ml((string(mlabel[m])));
+	  SuperBinList sBinList;
+	  for(int v = 0; v < Nvis; v++){
+	    VI vidx((v));
+            VS vis((string(CatTrees[v]->GetPlainLabel(Depth))));
+	    SuperBin* sb = new SuperBin(vidx,nSigEvts[s][v][index+m],nBkgEvts[v][index+m],ml,rl,vis);
+	    sBinList += sb;
+	  }
+	  sBinList.sortByZbi(sys);
+	  //sBinList.sortBySoverB(); 
+	  //sBinList.PrintSummary(sys);
+	  SuperBin* mergedBin = sBinList.MergeBins(sys);
+	  mergedBinList += mergedBin;
+	}	
+	index += NM;
+      }
+      //mergedBinList.PrintSummary(sys);
+      mergedBinList.PlotListZbiMR(("test_modified_sys20_"+proc_sig[s]+"_MR_"+can_name).c_str(), sys, fitbin);
+    }
+  }
+
 }
 
 void FitPlotter::FindBkgZeros(const VS& proc_bkg){

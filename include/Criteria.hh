@@ -87,6 +87,7 @@ public:
 class VS : public vector<string> {
 public:
   VS();
+  VS(const string s);
   VS(const vector<string>& vs);
   
   virtual ~VS();

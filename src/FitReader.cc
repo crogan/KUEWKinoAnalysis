@@ -491,3 +491,92 @@ string FitReader::GetSignalTitle(const string& label){
   return title+" "+std::to_string(mass/10000)+" "+std::to_string(mass%100000);
 }
 
+double FitReader::CalculateZbi(double Nsig, double Nbkg, double deltaNbkg){
+  double Nobs = Nsig+Nbkg;
+  double tau = 1./Nbkg/(deltaNbkg*deltaNbkg);
+  double aux = Nbkg*tau;
+  double Pvalue = TMath::BetaIncomplete(1./(1.+tau),Nobs,aux+1.);
+  double sigma = sqrt(2.)*TMath::ErfcInverse(Pvalue*2);
+
+  return (isnan(sigma))?0:sigma;
+}
+
+double FitReader::SuperBinValue(vector<double> sig_yields, vector<double> bkg_yields, double sys, vector<string> cat_label, bool verbose){
+
+  double zbi = -999.;
+  double max_zbi = -999.;
+
+  map<double, int> sig_map;
+  map<double, int>::reverse_iterator ritr;
+
+  for(unsigned int i = 0; i < bkg_yields.size(); i++){
+    zbi = CalculateZbi(sig_yields[i], bkg_yields[i], sys);
+    sig_map.insert(std::make_pair(zbi,i));
+  }
+  /*
+  if(verbose){
+    cout << "\nInput Summary: \n";
+    cout << "index" << "\tNbkg" << "\tNsig" << "\tZbi" << "\t" << "\tCategory" << endl;
+    for (ritr = sig_map.rbegin(); ritr != sig_map.rend(); ++ritr) {
+      cout << ritr->second << '\t' << bkg_yields[ritr->second] << '\t' 
+	   << sig_yields[ritr->second] << '\t' << ritr->first << '\t' << cat_label[ritr->second]
+           << '\n';
+    }
+    cout << endl;
+  }
+  */
+  vector<int> idx_order;
+
+  for (ritr = sig_map.rbegin(); ritr != sig_map.rend(); ++ritr)
+    idx_order.push_back(ritr->second);
+
+  max_zbi = sig_map.rbegin()->first;
+
+  double bkg_sum = bkg_yields[idx_order[0]];
+  double sig_sum = sig_yields[idx_order[0]];
+
+  vector<int> bins_combined;
+  bins_combined.push_back(idx_order[0]);
+
+  for(unsigned int i = 1; i < idx_order.size(); i++){
+
+    bkg_sum += bkg_yields[idx_order[i]];
+    sig_sum += sig_yields[idx_order[i]];
+    zbi = CalculateZbi(sig_sum, bkg_sum, sys);
+
+    if(zbi < max_zbi){
+      bkg_sum -= bkg_yields[idx_order[i]];
+      sig_sum -= sig_yields[idx_order[i]];
+      continue;
+    }
+    else{
+      max_zbi = zbi;
+      bins_combined.push_back(idx_order[i]);
+    }
+  }
+  //print bin indices that were combined
+  if(verbose /*&& max_zbi > 0. && bins_combined.size() > 1*/){
+    cout << "\nInput Summary: \n";
+    cout << "index" << "\tNbkg" << "\tNsig" << "\tZbi" << "\t" << "\tCategory" << endl;
+    for (ritr = sig_map.rbegin(); ritr != sig_map.rend(); ++ritr) {
+      cout << ritr->second << '\t' << bkg_yields[ritr->second] << '\t'
+           << sig_yields[ritr->second] << '\t' << ritr->first << '\t' << cat_label[ritr->second]
+           << '\n';
+    }
+    cout << endl;
+    cout << "Bins combined: ";
+    for(unsigned int i = 0; i < bins_combined.size(); i++){
+      if(i < bins_combined.size()-1)
+	cout << bins_combined[i] << ", ";
+      else
+	cout << bins_combined[i] << ".";
+    }
+    cout << endl
+	 << "Total Background Yield: " << bkg_sum << endl
+	 << "Total Signal Yield: "     <<       sig_sum << endl
+	 << "Combined Bin Zbi: " << max_zbi << endl
+	 << endl;
+  }
+
+  return max_zbi;
+}

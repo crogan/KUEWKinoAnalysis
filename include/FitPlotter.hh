@@ -12,6 +12,7 @@ using std::pair;
 
 enum SignificanceType {kSB, kSrootB, kZbin};
 enum PlotType{kFull, kRISR, kInv};
+enum CombineType{kMR,kVis};
 ///////////////////////////////////////////
 ////////// FitPlotter class
 ///////////////////////////////////////////
@@ -60,6 +61,13 @@ public:
 				  const CategoryTree& CT,
 				  PlotType pType = kFull,
 				  SignificanceType sType = kZbin);
+
+  void CombineBins(const string& can_name,
+		   const VS& proc_bkg,
+		   const VS& proc_sig,
+		   const CategoryTree& CT,
+		   CombineType cType = kVis,
+		   PlotType pType = kFull);
 
   void FindBkgZeros(const VS& proc_bkg);
   void FindBkgRare();
