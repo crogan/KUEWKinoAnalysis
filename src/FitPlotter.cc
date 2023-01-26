@@ -1994,7 +1994,6 @@ int offset = 0;
   double hhi = 0.2;
   double hbo = 0.19;
   double hto = 0.07;
-
   double ratio_h = 0.18;
   
   can->SetLeftMargin(hlo);
@@ -2151,12 +2150,12 @@ int offset = 0;
   VS vLabels;
   for(int v = 0; v < Nvis; v++){
     CategoryList tmpcat = CatList.Filter(*CatTrees[v]);
-  for(int r = 0; r < Nbins[v]; r++){
-rlabels += tmpcat[0].GetFitBin()[r].GetRBinLabel();
-  }}
+    for(int r = 0; r < Nbins[v]; r++){
+      rlabels += tmpcat[0].GetFitBin()[r].GetRBinLabel();
+    }
+  }
   for(int v = 0; v < Nvis; v++)
     vLabels += CatTrees[v]->GetPlainLabel(Depth);
-
   for(int b = 0; b < Nbins_total; b++){
     string label;
     double xpos, ypos;
@@ -2177,7 +2176,6 @@ rlabels += tmpcat[0].GetFitBin()[r].GetRBinLabel();
       ypos = 1. - hto - 4*eps;
       l.SetTextColor(7004 + 10*((b%Nvis)%8));
     }
-
     l.DrawLatex(xpos,ypos,label.c_str());
   }
   /*
@@ -2197,6 +2195,7 @@ rlabels += tmpcat[0].GetFitBin()[r].GetRBinLabel();
 		label.c_str());
   }
   */
+
   TLegend* leg = new TLegend(1.-hhi+0.007, 1.- (Nbkg+Nsig+1)*(1.-0.49)/9., 0.98, 1.-hto-0.005);
   leg->SetTextFont(42);
   leg->SetTextSize(0.035);
@@ -2212,14 +2211,15 @@ rlabels += tmpcat[0].GetFitBin()[r].GetRBinLabel();
   for(int i = 0; i < Nsig; i++)
     leg->AddEntry(fhists_sig[i], labels_sig[i].c_str(), "L");
   leg->Draw("SAME");
- // cout << "here" << endl;
+
   TPad* pad_ratio = nullptr;
+
   if(b_ratio){
     can->cd();
     pad_ratio = new TPad(Form("pad_%s", can_name.c_str()),
 			 Form("pad_%s", can_name.c_str()),
 			 0.0, hbo, 1.-hhi, hbo+ratio_h);
-
+    
     pad_ratio->SetBottomMargin(0.);
     pad_ratio->SetLeftMargin(hlo*1.25);
     pad_ratio->SetRightMargin(0.);
@@ -2228,7 +2228,6 @@ rlabels += tmpcat[0].GetFitBin()[r].GetRBinLabel();
     pad_ratio->SetGridx();
     pad_ratio->Draw();
     pad_ratio->cd();
-
 
     fhist_data_ratio->Draw("ep");
     fhist_data_ratio->GetXaxis()->SetNdivisions(30, 0, 0);
@@ -2261,7 +2260,7 @@ rlabels += tmpcat[0].GetFitBin()[r].GetRBinLabel();
   l.DrawLatex(1.-hhi-eps*4, 1.-hto+0.02, string("Regions "+CT.GetSpectroscopicLabel()).c_str());
   l.SetTextAlign(11);
   l.DrawLatex(hlo+eps*4, 1.-hto+0.02, m_CMSLabel.c_str());
-  
+
   can->Update();
 
 
@@ -5752,7 +5751,7 @@ void FitPlotter::CombineBins(const string& can_name,
   if(cType == kVis){
     for(int s = 0; s < Nsig; s++){
       SuperBinList mergedBinList;
-      mergedBinList.SetIdentifier(CT.GetSpectroscopicLabel().c_str());
+      mergedBinList.SetIdentifier(CT.GetBareLabel().c_str());
 
       for(int v = 0; v < Nvis; v++){
 	int NM = 0;
@@ -5792,7 +5791,7 @@ void FitPlotter::CombineBins(const string& can_name,
   if(cType == kMR){
     for(int s = 0; s < Nsig; s++){
       SuperBinList mergedBinList;
-      mergedBinList.SetIdentifier(CT.GetSpectroscopicLabel().c_str());
+      mergedBinList.SetIdentifier(CT.GetBareLabel().c_str());
 
       int index = 0;
       VS rlabel;
@@ -5819,7 +5818,7 @@ void FitPlotter::CombineBins(const string& can_name,
 	}	
 	index += NM;
       }
-      //mergedBinList.PrintSummary(sys);
+      mergedBinList.PrintSummary(sys);
       mergedBinList.PlotListZbiMR(("test_modified_sys20_"+proc_sig[s]+"_MR_"+can_name).c_str(), sys, fitbin);
     }
   }

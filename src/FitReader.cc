@@ -188,7 +188,7 @@ TH1D* FitReader::GetAddedHist(const string&       name,
       if(!IsFilled(cats[c], procs[p], sys))
 	continue;
 	//if(procs[p].Name() != "total_background" && name.find("plothist_0_") != std::string::npos && p == 0) cout << cats[c].Label()+"_"+cats[c].GetLabel() << " " << procs[p].Name() << endl;  
-  if(!hist){
+      if(!hist){
 	hist = (TH1D*) GetHistogram(cats[c], procs[p], sys)->Clone(name.c_str());
       } else {
 	hist->Add(GetHistogram(cats[c], procs[p], sys));
@@ -223,7 +223,11 @@ vector<double> FitReader::GetAddedHistValues(const CategoryList& cats,
 
       if(!hist){
         hist = (TH1D*) GetHistogram(cats[c], procs[p], sys)->Clone(name);
+	//cout << hist->GetTitle() << endl;
+
       } else {
+	//hist = (TH1D*) GetHistogram(cats[c], procs[p], sys);
+	//cout << GetHistogram(cats[c], procs[p], sys)->GetTitle() << endl;
         hist->Add(GetHistogram(cats[c], procs[p], sys));
       }
     }

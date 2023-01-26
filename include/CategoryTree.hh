@@ -43,6 +43,7 @@ private:
 
 class CategoryTree {
 public:
+  //CategoryTree();
   CategoryTree(const VS& match_string = VS(),
 	       const string& bare_label = "",
 	       const string& spec_label = "",
@@ -148,7 +149,72 @@ public:
   CategoryTree GetCategories_3L_plotFormat() const;
   CategoryTree GetCategories_3L_Summary() const;
   CategoryTree GetCategories_Plot1L() const;
+  CategoryTree GetCategories_0L_complete() const;
+  CategoryTree GetCategories_1L_complete() const;
+  CategoryTree GetCategories_2L_complete() const;
+  CategoryTree GetCategories_3L_complete() const;
   CategoryTree GetCategories_All() const;
+
+private:
+  CategoryTree* _CT_gamma0_etaInc;
+  CategoryTree* _CT_etaC;
+  CategoryTree* _CT_etaF;
+  CategoryTree* _CT_gamma0;
+  CategoryTree* _CT_gamma1;
+  CategoryTree* _CT_ptISR0_gamma0_etaInc;
+  CategoryTree* _CT_ptISR0;
+  CategoryTree* _CT_ptISR1;
+  CategoryTree* _CT_ptISR0_gamma0;
+  CategoryTree* _CT_ptISR1_gamma0;
+  CategoryTree* _CT_ptISR0_gammaInc;
+  CategoryTree* _CT_ptISR1_gammaInc;
+  CategoryTree* _CT_0bISR_ptISRInc;
+  CategoryTree* _CT_0bISR_ptISRInc_gammaInc;
+  CategoryTree* _CT_ge1bISR_ptISRInc;
+  CategoryTree* _CT_ge1bISR_ptISRInc_gammaInc;
+  CategoryTree* _CT_ge1jISR_ptISR0;
+  CategoryTree* _CT_ge1jISR_ptISRInc;
+  CategoryTree* _CT_ge1jISR_ptISRInc_gammaInc;
+  CategoryTree* _CT_ge1jISR_ptISR0_gamma0_etaInc;
+  CategoryTree* _CT_0sv_inclbISR_ptISRInc;
+  CategoryTree* _CT_0sv_ge1jISR_ptISRInc;
+  CategoryTree* _CT_0sv_inclbISR_ptISRInc_gammaInc;
+  CategoryTree* _CT_ge1sv_ge1jISR_ptISR0_gamma0_etaInc;
+  CategoryTree* _CT_0bS_inclbISR_ptISRInc_gammaInc;
+  CategoryTree* _CT_1bS_inclbISR_ptISRInc_gammaInc;
+  CategoryTree* _CT_2bS_ge1jISR_ptISRInc_gammaInc;
+  CategoryTree* _CT_ge2bS_ge1jISR_ptISRInc_gammaInc;
+  
+  void AssembleCTmodules();
+  
+  const CategoryTree& getCT_gamma0_etaInc() const;
+  const CategoryTree& getCT_etaC() const;
+  const CategoryTree& getCT_etaF() const;
+  const CategoryTree& getCT_gamma0() const;
+  const CategoryTree& getCT_gamma1() const;
+  const CategoryTree& getCT_ptISR0_gamma0_etaInc() const;
+  const CategoryTree& getCT_ptISR0() const;
+  const CategoryTree& getCT_ptISR1() const;
+  const CategoryTree& getCT_ptISR0_gamma0() const;
+  const CategoryTree& getCT_ptISR1_gamma0() const;
+  const CategoryTree& getCT_ptISR0_gammaInc() const;
+  const CategoryTree& getCT_ptISR1_gammaInc() const;
+  const CategoryTree& getCT_0bISR_ptISRInc() const;
+  const CategoryTree& getCT_0bISR_ptISRInc_gammaInc() const;
+  const CategoryTree& getCT_ge1bISR_ptISRInc() const;
+  const CategoryTree& getCT_ge1bISR_ptISRInc_gammaInc() const;
+  const CategoryTree& getCT_ge1jISR_ptISR0() const;
+  const CategoryTree& getCT_ge1jISR_ptISRInc() const;
+  const CategoryTree& getCT_ge1jISR_ptISRInc_gammaInc() const;
+  const CategoryTree& getCT_ge1jISR_ptISR0_gamma0_etaInc() const;
+  const CategoryTree& getCT_0sv_ge1jISR_ptISRInc() const;
+  const CategoryTree& getCT_0sv_inclbISR_ptISRInc() const;
+  const CategoryTree& getCT_0sv_inclbISR_ptISRInc_gammaInc() const;
+  const CategoryTree& getCT_ge1sv_ge1jISR_ptISR0_gamma0_etaInc() const;
+  const CategoryTree& getCT_0bS_inclbISR_ptISRInc_gammaInc() const;
+  const CategoryTree& getCT_1bS_inclbISR_ptISRInc_gammaInc() const;
+  const CategoryTree& getCT_2bS_ge1jISR_ptISRInc_gammaInc() const;
+  const CategoryTree& getCT_ge2bS_ge1jISR_ptISRInc_gammaInc() const;
 };
 
 #endif

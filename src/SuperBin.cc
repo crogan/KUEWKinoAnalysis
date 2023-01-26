@@ -120,8 +120,8 @@ void SuperBinList::PlotListZbi(const string name, const double sys){
 
   for(int b = 1; b < nBins+1; b++){
     fhist->SetBinContent(b, this->at(b-1)->getBinZbi(sys));
-    //cout << "bin " << b << ": " << endl;
-    //cout << "Zbi: " << this->at(b-1)->getBinZbi(sys) << endl;
+    cout << "bin " << b << ": " << endl;
+    cout << "Zbi: " << this->at(b-1)->getBinZbi(sys) << endl;
   }
 
   gROOT->SetBatch(kTRUE);
@@ -474,7 +474,6 @@ VI& VI::operator += (std::vector<int> vi){
   for(auto i : vi)
     this->push_back(i);
   return *this;
-
 }
 
 void VI::printList(){
