@@ -370,7 +370,9 @@ for i in range(len(names)):
 		elif 'BTAG' in match and "_S_ISR" in check and "2b" in check:
 			sup += "B_{2b}"
 		elif lep not in check and jet not in check or re.search("gold",check,re.IGNORECASE):
-			sup += check[1:]
+			ch = "_"
+			idxs = [l for l, ltr in enumerate(check) if ltr == ch]
+			sup += check[idxs[2]+1:]
 			sup = sup.replace("_",",")
 	#	if re.search("gold",check,re.IGNORECASE):
 	#		sup += "gold"
@@ -459,12 +461,15 @@ for i in range(len(syst_group)):
 	gr.SetLineColor(800+i*20 + 9)
 	gr_m.Add(gr)
 	leg_label = syst_group[i][0]
+	if "Fake_LF_SS" in syst_group[i][0]:
+		leg_label = "SS charge flip"
 	leg_label = leg_label.replace("_"," ")
 	print("leglabel: ", leg_label)
 	if "PTISR" in syst_group[i][0]:
 		leg_label = leg_label.replace("PTISR",r"p_{T}^{ISR}")
 	elif "gamT" in syst_group[i][0]:
 		leg_label = leg_label.replace("gamT",r"#gamma_{#perp}")
+
 	if "WjetsDY" in syst_group[i][0]:
 		leg_label = "W & Z / #gamma * (0L)"
 
@@ -475,6 +480,11 @@ for i in range(len(syst_group)):
 		leg_label = "W + jets (2L)"
 	if "Wjets3" in syst_group[i][0]:
 		leg_label = "W + jets (3L)"
+//commenting merge conflict
+//	if "Wjets" in syst_group[i][0]:
+//		leg_label = leg_label.replace("Wjets","W + jets and Z / #gamma * + jets")
+//	if "ZDY" in syst_group[i][0]:
+//		leg_label = leg_label.replace("ZDY", "Z / #gamma * + jets")
 	if "ttbar" in syst_group[i][0]:
 		leg_label = leg_label.replace("ttbar",r"t#bar{t} + jets")
 	if "scale_DB" in syst_group[i][0]:
