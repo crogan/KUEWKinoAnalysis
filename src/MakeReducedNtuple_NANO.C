@@ -56,6 +56,7 @@ int main(int argc, char* argv[]) {
 
   bool DO_SYS = false;
   bool DO_SYS_JES = false;
+  bool DO_SYS_JER = false;
   bool DO_SYS_MET = false;
   bool DO_SYS_MMS = false;
   bool DO_SYS_EES = false;
@@ -111,6 +112,7 @@ int main(int argc, char* argv[]) {
 
     if (strncmp(argv[i],"--sys",5)==0)  DO_SYS = true;
     if (strncmp(argv[i],"--sysJES",8)==0)  DO_SYS_JES = true;
+    if (strncmp(argv[i],"--sysJER",8)==0)  DO_SYS_JER = true;
     if (strncmp(argv[i],"--sysMET",8)==0)  DO_SYS_MET = true;
     if (strncmp(argv[i],"--sysMMS",8)==0)  DO_SYS_MMS = true;
     if (strncmp(argv[i],"--sysEES",8)==0)  DO_SYS_EES = true;
@@ -193,6 +195,8 @@ int main(int argc, char* argv[]) {
     ntuple->AddSystematics();
   if(DO_SYS_JES)
     ntuple->AddJESSystematics();
+  if(DO_SYS_JER)
+    ntuple->AddJERSystematics();
   if(DO_SYS_MET)
     ntuple->AddMETSystematics();
   if(DO_SYS_EES)

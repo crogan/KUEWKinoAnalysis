@@ -7,6 +7,7 @@
 #include <TLorentzVector.h>
 #include <TVector3.h>
 #include <TH1D.h>
+#include <TRandom3.h>
 #include <string>
 
 #include "NeventTool.hh"
@@ -52,6 +53,7 @@ public:
   void DoFastSim();
   void AddSystematics();
   void AddJESSystematics();
+  void AddJERSystematics();
   void AddMETSystematics();
   void AddEESSystematics();
   void AddMMSSystematics();

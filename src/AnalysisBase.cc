@@ -49,6 +49,11 @@ void AnalysisBase<Base>::AddJESSystematics(){
 }
 
 template <class Base>
+void AnalysisBase<Base>::AddJERSystematics(){
+  m_Systematics.Add(m_SysTool.JERSystematics());
+}
+
+template <class Base>
 void AnalysisBase<Base>::AddMETSystematics(){
   m_Systematics.Add(m_SysTool.METSystematics());
 }
@@ -148,6 +153,7 @@ void AnalysisBase<Base>::AddBtagFolder(const string& btagfold){
 template <class Base>
 void AnalysisBase<Base>::AddJMEFolder(const string& jmefold){
   m_JMETool.BuildMap(jmefold);
+  m_JMETool.BuildJERMap(jmefold);
 }
 
 template <class Base>
@@ -1543,7 +1549,6 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetGenJets(){
   return list;
 }
 
-
 template <>
 ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET, int id){
   int year = 2017;
@@ -1561,6 +1566,10 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET, int id){
   bool DO_JES = false;
   if(m_SysTool.JESSystematics() == CurrentSystematic())
     DO_JES = true;
+
+  bool DO_JER = false;
+  if(m_SysTool.JERSystematics() == CurrentSystematic())
+    DO_JER = true;
   
   for(int i = 0; i < Njet; i++){
     bool failID = false;
@@ -1581,7 +1590,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET, int id){
 		     Jet_phi[i], mass);
     
     if(DO_JES){
-      double uncer = m_JMETool.GetFactor(year, CurrentSystematic().Label(),
+      double uncer = m_JMETool.GetJESFactor(year, CurrentSystematic().Label(),
 					 Jet_pt[i], Jet_eta[i]);
       
       deltaMET -= delta*uncer*jet.Vect();
@@ -1592,14 +1601,64 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET, int id){
     
     // recalibrate jets
     // double raw = 1. - Jet_rawFactor[i];
-    // double L1 = m_JMETool.GetFactor(year, "L1FastJet",
+    // double L1 = m_JMETool.GetJESFactor(year, "L1FastJet",
     // 				     raw*Jet_pt[i], Jet_eta[i],
     // 				     Jet_area[i], fixedGridRhoFastjetAll);
-    // double L2 = m_JMETool.GetFactor(year, "L2Relative",
+    // double L2 = m_JMETool.GetJESFactor(year, "L2Relative",
     // 				     raw*L1*Jet_pt[i], Jet_eta[i],
     // 				     Jet_area[i], fixedGridRhoFastjetAll);
 
     // cout << raw << " " << L1 << " " << L2 << " " << raw*L1*L2 << endl;
+
+    if(!IsData()){
+
+      // JER recipe based on https://github.com/cms-nanoAOD/nanoAOD-tools/blob/master/python/postprocessing/modules/jme/jetmetUncertainties.py 
+      double smearFactor = 1.;
+      double JER = m_JMETool.GetJERFactor(year, Jet_pt[i], Jet_eta[i], fixedGridRhoFastjetAll); // using this for rho based on: https://github.com/cms-nanoAOD/nanoAOD-tools/blob/0127d46a973e894d97e9a16bd3939f421b2b689e/python/postprocessing/modules/jme/jetmetUncertainties.py#L49
+      double SF = m_JMETool.GetJERSFFactor(year,Jet_eta[i],0);
+
+      if(DO_JER)
+        SF = m_JMETool.GetJERSFFactor(year,Jet_eta[i],delta);
+
+      // check for gen jet matching:
+      bool gen_match = false;
+      Particle genJet;
+      genJet.SetPtEtaPhiM(0.,0.,0.,0.);
+      
+      for(int g = 0; g < nGenJet; g++){
+        if(fabs(Jet_pt[i] - GenJet_pt[g]) < 3.*JER*Jet_pt[i] && jet.DeltaR(genJet) < 0.2){
+          gen_match = true;
+          genJet.SetPtEtaPhiM(GenJet_pt[g],GenJet_eta[g],GenJet_phi[g],GenJet_mass[g]);
+        }
+      }
+
+      // 3 different cases to consider
+      // Case 1: we have a "good" gen level jet matched to reco jet
+      if(gen_match){
+        double dPt = jet.Perp() - genJet.Perp();
+        smearFactor = 1. + (SF - 1.)*dPt/jet.Perp();
+      }
+
+      // Case 2: Smear jet pT using a random Gaussian variation
+      else if(!gen_match && SF > 1.){
+        TRandom3 rand3;
+        rand3.SetSeed(event);
+        double rand_val = rand3.Gaus(0.,JER);
+        smearFactor = 1.+rand_val*sqrt(SF*SF-1.);
+      }
+
+      // Case 3: Resolution in data is better than res in sim so do nothing
+      else
+        smearFactor = 1.;
+      
+      if(smearFactor*jet.E() < 1.e-2)
+        smearFactor = 1.e-2/jet.E();
+
+      Particle oldJet = jet;
+      jet.SetPerp(jet.Perp()*smearFactor);
+      deltaMET -= (oldJet-jet).Vect();
+
+    } //end JER
 
     if(Jet_jetId[i] >= 3)
       jet.SetParticleID(kTight);
