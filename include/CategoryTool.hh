@@ -22,11 +22,11 @@ public:
   CategoryTool();
   virtual ~CategoryTool();
 
-  CategoryList GetCategories(bool maskSR = false) const;
-  CategoryList GetCategories_0L(bool maskSR = false) const;
-  CategoryList GetCategories_1L(bool maskSR = false) const;
-  CategoryList GetCategories_2L(bool maskSR = false) const;
-  CategoryList GetCategories_3L(bool maskSR = false) const;
+  CategoryList GetCategories(bool maskSR = false, bool unmaskVR = false) const;
+  CategoryList GetCategories_0L(bool maskSR = false, bool unmaskVR = false) const;
+  CategoryList GetCategories_1L(bool maskSR = false, bool unmaskVR = false) const;
+  CategoryList GetCategories_2L(bool maskSR = false, bool unmaskVR = false) const;
+  CategoryList GetCategories_3L(bool maskSR = false, bool unmaskVR = false) const;
 
 protected:
   FitBin   GetFitBin(int Nlep, int index, bool maskSR = false) const;

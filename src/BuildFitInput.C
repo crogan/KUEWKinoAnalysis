@@ -63,6 +63,8 @@ int main(int argc, char* argv[]) {
   bool doSys = false;
 
   bool maskSR = false;
+
+  bool unmaskVR = false;
   
   for(int i = 0; i < argc; i++){
     if(strncmp(argv[i],"--help", 6) == 0){
@@ -140,6 +142,9 @@ int main(int argc, char* argv[]) {
     if(strncmp(argv[i],"-maskSR", 7) == 0){
       maskSR = true;
     }
+    if(strncmp(argv[i],"-unmaskVR", 9) == 0){
+      unmaskVR = true;
+    }
   }
       
   if((proc_to_add.size() == 0) &&
@@ -175,13 +180,13 @@ int main(int argc, char* argv[]) {
   }
 
   if(cat0L)
-    Categories += CT.GetCategories_0L(maskSR);
+    Categories += CT.GetCategories_0L(maskSR, unmaskVR);
   if(cat1L)
-    Categories += CT.GetCategories_1L(maskSR);
+    Categories += CT.GetCategories_1L(maskSR, unmaskVR);
   if(cat2L)
-    Categories += CT.GetCategories_2L(maskSR);
+    Categories += CT.GetCategories_2L(maskSR, unmaskVR);
   if(cat3L)
-    Categories += CT.GetCategories_3L(maskSR);
+    Categories += CT.GetCategories_3L(maskSR, unmaskVR);
   
   cout << "Initializing sample maps from path " << NtuplePath << " for year " << year << endl;
   
