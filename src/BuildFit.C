@@ -502,18 +502,18 @@ if(xsec_norm != -999.0){
 else cout << "Nominal signal cross section: " << xsec_norm << endl;
   SystematicsTool SYS;
  
-////Hacking this section for VR fit, remove shape to norms and dont add shapes
-// Systematics shapeToNorm = SYS.GetConvertedSystematics(); //removed for VR fit
+
+ Systematics shapeToNorm = SYS.GetConvertedSystematics(); 
  
  int Nsys = systematics.GetN();
   if(Nsys > 0){
     cout << "+ Adding shape systematics" << endl;
     for(int s = 0; s < Nsys; s++){  
       Systematic& sys = systematics[s];
-     // if(shapeToNorm.Contains(sys)){ //removed these 3 lines for VR fit
-     //   CONFIG.AddShapeSysAsNorm(sys,cb,FIT);
-     //   continue;
-     // }//end if
+      if(shapeToNorm.Contains(sys)){ //removed these 3 lines for VR fit
+        CONFIG.AddShapeSysAsNorm(sys,cb,FIT);
+        continue;
+      }//end if
       ProcessList proc_sys;
 
       for(int p = 0; p < Nbkg; p++)
