@@ -497,6 +497,9 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
     tree->Branch("genM_susy",   &m_genM_susy);
     tree->Branch("genPDGID_susy", &m_genPDGID_susy);
     tree->Branch("genMomPDGID_susy", &m_genMomPDGID_susy);
+
+    //TChiWZ Reweighting
+    tree->Branch("testVariable", &m_testVariable);
   }
     
   return tree;
@@ -641,7 +644,8 @@ void ReducedNtuple<Base>::ClearVariables(){
   m_MISR = 0.;
   m_RISR = 0.;
   m_RISRT = 0.;
- 
+
+  m_testVariable = 0; 
 }
 
 template <class Base>
@@ -1386,6 +1390,9 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
       m_genPDGID_susy.push_back(GenSparticles[i].PDGID());
       m_genMomPDGID_susy.push_back(GenSparticles[i].MomPDGID());
     }
+    // TChiWZ branches
+    //m_testVariable = 1; //call a tchiwz function here
+    m_testVariable = AnalysisBase<Base>::GetTChiWZWeight();
   }
   
   // Fill output tree

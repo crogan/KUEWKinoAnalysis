@@ -182,6 +182,11 @@ private:
   vector<int>    m_genPDGID_susy;
   vector<int>    m_genMomPDGID_susy;
 
+  /////////////////////////
+  // TChiWZ Reweighting variables
+  ////////////////////////
+  int m_testVariable;
+
   //////////////////////
   // derived observables
   //////////////////////
