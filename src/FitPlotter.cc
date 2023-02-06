@@ -10,6 +10,7 @@
 #include <TLine.h>
 #include <TMultiGraph.h>
 
+#include "XsecTool.hh"
 #include "FitPlotter.hh"
 #include "shapeComparison.hh"
 #include "plotShapeComparison.hh"
@@ -5666,86 +5667,6 @@ void FitPlotter::CombineBins(const string& can_name,
     }
   }
 
-  /*
-  cout << string("Regions "+CT.GetSpectroscopicLabel()).c_str() << endl;
-  for(int s = 0; s < Nsig; s++){
-    cout << "Processing Signal " << proc_sig[s] << ": " << endl;
-    for(int b = 0; b < Nbin; b++){
-      vector<double> sig_yields;
-      vector<double> bkg_yields;
-      vector<string> cat_labels;
-      for(int v = 0; v < Nvis; v++){
-	sig_yields.push_back(nSigEvts[s][v][b]);
-	bkg_yields.push_back(nBkgEvts[v][b]);
-	cat_labels.push_back(CatTrees[v]->GetPlainLabel(Depth));
-      }
-      SuperBinValue(sig_yields, bkg_yields, 0.2, cat_labels, true);  
-    }
-  }
-  */
-  /*
-  cout << string("\nRegion "+CT.GetPlainLabel(Depth)).c_str() << endl;
-  for(int s = 0; s < Nsig; s++){
-    int index = 0;
-    cout << "Processing Signal " << proc_sig[s] << ": " << endl;
-    cout << endl;
-    for(int r = 0; r < NB; r++){
-      int NM = fitbin[r].NBins();
-      rlabel += fitbin[r].GetRBinLabel();
-      mlabel = fitbin[r].GetMBinLabels();
-      for(int m = 0; m < NM; m++){
-	cout << "RISR: " << rlabel[r] << endl;
-	cout << "Mperp: " << mlabel[m] << endl;
-	vector<double> sig_yields;
-        vector<double> bkg_yields;
-        vector<string> cat_labels;
-	for(int v = 0; v < Nvis; v++){
-	  sig_yields.push_back(nSigEvts[s][v][index+m]);
-	  bkg_yields.push_back(nBkgEvts[v][index+m]);
-	  cat_labels.push_back(CatTrees[v]->GetPlainLabel(Depth));
-	}
-	SuperBinValue(sig_yields, bkg_yields, 0.2, cat_labels, true);
-	cout << endl;
-      }
-      index += NM;
-    }
-  }
-  */
-  /*
-  cout << string("\nRegion "+CT.GetPlainLabel(Depth)).c_str() << endl;
-  for(int s = 0; s < Nsig; s++){
-    cout << "Processing Signal " << proc_sig[s] << ": " << endl;
-    cout << endl;
-    for(int v = 0; v < Nvis; v++){
-      vector<double> sig_yields;
-      vector<double> bkg_yields;
-      vector<string> cat_labels;
-      int NM = 0;
-      int index = 0;
-      for(int r = 0; r < NB; r++){
-	NM = fitbin[r].NBins();
-	rlabel += fitbin[r].GetRBinLabel();
-	mlabel = fitbin[r].GetMBinLabels();
-	for(int m = 0; m < NM; m++){
-	  cout << "RISR: " << rlabel[r] << endl;
-	  cout << "Mperp: " << mlabel[m] << endl;
-
-	  cout << index << endl;
-
-          sig_yields.push_back(nSigEvts[s][v][index+m]);
-          bkg_yields.push_back(nBkgEvts[v][index+m]);
-          cat_labels.push_back(CatTrees[v]->GetPlainLabel(Depth));
-        }
-	index += NM;
-      }
-
-      SuperBinValue(sig_yields, bkg_yields, 0.2, cat_labels, true);
-      
-      cout << endl;
-    }
-  }
-*/
-
   double sys = 0.2;
 
   if(cType == kVis){
@@ -5783,8 +5704,8 @@ void FitPlotter::CombineBins(const string& can_name,
 	SuperBin* mergedBin = sBinList.MergeBins(sys);
 	mergedBinList += mergedBin;
       }
+      mergedBinList.PlotListZbi(("test_modified_sys20_"+proc_sig[s]+"_vis_"+can_name).c_str(), sys);
       mergedBinList.PrintSummary(sys);
-      //mergedBinList.PlotListZbi(("test_modified_sys20_"+proc_sig[s]+"_"+can_name).c_str(), sys);
     }
   }
 
@@ -5795,21 +5716,27 @@ void FitPlotter::CombineBins(const string& can_name,
 
       int index = 0;
       VS rlabel;
+      //loop over total number of bins
       for(int r = 0; r < NB; r++){
+
 	int NM = fitbin[r].NBins();
 	VS mlabel;
 	rlabel += fitbin[r].GetRBinLabel();
 	VS rl((string(rlabel[r])));
+
 	for(int m = 0; m < NM; m++){
+
 	  mlabel += fitbin[r].GetMBinLabels();
 	  VS ml((string(mlabel[m])));
 	  SuperBinList sBinList;
+
 	  for(int v = 0; v < Nvis; v++){
 	    VI vidx((v));
             VS vis((string(CatTrees[v]->GetPlainLabel(Depth))));
 	    SuperBin* sb = new SuperBin(vidx,nSigEvts[s][v][index+m],nBkgEvts[v][index+m],ml,rl,vis);
 	    sBinList += sb;
 	  }
+	  
 	  sBinList.sortByZbi(sys);
 	  //sBinList.sortBySoverB(); 
 	  //sBinList.PrintSummary(sys);
@@ -5818,11 +5745,190 @@ void FitPlotter::CombineBins(const string& can_name,
 	}	
 	index += NM;
       }
-      mergedBinList.PrintSummary(sys);
+
       mergedBinList.PlotListZbiMR(("test_modified_sys20_"+proc_sig[s]+"_MR_"+can_name).c_str(), sys, fitbin);
+      mergedBinList.PrintSummary(sys);
     }
   }
 
+}
+
+void FitPlotter::CombineBinsSigAvg(const string& can_name,
+				   const VS& proc_bkg,
+				   const VS& proc_sig,
+				   const CategoryTree& CT,
+				   CombineType cType,
+				   PlotType pType){
+
+
+  RestFrames::SetStyle();
+
+  XsecTool g_Xsec;
+
+  CategoryList CatList = GetCategories();
+
+  vector<const CategoryTree*> CatTrees;
+  CT.GetListDeepest(CatTrees);
+
+  int Nbkg = proc_bkg.size();
+  int Nsig = proc_sig.size();
+  int Nvis = CatTrees.size();
+  int Ncat = CatList.GetN();
+
+  int Depth = CT.GetDepth();
+
+  if(Nsig == 0 ||
+     Nbkg == 0 ||
+     Nvis == 0 ||
+     Ncat == 0)
+    return;
+
+  CategoryList dumcat = CatList.Filter(*CatTrees[0]);
+  const FitBin& fitbin = dumcat[0].GetFitBin();
+
+  int Nbin;
+  if(pType == kFull)
+    Nbin = fitbin.NBins();
+  if(pType == kRISR || pType == kInv)
+    Nbin = fitbin.NRBins();
+
+  int NR = fitbin.NBins();
+  int NB = fitbin.NRBins();
+
+  ProcessList bkgs = FetchProcs(proc_bkg);
+  ProcessList sigs = FetchProcs(proc_sig);
+
+  Nsig = sigs.GetN();
+  Nbkg = bkgs.GetN();
+  
+  //background
+  double nBkgEvts[Nvis][Nbin];
+  for(int v = 0; v < Nvis; v++){
+
+    CategoryList cat = CatList.Filter(*CatTrees[v]);
+
+    vector<double> hbkgVec;
+    if(pType == kFull)
+      hbkgVec = GetAddedHistValues(cat, bkgs);
+    if(pType == kRISR || pType == kInv)
+      hbkgVec = IntegrateMperp(fitbin, GetAddedHistValues(cat, bkgs));
+    for(int b = 0; b < Nbin; b++)
+      nBkgEvts[v][b] = hbkgVec[b];
+  }
+
+  //signal
+  double nSigEvts[Nvis][Nbin];
+
+  for(int v = 0; v < Nvis; v++)
+    for(int b = 0; b < Nbin; b++)
+      nSigEvts[v][b] = 0.;
+
+  double normXsec = 0.;
+  
+  for(int s = 0; s < Nsig; s++){
+    
+    auto mass_tuple = SigMass(proc_sig[s]);
+    int parent_mass = std::get<0>(mass_tuple);
+    std::string proc_name = std::get<2>(mass_tuple);
+
+    double xsec = g_Xsec.GetXsec_SMS(proc_name, parent_mass);
+    normXsec += xsec/Nsig;
+    
+    ProcessList list;
+    list += sigs[s];
+
+    for(int v = 0; v < Nvis; v++){
+
+      CategoryList cat = CatList.Filter(*CatTrees[v]);
+
+      vector<double> hsigVec;
+      if(pType == kFull)
+        hsigVec = GetAddedHistValues(cat, list);
+      if(pType == kRISR || pType == kInv)
+        hsigVec = IntegrateMperp(fitbin, GetAddedHistValues(cat, list));
+
+      for(int b = 0; b < Nbin; b++)
+        nSigEvts[v][b] += (hsigVec[b]/xsec);
+    }
+  }
+
+  for(int v = 0; v < Nvis; v++)
+    for(int b = 0; b < Nbin; b++)
+      nSigEvts[v][b] *= normXsec/5;
+
+  double sys = 0.1;
+
+  SuperBinList mergedBinList;
+  mergedBinList.SetIdentifier(CT.GetBareLabel().c_str());
+  
+  int index = 0;
+  VS rlabel;
+
+  if(cType == kVis){
+    for(int v = 0; v < Nvis; v++){
+      int NM = 0;
+      int index = 0;
+      VS rlabel;
+      SuperBinList sBinList;
+      for(int r = 0; r < NB; r++){
+	NM = fitbin[r].NBins();
+	
+	VS mlabel;
+	rlabel += fitbin[r].GetRBinLabel();
+	for(int m = 0; m < NM; m++){
+	  mlabel += fitbin[r].GetMBinLabels();
+	  
+	  VI vidx(index+m);
+	  VS ml((string(mlabel[m])));
+	  VS rl((string(rlabel[r])));
+	  VS vis((string(CatTrees[v]->GetPlainLabel(Depth))));
+	  
+	  SuperBin* sb = new SuperBin(vidx, nSigEvts[v][index+m], nBkgEvts[v][index+m], ml, rl, vis);
+	  
+	  sBinList += sb;
+	}
+	index += NM;
+      }
+      sBinList.sortByZbi(sys);
+      
+      SuperBin* mergedBin = sBinList.MergeBins(sys);
+      mergedBinList += mergedBin;
+    }
+    mergedBinList.PlotListZbi(("combinedSig_sys10_vis_"+can_name).c_str(), sys);
+    mergedBinList.PrintSummaryVis(sys);
+  }
+   
+  //loop over total number of bins
+ if(cType == kMR){
+   for(int r = 0; r < NB; r++){
+    
+     int NM = fitbin[r].NBins();
+     VS mlabel;
+     rlabel += fitbin[r].GetRBinLabel();
+     VS rl((string(rlabel[r])));
+    
+     for(int m = 0; m < NM; m++){
+      
+       mlabel += fitbin[r].GetMBinLabels();
+       VS ml((string(mlabel[m])));
+       SuperBinList sBinList;
+       
+       for(int v = 0; v < Nvis; v++){
+	 VI vidx((v));
+	 VS vis((string(CatTrees[v]->GetPlainLabel(Depth))));
+	 SuperBin* sb = new SuperBin(vidx,nSigEvts[v][index+m],nBkgEvts[v][index+m],ml,rl,vis);
+	 sBinList += sb;
+       }
+       
+       sBinList.sortByZbi(sys);
+       SuperBin* mergedBin = sBinList.MergeBins(sys);
+       mergedBinList += mergedBin;
+     }
+     index += NM;
+   }
+   mergedBinList.PlotListZbiMR(("combinedSig_sys20_MR_"+can_name).c_str(), sys, fitbin);
+   mergedBinList.PrintSummary(sys);
+ }
 }
 
 void FitPlotter::FindBkgZeros(const VS& proc_bkg){
@@ -6246,3 +6352,26 @@ VS FitPlotter::AddPrefix(const string& pre, const VS& post) const {
 
   return ret;
 }
+/*
+std::tuple<int, int, std::string> FitPlotter::SigMass(const std::string sig) const{
+  int parent_mass = -999;
+  int child_mass = -999;
+  
+  std::string sigType = sig.substr(0, sig.find("_"));
+  std::string mass_diff = sig.substr(sig.find("_") + 1);
+  int size = mass_diff.size();
+  
+  if(size == 7){
+    parent_mass = std::stoi(mass_diff.substr(0,3));
+    child_mass = std::stoi(mass_diff.substr(3,size));
+  }
+  
+  if(size == 8){
+    parent_mass = std::stoi(mass_diff.substr(0,4));
+    child_mass = std::stoi(mass_diff.substr(4,size));
+  }
+
+  return std::make_tuple(parent_mass, child_mass, sigType);
+}
+
+*/

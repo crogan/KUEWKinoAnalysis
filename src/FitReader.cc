@@ -584,3 +584,84 @@ double FitReader::SuperBinValue(vector<double> sig_yields, vector<double> bkg_yi
 
   return max_zbi;
 }
+
+std::tuple<int, int, std::string> FitReader::SigMass(const std::string sig) const{
+  int parent_mass = -999;
+  int child_mass = -999;
+
+  std::string sigType = sig.substr(0, sig.find("_"));
+  std::string mass_diff = sig.substr(sig.find("_") + 1);
+  int size = mass_diff.size();
+
+  if(size == 7){
+    parent_mass = std::stoi(mass_diff.substr(0,3));
+    child_mass = std::stoi(mass_diff.substr(3,size));
+  }
+
+  if(size == 8){
+    parent_mass = std::stoi(mass_diff.substr(0,4));
+    child_mass = std::stoi(mass_diff.substr(4,size));
+  }
+
+  return std::make_tuple(parent_mass, child_mass, sigType);
+}
+
+int nthOccurrence(const std::string& str, const std::string& findMe, int nth){
+    size_t  pos = 0;
+    int     cnt = 0;
+
+    while(cnt != nth){
+      pos++;
+      pos = str.find(findMe, pos);
+      if (pos == std::string::npos)
+        return -1;
+      cnt++;
+    }
+    return pos;
+}
+
+VS FitReader::GetSignalProcs(const int min_mass_diff, const int max_mass_diff, const int exclude_below) const{
+
+  VS sig_procs;
+  
+  TList* fileList = m_File.GetListOfKeys();
+
+  TIter ele1(fileList);
+  ele1.Next();
+  TKey* key1 = (TKey*)ele1();
+  TObject* dir1 = key1->ReadObj();
+
+  TDirectory* dir = (TDirectory*)dir1;
+  TList* ls = dir->GetListOfKeys() ;
+
+  if (!ls) {
+    printf("<E> No keys found in file\n");
+    exit(1);
+  }
+
+  TIter next(ls);
+  TKey* key;
+  TObject* obj;
+
+  while ((key = (TKey*)next())) {
+    obj = key->ReadObj();
+    string title = obj->GetTitle();
+    if(title.find("_T") != std::string::npos && !(title.find("_TB") != std::string::npos)){
+      int pos1 = title.find("_T")+1;
+      int pos2 = nthOccurrence(title, "_", 3);
+      string sigTypeMass = title.substr(pos1, pos2-pos1);
+
+      auto mass_tuple = SigMass(sigTypeMass);
+      int parent_mass = std::get<0>(mass_tuple);
+      int child_mass = std::get<1>(mass_tuple);
+      int mass_diff = parent_mass-child_mass;
+
+      if(parent_mass >= exclude_below && mass_diff >= min_mass_diff && mass_diff <= max_mass_diff){
+	sig_procs.a(sigTypeMass);
+	//printf("%s\n",sigTypeMass.c_str());
+      }
+    }
+  }
+  
+  return sig_procs;
+}

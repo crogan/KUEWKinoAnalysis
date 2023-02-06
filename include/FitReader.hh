@@ -5,6 +5,7 @@
 #include <TH2D.h>
 #include <TFile.h>
 #include <TTree.h>
+#include <TKey.h>
 #include <iostream>
 #include <vector>
 
@@ -86,6 +87,8 @@ public:
 
   static double CalculateZbi(double Nsig, double Nbkg, double deltaNbkg);
 
+  VS GetSignalProcs(const int min_mass_diff, const int max_mass_diff, const int exclude_below) const;
+  
 protected:
   mutable TFile  m_File;
   mutable TFile* m_FilePtr;
@@ -109,7 +112,8 @@ protected:
   void ReadCategories();
 
   double SuperBinValue(vector<double> sig_yields, vector<double> bkg_yields, double sys, vector<string> cat_label, bool verbose=false);  
-  
+
+  std::tuple<int, int, std::string> SigMass(const std::string sig) const;
 };
 
 #endif

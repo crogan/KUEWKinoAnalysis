@@ -69,6 +69,13 @@ public:
 		   CombineType cType = kVis,
 		   PlotType pType = kFull);
 
+  void CombineBinsSigAvg(const string& can_name,
+			 const VS& proc_bkg,
+			 const VS& proc_sig,
+			 const CategoryTree& CT,
+			 CombineType cType = kVis,
+			 PlotType pType = kFull);
+  
   void FindBkgZeros(const VS& proc_bkg);
   void FindBkgRare();
   void YieldPerBkg(const VS& proc_bkg);
@@ -112,8 +119,9 @@ public:
 			     const VS& matchString,
 			     const string& name);
 
+  //VS GetSignalProcs(int min_mass_diff, int max_mass_diff, int exclude_below)
   map<string,VS> m_Strings;
-  
+
 private:
   string m_CMSLabel;
 
@@ -143,6 +151,9 @@ private:
 
   VS AddPrefix(const string& pre, const VS& post) const;
 
+  //std::tuple<int, int, std::string> SigMass(const std::string sig) const;
+  //std::string SigType(const std::string sig) const;
+  
 };
 
 #endif

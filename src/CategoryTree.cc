@@ -3094,13 +3094,13 @@ void CategoryTreeTool::AssembleCTmodules(){
   _CT_ptISR0_gamma0_etaInc = new CategoryTree(VS().a("PTISR0"), "PTISR0", "p-", kX_sup);
   _CT_ptISR0_gamma0_etaInc->AddSubCategory(*_CT_gamma0_etaInc);
 
-  _CT_ptISR0 = new CategoryTree(VS().a("PTISR0"), "PTISR0", "p^{-}", kX_sup);
-  _CT_ptISR1 = new CategoryTree(VS().a("PTISR1"), "PTISR1", "p^{+}", kX_sup);
+  _CT_ptISR0 = new CategoryTree(VS().a("PTISR0"), "PTISR0", "p-", kX_sup);
+  _CT_ptISR1 = new CategoryTree(VS().a("PTISR1"), "PTISR1", "p+", kX_sup);
 
-  _CT_ptISR0_gamma0   = new CategoryTree(VS().a("PTISR0"), "PTISR0", "p^{-}", kX_sup);
-  _CT_ptISR1_gamma0   = new CategoryTree(VS().a("PTISR1"), "PTISR1", "p^{+}", kX_sup);
-  _CT_ptISR0_gammaInc = new CategoryTree(VS().a("PTISR0"), "PTISR0", "p^{-}", kX_sup);
-  _CT_ptISR1_gammaInc = new CategoryTree(VS().a("PTISR1"), "PTISR0", "p^{+}", kX_sup);
+  _CT_ptISR0_gamma0   = new CategoryTree(VS().a("PTISR0"), "PTISR0", "p-", kX_sup);
+  _CT_ptISR1_gamma0   = new CategoryTree(VS().a("PTISR1"), "PTISR1", "p+", kX_sup);
+  _CT_ptISR0_gammaInc = new CategoryTree(VS().a("PTISR0"), "PTISR0", "p-", kX_sup);
+  _CT_ptISR1_gammaInc = new CategoryTree(VS().a("PTISR1"), "PTISR0", "p+", kX_sup);
 
   _CT_ptISR0_gamma0->AddSubCategory(*_CT_gamma0);
   _CT_ptISR1_gamma0->AddSubCategory(*_CT_gamma0);

@@ -63,10 +63,13 @@ SuperBin* SuperBin::tryMerge(SuperBin* superBin, double sys){
 
 //SuperBinList Class
 //Default constructor
-SuperBinList::SuperBinList(){}
+SuperBinList::SuperBinList(){
+  isSorted_ = false;
+}
 
 //Construct superBinList from vector of superBin objects
 SuperBinList::SuperBinList(const std::vector<SuperBin*>& superBinList){
+  isSorted_ = false;
   for(auto superBin : superBinList)
     *this += superBin;
   listSize_ = this->size();
@@ -88,15 +91,68 @@ SuperBinList& SuperBinList::operator += (const SuperBinList& superBinList){
 }
 
 void SuperBinList::PrintSummary(const double sys){  
-  this->sortByZbi(sys);
+
+  std::vector<int> idxVec = sortIndexByZbi(sys);
+
+  int size = this->size();
 
   cout << "Summary for bins in Region " << identifier_ << ": " << endl;
-  cout << "bins combined" << "\tindex" << "\tsignal yield" << "\tbackground yield" << "\tZbi" << endl;
-  for(int i = 0; i < this->size(); i++){
+  cout << "bins combined" << "\tindex" << "\t\t\tsignal yield" << "\tbackground yield" << "\tZbi" << endl;
+  for(auto i : idxVec){
     cout << "\t" << this->at(i)->getIndex().size() << "\t"; 
     this->at(i)->getIndex().printList();
-    cout << "\t" << this->at(i)->getNsig() << "\t\t" 
+    cout << "\t\t\t" << this->at(i)->getNsig() << "\t\t" 
 	 << this->at(i)->getNbkg() << "\t\t" << this->at(i)->getBinZbi(sys) << endl;
+
+    VS vis_label = this->at(i)->getVisLabel();
+    if (vis_label.size() > 1) {
+      cout << "\t\tcategories combined: " ;
+      for(int j = 0; j < vis_label.size(); j++){
+	  if(j < vis_label.size()-1)
+	    cout <<  vis_label[j] << ", ";
+	  else
+	    cout << vis_label[j];
+      }
+      cout << "\n\n";
+    }
+    else
+      cout << "\t\tmax Zbi category: " << vis_label[0] << "\n\n";
+  }
+}
+
+void SuperBinList::PrintSummaryVis(const double sys){
+
+  std::vector<int> idxVec = sortIndexByZbi(sys);
+
+  int size = this->size();
+
+  cout << "Summary for bins in Region " << identifier_ << ": " << endl;
+  cout << "bins combined" << "\tindex" << "\t\t\tsignal yield" << "\tbackground yield" << "\tZbi" << endl;
+  for(auto i : idxVec){
+    cout << "\t" << this->at(i)->getIndex().size() << "\t";
+    this->at(i)->getIndex().printList();
+    cout << "\t\t\t" << this->at(i)->getNsig() << "\t\t"
+         << this->at(i)->getNbkg() << "\t\t" << this->at(i)->getBinZbi(sys) << endl;
+
+    VS vis_label = this->at(i)->getVisLabel();
+    cout << "\t\tCategory: " << vis_label[0] << endl;
+    
+    VS mperp_label = this->at(i)->getMperpLabel();
+    VS risr_label = this->at(i)->getRisrLabel();
+    if (mperp_label.size() > 1 && risr_label.size() > 1) {
+      cout << "\t\tbins combined: " ;
+      for(int j = 0; j < mperp_label.size(); j++){
+	if(j>0 && j%3 == 0)
+	  cout << "\n\t\t\t\t";
+	if(j < mperp_label.size()-1)
+	  cout << "(RISR:" << risr_label[j] << ", " << "Mperp:" << mperp_label[j] << "), ";
+	else
+	  cout << "(RISR:" << risr_label[j] << ", " << "Mperp:" << mperp_label[j] << ")";
+      }
+      cout << "\n\n";
+    }
+    else
+      cout << "\t\tmax Zbi bin: " << "(RISR:" << risr_label[0] << ", " << "Mperp:" << mperp_label[0] << ")" << "\n\n";
   }
 }
 
@@ -105,11 +161,26 @@ void SuperBinList::SetIdentifier(const string ID){
 }
 
 void SuperBinList::sortByZbi(const double sys){
+  isSorted_ = true;
   std::sort(this->begin(), this->end(), [&sys](const SuperBin* lhs, const SuperBin* rhs){return lhs->getBinZbi(sys) > rhs->getBinZbi(sys);});
 }
 
 void SuperBinList::sortBySoverB(){
+  isSorted_ = true;
   std::sort(this->begin(), this->end(), [](const SuperBin* lhs, const SuperBin* rhs){return lhs->getSoverB() > rhs->getSoverB();});
+}
+
+std::vector<int> SuperBinList::sortIndexByZbi(const double sys) const{
+  std::vector<int> indexVec;
+  std::vector<double> vecZbi;
+
+  for(int i = 0; i < this->size(); i++){
+    indexVec.push_back(i);
+    vecZbi.push_back(this->at(i)->getBinZbi(sys));
+  }
+
+  std::sort(indexVec.begin(), indexVec.end(), [&vecZbi](const int lhs, const int rhs){return vecZbi[lhs] > vecZbi[rhs];});
+  return indexVec;
 }
 
 void SuperBinList::PlotListZbi(const string name, const double sys){
@@ -118,11 +189,8 @@ void SuperBinList::PlotListZbi(const string name, const double sys){
   double max = this->GetMaxZbi(sys);
   TH1F* fhist = new TH1F(Form("fhist_%s", name.c_str()), Form("fhist_%s", name.c_str()), nBins, 0., double(nBins));
 
-  for(int b = 1; b < nBins+1; b++){
+  for(int b = 1; b < nBins+1; b++)
     fhist->SetBinContent(b, this->at(b-1)->getBinZbi(sys));
-    cout << "bin " << b << ": " << endl;
-    cout << "Zbi: " << this->at(b-1)->getBinZbi(sys) << endl;
-  }
 
   gROOT->SetBatch(kTRUE);
   gStyle->SetOptTitle(0);
@@ -373,7 +441,6 @@ void SuperBinList::PlotListZbiMR(const string name, const double sys, const FitB
     if(b > 0)
       line->DrawLineNDC(hlo + (1.-hhi-hlo)/double(NB)*b , hbo , hlo + (1.-hhi-hlo)/double(NB)*b, 1.-hto);
   }
-  
   
   l.SetTextAngle(0);
   l.SetTextAlign(32);

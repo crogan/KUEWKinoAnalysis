@@ -58,7 +58,7 @@ private:
 };
 
 class SuperBinList : public std::vector<SuperBin*>{
-
+  
 public:
   SuperBinList();
   SuperBinList(const std::vector<SuperBin*>& superBinList);
@@ -68,12 +68,15 @@ public:
   SuperBinList& operator += (const SuperBinList& superBin); 
 
   void PrintSummary(const double sys);
+  void PrintSummaryVis(const double sys);
   void SetIdentifier(const string ID);
   void sortByZbi(const double sys);
   void sortBySoverB();
   void PlotListZbi(const string name, const double sys);
   void PlotListZbiMR(const string name, const double sys, const FitBin& fitbin);
 
+  std::vector<int> sortIndexByZbi(const double sys) const;
+  
   double GetMaxZbi(const double sys);
 
   SuperBin* GetMaxZbiBin(const double sys);
@@ -82,7 +85,12 @@ public:
 private:
   int listSize_;
 
+  bool isSorted_;
+  
   string identifier_ = "";
+
+  //std::vector<SuperBin*> ogBinList_;
+  //SuperBinList ogBinList_;
 
 };
 
