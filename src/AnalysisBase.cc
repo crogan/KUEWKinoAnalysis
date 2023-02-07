@@ -431,6 +431,11 @@ std::pair<int,int> AnalysisBase<Base>::GetSUSYMasses(){
 }
 
 template <class Base>
+double AnalysisBase<Base>::GetTChiWZWeight(){
+  return 2;
+}
+
+template <class Base>
 void AnalysisBase<Base>::MomTensorCalc(vector<TLorentzVector>& input, vector<double>& eigenvalues, double power, bool threeD){
 
   eigenvalues.clear();
