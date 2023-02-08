@@ -186,7 +186,15 @@ private:
   // TChiWZ Reweighting variables
   ////////////////////////
   int m_testVariable;
-
+  int m_genNZff;
+  vector<double> m_genPT_Zff;
+  vector<double> m_genEta_Zff;
+  vector<double> m_genPhi_Zff;
+  vector<double> m_genM_Zff;
+  vector<int> m_genPDGID_Zff;
+  vector<int> m_genMomPDGID_Zff;//should always be 23
+   
+  
   //////////////////////
   // derived observables
   //////////////////////

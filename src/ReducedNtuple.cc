@@ -500,7 +500,14 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
 
     //TChiWZ Reweighting
     tree->Branch("testVariable", &m_testVariable);
-  }
+    tree->Branch("genNZff", &m_genNZff);
+    tree->Branch("genPT_Zff", &m_genPT_Zff);
+    tree->Branch("genEta_Zff", &m_genEta_Zff);
+    tree->Branch("genPhi_Zff", &m_genPhi_Zff);
+    tree->Branch("genM_Zff", &m_genM_Zff);
+    tree->Branch("genPDGID_Zff", &m_genPDGID_Zff);
+    tree->Branch("genMomPDGID_Zff", &m_genMomPDGID_Zff);
+ }
     
   return tree;
 }
@@ -1392,7 +1399,28 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
     }
     // TChiWZ branches
     //m_testVariable = 1; //call a tchiwz function here
+    //clear before set
+    m_genPT_Zff.clear();
+    m_genEta_Zff.clear();
+    m_genPhi_Zff.clear();
+    m_genM_Zff.clear();
+    m_genPDGID_Zff.clear();
+    m_genMomPDGID_Zff.clear();
+
     m_testVariable = AnalysisBase<Base>::GetTChiWZWeight();
+    ParticleList ZffParticles = AnalysisBase<Base>::GetZffParticles();
+    m_genNZff = ZffParticles.size();
+    for(int i=0; i < m_genNZff; i++){
+      m_genPT_Zff.push_back(ZffParticles[i].Pt());
+      m_genEta_Zff.push_back(ZffParticles[i].Eta());
+      m_genPhi_Zff.push_back(ZffParticles[i].Phi());
+      m_genM_Zff.push_back(ZffParticles[i].M());
+      m_genPDGID_Zff.push_back(ZffParticles[i].PDGID());
+      m_genMomPDGID_Zff.push_back(ZffParticles.MomPDGID());
+    }    
+    
+   
+
   }
   
   // Fill output tree

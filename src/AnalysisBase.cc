@@ -434,6 +434,36 @@ template <class Base>
 double AnalysisBase<Base>::GetTChiWZWeight(){
   return 2;
 }
+template <class Base>
+ParticleList AnalysisBase<Base>::GetZffParticles(){
+//copy of get genboson
+  ParticleList list;
+
+  if(IsData())
+    return list;
+
+  int N = nGenPart;
+  int PDGID;
+  for(int i = 0; i < N; i++){
+    PDGID = GenPart_pdgId[i];
+    if(abs(PDGID) == 23 || abs(PDGID) == 24 || abs(PDGID) == 25){
+      Particle p;
+
+      p.SetPDGID(PDGID);
+      int mom = GenPart_genPartIdxMother[i];
+      if(mom >= 0 && mom < N)
+        p.SetMomPDGID(GenPart_pdgId[mom]);
+      p.SetPtEtaPhiM(GenPart_pt[i], GenPart_eta[i],
+                     GenPart_phi[i], max(float(0.),GenPart_mass[i]));
+
+      list.push_back(p);
+    }
+  }
+
+  return list;
+
+  
+}
 
 template <class Base>
 void AnalysisBase<Base>::MomTensorCalc(vector<TLorentzVector>& input, vector<double>& eigenvalues, double power, bool threeD){

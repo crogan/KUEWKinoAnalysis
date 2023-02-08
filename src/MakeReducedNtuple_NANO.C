@@ -185,7 +185,7 @@ int main(int argc, char* argv[]) {
   ntuple->AddJMEFolder(string(JMEFOLD));
   ntuple->AddSVDiscrFile(string(SVFILE));
   ntuple->AddMETTriggerFile(string(METTRIGFILE));
-  ntuple->AddPrefireFile(string(PREFIREFILE));
+  //ntuple->AddPrefireFile(string(PREFIREFILE));
   #ifdef _CMSSW_
   if(!DO_SMS && !IS_DATA)
     ntuple->AddLHAPDF();

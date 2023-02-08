@@ -12,6 +12,9 @@ PrefireTool::PrefireTool(int year, bool UseEMpT, std::string rootfile){
  m_year = year;
  m_UseEMpT = UseEMpT;
  
+ std::cout<<"opening prefire file: ";
+ std::cout<<year<<" "<<UseEMpT<<" "<<rootfile<<"\n";
+ 
  TFile* r_file = TFile::Open(rootfile.c_str());
  
  if(m_year == 2016){
