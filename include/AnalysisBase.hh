@@ -110,8 +110,11 @@ public:
   virtual ParticleList GetGenBosons();
   virtual ParticleList GetGenSparticles();
 
-  virtual double GetTChiWZWeight();
-  virtual double GetZffParticles();
+
+  virtual double GetTChiWZWeight(double x, double z, double mA, double mB, int signValue); 
+  virtual ParticleList GetZffParticles();
+  virtual vector<double> GetXYZ_mAmB();
+ 
  
   double DeltaPhiMin(const vector<TLorentzVector>& JETs, const TVector3& MET, int N = -1);
   double DeltaPhiMin(const vector<pair<TLorentzVector, bool> >& JETs, const TVector3& MET, int N = -1);

@@ -193,8 +193,11 @@ private:
   vector<double> m_genM_Zff;
   vector<int> m_genPDGID_Zff;
   vector<int> m_genMomPDGID_Zff;//should always be 23
-   
-  
+  double m_x;
+  double m_y;
+  double m_z;   
+  double m_wt_SS;
+  double m_wt_OS; 
   //////////////////////
   // derived observables
   //////////////////////

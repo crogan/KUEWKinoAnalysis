@@ -507,6 +507,11 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
     tree->Branch("genM_Zff", &m_genM_Zff);
     tree->Branch("genPDGID_Zff", &m_genPDGID_Zff);
     tree->Branch("genMomPDGID_Zff", &m_genMomPDGID_Zff);
+    tree->Branch("x",&m_x);
+    tree->Branch("y",&m_y);
+    tree->Branch("z",&m_z);
+    tree->Branch("wt_SS",&m_wt_SS);
+    tree->Branch("wt_OS",&m_wt_OS);
  }
     
   return tree;
@@ -653,6 +658,11 @@ void ReducedNtuple<Base>::ClearVariables(){
   m_RISRT = 0.;
 
   m_testVariable = 0; 
+  m_x =0.;
+  m_y =0.;
+  m_z =0.;
+  m_wt_SS=1.;
+  m_wt_OS=1.;
 }
 
 template <class Base>
@@ -1407,7 +1417,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
     m_genPDGID_Zff.clear();
     m_genMomPDGID_Zff.clear();
 
-    m_testVariable = AnalysisBase<Base>::GetTChiWZWeight();
+    //m_testVariable = AnalysisBase<Base>::GetTChiWZWeight();
     ParticleList ZffParticles = AnalysisBase<Base>::GetZffParticles();
     m_genNZff = ZffParticles.size();
     for(int i=0; i < m_genNZff; i++){
@@ -1416,10 +1426,15 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
       m_genPhi_Zff.push_back(ZffParticles[i].Phi());
       m_genM_Zff.push_back(ZffParticles[i].M());
       m_genPDGID_Zff.push_back(ZffParticles[i].PDGID());
-      m_genMomPDGID_Zff.push_back(ZffParticles.MomPDGID());
+      m_genMomPDGID_Zff.push_back(ZffParticles[i].MomPDGID());
     }    
-    
+    std::vector xyz = AnalysisBase<Base>::GetXYZ_mAmB();
+    m_x=xyz[0];
+    m_y=xyz[1];
+    m_z=xyz[2];   
    
+    m_wt_SS= AnalysisBase<Base>::GetTChiWZWeight(xyz[0],xyz[2],xyz[3],xyz[4], 1);
+    m_wt_OS= AnalysisBase<Base>::GetTChiWZWeight(xyz[0],xyz[2],xyz[3],xyz[4], -1); 
 
   }
   

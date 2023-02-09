@@ -429,40 +429,133 @@ std::pair<int,int> AnalysisBase<Base>::GetSUSYMasses(){
 
   return std::pair<int,int>(0,0);
 }
-
-template <class Base>
-double AnalysisBase<Base>::GetTChiWZWeight(){
-  return 2;
-}
 template <class Base>
 ParticleList AnalysisBase<Base>::GetZffParticles(){
-//copy of get genboson
-  ParticleList list;
+ return ParticleList();
+}
+template <class Base>
+double AnalysisBase<Base>::GetTChiWZWeight(double x, double z, double mA, double mB, int signValue){
+	return 1.;
+}
+template <>
+double AnalysisBase<StopNtupleTree>::GetTChiWZWeight(double x, double z, double mA, double mB, int signValue){
+	return 1.;
+}
+template <class Base>
+vector<double> AnalysisBase<Base>::GetXYZ_mAmB(){
+  vector v={0.,0.,0.,0.,0.};
+  //std::cout<<"in base stub?\n";
+  return v;
+}
+template <>
+std::vector<double> AnalysisBase<SUSYNANOBase>::GetXYZ_mAmB(){
+//vector of size 5 with [x,y,z,mA,mB]
+ std::vector xyz={0.,0.,0.,0.,0.};
 
-  if(IsData())
-    return list;
+ //if(IsData());
+ //   return xyz;
 
   int N = nGenPart;
   int PDGID;
+  int momIdx;
+  int momPDGID;
+   //quantities to calculate x,y,z phase space paramters
+  TLorentzVector q,qbar,n1,n2;
+  //loop over GenParts and collect necessary four vectors
   for(int i = 0; i < N; i++){
     PDGID = GenPart_pdgId[i];
-    if(abs(PDGID) == 23 || abs(PDGID) == 24 || abs(PDGID) == 25){
-      Particle p;
-
-      p.SetPDGID(PDGID);
-      int mom = GenPart_genPartIdxMother[i];
-      if(mom >= 0 && mom < N)
-        p.SetMomPDGID(GenPart_pdgId[mom]);
-      p.SetPtEtaPhiM(GenPart_pt[i], GenPart_eta[i],
-                     GenPart_phi[i], max(float(0.),GenPart_mass[i]));
-
-      list.push_back(p);
+    momIdx = GenPart_genPartIdxMother[i];
+    momPDGID = GenPart_pdgId[momIdx];
+    //save Z->ff children
+    if(abs(momPDGID) == 23){               
+        if(PDGID > 0) q.SetPtEtaPhiM(GenPart_pt[i], GenPart_eta[i], GenPart_phi[i], max(float(0.), GenPart_mass[i]));
+        else qbar.SetPtEtaPhiM(GenPart_pt[i], GenPart_eta[i], GenPart_phi[i], max(float(0.), GenPart_mass[i]));
     }
-  }
+   //additionally store LSP and N2 mass to calculate weight variables
+    if(abs(PDGID) == 1000022){
+       n1.SetPtEtaPhiM( GenPart_pt[i], GenPart_eta[i], GenPart_phi[i], max(float(0.), GenPart_mass[i]));
+    }
+    if(abs(PDGID) == 1000023){
+       n2.SetPtEtaPhiM( GenPart_pt[i], GenPart_eta[i], GenPart_phi[i], max(float(0.), GenPart_mass[i]));
+    }
+  }//end GenPart loop
 
-  return list;
+  //calculate x,y,z for event
+  double x,y,z;
+  double mA2 = n2.M() * n2.M();
 
-  
+  x = ( (n1 + q)*(n1 + q) ) / mA2;
+  y = ( (n1 + qbar)*(n1+  qbar) ) / mA2;
+  z = ( (qbar + q)*(qbar+q) )/ mA2;
+  //std::cout<<"(x,y,z) "<<x<<" "<<y<<" "<<z<<"\n";
+  xyz[0]=x;
+  xyz[1]=y;
+  xyz[2]=z;
+  xyz[3]=n2.M();
+  xyz[4]=n1.M();
+  return xyz;
+
+}
+template <>
+double AnalysisBase<SUSYNANOBase>::GetTChiWZWeight(double x, double z, double mA, double mB, int signValue){
+
+// Three choices for signValue = -1, 0, 1.
+//  0  gives phase-space
+//  1  gives "same-sign"
+// -1  gives "opposite-sign"
+ 
+    double mZ = 91.1876;
+    double pdf;
+    double rB = double(signValue)*mB/mA;
+    double rBsq = rB*rB;
+    double rZ = mZ/mA;
+    double rZsq = rZ*rZ;
+    double y = 1.0 + rBsq - x - z;
+    
+    if (signValue == -1 || signValue == 1){
+    // Opposite sign (-1) or Same-Sign (+1)
+        pdf = ( (1.0-x)*(x-rBsq) + (1.0-y)*(y-rBsq) + 2.0*rB*z ) / std::pow(z - rZsq, 2.0);
+    }
+    else if (signValue == 0){
+    // Phase-space only. Set to a constant. 
+        pdf = 1.0;
+    }
+    else{
+        std::cout << "shouldn't be here " << std::endl;
+        pdf = 0.0;
+    }
+    return pdf;
+} 
+
+template <>
+ParticleList AnalysisBase<SUSYNANOBase>::GetZffParticles(){
+ 
+  ParticleList list;
+ 
+ // if(IsData())
+ //   return list;
+
+  int N = nGenPart;
+  int PDGID;
+  int momIdx;
+  int momPDGID;
+  //loop over GenParts to find Z children
+   for(int i = 0; i < N; i++){
+    PDGID = GenPart_pdgId[i];
+    momIdx = GenPart_genPartIdxMother[i];
+    momPDGID = GenPart_pdgId[momIdx];
+        
+    //save Z->ff children
+     if(abs(momPDGID) == 23){
+	Particle p;	
+	p.SetMomPDGID(momPDGID);
+	p.SetPDGID(PDGID);
+        p.SetPtEtaPhiM(GenPart_pt[i], GenPart_eta[i], GenPart_phi[i], max(float(0.), GenPart_mass[i]));
+        list.push_back(p);
+      }
+   }
+  return list; 
+
 }
 
 template <class Base>
@@ -849,6 +942,15 @@ ParticleList AnalysisBase<StopNtupleTree>::GetGenSparticles(){
   }
 
   return list;
+}
+template <>
+ParticleList AnalysisBase<StopNtupleTree>::GetZffParticles(){
+ return ParticleList();
+}
+template <>
+vector<double> AnalysisBase<StopNtupleTree>::GetXYZ_mAmB(){
+ vector v={0.,0.,0.,0.,0.};	
+ return v;
 }
 
 /////////////////////////////////////////////////
