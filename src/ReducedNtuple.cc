@@ -1246,6 +1246,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   m_Eta_Genjet.clear();
   m_Phi_Genjet.clear();
   m_M_Genjet.clear();
+  m_Index_jet.clear();
   for(int i = 0; i < m_NGenjet; i++){
     m_PT_Genjet.push_back(GenJets[i].Pt());
     m_Eta_Genjet.push_back(GenJets[i].Eta());
