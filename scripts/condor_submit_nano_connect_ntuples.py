@@ -48,6 +48,81 @@ def create_filelist(rootlist, dataset, filetag):
 
     return listlist
 
+def write_sh_single(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
+    srcfile = srcfile.replace('.submit','_single.submit')
+    ofile = ofile.replace('_$(ItemIndex)_$(Step)','_0_0')
+    outfile = outfile.replace('_$(ItemIndex)_$(Step)','_0_0')
+    errfile = errfile.replace('_$(ItemIndex)_$(Step)','_0_0')
+    logfile = logfile.replace('_$(ItemIndex)_$(Step)','_0_0')
+    ifile = ifile.replace('_list','_0')
+    if DO_SMS == 1:
+        ifile = ifile.replace(pwd+'/'+filetag+'_SMS','./config')
+    elif DO_DATA == 1:
+        ifile = ifile.replace(pwd+'/'+filetag+'_Data','./config')
+    else:
+        ifile = ifile.replace(pwd+'/'+filetag,'./config')
+
+    fsrc = open(srcfile,'w')
+    fsrc.write('# Note: For only submitting 1 job! \n')
+    fsrc.write('# output (x_y), list and split args need to be updated \n')
+    fsrc.write('# Split should be the second number +1 \n')
+    fsrc.write('#       Example: file_1_15 would have a split value of 16,'+str(n)+'\n')
+    fsrc.write('universe = vanilla \n')
+    fsrc.write('executable = '+jobEXE+" \n")
+    fsrc.write('use_x509userproxy = true \n')
+    fsrc.write('Arguments = ');
+    fsrc.write('-ilist='+ifile+' ')
+    fsrc.write('-ofile='+ofile.split('/')[-1]+" ")
+    fsrc.write('-tree='+TREE+" ")
+    if DO_SMS == 1:
+        fsrc.write('--sms ')
+    if DO_DATA == 1:
+        fsrc.write('--data ')
+    if SYS == 1 and DO_DATA != 1:
+        fsrc.write('--sys ')
+    fsrc.write('-dataset='+dataset+" ")
+    fsrc.write('-filetag='+filetag+" ")
+    fsrc.write('-eventcount='+EVTCNT+" ")
+    fsrc.write('-filtereff='+FILTEREFF+" ")
+    fsrc.write('-json='+JSON+" ")
+    fsrc.write('-pu='+PUFOLD+" ")
+    fsrc.write('-btag='+BTAGFOLD+" ")
+    fsrc.write('-jme='+JMEFOLD+" ")
+    fsrc.write('-svfile='+SVFILE+" ")
+    fsrc.write('-metfile='+METFILE+" ")
+    fsrc.write('-prefirefile='+PREFIREFILE+" ")
+    fsrc.write('-split=1,'+str(n)+'\n')
+
+    outlog = outfile+".out"
+    errlog = errfile+".err"
+    loglog = logfile+".log"
+    fsrc.write('output = '+outlog+" \n")
+    fsrc.write('error = '+errlog+" \n")
+    fsrc.write('log = '+loglog+" \n")
+    fsrc.write('Requirements = (Machine != "red-node000.unl.edu" && Machine != "ncm*.hpc.itc.rwth-aachen.de" && Machine != "*mh-epyc7662-8.t2.ucsd.edu" && Machine != "*sdsc-88.t2.ucsd.edu")\n')
+    fsrc.write('request_memory = 2 GB \n')
+    #fsrc.write('priority = 10 \n')
+    fsrc.write('+RequiresCVMFS = True \n')
+    #fsrc.write('+RequiresSharedFS = True \n')
+
+    transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/stash/user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
+    fsrc.write(transfer_input)
+
+    fsrc.write('should_transfer_files = YES\n')
+    fsrc.write('when_to_transfer_output = ON_EXIT\n')
+
+    transfer_out_files = 'transfer_output_files = '+ofile.split('/')[-1]+'\n'
+    fsrc.write(transfer_out_files)
+
+    transfer_out_remap = 'transfer_output_remaps = "'+ofile.split('/')[-1]+'='+ofile
+    transfer_out_remap += '"\n'
+    fsrc.write(transfer_out_remap)
+    
+    fsrc.write('+ProjectName="cms.org.ku"\n')
+    fsrc.write('+REQUIRED_OS="rhel7"\n')
+    fsrc.write('queue')
+    fsrc.close()
+
 def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
     fsrc = open(srcfile,'w')
     fsrc.write('universe = vanilla \n')
@@ -83,11 +158,8 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
     fsrc.write('output = '+outlog+" \n")
     fsrc.write('error = '+errlog+" \n")
     fsrc.write('log = '+loglog+" \n")
-    fsrc.write('Requirements = (Machine != "red-node000.unl.edu" && Machine != "ncm*.hpc.itc.rwth-aachen.de" && Machine != "mh-epyc7662-8.t2.ucsd.edu")\n')
+    fsrc.write('Requirements = (Machine != "red-node000.unl.edu" && Machine != "ncm*.hpc.itc.rwth-aachen.de" && Machine != "*mh-epyc7662-8.t2.ucsd.edu" && Machine != "*sdsc-88.t2.ucsd.edu")\n')
     fsrc.write('request_memory = 2 GB \n')
-    #fsrc.write('priority = 10 \n')
-    #fsrc.write('+RequiresCVMFS = True \n')
-    #fsrc.write('+RequiresSharedFS = True \n')
 
     transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/stash/user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
     fsrc.write(transfer_input)
@@ -104,6 +176,9 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
     
     fsrc.write('+ProjectName="cms.org.ku"\n')
     fsrc.write('+REQUIRED_OS="rhel7"\n')
+    #fsrc.write('priority = 10 \n')
+    fsrc.write('+RequiresCVMFS = True \n')
+    #fsrc.write('+RequiresSharedFS = True \n')
     fsrc.write('queue '+str(n)+' from '+ifile+'\n')
     fsrc.close()
 
@@ -348,6 +423,7 @@ if __name__ == "__main__":
 
             script_name = srcdir+'_'.join([dataset, filetag])+'.submit'
             write_sh(script_name, overlist_name, file_name+'.root', logfile, outfile, errfile, dataset, filetag, SPLIT)
+            write_sh_single(script_name, overlist_name, file_name+'.root', logfile, outfile, errfile, dataset, filetag, SPLIT)
 
     if not COUNT:
         #print listdir
@@ -361,10 +437,11 @@ if __name__ == "__main__":
     total_jobs  = SPLIT * total_root_files
 
     # don't submit jobs if --dry-run is used
-    if not DRY_RUN or not COUNT:
+    if not DRY_RUN and not COUNT:
         for f in submit_list:
-            print "submitting: {0}".format(f)
-            os.system('condor_submit ' + f)
+            if '_single' not in f:
+                print "submitting: {0}".format(f)
+                os.system('condor_submit ' + f)
     
     # Number of ROOT files and jobs per sample 
     if VERBOSE:
