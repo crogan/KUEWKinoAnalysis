@@ -65,7 +65,11 @@ int main(int argc, char* argv[]) {
   bool maskSR = false;
 
   bool unmaskVR = false;
-  
+ 
+  //TChiWZ interpretations
+  bool TChiWZSS = false;
+  bool TChiWZOS = false;
+ 
   for(int i = 0; i < argc; i++){
     if(strncmp(argv[i],"--help", 6) == 0){
       bprint = true;
@@ -144,6 +148,12 @@ int main(int argc, char* argv[]) {
     }
     if(strncmp(argv[i],"-unmaskVR", 9) == 0){
       unmaskVR = true;
+    }
+    if(strncmp(argv[i],"-TChiWZOS", 9) == 0){
+      TChiWZOS = true;
+    }
+    if(strncmp(argv[i],"-TChiWZSS", 9) == 0){
+      TChiWZSS = true;
     }
   }
       
@@ -675,6 +685,14 @@ if(sys.Label().find("MET_TRIG") != std::string::npos)
 
 	  weight *= btag_weight*PU_weight;
 	  //weight *= btag_weight*PU_weight*trig_weight;
+
+	//reweight according to TChiWZ
+  	if(TChiWZSS){
+		weight*= base->wt_SS * base->wt_int_SS;
+	}
+	if(TChiWZOS){
+		weight*= base->wt_OS * base->wt_int_OS;
+	}
 
 	  if(is_data) weight = 1.;
 	  

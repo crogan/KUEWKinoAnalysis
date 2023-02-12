@@ -125,6 +125,13 @@ int main(int argc, char* argv[]) {
     if(strncmp(argv[i],"-unmaskVR",9) == 0){
       BuildFitInputCmd += "-unmaskVR ";
     }
+    if(strncmp(argv[i],"-TChiWZOS", 9) == 0){
+      BuildFitInputCmd += "-TChiWZOS ";
+    }
+    if(strncmp(argv[i],"-TChiWZSS", 9) == 0){
+      BuildFitInputCmd += "-TChiWZSS ";
+    }
+
     if(strncmp(argv[i],"-lumi", 5) == 0){
       i++;
       setLumi = true;

@@ -234,6 +234,10 @@ public :
    vector<double>  *genM_susy;
    vector<int>     *genPDGID_susy;
    vector<int>     *genMomPDGID_susy;
+   Double_t wt_SS;
+   Double_t wt_OS;
+   Double_t wt_int_OS;
+   Double_t wt_int_SS;
 
    // List of branches
    TBranch        *b_event_skipped;   //!
@@ -444,6 +448,10 @@ public :
    TBranch        *b_genM_susy;   //!
    TBranch        *b_genPDGID_susy;   //!
    TBranch        *b_genMomPDGID_susy;   //!
+   TBranch        *b_wt_SS; 
+   TBranch        *b_wt_OS;
+   TBranch        *b_wt_int_OS;
+   TBranch        *b_wt_int_SS;
 
    ReducedBase(TTree *tree=0);
    virtual ~ReducedBase();
@@ -800,6 +808,11 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchAddress("genM_susy", &genM_susy, &b_genM_susy);
    fChain->SetBranchAddress("genPDGID_susy", &genPDGID_susy, &b_genPDGID_susy);
    fChain->SetBranchAddress("genMomPDGID_susy", &genMomPDGID_susy, &b_genMomPDGID_susy);
+   fChain->SetBranchAddress("wt_SS", &wt_SS, &b_wt_SS);
+   fChain->SetBranchAddress("wt_OS", &wt_OS, &b_wt_OS);
+   fChain->SetBranchAddress("wt_int_OS", &wt_int_OS, &b_wt_int_OS);
+   fChain->SetBranchAddress("wt_int_SS", &wt_int_SS, &b_wt_int_SS);
+   
    Notify();
 
 
