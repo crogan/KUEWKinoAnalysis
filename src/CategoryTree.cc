@@ -1760,8 +1760,6 @@ CategoryTree CategoryTreeTool::GetCategories_2L() const {
   //CT_elmu_0j.AddSubCategory(CT_0sv_notGold);
   //CT_mumu_0j.AddSubCategory(CT_0sv_notGold);
 
-
-  
   CategoryTree CT_0j(VS().a("_0j"), "", "0J", kJ, true);
   CategoryTree CT_1j(VS().a("_1j"), "", "1J", kJ, true);
   CategoryTree CT_ge2j(VS().a("_ge2j"), "#geq 2 j #in S", "2J", kJ, true);
@@ -2727,7 +2725,7 @@ CategoryTree CategoryTreeTool::GetCategories_0L_complete() const {
 
   //level 6
   CategoryTree CT_0j(VS().a("_0j"), "0J", "0J", kJ, true);
-  CategoryTree CT_1j(VS().a("_1j"), "1J", "", kJ, true);
+  CategoryTree CT_1j(VS().a("_1j"), "1J", "1J", kJ, true);
   CategoryTree CT_2j(VS().a("_2j"), "2J", "2J", kJ, true);
   CategoryTree CT_3j(VS().a("_3j"), "3J", "3J", kJ, true);
   CategoryTree CT_4j(VS().a("_4j"), "4J", "4J", kJ, true);

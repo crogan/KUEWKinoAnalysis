@@ -2,15 +2,14 @@
 
 //SuperBin Class
 //Constructor
-SuperBin::SuperBin(const VI index, const double nSig, const double nBkg, const VS mPerpLabel, const VS rIsrLabel, const VS visLabel){
-  index_ = index;
-  nSig_ = nSig;
-  nBkg_ = nBkg;
-  sOverB_ = nSig/nBkg;
-  mPerpLabel_ = mPerpLabel;
-  rIsrLabel_ = rIsrLabel;
-  visLabel_ = visLabel;
-}
+SuperBin::SuperBin(const VI index, const double nSig, const double nBkg, const VS mPerpLabel, const VS rIsrLabel, const VS visLabel):
+  index_(index),
+  nSig_(nSig),
+  nBkg_(nBkg),
+  sOverB_(nSig/nBkg),
+  mPerpLabel_(mPerpLabel),
+  rIsrLabel_(rIsrLabel),
+  visLabel_(visLabel){}
 
 SuperBin::~SuperBin(){}
 
@@ -27,7 +26,10 @@ double SuperBin::getSoverB() const{
   return sOverB_;
 }
 double SuperBin::getBinZbi(const double sys) const{
-  return FitReader::CalculateZbi(nSig_, nBkg_, sys);
+  double zBi = 0.;
+  if(nBkg_ > 0.)
+    zBi = FitReader::CalculateZbi(nSig_, nBkg_, sys);;
+  return zBi;
 }
 VS SuperBin::getMperpLabel() const{
   return mPerpLabel_;
@@ -47,18 +49,21 @@ SuperBin* SuperBin::tryMerge(SuperBin* superBin, double sys){
   double nSigTotal = this->getNsig() + superBin->getNsig();
   double nBkgTotal = this->getNbkg() + superBin->getNbkg();
 
-  double combinedZbi = FitReader::CalculateZbi(nSigTotal, nBkgTotal, sys);
+  double combinedZbi = 0.;
+
+  if(nBkgTotal > 0)
+    combinedZbi = FitReader::CalculateZbi(nSigTotal, nBkgTotal, sys);
 
   if(combinedZbi > myZbi && combinedZbi > theirZbi){
     VI idxList = this->getIndex() += superBin->getIndex();
-    VS combinedMperpLabels = this->getMperpLabel() += superBin->getMperpLabel();
-    VS combinedRisrLabels  = this->getRisrLabel()  += superBin->getRisrLabel();
-    VS combinedVisLabels   = this->getVisLabel()   += superBin->getVisLabel();
+    VS combinedMperpLabels   = this->getMperpLabel() += superBin->getMperpLabel();
+    VS combinedRisrLabels    = this->getRisrLabel()  += superBin->getRisrLabel();
+    VS combinedVisLabels     = this->getVisLabel()   += superBin->getVisLabel();
     SuperBin* mergedSuperBin = new SuperBin(idxList, nSigTotal, nBkgTotal, combinedMperpLabels, combinedRisrLabels, combinedVisLabels);
     return mergedSuperBin;
   }
   else
-    return nullptr;
+    return this;
 }
 
 //SuperBinList Class
@@ -97,21 +102,28 @@ void SuperBinList::PrintSummary(const double sys){
   int size = this->size();
 
   cout << "Summary for bins in Region " << identifier_ << ": " << endl;
-  cout << "bins combined" << "\tindex" << "\t\t\tsignal yield" << "\tbackground yield" << "\tZbi" << endl;
+  cout << "bins combined" /*<< "\tindex"*/ << "\tsignal yield" << "\tbackground yield" << "\tZbi" << endl;
   for(auto i : idxVec){
     cout << "\t" << this->at(i)->getIndex().size() << "\t"; 
-    this->at(i)->getIndex().printList();
-    cout << "\t\t\t" << this->at(i)->getNsig() << "\t\t" 
-	 << this->at(i)->getNbkg() << "\t\t" << this->at(i)->getBinZbi(sys) << endl;
+    //this->at(i)->getIndex().printList();
+    cout << this->at(i)->getNsig() << "\t\t" 
+	 << this->at(i)->getNbkg() << "\t\t\t" << this->at(i)->getBinZbi(sys) << endl;
 
+
+    VS mperp_label = this->at(i)->getMperpLabel();
+    VS risr_label  = this->at(i)->getRisrLabel();
+    cout << "\t\tMperp RISR bin: " << "(RISR:" << risr_label[0] << ", " << "Mperp:" << mperp_label[0] << ")" << endl;
+    
     VS vis_label = this->at(i)->getVisLabel();
     if (vis_label.size() > 1) {
       cout << "\t\tcategories combined: " ;
       for(int j = 0; j < vis_label.size(); j++){
-	  if(j < vis_label.size()-1)
-	    cout <<  vis_label[j] << ", ";
-	  else
-	    cout << vis_label[j];
+	if(j>0 && j%3 == 0)
+          cout << "\n\t\t\t\t     ";
+	if(j < vis_label.size()-1)
+	  cout <<  vis_label[j] << ", ";
+	else
+	  cout << vis_label[j];
       }
       cout << "\n\n";
     }
@@ -127,12 +139,12 @@ void SuperBinList::PrintSummaryVis(const double sys){
   int size = this->size();
 
   cout << "Summary for bins in Region " << identifier_ << ": " << endl;
-  cout << "bins combined" << "\tindex" << "\t\t\tsignal yield" << "\tbackground yield" << "\tZbi" << endl;
+  cout << "bins combined" /*<< "\tindex"*/ << "\tsignal yield" << "\tbackground yield" << "\tZbi" << endl;
   for(auto i : idxVec){
     cout << "\t" << this->at(i)->getIndex().size() << "\t";
-    this->at(i)->getIndex().printList();
-    cout << "\t\t\t" << this->at(i)->getNsig() << "\t\t"
-         << this->at(i)->getNbkg() << "\t\t" << this->at(i)->getBinZbi(sys) << endl;
+    //this->at(i)->getIndex().printList();
+    cout << this->at(i)->getNsig() << "\t\t"
+         << this->at(i)->getNbkg() << "\t\t\t" << this->at(i)->getBinZbi(sys) << endl;
 
     VS vis_label = this->at(i)->getVisLabel();
     cout << "\t\tCategory: " << vis_label[0] << endl;
@@ -143,7 +155,7 @@ void SuperBinList::PrintSummaryVis(const double sys){
       cout << "\t\tbins combined: " ;
       for(int j = 0; j < mperp_label.size(); j++){
 	if(j>0 && j%3 == 0)
-	  cout << "\n\t\t\t\t";
+	  cout << "\n\t\t\t       ";
 	if(j < mperp_label.size()-1)
 	  cout << "(RISR:" << risr_label[j] << ", " << "Mperp:" << mperp_label[j] << "), ";
 	else

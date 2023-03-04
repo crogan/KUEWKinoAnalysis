@@ -5,6 +5,7 @@
 #include <TGraphErrors.h>
 
 #include "FitReader.hh"
+#include "SuperBin.hh"
 
 using std::map;
 using std::string;
@@ -69,12 +70,14 @@ public:
 		   CombineType cType = kVis,
 		   PlotType pType = kFull);
 
-  void CombineBinsSigAvg(const string& can_name,
-			 const VS& proc_bkg,
-			 const VS& proc_sig,
-			 const CategoryTree& CT,
-			 CombineType cType = kVis,
-			 PlotType pType = kFull);
+  SuperBinList CombineBinsSigAvg(const string& can_name,
+				 const VS& proc_bkg,
+				 const VS& proc_sig,
+				 const CategoryTree& CT,
+				 const double SF = 3,
+				 const double sys = 0.1,
+				 CombineType cType = kVis,
+				 PlotType pType = kFull);
   
   void FindBkgZeros(const VS& proc_bkg);
   void FindBkgRare();

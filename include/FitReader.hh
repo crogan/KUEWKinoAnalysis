@@ -61,6 +61,8 @@ public:
 				    const ProcessList&  procs,
 				    const Systematic&   sys = Systematic::Default()) const;
 
+  //vector<vector<double>> Get
+  
   bool IsFilled2D(const Category&   cat,
 		  const Process&    proc,
 		  const Systematic& sys = Systematic::Default()) const;

@@ -218,31 +218,36 @@ vector<double> FitReader::GetAddedHistValues(const CategoryList& cats,
 
   for(int p = 0; p < Np; p++){
     for(int c = 0; c < Nc; c++){
-      if(!IsThere(cats[c], procs[p], sys))
-        continue;
+      if(!IsThere(cats[c], procs[p], sys)){
+	//cout << cats[c].Label()+"_"+cats[c].GetLabel()+"/"+procs[p].Name() << endl;
+	continue;
+      }
 
       if(!hist){
         hist = (TH1D*) GetHistogram(cats[c], procs[p], sys)->Clone(name);
 	//cout << hist->GetTitle() << endl;
-
+	//cout << cats[c].Label()+"_"+cats[c].GetLabel()+"/"+procs[p].Name() << endl;
       } else {
 	//hist = (TH1D*) GetHistogram(cats[c], procs[p], sys);
 	//cout << GetHistogram(cats[c], procs[p], sys)->GetTitle() << endl;
         hist->Add(GetHistogram(cats[c], procs[p], sys));
+	//cout << cats[c].Label()+"_"+cats[c].GetLabel()+"/"+procs[p].Name() << endl;
       }
     }
   }
 
   if(hist){
     int bins = hist->GetNbinsX();
+    //if(bins < 10)
+    //cout << hist->GetTitle() << endl;
     
-    for(int b = 0; b < bins; b++){
+    for(int b = 0; b < bins; b++)
       histValues.push_back(hist->GetBinContent(b+1));
-    } 
 
     delete hist;
   }
   else{
+    //cout << "Didn't find the histogram!" << endl;    
     for (int i = 0; i < NBins; i++)
       histValues.push_back(0.);
   }
@@ -286,12 +291,14 @@ const TH2D* FitReader::GetHistogram2D(const Category&   cat,
 bool FitReader::IsFilled(const Category&   cat,
 			 const Process&    proc,
 			 const Systematic& sys) const {
-//cout << "IsFilled" << endl;
+  //cout << "IsFilled" << endl;
+  //cout << cat.Label()+"_"+cat.GetLabel()+"/"+proc.Name() << endl;
   if(!sys){
     if(m_ProcHist.count(proc) == 0)
       m_ProcHist[proc] = map<Category,TH1D*>();
     if(m_ProcHist[proc].count(cat) == 0){
       string shist = cat.Label()+"_"+cat.GetLabel()+"/"+proc.Name();
+      //cout << shist << endl;
       if(!m_FilePtr){ //if there is no file pointer, just take histogram from original file
 	m_ProcHist[proc][cat] = (TH1D*) m_File.Get(shist.c_str());
       } else {
