@@ -627,7 +627,8 @@ int nthOccurrence(const std::string& str, const std::string& findMe, int nth){
     return pos;
 }
 
-VS FitReader::GetSignalProcs(const int min_mass_diff, const int max_mass_diff, const int exclude_below) const{
+VS FitReader::GetSignalProcs(const int min_mass_diff, const int max_mass_diff,
+                             const int exclude_below, const int exclude_above) const{
 
   VS sig_procs;
   
@@ -638,7 +639,7 @@ VS FitReader::GetSignalProcs(const int min_mass_diff, const int max_mass_diff, c
   TKey* key1 = (TKey*)ele1();
   TObject* dir1 = key1->ReadObj();
 
-  TDirectory* dir = (TDirectory*)dir1;
+  auto dir = (TDirectory*)dir1;
   TList* ls = dir->GetListOfKeys() ;
 
   if (!ls) {
@@ -653,7 +654,7 @@ VS FitReader::GetSignalProcs(const int min_mass_diff, const int max_mass_diff, c
   while ((key = (TKey*)next())) {
     obj = key->ReadObj();
     string title = obj->GetTitle();
-    if(title.find("_T") != std::string::npos && !(title.find("_TB") != std::string::npos)){
+    if(title.find("_T") != std::string::npos && title.find("_TB") == std::string::npos){
       int pos1 = title.find("_T")+1;
       int pos2 = nthOccurrence(title, "_", 3);
       string sigTypeMass = title.substr(pos1, pos2-pos1);
@@ -663,12 +664,48 @@ VS FitReader::GetSignalProcs(const int min_mass_diff, const int max_mass_diff, c
       int child_mass = std::get<1>(mass_tuple);
       int mass_diff = parent_mass-child_mass;
 
-      if(parent_mass >= exclude_below && mass_diff >= min_mass_diff && mass_diff <= max_mass_diff){
-	sig_procs.a(sigTypeMass);
-	//printf("%s\n",sigTypeMass.c_str());
+      if(parent_mass >= exclude_below && parent_mass <= exclude_above && mass_diff >= min_mass_diff && mass_diff <= max_mass_diff){
+          sig_procs.a(sigTypeMass);
+
       }
     }
   }
   
   return sig_procs;
 }
+
+/*SuperBin FitReader::GetSuperBin(const VS& proc_bkg,
+                                const VS& proc_sig,
+                                const CategoryTree& CT,
+                                const vector<std::tuple<string, string, string>>& binIDs) {
+
+    int binSize = int(binIDs.size());
+    vector<string> categoryIDs(binSize), RISRIDs(binSize), MperpIDs(binSize);
+    for(int i=0; i < binSize; i++){
+        categoryIDs[i] = std::get<0>(binIDs[i]);
+        RISRIDs[i] = std::get<1>(binIDs[i]);
+        MperpIDs[i] = std::get<2>(binIDs[i]);
+    }
+
+    RestFrames::SetStyle();
+
+    CategoryList CatList = GetCategories();
+
+    vector<const CategoryTree*> CatTrees;
+    CT.GetListDeepest(CatTrees);
+
+    int Nbkg = int(proc_bkg.size());
+    int Nsig = int(proc_sig.size());
+    int Nvis = int(CatTrees.size());
+    int Ncat = CatList.GetN();
+
+    int Depth = CT.GetDepth();
+
+    ProcessList bkgs = FetchProcs(proc_bkg);
+    ProcessList sigs = FetchProcs(proc_sig);
+
+    Nsig = sigs.GetN();
+    Nbkg = bkgs.GetN();
+
+    return SuperBin(VI(), 0, 0, VS(), VS(), VS());
+}*/

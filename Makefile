@@ -76,7 +76,7 @@ locallib: lib
 
 lib: lib/libKUEWKino.so
 
-alltargets: MakeReducedNtuple_NANO.x EventCountPlot.x MakeEventCount_NANO.x BuildFitInput.x BuildPlotInput.x BuildFitShapes.x BuildFitInputCondor.x BuildPlotInputCondor.x BuildFitCondor.x
+alltargets: MakeReducedNtuple_NANO.x EventCountPlot.x MakeEventCount_NANO.x BuildFitInput.x BuildPlotInput.x BuildFitShapes.x BuildFitInputCondor.x BuildPlotInputCondor.x BuildFitCondor.x SuperBinMaker.x
 
 EventCountPlot.x:  $(SRCDIR)EventCountPlot.C $(OBJ_FILES) $(HH_FILES)
 	$(CXX) $(CXXFLAGS) -o EventCountPlot.x $(OUTOBJ)/*.o $(GLIBS) $ $<
@@ -125,6 +125,10 @@ BuildPlotInputCondor.x:  $(SRCDIR)BuildPlotInputCondor.C $(OBJ_FILES) $(HH_FILES
 BuildFitCondor.x:  $(SRCDIR)BuildFitCondor.C $(OBJ_FILES) $(HH_FILES)
 	$(CXX) $(CXXFLAGS) -o BuildFitCondor.x $(OUTOBJ)/*.o $(GLIBS) $ $<
 	touch BuildFitCondor.x
+
+SuperBinMaker.x:  $(SRCDIR)SuperBinMaker.C $(OBJ_FILES) $(HH_FILES)
+	$(CXX) $(CXXFLAGS) -o SuperBinMaker.x $(OUTOBJ)/*.o $(GLIBS) $ $<
+	touch SuperBinMaker.x
 
 lib/libKUEWKino.so: $(SOBJ_FILES)
 	mkdir -p lib

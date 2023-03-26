@@ -11,6 +11,7 @@
 
 #include "Category.hh"
 #include "Process.hh"
+#include "SuperBin.hh"
 
 using std::map;
 using std::string;
@@ -89,7 +90,7 @@ public:
 
   static double CalculateZbi(double Nsig, double Nbkg, double deltaNbkg);
 
-  VS GetSignalProcs(const int min_mass_diff, const int max_mass_diff, const int exclude_below) const;
+  VS GetSignalProcs(int min_mass_diff, int max_mass_diff, int exclude_below, int exclude_above) const;
   
 protected:
   mutable TFile  m_File;
