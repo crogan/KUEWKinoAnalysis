@@ -155,6 +155,7 @@ int main(int argc, char* argv[]) {
     if(strncmp(argv[i],"-TChiWZSS", 9) == 0){
       TChiWZSS = true;
     }
+  
   }
       
   if((proc_to_add.size() == 0) &&
