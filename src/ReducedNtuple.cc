@@ -294,9 +294,10 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("DzErr_lep", &m_DzErr_lep);
   tree->Branch("IP3D_lep", &m_IP3D_lep);
   tree->Branch("SIP3D_lep", &m_SIP3D_lep);
-  tree->Branch("ID_lep",      &m_ID_lep);
-  tree->Branch("SourceID_lep",      &m_SourceID_lep);
-  tree->Branch("Index_lep",   &m_Index_lep);
+  tree->Branch("ID_lep", &m_ID_lep);
+  tree->Branch("SourceID_lep", &m_SourceID_lep);
+  tree->Branch("LepQual_lep", &m_LepQual_lep);
+  tree->Branch("Index_lep", &m_Index_lep);
   
   tree->Branch("Njet", &m_Njet);
   tree->Branch("Nbjet", &m_Nbjet);
@@ -1275,6 +1276,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   m_SIP3D_lep.clear();
   m_ID_lep.clear();
   m_SourceID_lep.clear();
+  m_LepQual_lep.clear();
   m_Index_lep.clear();
   vector<int> genmatch;
   for(int i = 0; i < m_genNlep; i++)
@@ -1295,6 +1297,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
     m_IP3D_lep.push_back(Leptons[r].IP3D());
     m_SIP3D_lep.push_back(Leptons[r].SIP3D());
     m_ID_lep.push_back(Leptons[r].ParticleID());
+    m_LepQual_lep.push_back(Leptons[r].LepQual());
     int index = -1;
     double minDR = 0.1;
     for(int g = 0; g < m_genNlep; g++)
@@ -1311,6 +1314,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
       Leptons[r].SetSourceID(kFake);
     
     m_ID_lep.push_back(Leptons[r].SourceID());
+    m_SourceID_lep.push_back(Leptons[r].SourceID());
   }
 
   if(!AnalysisBase<Base>::IsData()){

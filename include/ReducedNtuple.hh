@@ -118,6 +118,7 @@ private:
   vector<double> m_SIP3D_lep;
   vector<int>    m_ID_lep;
   vector<int>    m_SourceID_lep;
+  vector<int>    m_LepQual_lep;
   vector<int>    m_Index_lep;
 
   int m_Njet;
