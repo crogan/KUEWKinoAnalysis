@@ -223,6 +223,31 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("BtagLFSFweight_up", &m_BtagLFSFweight_up);
   tree->Branch("BtagLFSFweight_down", &m_BtagLFSFweight_down);
 
+  tree->Branch("elIDSFweight", &m_elIDSFweight);
+  tree->Branch("elIDSFweight_up", &m_elIDSFweight_up);
+  tree->Branch("elIDSFweight_down", &m_elIDSFweight_down);
+  tree->Branch("elISOSFweight", &m_elISOSFweight);
+  tree->Branch("elISOSFweight_up", &m_elISOSFweight_up);
+  tree->Branch("elISOSFweight_down", &m_elISOSFweight_down);
+  tree->Branch("elSIPSFweight", &m_elSIPSFweight);
+  tree->Branch("elSIPSFweight_up", &m_elSIPSFweight_up);
+  tree->Branch("elSIPSFweight_down", &m_elSIPSFweight_down);
+  tree->Branch("elVLSFweight", &m_elVLSFweight);
+  tree->Branch("elVLSFweight_up", &m_elVLSFweight_up);
+  tree->Branch("elVLSFweight_down", &m_elVLSFweight_down);
+  tree->Branch("muIDSFweight", &m_muIDSFweight);
+  tree->Branch("muIDSFweight_up", &m_muIDSFweight_up);
+  tree->Branch("muIDSFweight_down", &m_muIDSFweight_down);
+  tree->Branch("muISOSFweight", &m_muISOSFweight);
+  tree->Branch("muISOSFweight_up", &m_muISOSFweight_up);
+  tree->Branch("muISOSFweight_down", &m_muISOSFweight_down);
+  tree->Branch("muSIPSFweight", &m_muSIPSFweight);
+  tree->Branch("muSIPSFweight_up", &m_muSIPSFweight_up);
+  tree->Branch("muSIPSFweight_down", &m_muSIPSFweight_down);
+  tree->Branch("muVLSFweight", &m_muVLSFweight);
+  tree->Branch("muVLSFweight_up", &m_muVLSFweight_up);
+  tree->Branch("muVLSFweight_down", &m_muVLSFweight_down);
+   
   tree->Branch("MetTrigSFweight", &m_MetTrigSFweight);
   tree->Branch("MetTrigSFweight_up", &m_MetTrigSFweight_up);
   tree->Branch("MetTrigSFweight_down", &m_MetTrigSFweight_down);
@@ -1091,8 +1116,6 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
 
     TVector3 isr_t = ISR->GetTransverseFourVector(*S).Vect();
     TVector3 isr   = ISR->GetFourVector(*S).Vect();
-
-    
     
     for(int l = 0; l < m_Nlep_S; l++){
       TVector3 lep   = S->GetFourVector(Leptons[m_index_lep_S[l]]).Vect();
@@ -1143,6 +1166,31 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
     m_BtagLFSFweight_up = AnalysisBase<Base>::GetBtagSFWeight(Jets, false, 1, kMedium);
     m_BtagLFSFweight_down = AnalysisBase<Base>::GetBtagSFWeight(Jets, false, -1, kMedium);
 
+    m_elIDSFweight = AnalysisBase<Base>::GetElIDSFWeight(Electrons, 0);
+    m_elIDSFweight_up = AnalysisBase<Base>::GetElIDSFWeight(Electrons, 1);
+    m_elIDSFweight_down = AnalysisBase<Base>::GetElIDSFWeight(Electrons, -1);
+    m_elISOSFweight = AnalysisBase<Base>::GetElISOSFWeight(Electrons, 0);
+    m_elISOSFweight_up = AnalysisBase<Base>::GetElISOSFWeight(Electrons, 1);
+    m_elISOSFweight_down = AnalysisBase<Base>::GetElISOSFWeight(Electrons, -1);
+    m_elSIPSFweight = AnalysisBase<Base>::GetElSIPSFWeight(Electrons, 0);
+    m_elSIPSFweight_up = AnalysisBase<Base>::GetElSIPSFWeight(Electrons, 1);
+    m_elSIPSFweight_down = AnalysisBase<Base>::GetElSIPSFWeight(Electrons, -1);
+    m_elVLSFweight = AnalysisBase<Base>::GetElVLIDSFWeight(Electrons, 0);
+    m_elVLSFweight_up = AnalysisBase<Base>::GetElVLIDSFWeight(Electrons, 1);
+    m_elVLSFweight_down = AnalysisBase<Base>::GetElVLIDSFWeight(Electrons, -1);
+    m_muIDSFweight = AnalysisBase<Base>::GetMuIDSFWeight(Muons, 0);
+    m_muIDSFweight_up = AnalysisBase<Base>::GetMuIDSFWeight(Muons, 1);
+    m_muIDSFweight_down = AnalysisBase<Base>::GetMuIDSFWeight(Muons, -1);
+    m_muISOSFweight = AnalysisBase<Base>::GetMuISOSFWeight(Muons, 0);
+    m_muISOSFweight_up = AnalysisBase<Base>::GetMuISOSFWeight(Muons, 1);
+    m_muISOSFweight_down = AnalysisBase<Base>::GetMuISOSFWeight(Muons, -1);
+    m_muSIPSFweight = AnalysisBase<Base>::GetMuSIPSFWeight(Muons, 0);
+    m_muSIPSFweight_up = AnalysisBase<Base>::GetMuSIPSFWeight(Muons, 1);
+    m_muSIPSFweight_down = AnalysisBase<Base>::GetMuSIPSFWeight(Muons, -1);
+    m_muVLSFweight = AnalysisBase<Base>::GetMuVLIDSFWeight(Muons, 0);
+    m_muVLSFweight_up = AnalysisBase<Base>::GetMuVLIDSFWeight(Muons, 1);
+    m_muVLSFweight_down = AnalysisBase<Base>::GetMuVLIDSFWeight(Muons, -1);
+
     m_MetTrigSFweight = AnalysisBase<Base>::GetMETTriggerSFWeight(m_MET, m_HT_eta5, m_Nele, m_Nmu, 0);
     m_MetTrigSFweight_up = AnalysisBase<Base>::GetMETTriggerSFWeight(m_MET, m_HT_eta5, m_Nele, m_Nmu, 1);
     m_MetTrigSFweight_down = AnalysisBase<Base>::GetMETTriggerSFWeight(m_MET, m_HT_eta5, m_Nele, m_Nmu, -1);
@@ -1173,6 +1221,30 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
     m_BtagLFSFweight = 1;
     m_BtagLFSFweight_up = 1;
     m_BtagLFSFweight_down = 1;
+    m_elIDSFweight = 1;
+  m_elIDSFweight_up = 1;
+  m_elIDSFweight_down = 1;
+  m_elISOSFweight = 1;
+  m_elISOSFweight_up = 1;
+  m_elISOSFweight_down = 1;
+  m_elSIPSFweight = 1;
+  m_elSIPSFweight_up = 1;
+  m_elSIPSFweight_down = 1;
+  m_elVLSFweight = 1;
+  m_elVLSFweight_up = 1;
+  m_elVLSFweight_down = 1;
+  m_muIDSFweight = 1;
+  m_muIDSFweight_up = 1;
+  m_muIDSFweight_down = 1;
+  m_muISOSFweight = 1;
+  m_muISOSFweight_up = 1;
+  m_muISOSFweight_down = 1;
+  m_muSIPSFweight = 1;
+  m_muSIPSFweight_up = 1;
+  m_muSIPSFweight_down = 1;
+  m_muVLSFweight = 1;
+  m_muVLSFweight_up = 1;
+  m_muVLSFweight_down = 1;
     m_MetTrigSFweight = 1.;
     m_MetTrigSFweight_up = 1.;
     m_MetTrigSFweight_down = 1.;

@@ -44,6 +44,32 @@ private:
   double m_BtagLFSFweight;
   double m_BtagLFSFweight_up;
   double m_BtagLFSFweight_down;
+
+  double m_elIDSFweight;
+  double m_elIDSFweight_up;
+  double m_elIDSFweight_down;
+  double m_elISOSFweight;
+  double m_elISOSFweight_up;
+  double m_elISOSFweight_down;
+  double m_elSIPSFweight;
+  double m_elSIPSFweight_up;
+  double m_elSIPSFweight_down;
+  double m_elVLSFweight;
+  double m_elVLSFweight_up;
+  double m_elVLSFweight_down;
+  double m_muIDSFweight;
+  double m_muIDSFweight_up;
+  double m_muIDSFweight_down;
+  double m_muISOSFweight;
+  double m_muISOSFweight_up;
+  double m_muISOSFweight_down;
+  double m_muSIPSFweight;
+  double m_muSIPSFweight_up;
+  double m_muSIPSFweight_down;
+  double m_muVLSFweight;
+  double m_muVLSFweight_up;
+  double m_muVLSFweight_down;
+  
   double m_MetTrigSFweight;
   double m_MetTrigSFweight_up;
   double m_MetTrigSFweight_down;
