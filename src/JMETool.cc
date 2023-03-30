@@ -37,6 +37,10 @@ double JMETool::GetJESFactor(int year, const string& name, double pT, double Eta
 double JMETool::GetJERFactor(int year, double pT, double Eta, double rho) const {
   if(year < 2016 || year > 2018)
     return 0;
+
+  if(year == 2016 && rho > 40.9) rho = 40.89;
+  if(year == 2017 && rho > 42.52) rho = 42.51;
+  if(year == 2018 && rho > 90.) rho = 89.99;
   
   if(m_JERFactors[year-2016].count(year) == 0)
     return 0;

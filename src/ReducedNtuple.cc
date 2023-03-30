@@ -266,20 +266,22 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample, bool do_slim){
   tree->Branch("PrefireWeight_up", &m_PrefireWeight_up);
   tree->Branch("PrefireWeight_down", &m_PrefireWeight_down);
 
+  if(!do_slim){
+    tree->Branch("METtrigger", &m_METtrigger);
+    tree->Branch("METHTtrigger", &m_METHTtrigger);
+    tree->Branch("METORtrigger", &m_METORtrigger);
+    tree->Branch("DoubleElectrontrigger", &m_DoubleElectrontrigger);
+    tree->Branch("DoubleMuontrigger", &m_DoubleMuontrigger);
+  }
+
   tree->Branch("EventFlag_FailJetID", &m_EventFlag_FailJetID);
   tree->Branch("EventFlag_JetInHEM", &m_EventFlag_JetInHEM);
   tree->Branch("EventFlag_JetInHEM_Pt20", &m_EventFlag_JetInHEM_Pt20);
   tree->Branch("EventFlag_JetInHEM_Pt20_JetID", &m_EventFlag_JetInHEM_Pt20_JetID);
   tree->Branch("HEM_Veto", &m_HEM_Veto);
-  
-  tree->Branch("METtrigger", &m_METtrigger);
-  tree->Branch("METHTtrigger", &m_METHTtrigger);
-  tree->Branch("METORtrigger", &m_METORtrigger);
 
   tree->Branch("SingleElectrontrigger", &m_SingleElectrontrigger);
   tree->Branch("SingleMuontrigger", &m_SingleMuontrigger);
-  tree->Branch("DoubleElectrontrigger", &m_DoubleElectrontrigger);
-  tree->Branch("DoubleMuontrigger", &m_DoubleMuontrigger);
   tree->Branch("EMutrigger", &m_EMutrigger);
   
   tree->Branch("MET", &m_MET);

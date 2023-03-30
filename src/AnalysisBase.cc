@@ -2154,7 +2154,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET, int id){
   
   for(int i = 0; i < Njet; i++){
     bool failID = false;
-    if(Jet_pt[i] < 15. || fabs(Jet_eta[i]) > 5.)
+    if(Jet_pt[i] < 15. || fabs(Jet_eta[i]) > 4.7)
       continue;
     if(Jet_jetId[i] < id)
       continue;
@@ -2219,8 +2219,8 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET, int id){
       // 3 different cases to consider
       // Case 1: we have a "good" gen level jet matched to reco jet
       if(gen_match){
-        double dPt = jet.Perp() - genJet.Perp();
-        smearFactor = 1. + (SF - 1.)*dPt/jet.Perp();
+        double dPt = jet.Pt() - genJet.Pt();
+        smearFactor = 1. + (SF - 1.)*dPt/jet.Pt();
       }
 
       // Case 2: Smear jet pT using a random Gaussian variation
@@ -2239,7 +2239,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET, int id){
         smearFactor = 1.e-2/jet.E();
 
       Particle oldJet = jet;
-      jet.SetPerp(jet.Perp()*smearFactor);
+      jet.SetPtEtaPhiM(jet.Pt()*smearFactor,jet.Eta(),jet.Phi(),jet.M());
       deltaMET -= (oldJet-jet).Vect();
 
     } //end JER
