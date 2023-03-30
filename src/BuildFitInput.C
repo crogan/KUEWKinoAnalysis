@@ -486,67 +486,47 @@ int main(int argc, char* argv[]) {
 	  trig_weight = 1.;
           if(!(!sys) && is_data) continue;      
 
-	  trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
-	  if(is_FastSim)
-	    trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0)*
-	      m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
-	  //cout << "event " << e << endl;
-	  //cout << "  sys: " << sys.Label() << endl;
-	  //cout << "    nom: " << trig_weight << endl;
-	  /*         
-		     if(base->Nlep == 0) correct_sys = "MET_TRIG_0L";
-		     else if(base->Nele == 1 && base->Nmu == 0) correct_sys = "MET_TRIG_1L_el";
-		     else if(base->Nele == 0 && base->Nmu == 1) correct_sys = "MET_TRIG_1L_mu";
-		     else if(base->Nlep > 1 && base->Nmu == 0) correct_sys = "MET_TRIG_2L3L_el";
-		     else if(base->Nlep > 1 && base->Nmu > 0) correct_sys = "MET_TRIG_2L3L_mu";
-		     if(!(!sys) && sys.Label() != correct_sys && sys.Label().find("MET_TRIG") != std::string::npos) continue;
-	  */
 
-	  if(sys.Label().find("MET_TRIG") != std::string::npos)
-	    {
-	      if(sys.Label() != correct_sys && correct_sys != "") continue;
-	      string scat = Categories[eindex].FullLabel();
-	      if(sys.Label() == "MET_TRIG_0L")
-		if(scat.find("0L") == std::string::npos)
-		  continue;
-	      if(sys.Label() == "MET_TRIG_1L_mu")
-		if(scat.find("1L") == std::string::npos ||
-		   (scat.find("_mu") == std::string::npos && scat.find("_lp") == std::string::npos && scat.find("_lm") == std::string::npos))
-		  continue;
-	      if(sys.Label() == "MET_TRIG_1L_el")
-		if(scat.find("1L") == std::string::npos ||
-		   (scat.find("_el") == std::string::npos && scat.find("_lp") == std::string::npos && scat.find("_lm") == std::string::npos))
-		  continue;
+	    trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
+            if(is_FastSim)
+	      trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0)*
+		m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
 
-	      if(sys.Label() == "MET_TRIG_2L3L_el")
-		if((scat.find("2L") == std::string::npos && scat.find("3L") == std::string::npos) ||
-		   (scat.find("elel") == std::string::npos && scat.find("_ll") == std::string::npos && scat.find("3L") == std::string::npos &&
-		    scat.find("_noZ") == std::string::npos && scat.find("_Zstar") == std::string::npos && scat.find("_SS") == std::string::npos))
-		  continue;
+            if(sys.Label().find("MET_TRIG") != std::string::npos && proc.Name() != "QCD")
+            {
+             /* 
+              if(sys.Label() != correct_sys && correct_sys != "") continue;
+              string scat = Categories[eindex].FullLabel();
+            
+              if(sys.Label() == "MET_TRIG_el")
+            	if((scat.find("0L") == std::string::npos) && 
+                       (scat.find("1L") == std::string::npos || (scat.find("_el") == std::string::npos && scat.find("_lp") == std::string::npos && scat.find("_lm") == std::string::npos)) &&
+                       ((scat.find("2L") == std::string::npos && scat.find("3L") == std::string::npos) || (scat.find("elel") == std::string::npos && scat.find("_ll") == std::string::npos && 
+                       scat.find("_noZ") == std::string::npos && scat.find("_Zstar") == std::string::npos && scat.find("_SS") == std::string::npos)))
+            		continue;
+            
+              if(sys.Label() == "MET_TRIG_mu")
+            	if((scat.find("0L") != std::string::npos) || 
+                       (scat.find("1L") == std::string::npos || (scat.find("_mu") == std::string::npos && scat.find("_lp") == std::string::npos && scat.find("_lm") == std::string::npos)) &&
+                       ((scat.find("2L") == std::string::npos && scat.find("3L") == std::string::npos) || (scat.find("mumu") == std::string::npos && scat.find("elmu") == std::string::npos && scat.find("_ll") == std::string::npos && 
+                       scat.find("_noZ") == std::string::npos && scat.find("_Zstar") == std::string::npos && scat.find("_SS") == std::string::npos)))
+            		continue;
+              */
+            	        if(sys.IsUp())
+            	          if(is_FastSim)
+            	            trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1)*
+            	              m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1);
+            	          else
+            	            trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1);
+            	        else
+            	          if(is_FastSim)
+            	            trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1)*
+            	              m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
+            	          else
+            	            trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
+            
+            }
 
-	      if(sys.Label() == "MET_TRIG_2L3L_mu")
-		if((scat.find("2L") == std::string::npos && scat.find("3L") == std::string::npos) ||
-		   (scat.find("elmu") == std::string::npos && scat.find("mumu") == std::string::npos && scat.find("_ll") == std::string::npos && scat.find("3L") == std::string::npos &&
-		    scat.find("_noZ") == std::string::npos && scat.find("_Zstar") == std::string::npos && scat.find("_SS") == std::string::npos))
-		  continue;
-  
-	      correct_sys = sys.Label();
-
-
-	      if(sys.IsUp())
-		if(is_FastSim)
-		  trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1)*
-		    m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1);
-		else
-		  trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1);
-	      else
-		if(is_FastSim)
-		  trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1)*
-		    m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
-		else
-		  trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
-
-	    }
 	      
 	  //
 	  // BTAG systematics from the ntuples
