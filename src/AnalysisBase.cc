@@ -2193,14 +2193,17 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET, int id){
 
     if(!IsData()){
 
-      // JER recipe based on https://github.com/cms-nanoAOD/nanoAOD-tools/blob/master/python/postprocessing/modules/jme/jetmetUncertainties.py 
+      // JER recipe based on https://github.com/cms-nanoAOD/nanoAOD-tools/blob/master/python/postprocessing/modules/jme/jetmetUncertainties.py
+     
       double smearFactor = 1.;
       double JER = m_JMETool.GetJERFactor(year, Jet_pt[i], Jet_eta[i], fixedGridRhoFastjetAll); // using this for rho based on: https://github.com/cms-nanoAOD/nanoAOD-tools/blob/0127d46a973e894d97e9a16bd3939f421b2b689e/python/postprocessing/modules/jme/jetmetUncertainties.py#L49
       double SF = m_JMETool.GetJERSFFactor(year,Jet_eta[i],0);
 
       if(DO_JER)
         SF = m_JMETool.GetJERSFFactor(year,Jet_eta[i],delta);
-
+       
+      //cout << SF << " " << JER << " " << Jet_pt[i] << " " << Jet_eta[i] << " " << Njet << " " << nGenJet <<  endl;
+      
       // check for gen jet matching:
       bool gen_match = false;
       Particle genJet;
@@ -2241,6 +2244,8 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET, int id){
 
     } //end JER
 
+    //cout << "Mass " << jet.M() << endl;
+    
     if(Jet_jetId[i] >= 3)
       jet.SetParticleID(kTight);
     else if(Jet_jetId[i] >= 2) 

@@ -17,8 +17,8 @@ public:
 
 private:
   bool m_library_generated;
-  TTree* InitOutputTree(const string& sample);
-  void FillOutputTree(TTree* tree, const Systematic& sys = Systematic::Default());
+  TTree* InitOutputTree(const string& sample, bool do_slim = false);
+  void FillOutputTree(TTree* tree, const Systematic& sys = Systematic::Default(), bool do_slim = false);
 
   void ClearVariables();
 
@@ -310,7 +310,8 @@ private:
   double m_PX3_BoostT;
   double m_MX3a_BoostT;
   double m_MX3b_BoostT;
-  double m_Mperp; 
+  double m_Mperp;
+  double m_gammaT;
 
   double m_PV_BoostT;
   

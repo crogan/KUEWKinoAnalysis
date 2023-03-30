@@ -95,7 +95,6 @@ void JMETool::BuildJERMap(const std::string& JMEfolder){
   
   for(int y = 0; y < 3; y++){
     ParseJERSFUncertainty(JMEfolder+"/"+JME[y]+"/"+JME[y]+"_SF_"+post, 2016+y);
-
     ParseJER(JMEfolder+"/"+JME[y]+"/"+JME[y]+"_PtResolution_"+post, 2016+y);
   }
   
@@ -205,7 +204,6 @@ void JMETool::ParseJER(const string& input, int year){
    ptmin = popdouble(line);
    ptmax = popdouble(line);
 
-
    std::vector<double> params;
    for(int i = 0; i < Nparam; i++)
      params.push_back(popdouble(line));
@@ -227,8 +225,8 @@ void JMETool::ParseJER(const string& input, int year){
        Bin = &Bins->AddBin(etamin, etamax);
      }
      
-       rhomin = popdouble(line);
-       rhomax = popdouble(line);
+     rhomin = popdouble(line);
+     rhomax = popdouble(line);
      
      Nblah = popdouble(line);
      ptmin = popdouble(line);     

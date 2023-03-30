@@ -453,48 +453,6 @@ int main(int argc, char* argv[]) {
 
 	if(eindex < 0){
 	  continue;
-	  if(Nlep > 3)
-	    continue;
-	  if(base->PTISR < 250. && Nlep >= 2)
-	    continue;
-	  if(base->PTISR < 400. && Nlep < 2)
-	    continue;
-
-	  int Nbron = 0;
-	  int Nslvr = 0;
-	  for(int i = 0; i < Nlep; i++){
-	    if(i < base->Nlep_a){
-	      if(list_a[i].ID() == kBronze)
-		Nbron++;
-	      if(list_a[i].ID() == kSilver)
-		Nslvr++;
-	    } else {
-	      if(list_b[i-base->Nlep_a].ID() == kBronze)
-		Nbron++;
-	      if(list_b[i-base->Nlep_a].ID() == kSilver)
-		Nslvr++;
-	    }
-	  }
-	  if(Nbron >= 2)
-	    continue;
-	  if(Nbron+Nslvr >= 3)
-	    continue;
-	  
-	  cout << "Nlep = " << Nlep << " PTISR = " << base->PTISR << " NjetS = " << NjetS << " NSV = " << NSV << endl;
-	  for(int i = 0; i < Nlep; i++){
-	    if(i < base->Nlep_a)
-	      cout << list_a[i].ID() << " " << list_a[i].IDLabel() << " " << list_a[i].Charge() << " a" << endl;
-	    else
-	      cout << list_b[i-base->Nlep_a].ID() << " " << list_b[i-base->Nlep_a].IDLabel() << " " << list_b[i-base->Nlep_a].Charge() << " b" << endl;
-	    //     int Nlep     = base->Nlep;
-	    // int NjetS    = base->Njet_S;
-	    // int NbjetS   = base->Nbjet_S;
-	    // int NjetISR  = base->Njet_ISR;
-	    // int NbjetISR = base->Nbjet_ISR;
-	    // int NSV      = base->NSV_S;
-	  }
-   	  
-	  continue;
 	}
 
 	double PTISR = base->PTISR;
@@ -526,28 +484,7 @@ int main(int argc, char* argv[]) {
 	  btag_weight = 1.;
 	  PU_weight = 1.;
 	  trig_weight = 1.;
-          if(!(!sys) && is_data) continue;
-	    
-	  // HERE BE DRAGONS
-
-	  //                         ^    ^
-	  //                        / \  //\
-	  //          |\___/|      /   \//  .\
-	  //          /O  O  \__  /    //  | \ \
-	  //         /     /  \/_/    //   |  \  \
-	  //         @___@'    \/_   //    |   \   \ 
-	  //            |       \/_ //     |    \    \ 
-	  //            |        \///      |     \     \ 
-	  //           _|_ /   )  //       |      \     _\
-	  //          '/,_ _ _/  ( ; -.    |    _ _\.-~        .-~~~^-.
-	  //          ,-{        _      `-.|.-~-.           .~         `.
-	  //           '/\      /                 ~-. _ .-~      .-~^-.  \
-	  //              `.   {            }                   /      \  \
-	  //            .----~-.\        \-'                 .~         \  `. \^-.
-	  //           ///.----..>    c   \             _ -~             `.  ^-`   ^-_
-	  //             ///-._ _ _ _ _ _ _}^ - - - - ~                     ~--,   .-~
-	  //                                                                   /.-'
-	  //         
+          if(!(!sys) && is_data) continue;      
 
 	  trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
 	  if(is_FastSim)

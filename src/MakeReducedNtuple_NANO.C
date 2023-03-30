@@ -54,6 +54,7 @@ int main(int argc, char* argv[]) {
   bool DO_SMS = false;
   bool DO_JSON = false;
   bool IS_DATA = false;
+  bool IS_FASTSIM = false;
 
   bool DO_SYS = false;
   bool DO_SYS_JES = false;
@@ -61,6 +62,8 @@ int main(int argc, char* argv[]) {
   bool DO_SYS_MET = false;
   bool DO_SYS_MMS = false;
   bool DO_SYS_EES = false;
+
+  bool DO_slim = false;
   
   int ICHUNK = 1;
   int NCHUNK = 1;
@@ -111,7 +114,10 @@ int main(int argc, char* argv[]) {
     
     if (strncmp(argv[i],"--sms",5)==0)  DO_SMS = true;
     if (strncmp(argv[i],"--data",6)==0)  IS_DATA = true;
+    if (strncmp(argv[i],"--fastsim",9)==0)  IS_FASTSIM = true;
 
+    if (strncmp(argv[i],"--slim",6)==0) DO_slim = true;
+    
     if (strncmp(argv[i],"--sys",5)==0)  DO_SYS = true;
     if (strncmp(argv[i],"--sysJES",8)==0)  DO_SYS_JES = true;
     if (strncmp(argv[i],"--sysJER",8)==0)  DO_SYS_JER = true;
@@ -216,8 +222,11 @@ int main(int argc, char* argv[]) {
   if(IS_DATA)
     ntuple->DoData();
 
+  if(IS_FASTSIM)
+    ntuple->DoFastSim();
+
   cout << "writing output with ichunk=" << ICHUNK << " nchunk=" << NCHUNK << endl;
-  ntuple->WriteNtuple(string(outputFileName), ICHUNK, NCHUNK);
+  ntuple->WriteNtuple(string(outputFileName), ICHUNK, NCHUNK, DO_slim);
 
   delete ntuple;
  
