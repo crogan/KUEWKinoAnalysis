@@ -33,8 +33,6 @@ if __name__ == "__main__":
 
     skip_list = [
         #"SMS-T2tt_mStop-400to1200_TuneCP2_13TeV-madgraphMLM-pythia8",
-        #"TTTo2L2Nu_TuneCP5_PSweights_13TeV-powheg-pythia8_Summer16_102X",
-        "TTToSemiLeptonic_TuneCP5_PSweights_13TeV-powheg-pythia8_Summer16_102X",
     ]
 
     if os.path.exists("scripts/startup_C.so") is False:
@@ -110,4 +108,4 @@ if __name__ == "__main__":
     if len(hadd_big_processes) == 0:
         print("Finished Merging Files")
     else:
-        print("Possible Error! Some hadd jobs may still be running!")
+        print("Possible Error! "+str(len(hadd_big_processes))+" hadd jobs may still be running!")
