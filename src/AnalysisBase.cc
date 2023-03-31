@@ -2210,9 +2210,10 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET, int id){
       genJet.SetPtEtaPhiM(0.,0.,0.,0.);
       
       for(int g = 0; g < nGenJet; g++){
+	genJet.SetPtEtaPhiM(GenJet_pt[g],GenJet_eta[g],GenJet_phi[g],GenJet_mass[g]);
         if(fabs(Jet_pt[i] - GenJet_pt[g]) < 3.*JER*Jet_pt[i] && jet.DeltaR(genJet) < 0.2){
           gen_match = true;
-          genJet.SetPtEtaPhiM(GenJet_pt[g],GenJet_eta[g],GenJet_phi[g],GenJet_mass[g]);
+          break;
         }
       }
 
@@ -2221,6 +2222,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET, int id){
       if(gen_match){
         double dPt = jet.Pt() - genJet.Pt();
         smearFactor = 1. + (SF - 1.)*dPt/jet.Pt();
+	cout << "case 1 " << smearFactor << endl;
       }
 
       // Case 2: Smear jet pT using a random Gaussian variation
@@ -2229,6 +2231,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET, int id){
         rand3.SetSeed(event);
         double rand_val = rand3.Gaus(0.,JER);
         smearFactor = 1.+rand_val*sqrt(SF*SF-1.);
+	cout << "case 2 " << smearFactor << " " << SF << " " << JER << " " << jet.Eta() << " " << jet.Pt() << endl;
       }
 
       // Case 3: Resolution in data is better than res in sim so do nothing
@@ -2238,9 +2241,11 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET, int id){
       if(smearFactor*jet.E() < 1.e-2)
         smearFactor = 1.e-2/jet.E();
 
+      //smearFactor = 1.;
+      
       Particle oldJet = jet;
-      jet.SetPtEtaPhiM(jet.Pt()*smearFactor,jet.Eta(),jet.Phi(),jet.M());
-      deltaMET -= (oldJet-jet).Vect();
+      jet.SetPtEtaPhiM(jet.Pt()*smearFactor,jet.Eta(),jet.Phi(),jet.M()*smearFactor);
+      deltaMET += (oldJet-jet).Vect();
 
     } //end JER
 
