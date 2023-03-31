@@ -462,6 +462,7 @@ if __name__ == "__main__":
         #print listdir
         os.system("cp -r "+listdir+" "+config)
         #print "creating tarball from: ", TARGET
+        os.system("sleep 15") # sleep so copy command(s) can catch up...
         os.system("tar -C "+config+"/../ -czf "+TARGET+"/config.tgz config")
 
     submit_dir  = srcdir        
