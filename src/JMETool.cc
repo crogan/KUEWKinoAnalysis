@@ -208,6 +208,9 @@ void JMETool::ParseJER(const string& input, int year){
    ptmin = popdouble(line);
    ptmax = popdouble(line);
 
+   etamin = emi;
+   etamax = emi;
+   
    std::vector<double> params;
    for(int i = 0; i < Nparam; i++)
      params.push_back(popdouble(line));
