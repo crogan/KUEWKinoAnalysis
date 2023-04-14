@@ -2154,10 +2154,10 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET, int id){
   
   for(int i = 0; i < Njet; i++){
     bool failID = false;
-    if(Jet_pt[i] < 15. || fabs(Jet_eta[i]) > 4.7)
-      continue;
-    if(Jet_jetId[i] < id)
-      continue;
+    //if(Jet_pt[i] < 15. || fabs(Jet_eta[i]) > 5.)
+    //  continue;
+    //if(Jet_jetId[i] < id)
+    //  continue;
     
     Particle jet;
     float mass = Jet_mass[i];
@@ -2235,17 +2235,21 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET, int id){
       // Case 3: Resolution in data is better than res in sim so do nothing
       else
         smearFactor = 1.;
-
-      smearFactor = 1.;
       
       if(smearFactor*jet.E() < 1.e-2)
         smearFactor = 1.e-2/jet.E();
       
       Particle oldJet = jet;
       jet.SetPtEtaPhiM(jet.Pt()*smearFactor,jet.Eta(),jet.Phi(),jet.M()*smearFactor);
-      deltaMET += (oldJet-jet).Vect();
+      //deltaMET += (oldJet-jet).Vect(); //should be default?
+      deltaMET -= (oldJet-jet).Vect();
 
     } //end JER
+
+    if(Jet_pt[i] < 15. || fabs(Jet_eta[i]) > 5.)
+      continue;
+    if(Jet_jetId[i] < id)
+      continue;
     
     if(Jet_jetId[i] >= 3)
       jet.SetParticleID(kTight);
