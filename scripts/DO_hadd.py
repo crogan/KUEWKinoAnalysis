@@ -3,6 +3,11 @@ from glob import glob as glob
 from subprocess import Popen as pop
 import subprocess
 
+# Example submission:
+#    nohup python scripts/DO_hadd.py -idir ../../../NTUPLES/Processing/Summer16_102X/ -odir ../../../NTUPLES/HADD/Summer16_102X/ > HADD_logs/HADD_Summer16_102X.debug 2>&1 &
+# After hadd finishes and ready to copy to LPC:
+#    nohup xrdcp --parallel 4 -f ../../../NTUPLES/HADD/Summer16_102X/* root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v1/Summer16_102X/ > xrdcp_Summer16_102X.debug 2>&1 &
+
 if __name__ == "__main__":
 
     argv_pos = 1
@@ -96,6 +101,7 @@ if __name__ == "__main__":
 
     for target, hadd_big in hadd_big_processes.items():
         if hadd_big.poll() is not None:
+            print("Waiting on big hadd job")
             hadd_big.wait()
             out,err = hadd_big.communicate()
             if err != "":
@@ -108,4 +114,4 @@ if __name__ == "__main__":
     if len(hadd_big_processes) == 0:
         print("Finished Merging Files")
     else:
-        print("Possible Error! "+str(len(hadd_big_processes))+" hadd jobs may still be running!")
+        print("Note: "+str(len(hadd_big_processes))+" hadd jobs may still be running!")
