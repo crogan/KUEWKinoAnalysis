@@ -33,7 +33,7 @@ double popdouble(std::string& line);
 std::string popstring(std::string& line);
 
 enum LimitType { kObs, kExp, kExpUp, kExpDn };
-enum PlotType { kTChiWZ, kT2tt, kT2bW, kT2bb, kTSlSl, kT2cc};
+enum PlotType { kTChiWZ, kT2tt, kT2bW, kT2bb, kTSlSl, kT2cc, kTChiWW};
 
 TCanvas* Plot2DHist_MCvMP(const string& can, TH2D* hist, PlotType ptype);
 TCanvas* Plot2DHist_dMvMP(const string& can, TH2D* hist, PlotType ptype);
@@ -633,6 +633,10 @@ TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist, PlotType ptype){
     xlabel = "m_{ #tilde{#it{l}}} [GeV]";
     ylabel = "m_{#tilde{#chi}^{0}_{1}} [GeV]";
  }
+ if(ptype == kTChiWW){
+    xlabel = "m_{#tilde{#chi}^{#pm}_{1}} [GeV]";
+    ylabel = "m_{#tilde{#chi}^{0}_{1}} [GeV]";
+ }
                   
   can->SetLeftMargin(0.15);
   can->SetRightMargin(0.2);
@@ -663,6 +667,159 @@ TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist, PlotType ptype){
       xsec = g_Xsec.GetXsec_SMS("TSlepSlep", MP);
     if(ptype == kT2cc)
       xsec = g_Xsec.GetXsec_SMS("T2cc", MP);   
+    if(ptype == kTChiWW)
+      xsec = g_Xsec.GetXsec_SMS("TChipmWW",MP);
+
+    for(int y = 0; y < Ny; y++){
+      if(hist->GetBinContent(x+1,y+1) > 0.){
+	hist->SetBinContent(x+1,y+1, hist->GetBinContent(x+1,y+1)*xsec);
+      }
+    }
+  }
+  
+  hist->GetXaxis()->CenterTitle();
+  hist->GetXaxis()->SetTitleFont(42);
+  hist->GetXaxis()->SetTitleSize(0.05);
+  hist->GetXaxis()->SetTitleOffset(1.08);
+  hist->GetXaxis()->SetLabelFont(42);
+  hist->GetXaxis()->SetLabelSize(0.045);
+  hist->GetXaxis()->SetTitle(xlabel.c_str());
+  hist->GetYaxis()->CenterTitle();
+  hist->GetYaxis()->SetTitleFont(42);
+  hist->GetYaxis()->SetTitleSize(0.05);
+  hist->GetYaxis()->SetTitleOffset(1.12);
+  hist->GetYaxis()->SetLabelFont(42);
+  hist->GetYaxis()->SetLabelSize(0.045);
+  hist->GetYaxis()->SetTitle(ylabel.c_str());
+  hist->GetZaxis()->CenterTitle();
+  hist->GetZaxis()->SetTitleFont(42);
+  hist->GetZaxis()->SetTitleSize(0.05);
+  hist->GetZaxis()->SetTitleOffset(1.15);
+  hist->GetZaxis()->SetLabelFont(42);
+  hist->GetZaxis()->SetLabelSize(0.045);
+  hist->GetZaxis()->SetTitle("95% C.L. cross-section U.L. [fb]");
+  hist->Draw("COLZ");
+
+  TLatex l;
+  l.SetTextFont(42);
+  l.SetNDC();
+
+  TLine* line = new TLine();
+  line->SetLineWidth(2);
+  line->SetLineColor(kBlack);
+
+  l.SetTextAlign(31);
+  l.SetTextSize(0.04);
+  l.SetTextFont(42);
+  l.DrawLatex(0.8, 0.95, "138 fb^{-1} (13 TeV)");
+  l.SetTextAlign(11);
+  l.SetTextSize(0.04);
+  l.SetTextFont(42);
+  l.DrawLatex(0.16, 0.95,"#bf{#it{CMS}} work-in-progress");
+  l.SetTextSize(0.05);
+
+  // SMS info
+  string SMS;
+  if(ptype == kTChiWZ){
+    SMS =  "pp #rightarrow #tilde{#chi}_{2}^{0} #tilde{#chi}_{1}^{#pm}; ";
+    SMS += "#tilde{#chi}_{2}^{0} #rightarrow Z*#tilde{#chi}_{1}^{0}, ";
+    SMS += "#tilde{#chi}_{1}^{#pm} #rightarrow W*#tilde{#chi}_{1}^{0}";
+  }
+  if(ptype == kT2tt){
+    SMS =  "pp #rightarrow #tilde{t} #tilde{t}; ";
+    SMS += "#tilde{t} #rightarrow t #tilde{#chi}_{1}^{0}";
+  }
+  if(ptype == kT2bW){
+    SMS =  "pp #rightarrow #tilde{t} #tilde{t}; ";
+    SMS += "#tilde{t} #rightarrow b #tilde{#chi}_{1}^{#pm}(W #tilde{#chi}_{1}^{0})";
+  }
+  if(ptype == kT2bb){
+    SMS =  "pp #rightarrow #tilde{b} #tilde{b}; ";
+    SMS += "#tilde{b} #rightarrow b #tilde{#chi}_{1}^{0}";
+  }
+  if(ptype == kTSlSl){
+    SMS =  "pp #rightarrow #tilde{#it{l}}_{L/R} #tilde{#it{l}}_{L/R}; ";
+    SMS += "#tilde{#it{l}}_{L/R} #rightarrow #it{l} #tilde{#chi}_{1}^{0}";
+  }
+  if(ptype == kT2cc){
+    SMS = "pp #rightarrow #tilde{t} #tilde{t}; ";
+    SMS += "#tilde{t} #rightarrow c #tilde{#chi}_{1}^{0}";
+ }
+ if(ptype == kTChiWW){
+    SMS = "pp #rightarrow #tilde{#chi}_{1}^{#pm} #tilde{#chi}_{1}^{#pm}; ";
+    SMS += "#tilde{#chi}_{1}^{#pm} #rightarrow W*#tilde{#chi}_{1}^{0}";
+ }
+
+  l.SetTextSize(0.035);
+  l.SetTextFont(42);
+  l.DrawLatex(0.18, 0.87,SMS.c_str());
+
+  return can;
+}
+
+TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
+//gSystem->Load("/home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/lib/libKUEWKino.so");
+  TCanvas* can = (TCanvas*) new TCanvas(name.c_str(),name.c_str(),700.,600);
+
+  string xlabel = "m_{P} [GeV]";
+  string ylabel = "m_{P} - M_{ #tilde{#chi}^{0}_{1}} [GeV]";
+
+  if(ptype == kTChiWZ){
+    xlabel = "m_{#tilde{#chi}^{#pm}_{1}} [GeV]";
+    ylabel = "m_{#tilde{#chi}^{#pm}_{1}} - m_{#tilde{#chi}^{0}_{1}} [GeV]";
+  }
+  if(ptype == kT2tt || ptype == kT2bW){
+    xlabel = "m_{ #tilde{t}} [GeV]";
+    ylabel = "m_{ #tilde{t}} - m_{#tilde{#chi}^{0}_{1}} [GeV]";
+  }
+  if(ptype == kT2bb){
+    xlabel = "m_{ #tilde{b}} [GeV]";
+    ylabel = "m_{ #tilde{b}} - m_{#tilde{#chi}^{0}_{1}} [GeV]";
+  }
+    if(ptype == kT2cc){
+    xlabel = "m_{ #tilde{t}} [GeV]";
+    ylabel = "m_{#tilde{#chi}^{0}_{1}} [GeV]";
+  }
+  if(ptype == kTSlSl){
+    xlabel = "m_{ #tilde{#it{l}}} [GeV]";
+    ylabel = "m_{#tilde{#it{l}}} - m_{#tilde{#chi}^{0}_{1}} [GeV]";
+ }
+  if(ptype == kTChiWW){
+    xlabel = "m_{#tilde{#chi}^{#pm}_{1}} [GeV]";
+    ylabel = "m_{#tilde{#chi}^{#pm}_{1}} - m_{#tilde{#chi}^{0}_{1}} [GeV]";
+ }
+  
+  can->SetLeftMargin(0.15);
+  can->SetRightMargin(0.2);
+  can->SetBottomMargin(0.15);
+  can->SetTopMargin(0.07);
+  can->SetGridx();
+  can->SetGridy();
+  can->SetLogz();
+  can->Draw();
+  can->cd();
+
+  // scale r limits to xsec limits
+  int Nx = hist->GetNbinsX();
+  int Ny = hist->GetNbinsY();
+  
+  for(int x = 0; x < Nx; x++){
+    double MP = hist->GetXaxis()->GetBinCenter(x+1);
+    double xsec = 1.;
+    if(ptype == kTChiWZ)
+      xsec = g_Xsec.GetXsec_SMS("TChiWZ", MP);
+    if(ptype == kT2tt)
+      xsec = g_Xsec.GetXsec_SMS("T2tt", MP);
+    if(ptype == kT2bW)
+      xsec = g_Xsec.GetXsec_SMS("T2bW", MP);
+    if(ptype == kT2bb)
+      xsec = g_Xsec.GetXsec_SMS("T2bb", MP);
+    if(ptype == kTSlSl)
+      xsec = g_Xsec.GetXsec_SMS("TSlepSlep", MP);
+    if(ptype == kT2cc)
+      xsec = g_Xsec.GetXsec_SMS("T2cc", MP);
+    if(ptype == kTChiWW)
+      xsec = g_Xsec.GetXsec_SMS("TChipmWW", MP);   
  
     for(int y = 0; y < Ny; y++){
       if(hist->GetBinContent(x+1,y+1) > 0.){
@@ -705,149 +862,7 @@ TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist, PlotType ptype){
   l.SetTextAlign(31);
   l.SetTextSize(0.04);
   l.SetTextFont(42);
-  l.DrawLatex(0.8, 0.95, "137 fb^{-1} (13 TeV)");
-  l.SetTextAlign(11);
-  l.SetTextSize(0.04);
-  l.SetTextFont(42);
-  l.DrawLatex(0.16, 0.95,"#bf{#it{CMS}} work-in-progress");
-  l.SetTextSize(0.05);
-
-  // SMS info
-  string SMS;
-  if(ptype == kTChiWZ){
-    SMS =  "pp #rightarrow #tilde{#chi}_{2}^{0} #tilde{#chi}_{1}^{#pm}; ";
-    SMS += "#tilde{#chi}_{2}^{0} #rightarrow Z*#tilde{#chi}_{1}^{0}, ";
-    SMS += "#tilde{#chi}_{1}^{#pm} #rightarrow W*#tilde{#chi}_{1}^{0}";
-  }
-  if(ptype == kT2tt){
-    SMS =  "pp #rightarrow #tilde{t} #tilde{t}; ";
-    SMS += "#tilde{t} #rightarrow t #tilde{#chi}_{1}^{0}";
-  }
-  if(ptype == kT2bW){
-    SMS =  "pp #rightarrow #tilde{t} #tilde{t}; ";
-    SMS += "#tilde{t} #rightarrow b #tilde{#chi}_{1}^{#pm}(W #tilde{#chi}_{1}^{0})";
-  }
-  if(ptype == kT2bb){
-    SMS =  "pp #rightarrow #tilde{b} #tilde{b}; ";
-    SMS += "#tilde{b} #rightarrow b #tilde{#chi}_{1}^{0}";
-  }
-  if(ptype == kTSlSl){
-    SMS =  "pp #rightarrow #tilde{#it{l}}_{L/R} #tilde{#it{l}}_{L/R}; ";
-    SMS += "#tilde{#it{l}}_{L/R} #rightarrow #it{l} #tilde{#chi}_{1}^{0}";
-  }
-  if(ptype == kT2cc){
-    SMS = "pp #rightarrow #tilde{t} #tilde{t}; ";
-    SMS += "#tilde{t} #rightarrow c #tilde{#chi}_{1}^{0}";
- }
-
-  l.SetTextSize(0.035);
-  l.SetTextFont(42);
-  l.DrawLatex(0.18, 0.87,SMS.c_str());
-
-  return can;
-}
-
-TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
-//gSystem->Load("/home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/lib/libKUEWKino.so");
-  TCanvas* can = (TCanvas*) new TCanvas(name.c_str(),name.c_str(),700.,600);
-
-  string xlabel = "m_{P} [GeV]";
-  string ylabel = "m_{P} - M_{ #tilde{#chi}^{0}_{1}} [GeV]";
-
-  if(ptype == kTChiWZ){
-    xlabel = "m_{#tilde{#chi}^{#pm}_{1}} [GeV]";
-    ylabel = "m_{#tilde{#chi}^{#pm}_{1}} - m_{#tilde{#chi}^{0}_{1}} [GeV]";
-  }
-  if(ptype == kT2tt || ptype == kT2bW){
-    xlabel = "m_{ #tilde{t}} [GeV]";
-    ylabel = "m_{ #tilde{t}} - m_{#tilde{#chi}^{0}_{1}} [GeV]";
-  }
-  if(ptype == kT2bb){
-    xlabel = "m_{ #tilde{b}} [GeV]";
-    ylabel = "m_{ #tilde{b}} - m_{#tilde{#chi}^{0}_{1}} [GeV]";
-  }
-    if(ptype == kT2cc){
-    xlabel = "m_{ #tilde{t}} [GeV]";
-    ylabel = "m_{#tilde{#chi}^{0}_{1}} [GeV]";
-  }
-  if(ptype == kTSlSl){
-    xlabel = "m_{ #tilde{#it{l}}} [GeV]";
-    ylabel = "m_{#tilde{#it{l}}} - m_{#tilde{#chi}^{0}_{1}} [GeV]";
- }
-
-  
-  can->SetLeftMargin(0.15);
-  can->SetRightMargin(0.2);
-  can->SetBottomMargin(0.15);
-  can->SetTopMargin(0.07);
-  can->SetGridx();
-  can->SetGridy();
-  can->SetLogz();
-  can->Draw();
-  can->cd();
-
-  // scale r limits to xsec limits
-  int Nx = hist->GetNbinsX();
-  int Ny = hist->GetNbinsY();
-  
-  for(int x = 0; x < Nx; x++){
-    double MP = hist->GetXaxis()->GetBinCenter(x+1);
-    double xsec = 1.;
-    if(ptype == kTChiWZ)
-      xsec = g_Xsec.GetXsec_SMS("TChiWZ", MP);
-    if(ptype == kT2tt)
-      xsec = g_Xsec.GetXsec_SMS("T2tt", MP);
-    if(ptype == kT2bW)
-      xsec = g_Xsec.GetXsec_SMS("T2bW", MP);
-    if(ptype == kT2bb)
-      xsec = g_Xsec.GetXsec_SMS("T2bb", MP);
-    if(ptype == kTSlSl)
-      xsec = g_Xsec.GetXsec_SMS("TSlepSlep", MP);
-    if(ptype == kT2cc)
-      xsec = g_Xsec.GetXsec_SMS("T2cc", MP);
-    
-    for(int y = 0; y < Ny; y++){
-      if(hist->GetBinContent(x+1,y+1) > 0.){
-	hist->SetBinContent(x+1,y+1, hist->GetBinContent(x+1,y+1)*xsec);
-      }
-    }
-  }
-  
-  hist->GetXaxis()->CenterTitle();
-  hist->GetXaxis()->SetTitleFont(42);
-  hist->GetXaxis()->SetTitleSize(0.05);
-  hist->GetXaxis()->SetTitleOffset(1.08);
-  hist->GetXaxis()->SetLabelFont(42);
-  hist->GetXaxis()->SetLabelSize(0.045);
-  hist->GetXaxis()->SetTitle(xlabel.c_str());
-  hist->GetYaxis()->CenterTitle();
-  hist->GetYaxis()->SetTitleFont(42);
-  hist->GetYaxis()->SetTitleSize(0.05);
-  hist->GetYaxis()->SetTitleOffset(1.12);
-  hist->GetYaxis()->SetLabelFont(42);
-  hist->GetYaxis()->SetLabelSize(0.045);
-  hist->GetYaxis()->SetTitle(ylabel.c_str());
-  hist->GetZaxis()->CenterTitle();
-  hist->GetZaxis()->SetTitleFont(42);
-  hist->GetZaxis()->SetTitleSize(0.05);
-  hist->GetZaxis()->SetTitleOffset(1.15);
-  hist->GetZaxis()->SetLabelFont(42);
-  hist->GetZaxis()->SetLabelSize(0.045);
-  hist->GetZaxis()->SetTitle("95% C.L. cross-section U.L. [fb]");
-  hist->Draw("COLZ");
-
-  TLatex l;
-  l.SetTextFont(42);
-  l.SetNDC();
-
-  TLine* line = new TLine();
-  line->SetLineWidth(2);
-  line->SetLineColor(kBlack);
-
-  l.SetTextAlign(31);
-  l.SetTextSize(0.04);
-  l.SetTextFont(42);
-  l.DrawLatex(0.8, 0.95, "137 fb^{-1} (13 TeV)");
+  l.DrawLatex(0.8, 0.95, "138 fb^{-1} (13 TeV)");
   l.SetTextAlign(11);
   l.SetTextSize(0.04);
   l.SetTextFont(42);
@@ -880,6 +895,10 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
     if(ptype == kT2cc){
     SMS = "pp #rightarrow #tilde{t} #tilde{t}; ";
     SMS += "#tilde{t} #rightarrow c #tilde{#chi}_{1}^{0}";
+ }
+ if(ptype == kTChiWW){
+    SMS = "pp #rightarrow #tilde{#chi}_{1}^{#pm}  #tilde{#chi}_{1}^{#pm}; ";
+    SMS += "#tilde{#chi}_{1}^{#pm} #rightarrow W*#tilde{#chi}_{1}^{0}";
  }
 
 
