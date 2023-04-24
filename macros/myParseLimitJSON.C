@@ -746,7 +746,7 @@ TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist, PlotType ptype){
     SMS += "#tilde{t} #rightarrow c #tilde{#chi}_{1}^{0}";
  }
  if(ptype == kTChiWW){
-    SMS = "pp #rightarrow #tilde{#chi}_{1}^{#pm} #tilde{#chi}_{1}^{#pm}; ";
+    SMS = "pp #rightarrow #tilde{#chi}_{1}^{#pm} #tilde{#chi}_{1}^{#mp}; ";
     SMS += "#tilde{#chi}_{1}^{#pm} #rightarrow W*#tilde{#chi}_{1}^{0}";
  }
 
@@ -897,7 +897,7 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
     SMS += "#tilde{t} #rightarrow c #tilde{#chi}_{1}^{0}";
  }
  if(ptype == kTChiWW){
-    SMS = "pp #rightarrow #tilde{#chi}_{1}^{#pm}  #tilde{#chi}_{1}^{#pm}; ";
+    SMS = "pp #rightarrow #tilde{#chi}_{1}^{#pm}  #tilde{#chi}_{1}^{#mp}; ";
     SMS += "#tilde{#chi}_{1}^{#pm} #rightarrow W*#tilde{#chi}_{1}^{0}";
  }
 
