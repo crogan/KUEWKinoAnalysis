@@ -1,0 +1,22 @@
+# Note: For only submitting 1 job! 
+# output (x_y), list and split args need to be updated 
+# Split should be the second number +1 
+#       Example: file_1_15 would have a split value of 16,1
+universe = vanilla 
+executable = execute_script.sh 
+use_x509userproxy = true 
+Arguments = -ilist=./config_RWT/list/TChiWZ_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X/TChiWZ_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X_0.list -ofile=TChiWZ_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X_0_0.root -tree=Events --sms -dataset=TChiWZ_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 -filetag=Summer16_102X -eventcount=./config/EventCount.root -filtereff=./config/FilterEff.root -json=./config/GRL_JSON.txt -pu=./config/PU/ -btag=./config/BtagSF/ -jme=./config/JME/ -svfile=./config/NNmodel.json -metfile=./config/METTrigger/Parameters.csv -prefirefile=./config/Prefire/Prefire.root -split=1,1
+output = /uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis/Summer16_102X_SMS_RWT/out/TChiWZ_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X/TChiWZ_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X_0_0.out 
+error = /uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis/Summer16_102X_SMS_RWT/err/TChiWZ_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X/TChiWZ_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X_0_0.err 
+log = /uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis/Summer16_102X_SMS_RWT/log/TChiWZ_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X/TChiWZ_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X_0_0.log 
+Requirements = (Machine != "red-node000.unl.edu" && Machine != "ncm*.hpc.itc.rwth-aachen.de" && Machine != "*mh-epyc7662-8.t2.ucsd.edu" && Machine != "*sdsc-88.t2.ucsd.edu")
+request_memory = 2 GB 
++RequiresCVMFS = True 
+transfer_input_files = /uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis/Summer16_102X_SMS_RWT/config.tgz,/stash/user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+transfer_output_files = TChiWZ_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X_0_0.root
+transfer_output_remaps = "TChiWZ_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X_0_0.root=/uscms/home/janguian/nobackup/NTUPLE//Summer16_102X_SMS_RWT/TChiWZ_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X/TChiWZ_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X_0_0.root"
++ProjectName="cms.org.ku"
++REQUIRED_OS="rhel7"
+queue

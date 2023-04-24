@@ -1,0 +1,17 @@
+DIR=Summer16_102X_SMS_RWT
+echo ${DIR}
+
+#root://cmsxrootd.fnal.gov//store/mc/RunIIAutumn18NanoAODv7/TChiWZ_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8/NANOAODSIM/PUFall18Fast_Nano02Apr2020_102X_upgrade2018_realistic_v21-v1/110000/FCBB39BC-A5FA-704F-B82D-392409AD3E06.root
+
+#./MakeReducedNtuple_NANO.x -ilist=./${DIR}/config_RWT/list/TChiWZ_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X/TChiWZ_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X_0.list -ofile=TChiWZ_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X_0_0.root -tree=Events --sms -dataset=TChiWZ_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 -filetag=Summer16_102X -eventcount=./${DIR}/config/EventCount.root -filtereff=./${DIR}/config/FilterEff.root -json=./${DIR}/config/GRL_JSON.txt -pu=./${DIR}/config/PU/ -btag=./${DIR}/config/BtagSF/ -jme=./${DIR}/config/JME/ -svfile=./${DIR}/config/NNmodel.json -metfile=./${DIR}/config/METTrigger/Parameters.csv -prefirefile=./${DIR}/config/Prefire/Prefire.root
+
+#local file
+#./MakeReducedNtuple_NANO.x -ifile=/uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis/Autumn18_102X_SMS_RWT/test_local/FCBB39BC-A5FA-704F-B82D-392409AD3E06.root -ofile=TChiWZ_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X_0_0.root -tree=Events --sms -dataset=TChiWZ_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 -filetag=Summer16_102X -eventcount=./${DIR}/config/EventCount.root -filtereff=./${DIR}/config/FilterEff.root -json=./${DIR}/config/GRL_JSON.txt -pu=./${DIR}/config/PU/ -btag=./${DIR}/config/BtagSF/ -jme=./${DIR}/config/JME/ -svfile=./${DIR}/config/NNmodel.json -metfile=./${DIR}/config/METTrigger/Parameters.csv -prefirefile=./${DIR}/config/Prefire/Prefire.root
+
+#xrootd
+#./MakeReducedNtuple_NANO.x -ifile=root://cmsxrootd.fnal.gov//store/mc/RunIIAutumn18NanoAODv7/TChiWZ_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8/NANOAODSIM/PUFall18Fast_Nano02Apr2020_102X_upgrade2018_realistic_v21-v1/110000/FCBB39BC-A5FA-704F-B82D-392409AD3E06.root -ofile=TChiWZ_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X_0_0.root -tree=Events --sms -dataset=TChiWZ_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 -filetag=Summer16_102X -eventcount=./${DIR}/config/EventCount.root -filtereff=./${DIR}/config/FilterEff.root -json=./${DIR}/config/GRL_JSON.txt -pu=./${DIR}/config/PU/ -btag=./${DIR}/config/BtagSF/ -jme=./${DIR}/config/JME/ -svfile=./${DIR}/config/NNmodel.json -metfile=./${DIR}/config/METTrigger/Parameters.csv -prefirefile=./${DIR}/config/Prefire/Prefire.root
+
+#list of lists
+./MakeReducedNtuple_NANO.x -ilist=./${DIR}/config_RWT/list/TChiWZ_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X/TChiWZ_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X_list.list -ofile=TChiWZ_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X_0_0.root -tree=Events --sms -dataset=TChiWZ_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 -filetag=Summer16_102X -eventcount=./${DIR}/config/EventCount.root -filtereff=./${DIR}/config/FilterEff.root -json=./${DIR}/config/GRL_JSON.txt -pu=./${DIR}/config/PU/ -btag=./${DIR}/config/BtagSF/ -jme=./${DIR}/config/JME/ -svfile=./${DIR}/config/NNmodel.json -metfile=./${DIR}/config/METTrigger/Parameters.csv -prefirefile=./${DIR}/config/Prefire/Prefire.root
+
+
