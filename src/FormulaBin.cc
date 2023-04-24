@@ -289,7 +289,7 @@ double FormulaBinsBins::JERSF(double Eta, double pT, double rho) const {
     if(Eta < m_Max[i])
       return m_Bins[i]->JERSF(pT, rho);
   }
-
+  
   return 1;
 }
 

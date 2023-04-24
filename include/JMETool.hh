@@ -3,8 +3,6 @@
 
 #include "../include/FormulaBin.hh"
 
-//#include "../src/FormulaBin.cc"
-
 using std::string;
 
 class JMETool {

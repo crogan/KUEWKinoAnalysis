@@ -7,6 +7,7 @@ class ParticleList;
 
 /// Particle ID level
 enum ParticleIDType { kNothing, kVeryLoose, kLoose, kMedium, kTight, kVeryTight };
+enum LepID { kGold, kSilver, kBronze };
 
 class Particle : public TLorentzVector {
 public:
@@ -66,6 +67,9 @@ public:
   ParticleIDType BtagID() const;
   void SetBtagID(ParticleIDType id);
 
+  LepID LepQual() const;
+  void SetLepQual(LepID qual);
+
   Particle Merge(const Particle&) const;
   
   operator ParticleList() const;
@@ -83,6 +87,7 @@ private:
   ParticleIDType m_BtagID;
 
   // lepton stuff
+  LepID m_LepQual;
   
   double m_RelIso;
   double m_MiniIso;
