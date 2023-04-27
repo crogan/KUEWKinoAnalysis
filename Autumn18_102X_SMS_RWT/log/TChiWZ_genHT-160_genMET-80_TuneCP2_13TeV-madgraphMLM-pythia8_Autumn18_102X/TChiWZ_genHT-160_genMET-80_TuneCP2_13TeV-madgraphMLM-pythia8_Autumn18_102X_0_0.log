@@ -27,3 +27,8 @@
 	Transfer output files failure at execution point slot1_37@cmswn2053.fnal.gov while sending files to access point lpcschedd5. Details: Error from slot1_37@cmswn2053.fnal.gov: STARTER at 131.225.188.157 failed to send file(s) to <131.225.204.62:9618>: |Error: reading from file /storage/local/data1/condor/execute/dir_16312/TChiWZ_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X_0_0.root: (errno 2) No such file or directory; SHADOW failed to receive file(s) from <131.225.188.157:38054>
 	Code 12 Subcode 2
 ...
+009 (31947240.000.000) 2023-04-25 01:34:35 Job was aborted.
+	LPC job removed by SYSTEM_PERIODIC_REMOVE due to job held for more than 7 days.
+
+	Job terminated by itself at 2023-04-18T06:34:04Z (using method 0: OF_ITS_OWN_ACCORD).
+...
