@@ -23,17 +23,21 @@ public:
 	
   std::vector<double> _syst_low;//low pt systematic
 
+  std::vector<double> _syst_low16;
+  std::vector<double> _syst_low17;
+  std::vector<double> _syst_low18;
+
   //overwrite parent members to deal with split threshold
   std::pair<double,double> getPair(double pt, double eta, int year = 0);
   double getEfficiency(double pt, double eta, int year = 0);
   double getError(double pt, double eta, int year = 0);
 
-  void extractFit( TCanvas* hCanv, double fitLow, double fitUp, std::map<std::pair<double,double>, std::pair<double,double> >& _fmap);
+  void extractFit( TCanvas* hCanv, double fitLow, double fitUp, std::map<std::pair<double,double>, std::pair<double,double> >& _fmap, int year=0);
 
   E_bank_fit(int year, std::string f16, std::string f17, std::string f18, std::string histPath);
 
   //void applySystematicsLow(std::vector<double> errors, int year);
-  void setSystematicsLow(std::vector<double> errors);
+  void setSystematicsLow(std::vector<double> errors, int year = 0);
 
 };
 

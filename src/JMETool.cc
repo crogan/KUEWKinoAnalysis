@@ -16,10 +16,15 @@ JMETool::~JMETool(){
       delete it->second;
       it++;
     }
+    std::map<int, FormulaBinsBins*>::iterator it_JER = m_JERFactors[i].begin();
+    while(it_JER != m_JERFactors[i].end()){
+      delete it_JER->second;
+      it_JER++;
+    }
   }
 }
 
-double JMETool::GetFactor(int year, const string& name, double pT, double Eta, double A, double rho) const {
+double JMETool::GetJESFactor(int year, const string& name, double pT, double Eta, double A, double rho) const {
   if(year < 2016 || year > 2018)
     return 0;
   
@@ -27,6 +32,114 @@ double JMETool::GetFactor(int year, const string& name, double pT, double Eta, d
     return 0;
   
   return m_Factors[year-2016][name]->SF(Eta, pT, A, rho);
+}
+
+double JMETool::GetJERFactor(int year, double pT, double Eta, double rho) const {
+  if(year < 2016 || year > 2018)
+    return 1.;
+  if(fabs(Eta) > 4.69) return 1.;
+
+  if(year == 2016 && rho > 40.9) rho = 40.89;
+  if(year == 2017 && rho > 42.52) rho = 42.51;
+  if(year == 2018 && rho > 90.) rho = 89.99;
+  
+  if(m_JERFactors[year-2016].count(year) == 0)
+    return 1.;
+  
+  return m_JERFactors[year-2016][year]->JERSF(Eta, pT, rho); 
+}
+
+int JMETool::GetPairIndex(int year, double Eta) const {
+  for(std::map<int, std::pair<double,double>>::iterator it = m_JERSFEtaBins[year-2016].begin(); it != m_JERSFEtaBins[year-2016].end(); it++)
+  {
+   if((Eta - m_JERSFEtaBins[year-2016][it->first].second)*(Eta - m_JERSFEtaBins[year-2016][it->first].first) <= 0.)
+    return it->first;
+  }
+  return -1;
+}
+
+double JMETool::GetJERSFFactor(int year, double Eta, int updown) const {
+  if(year < 2016 || year > 2018)
+    return 1.;
+  if(fabs(Eta) > 4.69) return 1.;
+  
+  double binEtaMin = 0.;
+  double binEtaMax = 0.;
+  double SF = 1.;
+  double SFunc = 0.;
+  // function to get eta min and max
+  int eta_Index = GetPairIndex(year, Eta); 
+  if(eta_Index < 0) std::cout << "Could not find eta bin for eta = " << Eta << std::endl;
+  // function to get SF and SF unc (SF-SFdown)
+  SF = m_JERSFFactors[year-2016][eta_Index].first;
+  SFunc = m_JERSFFactors[year-2016][eta_Index].second;
+
+  // up
+  if(updown > 0)
+   return SF+SFunc;
+  // down
+  else if(updown < 0)
+   return SF-SFunc;
+  // nominal
+  else
+   return SF;
+  
+  return 1.;
+}
+
+void JMETool::BuildJERMap(const std::string& JMEfolder){
+
+  string JME[3]; // [year]
+
+  JME[0] = "Summer16_25nsV1b_MC";
+  JME[1] = "Fall17_V3_MC";
+  JME[2] = "Autumn18_V6_MC";
+  
+  string post = "AK4PFchs.txt";
+
+  cout << "Building JER maps for all three years" << endl;
+  
+  for(int y = 0; y < 3; y++){
+    ParseJERSFUncertainty(JMEfolder+"/"+JME[y]+"/"+JME[y]+"_SF_"+post, 2016+y);
+    ParseJER(JMEfolder+"/"+JME[y]+"/"+JME[y]+"_PtResolution_"+post, 2016+y);
+  }
+  
+}
+
+void JMETool::ParseJERSFUncertainty(const string& input, int year){
+  if(year < 2016 || year > 2018)
+    return;
+
+  std::ifstream ifile(input.c_str());
+   if(!ifile.is_open()){
+    std::cout << "can't open JER SF file " << input << std::endl;
+    return;
+   }
+   
+   string line;
+   size_t found;
+
+   double etamin, etamax, factor, unc;
+   int eta_Index = 0;
+   while(getline(ifile,line)){
+     // discard comment line
+     if(line.find("{") != string::npos)
+       continue;
+       
+     etamin = popdouble(line);
+     etamax = popdouble(line);
+     std::pair<double,double> eta_pair(etamin,etamax);
+     m_JERSFEtaBins[year-2016][eta_Index] = eta_pair;
+
+     popdouble(line); //not used, just need to remove this unused entry
+     factor = popdouble(line);
+     unc = factor - popdouble(line);
+     std::pair<double,double> factor_pair(factor,unc);
+     m_JERSFFactors[year-2016][eta_Index] = factor_pair;
+     eta_Index++;
+     
+   }
+   ifile.close();
 }
 
 void JMETool::BuildMap(const std::string& JMEfolder){
@@ -43,7 +156,7 @@ void JMETool::BuildMap(const std::string& JMEfolder){
 
   string post = "AK4PFchs.txt";
 
-  cout << "Building JME maps for all three years" << endl;
+  cout << "Building JES maps for all three years" << endl;
   
   for(int y = 0; y < 3; y++){
     // ParseJESUncertainty(JMEfolder+"/"+JME[y]+"/"+JME[y]+"_Uncertainty_"+post, 2016+y);
@@ -59,13 +172,92 @@ void JMETool::BuildMap(const std::string& JMEfolder){
   }
 }
 
+void JMETool::ParseJER(const string& input, int year){
+  if(year < 2016 || year > 2018)
+    return;
+  
+  std::ifstream ifile(input.c_str());
+   if(!ifile.is_open()){
+    std::cout << "can't open JER file " << input << std::endl;
+    return;
+   }
+   
+   string line;
+   size_t found;
+
+   // first line with variable and equation info
+   getline(ifile,line);
+   
+   found = line.find("sqrt");
+   line.erase(0,found-1);
+
+   string formula = popstring(line);
+   int Nvar = 1;
+   int Nparam = 4;
+  
+   // get the first line to get parameter numbers
+   double etamin, etamax;
+   double emi, ema;
+   double rhomin, rhomax;
+   int Nblah;
+   double ptmin, ptmax;
+   getline(ifile,line);
+   emi = popdouble(line);
+   ema = popdouble(line);
+   rhomin = popdouble(line);
+   rhomax = popdouble(line);
+   Nblah = popdouble(line);
+   ptmin = popdouble(line);
+   ptmax = popdouble(line);
+
+   etamin = emi;
+   etamax = emi;
+   
+   std::vector<double> params;
+   for(int i = 0; i < Nparam; i++)
+     params.push_back(popdouble(line));
+   
+   FormulaBinsBins* Bins = new FormulaBinsBins(formula, Nvar, Nparam);
+   m_JERFactors[year-2016][year] = Bins;
+
+   const FormulaBins* Bin = &Bins->AddBin(etamin, etamax);
+   Bin->AddBin(rhomin, rhomax, params);
+
+   while(getline(ifile,line)){
+     emi = popdouble(line);
+     ema = popdouble(line);
+     
+     // new eta bin
+     if(fabs(emi-etamin) + fabs(ema-etamax) > 1e-8){
+       etamin = emi;
+       etamax = ema;
+       Bin = &Bins->AddBin(etamin, etamax);
+     }
+     
+     rhomin = popdouble(line);
+     rhomax = popdouble(line);
+     
+     Nblah = popdouble(line);
+     ptmin = popdouble(line);     
+     ptmax = popdouble(line);     
+
+     params.clear();
+     for(int i = 0; i < Nparam; i++)
+       params.push_back(popdouble(line));
+     
+     Bin->AddBin(rhomin, rhomax, params);
+   }
+
+   ifile.close();
+}
+
 void JMETool::ParseJESUncertainty(const string& input, int year, const string& prefix){
   if(year < 2016 || year > 2018)
     return;
   
   std::ifstream ifile(input.c_str());
    if(!ifile.is_open()){
-    std::cout << "can't open JME file " << input << std::endl;
+    std::cout << "can't open JES file " << input << std::endl;
     return;
    }
    

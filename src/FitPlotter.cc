@@ -2213,6 +2213,7 @@ rlabels += tmpcat[0].GetFitBin()[r].GetRBinLabel();
     pad_ratio->Draw();
     pad_ratio->cd();
 
+
     fhist_data_ratio->Draw("ep");
     fhist_data_ratio->GetXaxis()->SetNdivisions(30, 0, 0);
     fhist_data_ratio->GetYaxis()->SetNdivisions(6, 5, 0);
@@ -2236,6 +2237,7 @@ rlabels += tmpcat[0].GetFitBin()[r].GetRBinLabel();
     //DrawRM(fitbin,can,can,vLabels);
     DrawRM(dumcats,can,can,vLabels);
 
+
   l.SetTextAngle(0);
   l.SetTextColor(kBlack);
   l.SetTextAlign(31);
@@ -2244,6 +2246,66 @@ rlabels += tmpcat[0].GetFitBin()[r].GetRBinLabel();
   l.SetTextAlign(11);
   l.DrawLatex(hlo+eps*4, 1.-hto+0.02, m_CMSLabel.c_str());
   
+  can->Update();
+
+
+// make y-axis in ratio plot be symmetric and cover all data and mc points
+
+// fhist_data_ratio doesn't return the correct value for GetYaxis()->GetXmax/min() so we brute force it
+// start with getting the min and max deviation from the first bin (0 bin is underflow)
+double ratio_axis_min = fhist_data_ratio->GetBinContent(1)-fhist_data_ratio->GetBinError(1);
+double ratio_axis_max = fhist_data_ratio->GetBinContent(1)+fhist_data_ratio->GetBinError(1);
+
+// loop over remaining bins to find max deviation up and down for the data (b = nbins is last bin)
+    for (int b = 2; b <= fhist_data_ratio->GetNbinsX(); b++)
+    {
+     if(fhist_data_ratio->GetBinContent(b)-fhist_data_ratio->GetBinError(b) < ratio_axis_min)
+        ratio_axis_min = fhist_data_ratio->GetBinContent(b)-fhist_data_ratio->GetBinError(b);
+     if(fhist_data_ratio->GetBinContent(b)+fhist_data_ratio->GetBinError(b) > ratio_axis_max)
+        ratio_axis_max = fhist_data_ratio->GetBinContent(b)+fhist_data_ratio->GetBinError(b);
+    }
+
+// check if the bkg ratio has larger deviation than the data
+   if(ratio_axis_min > gr_bkg_ratio->GetYaxis()->GetXmin())
+      ratio_axis_min = gr_bkg_ratio->GetYaxis()->GetXmin();
+   if(ratio_axis_max < gr_bkg_ratio->GetYaxis()->GetXmax())
+      ratio_axis_max = gr_bkg_ratio->GetYaxis()->GetXmax();
+
+// round to nearest three decimal places
+    ratio_axis_min = std::floor(ratio_axis_min*1000.)/1000.;
+    ratio_axis_max = std::ceil(ratio_axis_max*1000.)/1000.;
+
+// make it so we have the same range from 1 for min and max
+//   example: 0.9, 1.15 becomes 0.85, 1.15
+    if(fabs(1.-ratio_axis_min) > fabs(ratio_axis_max-1.)){
+      ratio_axis_max = 1.-ratio_axis_min+1.;
+    }
+    else if(fabs(ratio_axis_max-1.) > fabs(1.-ratio_axis_min)){
+      ratio_axis_min = 1.+1.-ratio_axis_max;
+    }
+
+// add offset so there is a bit of white space between histograms and axis
+    if(ratio_axis_max > 1.5){
+        ratio_axis_min -= 0.11;
+        ratio_axis_max += 0.11;
+    }
+    else if(ratio_axis_max > 1.25){
+        ratio_axis_min -= 0.06;
+        ratio_axis_max += 0.06;
+    }
+    else{
+        ratio_axis_min -= 0.02;
+        ratio_axis_max += 0.02;
+    }
+
+// minimum deviation from 1 is 7% so we can clearly see 5% on the axis label (5% is the default minimum deviation to show)
+  if(ratio_axis_min > 0.93 && ratio_axis_max < 1.07){
+    ratio_axis_min = 0.93;
+    ratio_axis_max = 1.07;
+  }
+
+    fhist_data_ratio->GetYaxis()->SetRangeUser(ratio_axis_min, ratio_axis_max);
+
   can->Update();
   can->SaveAs("plots/"+TString(can_name)+".pdf");
   can->SaveAs("plots/"+TString(can_name)+".gif");
@@ -2512,7 +2574,16 @@ void FitPlotter::DrawRM(vector<CategoryList> cats, TCanvas* can, TPad* pad, VS l
 	pad->cd();
       }
     }
-    l.DrawLatex((hi + hi_last)/2., 1 - hto - 4*eps, labels[r].c_str());
+//this if is a hack
+if (labels[r].find("0L 0J #geq 1SV") != std::string::npos)
+ {
+  std::cout << "Fixing label for: " << labels[r] << std::endl;
+  l.SetTextAngle(90);
+  l.DrawLatex((hi + hi_last)/2.-0.0075, 1 - hto - 4*eps - 0.1, labels[r].c_str());
+  l.SetTextAngle(0);
+ }
+else
+    l.DrawLatex((hi + hi_last)/2., 1 - hto - 4*eps - 0.015, labels[r].c_str());
   
   }
 
@@ -4755,37 +4826,37 @@ void FitPlotter::InitializeRecipes(){
   m_Strings["Fakes"] += m_Strings["HF_Fakes"];
   m_Strings["Fakes"] += m_Strings["LF_Fakes"];
 
-  m_Title["ttbar_all"] = "t #bar{t} + jets + fakes";
+  m_Title["ttbar_all"] = "t #bar{t} + jets";
   m_Color["ttbar_all"] = 7011;
   m_Strings["ttbar_all"] = VS().a("ttbar");
   m_Strings["ttbar_all"] += AddPrefix("ttbar", s_Fakes_HF);
   m_Strings["ttbar_all"] += AddPrefix("ttbar", s_Fakes_LF);
 
-  m_Title["ST_all"] = "single top + fakes";
+  m_Title["ST_all"] = "single top";
   m_Color["ST_all"] = 7010;
   m_Strings["ST_all"] = VS().a("ST");
   m_Strings["ST_all"] += AddPrefix("ST", s_Fakes_HF);
   m_Strings["ST_all"] += AddPrefix("ST", s_Fakes_LF);
 
-  m_Title["DB_all"] = "di-bosons + fakes";
+  m_Title["DB_all"] = "di-bosons";
   m_Color["DB_all"] = 7051;
   m_Strings["DB_all"] = VS().a("DB");
   m_Strings["DB_all"] += AddPrefix("DB", s_Fakes_HF);
   m_Strings["DB_all"] += AddPrefix("DB", s_Fakes_LF);
 
-  m_Title["TB_all"] = "tri-bosons / + fakes";
+  m_Title["TB_all"] = "tri-bosons";
   m_Color["TB_all"] = 7050;
   m_Strings["TB_all"] = VS().a("TB");
   m_Strings["TB_all"] += AddPrefix("TB", s_Fakes_HF);
   m_Strings["TB_all"] += AddPrefix("TB", s_Fakes_LF);
 
-  m_Title["ZDY_all"] = "Z / #gamma* + jets + fakes";
+  m_Title["ZDY_all"] = "Z / #gamma* + jets";
   m_Color["ZDY_all"] = 7000;
   m_Strings["ZDY_all"] = VS().a("ZDY");
   m_Strings["ZDY_all"] += AddPrefix("ZDY", s_Fakes_HF);
   m_Strings["ZDY_all"] += AddPrefix("ZDY", s_Fakes_LF);
 
-  m_Title["Wjets_all"] = "W + jets + fakes";
+  m_Title["Wjets_all"] = "W + jets";
   m_Color["Wjets_all"] = 7001;
   m_Strings["Wjets_all"] = VS().a("Wjets");
   m_Strings["Wjets_all"] += AddPrefix("Wjets", s_Fakes_HF);

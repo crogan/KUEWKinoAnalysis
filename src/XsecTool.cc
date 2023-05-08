@@ -91,14 +91,6 @@ double XsecTool::GetXsec_SMS(const std::string& dataset, double MP) const {
       double y1 = m_Label2Xsec_SMS[label][i];
       double y2 = m_Label2Xsec_SMS[label][i+1];
       double beta = log(y1/y2)/(x2-x1);
-std::cout << "MP: " << MP << std::endl;
-std::cout << "x1: " << x1 << std::endl;
-std::cout << "x2: " << x2 << std::endl;
-std::cout << "y1: " << y1 << std::endl;
-std::cout << "y2: " << y2 << std::endl;
-std::cout << "beta: " << beta << std::endl;
-std::cout << "BR: " << BR << std::endl;
-std::cout << "xsec: " << BR*y1*exp(beta*(x1-MP)) << std::endl;
       return BR*y1*exp(beta*(x1-MP));
     }
   }
@@ -196,40 +188,41 @@ std::map<std::string,double> XsecTool::InitMap_Xsec_BKG(){
   Label2Xsec["QCD_Pt_600to800_TuneCP5_13TeV_pythia8"] = 156.5;
   Label2Xsec["QCD_Pt_800to1000_TuneCP5_13TeV_pythia8"] = 26.28;
   Label2Xsec["QCD_Pt_80to120_TuneCP5_13TeV_pythia8"] = 2336000.0;
+  Label2Xsec["QCD_Pt-15to7000_TuneCUETP8M1_FlatP6_13TeV_pythia8"] = 1973000000.0;
 
-  Label2Xsec["QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 1207.0;
   Label2Xsec["QCD_HT100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 28060000.0;
-  Label2Xsec["QCD_HT1500to2000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 120.0;
-  Label2Xsec["QCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 25.25;
   Label2Xsec["QCD_HT200to300_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 1710000.0;
   Label2Xsec["QCD_HT300to500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 347500.0;
   Label2Xsec["QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 32060.0;
   Label2Xsec["QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 6829.0;
-  Label2Xsec["QCD_Pt-15to7000_TuneCUETP8M1_FlatP6_13TeV_pythia8"] = 1973000000.0;
+  Label2Xsec["QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 1207.0;
+  Label2Xsec["QCD_HT1500to2000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 120.0;
+  Label2Xsec["QCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 25.25;
   
-  Label2Xsec["QCD_HT1000to1500_TuneCP5_13TeV-madgraphMLM-pythia8"] = 1088.0;
-  Label2Xsec["QCD_HT100to200_TuneCP5_13TeV-madgraphMLM-pythia8"] = 23700000.0;
-  Label2Xsec["QCD_HT1500to2000_TuneCP5_13TeV-madgraphMLM-pythia8"] = 99.11;
-  Label2Xsec["QCD_HT2000toInf_TuneCP5_13TeV-madgraphMLM-pythia8"] = 20.23;
-  Label2Xsec["QCD_HT200to300_TuneCP5_13TeV-madgraphMLM-pythia8"] = 1547000.0;
-  Label2Xsec["QCD_HT300to500_TuneCP5_13TeV-madgraphMLM-pythia8"] = 322600.0;
-  Label2Xsec["QCD_HT500to700_TuneCP5_13TeV-madgraphMLM-pythia8"] = 29980.0;
-  Label2Xsec["QCD_HT700to1000_TuneCP5_13TeV-madgraphMLM-pythia8"] = 6334.0;
-  
-  Label2Xsec["QCD_HT1000to1500_TuneCP5_13TeV-madgraph-pythia8"] = 1088.0;
   Label2Xsec["QCD_HT100to200_TuneCP5_13TeV-madgraph-pythia8"] = 23700000.0;
-  Label2Xsec["QCD_HT1500to2000_TuneCP5_13TeV-madgraph-pythia8"] = 99.11;
-  Label2Xsec["QCD_HT2000toInf_TuneCP5_13TeV-madgraph-pythia8"] = 20.23;
   Label2Xsec["QCD_HT200to300_TuneCP5_13TeV-madgraph-pythia8"] = 1547000.0;
   Label2Xsec["QCD_HT300to500_TuneCP5_13TeV-madgraph-pythia8"] = 322600.0;
-  Label2Xsec["QCD_HT700to1000_TuneCP5_13TeV-madgraph-pythia8"] = 6334.0;
   Label2Xsec["QCD_HT500to700_TuneCP5_13TeV-madgraph-pythia8"] = 29980.0;
+  Label2Xsec["QCD_HT700to1000_TuneCP5_13TeV-madgraph-pythia8"] = 6310.0;
+  Label2Xsec["QCD_HT1000to1500_TuneCP5_13TeV-madgraph-pythia8"] = 1088.0;
+  Label2Xsec["QCD_HT1500to2000_TuneCP5_13TeV-madgraph-pythia8"] = 99.11;
+  Label2Xsec["QCD_HT2000toInf_TuneCP5_13TeV-madgraph-pythia8"] = 20.23;
 
-  Label2Xsec["ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-madgraph-pythia8"] = 3.36;;
+  Label2Xsec["QCD_HT100to200_TuneCP5_13TeV-madgraphMLM-pythia8"] = 23590000.0;
+  Label2Xsec["QCD_HT200to300_TuneCP5_13TeV-madgraphMLM-pythia8"] = 1551000.0;
+  Label2Xsec["QCD_HT300to500_TuneCP5_13TeV-madgraphMLM-pythia8"] = 323400.0;
+  Label2Xsec["QCD_HT500to700_TuneCP5_13TeV-madgraphMLM-pythia8"] = 30140.0;
+  Label2Xsec["QCD_HT700to1000_TuneCP5_13TeV-madgraphMLM-pythia8"] = 6344.0;
+  Label2Xsec["QCD_HT1000to1500_TuneCP5_13TeV-madgraphMLM-pythia8"] = 1092.0;
+  Label2Xsec["QCD_HT1500to2000_TuneCP5_13TeV-madgraphMLM-pythia8"] = 99.76;
+  Label2Xsec["QCD_HT2000toInf_TuneCP5_13TeV-madgraphMLM-pythia8"] = 20.35;
+  
+  Label2Xsec["ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-madgraph-pythia8"] = 3.74;
+  Label2Xsec["ST_s-channel_4f_hadronicDecays_TuneCP5_13TeV-madgraph-pythia8"] = 11.24;
   Label2Xsec["ST_t-channel_antitop_4f_InclusiveDecays_TuneCP5_13TeV-powheg-madspin-pythia8"] = 71.74;
   Label2Xsec["ST_tW_antitop_5f_NoFullyHadronicDecays_TuneCP5_13TeV-powheg-pythia8"] = 34.97; 
-  Label2Xsec["ST_tW_top_5f_NoFullyHadronicDecays_TuneCP5_13TeV-powheg-pythia8"] = 34.91;
-  Label2Xsec["ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8"] = 35.85;
+  Label2Xsec["ST_tW_top_5f_NoFullyHadronicDecays_TuneCP5_13TeV-powheg-pythia8"] = 35.85;
+  Label2Xsec["ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8"] = 34.91;
   Label2Xsec["ST_tWll_5f_LO_TuneCP5_PSweights_13TeV-madgraph-pythia8"] = 0.01103;  
   Label2Xsec["ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8"] = 3.36;;
   Label2Xsec["ST_s-channel_4f_leptonDecays_TuneCP5_PSweights_13TeV-amcatnlo-pythia8"] = 3.36;;
@@ -280,10 +273,10 @@ std::map<std::string,double> XsecTool::InitMap_Xsec_BKG(){
   Label2Xsec["WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8"] = 0.008001 * 1.21 * 4.42;
 
   // Wjets Pt binned, xsec should be NLO (from generator via XsecDB https://cms-gen-dev.cern.ch/xsdb
+  Label2Xsec["WJetsToLNu_Pt-50To100_TuneCP5_13TeV-amcatnloFXFX-pythia8"] = 3570.0;
   Label2Xsec["WJetsToLNu_Pt-100To250_TuneCP5_13TeV-amcatnloFXFX-pythia8"] = 779.1;
   Label2Xsec["WJetsToLNu_Pt-250To400_TuneCP5_13TeV-amcatnloFXFX-pythia8"] = 27.98;
   Label2Xsec["WJetsToLNu_Pt-400To600_TuneCP5_13TeV-amcatnloFXFX-pythia8"] = 3.604;
-  Label2Xsec["WJetsToLNu_Pt-50To100_TuneCP5_13TeV-amcatnloFXFX-pythia8"] = 3570.0;
   Label2Xsec["WJetsToLNu_Pt-600ToInf_TuneCP5_13TeV-amcatnloFXFX-pythia8"] = 0.5545;
  
   Label2Xsec["WJetsToLNu_Pt-100To250_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8"] = 627.1;
@@ -296,10 +289,10 @@ std::map<std::string,double> XsecTool::InitMap_Xsec_BKG(){
   Label2Xsec["WW_TuneCP5_13TeV-pythia8"] = 118.8;
   Label2Xsec["WWTo2L2Nu_NNPDF31_TuneCP5_13TeV-powheg-pythia8"] = 12.719;
   Label2Xsec["WWTo2L2Nu_NNPDF31_TuneCP5_PSweights_13TeV-powheg-pythia8"] = 12.719;
-  Label2Xsec["WWTo2L2Nu_13TeV-powheg"] = 12.719;
-  Label2Xsec["WWToLNuQQ_13TeV-powheg"] = 26.203;
-  Label2Xsec["WWToLNuQQ_NNPDF31_TuneCP5_13TeV-powheg-pythia8"] = 26.203;
-  Label2Xsec["WWTo4Q_NNPDF31_TuneCP5_13TeV-powheg-pythia8"] = 53.98;
+  Label2Xsec["WWTo2L2Nu_13TeV-powheg"] = 10.48;
+  Label2Xsec["WWToLNuQQ_13TeV-powheg"] = 43.53;
+  Label2Xsec["WWToLNuQQ_NNPDF31_TuneCP5_13TeV-powheg-pythia8"] = 45.99;
+  Label2Xsec["WWTo4Q_NNPDF31_TuneCP5_13TeV-powheg-pythia8"] = 47.73;
   Label2Xsec["WWTo4Q_13TeV-powheg"] = 53.98;
 
   Label2Xsec["WZ_TuneCUETP8M1_13TeV-pythia8"] = 50.7;
@@ -324,23 +317,23 @@ std::map<std::string,double> XsecTool::InitMap_Xsec_BKG(){
   Label2Xsec["ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8"] = 1.194;
   Label2Xsec["ZZTo2Q2Nu_TuneCP5_13TeV_amcatnloFXFX_madspin_pythia8"] = 2.364;
   Label2Xsec["ZZTo2Q2Nu_13TeV_amcatnloFXFX_madspin_pythia8"] = 2.364;
-  Label2Xsec["ZZTo4L_TuneCP5_13TeV_powheg_pythia8"] = 0.172;
-  Label2Xsec["ZZTo4L_13TeV_powheg_pythia8"] = 0.172;
+  Label2Xsec["ZZTo4L_TuneCP5_13TeV_powheg_pythia8"] = 1.256;
+  Label2Xsec["ZZTo4L_13TeV_powheg_pythia8"] = 1.325;
   Label2Xsec["ZZTo4Q_13TeV_amcatnloFXFX_madspin_pythia8"] = 8.265;
 
-  Label2Xsec["WWG_TuneCP5_13TeV-amcatnlo-pythia8"] = 0.2147 ;
-  Label2Xsec["WWW_4F_TuneCP5_13TeV-amcatnlo-pythia8"] = 0.2086 ;
-  Label2Xsec["WWZ_TuneCP5_13TeV-amcatnlo-pythia8"] = 0.1651 ;
-  Label2Xsec["WZG_TuneCP5_13TeV-amcatnlo-pythia8"] = 0.04123 ;
-  Label2Xsec["WWG_TuneCUETP8M1_13TeV-amcatnlo-pythia8"] = 0.2147 ;
-  Label2Xsec["WWZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8"] = 0.1651 ;
-  Label2Xsec["WZG_TuneCUETP8M1_13TeV-amcatnlo-pythia8"] = 0.04123 ;
-  Label2Xsec["WWZ_4F_TuneCP5_13TeV-amcatnlo-pythia8"] = 0.1651 ;
   Label2Xsec["WWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8"] = 0.2086 ;
-  Label2Xsec["ZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8"] = 0.01398 ;
-  Label2Xsec["ZZZ_TuneCP5_13TeV-amcatnlo-pythia8"] = 0.01398 ;
-  Label2Xsec["WZZ_TuneCP5_13TeV-amcatnlo-pythia8"] = 0.05565;
+  Label2Xsec["WWW_4F_TuneCP5_13TeV-amcatnlo-pythia8"] = 0.2158;
+  Label2Xsec["WWG_TuneCP5_13TeV-amcatnlo-pythia8"] = 0.2147 ;
+  Label2Xsec["WWG_TuneCUETP8M1_13TeV-amcatnlo-pythia8"] = 0.2147 ;
+  Label2Xsec["WZG_TuneCP5_13TeV-amcatnlo-pythia8"] = 0.04345;
+  Label2Xsec["WZG_TuneCUETP8M1_13TeV-amcatnlo-pythia8"] = 0.04123 ;
+  Label2Xsec["WWZ_TuneCP5_13TeV-amcatnlo-pythia8"] = 0.1676 ;
+  Label2Xsec["WWZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8"] = 0.1651 ;
+  Label2Xsec["WWZ_4F_TuneCP5_13TeV-amcatnlo-pythia8"] = 0.1707 ;
+  Label2Xsec["WZZ_TuneCP5_13TeV-amcatnlo-pythia8"] = 0.05709;
   Label2Xsec["WZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8"] = 0.05565;
+  Label2Xsec["ZZZ_TuneCUETP8M1_13TeV-amcatnlo-pythia8"] = 0.01398 ;
+  Label2Xsec["ZZZ_TuneCP5_13TeV-amcatnlo-pythia8"] = 0.01476;
 
   Label2Xsec["TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 831.76;
   Label2Xsec["TTJets_TuneCUETP8M2T4_13TeV-amcatnloFXFX-pythia8"] = 831.76;
@@ -352,7 +345,7 @@ std::map<std::string,double> XsecTool::InitMap_Xsec_BKG(){
   Label2Xsec["TTJets_HT-2500toInf_TuneCP5_13TeV-madgraphMLM-pythia8"] = 0.001445;
   Label2Xsec["TTJets_HT-600to800_TuneCP5_13TeV-madgraphMLM-pythia8"] = 1.65;
   Label2Xsec["TTJets_HT-800to1200_TuneCP5_13TeV-madgraphMLM-pythia8"] = 0.6736;
-  Label2Xsec["TTJets_SingleLeptFromTbar_TuneCP5_13TeV-madgraphMLM-pythia8"] = 114.0;
+  Label2Xsec["TTJets_SingleLeptFromTbar_TuneCP5_13TeV-madgraphMLM-pythia8"] = 108.7;
   Label2Xsec["TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 56.86;
   Label2Xsec["TTJets_HT-1200to2500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 0.1194;
   Label2Xsec["TTJets_HT-2500toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"] = 0.001445;
@@ -369,15 +362,15 @@ std::map<std::string,double> XsecTool::InitMap_Xsec_BKG(){
   Label2Xsec["TTJets_DiLept_TuneCP5_13TeV-madgraphMLM-pythia8"] = 54.23;
   Label2Xsec["TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8"] = 109.6;
 
-  Label2Xsec["TTGJets_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8"] = 3.697;
-  Label2Xsec["TTTT_TuneCP5_13TeV-amcatnlo-pythia8"] = 0.009103;
-  Label2Xsec["TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8"] = 0.2043;
-  Label2Xsec["TTWJetsToQQ_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8"] = 0.4062;
-  Label2Xsec["TTZToLLNuNu_M-10_TuneCP5_13TeV-amcatnlo-pythia8"] = 0.2529;
-  Label2Xsec["TTZToQQ_TuneCP5_13TeV-amcatnlo-pythia8"] = 0.5297;
-  Label2Xsec["TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8"] = 0.009103;
+  Label2Xsec["TTGJets_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8"] = 3.757;
+  Label2Xsec["TTTT_TuneCP5_13TeV-amcatnlo-pythia8"] = 0.008213;
+  Label2Xsec["TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8"] = 0.2198;
+  Label2Xsec["TTWJetsToQQ_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8"] = 0.4377;
+  Label2Xsec["TTZToLLNuNu_M-10_TuneCP5_13TeV-amcatnlo-pythia8"] = 0.2432;
+  Label2Xsec["TTZToQQ_TuneCP5_13TeV-amcatnlo-pythia8"] = 0.5104;
+  Label2Xsec["TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8"] = 0.008213;
   Label2Xsec["TTWJetsToLNu_TuneCP5_PSweights_13TeV-amcatnloFXFX-madspin-pythia8"] = 0.2043;
-  Label2Xsec["TTGJets_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8"] = 3.697;
+  Label2Xsec["TTGJets_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8"] = 3.795;
   Label2Xsec["TTTT_TuneCUETP8M1_13TeV-amcatnlo-pythia8"] = 0.009103;
   Label2Xsec["TTWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8"] = 0.2043;
   Label2Xsec["TTWJetsToQQ_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8"] = 0.4062;

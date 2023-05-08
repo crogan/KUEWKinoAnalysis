@@ -7,6 +7,7 @@
 #include <TLorentzVector.h>
 #include <TVector3.h>
 #include <TH1D.h>
+#include <TRandom3.h>
 #include <string>
 
 #include "NeventTool.hh"
@@ -15,6 +16,7 @@
 #include "PUTool.hh"
 #include "LHETool.hh"
 #include "BtagSFTool.hh"
+#include "LepSFTool.hh"
 #include "JMETool.hh"
 #include "SVDiscrTool.hh"
 #include "METTriggerTool.hh"
@@ -40,6 +42,7 @@ public:
   void AddJSONFile(const string& jsonfile);
   void AddPUFolder(const string& pufold);
   void AddBtagFolder(const string& btagfold);
+  void AddLepFolder(const string& lepfold);
   void AddJMEFolder(const string& jmefold);
   void AddSVDiscrFile(const string& svfile);
   void AddMETTriggerFile(const string& csvfile);
@@ -52,6 +55,7 @@ public:
   void DoFastSim();
   void AddSystematics();
   void AddJESSystematics();
+  void AddJERSystematics();
   void AddMETSystematics();
   void AddEESSystematics();
   void AddMMSSystematics();
@@ -133,6 +137,16 @@ protected:
   virtual double GetMuFWeight(int updown = 0);
   virtual double GetMuRWeight(int updown = 0);
   virtual double GetBtagSFWeight(const ParticleList& jets, bool HForLF, int updown = 0, ParticleIDType tag = kMedium);
+
+  virtual double GetElIDSFWeight(const ParticleList& els, int updown = 0);
+  virtual double GetElISOSFWeight(const ParticleList& els, int updown = 0);
+  virtual double GetElSIPSFWeight(const ParticleList& els, int updown = 0);
+  virtual double GetElVLIDSFWeight(const ParticleList& els, int updown = 0);
+  virtual double GetMuIDSFWeight(const ParticleList& mus, int updown = 0);
+  virtual double GetMuISOSFWeight(const ParticleList& mus, int updown = 0);
+  virtual double GetMuSIPSFWeight(const ParticleList& mus, int updown = 0);
+  virtual double GetMuVLIDSFWeight(const ParticleList& mus, int updown = 0);
+ 
   virtual double GetMETTriggerSFWeight(double MET, double HT, int Nele, int Nmu, int updown = 0);
   virtual int GetMETTriggerSFCurve(double HT, int Nele, int Nmu);
   virtual double GetXsec();
@@ -153,6 +167,7 @@ private:
   PUTool          m_PUTool;
   LHETool         m_LHETool;
   BtagSFTool      m_BtagSFTool;
+  LepSFTool       m_LepSFTool;
   JMETool         m_JMETool;
   SVDiscrTool     m_SVDiscrTool;
   SystematicsTool m_SysTool;
