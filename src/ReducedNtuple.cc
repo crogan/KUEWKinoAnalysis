@@ -266,10 +266,11 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample, bool do_slim){
   tree->Branch("PrefireWeight_up", &m_PrefireWeight_up);
   tree->Branch("PrefireWeight_down", &m_PrefireWeight_down);
 
+  tree->Branch("METtrigger", &m_METtrigger);
+  tree->Branch("METHTtrigger", &m_METHTtrigger);
+  tree->Branch("METORtrigger", &m_METORtrigger);
+
   if(!do_slim){
-    tree->Branch("METtrigger", &m_METtrigger);
-    tree->Branch("METHTtrigger", &m_METHTtrigger);
-    tree->Branch("METORtrigger", &m_METORtrigger);
     tree->Branch("DoubleElectrontrigger", &m_DoubleElectrontrigger);
     tree->Branch("DoubleMuontrigger", &m_DoubleMuontrigger);
   }

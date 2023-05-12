@@ -4,6 +4,8 @@ import os, sys, commands, time
 
 # Example submission: 
 #  python scripts/condor_submit_nano_connect_ntuples.py -split 10 -list samples/NANO/Lists/Fall17_102X.list --sys --slim --csv 
+#
+#  python scripts/condor_submit_nano_connect_ntuples.py -split 20 -list samples/NANO/Lists/Fall17_102X.list --sys --slim --verbose --csv && python scripts/condor_submit_nano_connect_ntuples.py -split 30 -list samples/NANO/Lists/Fall17_102X_SMS_FastSim_Quick.list --sys --slim --sms --fastsim --verbose --csv && python scripts/condor_submit_nano_connect_ntuples.py -split 10 -list samples/NANO/Lists/Fall17_102X_Data_MET.list --slim --data --verbose --csv 
 
 # ----------------------------------------------------------- #
 # Parameters
@@ -497,22 +499,28 @@ if __name__ == "__main__":
 
     # Prep csv file
     if CSV:
-        f_csv = open("{0}".format(TARGET)+"/CSV.csv",'w')
-        f_csv.write('sample,clusterid,totaljobs \n')
+        csv_name = LIST.split("/")[-1]
+        print('csv name: ',csv_name) #
+        #f_csv = open("{0}".format(TARGET)+"/CSV.csv",'w') #
+        f_csv = open("{0}".format(TARGET)+"/"+csv_name+".csv",'w')
+        f_csv.write('sample,clusterid,totaljobs')
+        f_csv.write('\n')
 
     # don't submit jobs if --dry-run is used
     if not DRY_RUN and not COUNT:
         for f in submit_list:
-            sample_handle = f[f.find('_102X/src/')+10 : f.find('.')]
+            sample_handle = f.split("/")
+            sample_handle = sample_handle[-1]
+            sample_handle = sample_handle.replace(".submit",'')
             print "submitting: {0}".format(f)
             if CSV:
                 os.system('condor_submit '+f+' | tee '+sample_handle+'.txt')
                 with open(sample_handle+'.txt','r') as sample_submit_file:
                     lines = sample_submit_file.read()
-                    cluster_index = lines.find('cluster ')
-                    if cluster_index != -1:
-                        cluster = lines[cluster_index+len('cluster '):]
-                        input_info[sample_handle]["cluster"] = cluster
+                    clusterid_index = lines.find('cluster ')
+                    if clusterid_index != -1:
+                        clusterid = lines[clusterid_index+len('cluster '):]
+                        input_info[sample_handle]["clusterid"] = clusterid
                 os.system('rm '+sample_handle+'.txt')
             else:
                 os.system('condor_submit ' + f)
@@ -528,7 +536,7 @@ if __name__ == "__main__":
             print(" - number of root files  = {0}".format(n_root_files))
             print(" - number of jobs        = {0}".format(n_jobs))
             if CSV:
-                f_csv.write("{0}".format(f+","+input_info[f]["cluster"].replace('.\n','')+",{0}".format(n_jobs)))
+                f_csv.write("{0}".format(f+","+input_info[f]["clusterid"].replace('.\n','')+",{0}".format(n_jobs)+'\n'))
 
     # Close csv file
     if CSV:

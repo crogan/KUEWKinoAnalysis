@@ -14,6 +14,7 @@ if __name__ == "__main__":
 
     OUT_DIR = "dum"
     IN_DIR = "dum"
+    redo = False
     
     if '-odir' in sys.argv:
         p = sys.argv.index('-odir')
@@ -23,6 +24,9 @@ if __name__ == "__main__":
         p = sys.argv.index('-idir')
         IN_DIR = sys.argv[p+1]
         argv_pos += 2
+    if '--redo' in sys.argv:
+        redo = True
+        argv_pos += 1
 
     if not len(sys.argv) > 1 or '-h' in sys.argv or '--help' in sys.argv or OUT_DIR == "dum" or IN_DIR == "dum":
         print "Usage: %s [-idir /path/input_dir] [-odir /path/output_dir]" % sys.argv[0]
@@ -39,6 +43,10 @@ if __name__ == "__main__":
     skip_list = [
         #"SMS-T2tt_mStop-400to1200_TuneCP2_13TeV-madgraphMLM-pythia8",
     ]
+    redo_list = [
+        #"ZZTo4L_13TeV_powheg_pythia8_Fall17_102X",
+        #"WJetsToLNu_HT-70To100_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X",
+    ]
 
     if os.path.exists("scripts/startup_C.so") is False:
         os.system("cd scripts && root.exe -b -l -q startup.C+ && cd ..")
@@ -51,6 +59,9 @@ if __name__ == "__main__":
             if dataset in target:
                 skip = True
         if skip:
+            continue
+
+        if redo and target not in redo_list:
             continue
 
         #print target
@@ -89,7 +100,7 @@ if __name__ == "__main__":
                         err_log = open("HADD_logs/"+"/"+target+".err","a")
                         err_log.write(err)
                         err_log.close()
-                    hadd_big_processes.pop(target,None)
+                    del hadd_big_processes[target]
                 elif len(hadd_big_processes) < 10:
                     tmp_pop = pop("hadd -f "+OUT_DIR+"/"+target+".root "+IN_DIR+"/"+target+"/*.root",stdout=subprocess.PIPE,stderr=subprocess.PIPE,shell=True)
                     hadd_big_processes[str(target)] = tmp_pop
@@ -110,7 +121,8 @@ if __name__ == "__main__":
                 err_log.write(err)
                 err_log.close()
             if hadd_big.poll() is None:
-                hadd_big_processes.pop(target,None)
+                #hadd_big_processes.pop(target,None)
+                del hadd_big_processes[target]
     if len(hadd_big_processes) == 0:
         print("Finished Merging Files")
     else:
