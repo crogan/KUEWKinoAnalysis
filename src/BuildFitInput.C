@@ -19,7 +19,7 @@
 //#include <TIter.h>
 #include <TKey.h>
 
-#include "ReducedBase.hh"
+#include "ReducedBase_NTUPLES_v1.hh"
 #include "FitInputBuilder.hh"
 #include "Systematics.hh"
 #include "SampleTool.hh"
@@ -382,11 +382,9 @@ int main(int argc, char* argv[]) {
 	  int PDGID = base->PDGID_lep->at(index);
 	    
 	  LepID id;
-	  if(base->ID_lep->at(index*2) < 3 ||
-	     base->MiniIso_lep->at(index)*base->PT_lep->at(index) >= 4. ||
-	     base->RelIso_lep->at(index)*base->PT_lep->at(index) >= 4.)
+	  if(base->LepQual_lep->at(index) == 2)
 	    id = kBronze;
-	  else if(base->SIP3D_lep->at(index) > 2.)
+	  else if(base->LepQual_lep->at(index) == 1)
 	    id = kSilver;
 	  else
 	    id = kGold;
@@ -396,8 +394,8 @@ int main(int argc, char* argv[]) {
 	  else
 	    flavor = kMuon;
 	  LepCharge charge = (base->Charge_lep->at(index) > 0 ? kPos : kNeg);
-	  //LepSource source = LepSource(base->SourceID_lep->at(index));
-	  LepSource source = LepSource(base->ID_lep->at(index*2+1)); // fix for current ntuple version
+	  LepSource source = LepSource(base->SourceID_lep->at(index));
+	  //LepSource source = LepSource(base->ID_lep->at(index*2+1)); // fix for old ntuple version
 	    
 	  list_a += Lep(flavor, charge, id, source);
 	}
@@ -407,11 +405,9 @@ int main(int argc, char* argv[]) {
 	  int PDGID = base->PDGID_lep->at(index);
 
 	  LepID id;
-	  if(base->ID_lep->at(index*2) < 3 ||
-	     base->MiniIso_lep->at(index)*base->PT_lep->at(index) >= 4. ||
-	     base->RelIso_lep->at(index)*base->PT_lep->at(index) >= 4.)
+	  if(base->LepQual_lep->at(index) == 2)
 	    id = kBronze;
-	  else if(base->SIP3D_lep->at(index) > 2.)
+	  else if(base->LepQual_lep->at(index) == 1)
 	    id = kSilver;
 	  else
 	    id = kGold;
@@ -421,8 +417,8 @@ int main(int argc, char* argv[]) {
 	  else
 	    flavor = kMuon;
 	  LepCharge charge = (base->Charge_lep->at(index) > 0 ? kPos : kNeg);
-	  //LepSource source = LepSource(base->SourceID_lep->at(index));
-	  LepSource source = LepSource(base->ID_lep->at(index*2+1)); // fix for current ntuple version
+	  LepSource source = LepSource(base->SourceID_lep->at(index));
+	  //LepSource source = LepSource(base->ID_lep->at(index*2+1)); // fix for old ntuple version
 	  
 	  list_b += Lep(flavor, charge, id, source);
 	}
@@ -434,10 +430,11 @@ int main(int argc, char* argv[]) {
 	    SVmaxeta = fabs(base->Eta_SV->at(ie));
 
 	// gammaT calc
-	double MST =
-	  sqrt(base->MX3a_BoostT*base->MX3a_BoostT+base->PX3_BoostT*base->PX3_BoostT) +
-	  sqrt(base->MX3b_BoostT*base->MX3b_BoostT+base->PX3_BoostT*base->PX3_BoostT);
-	double gammaT = 2.*base->Mperp / MST;
+	//double MST =
+	//  sqrt(base->MX3a_BoostT*base->MX3a_BoostT+base->PX3_BoostT*base->PX3_BoostT) +
+	//  sqrt(base->MX3b_BoostT*base->MX3b_BoostT+base->PX3_BoostT*base->PX3_BoostT);
+	//double gammaT = 2.*base->Mperp / MST;
+	double gammaT = base->gammaT;
 
 
 

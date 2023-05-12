@@ -21,7 +21,7 @@
 #include <TSystem.h>
 #include <TKey.h>
 
-#include "../include/ReducedBase_slim.hh"
+#include "../include/ReducedBase_NTUPLES_v1.hh"
 #include "../include/SampleTool.hh"
 #include "../include/CategoryTool.hh"
 #include "../include/ScaleFactorTool.hh"
