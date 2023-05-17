@@ -457,18 +457,18 @@ void myParseLimitJSON(const string& json, bool inclObs = false, PlotType ptype =
   
   TCanvas* can_MC = Plot2DHist_MCvMP("can_MC", hist_exp_MC, ptype);
   can_MC->cd();
-  gr_exp_MC->SetLineColor(7043);
+  gr_exp_MC->SetLineColor(kMagenta+3);
   gr_exp_MC->SetLineWidth(5);
   gr_exp_MC->SetLineStyle(1);
   gr_exp_MC->Draw("same C");
 
   gr_exp_MC_up->SetMarkerColor(kWhite);
-  gr_exp_MC_up->SetLineColor(7043);
+  gr_exp_MC_up->SetLineColor(kMagenta+1);
   gr_exp_MC_up->SetLineWidth(4);
   gr_exp_MC_up->SetLineStyle(7);
   gr_exp_MC_up->Draw("same C");
   gr_exp_MC_dn->SetMarkerColor(kWhite);
-  gr_exp_MC_dn->SetLineColor(7043);
+  gr_exp_MC_dn->SetLineColor(kMagenta+1);
   gr_exp_MC_dn->SetLineWidth(4);
   gr_exp_MC_dn->SetLineStyle(7);
   gr_exp_MC_dn->Draw("same C");
@@ -483,7 +483,7 @@ void myParseLimitJSON(const string& json, bool inclObs = false, PlotType ptype =
   l.SetTextSize(0.035);
   l.SetTextFont(42);
   l.DrawLatex(0.23, 0.83,"expected #pm 1 #sigma_{expm}");
-  line->SetLineColor(7043);
+  line->SetLineColor(kMagenta+3);
   line->SetLineWidth(2);
   line->SetLineStyle(1);
   line->DrawLineNDC(0.18, 0.83, 0.22, 0.83);
@@ -505,22 +505,21 @@ void myParseLimitJSON(const string& json, bool inclObs = false, PlotType ptype =
   TGraph* gr_exp_dM_up   = limit_def->Get2DContour_dMvMP(kExpUp);
   TGraph* gr_exp_dM_dn   = limit_def->Get2DContour_dMvMP(kExpDn);
   TGraph* gr_exp_dM_obs   = limit_def->Get2DContour_dMvMP(kObs);
-  
   TCanvas* can_dM = Plot2DHist_dMvMP("can_dM", hist_exp_dM, ptype);
   can_dM->cd();
   
-  gr_exp_dM->SetLineColor(7043);
+  gr_exp_dM->SetLineColor(kMagenta+3);
   gr_exp_dM->SetLineWidth(5);
   gr_exp_dM->SetLineStyle(1);
   gr_exp_dM->Draw("same C");
 
   gr_exp_dM_up->SetMarkerColor(kWhite);
-  gr_exp_dM_up->SetLineColor(7043);
+  gr_exp_dM_up->SetLineColor(kMagenta+1);
   gr_exp_dM_up->SetLineWidth(4);
   gr_exp_dM_up->SetLineStyle(7);
   gr_exp_dM_up->Draw("same C");
   gr_exp_dM_dn->SetMarkerColor(kWhite);
-  gr_exp_dM_dn->SetLineColor(7043);
+  gr_exp_dM_dn->SetLineColor(kMagenta+1);
   gr_exp_dM_dn->SetLineWidth(4);
   gr_exp_dM_dn->SetLineStyle(7);
   gr_exp_dM_dn->Draw("same C");
@@ -534,7 +533,7 @@ void myParseLimitJSON(const string& json, bool inclObs = false, PlotType ptype =
   l.SetTextSize(0.035);
   l.SetTextFont(42);
   l.DrawLatex(0.23, 0.83,"expected #pm 1 #sigma_{expm}");
-  line->SetLineColor(7043);
+  line->SetLineColor(kMagenta+3);
   line->SetLineWidth(2);
   line->SetLineStyle(1);
   line->DrawLineNDC(0.18, 0.83, 0.22, 0.83);
@@ -705,7 +704,7 @@ TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist, PlotType ptype){
   l.SetTextAlign(31);
   l.SetTextSize(0.04);
   l.SetTextFont(42);
-  l.DrawLatex(0.8, 0.95, "137 fb^{-1} (13 TeV)");
+  l.DrawLatex(0.8, 0.95, "138 fb^{-1} (13 TeV)");
   l.SetTextAlign(11);
   l.SetTextSize(0.04);
   l.SetTextFont(42);
@@ -847,7 +846,7 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
   l.SetTextAlign(31);
   l.SetTextSize(0.04);
   l.SetTextFont(42);
-  l.DrawLatex(0.8, 0.95, "137 fb^{-1} (13 TeV)");
+  l.DrawLatex(0.8, 0.95, "138 fb^{-1} (13 TeV)");
   l.SetTextAlign(11);
   l.SetTextSize(0.04);
   l.SetTextFont(42);

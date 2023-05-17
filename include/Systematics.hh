@@ -118,6 +118,7 @@ public:
   Systematics GetTreeSystematics() const;
 
   const Systematics& JESSystematics() const;
+  const Systematics& JERSystematics() const;
   const Systematics& MMSSystematics() const;
   const Systematics& EESSystematics() const;
   const Systematics& METSystematics() const;
@@ -126,6 +127,7 @@ private:
   void Init();
   
   Systematics m_JESSys; // jet energy scale systematics
+  Systematics m_JERSys; // jet energy resolution systematics
   Systematics m_MMSSys; // muon momentum scale
   Systematics m_EESSys; // electron energy scale
   Systematics m_METSys; // MET systematics

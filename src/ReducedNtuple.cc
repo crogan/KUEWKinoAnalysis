@@ -184,7 +184,7 @@ ReducedNtuple<Base>::~ReducedNtuple() {
 }
 
 template <class Base>
-TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
+TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample, bool do_slim){
 
   // gInterpreter->GenerateDictionary("vectorr<int>", "vector");
   // gInterpreter->GenerateDictionary("vector<double>", "vector");
@@ -193,7 +193,7 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   //   gInterpreter->GenerateDictionary("std::vector<std::vector<double> >", "vector");
   //   m_library_generated = true;
   // }
-
+  
   TTree* tree = (TTree*) new TTree(sample.c_str(), sample.c_str());
 
   tree->Branch("event_skipped", &m_event_skipped);
@@ -223,6 +223,31 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("BtagLFSFweight_up", &m_BtagLFSFweight_up);
   tree->Branch("BtagLFSFweight_down", &m_BtagLFSFweight_down);
 
+  tree->Branch("elIDSFweight", &m_elIDSFweight);
+  tree->Branch("elIDSFweight_up", &m_elIDSFweight_up);
+  tree->Branch("elIDSFweight_down", &m_elIDSFweight_down);
+  tree->Branch("elISOSFweight", &m_elISOSFweight);
+  tree->Branch("elISOSFweight_up", &m_elISOSFweight_up);
+  tree->Branch("elISOSFweight_down", &m_elISOSFweight_down);
+  tree->Branch("elSIPSFweight", &m_elSIPSFweight);
+  tree->Branch("elSIPSFweight_up", &m_elSIPSFweight_up);
+  tree->Branch("elSIPSFweight_down", &m_elSIPSFweight_down);
+  tree->Branch("elVLSFweight", &m_elVLSFweight);
+  tree->Branch("elVLSFweight_up", &m_elVLSFweight_up);
+  tree->Branch("elVLSFweight_down", &m_elVLSFweight_down);
+  tree->Branch("muIDSFweight", &m_muIDSFweight);
+  tree->Branch("muIDSFweight_up", &m_muIDSFweight_up);
+  tree->Branch("muIDSFweight_down", &m_muIDSFweight_down);
+  tree->Branch("muISOSFweight", &m_muISOSFweight);
+  tree->Branch("muISOSFweight_up", &m_muISOSFweight_up);
+  tree->Branch("muISOSFweight_down", &m_muISOSFweight_down);
+  tree->Branch("muSIPSFweight", &m_muSIPSFweight);
+  tree->Branch("muSIPSFweight_up", &m_muSIPSFweight_up);
+  tree->Branch("muSIPSFweight_down", &m_muSIPSFweight_down);
+  tree->Branch("muVLSFweight", &m_muVLSFweight);
+  tree->Branch("muVLSFweight_up", &m_muVLSFweight_up);
+  tree->Branch("muVLSFweight_down", &m_muVLSFweight_down);
+   
   tree->Branch("MetTrigSFweight", &m_MetTrigSFweight);
   tree->Branch("MetTrigSFweight_up", &m_MetTrigSFweight_up);
   tree->Branch("MetTrigSFweight_down", &m_MetTrigSFweight_down);
@@ -241,20 +266,22 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("PrefireWeight_up", &m_PrefireWeight_up);
   tree->Branch("PrefireWeight_down", &m_PrefireWeight_down);
 
+  if(!do_slim){
+    tree->Branch("METtrigger", &m_METtrigger);
+    tree->Branch("METHTtrigger", &m_METHTtrigger);
+    tree->Branch("METORtrigger", &m_METORtrigger);
+    tree->Branch("DoubleElectrontrigger", &m_DoubleElectrontrigger);
+    tree->Branch("DoubleMuontrigger", &m_DoubleMuontrigger);
+  }
+
   tree->Branch("EventFlag_FailJetID", &m_EventFlag_FailJetID);
   tree->Branch("EventFlag_JetInHEM", &m_EventFlag_JetInHEM);
   tree->Branch("EventFlag_JetInHEM_Pt20", &m_EventFlag_JetInHEM_Pt20);
   tree->Branch("EventFlag_JetInHEM_Pt20_JetID", &m_EventFlag_JetInHEM_Pt20_JetID);
   tree->Branch("HEM_Veto", &m_HEM_Veto);
-  
-  tree->Branch("METtrigger", &m_METtrigger);
-  tree->Branch("METHTtrigger", &m_METHTtrigger);
-  tree->Branch("METORtrigger", &m_METORtrigger);
 
   tree->Branch("SingleElectrontrigger", &m_SingleElectrontrigger);
   tree->Branch("SingleMuontrigger", &m_SingleMuontrigger);
-  tree->Branch("DoubleElectrontrigger", &m_DoubleElectrontrigger);
-  tree->Branch("DoubleMuontrigger", &m_DoubleMuontrigger);
   tree->Branch("EMutrigger", &m_EMutrigger);
   
   tree->Branch("MET", &m_MET);
@@ -285,33 +312,38 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   
   tree->Branch("Charge_lep",  &m_Charge_lep);
   tree->Branch("PDGID_lep",   &m_PDGID_lep);
-  tree->Branch("RelIso_lep",  &m_RelIso_lep);
-  tree->Branch("MiniIso_lep", &m_MiniIso_lep);
-  
-  tree->Branch("Dxy_lep", &m_Dxy_lep);
-  tree->Branch("DxyErr_lep", &m_DxyErr_lep);
-  tree->Branch("Dz_lep", &m_Dz_lep);
-  tree->Branch("DzErr_lep", &m_DzErr_lep);
-  tree->Branch("IP3D_lep", &m_IP3D_lep);
-  tree->Branch("SIP3D_lep", &m_SIP3D_lep);
-  tree->Branch("ID_lep",      &m_ID_lep);
-  tree->Branch("SourceID_lep",      &m_SourceID_lep);
-  tree->Branch("Index_lep",   &m_Index_lep);
+  tree->Branch("ID_lep", &m_ID_lep);
+  tree->Branch("SourceID_lep", &m_SourceID_lep);
+  tree->Branch("LepQual_lep", &m_LepQual_lep);
+  tree->Branch("Index_lep", &m_Index_lep);
+
+  if(!do_slim){
+    tree->Branch("RelIso_lep",  &m_RelIso_lep);
+    tree->Branch("MiniIso_lep", &m_MiniIso_lep);
+    tree->Branch("Dxy_lep", &m_Dxy_lep);
+    tree->Branch("DxyErr_lep", &m_DxyErr_lep);
+    tree->Branch("Dz_lep", &m_Dz_lep);
+    tree->Branch("DzErr_lep", &m_DzErr_lep);
+    tree->Branch("IP3D_lep", &m_IP3D_lep);
+    tree->Branch("SIP3D_lep", &m_SIP3D_lep);
+  }
   
   tree->Branch("Njet", &m_Njet);
   tree->Branch("Nbjet", &m_Nbjet);
-  
-  tree->Branch("PT_jet",  &m_PT_jet);
-  tree->Branch("Eta_jet", &m_Eta_jet);
-  tree->Branch("Phi_jet", &m_Phi_jet);
-  tree->Branch("M_jet",   &m_M_jet);
-  tree->Branch("Btag_jet",   &m_Btag_jet);
-  tree->Branch("BtagID_jet",   &m_BtagID_jet);
-  tree->Branch("Flavor_jet",   &m_Flavor_jet);
-  tree->Branch("index_jet_a", &m_index_jet_a);
-  tree->Branch("index_jet_b", &m_index_jet_b);
-  tree->Branch("index_jet_ISR", &m_index_jet_ISR);
-  tree->Branch("index_jet_S", &m_index_jet_S);
+
+  if(!do_slim){
+    tree->Branch("PT_jet",  &m_PT_jet);
+    tree->Branch("Eta_jet", &m_Eta_jet);
+    tree->Branch("Phi_jet", &m_Phi_jet);
+    tree->Branch("M_jet",   &m_M_jet);
+    tree->Branch("Btag_jet",   &m_Btag_jet);
+    tree->Branch("BtagID_jet",   &m_BtagID_jet);
+    tree->Branch("Flavor_jet",   &m_Flavor_jet);
+    tree->Branch("index_jet_a", &m_index_jet_a);
+    tree->Branch("index_jet_b", &m_index_jet_b);
+    tree->Branch("index_jet_ISR", &m_index_jet_ISR);
+    tree->Branch("index_jet_S", &m_index_jet_S);
+  }
 
   tree->Branch("NSV", &m_NSV);
   tree->Branch("PT_SV",  &m_PT_SV);
@@ -321,12 +353,14 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("ProbB_SV",   &m_ProbB_SV);
   tree->Branch("ProbC_SV",   &m_ProbC_SV);
 
-  tree->Branch("PT_Genjet",  &m_PT_Genjet);
-  tree->Branch("Eta_Genjet", &m_Eta_Genjet);
-  tree->Branch("Phi_Genjet", &m_Phi_Genjet);
-  tree->Branch("M_Genjet",   &m_M_Genjet);
-  tree->Branch("Index_jet",   &m_Index_jet);
-
+  if(!do_slim){
+    tree->Branch("PT_Genjet",  &m_PT_Genjet);
+    tree->Branch("Eta_Genjet", &m_Eta_Genjet);
+    tree->Branch("Phi_Genjet", &m_Phi_Genjet);
+    tree->Branch("M_Genjet",   &m_M_Genjet);
+    tree->Branch("Index_jet",   &m_Index_jet);
+  }
+  
   tree->Branch("Njet_ISR", &m_Njet_ISR);
   tree->Branch("Njet_S", &m_Njet_S);
   tree->Branch("Nbjet_ISR", &m_Nbjet_ISR);
@@ -339,17 +373,19 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("index_SV_S", &m_index_SV_S);
   tree->Branch("index_lep_ISR", &m_index_lep_ISR);
   tree->Branch("index_lep_S", &m_index_lep_S);
-  
-  tree->Branch("dphi_lep_S", &m_dphi_lep_S);
-  tree->Branch("cos_lep_S", &m_cos_lep_S);
-  tree->Branch("dphi_jet_S", &m_dphi_jet_S);
-  tree->Branch("cos_jet_S", &m_cos_jet_S);
-  tree->Branch("dphi_SV_S", &m_dphi_SV_S);
-  tree->Branch("cos_SV_S", &m_cos_SV_S);
 
-  tree->Branch("dphiMET_lep_S", &m_dphiMET_lep_S);
-  tree->Branch("dphiMET_jet_S", &m_dphiMET_jet_S);
-  tree->Branch("dphiMET_SV_S", &m_dphiMET_SV_S);
+  if(!do_slim){
+    tree->Branch("dphi_lep_S", &m_dphi_lep_S);
+    tree->Branch("cos_lep_S", &m_cos_lep_S);
+    tree->Branch("dphi_jet_S", &m_dphi_jet_S);
+    tree->Branch("cos_jet_S", &m_cos_jet_S);
+    tree->Branch("dphi_SV_S", &m_dphi_SV_S);
+    tree->Branch("cos_SV_S", &m_cos_SV_S);
+
+    tree->Branch("dphiMET_lep_S", &m_dphiMET_lep_S);
+    tree->Branch("dphiMET_jet_S", &m_dphiMET_jet_S);
+    tree->Branch("dphiMET_SV_S", &m_dphiMET_SV_S);
+  }
   
   tree->Branch("Njet_a", &m_Njet_a);
   tree->Branch("Njet_b", &m_Njet_b);
@@ -370,91 +406,95 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample){
   tree->Branch("cosCM", &m_cosCM);
   tree->Branch("dphiCM", &m_dphiCM);
   tree->Branch("dphiCMI", &m_dphiCMI);
-  
-  tree->Branch("MS", &m_MS);
-  tree->Branch("PS", &m_PS);
-  tree->Branch("cosS", &m_cosS);
-  tree->Branch("dphiS", &m_dphiS);
-  tree->Branch("dphiSI", &m_dphiSI);
-  tree->Branch("PTS", &m_PTS);
-  tree->Branch("PzS", &m_PzS);
-
-  tree->Branch("MX3a", &m_MX3a);
-  tree->Branch("MX3b", &m_MX3b);
-  tree->Branch("EVa", &m_EVa);
-  tree->Branch("EVb", &m_EVb);
-  tree->Branch("PVa", &m_PVa);
-  tree->Branch("PVb", &m_PVb);
-  tree->Branch("EJa", &m_EJa);
-  tree->Branch("EJb", &m_EJb);
-  tree->Branch("PJa", &m_PJa);
-  tree->Branch("PJb", &m_PJb);
-
-  tree->Branch("MX2a", &m_MX2a);
-  tree->Branch("MX2b", &m_MX2b);
-  tree->Branch("ELa", &m_ELa);
-  tree->Branch("ELb", &m_ELb);
-  tree->Branch("PLa", &m_PLa);
-  tree->Branch("PLb", &m_PLb);
-
-  tree->Branch("MV", &m_MV);
-  tree->Branch("PV", &m_PV);
-  tree->Branch("MVa", &m_MVa);
-  tree->Branch("MVb", &m_MVb);
-  tree->Branch("PV_lab", &m_PV_lab);
   tree->Branch("dphiMET_V", &m_dphiMET_V);
 
-  tree->Branch("MJa", &m_MJa);
-  tree->Branch("MJb", &m_MJb);
-  tree->Branch("MLa", &m_MLa);
-  tree->Branch("MLb", &m_MLb);
-  tree->Branch("cosJa", &m_cosJa);
-  tree->Branch("cosJb", &m_cosJb);
-  tree->Branch("cosLa", &m_cosLa);
-  tree->Branch("cosLb", &m_cosLb);
-
-  tree->Branch("MJ", &m_MJ);
-  tree->Branch("ML", &m_ML);
-  tree->Branch("EJ", &m_EJ);
-  tree->Branch("EL", &m_EL);
-  tree->Branch("PJ", &m_PJ);
-  tree->Branch("PL", &m_PL);
-  
-  tree->Branch("PX3", &m_PX3);
-  tree->Branch("PX3_BoostT", &m_PX3_BoostT);
-  tree->Branch("MX3a_BoostT", &m_MX3a_BoostT);
-  tree->Branch("MX3b_BoostT", &m_MX3b_BoostT);
-  tree->Branch("Mperp", &m_Mperp); 
-
-  tree->Branch("PV_BoostT", &m_PV_BoostT);
-  
-  tree->Branch("EVa_BoostT", &m_EVa_BoostT);
-  tree->Branch("EVb_BoostT", &m_EVb_BoostT);
-  tree->Branch("PVa_BoostT", &m_PVa_BoostT);
-  tree->Branch("PVb_BoostT", &m_PVb_BoostT);
-
+  tree->Branch("Mperp", &m_Mperp);
+  tree->Branch("gammaT", &m_gammaT);
   tree->Branch("EJ_BoostT", &m_EJ_BoostT);
   tree->Branch("EL_BoostT", &m_EL_BoostT);
-  tree->Branch("PJ_BoostT", &m_PJ_BoostT);
-  tree->Branch("PL_BoostT", &m_PL_BoostT);
-  
-  tree->Branch("H11S", &m_H11S);
-  tree->Branch("H21S", &m_H21S);
-  tree->Branch("HT21S", &m_HT21S);
-  tree->Branch("H22S", &m_H22S);
-  tree->Branch("HT22S", &m_HT22S);
-  tree->Branch("H42S", &m_H42S);
-  tree->Branch("HT42S", &m_HT42S);
-  tree->Branch("H11X3a", &m_H11X3a);
-  tree->Branch("H11X3b", &m_H11X3b);
-  tree->Branch("H21X3a", &m_H21X3a);
-  tree->Branch("H21X3b", &m_H21X3b);
-
-  tree->Branch("PISR", &m_PISR);
   tree->Branch("PTISR", &m_PTISR);
   tree->Branch("RISR", &m_RISR);
-  tree->Branch("RISRT", &m_RISRT);
-  tree->Branch("MISR", &m_MISR);
+  
+  if(!do_slim){
+    tree->Branch("MS", &m_MS);
+    tree->Branch("PS", &m_PS);
+    tree->Branch("cosS", &m_cosS);
+    tree->Branch("dphiS", &m_dphiS);
+    tree->Branch("dphiSI", &m_dphiSI);
+    tree->Branch("PTS", &m_PTS);
+    tree->Branch("PzS", &m_PzS);
+    
+    tree->Branch("MX3a", &m_MX3a);
+    tree->Branch("MX3b", &m_MX3b);
+    tree->Branch("EVa", &m_EVa);
+    tree->Branch("EVb", &m_EVb);
+    tree->Branch("PVa", &m_PVa);
+    tree->Branch("PVb", &m_PVb);
+    tree->Branch("EJa", &m_EJa);
+    tree->Branch("EJb", &m_EJb);
+    tree->Branch("PJa", &m_PJa);
+    tree->Branch("PJb", &m_PJb);
+
+    tree->Branch("MX2a", &m_MX2a);
+    tree->Branch("MX2b", &m_MX2b);
+    tree->Branch("ELa", &m_ELa);
+    tree->Branch("ELb", &m_ELb);
+    tree->Branch("PLa", &m_PLa);
+    tree->Branch("PLb", &m_PLb);
+
+    tree->Branch("MV", &m_MV);
+    tree->Branch("PV", &m_PV);
+    tree->Branch("MVa", &m_MVa);
+    tree->Branch("MVb", &m_MVb);
+    tree->Branch("PV_lab", &m_PV_lab);
+
+    tree->Branch("MJa", &m_MJa);
+    tree->Branch("MJb", &m_MJb);
+    tree->Branch("MLa", &m_MLa);
+    tree->Branch("MLb", &m_MLb);
+    tree->Branch("cosJa", &m_cosJa);
+    tree->Branch("cosJb", &m_cosJb);
+    tree->Branch("cosLa", &m_cosLa);
+    tree->Branch("cosLb", &m_cosLb);
+    
+    tree->Branch("MJ", &m_MJ);
+    tree->Branch("ML", &m_ML);
+    tree->Branch("EJ", &m_EJ);
+    tree->Branch("EL", &m_EL);
+    tree->Branch("PJ", &m_PJ);
+    tree->Branch("PL", &m_PL);
+    
+    tree->Branch("PX3", &m_PX3);
+    tree->Branch("PX3_BoostT", &m_PX3_BoostT);
+    tree->Branch("MX3a_BoostT", &m_MX3a_BoostT);
+    tree->Branch("MX3b_BoostT", &m_MX3b_BoostT);
+
+    tree->Branch("PV_BoostT", &m_PV_BoostT);
+    
+    tree->Branch("EVa_BoostT", &m_EVa_BoostT);
+    tree->Branch("EVb_BoostT", &m_EVb_BoostT);
+    tree->Branch("PVa_BoostT", &m_PVa_BoostT);
+    tree->Branch("PVb_BoostT", &m_PVb_BoostT);
+    
+    tree->Branch("PJ_BoostT", &m_PJ_BoostT);
+    tree->Branch("PL_BoostT", &m_PL_BoostT);
+  
+    tree->Branch("H11S", &m_H11S);
+    tree->Branch("H21S", &m_H21S);
+    tree->Branch("HT21S", &m_HT21S);
+    tree->Branch("H22S", &m_H22S);
+    tree->Branch("HT22S", &m_HT22S);
+    tree->Branch("H42S", &m_H42S);
+    tree->Branch("HT42S", &m_HT42S);
+    tree->Branch("H11X3a", &m_H11X3a);
+    tree->Branch("H11X3b", &m_H11X3b);
+    tree->Branch("H21X3a", &m_H21X3a);
+    tree->Branch("H21X3b", &m_H21X3b);
+    
+    tree->Branch("PISR", &m_PISR);
+    tree->Branch("RISRT", &m_RISRT);
+    tree->Branch("MISR", &m_MISR);
+  }
 
   if(!AnalysisBase<Base>::IsData()){
     tree->Branch("NPU", &m_NPU);
@@ -645,7 +685,7 @@ void ReducedNtuple<Base>::ClearVariables(){
 }
 
 template <class Base>
-void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
+void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys, bool do_slim){
   
   AnalysisBase<Base>::SetSystematic(sys);
 
@@ -1054,6 +1094,8 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   m_MX3a_BoostT = (vP_Ja_S+vP_La_S+vP_Ia_S).M();
   m_MX3b_BoostT = (vP_Jb_S+vP_Lb_S+vP_Ib_S).M();
   m_Mperp = sqrt(m_MX3a_BoostT*m_MX3a_BoostT+m_MX3b_BoostT*m_MX3b_BoostT)/sqrt(2.);
+  m_gammaT = 2*m_Mperp/(sqrt(m_MX3a_BoostT*m_MX3a_BoostT+m_PX3_BoostT*m_PX3_BoostT) +
+			sqrt(m_MX3b_BoostT*m_MX3b_BoostT+m_PX3_BoostT*m_PX3_BoostT));
 
   m_PV_BoostT = (vP_Ja_S+vP_La_S+vP_Jb_S+vP_Lb_S).P();
   
@@ -1090,8 +1132,6 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
 
     TVector3 isr_t = ISR->GetTransverseFourVector(*S).Vect();
     TVector3 isr   = ISR->GetFourVector(*S).Vect();
-
-    
     
     for(int l = 0; l < m_Nlep_S; l++){
       TVector3 lep   = S->GetFourVector(Leptons[m_index_lep_S[l]]).Vect();
@@ -1142,6 +1182,31 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
     m_BtagLFSFweight_up = AnalysisBase<Base>::GetBtagSFWeight(Jets, false, 1, kMedium);
     m_BtagLFSFweight_down = AnalysisBase<Base>::GetBtagSFWeight(Jets, false, -1, kMedium);
 
+    m_elIDSFweight = AnalysisBase<Base>::GetElIDSFWeight(Electrons, 0);
+    m_elIDSFweight_up = AnalysisBase<Base>::GetElIDSFWeight(Electrons, 1);
+    m_elIDSFweight_down = AnalysisBase<Base>::GetElIDSFWeight(Electrons, -1);
+    m_elISOSFweight = AnalysisBase<Base>::GetElISOSFWeight(Electrons, 0);
+    m_elISOSFweight_up = AnalysisBase<Base>::GetElISOSFWeight(Electrons, 1);
+    m_elISOSFweight_down = AnalysisBase<Base>::GetElISOSFWeight(Electrons, -1);
+    m_elSIPSFweight = AnalysisBase<Base>::GetElSIPSFWeight(Electrons, 0);
+    m_elSIPSFweight_up = AnalysisBase<Base>::GetElSIPSFWeight(Electrons, 1);
+    m_elSIPSFweight_down = AnalysisBase<Base>::GetElSIPSFWeight(Electrons, -1);
+    m_elVLSFweight = AnalysisBase<Base>::GetElVLIDSFWeight(Electrons, 0);
+    m_elVLSFweight_up = AnalysisBase<Base>::GetElVLIDSFWeight(Electrons, 1);
+    m_elVLSFweight_down = AnalysisBase<Base>::GetElVLIDSFWeight(Electrons, -1);
+    m_muIDSFweight = AnalysisBase<Base>::GetMuIDSFWeight(Muons, 0);
+    m_muIDSFweight_up = AnalysisBase<Base>::GetMuIDSFWeight(Muons, 1);
+    m_muIDSFweight_down = AnalysisBase<Base>::GetMuIDSFWeight(Muons, -1);
+    m_muISOSFweight = AnalysisBase<Base>::GetMuISOSFWeight(Muons, 0);
+    m_muISOSFweight_up = AnalysisBase<Base>::GetMuISOSFWeight(Muons, 1);
+    m_muISOSFweight_down = AnalysisBase<Base>::GetMuISOSFWeight(Muons, -1);
+    m_muSIPSFweight = AnalysisBase<Base>::GetMuSIPSFWeight(Muons, 0);
+    m_muSIPSFweight_up = AnalysisBase<Base>::GetMuSIPSFWeight(Muons, 1);
+    m_muSIPSFweight_down = AnalysisBase<Base>::GetMuSIPSFWeight(Muons, -1);
+    m_muVLSFweight = AnalysisBase<Base>::GetMuVLIDSFWeight(Muons, 0);
+    m_muVLSFweight_up = AnalysisBase<Base>::GetMuVLIDSFWeight(Muons, 1);
+    m_muVLSFweight_down = AnalysisBase<Base>::GetMuVLIDSFWeight(Muons, -1);
+
     m_MetTrigSFweight = AnalysisBase<Base>::GetMETTriggerSFWeight(m_MET, m_HT_eta5, m_Nele, m_Nmu, 0);
     m_MetTrigSFweight_up = AnalysisBase<Base>::GetMETTriggerSFWeight(m_MET, m_HT_eta5, m_Nele, m_Nmu, 1);
     m_MetTrigSFweight_down = AnalysisBase<Base>::GetMETTriggerSFWeight(m_MET, m_HT_eta5, m_Nele, m_Nmu, -1);
@@ -1172,6 +1237,30 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
     m_BtagLFSFweight = 1;
     m_BtagLFSFweight_up = 1;
     m_BtagLFSFweight_down = 1;
+    m_elIDSFweight = 1;
+  m_elIDSFweight_up = 1;
+  m_elIDSFweight_down = 1;
+  m_elISOSFweight = 1;
+  m_elISOSFweight_up = 1;
+  m_elISOSFweight_down = 1;
+  m_elSIPSFweight = 1;
+  m_elSIPSFweight_up = 1;
+  m_elSIPSFweight_down = 1;
+  m_elVLSFweight = 1;
+  m_elVLSFweight_up = 1;
+  m_elVLSFweight_down = 1;
+  m_muIDSFweight = 1;
+  m_muIDSFweight_up = 1;
+  m_muIDSFweight_down = 1;
+  m_muISOSFweight = 1;
+  m_muISOSFweight_up = 1;
+  m_muISOSFweight_down = 1;
+  m_muSIPSFweight = 1;
+  m_muSIPSFweight_up = 1;
+  m_muSIPSFweight_down = 1;
+  m_muVLSFweight = 1;
+  m_muVLSFweight_up = 1;
+  m_muVLSFweight_down = 1;
     m_MetTrigSFweight = 1.;
     m_MetTrigSFweight_up = 1.;
     m_MetTrigSFweight_down = 1.;
@@ -1200,45 +1289,48 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   m_MET_phi = ETMiss.Phi();
 
   // Fill Jets
-  m_PT_jet.clear();
-  m_Eta_jet.clear();
-  m_Phi_jet.clear();
-  m_M_jet.clear();
-  m_Btag_jet.clear();
-  m_BtagID_jet.clear();
-  m_Flavor_jet.clear();
-  for(int i = 0; i < m_Njet; i++){
-    m_PT_jet.push_back(Jets[i].Pt());
-    m_Eta_jet.push_back(Jets[i].Eta());
-    m_Phi_jet.push_back(Jets[i].Phi());
-    m_M_jet.push_back(Jets[i].M());
-    m_Btag_jet.push_back(Jets[i].Btag());
-    m_BtagID_jet.push_back(Jets[i].BtagID());
-    m_Flavor_jet.push_back(Jets[i].PDGID());
-  }
+  if(!do_slim){
+    m_PT_jet.clear();
+    m_Eta_jet.clear();
+    m_Phi_jet.clear();
+    m_M_jet.clear();
+    m_Btag_jet.clear();
+    m_BtagID_jet.clear();
+    m_Flavor_jet.clear();
+    for(int i = 0; i < m_Njet; i++){
+      m_PT_jet.push_back(Jets[i].Pt());
+      m_Eta_jet.push_back(Jets[i].Eta());
+      m_Phi_jet.push_back(Jets[i].Phi());
+      m_M_jet.push_back(Jets[i].M());
+      m_Btag_jet.push_back(Jets[i].Btag());
+      m_BtagID_jet.push_back(Jets[i].BtagID());
+      m_Flavor_jet.push_back(Jets[i].PDGID());
+    }
 
-  // Fill GenJets
-  vector<int> genmatch_jet;
-  for(int i = 0; i < m_NGenjet; i++)
-    genmatch_jet.push_back(-1);
-  m_PT_Genjet.clear();
-  m_Eta_Genjet.clear();
-  m_Phi_Genjet.clear();
-  m_M_Genjet.clear();
-  for(int i = 0; i < m_NGenjet; i++){
-    m_PT_Genjet.push_back(GenJets[i].Pt());
-    m_Eta_Genjet.push_back(GenJets[i].Eta());
-    m_Phi_Genjet.push_back(GenJets[i].Phi());
-    m_M_Genjet.push_back(GenJets[i].M());
-    int index = -1;
-    double minDR = 0.1;
-    for(int g = 0; g < m_NGenjet; g++)
-      if(Jets[i].DeltaR(GenJets[g]) < minDR){
-       minDR = Jets[i].DeltaR(GenJets[g]);
-       index = g;
-       genmatch_jet[g] = i;
-      }
-    m_Index_jet.push_back(index);
+    // Fill GenJets
+    vector<int> genmatch_jet;
+    for(int i = 0; i < m_NGenjet; i++)
+      genmatch_jet.push_back(-1);
+    m_PT_Genjet.clear();
+    m_Eta_Genjet.clear();
+    m_Phi_Genjet.clear();
+    m_M_Genjet.clear();
+    m_Index_jet.clear();
+    for(int i = 0; i < m_NGenjet; i++){
+      m_PT_Genjet.push_back(GenJets[i].Pt());
+      m_Eta_Genjet.push_back(GenJets[i].Eta());
+      m_Phi_Genjet.push_back(GenJets[i].Phi());
+      m_M_Genjet.push_back(GenJets[i].M());
+      int index = -1;
+      double minDR = 0.1;
+      for(int g = 0; g < m_NGenjet; g++)
+	if(Jets[i].DeltaR(GenJets[g]) < minDR){
+	  minDR = Jets[i].DeltaR(GenJets[g]);
+	  index = g;
+	  genmatch_jet[g] = i;
+	}
+      m_Index_jet.push_back(index);
+    }
   }
 
   // Fill SVs
@@ -1274,6 +1366,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
   m_SIP3D_lep.clear();
   m_ID_lep.clear();
   m_SourceID_lep.clear();
+  m_LepQual_lep.clear();
   m_Index_lep.clear();
   vector<int> genmatch;
   for(int i = 0; i < m_genNlep; i++)
@@ -1294,6 +1387,7 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
     m_IP3D_lep.push_back(Leptons[r].IP3D());
     m_SIP3D_lep.push_back(Leptons[r].SIP3D());
     m_ID_lep.push_back(Leptons[r].ParticleID());
+    m_LepQual_lep.push_back(Leptons[r].LepQual());
     int index = -1;
     double minDR = 0.1;
     for(int g = 0; g < m_genNlep; g++)
@@ -1309,7 +1403,8 @@ void ReducedNtuple<Base>::FillOutputTree(TTree* tree, const Systematic& sys){
     else
       Leptons[r].SetSourceID(kFake);
     
-    m_ID_lep.push_back(Leptons[r].SourceID());
+    // m_ID_lep.push_back(Leptons[r].SourceID());
+    m_SourceID_lep.push_back(Leptons[r].SourceID());
   }
 
   if(!AnalysisBase<Base>::IsData()){

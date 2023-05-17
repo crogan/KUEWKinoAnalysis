@@ -1,5 +1,7 @@
 samples/NANO/Fall17_102X_SMS/SMS-N2C1-higgsino_TuneCP2_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Fall17_102X_SMS/SMS-N2C1-higgsino_mN2-260to500_TuneCP2_13TeV-madgraphMLM-pythia8.txt
+samples/NANO/Fall17_102X_SMS/SMS-N2N1-higgsino_TuneCP2_13TeV-madgraphMLM-pythia8.txt
+samples/NANO/Fall17_102X_SMS/SMS-N2N1-higgsino_mN2-260to500_TuneCP2_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Fall17_102X_SMS/SMS-T1bbbb_TuneCP2_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Fall17_102X_SMS/SMS-T1bbbb_mGluino-1000_mLSP-900_TuneCP2_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Fall17_102X_SMS/SMS-T1bbbb_mGluino-1500_mLSP-100_TuneCP2_13TeV-madgraphMLM-pythia8.txt
@@ -8,12 +10,11 @@ samples/NANO/Fall17_102X_SMS/SMS-T1tttt_TuneCP2_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Fall17_102X_SMS/SMS-T1tttt_mGluino-1200_mLSP-800_TuneCP2_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Fall17_102X_SMS/SMS-T1tttt_mGluino-2000_mLSP-100_TuneCP2_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Fall17_102X_SMS/SMS-T2-4bd_genMET-80_mStop-500_mLSP-420_TuneCP2_13TeV-madgraphMLM-pythia8.txt
-samples/NANO/Fall17_102X_SMS/SMS-T2-4bd_genMET-80_mStop-500_mLSP-420_TuneCP5_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Fall17_102X_SMS/SMS-T2-4bd_genMET-80_mStop-500_mLSP-490_TuneCP2_13TeV-madgraphMLM-pythia8.txt
-samples/NANO/Fall17_102X_SMS/SMS-T2-4bd_genMET-80_mStop-500_mLSP-490_TuneCP5_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Fall17_102X_SMS/SMS-T2bW_TuneCP2_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Fall17_102X_SMS/SMS-T2bW_X05_dM-10to80_2Lfilter_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Fall17_102X_SMS/SMS-T2bW_X05_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8.txt
+samples/NANO/Fall17_102X_SMS/SMS-T2bW_X05_dM-90to170_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Fall17_102X_SMS/SMS-T2bb_TuneCP2_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Fall17_102X_SMS/SMS-T2bb_mSbot-1650to2600_TuneCP2_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Fall17_102X_SMS/SMS-T2bt_TuneCP2_13TeV-madgraphMLM-pythia8.txt
@@ -56,13 +57,16 @@ samples/NANO/Fall17_102X_SMS/SMS-TChiWZ_ZToLL_dM-90to100_TuneCP2_13TeV-madgraphM
 samples/NANO/Fall17_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Fall17_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_mC1-325to1000_TuneCP2_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Fall17_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_mChargino250_mLSP230_TuneCP5_13TeV-madgraphMLM-pythia8.txt
+samples/NANO/Fall17_102X_SMS/SMS-TChiWZ_dM-60to90_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Fall17_102X_SMS/SMS-TChiZZ_ZToLL_TuneCP2_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Fall17_102X_SMS/SMS-TChiZZ_ZToLL_ZToLL_TuneCP2_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Fall17_102X_SMS/SMS-TChipmSlepSnu_TuneCP2_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Fall17_102X_SMS/SMS-TChipmSlepSnu_mC1_825_1500_TuneCP2_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Fall17_102X_SMS/SMS-TChipmWW_TuneCP2_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Fall17_102X_SMS/SMS-TChipmWW_WWTo2LNu_TuneCP2_13TeV-madgraphMLM-pythia8.txt
+samples/NANO/Fall17_102X_SMS/SMS-TChipmWW_dM-3to50_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8.txt
+samples/NANO/Fall17_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Fall17_102X_SMS/SMS-TSlepSlep_mSlep-500To1300_TuneCP2_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Fall17_102X_SMS/SMS-TStauStau-Ewkino_lefthanded_dM-10to40_genHT-80_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Fall17_102X_SMS/SMS-TStauStau-Ewkino_lefthanded_dM-50_genHT-80_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8.txt
@@ -82,5 +86,3 @@ samples/NANO/Fall17_102X_SMS/SMS-TStauStau_righthanded_mStau-225to250_TuneCP5_13
 samples/NANO/Fall17_102X_SMS/SMS-TStauStau_righthanded_mStau-275to500_TuneCP5_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Fall17_102X_SMS/SMS-TStauStau_righthanded_mStau-90_mLSP-20_TuneCP5_13TeV-madgraphMLM-pythia8.txt
 samples/NANO/Fall17_102X_SMS/TChiWZ_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8.txt
-samples/NANO/Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext.txt
-samples/NANO/Fall17_102X_SMS/SMS-TSlepSlep_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8.txt

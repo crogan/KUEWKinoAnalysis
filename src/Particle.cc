@@ -23,6 +23,7 @@ Particle::Particle() : TLorentzVector() {
   m_Ndof = 0.;
   m_Btag = 0.;
   m_BtagID = kNothing;
+  m_LepQual = kGold;
 }
     
 Particle::~Particle() {}
@@ -73,6 +74,14 @@ ParticleIDType Particle::BtagID() const {
 
 void Particle::SetBtagID(ParticleIDType id){
   m_BtagID = id;
+}
+
+LepID Particle::LepQual() const {
+  return m_LepQual;
+}
+
+void Particle::SetLepQual(LepID qual){
+  m_LepQual = qual;
 }
 
 double Particle::RelIso() const {

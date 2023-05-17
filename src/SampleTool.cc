@@ -240,7 +240,7 @@ void SampleTool::InitProcMap(){
   m_Lumi[1] = 41.479680529;    // 2017 lumi
   //m_Lumi[2] = 59.832475339;     // 2018 lumi
   //m_Lumi[2] = 21.077794578;    // 2018 preHEM lumi
-  m_Lumi[2] = 21.077794578 + 0.95*38.662770624;    // 2018 preHEM + post w/ rought veto eff 
+  m_Lumi[2] = 21.077794578 + 0.95*38.662770624;    // 2018 preHEM + post w/ rough veto eff 
 
   // 2018 lumi ---> 21.077794578, 38.662770624 (pre/post HEM)
 
@@ -273,6 +273,7 @@ void SampleTool::InitProcMap(){
     Process ST("ST", kBkg);
     list.clear();
     list += m_Path + "Summer16_102X/ST_s-channel_4f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1_Summer16_102X.root";
+    //list += m_Path + "Summer16_102X/ST_s-channel_4f_hadronicDecays_TuneCP5_PSweights_13TeV-amcatnlo-pythia8_Summer16_102X.root"; //to be used with new ntuples
     list += m_Path + "Summer16_102X/ST_t-channel_antitop_4f_inclusiveDecays_13TeV-powhegV2-madspin-pythia8_TuneCUETP8M1_Summer16_102X.root";
     list += m_Path + "Summer16_102X/ST_t-channel_top_4f_inclusiveDecays_13TeV-powhegV2-madspin-pythia8_TuneCUETP8M1_Summer16_102X.root";
     list += m_Path + "Summer16_102X/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1_Summer16_102X.root";
@@ -468,10 +469,11 @@ void SampleTool::InitProcMap(){
     Process ST("ST", kBkg);
     list.clear();
     list += m_Path + "Fall17_102X/ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8_Fall17_102X.root";
+    //list += m_Path + "Fall17_102X/ST_s-channel_4f_hadronicDecays_TuneCP5_13TeV-amcatnlo-pythia8_Fall17_102X.root"; // use only with new ntuples
     list += m_Path + "Fall17_102X/ST_t-channel_antitop_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8_Fall17_102X.root";
     list += m_Path + "Fall17_102X/ST_t-channel_top_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8_Fall17_102X.root";
     list += m_Path + "Fall17_102X/ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8_Fall17_102X.root";
-    list += m_Path + "Fall17_102X/ST_tW_top_5f_inclusiveDecays_TuneCP5_PSweights_13TeV-powheg-pythia8_Fall17_102X.root";
+    list += m_Path + "Fall17_102X/ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8_Fall17_102X.root";
     m_Proc[m_iYear][ST] = pair<vector<string>,string>(list, "KUAnalysis");
   
     Process ZDY("ZDY", kBkg);
@@ -703,6 +705,7 @@ void SampleTool::InitProcMap(){
     Process ST("ST", kBkg);
     list.clear();
     list += m_Path + "Autumn18_102X/ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-madgraph-pythia8_Autumn18_102X.root";
+    //list += m_Path + "Autumn18_102X/ST_s-channel_4f_hadronicDecays_TuneCP5_13TeV-madgraph-pythia8_Autumn18_102X.root"; //added in new ntuples
     list += m_Path + "Autumn18_102X/ST_t-channel_antitop_4f_InclusiveDecays_TuneCP5_13TeV-powheg-madspin-pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/ST_t-channel_top_4f_InclusiveDecays_TuneCP5_13TeV-powheg-madspin-pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8_Autumn18_102X.root";

@@ -49,6 +49,11 @@ void AnalysisBase<Base>::AddJESSystematics(){
 }
 
 template <class Base>
+void AnalysisBase<Base>::AddJERSystematics(){
+  m_Systematics.Add(m_SysTool.JERSystematics());
+}
+
+template <class Base>
 void AnalysisBase<Base>::AddMETSystematics(){
   m_Systematics.Add(m_SysTool.METSystematics());
 }
@@ -146,8 +151,14 @@ void AnalysisBase<Base>::AddBtagFolder(const string& btagfold){
 }
 
 template <class Base>
+void AnalysisBase<Base>::AddLepFolder(const string& lepfold){
+  m_LepSFTool.BuildMap(lepfold);
+}
+
+template <class Base>
 void AnalysisBase<Base>::AddJMEFolder(const string& jmefold){
   m_JMETool.BuildMap(jmefold);
+  m_JMETool.BuildJERMap(jmefold);
 }
 
 template <class Base>
@@ -269,6 +280,46 @@ double AnalysisBase<Base>::GetPDFWeight(int updown){
 
 template <class Base>
 double AnalysisBase<Base>::GetBtagSFWeight(const ParticleList& jets, bool HForLF, int updown, ParticleIDType tag){
+  return 0;
+}
+
+template <class Base>
+double AnalysisBase<Base>::GetElIDSFWeight(const ParticleList& els, int updown){
+  return 0;
+}
+
+template <class Base>
+double AnalysisBase<Base>::GetElISOSFWeight(const ParticleList& els, int updown){
+  return 0;
+}
+
+template <class Base>
+double AnalysisBase<Base>::GetElSIPSFWeight(const ParticleList& els, int updown){
+  return 0;
+}
+
+template <class Base>
+double AnalysisBase<Base>::GetElVLIDSFWeight(const ParticleList& els, int updown){
+  return 0;
+}
+
+template <class Base>
+double AnalysisBase<Base>::GetMuIDSFWeight(const ParticleList& mus, int updown){
+  return 0;
+}
+
+template <class Base>
+double AnalysisBase<Base>::GetMuISOSFWeight(const ParticleList& mus, int updown){
+  return 0;
+}
+
+template <class Base>
+double AnalysisBase<Base>::GetMuSIPSFWeight(const ParticleList& mus, int updown){
+  return 0;
+}
+
+template <class Base>
+double AnalysisBase<Base>::GetMuVLIDSFWeight(const ParticleList& mus, int updown){
   return 0;
 }
 
@@ -868,7 +919,7 @@ bool AnalysisBase<SUSYNANOBase>::PassEventFilter(){
 template<>
 bool AnalysisBase<SUSYNANOBase>::FastSimEventVeto(const ParticleList& GenJets){
 
- ParticleList jets;
+  ParticleList jets;
   for(int i = 0; i < nJet; i++){
     if(Jet_pt[i] < 20. || fabs(Jet_eta[i]) > 2.5)
       continue;  
@@ -896,48 +947,48 @@ bool AnalysisBase<SUSYNANOBase>::FastSimEventVeto(const ParticleList& GenJets){
 
 template<>
 double AnalysisBase<SUSYNANOBase>::EGvalue(int jetIndex, int updown){
- double PhotonMinPt = 20.;
- double PhotonMaxPt = 500.;
- double PhotonMinEta = 2.;
- double PhotonMaxEta = 3.;
- double phopf = 1.;
+  double PhotonMinPt = 20.;
+  double PhotonMaxPt = 500.;
+  double PhotonMinEta = 2.;
+  double PhotonMaxEta = 3.;
+  double phopf = 1.;
 
- vector<int> PhotonInJet;
+  vector<int> PhotonInJet;
 
- for(int p = 0; p < nPhoton; p++)
- {
-  if(Photon_jetIdx[p] == jetIndex){
-   if(Photon_pt[p] >= PhotonMinPt && fabs(Photon_eta[p]) <= PhotonMaxEta && fabs(Photon_eta[p]) >= PhotonMinEta){
-    double phopf_temp = 1. - m_PrefireTool.GetPrefireProbability(false, Photon_eta[p], Photon_pt[p], PhotonMaxPt, updown);
-    double elepf_temp = 1.;
-    if(Photon_electronIdx[p] > -1){
-     if(Electron_pt[Photon_electronIdx[p]] >= PhotonMinPt && fabs(Electron_eta[Photon_electronIdx[p]]) <= PhotonMaxEta && fabs(Electron_eta[Photon_electronIdx[p]]) >= PhotonMinEta){
-      elepf_temp = 1. - m_PrefireTool.GetPrefireProbability(false, Electron_eta[Photon_electronIdx[p]], Electron_pt[Photon_electronIdx[p]], PhotonMaxPt, updown);
-     }
+  for(int p = 0; p < nPhoton; p++)
+    {
+      if(Photon_jetIdx[p] == jetIndex){
+	if(Photon_pt[p] >= PhotonMinPt && fabs(Photon_eta[p]) <= PhotonMaxEta && fabs(Photon_eta[p]) >= PhotonMinEta){
+	  double phopf_temp = 1. - m_PrefireTool.GetPrefireProbability(false, Photon_eta[p], Photon_pt[p], PhotonMaxPt, updown);
+	  double elepf_temp = 1.;
+	  if(Photon_electronIdx[p] > -1){
+	    if(Electron_pt[Photon_electronIdx[p]] >= PhotonMinPt && fabs(Electron_eta[Photon_electronIdx[p]]) <= PhotonMaxEta && fabs(Electron_eta[Photon_electronIdx[p]]) >= PhotonMinEta){
+	      elepf_temp = 1. - m_PrefireTool.GetPrefireProbability(false, Electron_eta[Photon_electronIdx[p]], Electron_pt[Photon_electronIdx[p]], PhotonMaxPt, updown);
+	    }
+	  }
+	  phopf *= min(phopf_temp,elepf_temp);
+	  PhotonInJet.push_back(p);
+	}   
+      }
     }
-    phopf *= min(phopf_temp,elepf_temp);
-    PhotonInJet.push_back(p);
-   }   
-  }
- }
- for(int e = 0; e < nElectron; e++)
- {
-  if(Electron_jetIdx[e] == jetIndex && std::count(PhotonInJet.begin(), PhotonInJet.end(), Electron_photonIdx[e]) == 0){
-   if(Electron_pt[e] >= PhotonMinPt && fabs(Electron_eta[e]) <= PhotonMaxEta && fabs(Electron_eta[e]) >= PhotonMinEta){
-    phopf *= 1. - m_PrefireTool.GetPrefireProbability(false, Electron_eta[e], Electron_pt[e], PhotonMaxPt, updown);
-   }
-  }
- }
- return phopf;
+  for(int e = 0; e < nElectron; e++)
+    {
+      if(Electron_jetIdx[e] == jetIndex && std::count(PhotonInJet.begin(), PhotonInJet.end(), Electron_photonIdx[e]) == 0){
+	if(Electron_pt[e] >= PhotonMinPt && fabs(Electron_eta[e]) <= PhotonMaxEta && fabs(Electron_eta[e]) >= PhotonMinEta){
+	  phopf *= 1. - m_PrefireTool.GetPrefireProbability(false, Electron_eta[e], Electron_pt[e], PhotonMaxPt, updown);
+	}
+      }
+    }
+  return phopf;
 }
 
 template<>
 double AnalysisBase<SUSYNANOBase>::GetPrefireWeight(int updown){
- int year = 2016;
- if(m_FileTag.find("17") != std::string::npos)
-   year = 2017;
- if(m_FileTag.find("18") != std::string::npos)
-  return 1.; // no prefire weight for 2018
+  int year = 2016;
+  if(m_FileTag.find("17") != std::string::npos)
+    year = 2017;
+  if(m_FileTag.find("18") != std::string::npos)
+    return 1.; // no prefire weight for 2018
 
   double JetMinPt = 20.;
   double JetMaxPt = 500.;
@@ -945,22 +996,22 @@ double AnalysisBase<SUSYNANOBase>::GetPrefireWeight(int updown){
   double JetMaxEta = 3.;
 
 
- double prefw = 1.;
+  double prefw = 1.;
 
- // loop over jets
- for(int j = 0; j < nJet; j++){
-   double jetpf = 1.0;
-   double jetpt = Jet_pt[j];
-   if(m_PrefireTool.Get_UseEMpT())
+  // loop over jets
+  for(int j = 0; j < nJet; j++){
+    double jetpf = 1.0;
+    double jetpt = Jet_pt[j];
+    if(m_PrefireTool.Get_UseEMpT())
       jetpt *= Jet_chEmEF[j] + Jet_neEmEF[j];
-   if(jetpt >= JetMinPt && fabs(Jet_eta[j]) <= JetMaxEta && fabs(Jet_eta[j]) >= JetMinEta)
-     jetpf *= 1. - m_PrefireTool.GetPrefireProbability(true, Jet_eta[j], jetpt, JetMaxPt, updown);
-   double phopf = EGvalue(j,updown);
-   prefw *= std::min(jetpf,phopf);
- }
- prefw *= EGvalue(-1,updown); //loop over all photons/electrons not associated to jets
+    if(jetpt >= JetMinPt && fabs(Jet_eta[j]) <= JetMaxEta && fabs(Jet_eta[j]) >= JetMinEta)
+      jetpf *= 1. - m_PrefireTool.GetPrefireProbability(true, Jet_eta[j], jetpt, JetMaxPt, updown);
+    double phopf = EGvalue(j,updown);
+    prefw *= std::min(jetpf,phopf);
+  }
+  prefw *= EGvalue(-1,updown); //loop over all photons/electrons not associated to jets
  
- return prefw;
+  return prefw;
 }
 
 template <>
@@ -1241,9 +1292,9 @@ double AnalysisBase<SUSYNANOBase>::GetPUWeight(int updown){
   return m_PUTool.GetWeight(Pileup_nPU, year, updown);
 }
 
- // [0] is muR=0.5 muF=0.5 ; [1] is muR=0.5 muF=1.0 ; [2] is muR=0.5 muF=2.0 ;
- // [3] is muR=0.1 muF=0.5 ; [4] is muR=1.0 muF=1.0 ; [5] is muR=1.0 muF=2.0 ;
- // [6] is muR=2.0 muF=0.5 ; [7] is muR=2.0 muF=1.0 ; [8] is muR=2.0 muF=2.0 ;
+// [0] is muR=0.5 muF=0.5 ; [1] is muR=0.5 muF=1.0 ; [2] is muR=0.5 muF=2.0 ;
+// [3] is muR=0.1 muF=0.5 ; [4] is muR=1.0 muF=1.0 ; [5] is muR=1.0 muF=2.0 ;
+// [6] is muR=2.0 muF=0.5 ; [7] is muR=2.0 muF=1.0 ; [8] is muR=2.0 muF=2.0 ;
 
 template <>
 double AnalysisBase<SUSYNANOBase>::GetMuFWeight(int updown){
@@ -1344,6 +1395,542 @@ double AnalysisBase<SUSYNANOBase>::GetBtagSFWeight(const ParticleList& jets, boo
       probMC   *= (1.-EFF);
       probDATA *= (1.-SF*EFF);
     }
+  }
+
+  if(probMC <= 0. || probDATA <= 0.)
+    return 1.;
+
+  return probDATA/probMC;
+}
+
+template <>
+double AnalysisBase<SUSYNANOBase>::GetElIDSFWeight(const ParticleList& els, int updown){
+  if(IsData())
+    return 1.;
+
+  bool FastSim = IsFastSim();
+  
+  int year = 2016;
+  if(m_FileTag.find("17") != std::string::npos)
+    year = 2017;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+
+  int Nlep = els.size();
+  int pdg = 11;
+  double EFFMC, EFFData, SF;
+  double EFFMCErr, EFFDataErr, SFErr;
+
+  double probMC   = 1.;
+  double probDATA = 1.;
+  
+  for(int i = 0; i < Nlep; i++){
+    if(els[i].SourceID() > 0)
+      continue;
+    
+    EFFMC = m_LepSFTool.getMCIdEfficiency(els[i].Pt(), els[i].Eta(), pdg, year);
+    EFFData = m_LepSFTool.getDataIdEfficiency(els[i].Pt(), els[i].Eta(), pdg, year);
+
+    if(EFFMC > 0 && EFFData > 0)
+      SF = EFFData/EFFMC;
+    else
+      SF = 1;
+
+    SFErr = 0;
+    if(updown != 0){
+      EFFMCErr = m_LepSFTool.getMCIdError(els[i].Pt(), els[i].Eta(), pdg, year);
+      EFFDataErr = m_LepSFTool.getDataIdError(els[i].Pt(), els[i].Eta(), pdg, year);
+
+      if(EFFMC > 0 && EFFData > 0)
+	SFErr = updown * SF * sqrt( EFFMCErr*EFFMCErr/EFFMC/EFFMC + EFFDataErr*EFFDataErr/EFFData/EFFData );
+    }
+
+    SF += SFErr;
+    
+    if(FastSim){
+      double FSSF = m_LepSFTool.getIdFastSimSF(els[i].Pt(), els[i].Eta(), pdg, year);
+      if(FSSF > 0){
+	SF *= FSSF;
+	EFFMC /= FSSF;
+      }
+    }
+
+    // Evaluate cut
+    if(els[i].ParticleID() >= kMedium){
+      probMC   *= EFFMC;
+      probDATA *= SF*EFFMC;
+    } else {
+      probMC   *= EFFMC;
+      probDATA *= EFFMC/SF;
+    }
+  }
+
+  if(probMC <= 0. || probDATA <= 0.)
+    return 1.;
+
+  return probDATA/probMC;
+}
+
+template <>
+double AnalysisBase<SUSYNANOBase>::GetElISOSFWeight(const ParticleList& els, int updown){
+  if(IsData())
+    return 1.;
+
+  bool FastSim = IsFastSim();
+  
+  int year = 2016;
+  if(m_FileTag.find("17") != std::string::npos)
+    year = 2017;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+
+  int Nlep = els.size();
+  int pdg = 11;
+  double EFFMC, EFFData, SF;
+  double EFFMCErr, EFFDataErr, SFErr;
+
+  double probMC   = 1.;
+  double probDATA = 1.;
+  
+  for(int i = 0; i < Nlep; i++){
+    if(els[i].SourceID() > 0)
+      continue;
+    
+    EFFMC = m_LepSFTool.getMCIsoEfficiency(els[i].Pt(), els[i].Eta(), pdg, year);
+    EFFData = m_LepSFTool.getDataIsoEfficiency(els[i].Pt(), els[i].Eta(), pdg, year);
+
+    if(EFFMC > 0 && EFFData > 0)
+      SF = EFFData/EFFMC;
+    else
+      SF = 1;
+
+    SFErr = 0;
+    if(updown != 0){
+      EFFMCErr = m_LepSFTool.getMCIsoError(els[i].Pt(), els[i].Eta(), pdg, year);
+      EFFDataErr = m_LepSFTool.getDataIsoError(els[i].Pt(), els[i].Eta(), pdg, year);
+
+      if(EFFMC > 0 && EFFData > 0)
+	SFErr = updown * SF * sqrt( EFFMCErr*EFFMCErr/EFFMC/EFFMC + EFFDataErr*EFFDataErr/EFFData/EFFData );
+    }
+
+    SF += SFErr;
+    
+    if(FastSim){
+      double FSSF = m_LepSFTool.getIsoFastSimSF(els[i].Pt(), els[i].Eta(), pdg, year);
+      if(FSSF > 0){
+	SF *= FSSF;
+	EFFMC /= FSSF;
+      }
+    }
+
+    // Evaluate cut
+    if(els[i].RelIso() < 4. && els[i].MiniIso() < 4.){
+      probMC   *= EFFMC;
+      probDATA *= SF*EFFMC;
+    } else {
+      probMC   *= EFFMC;
+      probDATA *= EFFMC/SF;
+    }
+  }
+
+  if(probMC <= 0. || probDATA <= 0.)
+    return 1.;
+
+  return probDATA/probMC;
+}
+
+template <>
+double AnalysisBase<SUSYNANOBase>::GetElSIPSFWeight(const ParticleList& els, int updown){
+  if(IsData())
+    return 1.;
+
+  bool FastSim = IsFastSim();
+  
+  int year = 2016;
+  if(m_FileTag.find("17") != std::string::npos)
+    year = 2017;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+
+  int Nlep = els.size();
+  int pdg = 11;
+  double EFFMC, EFFData, SF;
+  double EFFMCErr, EFFDataErr, SFErr;
+
+  double probMC   = 1.;
+  double probDATA = 1.;
+  
+  for(int i = 0; i < Nlep; i++){
+    if(els[i].SourceID() > 0)
+      continue;
+    
+    EFFMC = m_LepSFTool.getMCSipEfficiency(els[i].Pt(), els[i].Eta(), pdg, year);
+    EFFData = m_LepSFTool.getDataSipEfficiency(els[i].Pt(), els[i].Eta(), pdg, year);
+
+    if(EFFMC > 0 && EFFData > 0)
+      SF = EFFData/EFFMC;
+    else
+      SF = 1;
+
+    SFErr = 0;
+    if(updown != 0){
+      EFFMCErr = m_LepSFTool.getMCSipError(els[i].Pt(), els[i].Eta(), pdg, year);
+      EFFDataErr = m_LepSFTool.getDataSipError(els[i].Pt(), els[i].Eta(), pdg, year);
+
+      if(EFFMC > 0 && EFFData > 0)
+	SFErr = updown * SF * sqrt( EFFMCErr*EFFMCErr/EFFMC/EFFMC + EFFDataErr*EFFDataErr/EFFData/EFFData );
+    }
+
+    SF += SFErr;
+    
+    if(FastSim){
+      double FSSF = m_LepSFTool.getSipFastSimSF(els[i].Pt(), els[i].Eta(), pdg, year);
+      if(FSSF > 0){
+	SF *= FSSF;
+	EFFMC /= FSSF;
+      }
+    }
+
+    // Evaluate cut
+    if(els[i].LepQual() != kBronze){
+      if(els[i].SIP3D() < 2.){
+	probMC   *= EFFMC;
+	probDATA *= SF*EFFMC;
+      } else {
+	probMC   *= EFFMC;
+	probDATA *= EFFMC/SF;
+      }
+    }
+  }
+
+  if(probMC <= 0. || probDATA <= 0.)
+    return 1.;
+
+  return probDATA/probMC;
+}
+
+template <>
+double AnalysisBase<SUSYNANOBase>::GetElVLIDSFWeight(const ParticleList& els, int updown){
+   if(IsData())
+    return 1.;
+
+  bool FastSim = IsFastSim();
+  
+  int year = 2016;
+  if(m_FileTag.find("17") != std::string::npos)
+    year = 2017;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+
+  int Nlep = els.size();
+  int pdg = 11;
+  double EFFMC, EFFData, SF;
+  double EFFMCErr, EFFDataErr, SFErr;
+
+  double probMC   = 1.;
+  double probDATA = 1.;
+  
+  for(int i = 0; i < Nlep; i++){
+    if(els[i].SourceID() > 0)
+      continue;
+    
+    EFFMC = m_LepSFTool.getMCVLIdEfficiency(els[i].Pt(), els[i].Eta(), pdg, year);
+    EFFData = m_LepSFTool.getDataVLIdEfficiency(els[i].Pt(), els[i].Eta(), pdg, year);
+
+    if(EFFMC > 0)
+      SF = EFFData/EFFMC;
+    else
+      SF = 1;
+
+    SFErr = 0;
+    if(updown != 0){
+      EFFMCErr = m_LepSFTool.getMCVLIdError(els[i].Pt(), els[i].Eta(), pdg, year);
+      EFFDataErr = m_LepSFTool.getDataVLIdError(els[i].Pt(), els[i].Eta(), pdg, year);
+
+      if(EFFMC > 0 && EFFData > 0)
+	SFErr = updown * SF * sqrt( EFFMCErr*EFFMCErr/EFFMC/EFFMC + EFFDataErr*EFFDataErr/EFFData/EFFData );
+    }
+
+    SF += SFErr;
+    
+    if(FastSim){
+      double FSSF = m_LepSFTool.getVLIdFastSimSF(els[i].Pt(), els[i].Eta(), pdg, year);
+      if(FSSF > 0){
+	SF *= FSSF;
+	EFFMC /= FSSF;
+      }
+    }
+
+    // apply VL SF to all leptons
+    probDATA *= SF;
+  }
+
+  if(probMC <= 0. || probDATA <= 0.)
+    return 1.;
+
+  return probDATA/probMC;
+}
+
+template <>
+double AnalysisBase<SUSYNANOBase>::GetMuIDSFWeight(const ParticleList& mus, int updown){
+   if(IsData())
+    return 1.;
+
+  bool FastSim = IsFastSim();
+  
+  int year = 2016;
+  if(m_FileTag.find("17") != std::string::npos)
+    year = 2017;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+
+  int Nlep = mus.size();
+  int pdg = 13;
+  double EFFMC, EFFData, SF;
+  double EFFMCErr, EFFDataErr, SFErr;
+
+  double probMC   = 1.;
+  double probDATA = 1.;
+  
+  for(int i = 0; i < Nlep; i++){
+    if(mus[i].SourceID() > 0)
+      continue;
+    
+    EFFMC = m_LepSFTool.getMCIdEfficiency(mus[i].Pt(), mus[i].Eta(), pdg, year);
+    EFFData = m_LepSFTool.getDataIdEfficiency(mus[i].Pt(), mus[i].Eta(), pdg, year);
+
+    if(EFFMC > 0 && EFFData > 0)
+      SF = EFFData/EFFMC;
+    else
+      SF = 1;
+
+    SFErr = 0;
+    if(updown != 0){
+      EFFMCErr = m_LepSFTool.getMCIdError(mus[i].Pt(), mus[i].Eta(), pdg, year);
+      EFFDataErr = m_LepSFTool.getDataIdError(mus[i].Pt(), mus[i].Eta(), pdg, year);
+
+      if(EFFMC > 0 && EFFData > 0)
+	SFErr = updown * SF * sqrt( EFFMCErr*EFFMCErr/EFFMC/EFFMC + EFFDataErr*EFFDataErr/EFFData/EFFData );
+    }
+
+    SF += SFErr;
+    
+    if(FastSim){
+      double FSSF = m_LepSFTool.getIdFastSimSF(mus[i].Pt(), mus[i].Eta(), pdg, year);
+      if(FSSF > 0){
+	SF *= FSSF;
+	EFFMC /= FSSF;
+      }
+    }
+
+    // Evaluate cut
+    if(mus[i].ParticleID() >= kMedium){
+      probMC   *= EFFMC;
+      probDATA *= SF*EFFMC;
+    } else {
+      probMC   *= EFFMC;
+      probDATA *= EFFMC/SF;
+    }
+  }
+
+  if(probMC <= 0. || probDATA <= 0.)
+    return 1.;
+
+  return probDATA/probMC;
+}
+
+template <>
+double AnalysisBase<SUSYNANOBase>::GetMuISOSFWeight(const ParticleList& mus, int updown){
+  if(IsData())
+    return 1.;
+
+  bool FastSim = IsFastSim();
+  
+  int year = 2016;
+  if(m_FileTag.find("17") != std::string::npos)
+    year = 2017;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+
+  int Nlep = mus.size();
+  int pdg = 13;
+  double EFFMC, EFFData, SF;
+  double EFFMCErr, EFFDataErr, SFErr;
+
+  double probMC   = 1.;
+  double probDATA = 1.;
+  
+  for(int i = 0; i < Nlep; i++){
+    if(mus[i].SourceID() > 0)
+      continue;
+    
+    EFFMC = m_LepSFTool.getMCIsoEfficiency(mus[i].Pt(), mus[i].Eta(), pdg, year);
+    EFFData = m_LepSFTool.getDataIsoEfficiency(mus[i].Pt(), mus[i].Eta(), pdg, year);
+
+    if(EFFMC > 0 && EFFData > 0)
+      SF = EFFData/EFFMC;
+    else
+      SF = 1;
+
+    SFErr = 0;
+    if(updown != 0){
+      EFFMCErr = m_LepSFTool.getMCIsoError(mus[i].Pt(), mus[i].Eta(), pdg, year);
+      EFFDataErr = m_LepSFTool.getDataIsoError(mus[i].Pt(), mus[i].Eta(), pdg, year);
+
+      if(EFFMC > 0 && EFFData > 0)
+	SFErr = updown * SF * sqrt( EFFMCErr*EFFMCErr/EFFMC/EFFMC + EFFDataErr*EFFDataErr/EFFData/EFFData );
+    }
+
+    SF += SFErr;
+    
+    if(FastSim){
+      double FSSF = m_LepSFTool.getIsoFastSimSF(mus[i].Pt(), mus[i].Eta(), pdg, year);
+      if(FSSF > 0){
+	SF *= FSSF;
+	EFFMC /= FSSF;
+      }
+    }
+
+    // Evaluate cut
+    if(mus[i].RelIso() < 4. && mus[i].MiniIso() < 4.){
+      probMC   *= EFFMC;
+      probDATA *= SF*EFFMC;
+    } else {
+      probMC   *= EFFMC;
+      probDATA *= EFFMC/SF;
+    }
+  }
+
+  if(probMC <= 0. || probDATA <= 0.)
+    return 1.;
+
+  return probDATA/probMC;
+}
+
+template <>
+double AnalysisBase<SUSYNANOBase>::GetMuSIPSFWeight(const ParticleList& mus, int updown){
+  if(IsData())
+    return 1.;
+
+  bool FastSim = IsFastSim();
+  
+  int year = 2016;
+  if(m_FileTag.find("17") != std::string::npos)
+    year = 2017;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+
+  int Nlep = mus.size();
+  int pdg = 13;
+  double EFFMC, EFFData, SF;
+  double EFFMCErr, EFFDataErr, SFErr;
+
+  double probMC   = 1.;
+  double probDATA = 1.;
+  
+  for(int i = 0; i < Nlep; i++){
+    if(mus[i].SourceID() > 0)
+      continue;
+    
+    EFFMC = m_LepSFTool.getMCSipEfficiency(mus[i].Pt(), mus[i].Eta(), pdg, year);
+    EFFData = m_LepSFTool.getDataSipEfficiency(mus[i].Pt(), mus[i].Eta(), pdg, year);
+
+    if(EFFMC > 0 && EFFData > 0)
+      SF = EFFData/EFFMC;
+    else
+      SF = 1;
+
+    SFErr = 0;
+    if(updown != 0){
+      EFFMCErr = m_LepSFTool.getMCSipError(mus[i].Pt(), mus[i].Eta(), pdg, year);
+      EFFDataErr = m_LepSFTool.getDataSipError(mus[i].Pt(), mus[i].Eta(), pdg, year);
+
+      if(EFFMC > 0 && EFFData > 0)
+	SFErr = updown * SF * sqrt( EFFMCErr*EFFMCErr/EFFMC/EFFMC + EFFDataErr*EFFDataErr/EFFData/EFFData );
+    }
+
+    SF += SFErr;
+    
+    if(FastSim){
+      double FSSF = m_LepSFTool.getSipFastSimSF(mus[i].Pt(), mus[i].Eta(), pdg, year);
+      if(FSSF > 0){
+	SF *= FSSF;
+	EFFMC /= FSSF;
+      }
+    }
+
+    // Evaluate cut
+    if(mus[i].LepQual() != kBronze){
+      if(mus[i].SIP3D() < 2.){
+	probMC   *= EFFMC;
+	probDATA *= SF*EFFMC;
+      } else {
+	probMC   *= EFFMC;
+	probDATA *= EFFMC/SF;
+      }
+    }
+  }
+
+  if(probMC <= 0. || probDATA <= 0.)
+    return 1.;
+
+  return probDATA/probMC;
+}
+
+template <>
+double AnalysisBase<SUSYNANOBase>::GetMuVLIDSFWeight(const ParticleList& mus, int updown){
+  if(IsData())
+    return 1.;
+
+  bool FastSim = IsFastSim();
+  
+  int year = 2016;
+  if(m_FileTag.find("17") != std::string::npos)
+    year = 2017;
+  if(m_FileTag.find("18") != std::string::npos)
+    year = 2018;
+
+  int Nlep = mus.size();
+  int pdg = 13;
+  double EFFMC, EFFData, SF;
+  double EFFMCErr, EFFDataErr, SFErr;
+
+  double probMC   = 1.;
+  double probDATA = 1.;
+  
+  for(int i = 0; i < Nlep; i++){
+    if(mus[i].SourceID() > 0)
+      continue;
+    
+    EFFMC = m_LepSFTool.getMCVLIdEfficiency(mus[i].Pt(), mus[i].Eta(), pdg, year);
+    EFFData = m_LepSFTool.getDataVLIdEfficiency(mus[i].Pt(), mus[i].Eta(), pdg, year);
+
+    if(EFFMC > 0)
+      SF = EFFData/EFFMC;
+    else
+      SF = 1;
+
+    SFErr = 0;
+    if(updown != 0){
+      EFFMCErr = m_LepSFTool.getMCVLIdError(mus[i].Pt(), mus[i].Eta(), pdg, year);
+      EFFDataErr = m_LepSFTool.getDataVLIdError(mus[i].Pt(), mus[i].Eta(), pdg, year);
+
+      if(EFFMC > 0 && EFFData > 0)
+	SFErr = updown * SF * sqrt( EFFMCErr*EFFMCErr/EFFMC/EFFMC + EFFDataErr*EFFDataErr/EFFData/EFFData );
+    }
+
+    SF += SFErr;
+    
+    if(FastSim){
+      double FSSF = m_LepSFTool.getVLIdFastSimSF(mus[i].Pt(), mus[i].Eta(), pdg, year);
+      if(FSSF > 0){
+	SF *= FSSF;
+	EFFMC /= FSSF;
+      }
+    }
+
+    // apply VL SF to all leptons
+    probDATA *= SF;
   }
 
   if(probMC <= 0. || probDATA <= 0.)
@@ -1535,14 +2122,13 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetGenJets(){
     if(mass < 0.)
       mass = 0.;
     jet.SetPtEtaPhiM(GenJet_pt[i], GenJet_eta[i],
-                    GenJet_phi[i], mass);
+		     GenJet_phi[i], mass);
     //jet.SetPDGID( GenPart_pdgId[i] );
 
     list.push_back(jet);
   }
   return list;
 }
-
 
 template <>
 ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET, int id){
@@ -1561,13 +2147,17 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET, int id){
   bool DO_JES = false;
   if(m_SysTool.JESSystematics() == CurrentSystematic())
     DO_JES = true;
+
+  bool DO_JER = false;
+  if(m_SysTool.JERSystematics() == CurrentSystematic())
+    DO_JER = true;
   
   for(int i = 0; i < Njet; i++){
     bool failID = false;
-    if(Jet_pt[i] < 15. || fabs(Jet_eta[i]) > 5.)
-      continue;
-    if(Jet_jetId[i] < id)
-      continue;
+    //if(Jet_pt[i] < 15. || fabs(Jet_eta[i]) > 5.)
+    //  continue;
+    //if(Jet_jetId[i] < id)
+    //  continue;
     
     Particle jet;
     float mass = Jet_mass[i];
@@ -1581,8 +2171,8 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET, int id){
 		     Jet_phi[i], mass);
     
     if(DO_JES){
-      double uncer = m_JMETool.GetFactor(year, CurrentSystematic().Label(),
-					 Jet_pt[i], Jet_eta[i]);
+      double uncer = m_JMETool.GetJESFactor(year, CurrentSystematic().Label(),
+					    Jet_pt[i], Jet_eta[i]);
       
       deltaMET -= delta*uncer*jet.Vect();
       jet.SetPtEtaPhiM((1.+delta*uncer)*jet.Pt(),
@@ -1592,15 +2182,75 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET, int id){
     
     // recalibrate jets
     // double raw = 1. - Jet_rawFactor[i];
-    // double L1 = m_JMETool.GetFactor(year, "L1FastJet",
+    // double L1 = m_JMETool.GetJESFactor(year, "L1FastJet",
     // 				     raw*Jet_pt[i], Jet_eta[i],
     // 				     Jet_area[i], fixedGridRhoFastjetAll);
-    // double L2 = m_JMETool.GetFactor(year, "L2Relative",
+    // double L2 = m_JMETool.GetJESFactor(year, "L2Relative",
     // 				     raw*L1*Jet_pt[i], Jet_eta[i],
     // 				     Jet_area[i], fixedGridRhoFastjetAll);
 
     // cout << raw << " " << L1 << " " << L2 << " " << raw*L1*L2 << endl;
 
+    if(!IsData()){
+
+      // JER recipe based on https://github.com/cms-nanoAOD/nanoAOD-tools/blob/master/python/postprocessing/modules/jme/jetmetUncertainties.py
+     
+      double smearFactor = 1.;
+      double JER = m_JMETool.GetJERFactor(year, Jet_pt[i], Jet_eta[i], fixedGridRhoFastjetAll); // using this for rho based on: https://github.com/cms-nanoAOD/nanoAOD-tools/blob/0127d46a973e894d97e9a16bd3939f421b2b689e/python/postprocessing/modules/jme/jetmetUncertainties.py#L49
+      double SF = m_JMETool.GetJERSFFactor(year,Jet_eta[i],0);
+
+      if(DO_JER)
+        SF = m_JMETool.GetJERSFFactor(year,Jet_eta[i],delta);
+       
+      //cout << SF << " " << JER << " " << Jet_pt[i] << " " << Jet_eta[i] << " " << Njet << " " << nGenJet <<  endl;
+      
+      // check for gen jet matching:
+      bool gen_match = false;
+      Particle genJet;
+      genJet.SetPtEtaPhiM(0.,0.,0.,0.);
+      
+      for(int g = 0; g < nGenJet; g++){
+	genJet.SetPtEtaPhiM(GenJet_pt[g],GenJet_eta[g],GenJet_phi[g],GenJet_mass[g]);
+        if(fabs(Jet_pt[i] - GenJet_pt[g]) < 3.*JER*Jet_pt[i] && jet.DeltaR(genJet) < 0.2){
+          gen_match = true;
+          break;
+        }
+      }
+
+      // 3 different cases to consider
+      // Case 1: we have a "good" gen level jet matched to reco jet
+      if(gen_match){
+        double dPt = jet.Pt() - genJet.Pt();
+        smearFactor = 1. + (SF - 1.)*dPt/jet.Pt();
+      }
+
+      // Case 2: Smear jet pT using a random Gaussian variation
+      else if(!gen_match && SF > 1.){
+        TRandom3 rand3;
+        rand3.SetSeed(event);
+        double rand_val = rand3.Gaus(0.,JER);
+        smearFactor = 1.+rand_val*sqrt(SF*SF-1.);
+      }
+
+      // Case 3: Resolution in data is better than res in sim so do nothing
+      else
+        smearFactor = 1.;
+      
+      if(smearFactor*jet.E() < 1.e-2)
+        smearFactor = 1.e-2/jet.E();
+      
+      Particle oldJet = jet;
+      jet.SetPtEtaPhiM(jet.Pt()*smearFactor,jet.Eta(),jet.Phi(),jet.M()*smearFactor);
+      //deltaMET += (oldJet-jet).Vect(); //should be default?
+      deltaMET -= (oldJet-jet).Vect();
+
+    } //end JER
+
+    if(Jet_pt[i] < 15. || fabs(Jet_eta[i]) > 5.)
+      continue;
+    if(Jet_jetId[i] < id)
+      continue;
+    
     if(Jet_jetId[i] >= 3)
       jet.SetParticleID(kTight);
     else if(Jet_jetId[i] >= 2) 
@@ -2134,8 +2784,17 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetElectrons(){
 	
       }
     } // end lepton id
-    
- 
+
+    // Lepton quality
+    if(lep.ParticleID() >= kMedium &&
+       (lep.RelIso() < 4. && lep.MiniIso() < 4.)){
+      if(lep.SIP3D() < 2.)
+	lep.SetLepQual(kGold);
+      else
+	lep.SetLepQual(kSilver);
+    } else {
+      lep.SetLepQual(kBronze);
+    }
 
     list.push_back(lep);
   }
@@ -2201,6 +2860,17 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetMuons(){
       }
     }
 
+    // Lepton quality
+    if(lep.ParticleID() >= kMedium &&
+       (lep.RelIso() < 4. && lep.MiniIso() < 4.)){
+      if(lep.SIP3D() < 2.)
+	lep.SetLepQual(kGold);
+      else
+	lep.SetLepQual(kSilver);
+    } else {
+      lep.SetLepQual(kBronze);
+    }
+    
     list.push_back(lep);
   }
 

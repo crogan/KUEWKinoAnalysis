@@ -80,7 +80,7 @@ if ANfit:
 
 print 'out directory:',odir
 
-procs = ['ST','norm_QCD','DB','TB','scale_ZDY','ttbar','Wjets']
+procs = ['ST','norm_QCD','DB','TB','scale_ZDY','scale_DB','ttbar','Wjets']
 if args.SFs:
 	args.sys = procs
 
@@ -310,12 +310,19 @@ for i in range(len(names)):
 	match = syst_group[i][0]
 	x_labels = []
 	diffs = []
-#	print "matching for:",match
+	print "matching for:",match
 	for j in range(len(names[i])):
-#		print names[i][j][0],names[i][j][1]
+		print names[i][j][0],names[i][j][1]
 		check = names[i][j][0].replace(match,"")
 		check = check.replace("other","")
-#		print "match:",match, "check:", check
+		print "match:",match, "check:", check
+		if "Wjets1L" in match:
+			check = "1L"+check
+		if "Wjets2L" in match:
+			check = "2L"+check
+		if "Wjets3L" in match:
+			check = "3L"+check
+		print("new check", check)
 		sym = '#_'+names[i][j][1]
 		sym = sym.replace("_","")
 		check = check.replace("scale","")
@@ -323,6 +330,13 @@ for i in range(len(names)):
 		sub = "_{#scale[0.8]{"
 		lep = "lep"
 		jet = "jet"
+#		if "Wjets1L" in match:
+#                       sub +=lep
+#                if "Wjets2L" in match:
+#                        sub +=lep
+#                if "Wjets3L" in match:
+#                        sub +=lep
+
 		#check for lepton split
 		if re.search('[0-9]L_',check):
 			lep = re.findall('[0-9]L_',check)[0][:-1]
@@ -450,22 +464,39 @@ for i in range(len(syst_group)):
 	if "Fake_LF_SS" in syst_group[i][0]:
 		leg_label = "SS charge flip"
 	leg_label = leg_label.replace("_"," ")
+	print("leglabel: ", leg_label)
 	if "PTISR" in syst_group[i][0]:
 		leg_label = leg_label.replace("PTISR",r"p_{T}^{ISR}")
 	elif "gamT" in syst_group[i][0]:
 		leg_label = leg_label.replace("gamT",r"#gamma_{#perp}")
-	if "Wjets" in syst_group[i][0]:
-		leg_label = leg_label.replace("Wjets","W + jets and Z / #gamma * + jets")
-	if "ZDY" in syst_group[i][0]:
-		leg_label = leg_label.replace("ZDY", "Z / #gamma * + jets")
+
+	if "WjetsDY" in syst_group[i][0]:
+		leg_label = "W & Z / #gamma * (0L)"
+
+		#leg_label = leg_label.replace("Wjets","W + jets")
+	if "Wjets1" in syst_group[i][0]:
+		leg_label = "W + jets (1L)"
+	if "Wjets2" in syst_group[i][0]:
+		leg_label = "W + jets (2L)"
+	if "Wjets3" in syst_group[i][0]:
+		leg_label = "W + jets (3L)"
+//commenting merge conflict
+//	if "Wjets" in syst_group[i][0]:
+//		leg_label = leg_label.replace("Wjets","W + jets and Z / #gamma * + jets")
+//	if "ZDY" in syst_group[i][0]:
+//		leg_label = leg_label.replace("ZDY", "Z / #gamma * + jets")
 	if "ttbar" in syst_group[i][0]:
 		leg_label = leg_label.replace("ttbar",r"t#bar{t} + jets")
 	if "scale_DB" in syst_group[i][0]:
-		leg_label = leg_label.replace("scale_DB","di-bosons")
+		leg_label = "Scale Di-boson"
+	if "scale_ZDY" in syst_group[i][0]:
+		leg_label = "Scale Z / #gamma * + jets"
+	if "norm_ZDYDB" in syst_group[i][0]:
+		leg_label = "Di-boson & Z/ #gamma *"
 	if "TB" in syst_group[i][0]:
 		leg_label = leg_label.replace("tri-bosons")
-	if "norm_QCD" in syst_group[i][0]:
-		leg_label = leg_label.replace("norm_QCD","QCD multi-jets")
+	if "QCD" in syst_group[i][0]:
+		leg_label = "QCD multi-jets"#leg_label.replace("norm QCD","QCD multi-jets")
 	if "ST" in syst_group[i][0]:
 		leg_label = leg_label.replace("ST","single top")
 	if "elf" in syst_group[i][0]:

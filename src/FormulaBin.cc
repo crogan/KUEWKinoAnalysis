@@ -89,6 +89,18 @@ double FormulaBin::SF(double pT, double A, double rho) const {
   return m_formula->getVal();
 }
 
+double FormulaBin::JERSF(double pT) const {
+  if(m_Nvar < 1 || !m_formula){
+    return m_val[0];
+  }
+  for(int i = 0; i < m_Nparam; i++){
+    m_param[i]->setVal(m_val[i]);
+  }
+
+  m_X[0]->setVal(pT);
+  return m_formula->getVal();
+}
+
 FormulaBins::FormulaBins(){
   m_Nbins = 0;
 
@@ -111,6 +123,16 @@ double FormulaBins::SF(double pT, double A, double rho) const {
   for(int i = 0; i < m_Nbins; i++){
     if(pT < m_Bins[i]->Max()){
       return m_Bins[i]->SF(pT, A, rho);
+    }
+  }
+
+  return 1;
+}
+
+double FormulaBins::JERSF(double pT, double rho) const {
+  for(int i = 0; i < m_Nbins; i++){
+    if(rho < m_Bins[i]->Max()){
+      return m_Bins[i]->SF(pT);
     }
   }
 
@@ -259,6 +281,15 @@ double FormulaBinsBins::SF(double Eta, double pT, double A, double rho) const {
       return m_Bins[i]->SF(pT, A, rho);
   }
 
+  return 1;
+}
+
+double FormulaBinsBins::JERSF(double Eta, double pT, double rho) const {
+  for(int i = 0; i < m_Nbins; i++){
+    if(Eta < m_Max[i])
+      return m_Bins[i]->JERSF(pT, rho);
+  }
+  
   return 1;
 }
 

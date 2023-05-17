@@ -20,6 +20,7 @@ public:
 
   // rho and area for JEC
   double SF(double pT, double A = 0, double rho = 0) const;
+  double JERSF(double pT) const;
 
   double Min() const { return m_Min; }
   double Max() const { return m_Max; }
@@ -54,6 +55,7 @@ public:
   }
 
   double SF(double pT, double A = 0, double rho = 0) const;
+  double JERSF(double pT, double rho) const;
 
   void AddBin(double min, double max, const std::string& formula, int Nvar = 1, double const_val = 0) const;
   void AddBin(double min, double max, const vector<double>& vals) const;
@@ -78,6 +80,7 @@ public:
   virtual ~FormulaBinsBins();
 
   double SF(double Eta, double pT, double A = 0, double rho = 0) const;
+  double JERSF(double Eta, double pT, double rho) const;
 
   const FormulaBins& AddBin(double min, double max);
   
