@@ -92,6 +92,7 @@ samples/NANO/Summer16_102X/WplusH_HToBB_WToLNu_M125_13TeV_powheg_pythia8.txt
 samples/NANO/Summer16_102X/ZH_HToBB_ZToLL_M125_13TeV_powheg_pythia8.txt
 samples/NANO/Summer16_102X/ZH_HToBB_ZToNuNu_M125_13TeV_powheg_pythia8.txt
 samples/NANO/Summer16_102X/ZJetsToNuNu_HT-100To200_13TeV-madgraph.txt
+samples/NANO/Summer16_102X/TTWW_TuneCUETP8M2T4_13TeV-madgraph-pythia8.txt
 samples/NANO/Summer16_102X/ZJetsToNuNu_HT-1200To2500_13TeV-madgraph.txt
 samples/NANO/Summer16_102X/ZJetsToNuNu_HT-200To400_13TeV-madgraph.txt
 samples/NANO/Summer16_102X/ZJetsToNuNu_HT-2500ToInf_13TeV-madgraph.txt
