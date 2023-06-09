@@ -675,7 +675,7 @@ else cout << "Nominal signal cross section: " << xsec_norm << endl;
 		out << "combineTool.py -M T2W -i datacard.txt -o ws.root -m " << m << " --channel-masks \n";
 		out << "combine ws.root -M " << chanMaskCmd << " -m " << m << " --setParameters ";
 		for(int i = 0; i < superBins.size(); i++)		
-			out << "mask_"<< superBins[i] << "=1";
+			out << "mask_"<< superBins[i] << "=1 ";
 		out.close();
 	}
     }
