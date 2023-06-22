@@ -269,7 +269,7 @@ void FitConfiguration::AddSVSys(ch::CombineHarvester& cb, ProcessList& processes
   cb.SetFlag("filters-use-regex", false);
 }
 
-void FitConfiguration::Add0LPTISRSys(ch::CombineHarvester& cb, ProcessList& processes, string label){
+void FitConfiguration::Add0LPTISRSys(ch::CombineHarvester& cb, ProcessList& processes, string label, bool applyToSig){
   cb.SetFlag("filters-use-regex", true);
 
   cb.cp().process(processes.GetProcesses()).bin(VS().a(".*0L.*.*0j.*S_.*.*PTISR1.*"))
@@ -290,11 +290,32 @@ void FitConfiguration::Add0LPTISRSys(ch::CombineHarvester& cb, ProcessList& proc
   cb.cp().process(processes.GetProcesses()).bin(VS().a(".*0L.*.*5j.*S_.*.*PTISR1.*"))
     .AddSyst(cb, label+"PTISR_0L_5jS", "lnN", SystMap<>::init(1.20));
 
+  if(applyToSig){
+	cb.cp().signals().bin(VS().a(".*0L.*.*0j.*S_.*.*PTISR1.*"))
+    .AddSyst(cb, label+"PTISR_0L_0jS", "lnN", SystMap<>::init(1.20));
+
+	cb.cp().signals().bin(VS().a(".*0L.*.*1j.*S_.*.*PTISR1.*"))
+    .AddSyst(cb, label+"PTISR_0L_1jS", "lnN", SystMap<>::init(1.20));
+
+  	cb.cp().signals().bin(VS().a(".*0L.*.*2j.*S_.*.*PTISR1.*"))
+    .AddSyst(cb, label+"PTISR_0L_2jS", "lnN", SystMap<>::init(1.20));
+
+  	cb.cp().signals().bin(VS().a(".*0L.*.*3j.*S_.*.*PTISR1.*"))
+    .AddSyst(cb, label+"PTISR_0L_3jS", "lnN", SystMap<>::init(1.20));
+  
+  	cb.cp().signals().bin(VS().a(".*0L.*.*4j.*S_.*.*PTISR1.*"))
+    .AddSyst(cb, label+"PTISR_0L_4jS", "lnN", SystMap<>::init(1.20));
+  
+  	cb.cp().signals().bin(VS().a(".*0L.*.*5j.*S_.*.*PTISR1.*"))
+    .AddSyst(cb, label+"PTISR_0L_5jS", "lnN", SystMap<>::init(1.20));
+
+  }
+  
 
   cb.SetFlag("filters-use-regex", false);
 }
 
-void FitConfiguration::Add1LPTISRSys(ch::CombineHarvester& cb, ProcessList& processes, string label){
+void FitConfiguration::Add1LPTISRSys(ch::CombineHarvester& cb, ProcessList& processes, string label, bool applyToSig){
   cb.SetFlag("filters-use-regex", true);
 
   cb.cp().process(processes.GetProcesses()).bin(VS().a(".*1L.*.*0j.*S_.*.*PTISR1.*"))
@@ -313,10 +334,55 @@ void FitConfiguration::Add1LPTISRSys(ch::CombineHarvester& cb, ProcessList& proc
     .AddSyst(cb, label+"PTISR_1L_4jS", "lnN", SystMap<>::init(1.20));
 
 
+  if(applyToSig){
+	cb.cp().signals().bin(VS().a(".*1L.*.*0j.*S_.*.*PTISR1.*"))
+    .AddSyst(cb, label+"PTISR_1L_0jS", "lnN", SystMap<>::init(1.20));
+
+  	cb.cp().signals().bin(VS().a(".*1L.*.*1j.*S_.*.*PTISR1.*"))
+    .AddSyst(cb, label+"PTISR_1L_1jS", "lnN", SystMap<>::init(1.20));
+
+ 	cb.cp().signals().bin(VS().a(".*1L.*.*2j.*S_.*.*PTISR1.*"))
+    .AddSyst(cb, label+"PTISR_1L_2jS", "lnN", SystMap<>::init(1.20));
+
+  	cb.cp().signals().bin(VS().a(".*1L.*.*3j.*S_.*.*PTISR1.*"))
+    .AddSyst(cb, label+"PTISR_1L_3jS", "lnN", SystMap<>::init(1.20));
+
+  	cb.cp().signals().bin(VS().a(".*1L.*.*4j.*S_.*.*PTISR1.*"))
+    .AddSyst(cb, label+"PTISR_1L_4jS", "lnN", SystMap<>::init(1.20));
+ 
+  }
+
+  cb.SetFlag("filters-use-regex", false);
+}
+void FitConfiguration::Add2LPTISRSys(ch::CombineHarvester& cb, ProcessList& processes, string label, bool applyToSig){
+  cb.SetFlag("filters-use-regex", true);
+
+  cb.cp().process(processes.GetProcesses()).bin(VS().a(".*2L.*.*0j.*S_.*.*PTISR1.*"))
+    .AddSyst(cb, label+"PTISR_2L_0jS", "lnN", SystMap<>::init(1.20));
+
+  cb.cp().process(processes.GetProcesses()).bin(VS().a(".*2L.*.*1j.*S_.*.*PTISR1.*"))
+    .AddSyst(cb, label+"PTISR_2L_1jS", "lnN", SystMap<>::init(1.20));
+
+  cb.cp().process(processes.GetProcesses()).bin(VS().a(".*2L.*.*2j.*S_.*.*PTISR1.*"))
+    .AddSyst(cb, label+"PTISR_2L_2jS", "lnN", SystMap<>::init(1.20));
+
+  if(applyToSig){
+	cb.cp().signals().bin(VS().a(".*2L.*.*0j.*S_.*.*PTISR1.*"))
+    .AddSyst(cb, label+"PTISR_2L_0jS", "lnN", SystMap<>::init(1.20));
+
+  	cb.cp().signals().bin(VS().a(".*2L.*.*1j.*S_.*.*PTISR1.*"))
+    .AddSyst(cb, label+"PTISR_2L_1jS", "lnN", SystMap<>::init(1.20));
+
+ 	cb.cp().signals().bin(VS().a(".*2L.*.*2j.*S_.*.*PTISR1.*"))
+    .AddSyst(cb, label+"PTISR_2L_2jS", "lnN", SystMap<>::init(1.20));
+
+  }
+
   cb.SetFlag("filters-use-regex", false);
 }
 
-void FitConfiguration::AddCommongamTSys(ch::CombineHarvester& cb, ProcessList& processes){
+
+void FitConfiguration::AddCommongamTSys(ch::CombineHarvester& cb, ProcessList& processes,  bool applyToSig){
   cb.SetFlag("filters-use-regex", true);
 
   cb.cp().backgrounds().bin(VS().a(".*2L.*.*0j.*S_.*.*gamT1.*"))
@@ -328,10 +394,21 @@ void FitConfiguration::AddCommongamTSys(ch::CombineHarvester& cb, ProcessList& p
   cb.cp().backgrounds().bin(VS().a(".*2L.*.*2j.*S_.*.*gamT1.*"))
     .AddSyst(cb, "gamT_2L_2jS", "lnN", SystMap<>::init(1.20));
 
+  if(applyToSig){
+    cb.cp().signals().bin(VS().a(".*2L.*.*0j.*S_.*.*gamT1.*"))
+    .AddSyst(cb, "gamT_2L_0jS", "lnN", SystMap<>::init(1.20));
+
+    cb.cp().signals().bin(VS().a(".*2L.*.*1j.*S_.*.*gamT1.*"))
+    .AddSyst(cb, "gamT_2L_1jS", "lnN", SystMap<>::init(1.20));
+
+    cb.cp().signals().bin(VS().a(".*2L.*.*2j.*S_.*.*gamT1.*"))
+    .AddSyst(cb, "gamT_2L_2jS", "lnN", SystMap<>::init(1.20));
+  }
+
   cb.SetFlag("filters-use-regex", false);
 }
 
-void FitConfiguration::Add0LgamTSys(ch::CombineHarvester& cb, ProcessList& processes, string label){
+void FitConfiguration::Add0LgamTSys(ch::CombineHarvester& cb, ProcessList& processes, string label, bool applyToSig){
   cb.SetFlag("filters-use-regex", true);
 
   cb.cp().process(processes.GetProcesses()).bin(VS().a(".*0L.*.*2j.*S_.*.*gamT1.*"))
@@ -345,12 +422,26 @@ void FitConfiguration::Add0LgamTSys(ch::CombineHarvester& cb, ProcessList& proce
 
   cb.cp().process(processes.GetProcesses()).bin(VS().a(".*0L.*.*5j.*S_.*.*gamT1.*"))
     .AddSyst(cb, label+"gamT_0L_5jS", "lnN", SystMap<>::init(1.20));
+ 
+  if(applyToSig){
+    cb.cp().signals().bin(VS().a(".*0L.*.*2j.*S_.*.*gamT1.*"))
+    .AddSyst(cb, label+"gamT_0L_2jS", "lnN", SystMap<>::init(1.20));
+
+    cb.cp().signals().bin(VS().a(".*0L.*.*3j.*S_.*.*gamT1.*"))
+    .AddSyst(cb, label+"gamT_0L_3jS", "lnN", SystMap<>::init(1.20));
+
+    cb.cp().signals().bin(VS().a(".*0L.*.*4j.*S_.*.*gamT1.*"))
+    .AddSyst(cb, label+"gamT_0L_4jS", "lnN", SystMap<>::init(1.20));
+
+    cb.cp().signals().bin(VS().a(".*0L.*.*5j.*S_.*.*gamT1.*"))
+    .AddSyst(cb, label+"gamT_0L_5jS", "lnN", SystMap<>::init(1.20));	
+  }
 
 
   cb.SetFlag("filters-use-regex", false);
 }
 
-void FitConfiguration::Add1LgamTSys(ch::CombineHarvester& cb, ProcessList& processes, string label){
+void FitConfiguration::Add1LgamTSys(ch::CombineHarvester& cb, ProcessList& processes, string label, bool applyToSig){
   cb.SetFlag("filters-use-regex", true);
 
   cb.cp().process(processes.GetProcesses()).bin(VS().a(".*1L.*.*1j.*S_.*.*gamT1.*"))
@@ -364,6 +455,20 @@ void FitConfiguration::Add1LgamTSys(ch::CombineHarvester& cb, ProcessList& proce
 
   cb.cp().process(processes.GetProcesses()).bin(VS().a(".*1L.*.*4j.*S_.*.*gamT1.*"))
     .AddSyst(cb, label+"gamT_1L_4jS", "lnN", SystMap<>::init(1.20));
+
+  if(applyToSig){
+	cb.cp().signals().bin(VS().a(".*1L.*.*1j.*S_.*.*gamT1.*"))
+    .AddSyst(cb, label+"gamT_1L_1jS", "lnN", SystMap<>::init(1.20));
+
+  	cb.cp().signals().bin(VS().a(".*1L.*.*2j.*S_.*.*gamT1.*"))
+    .AddSyst(cb, label+"gamT_1L_2jS", "lnN", SystMap<>::init(1.20));
+
+  	cb.cp().signals().bin(VS().a(".*1L.*.*3j.*S_.*.*gamT1.*"))
+    .AddSyst(cb, label+"gamT_1L_3jS", "lnN", SystMap<>::init(1.20));
+
+  	cb.cp().signals().bin(VS().a(".*1L.*.*4j.*S_.*.*gamT1.*"))
+    .AddSyst(cb, label+"gamT_1L_4jS", "lnN", SystMap<>::init(1.20));
+  }
 
 
   cb.SetFlag("filters-use-regex", false);
@@ -501,7 +606,7 @@ void FitConfiguration::initSystDictTtbar( SystDict& sd){
 //	std::cout<<"init ttbar end"<<std::endl;
 	
 }
-void FitConfiguration::AddNormHierarchy( SystDict& sd, VS& proc, ch::CombineHarvester& cb, ProcessList& processes){
+void FitConfiguration::AddNormHierarchy( SystDict& sd, VS& proc, ch::CombineHarvester& cb, ProcessList& processes, bool applyToSig){
 	cb.SetFlag("filters-use-regex", true);
 	//create standard string mapping
 	std::map<int, string> Lmap;
@@ -565,6 +670,9 @@ void FitConfiguration::AddNormHierarchy( SystDict& sd, VS& proc, ch::CombineHarv
 			paramInit = 1.2;
 		}
 		cb.cp().process(plist.GetProcesses()).bin(VS(systRegex)).AddSyst(cb, s.first , paramType , SystMap<>::init(paramInit));
+		if(applyToSig){
+			cb.cp().signals().bin(VS(systRegex)).AddSyst(cb, s.first , paramType , SystMap<>::init(paramInit));
+		}	
 			
 		systRegex.clear();
 	}

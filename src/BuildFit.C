@@ -266,8 +266,12 @@ map<string,VC> catBins;
   
   // prepare processes
   ProcessList signals = processes.Filter(kSig);
-
+   std:cout<<"PLIST\n";
+  signals.Print();
   ProcessList backgrounds = processes.Filter(kBkg); 
+  
+  ProcessList splusb = signals;
+  splusb += backgrounds;
 
   // prepare channels/categories
   map<string,CategoryList> chanMap;
@@ -398,6 +402,12 @@ cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
   ProcessList bkg_noQCD = backgrounds.Remove("QCD");
   ProcessList Top_only = backgrounds.FilterOR(top);
   ProcessList QCD_only = backgrounds.Filter("QCD");
+
+  //didint work
+  //ProcessList bkg_noQCD_sig = bkg_noQCD;
+  //bkg_noQCD_sig  += signals;
+  ProcessList all_noQCD = processes.Filter("QCD");
+
   //CONFIG.AddBJetSys(cb, backgrounds, "");
   //CONFIG.AddPTISRSys(cb, backgrounds, "");
   //CONFIG.AddgamTSys(cb, backgrounds, "");
@@ -407,14 +417,25 @@ cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
   CONFIG.Add1LBJetSys(cb, bkg_noTop, "other_");
   CONFIG.Add1LBJetSys(cb, Top_only, "top_");
 
-  CONFIG.Add0LPTISRSys(cb, bkg_noQCD, "other_");
+  //try adding signals to ptisr systematics
+  bool applyPTISRToSig=true;
+  std::cout<<"Applying PTISR Systematics to Signal: "<< applyPTISRToSig <<"\n";
+  CONFIG.Add0LPTISRSys(cb, bkg_noQCD, "other_",applyPTISRToSig);
   CONFIG.Add0LPTISRSys(cb, QCD_only, "QCD_");
-  CONFIG.Add1LPTISRSys(cb, backgrounds, "");
+  CONFIG.Add1LPTISRSys(cb, backgrounds, "",applyPTISRToSig);
+  CONFIG.Add2LPTISRSys(cb, backgrounds, "",applyPTISRToSig);
+  
+//  CONFIG.Add0LPTISRSys(cb, all_noQCD , "other_");
+//  CONFIG.Add0LPTISRSys(cb, QCD_only, "QCD_");
+//  CONFIG.Add1LPTISRSys(cb, splusb, "");
+//  CONFIG.Add2LPTISRSys(cb, splusb, "");
 
-  CONFIG.Add0LgamTSys(cb, bkg_noQCD, "other_");
+  bool applyGamTToSig=true;
+  std::cout<<"Applying gamT Systematics to Signal: "<< applyGamTToSig <<"\n";
+  CONFIG.Add0LgamTSys(cb, bkg_noQCD, "other_",applyGamTToSig);
   CONFIG.Add0LgamTSys(cb, QCD_only, "QCD_");
-  CONFIG.Add1LgamTSys(cb, backgrounds, "");
-  CONFIG.AddCommongamTSys(cb, backgrounds);
+  CONFIG.Add1LgamTSys(cb, backgrounds, "",applyGamTToSig);
+  CONFIG.AddCommongamTSys(cb, backgrounds,applyGamTToSig);
 
   //CONFIG.AddLeptonQualityNormSys(cb, processes);
   //CONFIG.AddSJetLeptonQualityNormSys(cb, processes);
@@ -427,11 +448,14 @@ cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
   WjetsDY0L += "ZDY";
   SystDict smW;
   SystDict smW0L;
+
+  bool applyWjetsToSig = false;
+  std::cout<<"Applying Wjets Systematics to Signal: "<< applyWjetsToSig <<"\n";
   CONFIG.initSystDictW(smW);
-  CONFIG.AddNormHierarchy( smW, Wjets, cb,processes) ;
+  CONFIG.AddNormHierarchy( smW, Wjets, cb,processes, applyWjetsToSig) ;
 
   CONFIG.initSystDictW0L(smW0L);
-  CONFIG.AddNormHierarchy( smW0L, WjetsDY0L, cb, processes);
+  CONFIG.AddNormHierarchy( smW0L, WjetsDY0L, cb, processes, applyWjetsToSig);
 
 //   CONFIG.AddSJetNormSys("Wjets", Wjets, cb, processes);
 
@@ -441,8 +465,10 @@ cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
   ttbar += "ttbar";
   SystDict smtt;
  // ttbar += "ST";
+  bool applyTtbarToSig = true;
+  std::cout<<"Applying ttbar Systematics to Signal: "<< applyTtbarToSig <<"\n";
    CONFIG.initSystDictTtbar(smtt);
-   CONFIG.AddNormHierarchy( smtt, ttbar, cb, processes) ;
+   CONFIG.AddNormHierarchy( smtt, ttbar, cb, processes, applyTtbarToSig ) ;
 //   CONFIG.AddSJetNormSys("ttbar", ttbar, cb, processes);
 
   VS QCD;
@@ -485,8 +511,8 @@ DB += "DB";
 CONFIG.AddSJetNormSys("DB",DB,cb, processes);
 */
 
-
-  //cb.PrintSysts();
+///PRINT TABLE OF ALL SYSTS AND MAP
+//  cb.PrintSysts();
 
  using ch::syst::SystMap;
   using ch::syst::era;
