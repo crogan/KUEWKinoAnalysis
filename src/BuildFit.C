@@ -18,6 +18,9 @@
 
 using namespace std;
 
+vector<string> superBins = {"Ch0L_0_0jge2svS_ge1jISR_PTISR0_gamT0_SVeta0","Ch0L_0_4j1bS_ge1j0bISR_PTISR1_gamT0","Ch0L_0_4j1bS_ge1j0bISR_PTISR1_gamT1","Ch0L_0_4jge2bS_ge1jISR_PTISR1_gamT0","Ch0L_0_4jge2bS_ge1jISR_PTISR1_gamT1","Ch0L_0_ge5j1bS_ge1j0bISR_PTISR1_gamT0","Ch0L_0_ge5jge2bS_ge1jISR_PTISR1_gamT0","Ch1L_lm_gold_0jge1svS_ge1jISR_PTISR0_gamT0_SVeta0","Ch1L_lpm_gold_1jge1svS_ge1jISR_PTISR0_gamT0_SVeta0","Ch1L_lpm_gold_2j1bS_ge1j0bISR_PTISR1_gamT1","Ch1L_lpm_gold_2j2bS_ge1jISR_PTISR1_gamT1","Ch1L_lpm_gold_3j1bS_ge1j0bISR_PTISR1_gamT1","Ch1L_lpm_gold_3jge2bS_ge1jISR_PTISR1_gamT1","Ch1L_lpm_gold_ge4j1bS_ge1j0bISR_PTISR1_gamT1","Ch1L_lpm_gold_ge4jge2bS_ge1jISR_PTISR1_gamT1","Ch1L_mum_gold_0j0svS_ge1j0bISR_PTISR1","Ch2L_OSelel_gold_0j0svS_ge1j0bISR_PTISR1_gamT0","Ch2L_OSelel_gold_0j0svS_ge1j0bISR_PTISR1_gamT1","Ch2L_OSelmu_gold_0j0svS_ge1j0bISR_PTISR1_gamT1","Ch2L_OSmumu_gold_0j0svS_ge1j0bISR_PTISR1_gamT0","Ch2L_OSmumu_gold_0j0svS_ge1j0bISR_PTISR1_gamT1","Ch2L_Zstar_gold_1j0bS_ge1j0bISR_PTISR1_gamT0","Ch2L_Zstar_gold_1j0bS_ge1j0bISR_PTISR1_gamT1","Ch2L_Zstar_gold_1j1bS_ge1j0bISR_PTISR1_gamT1","Ch2L_Zstar_gold_ge2j0bS_ge1j0bISR_PTISR1_gamT0","Ch2L_Zstar_gold_ge2j0bS_ge1j0bISR_PTISR1_gamT1","Ch2L_Zstar_gold_ge2jge1bS_ge1j0bISR_PTISR1_gamT1","Ch2L_ll_gold_0jge1svS_ge1jISR_PTISR0_gamT0_SVeta0","Ch2L_noZ_gold_1j0bS_ge1j0bISR_PTISR1_gamT1","Ch2L_noZ_gold_1j1bS_ge1j0bISR_PTISR1_gamT1","Ch2L_noZ_gold_ge2j0bS_ge1j0bISR_PTISR1_gamT1","Ch2L_noZ_gold_ge2jge1bS_ge1j0bISR_PTISR1_gamT1","Ch3L_SS_gold_inclS_ge1jISR_PTISR0","Ch3L_Zstar_gold_0jS_ge1jISR_PTISR0","Ch3L_Zstar_gold_ge1jS_ge1jISR_PTISR0","Ch3L_noZ_gold_0jS_ge1jISR_PTISR0","Ch3L_noZ_gold_ge1jS_ge1jISR_PTISR0"};
+
+
 int main(int argc, char* argv[]) {
   string InputFile = "test/FitInput_test.root";
   string OutputFold = "BuildFit_output";
@@ -46,6 +49,8 @@ int main(int argc, char* argv[]) {
   double xsec_norm = -999.0;
 
   bool workspace = false;
+  bool chanMask = false;
+  string chanMaskCmd;
 
   bool doMCstats = false;
 
@@ -60,6 +65,14 @@ int main(int argc, char* argv[]) {
     }
     if(strncmp(argv[i],"-w", 2) == 0){
       workspace = true;
+    }
+    if(strncmp(argv[i],"--maskChannels", 14) == 0){
+      chanMask = true;
+      i++;
+      chanMaskCmd = string(argv[i]);
+    }
+    if(strncmp(argv[i],"-m", 2) == 0){
+      chanMask = true;
     }
     if(strncmp(argv[i],"--help", 6) == 0){
       bprint = true;
@@ -193,6 +206,7 @@ int main(int argc, char* argv[]) {
     cout << "   +MCstats            adds autoMCStats uncertainties" << endl;
     cout << "   -sepchan            make datacards for each group of channels separately" << endl;
     cout << "   --workspace(-w)     also build workspaces (note: faster not to, and run message)" << endl;
+    cout << "   --maskChannels [method] mask channels of model independent signal regions (superbins)" << endl;
     cout << "   --batch             for running inside a batch job" << endl;
     cout << "   --connect           for running inside a batch job on CMS connect" << endl;
 
@@ -677,7 +691,17 @@ else cout << "Nominal signal cross section: " << xsec_norm << endl;
 
       cb.cp().mass({m, "*"})
 	.WriteDatacard(fold+"/datacard.txt", output);
-    }
+    if(chanMask){
+		string oname = fold+"/T2W_with_channelmask.sh";
+		std::ofstream out;
+		out.open(oname);
+		out << "combineTool.py -M T2W -i datacard.txt -o ws.root -m " << m << " --channel-masks \n";
+		out << "combine ws.root -M " << chanMaskCmd << " -m " << m << " --setParameters ";
+		for(int i = 0; i < superBins.size(); i++)		
+			out << "mask_"<< superBins[i] << "=1 ";
+		out.close();
+	}
+	}
   }
 
   // datacard/workspace for each channel
