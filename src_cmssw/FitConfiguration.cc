@@ -702,6 +702,7 @@ for(auto s : Nlep){
 	string name = "norm_" + label + s;
 	systRegex.a( Lmap[s] );
 	cb.cp().process(plist.GetProcesses()).bin(VS(systRegex)).AddSyst(cb, name, "lnN", SystMap<>::init(errorInit));
+	systRegex.clear();
 }
 
 
