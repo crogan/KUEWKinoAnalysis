@@ -526,7 +526,7 @@ CONFIG.AddSJetNormSys("DB",DB,cb, processes);
 */
 
 ///PRINT TABLE OF ALL SYSTS AND MAP
-//  cb.PrintSysts();
+  cb.PrintSysts();
 
  using ch::syst::SystMap;
   using ch::syst::era;
