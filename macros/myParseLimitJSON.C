@@ -336,7 +336,8 @@ public:
     if(type == kObs)
       vec = m_R_obs;
     if(type == kExp)
-      vec = m_R_exp0;
+      vec = m_R_exp0; //hack to make z axis obs?
+     // vec = m_R_obs;
     if(type == kExpUp)
       vec = m_R_exp_p1;
     if(type == kExpDn)
@@ -551,6 +552,7 @@ void myParseLimitJSON(const string& json, bool inclObs = false, PlotType ptype =
   TFile* out = new TFile(outfile.c_str(),"RECREATE");
   out->WriteTObject(can_MC);
   out->WriteTObject(can_dM);
+  out->WriteTObject(hist_exp_dM);
   out->Close();
  
 }
