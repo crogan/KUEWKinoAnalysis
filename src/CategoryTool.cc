@@ -35,7 +35,7 @@ FitBin CategoryTool::GetFitBin(int Nlep, int index, bool maskSR) const {
 	RBins.push_back(RBin(0.985, 1.00,  VD().a(0.).a(5.).a(10.).a(40.)));
     }
     if(index == 1){ 
-      RBins.push_back(RBin(0.8,   0.90,  VD().a(0.).a(100.)));
+    //  RBins.push_back(RBin(0.8,   0.90,  VD().a(0.).a(100.)));
       RBins.push_back(RBin(0.90,  0.93,  VD().a(0.).a(100.)));//test 2 another Mperp merge
       if(!maskSR){
 	RBins.push_back(RBin(0.93,  0.96,  VD().a(0.).a(20.).a(100.)));
@@ -43,8 +43,8 @@ FitBin CategoryTool::GetFitBin(int Nlep, int index, bool maskSR) const {
       }
     }
     if(index == 2){
-      RBins.push_back(RBin(0.65,  0.75,  VD().a(0.).a(120.))); //test1 merge lowest Mperp
-      RBins.push_back(RBin(0.75,  0.85,  VD().a(0.).a(40.).a(120.)));
+   //   RBins.push_back(RBin(0.65,  0.75,  VD().a(0.).a(120.))); //test1 merge lowest Mperp
+      RBins.push_back(RBin(0.75,  0.85,  VD().a(0.).a(120.)));
       if(!maskSR){
 	RBins.push_back(RBin(0.85,  0.9,   VD().a(0.).a(30.).a(120.)));
 	RBins.push_back(RBin(0.9,   0.95,  VD().a(0.).a(20.).a(120.)));
@@ -52,8 +52,8 @@ FitBin CategoryTool::GetFitBin(int Nlep, int index, bool maskSR) const {
       }
     }
     if(index == 3){
-      RBins.push_back(RBin(0.55,  0.65, VD().a(0.).a(200.))); //test1 merge lowest Mperp
-      RBins.push_back(RBin(0.65,  0.75, VD().a(0.).a(90.).a(200.)));
+   //   RBins.push_back(RBin(0.55,  0.65, VD().a(0.).a(200.))); //test1 merge lowest Mperp
+      RBins.push_back(RBin(0.65,  0.75, VD().a(0.).a(200.)));
       if(!maskSR){
 	RBins.push_back(RBin(0.75,  0.85, VD().a(0.).a(70.).a(200.)));
 	RBins.push_back(RBin(0.85,  0.9,  VD().a(0.).a(50.).a(200.)));
@@ -61,16 +61,16 @@ FitBin CategoryTool::GetFitBin(int Nlep, int index, bool maskSR) const {
       }
     }
     if(index == 4){
-      RBins.push_back(RBin(0.55,  0.65, VD().a(0.).a(300.))); //test1 merge lowest Mperp
-      RBins.push_back(RBin(0.65,  0.75, VD().a(0.).a(100.).a(300.)));
+   //   RBins.push_back(RBin(0.55,  0.65, VD().a(0.).a(300.))); //test1 merge lowest Mperp
+      RBins.push_back(RBin(0.65,  0.75, VD().a(0.).a(300.)));
       if(!maskSR){
 	RBins.push_back(RBin(0.75,  0.85, VD().a(0.).a(80.).a(300.)));
 	RBins.push_back(RBin(0.85,  1.0,  VD().a(0.).a(300.)));
       }
     }
     if(index == 5){
-      RBins.push_back(RBin(0.5,   0.6,  VD().a(0.).a(400.))); //test1 merge lowest Mperp
-      RBins.push_back(RBin(0.6,   0.7,  VD().a(0.).a(180.).a(400.)));
+  //    RBins.push_back(RBin(0.5,   0.6,  VD().a(0.).a(400.))); //test1 merge lowest Mperp
+      RBins.push_back(RBin(0.6,   0.7,  VD().a(0.).a(400.)));
       if(!maskSR){
 	RBins.push_back(RBin(0.7,   0.8,  VD().a(0.).a(150.).a(400.)));
 	RBins.push_back(RBin(0.8,   1.0,  VD().a(0.).a(400.)));
@@ -81,14 +81,14 @@ FitBin CategoryTool::GetFitBin(int Nlep, int index, bool maskSR) const {
   if(Nlep == 1){
     if(index == 0){
      // RBins.push_back(RBin(0.9,   0.96,   VD().a(0.).a(40.))); //test2 adding more bin mods (remove bin)
-      RBins.push_back(RBin(0.96,  0.98,   VD().a(0.).a(10.).a(40.)));
+      RBins.push_back(RBin(0.96,  0.98,   VD().a(0.).a(40.)));
       if(!maskSR){
 	RBins.push_back(RBin(0.98,  1.00,   VD().a(0.).a(5.).a(10.).a(40.)));
       }
     }
     if(index == 1){
-      RBins.push_back(RBin(0.65,  0.75,  VD().a(0.).a(120.)));//test2 adding more bin mods (Mperp merge)
-      RBins.push_back(RBin(0.75,  0.85,  VD().a(0.).a(40.).a(120.)));
+    //  RBins.push_back(RBin(0.65,  0.75,  VD().a(0.).a(120.)));//test2 adding more bin mods (Mperp merge)
+      RBins.push_back(RBin(0.75,  0.85,  VD().a(0.).a(120.)));
       if(!maskSR){
 	RBins.push_back(RBin(0.85,  0.9,   VD().a(0.).a(30.).a(120.)));
 	RBins.push_back(RBin(0.9,   0.95,  VD().a(0.).a(20.).a(120.)));
@@ -96,8 +96,8 @@ FitBin CategoryTool::GetFitBin(int Nlep, int index, bool maskSR) const {
       }
     }
     if(index == 2){
-      RBins.push_back(RBin(0.55,  0.65, VD().a(0.).a(200.))); //test1 merge lowest Mperp
-      RBins.push_back(RBin(0.65,  0.75, VD().a(0.).a(90.).a(200.)));
+   //   RBins.push_back(RBin(0.55,  0.65, VD().a(0.).a(200.))); //test1 merge lowest Mperp
+      RBins.push_back(RBin(0.65,  0.75, VD().a(0.).a(200.)));
       if(!maskSR){
 	RBins.push_back(RBin(0.75,  0.85, VD().a(0.).a(70.).a(200.)));
 	RBins.push_back(RBin(0.85,  0.9,  VD().a(0.).a(50.).a(200.)));
@@ -105,16 +105,16 @@ FitBin CategoryTool::GetFitBin(int Nlep, int index, bool maskSR) const {
       }
     }
     if(index == 3){
-      RBins.push_back(RBin(0.55,  0.65, VD().a(0.).a(300.))); //test1 merge lowest Mperp
-      RBins.push_back(RBin(0.65,  0.75, VD().a(0.).a(100.).a(300.)));
+  //    RBins.push_back(RBin(0.55,  0.65, VD().a(0.).a(300.))); //test1 merge lowest Mperp
+      RBins.push_back(RBin(0.65,  0.75, VD().a(0.).a(300.)));
       if(!maskSR){
 	RBins.push_back(RBin(0.75,  0.85, VD().a(0.).a(80.).a(300.)));
 	RBins.push_back(RBin(0.85,  1.0,  VD().a(0.).a(300.)));
       }
     }
     if(index == 4){
-      RBins.push_back(RBin(0.5,   0.6,  VD().a(0.).a(400.))); //test1 merge lowest Mperp
-      RBins.push_back(RBin(0.6,   0.7,  VD().a(0.).a(180.).a(400.)));
+  //    RBins.push_back(RBin(0.5,   0.6,  VD().a(0.).a(400.))); //test1 merge lowest Mperp
+      RBins.push_back(RBin(0.6,   0.7,  VD().a(0.).a(400.)));
       if(!maskSR){
 	RBins.push_back(RBin(0.7,   0.8,  VD().a(0.).a(150.).a(400.)));
 	RBins.push_back(RBin(0.8,   1.0,  VD().a(0.).a(400.)));
