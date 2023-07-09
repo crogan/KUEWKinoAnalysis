@@ -28,6 +28,13 @@ public:
 
   void AddCommonSys(ch::CombineHarvester& cb, ProcessList& processes);
   void AddFakeLeptonSys(ch::CombineHarvester& cb, ProcessList& processes);
+
+  void AddFakeGlobal(ch::CombineHarvester& cb, ProcessList& processes, int option);
+  void AddIDISObron(ch::CombineHarvester& cb, ProcessList& processes);
+  void AddSIP3Dslvr(ch::CombineHarvester& cb, ProcessList& processes);
+  void AddIDISObron_splitSJet(ch::CombineHarvester& cb, ProcessList& processes);
+  void AddSlvrBronGlobal(ch::CombineHarvester& cb, ProcessList& processes);
+
   void AddSVSys(ch::CombineHarvester& cb, ProcessList& processes);
   void AddBJetSys(ch::CombineHarvester& cb, ProcessList& processes);
   void Add0LBJetSys(ch::CombineHarvester& cb, ProcessList& processes, string label);

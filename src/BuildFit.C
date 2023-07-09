@@ -398,7 +398,28 @@ cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
   CONFIG.AddRareNorms(bkg_rare, 0.4, cb, processes);
   
   CONFIG.AddCommonSys(cb, processes);
-  CONFIG.AddFakeLeptonSys(cb, processes);
+
+	//splitting these out for unblinding tests
+  //CONFIG.AddFakeLeptonSys(cb, processes);//the original function call
+
+//Trial1 split globals by process, keep rest the same
+ std::cout<<"Splitting global fake between ttbar and other\n";
+  CONFIG.AddFakeGlobal(cb, processes, 1);
+  CONFIG.AddFakeGlobal(cb, processes, 2);
+  CONFIG.AddIDISObron(cb, processes);
+  CONFIG.AddSIP3Dslvr(cb, processes);
+
+//Trial2 split idiso by L,J, keep rest the same
+// std::cout<<"splitting idiso by L and J\n";  
+//  CONFIG.AddFakeGlobal(cb, processes, 0);
+//  CONFIG.AddIDISObron_splitSJet(cb, processes);
+//  CONFIG.AddSIP3Dslvr(cb, processes);
+
+//Trial 3 do the normal fake systs but add bronz and slver rates (assigned to nonfake)
+// std::cout<<"applying bron and silver rate\n";
+//  CONFIG.AddFakeLeptonSys(cb,processes);
+//  CONFIG.AddSlvrBronGlobal(cb,processes);
+
   CONFIG.AddSVSys(cb, processes);
   ProcessList proc_LF_Fakes = proc_fakes;
   proc_LF_Fakes = proc_LF_Fakes.Filter("f1");
