@@ -400,14 +400,14 @@ cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
   CONFIG.AddCommonSys(cb, processes);
 
 	//splitting these out for unblinding tests
-  //CONFIG.AddFakeLeptonSys(cb, processes);//the original function call
+ CONFIG.AddFakeLeptonSys(cb, processes);//the original function call
 
 //Trial1 split globals by process, keep rest the same
- std::cout<<"Splitting global fake between ttbar and other\n";
-  CONFIG.AddFakeGlobal(cb, processes, 1);
-  CONFIG.AddFakeGlobal(cb, processes, 2);
-  CONFIG.AddIDISObron(cb, processes);
-  CONFIG.AddSIP3Dslvr(cb, processes);
+// std::cout<<"Splitting global fake between ttbar and other\n";
+//  CONFIG.AddFakeGlobal(cb, processes, 1);
+//  CONFIG.AddFakeGlobal(cb, processes, 2);
+//  CONFIG.AddIDISObron(cb, processes);
+//  CONFIG.AddSIP3Dslvr(cb, processes);
 
 //Trial2 split idiso by L,J, keep rest the same
 // std::cout<<"splitting idiso by L and J\n";  
