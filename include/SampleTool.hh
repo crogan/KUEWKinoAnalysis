@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <ctype.h>
 #include <map>
 #include <vector>
 #include <TChain.h>

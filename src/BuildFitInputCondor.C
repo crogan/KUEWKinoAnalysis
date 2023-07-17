@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
   string SigFile = "";
   
   //string NtuplePath = "root://xrootd.unl.edu//store/user/zflowers/crogan/";
-  string NtuplePath = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v0/";
+  string NtuplePath = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v1/";
   string OutFile    = "BuildFitInput_output.root";
 
   bool bprint = false;

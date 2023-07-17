@@ -34,7 +34,7 @@ using namespace std;
 int main(int argc, char* argv[]) {
   int ifile = -1;
   //string NtuplePath = "root://xrootd.unl.edu//store/user/zflowers/crogan/";
-  string NtuplePath = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v0/";
+  string NtuplePath = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v1/";
   string OutFile    = "BuildFitInput_output.root";
 
   bool doSigFile = false;
@@ -483,11 +483,13 @@ int main(int argc, char* argv[]) {
 	  trig_weight = 1.;
           if(!(!sys) && is_data) continue;      
 
-
-	    trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
-            if(is_FastSim)
-	      trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0)*
-		m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
+           //trig on the fly
+	    //trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
+            //if(is_FastSim)
+	    //  trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0)*
+            //	  m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
+           //trig ntuples
+            trig_weight = base->MetTrigSFweight; 
 
             if(sys.Label().find("MET_TRIG") != std::string::npos && proc.Name() != "QCD")
             {
@@ -509,6 +511,8 @@ int main(int argc, char* argv[]) {
                        scat.find("_noZ") == std::string::npos && scat.find("_Zstar") == std::string::npos && scat.find("_SS") == std::string::npos)))
             		continue;
               */
+              //trig on the fly
+              /*
             	        if(sys.IsUp())
             	          if(is_FastSim)
             	            trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1)*
@@ -521,35 +525,41 @@ int main(int argc, char* argv[]) {
             	              m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
             	          else
             	            trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
+              */
+             //trig ntuples
+            	if(sys.IsUp())
+                 trig_weight = base->MetTrigSFweight_up;
+                else
+                 trig_weight = base->MetTrigSFweight_down;
+             
             
             }
+            
 
 	      
 	  //
 	  // BTAG systematics from the ntuples
 	  //
-	  /*
 	    if(sys == Systematic("BTAGHF_SF"))
-	    if(sys.IsUp())
-	    btag_weight *= base->BtagSFweight_up;
-	    else
-	    btag_weight *= base->BtagSFweight_down;
+	      if(sys.IsUp())
+	        btag_weight *= base->BtagHFSFweight_up;
+	      else
+	        btag_weight *= base->BtagHFSFweight_down;
 	    else 
-	    btag_weight *= base->BtagSFweight;
+	      btag_weight *= base->BtagHFSFweight;
 
 	    if(sys == Systematic("BTAGLF_SF"))
-	    if(sys.IsUp())
-	    btag_weight *= base->BtagSFweight_up;
-	    else
-	    btag_weight *= base->BtagSFweight_down;
+	      if(sys.IsUp())
+	        btag_weight *= base->BtagLFSFweight_up;
+	      else
+	        btag_weight *= base->BtagLFSFweight_down;
 	    else 
-	    btag_weight *= base->BtagSFweight;
-	  */
+	      btag_weight *= base->BtagLFSFweight;
 
 	  //
 	  // BTAG systematics on the fly (needs jet collection in reduced ntuples)
 	  //
-	  
+	 /* 
 	  if(sys == Systematic("BTAGHF_SF")){
 	    if(sys.IsUp())
 	      btag_weight *= SF.GetBtagSFWeight(base, year, is_FastSim, true, 1);
@@ -567,7 +577,7 @@ int main(int argc, char* argv[]) {
 	  } else {
 	    btag_weight *= SF.GetBtagSFWeight(base, year, is_FastSim, false, 0);
 	  }
-
+          */
 
 	  // turn off PU systematics for now
 	  // if(sys == Systematic("PU_SF"))
