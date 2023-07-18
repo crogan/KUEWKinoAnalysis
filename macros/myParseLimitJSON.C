@@ -872,9 +872,11 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
   // SMS info
   string SMS;
   if(ptype == kTChiWZ){
-    SMS =  "pp #rightarrow #tilde{#chi}_{2}^{0} #tilde{#chi}_{1}^{#pm}; ";
-    SMS += "#tilde{#chi}_{2}^{0} #rightarrow Z*#tilde{#chi}_{1}^{0}, ";
-    SMS += "#tilde{#chi}_{1}^{#pm} #rightarrow W*#tilde{#chi}_{1}^{0}";
+    //  SMS = "pp #rightarrow #tilde{#chi}_{2}^{0} #tilde{#chi}_{1}^{#pm}"
+      SMS += "#tilde{#chi}_{2}^{0} #tilde{#chi}_{1}^{#pm} #rightarrow Z*#tilde{#chi}_{1}^{0} W* #tilde{#chi}_{1}^{0}";
+    //SMS =  "pp #rightarrow #tilde{#chi}_{2}^{0} #tilde{#chi}_{1}^{#pm}; ";
+    //SMS += "#tilde{#chi}_{2}^{0} #rightarrow Z*#tilde{#chi}_{1}^{0}, ";
+   // SMS += "#tilde{#chi}_{1}^{#pm} #rightarrow W*#tilde{#chi}_{1}^{0}";
   }
   if(ptype == kT2tt){
     SMS =  "pp #rightarrow #tilde{t} #tilde{t}; ";
