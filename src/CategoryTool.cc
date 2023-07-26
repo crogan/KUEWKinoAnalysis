@@ -677,6 +677,227 @@ Hadronic CategoryTool::GetHadronicRegion(int Njet, int index) const {
 
 }
 
+Hadronic CategoryTool::GetHadronicRegionISR(int Njet, int index) const {
+  /////////
+  // 0 jet
+  /////////
+  if(Njet == 0){
+    // fully inclusive
+    if(index == 0){
+      Hadronic H(0, 0, 0, "incl");
+      H += Hadronic(0, 0, -1);
+      H += Hadronic(-1, 0, 0);
+      H += Hadronic(-1, 0, -1);
+      H += Hadronic(-1, 1, 0);
+      H += Hadronic(-1, 1, -1);
+      return H;
+    }
+
+    // C1
+    if(index == 1){
+      Hadronic H(0, 0, 0, "0j0sv");
+      return H;
+    }
+
+    // C2
+    if(index == 2){
+      Hadronic H(0, 0, -1, "0jge1sv");
+      return H;
+    }
+
+    // exactly 1 sv
+    if(index == 3){
+      Hadronic H(0, 0, 1, "0j1sv");
+      return H;
+    }
+
+    // ge 2 sv
+    if(index == 4){
+      Hadronic H(0, 0, -2, "0jge2sv");
+      return H;
+    }
+
+    // 0j
+    if(index == 5){
+      Hadronic H(0, 0, 0, "0j");
+      H += Hadronic(0, 0, -1);
+      return H;
+    }
+  }
+
+  /////////
+  // 1 jet
+  /////////
+  if(Njet == 1){
+    // fully inclusive ge1 jet
+    if(index == 0){
+      Hadronic H(-1, 0, 0, "ge1j");
+      H += Hadronic(-1, 0, -1);
+      H += Hadronic(-1, 1, 0);
+      H += Hadronic(-1, 1, -1);
+      return H;
+    }
+
+    // inclusive exactly 1 jet
+    if(index == 1){
+      Hadronic H(1, 0, 0, "1j");
+      H += Hadronic(1, 0, -1);
+      H += Hadronic(1, 1, 0);
+      H += Hadronic(1, 1, -1);
+      return H;
+    }
+
+    // C3 exactly 1 jet 0b 0sv
+    if(index == 2){
+      Hadronic H(1, 0, 0, "1j0b0sv");
+      return H;
+    }
+
+    // C4 exactly 1 jet 1b 0sv
+    if(index == 3){
+      Hadronic H(1, 1, 0, "1j1b0sv");
+      return H;
+    }
+
+    // C5 exactly 1 jet 0b ge1sv
+    if(index == 4){
+      Hadronic H(1, 0, -1, "1j0bge1sv");
+      return H;
+    }
+
+    // C6 exactly 1 jet 1b ge1sv
+    if(index == 5){
+      Hadronic H(1, 1, -1, "1j1bge1sv");
+      return H;
+    }
+
+    // B1 ge1 jet 0 b
+    if(index == 6){
+      Hadronic H(-1, 0, 0, "ge1j0b");
+      H += Hadronic(-1, 0, -1);
+      return H;
+    }
+
+    // B2 ge1 jet ge1 b
+    if(index == 7){
+      Hadronic H(-1, 1, 0, "ge1jge1b");
+      H += Hadronic(-1, 1, -1);
+      return H;
+    }
+
+    // exactly 1 jet 0b
+    if(index == 8){
+      Hadronic H(1, 0, 0, "1j0b");
+      H += Hadronic(1, 0, -1);
+      return H;
+    }
+
+    // exactly 1 jet 1b
+    if(index == 9){
+      Hadronic H(1, 1, 0, "1j1b");
+      H += Hadronic(1, 1, -1);
+      return H;
+    }
+
+    // not C5+C6, exactly 1 jet incl b 0sv
+    if(index == 10){
+      Hadronic H(1, 0, 0, "1j0sv");
+      H += Hadronic(1, 1, 0);
+      return H;
+    }
+
+    // C5+C6 exactly 1 jet incl b ge1sv
+    if(index == 11){
+      Hadronic H(1, 0, -1, "1jge1sv");
+      H += Hadronic(1, 1, -1);
+      return H;
+    }
+  }
+
+  /////////
+  // 2 jet
+  /////////
+  if(Njet == 2){
+    // fully inclusive ge2 jet
+    if(index == 0){
+      Hadronic H(-2, 0, 0, "ge2j");
+      H += Hadronic(-2, 0, -1);
+      H += Hadronic(-2, 1, 0);
+      H += Hadronic(-2, 1, -1);
+      return H;
+    }
+
+    // fully inclusive exactly 2 jet
+    if(index == 1){
+      Hadronic H(2, 0, 0, "2j");
+      H += Hadronic(2, 0, -1);
+      H += Hadronic(2, 1, 0);
+      H += Hadronic(2, 1, -1);
+      return H;
+    }
+
+    // C7 2 jet 0b
+    if(index == 2){
+      Hadronic H(2, 0, 0, "2j0b");
+      H += Hadronic(2, 0, -1);
+      return H;
+    }
+
+    // C8 2 jet ge1b
+    if(index == 3){
+      Hadronic H(2, 1, 0, "2jge1b");
+      H += Hadronic(2, 1, -1);
+      return H;
+    }
+    
+    // C8 2 jet 1b
+    if(index == 4){
+      Hadronic H(2, 1, 0, "2j1b");
+      H += Hadronic(2, 1, -1);
+      return H;
+    }
+
+    // C9 2 jet 2b
+    if(index == 5){
+      Hadronic H(2, 2, 0, "2j2b");
+      H += Hadronic(2, 2, -1);
+      return H;
+    }
+
+    // ge2j 0b
+    if(index == 6){
+      Hadronic H(-2, 0, 0, "ge2j0b");
+      H += Hadronic(-2, 0, -1);
+      return H;
+    }
+
+    // ge2j ge1b
+    if(index == 7){
+      Hadronic H(-2, 1, 0, "ge2jge1b");
+      H += Hadronic(-2, 1, -1);
+      return H;
+    }
+
+    //  ge2j 1b
+    if(index == 8){
+      Hadronic H(-2, 1, 0, "ge2j1b");
+      H += Hadronic(-2, 1, -1);
+      return H;
+    }
+
+  }
+
+  // default inclusive
+  Hadronic H(0, 0, 0, "incl");
+  H += Hadronic(0, 0, -1);
+  H += Hadronic(-1, 0, 0);
+  H += Hadronic(-1, 0, -1);
+  H += Hadronic(-1, 1, 0);
+  H += Hadronic(-1, 1, -1);
+  return H;
+}
+
+
 float gamTval = 0.0;
 
 CategoryList CategoryTool::GetCategories_0L(bool maskSR) const {
@@ -690,9 +911,12 @@ CategoryList CategoryTool::GetCategories_0L(bool maskSR) const {
   // Get hadronic ISR region lists - inclusive and b-separated
   vector<Hadronic> H_ISR_noB;
   vector<Hadronic> H_ISR_B;
-  H_ISR_noB.push_back(GetHadronicRegion(1, 0)); // ge1j
-  H_ISR_B.push_back(GetHadronicRegion(1, 6)); // ge1j0b
-  H_ISR_B.push_back(GetHadronicRegion(1, 7)); // ge1jge1b
+  //H_ISR_noB.push_back(GetHadronicRegion(1, 0)); // ge1j
+  //H_ISR_B.push_back(GetHadronicRegion(1, 6)); // ge1j0b
+  //H_ISR_B.push_back(GetHadronicRegion(1, 7)); // ge1jge1b
+  H_ISR_noB.push_back(GetHadronicRegionISR(1, 0)); // ge1j
+  H_ISR_B.push_back(GetHadronicRegionISR(1, 6));   // ge1j0b
+  H_ISR_B.push_back(GetHadronicRegionISR(1, 7));   // ge1jge1b
   
   // Get PTISR binning
   vector<double> PTISR_incl;
@@ -960,9 +1184,12 @@ CategoryList CategoryTool::GetCategories_1L(bool maskSR) const {
   // Get hadronic ISR region lists - inclusive and b-separated
   vector<Hadronic> H_ISR_noB;
   vector<Hadronic> H_ISR_B;
-  H_ISR_noB.push_back(GetHadronicRegion(1, 0)); // ge1j
-  H_ISR_B.push_back(GetHadronicRegion(1, 6)); // ge1j0b
-  H_ISR_B.push_back(GetHadronicRegion(1, 7)); // ge1jge1b
+  //H_ISR_noB.push_back(GetHadronicRegion(1, 0)); // ge1j
+  //H_ISR_B.push_back(GetHadronicRegion(1, 6)); // ge1j0b
+  //H_ISR_B.push_back(GetHadronicRegion(1, 7)); // ge1jge1b
+  H_ISR_noB.push_back(GetHadronicRegionISR(1, 0)); // ge1j
+  H_ISR_B.push_back(GetHadronicRegionISR(1, 6)); // ge1j0b
+  H_ISR_B.push_back(GetHadronicRegionISR(1, 7)); // ge1jge1b
 
    // Get PTISR binning
   vector<double> PTISR_incl;
@@ -1491,9 +1718,12 @@ CategoryList CategoryTool::GetCategories_2L(bool maskSR) const {
   // Get hadronic ISR region lists - inclusive and b-separated
   vector<Hadronic> H_ISR_noB;
   vector<Hadronic> H_ISR_B;
-  H_ISR_noB.push_back(GetHadronicRegion(1, 0)); // ge1j
-  H_ISR_B.push_back(GetHadronicRegion(1, 6)); // ge1j0b
-  H_ISR_B.push_back(GetHadronicRegion(1, 7)); // ge1jge1b
+  //H_ISR_noB.push_back(GetHadronicRegion(1, 0)); // ge1j
+  //H_ISR_B.push_back(GetHadronicRegion(1, 6)); // ge1j0b
+  //H_ISR_B.push_back(GetHadronicRegion(1, 7)); // ge1jge1b
+  H_ISR_noB.push_back(GetHadronicRegionISR(1, 0)); // ge1j
+  H_ISR_B.push_back(GetHadronicRegionISR(1, 6)); // ge1j0b
+  H_ISR_B.push_back(GetHadronicRegionISR(1, 7)); // ge1jge1b
   
  // Get PTISR binning
   vector<double> PTISR_incl;
@@ -2145,9 +2375,12 @@ CategoryList CategoryTool::GetCategories_3L(bool maskSR) const {
   // Get hadronic ISR region lists - inclusive and b-separated
   vector<Hadronic> H_ISR_noB;
   vector<Hadronic> H_ISR_B;
-  H_ISR_noB.push_back(GetHadronicRegion(1, 0)); // ge1j
-  H_ISR_B.push_back(GetHadronicRegion(1, 6)); // ge1j0b
-  H_ISR_B.push_back(GetHadronicRegion(1, 7)); // ge1jge1b
+  //H_ISR_noB.push_back(GetHadronicRegion(1, 0)); // ge1j
+  //H_ISR_B.push_back(GetHadronicRegion(1, 6)); // ge1j0b
+  //H_ISR_B.push_back(GetHadronicRegion(1, 7)); // ge1jge1b
+  H_ISR_noB.push_back(GetHadronicRegionISR(1, 0)); // ge1j
+  H_ISR_B.push_back(GetHadronicRegionISR(1, 6)); // ge1j0b
+  H_ISR_B.push_back(GetHadronicRegionISR(1, 7)); // ge1jge1b
   
  // Get PTISR binning
   vector<double> PTISR_incl;
