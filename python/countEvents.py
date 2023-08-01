@@ -4,6 +4,7 @@ import os
 import glob
 import ROOT
 import argparse
+import tools
 
 # Make sure ROOT.TFile.Open(fileURL) does not seg fault when $ is in sys.argv (e.g. $ passed in as argument)
 ROOT.PyConfig.IgnoreCommandLineOptions = True
@@ -12,6 +13,7 @@ ROOT.gROOT.SetBatch(ROOT.kTRUE)
 # Tell ROOT not to be in charge of memory, fix issue of histograms being deleted when ROOT file is closed:
 ROOT.TH1.AddDirectory(False)
 
+# count events in a ROOT file
 def countEvents(root_file):
     result = 0
     tree_name = "EventCount"
@@ -25,17 +27,31 @@ def countEvents(root_file):
         #print("n_events = {0}".format(n_events))
     return result
 
-def processDir(directory, verbose):
+# process directory containing ROOT files
+def processDir(directory, pattern, eos, verbose):
     if verbose:
         print("Counting events.")
+        print("----------------------------")
         print("directory: {0}".format(directory))
+        print("pattern: {0}".format(pattern))
+        print("eos: {0}".format(eos))
+        print("verbose: {0}".format(verbose))
+        print("----------------------------")
     
     total_event_count = 0
     base_file_names = []
     n_events_map = {}
     
     # get ROOT files
-    root_files = glob.glob("{0}/*.root".format(directory))
+    if eos:
+        root_files = tools.get_eos_file_list(directory)
+    else:
+        root_files = glob.glob("{0}/*.root".format(directory))
+
+    # if pattern is set, then require file name to contain pattern
+    if pattern:
+        root_files = [f for f in root_files if pattern in os.path.basename(f)]
+    
     n_root_files = len(root_files)
 
     # count events
@@ -60,11 +76,15 @@ def processDir(directory, verbose):
 def run():
     # options
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument("--directory",  "-d", default="",       help="directory containing root files")
+    parser.add_argument("--directory",  "-d", default="",                               help="directory containing ROOT files")
+    parser.add_argument("--pattern",    "-p", default="",                               help="pattern for root file names")
+    parser.add_argument("--eos",        "-e", default = False,  action = "store_true",  help="run over ROOT files on EOS")
     parser.add_argument("--verbose",    "-v", default = False,  action = "store_true",  help="verbose flag to print more things")
 
     options     = parser.parse_args()
     directory   = options.directory
+    pattern     = options.pattern
+    eos         = options.eos
     verbose     = options.verbose
 
     # check that directory is set
@@ -72,7 +92,7 @@ def run():
         print("ERROR: 'directory' is not set. Please provide a directory using the -d option.")
         return
     
-    processDir(directory, verbose)
+    processDir(directory, pattern, eos, verbose)
 
 def main():
     run()
