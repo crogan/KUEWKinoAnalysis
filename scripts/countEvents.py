@@ -12,7 +12,11 @@ ROOT.gROOT.SetBatch(ROOT.kTRUE)
 # Tell ROOT not to be in charge of memory, fix issue of histograms being deleted when ROOT file is closed:
 ROOT.TH1.AddDirectory(False)
 
-def countEvents(directory):
+def countEvents(root_file):
+    result = -1
+    return result
+
+def processDir(directory):
     print("Counting events.")
     print("directory: {0}".format(directory))
     
@@ -20,9 +24,19 @@ def countEvents(directory):
     root_files = glob.glob("{0}/*.root".format(directory))
     n_root_files = len(root_files)
 
+    n_events_map = {}
+
     print("Found {0} ROOT files:".format(n_root_files))
     for root_file in root_files:
-        print(" - {0}".format(os.path.basename(root_file)))
+        base_name = os.path.basename(root_file)
+        n_events = countEvents(root_file)
+        n_events_map[base_name] = n_events
+        print(" - {0}".format(base_name))
+
+    print("Number of events:")
+    for base_name in n_events_map:
+        n_events = n_events_map[base_name]
+        print("{0}: {1}".format(base_name, n_events))
 
 def run():
     # options
@@ -37,12 +51,11 @@ def run():
         print("ERROR: 'directory' is not set. Please provide a directory using the -d option.")
         return
     
-    countEvents(directory)
+    processDir(directory)
 
 def main():
     run()
 
 if __name__ == "__main__":
     main()
-
 
