@@ -28,18 +28,20 @@ def countEvents(root_file):
     return result
 
 # process directory containing ROOT files
-def processDir(directory, pattern, eos, verbose):
+def processDir(directory, pattern, csv, eos, verbose):
     if verbose:
         print("Counting events.")
         print("----------------------------")
         print("directory: {0}".format(directory))
         print("pattern: {0}".format(pattern))
+        print("csv: {0}".format(csv))
         print("eos: {0}".format(eos))
         print("verbose: {0}".format(verbose))
         print("----------------------------")
     
     total_event_count = 0
     base_file_names = []
+    output_data = []
     n_events_map = {}
     
     # get ROOT files
@@ -62,6 +64,7 @@ def processDir(directory, pattern, eos, verbose):
         base_file_names.append(base_name)
         n_events = countEvents(root_file)
         n_events_map[base_name] = n_events
+        output_data.append([base_name, n_events])
         total_event_count += n_events
         if verbose:
             print(" - {0}".format(base_name))
@@ -72,18 +75,24 @@ def processDir(directory, pattern, eos, verbose):
         n_events = n_events_map[base_name]
         print("{0}: {1}".format(base_name, n_events))
     print("Total event count: {0}".format(total_event_count))
+    
+    # if csv file name is set, then save data to csv
+    if csv:
+        tools.writeCSV(csv, output_data)
 
 def run():
     # options
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument("--directory",  "-d", default="",                               help="directory containing ROOT files")
-    parser.add_argument("--pattern",    "-p", default="",                               help="pattern for root file names")
+    parser.add_argument("--directory",  "-d", default="",                               help="directory containing ROOT files (required)")
+    parser.add_argument("--pattern",    "-p", default="",                               help="pattern for root file names (optional)")
+    parser.add_argument("--csv",        "-c", default="",                               help="output csv file name (optional)")
     parser.add_argument("--eos",        "-e", default = False,  action = "store_true",  help="run over ROOT files on EOS")
     parser.add_argument("--verbose",    "-v", default = False,  action = "store_true",  help="verbose flag to print more things")
 
     options     = parser.parse_args()
     directory   = options.directory
     pattern     = options.pattern
+    csv         = options.csv
     eos         = options.eos
     verbose     = options.verbose
 
@@ -92,7 +101,7 @@ def run():
         print("ERROR: 'directory' is not set. Please provide a directory using the -d option.")
         return
     
-    processDir(directory, pattern, eos, verbose)
+    processDir(directory, pattern, csv, eos, verbose)
 
 def main():
     run()

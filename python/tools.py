@@ -22,14 +22,24 @@ def numberInRange(number, range_min, range_max):
     else:
         return False
 
-# takes a csv file as input and outputs data in a matrix
-def getData(input_file):
+# Note for csv library:
+# The "newline" argument is available in python 3, but not in python 2.
+
+# read csv file: takes a csv file as input and outputs data in a matrix
+def readCSV(input_file):
     data = []
-    with open(input_file, "r") as f:
-        reader = csv.reader(f)
+    with open(input_file, mode="r") as f:
+        reader = csv.reader(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         for row in reader:
             data.append(row)
     return data
+
+# write csv file: takes data matrix as input and outputs a csv file 
+def writeCSV(output_file, data):
+    with open(output_file, mode="w") as f:
+        writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+        for row in data:
+            writer.writerow(row)
 
 # get chain from list of ROOT files
 def getChain(input_files, num_files):
