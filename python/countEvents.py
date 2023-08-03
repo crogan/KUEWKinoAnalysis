@@ -6,6 +6,9 @@ import ROOT
 import argparse
 import tools
 
+# TODO
+# - Update get_eos_file_list() to use a pattern
+
 # Make sure ROOT.TFile.Open(fileURL) does not seg fault when $ is in sys.argv (e.g. $ passed in as argument)
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 # Make plots faster without displaying them

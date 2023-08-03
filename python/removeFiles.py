@@ -6,6 +6,7 @@ import tools
 import argparse
 
 # TODO
+# - Update get_eos_file_list() to use a pattern
 
 # DONE
 # - List all files in a directory.

@@ -5,6 +5,9 @@ import csv
 import glob
 import ROOT
 
+# TODO
+# - Update get_eos_file_list() to use a pattern
+
 # creates directory if it does not exist
 def makeDir(dir_name):
     if not os.path.exists(dir_name):
