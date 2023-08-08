@@ -5,6 +5,11 @@ import csv
 import glob
 import ROOT
 
+# TODO
+
+# DONE
+# - Update get_eos_file_list() to use a pattern
+
 # creates directory if it does not exist
 def makeDir(dir_name):
     if not os.path.exists(dir_name):
@@ -22,14 +27,24 @@ def numberInRange(number, range_min, range_max):
     else:
         return False
 
-# takes a csv file as input and outputs data in a matrix
-def getData(input_file):
+# Note for csv library:
+# The "newline" argument is available in python 3, but not in python 2.
+
+# read csv file: takes a csv file as input and outputs data in a matrix
+def readCSV(input_file):
     data = []
-    with open(input_file, "r") as f:
-        reader = csv.reader(f)
+    with open(input_file, mode="r") as f:
+        reader = csv.reader(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         for row in reader:
             data.append(row)
     return data
+
+# write csv file: takes data matrix as input and outputs a csv file 
+def writeCSV(output_file, data):
+    with open(output_file, mode="w") as f:
+        writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+        for row in data:
+            writer.writerow(row)
 
 # get chain from list of ROOT files
 def getChain(input_files, num_files):
@@ -65,16 +80,32 @@ def get_file_list_glob(directory, pattern="*.root"):
         d += "/"
     return glob.glob(d + pattern)
 
-# get list of EOS files
-def get_eos_file_list(path, eosurl="root://cmseos.fnal.gov"):
+# get list of ROOT files on EOS
+# - if pattern is set, require that pattern is in base name
+def get_eos_file_list(path, pattern="", eosurl="root://cmseos.fnal.gov"):
+    debug = False
     output = [] 
     with eosls(path, "", eosurl) as files:
         for f in files:
-            name = f.strip()
-            # add ROOT files to list
+            name        = f.strip()
+            full_name   = "{0}/{1}".format(eosurl, name)
+            base_name   = os.path.basename(name) 
+            
+            # print info for debugging
+            if debug:
+                print("In get_eos_file_list():")
+                print(" - name: {0}".format(name))
+                print(" - full_name: {0}".format(full_name))
+                print(" - base_name: {0}".format(base_name))
+            
+            # require file to be a ROOT file 
             if name.endswith(".root"):
-                full_name = "{0}/{1}".format(eosurl, name)
-                output.append(full_name)
+                # if pattern is set, require that pattern is in base name
+                if pattern:
+                    if pattern in base_name:
+                        output.append(full_name)
+                else:
+                    output.append(full_name)
     return output
 
 # eosls command using xrdfs
