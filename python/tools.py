@@ -80,7 +80,8 @@ def get_file_list_glob(directory, pattern="*.root"):
         d += "/"
     return glob.glob(d + pattern)
 
-# get list of EOS files
+# get list of ROOT files on EOS
+# - if pattern is set, require that pattern is in base name
 def get_eos_file_list(path, pattern="", eosurl="root://cmseos.fnal.gov"):
     debug = False
     output = [] 

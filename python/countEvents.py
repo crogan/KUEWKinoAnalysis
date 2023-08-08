@@ -7,6 +7,8 @@ import argparse
 import tools
 
 # TODO
+
+# DONE
 # - Update get_eos_file_list() to use a pattern
 
 # Make sure ROOT.TFile.Open(fileURL) does not seg fault when $ is in sys.argv (e.g. $ passed in as argument)
@@ -46,22 +48,24 @@ def processDir(directory, pattern, csv, eos, verbose):
     base_file_names = []
     output_data = []
     n_events_map = {}
+    root_files = []
     
     # get ROOT files
+    # - if pattern is set, then require file name to contain pattern
     if eos:
-        root_files = tools.get_eos_file_list(directory)
+        root_files = tools.get_eos_file_list(directory, pattern)
     else:
-        root_files = glob.glob("{0}/*.root".format(directory))
-
-    # if pattern is set, then require file name to contain pattern
-    if pattern:
-        root_files = [f for f in root_files if pattern in os.path.basename(f)]
-    
+        if pattern:
+            root_files = glob.glob("{0}/*{1}*.root".format(directory, pattern))
+        else:
+            root_files = glob.glob("{0}/*.root".format(directory))
+        
     n_root_files = len(root_files)
 
-    # count events
     if verbose:
         print("Found {0} ROOT files:".format(n_root_files))
+    
+    # count events
     for root_file in root_files:
         base_name = os.path.basename(root_file)
         base_file_names.append(base_name)
