@@ -6,6 +6,8 @@ import glob
 import ROOT
 
 # TODO
+
+# DONE
 # - Update get_eos_file_list() to use a pattern
 
 # creates directory if it does not exist
@@ -79,15 +81,30 @@ def get_file_list_glob(directory, pattern="*.root"):
     return glob.glob(d + pattern)
 
 # get list of EOS files
-def get_eos_file_list(path, eosurl="root://cmseos.fnal.gov"):
+def get_eos_file_list(path, pattern="", eosurl="root://cmseos.fnal.gov"):
+    debug = False
     output = [] 
     with eosls(path, "", eosurl) as files:
         for f in files:
-            name = f.strip()
-            # add ROOT files to list
+            name        = f.strip()
+            full_name   = "{0}/{1}".format(eosurl, name)
+            base_name   = os.path.basename(name) 
+            
+            # print info for debugging
+            if debug:
+                print("In get_eos_file_list():")
+                print(" - name: {0}".format(name))
+                print(" - full_name: {0}".format(full_name))
+                print(" - base_name: {0}".format(base_name))
+            
+            # require file to be a ROOT file 
             if name.endswith(".root"):
-                full_name = "{0}/{1}".format(eosurl, name)
-                output.append(full_name)
+                # if pattern is set, require that pattern is in base name
+                if pattern:
+                    if pattern in base_name:
+                        output.append(full_name)
+                else:
+                    output.append(full_name)
     return output
 
 # eosls command using xrdfs
