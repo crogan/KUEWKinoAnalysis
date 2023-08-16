@@ -373,6 +373,9 @@ int main(int argc, char* argv[]) {
 	  
 	LepList list_a;
 	LepList list_b;
+        std::vector<TLorentzVector> tlv_a;
+        std::vector<TLorentzVector> tlv_b;
+        double lep_pt,lep_eta,lep_phi,lep_m;
 	  
 	int index;
 	  
@@ -398,6 +401,16 @@ int main(int argc, char* argv[]) {
 	  //LepSource source = LepSource(base->ID_lep->at(index*2+1)); // fix for old ntuple version
 	    
 	  list_a += Lep(flavor, charge, id, source);
+
+	  lep_pt = base->PT_lep->at(index);
+	  lep_eta = base->Eta_lep->at(index);
+	  lep_phi = base->Phi_lep->at(index);
+	  lep_m = base->M_lep->at(index);
+
+          TLorentzVector tlv;
+	  tlv.SetPtEtaPhiM(lep_pt,lep_eta,lep_phi,lep_m);
+	  tlv_a.push_back(tlv);
+
 	}
 	for(int i = 0; i < base->Nlep_b; i++){
 	  index = (*base->index_lep_b)[i];
@@ -421,7 +434,50 @@ int main(int argc, char* argv[]) {
 	  //LepSource source = LepSource(base->ID_lep->at(index*2+1)); // fix for old ntuple version
 	  
 	  list_b += Lep(flavor, charge, id, source);
+
+	  lep_pt = base->PT_lep->at(index);
+          lep_eta = base->Eta_lep->at(index);
+          lep_phi = base->Phi_lep->at(index);
+          lep_m = base->M_lep->at(index);
+
+          TLorentzVector tlv;
+          tlv.SetPtEtaPhiM(lep_pt,lep_eta,lep_phi,lep_m);
+          tlv_b.push_back(tlv);
+
 	}
+
+	//loop over both lep lists and form all OSSF pairs
+	//calculate all combinations mass. veto any event in j/psi window and break
+	bool jpsi=false;
+	bool upsilon=false;
+	
+	//need at least 2 Leps to try this
+	if( base->Nlep >= 2 ){
+	for( int i=0; i<list_a.GetN(); i++){
+		for( int j=0; j<list_b.GetN(); j++){
+			if(  (list_a[i].Flavor() == list_b[j].Flavor()) && (list_a[i].Charge() != list_b[j].Charge()) ){
+				//OSSF pair calculate mass indexed by list_a(b)
+				TLorentzVector tlv_ab = tlv_a[i] + tlv_b[j];
+				//std::cout<<"MASS= "<<tlv_ab.M()<<"\n";	
+				if( tlv_ab.M() < 3.2 && tlv_ab.M() > 3.0 ){
+					//jpsi is present, veto event
+					jpsi=true;
+				// 	std::cout<<"tlv_ab M: "<<tlv_ab.M()<<" ";
+				//	std::cout<<"found jpsi \n";	
+				}
+				//if( tlv_ab.M() < 10.5 && tlv_ab.M() > 9.0){
+				//	upsilon=true;
+				//	std::cout<<"tlv_ab M: "<<tlv_ab.M()<<" ";
+				//	std::cout<<"found upsilon \n";
+				//}
+			}	
+			if(jpsi || upsilon) break;
+		}
+		if(jpsi || upsilon) break;
+	}
+	}//end 2L check
+	//veto event if flag flipped
+	if(jpsi || upsilon) continue;
 
 	// SV eta
 	double SVmaxeta = 1.; // 1 is fine b/c less than 1.5 cutoff
@@ -435,7 +491,6 @@ int main(int argc, char* argv[]) {
 	//  sqrt(base->MX3b_BoostT*base->MX3b_BoostT+base->PX3_BoostT*base->PX3_BoostT);
 	//double gammaT = 2.*base->Mperp / MST;
 	double gammaT = base->gammaT;
-
 
 
 	
@@ -458,6 +513,9 @@ int main(int argc, char* argv[]) {
 	double btag_weight = 1.;
 	double PU_weight = 1.;
 	double trig_weight = 1.;
+        double PDF_weight = 1.;
+        double MuR_weight = 1.;
+        double MuF_weight = 1.;
 
 	if(!is_data){
 	  weight = (setLumi ? lumi : ST.Lumi())*base->weight*sample_weight;
@@ -481,6 +539,9 @@ int main(int argc, char* argv[]) {
 	  btag_weight = 1.;
 	  PU_weight = 1.;
 	  trig_weight = 1.;
+          PDF_weight = 1.;
+          MuR_weight = 1.;
+          MuF_weight = 1.;
           if(!(!sys) && is_data) continue;      
 
            //trig on the fly
@@ -588,13 +649,39 @@ int main(int argc, char* argv[]) {
 	  // else
 	  //   PU_weight = base->PUweight;
 
+	  //
+	  // PDF systematics
+	  //
+	    if(sys == Systematic("PDF_SF"))
+	      if(sys.IsUp())
+	        PDF_weight *= base->PDFweight_up;
+	      else
+	        PDF_weight *= base->PDFweight_down;
+	    else 
+	      PDF_weight *= base->PDFweight;
 
+	    if(sys == Systematic("MuR_SF"))
+	      if(sys.IsUp())
+	        MuR_weight *= base->MuRweight_up;
+	      else
+	        MuR_weight *= base->MuRweight_down;
+	    else 
+	      MuR_weight *= base->MuRweight;
 
+	    if(sys == Systematic("MuF_SF"))
+	      if(sys.IsUp())
+	        MuF_weight *= base->MuFweight_up;
+	      else
+	        MuF_weight *= base->MuFweight_down;
+	    else 
+	      MuF_weight *= base->MuFweight;
 
 
 	  weight *= btag_weight*PU_weight;
+	  //if(MuR_weight == 0.) MuR_weight = 1.;
+	  //if(MuF_weight == 0.) MuF_weight = 1.;
+	  //weight *= btag_weight*PU_weight*PDF_weight*MuR_weight*MuF_weight;
 	  //weight *= btag_weight*PU_weight*trig_weight;
-
 	  if(is_data) weight = 1.;
 	  
 	  LepList Fakes  = list_a.GetFakes();

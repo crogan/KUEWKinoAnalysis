@@ -324,6 +324,9 @@ Systematics SystematicsTool::GetWeightSystematics() const {
   //list += "MET_TRIG_SF"; // default
   ////list += "MET_TRIG_el";
   ////list += "MET_TRIG_mu";
+  //list += "PDF_SF";
+  //list += "MuR_SF";
+  //list += "MuF_SF";
 
   return list;
 }
