@@ -318,7 +318,7 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample, bool do_slim){
   tree->Branch("LepQual_lep", &m_LepQual_lep);
   tree->Branch("Index_lep", &m_Index_lep);
 
-  if(!do_slim){
+ // if(!do_slim){
     tree->Branch("RelIso_lep",  &m_RelIso_lep);
     tree->Branch("MiniIso_lep", &m_MiniIso_lep);
     tree->Branch("Dxy_lep", &m_Dxy_lep);
@@ -327,7 +327,7 @@ TTree* ReducedNtuple<Base>::InitOutputTree(const string& sample, bool do_slim){
     tree->Branch("DzErr_lep", &m_DzErr_lep);
     tree->Branch("IP3D_lep", &m_IP3D_lep);
     tree->Branch("SIP3D_lep", &m_SIP3D_lep);
-  }
+  //}
   
   tree->Branch("Njet", &m_Njet);
   tree->Branch("Nbjet", &m_Nbjet);

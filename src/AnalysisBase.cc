@@ -2787,7 +2787,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetElectrons(){
 
     // Lepton quality
     if(lep.ParticleID() >= kMedium &&
-       (lep.RelIso() < 4. && lep.MiniIso() < 4.)){
+       (lep.RelIso()*lep.Pt() < 4. && lep.MiniIso()*lep.Pt() < 4.)){
       if(lep.SIP3D() < 2.)
 	lep.SetLepQual(kGold);
       else
@@ -2829,8 +2829,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetMuons(){
     lep.SetPtEtaPhiM(Muon_pt[i], Muon_eta[i],
 		     Muon_phi[i], std::max(float(0.),Muon_mass[i]));
     lep.SetPDGID( (Muon_charge[i] < 0. ? 13 : -13) );
-    lep.SetCharge( (Muon_charge[i] < 0. ? -1 : 1) );
-
+    lep.SetCharge( (Muon_charge[i] < 0. ? -1 : 1) );	
     lep.SetDxy(Muon_dxy[i]);
     lep.SetDxyErr(Muon_dxyErr[i]);
     lep.SetDz(Muon_dz[i]);
@@ -2862,7 +2861,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetMuons(){
 
     // Lepton quality
     if(lep.ParticleID() >= kMedium &&
-       (lep.RelIso() < 4. && lep.MiniIso() < 4.)){
+       (lep.RelIso()*lep.Pt() < 4. && lep.MiniIso()*lep.Pt() < 4.)){
       if(lep.SIP3D() < 2.)
 	lep.SetLepQual(kGold);
       else
