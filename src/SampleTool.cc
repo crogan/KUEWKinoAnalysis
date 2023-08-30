@@ -574,7 +574,22 @@ void SampleTool::InitProcMap(){
     list += m_Path + "Fall17_102X/QCD_HT500to700_TuneCP5_13TeV-madgraph-pythia8_Fall17_102X.root";
     list += m_Path + "Fall17_102X/QCD_HT700to1000_TuneCP5_13TeV-madgraph-pythia8_Fall17_102X.root";
     m_Proc[m_iYear][QCD] = pair<vector<string>,string>(list, "KUAnalysis");
-    
+  
+    ///2017 debugging samples
+    //"old" ntuples
+    Process debug1("debug1", kBkg);
+    list.clear();
+    list += m_Path + "debug_std/DYJetsToLL_M-4to50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8_all_std.root";
+    list += m_Path + "debug_std/DYJetsToLL_M-50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8_all_std.root";	
+    m_Proc[m_iYear][debug1] = pair<vector<string>,string>(list, "KUAnalysis");
+
+   //"new" ntuples
+    Process debug2("debug2", kBkg);
+    list.clear();
+    list += m_Path + "debug_slm/DYJetsToLL_M-4to50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8_all_slm.root";
+    list += m_Path + "debug_slm/DYJetsToLL_M-50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8_all_slm.root";
+    m_Proc[m_iYear][debug2] = pair<vector<string>,string>(list, "KUAnalysis");
+
     // -------------- //
     // --- Signal --- //
     // -------------- //
@@ -614,7 +629,7 @@ void SampleTool::InitProcMap(){
 
     InitSMS("T2bb", m_Path+"Fall17_102X_SMS/SMS-T2bb_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
 
-    InitSMS("T2cc", m_Path+"Fall17_102X_SMS/SMS-T2cc_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
+   // InitSMS("T2cc", m_Path+"Fall17_102X_SMS/SMS-T2cc_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
     
     InitSMS("T1bbbb", m_Path+"Fall17_102X_SMS/SMS-T1bbbb_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
   
