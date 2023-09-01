@@ -385,12 +385,23 @@ int main(int argc, char* argv[]) {
 	  int PDGID = base->PDGID_lep->at(index);
 	    
 	  LepID id;
+          // "precalc"
 	  if(base->LepQual_lep->at(index) == 2)
 	    id = kBronze;
 	  else if(base->LepQual_lep->at(index) == 1)
 	    id = kSilver;
 	  else
 	    id = kGold;
+          // "on the fly"
+          //if(base->ID_lep->at(index) < 3 ||
+	  //   base->MiniIso_lep->at(index)*base->PT_lep->at(index) >= 4. ||
+	  //   base->RelIso_lep->at(index)*base->PT_lep->at(index) >= 4.)
+	  //  id = kBronze;
+	  //else if(base->SIP3D_lep->at(index) > 2.)
+	  //  id = kSilver;
+	  //else
+	  //  id = kGold;
+	  
 	  LepFlavor flavor;
 	  if(abs(PDGID) == 11)
 	    flavor = kElectron;
@@ -418,13 +429,24 @@ int main(int argc, char* argv[]) {
 	  int PDGID = base->PDGID_lep->at(index);
 
 	  LepID id;
+          // "precalc"
 	  if(base->LepQual_lep->at(index) == 2)
 	    id = kBronze;
 	  else if(base->LepQual_lep->at(index) == 1)
 	    id = kSilver;
 	  else
 	    id = kGold;
-	  LepFlavor flavor;
+          // "on the fly"
+          //if(base->ID_lep->at(index) < 3 ||
+	  //   base->MiniIso_lep->at(index)*base->PT_lep->at(index) >= 4. ||
+	  //   base->RelIso_lep->at(index)*base->PT_lep->at(index) >= 4.)
+	  //  id = kBronze;
+	  //else if(base->SIP3D_lep->at(index) > 2.)
+	  //  id = kSilver;
+	  //else
+	  //  id = kGold;
+	 
+          LepFlavor flavor;
 	  if(abs(PDGID) == 11)
 	    flavor = kElectron;
 	  else
