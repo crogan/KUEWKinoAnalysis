@@ -19,7 +19,7 @@ RESTFRAMES  = './scripts/setup_RestFrames_connect.sh'
 CMSSW_SETUP = './scripts/cmssw_setup_connect.sh'
 TREE        = "Events"
 USER        = os.environ['USER']
-OUT_BASE    = "/stash/user/"+USER+"/NTUPLES/Processing"
+OUT_BASE    = "/ospool/cms-user/"+USER+"/NTUPLES/Processing"
 LIST        = "default.list"
 QUEUE       = ""
 SPLIT       = 1
@@ -108,13 +108,13 @@ def write_sh_single(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,
     fsrc.write('output = '+outlog+" \n")
     fsrc.write('error = '+errlog+" \n")
     fsrc.write('log = '+loglog+" \n")
-    fsrc.write('Requirements = (Machine != "red-node000.unl.edu" && Machine != "ncm*.hpc.itc.rwth-aachen.de" && Machine != "*mh-epyc7662-8.t2.ucsd.edu" && Machine != "*sdsc-88.t2.ucsd.edu")\n')
+    fsrc.write('Requirements = (Machine != "red-node000.unl.edu" && Machine != "ncm*.hpc.itc.rwth-aachen.de" && Machine != "*mh-epyc7662-8.t2.ucsd.edu" && Machine != "*sdsc-88.t2.ucsd.edu" && Machine != "*beowulf.cluster")\n')
     fsrc.write('request_memory = 2 GB \n')
     #fsrc.write('priority = 10 \n')
     fsrc.write('+RequiresCVMFS = True \n')
     #fsrc.write('+RequiresSharedFS = True \n')
 
-    transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/stash/user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
+    transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/ospool/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
     fsrc.write(transfer_input)
 
     fsrc.write('should_transfer_files = YES\n')
@@ -175,7 +175,7 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
     fsrc.write('Requirements = (Machine != "red-node000.unl.edu" && Machine != "ncm*.hpc.itc.rwth-aachen.de" && Machine != "*mh-epyc7662-8.t2.ucsd.edu" && Machine != "*sdsc-88.t2.ucsd.edu")\n')
     fsrc.write('request_memory = 2 GB \n')
 
-    transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/stash/user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
+    transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/ospool/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
     fsrc.write(transfer_input)
 
     fsrc.write('should_transfer_files = YES\n')
@@ -459,6 +459,9 @@ if __name__ == "__main__":
             p = datasetlist.index(tagtuple[0])
             datasetlist[p][2].extend(rootlist)
 
+    if VERBOSE:
+        print("Created area for output root files")
+
     for (dataset,filetag,rootlist) in datasetlist:
         if not COUNT:
             os.system("mkdir -p "+os.path.join(listdir, dataset+'_'+filetag))
@@ -484,13 +487,18 @@ if __name__ == "__main__":
             script_name = srcdir+'_'.join([dataset, filetag])+'.submit'
             write_sh(script_name, overlist_name, file_name+'.root', logfile, outfile, errfile, dataset, filetag, SPLIT)
             write_sh_single(script_name, overlist_name, file_name+'.root', logfile, outfile, errfile, dataset, filetag, SPLIT)
+    
+    if VERBOSE:
+        print("Created area for log files")
 
     if not COUNT:
         #print listdir
         os.system("cp -r "+listdir+" "+config)
         #print "creating tarball from: ", TARGET
-        os.system("sleep 15") # sleep so copy command(s) can catch up...
+        os.system("sleep 10") # sleep so copy command(s) can catch up...
         os.system("tar -C "+config+"/../ -czf "+TARGET+"/config.tgz config")
+        if VERBOSE:
+            print("Created tar ball")
 
     submit_dir  = srcdir        
     submit_list = [os.path.join(submit_dir, f) for f in os.listdir(submit_dir) if (os.path.isfile(os.path.join(submit_dir, f)) and ('.submit' in f) and ('_single' not in f))]
@@ -499,9 +507,7 @@ if __name__ == "__main__":
 
     # Prep csv file
     if CSV:
-        csv_name = LIST.split("/")[-1]
-        print('csv name: ',csv_name) #
-        #f_csv = open("{0}".format(TARGET)+"/CSV.csv",'w') #
+        csv_name = LIST.split("/")[-1].split(".")[0]
         f_csv = open("{0}".format(TARGET)+"/"+csv_name+".csv",'w')
         f_csv.write('sample,clusterid,totaljobs')
         f_csv.write('\n')

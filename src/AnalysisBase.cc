@@ -1300,6 +1300,7 @@ template <>
 double AnalysisBase<SUSYNANOBase>::GetMuFWeight(int updown){
   if(IsData())
     return 1.;
+  if(nLHEScaleWeight == 0) return 1.;
   if(updown > 0)
     return LHEScaleWeight[5];
   else if(updown < 0) 
@@ -1312,6 +1313,7 @@ template <>
 double AnalysisBase<SUSYNANOBase>::GetMuRWeight(int updown){
   if(IsData())
     return 1.;
+  if(nLHEScaleWeight == 0) return 1.;
   if(updown > 0)
     return LHEScaleWeight[7];
   else if(updown < 0) 

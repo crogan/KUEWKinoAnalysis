@@ -44,8 +44,9 @@ if __name__ == "__main__":
         #"SMS-T2tt_mStop-400to1200_TuneCP2_13TeV-madgraphMLM-pythia8",
     ]
     redo_list = [
-        #"ZZTo4L_13TeV_powheg_pythia8_Fall17_102X",
-        #"WJetsToLNu_HT-70To100_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X",
+        "TTZToLLNuNu_M-10_TuneCP5_13TeV-amcatnlo-pythia8_Fall17_102X",
+        "TTTT_TuneCP5_13TeV-amcatnlo-pythia8_Fall17_102X",
+        "TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8_Fall17_102X",
     ]
 
     if os.path.exists("scripts/startup_C.so") is False:
@@ -63,6 +64,8 @@ if __name__ == "__main__":
 
         if redo and target not in redo_list:
             continue
+        if redo and target not in os.listdir(IN_DIR):
+            continue
 
         #print target
         #haddcmd = "hadd -f "+OUT_DIR+"/"+target+".root "
@@ -72,9 +75,9 @@ if __name__ == "__main__":
             #os.system("LD_PRELOAD=scripts/startup_C.so hadd -f -j 4 "+IN_DIR+"/"+target+"/"+target+"_"+str(i)+".root "+IN_DIR+"/"+target+"/"+target+"_"+str(i)+"/*.root")
 
         hadd_sml_processes = []
-        if os.path.exists("HADD_logs/"+"/"+target) is True:
-            os.system("rm -r HADD_logs/"+"/"+target)
-        os.system("mkdir -p HADD_logs/"+"/"+target)
+        if os.path.exists("HADD_logs/"+target) is True:
+            os.system("rm -r HADD_logs/"+target)
+        os.system("mkdir -p HADD_logs/"+target)
         for i in range(0,10):
             os.system("mkdir -p "+IN_DIR+"/"+target+"/"+target+"_"+str(i))
             for f in glob(os.path.join(IN_DIR+"/"+target+"/"+target+"_*"+str(i)+".root")):
