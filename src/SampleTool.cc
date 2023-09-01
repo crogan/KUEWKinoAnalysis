@@ -263,6 +263,7 @@ void SampleTool::InitProcMap(){
     list += m_Path + "Summer16_102X/TTJets_SingleLeptFromT_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root";
     list += m_Path + "Summer16_102X/TTJets_SingleLeptFromTbar_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root";
     list += m_Path + "Summer16_102X/TTGJets_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8_Summer16_102X.root";
+    list += m_Path + "Summer16_102X/TTWW_TuneCUETP8M2T4_13TeV-madgraph-pythia8.root";
     list += m_Path + "Summer16_102X/TTTT_TuneCUETP8M1_13TeV-amcatnlo-pythia8_Summer16_102X.root";
     list += m_Path + "Summer16_102X/TTWJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8_Summer16_102X.root";
     list += m_Path + "Summer16_102X/TTWJetsToQQ_TuneCUETP8M1_13TeV-amcatnloFXFX-madspin-pythia8_Summer16_102X.root";
@@ -458,6 +459,7 @@ void SampleTool::InitProcMap(){
     list += m_Path + "Fall17_102X/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root";
     list += m_Path + "Fall17_102X/TTJets_SingleLeptFromTbar_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root";
     list += m_Path + "Fall17_102X/TTGJets_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8_Fall17_102X.root";
+    list += m_Path + "Fall17_102X/TTWW_TuneCP5_13TeV-madgraph-pythia8_Fall17_102X.root";
     list += m_Path + "Fall17_102X/TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8_Fall17_102X.root";
     list += m_Path + "Fall17_102X/TTWJetsToLNu_TuneCP5_PSweights_13TeV-amcatnloFXFX-madspin-pythia8_Fall17_102X.root";
     list += m_Path + "Fall17_102X/TTWJetsToQQ_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8_Fall17_102X.root";
@@ -695,6 +697,7 @@ void SampleTool::InitProcMap(){
     list += m_Path + "Autumn18_102X/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/TTJets_SingleLeptFromTbar_TuneCP5_13TeV-madgraphMLM-pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/TTGJets_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8_Autumn18_102X.root";
+    list += m_Path + "Autumn18_102X/TTWW_TuneCP5_13TeV-madgraph-pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/TTTT_TuneCP5_13TeV-amcatnlo-pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8_Autumn18_102X.root";
     list += m_Path + "Autumn18_102X/TTWJetsToQQ_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8_Autumn18_102X.root";

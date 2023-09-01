@@ -114,6 +114,14 @@ public :
    vector<double>  *M_lep;
    vector<int>     *Charge_lep;
    vector<int>     *PDGID_lep;
+   vector<double>  *RelIso_lep;
+   vector<double>  *MiniIso_lep;
+   vector<double>  *Dxy_lep;
+   vector<double>  *DxyErr_lep;
+   vector<double>  *Dz_lep;
+   vector<double>  *DzErr_lep;
+   vector<double>  *IP3D_lep;
+   vector<double>  *SIP3D_lep;
    vector<int>     *ID_lep;
    vector<int>     *SourceID_lep;
    vector<int>     *LepQual_lep;
@@ -289,6 +297,14 @@ public :
    TBranch        *b_M_lep;   //!
    TBranch        *b_Charge_lep;   //!
    TBranch        *b_PDGID_lep;   //!
+   TBranch        *b_RelIso_lep;   //!
+   TBranch        *b_MiniIso_lep;   //!
+   TBranch        *b_Dxy_lep;   //!
+   TBranch        *b_DxyErr_lep;   //!
+   TBranch        *b_Dz_lep;   //!
+   TBranch        *b_DzErr_lep;   //!
+   TBranch        *b_IP3D_lep;   //!
+   TBranch        *b_SIP3D_lep;   //!
    TBranch        *b_ID_lep;   //!
    TBranch        *b_SourceID_lep;   //!
    TBranch        *b_LepQual_lep;   //!
@@ -441,6 +457,14 @@ inline void ReducedBase::Init(TTree *tree)
    M_lep = 0;
    Charge_lep = 0;
    PDGID_lep = 0;
+   RelIso_lep = 0;
+   MiniIso_lep = 0;
+   Dxy_lep = 0;
+   DxyErr_lep = 0;
+   Dz_lep = 0;
+   DzErr_lep = 0;
+   IP3D_lep = 0;
+   SIP3D_lep = 0;
    ID_lep = 0;
    SourceID_lep = 0;
    LepQual_lep = 0;
@@ -580,6 +604,14 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchAddress("M_lep", &M_lep, &b_M_lep);
    fChain->SetBranchAddress("Charge_lep", &Charge_lep, &b_Charge_lep);
    fChain->SetBranchAddress("PDGID_lep", &PDGID_lep, &b_PDGID_lep);
+   fChain->SetBranchAddress("RelIso_lep", &RelIso_lep, &b_RelIso_lep);
+   fChain->SetBranchAddress("MiniIso_lep", &MiniIso_lep, &b_MiniIso_lep);
+   fChain->SetBranchAddress("Dxy_lep", &Dxy_lep, &b_Dxy_lep);
+   fChain->SetBranchAddress("DxyErr_lep", &DxyErr_lep, &b_DxyErr_lep);
+   fChain->SetBranchAddress("Dz_lep", &Dz_lep, &b_Dz_lep);
+   fChain->SetBranchAddress("DzErr_lep", &DzErr_lep, &b_DzErr_lep);
+   fChain->SetBranchAddress("IP3D_lep", &IP3D_lep, &b_IP3D_lep);
+   fChain->SetBranchAddress("SIP3D_lep", &SIP3D_lep, &b_SIP3D_lep);
    fChain->SetBranchAddress("ID_lep", &ID_lep, &b_ID_lep);
    fChain->SetBranchAddress("SourceID_lep", &SourceID_lep, &b_SourceID_lep);
    fChain->SetBranchAddress("LepQual_lep", &LepQual_lep, &b_LepQual_lep);
