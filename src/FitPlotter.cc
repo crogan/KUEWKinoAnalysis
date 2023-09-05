@@ -6070,10 +6070,10 @@ SuperBinList FitPlotter::GetAllBins(const VS& proc_bkg,
             }
             index += NM;
         }
-        //cout << "Total bins :" << sBinList.size() << endl;
-        /*
+        cout << "Total bins :" << sBinList.size() << endl;
+        
         for(auto const &sb : sBinList)
-            sb->PrintSummary();*/
+            sb->PrintSummary(sys);
         allBins += sBinList;
     }
 
@@ -6110,6 +6110,10 @@ SuperBin* FitPlotter::GetSuperBin(const VS& proc_bkg,
     int Ncat = CatList.GetN();
 
     int Depth = CT.GetDepth();
+
+    /*for(int v = 0; v < Nvis; v++){
+        cout << CatTrees[v]->GetPlainLabel(Depth) << endl;
+    }*/
 
     ProcessList bkgs = FetchProcs(proc_bkg);
     ProcessList sigs = FetchProcs(proc_sig);
@@ -6166,6 +6170,7 @@ SuperBin* FitPlotter::GetSuperBin(const VS& proc_bkg,
         VS rlabel;
 
         CategoryList cat = CatList.Filter(*superbin_cts[v]);
+
         vector<double> hsigVec = GetAddedHistValues(cat, list);
 
         /*for(int i = 0; i < int(hsigVec.size()); i++)
@@ -6180,17 +6185,18 @@ SuperBin* FitPlotter::GetSuperBin(const VS& proc_bkg,
                 mlabel += fitbins[v][r].GetMBinLabels();
                 if(strcmp(RISRIDs[v].c_str(), rlabel[r].c_str()) == 0 && strcmp(MperpIDs[v].c_str(), mlabel[m].c_str()) == 0) {
                     //cout << "bin " << categoryIDs[v] << " " << RISRIDs[v] << " " << MperpIDs[v] << " signal yield: " << hsigVec[m + index] << endl;
+                    /*cout << "bin " << superbin_cts[v]->GetPlainLabel(Depth) << " " << rlabel[r] << " "
+                         << mlabel[m] << " signal yield: " << hsigVec[m + index] << endl;*/
                     signal_yield += hsigVec[m + index];
                 }
-
             }
             index += NM;
         }
     }
-    //}
 
     //background
-    double background_yield = 0;
+    double background_yield = 0.;
+    double background_error = 0.;
     for(int v=0; v < Nvis; v++) {
         int NM = 0;
         int index = 0;
@@ -6198,8 +6204,10 @@ SuperBin* FitPlotter::GetSuperBin(const VS& proc_bkg,
 
         CategoryList cat = CatList.Filter(*superbin_cts[v]);
         vector<double> hbkgVec = GetAddedHistValues(cat, bkgs);
+        vector<double> hbkgErrVec = GetAddedHistErrors(cat, bkgs);
+
         /*for(int i = 0; i < int(hbkgVec.size()); i++)
-            cout << "value in bin " << i << ": " << hbkgVec[i] << endl;*/
+            cout << "error in bin " << i << ": " << hbkgErrVec[i] << endl;*/
 
         for (int r = 0; r < fitbins[v].NRBins(); r++) {
             NM = fitbins[v][r].NBins();
@@ -6209,16 +6217,23 @@ SuperBin* FitPlotter::GetSuperBin(const VS& proc_bkg,
             for(int m = 0; m < NM; m++) {
                 mlabel += fitbins[v][r].GetMBinLabels();
                 if(strcmp(RISRIDs[v].c_str(), rlabel[r].c_str()) == 0 && strcmp(MperpIDs[v].c_str(), mlabel[m].c_str()) == 0) {
-                    //cout << "bin " << categoryIDs[v] << " " << RISRIDs[v] << " " << MperpIDs[v] << " background yield: " << hbkgVec[m + index] << endl;
+                    /*cout << "bin " << categoryIDs[v] << " " << RISRIDs[v] << " " << MperpIDs[v] << " background yield: " << hbkgVec[m + index] << endl;
+                    cout << "bin " << superbin_cts[v]->GetPlainLabel(Depth) << " " << rlabel[r] << " "
+                    << mlabel[m] << " background yield: " << hbkgVec[m + index] << endl;
+                    cout << "Mperp/RISR bins: " << hbkgVec.size() << endl;*/
                     background_yield += hbkgVec[m + index];
+                    background_error += pow(hbkgErrVec[m + index], 2.);
                 }
-
             }
             index += NM;
         }
     }
-    auto sb = new SuperBin(indices, signal_yield, background_yield, MperpIDs, RISRIDs, categoryIDs);
+    background_error = sqrt(background_error);
+    cout << background_yield << " " << background_error << endl;
+    auto sb = new SuperBin(indices, signal_yield, background_yield,
+                           MperpIDs, RISRIDs, categoryIDs, background_error);
     //cout << "signal: " << sb.GetNsig() << ", background: " << sb.GetNbkg() << ", zbi: " << sb.GetBinZbi(0.1) << endl;
+    cout << sb->GetBkgErr() << endl;
 
     return sb;
 }

@@ -3,14 +3,16 @@
 //SuperBin Class
 //Constructor
 SuperBin::SuperBin(const VI &index, const double nSig, const double nBkg, const VS &mPerpLabel, const VS &rIsrLabel,
-                   const VS &visLabel) :
+                   const VS &visLabel, const double bkgErr, const double sigErr) :
         index_(index),
         nSig_(nSig),
         nBkg_(nBkg),
         sOverB_(nSig / nBkg),
         mPerpLabel_(mPerpLabel),
         rIsrLabel_(rIsrLabel),
-        visLabel_(visLabel) {}
+        visLabel_(visLabel),
+        bkgErr_(bkgErr),
+        sigErr_(sigErr){}
 
 SuperBin::~SuperBin() = default;
 
@@ -22,8 +24,16 @@ double SuperBin::GetNsig() const {
     return nSig_;
 }
 
+double SuperBin::GetSigErr() const {
+    return sigErr_;
+}
+
 double SuperBin::GetNbkg() const {
     return nBkg_;
+}
+
+double SuperBin::GetBkgErr() const {
+    return bkgErr_;
 }
 
 double SuperBin::GetSoverB() const {
@@ -67,8 +77,10 @@ SuperBin *SuperBin::TryMerge(SuperBin *superBin, double sys) const {
         VS combinedMperpLabels = this->GetMperpLabel() += superBin->GetMperpLabel();
         VS combinedRisrLabels = this->GetRisrLabel() += superBin->GetRisrLabel();
         VS combinedVisLabels = this->GetVisLabel() += superBin->GetVisLabel();
+        double bkg_err = sqrt(pow(this->GetBkgErr(), 2) + pow(superBin->GetBkgErr(), 2));
+        double sig_err = sqrt(pow(this->GetSigErr(), 2) + pow(superBin->GetSigErr(), 2));
         auto mergedSuperBin = new SuperBin(idxList, nSigTotal, nBkgTotal, combinedMperpLabels, combinedRisrLabels,
-                                           combinedVisLabels);
+                                           combinedVisLabels, bkg_err, sig_err);
         return mergedSuperBin;
     } else
         return nullptr;
@@ -83,8 +95,10 @@ SuperBin *SuperBin::ForceMerge(SuperBin *superBin, double sys) const {
     VS combinedMperpLabels = this->GetMperpLabel() += superBin->GetMperpLabel();
     VS combinedRisrLabels = this->GetRisrLabel() += superBin->GetRisrLabel();
     VS combinedVisLabels = this->GetVisLabel() += superBin->GetVisLabel();
+    double bkgErr = sqrt(pow(this->GetBkgErr(), 2) + pow(superBin->GetBkgErr(), 2));
+    double sigErr = sqrt(pow(this->GetSigErr(), 2) + pow(superBin->GetSigErr(), 2));
     auto mergedSuperBin = new SuperBin(idxList, nSigTotal, nBkgTotal, combinedMperpLabels, combinedRisrLabels,
-                                       combinedVisLabels);
+                                       combinedVisLabels, bkgErr, sigErr);
 
     return mergedSuperBin;
 }
@@ -106,7 +120,7 @@ SuperBinList::SuperBinList() :
 }
 
 //Construct superBinList from vector of superBin objects
-SuperBinList::SuperBinList(const std::vector<SuperBin *> &superBinList) {
+SuperBinList::SuperBinList(const std::vector<SuperBin*> &superBinList) {
     isSorted_ = false;
     for (auto superBin: superBinList)
         *this += superBin;
@@ -624,6 +638,9 @@ SuperBin* SuperBinList::ForceMergeBins(){
     VS vis, mlabels, rlabels;
     double background_yield = 0.;
     double signal_yield = 0.;
+    double signal_error = 0.;
+    double background_error = 0.;
+
 
     for (auto const &bin : *this){
         indices += bin->getIndex();
@@ -632,9 +649,13 @@ SuperBin* SuperBinList::ForceMergeBins(){
         rlabels += bin->GetRisrLabel();
         background_yield += bin->GetNbkg();
         signal_yield += bin->GetNsig();
+        signal_error += pow(bin->GetBkgErr(), 2);
+        background_error += pow(bin->GetBkgErr(), 2);
+
     }
 
-    return new SuperBin(indices, signal_yield, background_yield, mlabels, rlabels, vis);
+    return new SuperBin(indices, signal_yield, background_yield, mlabels, rlabels, vis,
+                        sqrt(signal_error), sqrt(background_error));
 }
 
 

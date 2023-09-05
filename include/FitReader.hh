@@ -23,100 +23,104 @@ using std::basic_string;
 
 class FitReader {
 public:
-  FitReader(const string& inputfile,
-	    const string& otherfile = "",
-	    const string& otherfold = "");
+    FitReader(const string& inputfile,
+              const string& otherfile = "",
+              const string& otherfold = "");
 
-  virtual ~FitReader();
+    virtual ~FitReader();
 
-  void PrintCategories(bool verbose = false);
-  void PrintProcesses(bool verbose = false);
+    void PrintCategories(bool verbose = false);
+    void PrintProcesses(bool verbose = false);
 
-  // checks if filled, loads histogram for use
-  bool IsFilled(const Category&   cat,
-		const Process&    proc,
-		const Systematic& sys = Systematic::Default()) const;
+    // checks if filled, loads histogram for use
+    bool IsFilled(const Category&   cat,
+                  const Process&    proc,
+                  const Systematic& sys = Systematic::Default()) const;
 
-  // checks if filled, deletes histogram after check
-  bool IsThere(const Category&   cat,
-	       const Process&    proc,
-	       const Systematic& sys = Systematic::Default()) const;
+    // checks if filled, deletes histogram after check
+    bool IsThere(const Category&   cat,
+                 const Process&    proc,
+                 const Systematic& sys = Systematic::Default()) const;
 
-  const TH1D* GetHistogram(const Category&   cat,
-			   const Process&    proc,
-			   const Systematic& sys = Systematic::Default()) const;
+    const TH1D* GetHistogram(const Category&   cat,
+                             const Process&    proc,
+                             const Systematic& sys = Systematic::Default()) const;
 
-  // returns a 1-bin histogram added over all RISR/Mperp bins, all cats, all procs
-  TH1D* GetIntegralHist(const string&       name,
-			const CategoryList& cats,
-			const ProcessList&  procs,
-			const Systematic&   sys = Systematic::Default()) const;
+    // returns a 1-bin histogram added over all RISR/Mperp bins, all cats, all procs
+    TH1D* GetIntegralHist(const string&       name,
+                          const CategoryList& cats,
+                          const ProcessList&  procs,
+                          const Systematic&   sys = Systematic::Default()) const;
 
-  // returns a RISR/Mperp histogram added over all cats, all procs (need to have same binning or errors)
-  TH1D* GetAddedHist(const string&       name,
-		     const CategoryList& cats,
-		     const ProcessList&  procs,
-		     const Systematic&   sys = Systematic::Default()) const;
+    // returns a RISR/Mperp histogram added over all cats, all procs (need to have same binning or errors)
+    TH1D* GetAddedHist(const string&       name,
+                       const CategoryList& cats,
+                       const ProcessList&  procs,
+                       const Systematic&   sys = Systematic::Default()) const;
 
-  vector<double> GetAddedHistValues(const CategoryList& cats,
-				    const ProcessList&  procs,
-				    const Systematic&   sys = Systematic::Default()) const;
+    vector<double> GetAddedHistValues(const CategoryList& cats,
+                                      const ProcessList&  procs,
+                                      const Systematic&   sys = Systematic::Default()) const;
 
-  //vector<vector<double>> Get
-  
-  bool IsFilled2D(const Category&   cat,
-		  const Process&    proc,
-		  const Systematic& sys = Systematic::Default()) const;
+    vector<double> GetAddedHistErrors(const CategoryList& cats,
+                                      const ProcessList&  procs,
+                                      const Systematic&   sys = Systematic::Default()) const;
 
-  const TH2D* GetHistogram2D(const Category&   cat,
-			     const Process&    proc,
-			     const Systematic& sys = Systematic::Default()) const;
+    //vector<vector<double>> Get
 
-  double Integral(const Category&   cat,
-		  const Process&    proc,
-		  const Systematic& sys = Systematic::Default()) const;
+    bool IsFilled2D(const Category&   cat,
+                    const Process&    proc,
+                    const Systematic& sys = Systematic::Default()) const;
 
-  bool HasSystematic(const Process& proc, const Systematic& sys) const;
+    const TH2D* GetHistogram2D(const Category&   cat,
+                               const Process&    proc,
+                               const Systematic& sys = Systematic::Default()) const;
 
-  string GetSignalTitle(const string&);
+    double Integral(const Category&   cat,
+                    const Process&    proc,
+                    const Systematic& sys = Systematic::Default()) const;
 
-  VS GetChannels() const;  
-  const ProcessList&  GetProcesses() const;
-  const CategoryList& GetCategories(const string& channel = "") const;         
-  const Systematics&  GetSystematics() const;
+    bool HasSystematic(const Process& proc, const Systematic& sys) const;
 
-  map<string,VS> m_Strings;
-  mutable map<Process,Systematics> m_ProcSys;
+    string GetSignalTitle(const string&);
 
-  static double CalculateZbi(double Nsig, double Nbkg, double deltaNbkg);
+    VS GetChannels() const;
+    const ProcessList&  GetProcesses() const;
+    const CategoryList& GetCategories(const string& channel = "") const;
+    const Systematics&  GetSystematics() const;
 
-  VS GetSignalProcs(int min_mass_diff, int max_mass_diff, int exclude_below, int exclude_above) const;
-  
+    map<string,VS> m_Strings;
+    mutable map<Process,Systematics> m_ProcSys;
+
+    static double CalculateZbi(double Nsig, double Nbkg, double deltaNbkg);
+
+    VS GetSignalProcs(int min_mass_diff, int max_mass_diff, int exclude_below, int exclude_above) const;
+
 protected:
-  mutable TFile  m_File;
-  mutable TFile* m_FilePtr;
-  string         m_FileFold;
+    mutable TFile  m_File;
+    mutable TFile* m_FilePtr;
+    string         m_FileFold;
 
-  mutable map<Process,map<Category,TH1D*> > m_ProcHist;
-  mutable map<Process,map<Systematic,map<Category,pair<TH1D*,TH1D*> > > >m_ProcHistSys;
-  mutable map<Process,map<Category,TH2D*> > m_ProcHist_2D;
-  mutable map<Process,map<Systematic,map<Category,pair<TH2D*,TH2D*> > > >m_ProcHistSys_2D;
+    mutable map<Process,map<Category,TH1D*> > m_ProcHist;
+    mutable map<Process,map<Systematic,map<Category,pair<TH1D*,TH1D*> > > >m_ProcHistSys;
+    mutable map<Process,map<Category,TH2D*> > m_ProcHist_2D;
+    mutable map<Process,map<Systematic,map<Category,pair<TH2D*,TH2D*> > > >m_ProcHistSys_2D;
 
-  ProcessList                      m_Proc;
-  mutable map<string,CategoryList> m_Chan;
-  mutable map<string,bool>         m_CatLabel;
-  CategoryList                     m_Cat;
-  Systematics                      m_Sys;
-  
-  ProcessBranch m_ProcBranch;
-  void ReadProcesses();
-  
-  CategoryBranch m_CatBranch;
-  void ReadCategories();
+    ProcessList                      m_Proc;
+    mutable map<string,CategoryList> m_Chan;
+    mutable map<string,bool>         m_CatLabel;
+    CategoryList                     m_Cat;
+    Systematics                      m_Sys;
 
-  double SuperBinValue(vector<double> sig_yields, vector<double> bkg_yields, double sys, vector<string> cat_label, bool verbose=false);  
+    ProcessBranch m_ProcBranch;
+    void ReadProcesses();
 
-  std::tuple<int, int, std::string> SigMass(const std::string sig) const;
+    CategoryBranch m_CatBranch;
+    void ReadCategories();
+
+    double SuperBinValue(vector<double> sig_yields, vector<double> bkg_yields, double sys, vector<string> cat_label, bool verbose=false);
+
+    std::tuple<int, int, std::string> SigMass(const std::string sig) const;
 };
 
 #endif
