@@ -81,7 +81,7 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag):
     #fsrc.write('+RequiresSharedFS = True \n')
 
     if CONNECT is True:
-        transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/stash/user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
+        transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/ospool/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
     else:
         transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/uscms/home/z374f439/nobackup/whatever_you_want/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
     fsrc.write(transfer_input)
@@ -171,7 +171,7 @@ if __name__ == "__main__":
     os.system("cp "+CMSSW_SETUP+" "+config+".")
 
     if CONNECT is True:
-        OUT  = "/stash/user/"+USER+"/EventCount/root/"
+        OUT  = "/ospool/cms-user/"+USER+"/EventCount/root/"
 
     # output root files
     ROOT = OUT+"/"+NAME+"/"
