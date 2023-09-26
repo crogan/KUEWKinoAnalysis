@@ -2788,6 +2788,8 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetElectrons(){
     } // end lepton id
 
     // Lepton quality
+    // matching old BFI qual logic exactly
+    /*
     if(lep.ParticleID() >= kMedium &&
        (lep.RelIso()*lep.Pt() < 4. && lep.MiniIso()*lep.Pt() < 4.)){
       if(lep.SIP3D() < 2.)
@@ -2797,6 +2799,14 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetElectrons(){
     } else {
       lep.SetLepQual(kBronze);
     }
+    */
+     //its okay to cut on kMedium for elecs, they are either tight(4) or loose(2&1) - this makes the logic identical to old BFI
+     if(lep.ParticleID() < kMedium || lep.MiniIso()*lep.Pt() >= 4. || lep.RelIso()*lep.Pt() >= 4.)
+	    lep.SetLepQual(kBronze);
+	  else if(lep.SIP3D() > 2.)
+	    lep.SetLepQual(kSilver);
+	  else
+	    lep.SetLepQual(kGold);
 
     list.push_back(lep);
   }
@@ -2862,6 +2872,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetMuons(){
     }
 
     // Lepton quality
+    /*
     if(lep.ParticleID() >= kMedium &&
        (lep.RelIso()*lep.Pt() < 4. && lep.MiniIso()*lep.Pt() < 4.)){
       if(lep.SIP3D() < 2.)
@@ -2871,6 +2882,14 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetMuons(){
     } else {
       lep.SetLepQual(kBronze);
     }
+    */
+    if(lep.ParticleID() < kMedium || lep.MiniIso()*lep.Pt() >= 4. || lep.RelIso()*lep.Pt() >= 4.)
+            lep.SetLepQual(kBronze);
+          else if(lep.SIP3D() > 2.)
+            lep.SetLepQual(kSilver);
+          else
+            lep.SetLepQual(kGold);
+
     
     list.push_back(lep);
   }

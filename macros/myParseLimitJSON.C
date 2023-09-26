@@ -553,6 +553,9 @@ void myParseLimitJSON(const string& json, bool inclObs = false, PlotType ptype =
   out->WriteTObject(can_MC);
   out->WriteTObject(can_dM);
   out->WriteTObject(hist_exp_dM);
+  out->WriteTObject(gr_exp_dM,"gr_mid");
+  out->WriteTObject(gr_exp_dM_up,"gr_up");
+  out->WriteTObject(gr_exp_dM_dn,"gr_dn");
   out->Close();
  
 }
