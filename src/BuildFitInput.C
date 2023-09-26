@@ -64,7 +64,7 @@ int main(int argc, char* argv[]) {
 
   bool maskSR = false;
  
-  bool debugVerbosity = true;
+  bool debugVerbosity = false;
  
   for(int i = 0; i < argc; i++){
     if(strncmp(argv[i],"--help", 6) == 0){
@@ -390,8 +390,8 @@ int main(int argc, char* argv[]) {
 	    
 	  LepID id;
 	//debugging assume index problem has been fixed.. this will not work with older ntuples (applied in A and B)
-	//  if(base->ID_lep->at(index*2) < 3 ||
-	    if(base->ID_lep->at(index) < 3 ||
+	  if(base->ID_lep->at(index*2) < 3 ||
+	//    if(base->ID_lep->at(index) < 3 ||
 	     base->MiniIso_lep->at(index)*base->PT_lep->at(index) >= 4. ||
 	     base->RelIso_lep->at(index)*base->PT_lep->at(index) >= 4.)
 	    id = kBronze;
@@ -405,8 +405,8 @@ int main(int argc, char* argv[]) {
 	  else
 	    flavor = kMuon;
 	  LepCharge charge = (base->Charge_lep->at(index) > 0 ? kPos : kNeg);
-	  LepSource source = LepSource(base->SourceID_lep->at(index));
-	//  LepSource source = LepSource(base->ID_lep->at(index*2+1)); // fix for current ntuple version (this is the one turned on in master)
+	//  LepSource source = LepSource(base->SourceID_lep->at(index));
+	  LepSource source = LepSource(base->ID_lep->at(index*2+1)); // fix for current ntuple version (this is the one turned on in master)
 	  
 	
 	  list_a += Lep(flavor, charge, id, source);
@@ -428,8 +428,8 @@ int main(int argc, char* argv[]) {
 	  int PDGID = base->PDGID_lep->at(index);
 
 	  LepID id;
-	 // if(base->ID_lep->at(index*2) < 3 || //index fixed for newly produced ntuples
-	    if(base->ID_lep->at(index) < 3 ||
+	  if(base->ID_lep->at(index*2) < 3 || //index fixed for newly produced ntuples
+	 //   if(base->ID_lep->at(index) < 3 ||
 	     base->MiniIso_lep->at(index)*base->PT_lep->at(index) >= 4. ||
 	     base->RelIso_lep->at(index)*base->PT_lep->at(index) >= 4.)
 	    id = kBronze;
@@ -445,8 +445,8 @@ int main(int argc, char* argv[]) {
 
 	
 	  LepCharge charge = (base->Charge_lep->at(index) > 0 ? kPos : kNeg);
-	  LepSource source = LepSource(base->SourceID_lep->at(index));
-	//  LepSource source = LepSource(base->ID_lep->at(index*2+1)); // fix for current ntuple version
+	//  LepSource source = LepSource(base->SourceID_lep->at(index));
+	  LepSource source = LepSource(base->ID_lep->at(index*2+1)); // fix for current ntuple version
 	  list_b += Lep(flavor, charge, id, source);
 	
 	  lep_pt = base->PT_lep->at(index);
@@ -551,11 +551,11 @@ int main(int argc, char* argv[]) {
 	  trig_weight = 1.;
           if(!(!sys) && is_data) continue;      
 
-		//remove these for debugging 
-//	    trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
-//            if(is_FastSim)
-///	      trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0)*
-//		m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
+		
+	    trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
+            if(is_FastSim)
+	      trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0)*
+		m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
 
 
 
@@ -671,7 +671,8 @@ int main(int argc, char* argv[]) {
 	  
 	
 	  double RISR  = base->RISR;
-          weight = 1.;		
+        //weight fixing for debug samples
+        //weight = 1.;		
 
 	  if(Fakes.GetN() > 0 && is_bkg){
 	    VS flabels = Fakes.GetFakeLabels(2); // processes w/ up to 2 "fake" leps
