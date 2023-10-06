@@ -8,7 +8,10 @@ odir = 'Output/'
 #Load input arguments ()
 #Require Absolute Path
 inputList = sys.argv[1] 
-
+runFlags = sys.argv[2:]
+runFlags = " ".join(runFlags)
+print("Using input list: "+ inputList )
+print("Adding input flags: "+ runFlags )
 
 #testlists
 #inputList = '/uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis/samples/NANO/Fall17_102X/DYJetsToLL_M-4to50_HT-100to200_TuneCP5_13TeV-madgraphMLM-pythia8.txt'
@@ -34,7 +37,7 @@ os.mkdir(odir+dataSetName+"_"+yearTag+"/out")
 ####################Create submission script in src directory##################
 subf = open(odir+dataSetName+"_"+yearTag+"/src/submit.sh","w")
 SH.writeSubmissionBase( subf, dataSetName, yearTag )
-SH.writeQueueList( subf, inputList, dataSetName, yearTag )
+SH.writeQueueList( subf, inputList, dataSetName, yearTag, runFlags )
 subf.close()
 
 print("submission ready, to run use:")

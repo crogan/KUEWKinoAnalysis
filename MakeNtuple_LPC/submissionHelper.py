@@ -36,8 +36,8 @@ def writeSubmissionBase( subf, dataSetName, yearTag ):
 	#print("remap is "+ remap)
 	subf.write("transfer_output_remaps = \""+outname+"="+remap+"\"\n")
 
-def writeQueueList( subf, pathToList, dataSetName, yearTag ):
-	configArgs = " -tree=Events -eventcount=./config/EventCount.root -filtereff=./config/FilterEff.root -json=./config/GRL_JSON.txt -pu=./config/PU/ -btag=./config/BtagSF/ -lep=./config/LepSF/ -jme=./config/JME/ -svfile=./config/NNmodel.json -metfile=./config/METTrigger/Parameters.csv -prefirefile=./config/Prefire/Prefire.root --slim --sys"
+def writeQueueList( subf, pathToList, dataSetName, yearTag, runFlags ):
+	configArgs = " -tree=Events -eventcount=./config/EventCount.root -filtereff=./config/FilterEff.root -json=./config/GRL_JSON.txt -pu=./config/PU/ -btag=./config/BtagSF/ -lep=./config/LepSF/ -jme=./config/JME/ -svfile=./config/NNmodel.json -metfile=./config/METTrigger/Parameters.csv -prefirefile=./config/Prefire/Prefire.root --slim" #--sys"
 	dataSetArg = " -dataset="+dataSetName
 	outFileArg = " -ofile="+dataSetName+"_"+yearTag+".$(Process).root"
 	
@@ -46,7 +46,7 @@ def writeQueueList( subf, pathToList, dataSetName, yearTag ):
 	jobCtr=0
 	for ifile in ilist:
 		inFileArg = " -ifile="+ifile.rstrip()
-		Args = "Arguments ="+inFileArg+dataSetArg+outFileArg+configArgs+"\n"
+		Args = "Arguments ="+inFileArg+dataSetArg+outFileArg+configArgs+" "+runFlags+"\n"
 		subf.write("\n\n\n")
 		subf.write("###### job"+str(jobCtr)+ "######\n")
 		subf.write(Args)
