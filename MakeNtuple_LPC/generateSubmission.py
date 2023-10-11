@@ -37,11 +37,14 @@ os.mkdir(odir+dataSetName+"_"+yearTag+"/out")
 ####################Create submission script in src directory##################
 subf = open(odir+dataSetName+"_"+yearTag+"/src/submit.sh","w")
 SH.writeSubmissionBase( subf, dataSetName, yearTag )
-SH.writeQueueList( subf, inputList, dataSetName, yearTag, runFlags )
-subf.close()
+flagSets = SH.processFlags_Split(runFlags)
+#SH.writeQueueList( subf, inputList, dataSetName, yearTag, runFlags )
+#for flagSet in flagSets:
+SH.writeQueueList(subf, inputList, dataSetName, yearTag, flagSets)
+#subf.close()
 
 print("submission ready, to run use:")
-print("cd ../ && condor_submit MakeNtuple_LPC/Output/"+dataSetName+"_"+yearTag+"/src/submit.sh")
+print("pushd ../ && condor_submit MakeNtuple_LPC/Output/"+dataSetName+"_"+yearTag+"/src/submit.sh")
 
 
 
