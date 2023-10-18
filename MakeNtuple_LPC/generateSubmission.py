@@ -1,97 +1,72 @@
 import sys
 import os
+import argparse
 import shutil
 import submissionHelper as SH
 
+# Create workspace and condor submit files.
+def generateSubmission(outputDir, extra_args):
+ 	# Ensure that the directory includes "/" at the end.
+	if outputDir[-1] != "/":
+		outputDir += "/"
+	
+	print("Directory for condor submission: {0}".format(outputDir))
+	print("------------------------------------------------------------")
+	
+	# Create directory if it does not exist.
+	SH.makeDir(outputDir)
+	
+ 	# Load input arguments
+	# - we assume that the first argument is the input file list
+	# - the absolute path is required for the input file list
+	inputList = extra_args[0]
+	runFlags  = extra_args[1:]
+	runFlags  = " ".join(runFlags)
+	
+	print("Using input list: {0}".format(inputList))
+	print("Adding input flags: {0}".format(runFlags))
 
-odir = 'Output/'
-#Load input arguments ()
-#Require Absolute Path
-inputList = sys.argv[1] 
-runFlags = sys.argv[2:]
-runFlags = " ".join(runFlags)
-print("Using input list: "+ inputList )
-print("Adding input flags: "+ runFlags )
+	dataSetName = SH.getDataSetName(inputList)
+	yearTag = SH.getYearTag(inputList)
+	sampleDir = outputDir + dataSetName + "_" + yearTag
+	
+	print("Preparing sample directory: {0}".format(sampleDir))
 
-#testlists
-#inputList = '/uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis/samples/NANO/Fall17_102X/DYJetsToLL_M-4to50_HT-100to200_TuneCP5_13TeV-madgraphMLM-pythia8.txt'
-#inputList = '/uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis/samples/NANO/Fall17_102X_Data/MET/MET_Run2017B-02Apr2020-v1_2017.txt'
+	##### Create a workspace (remove existing directory) #####
+	if os.path.exists(sampleDir):
+		print("Removing existing directory: {0}".format(sampleDir))
+		shutil.rmtree(sampleDir)
 
+	# Create directories for work area.
+	SH.createWorkArea(sampleDir)
 
-dataSetName = SH.getDataSetName(inputList)
-yearTag = SH.getYearTag(inputList)
-#print(yearTag)
+	##### Create condor submission script in src directory #####
+	condorSubmitFile = sampleDir + "/src/submit.sh"
+	subf = open(condorSubmitFile, "w")
+	SH.writeSubmissionBase(subf, sampleDir, dataSetName, yearTag)
+	flagSets = SH.processFlags_Split(runFlags)
+	#SH.writeQueueList( subf, inputList, dataSetName, yearTag, runFlags )
+	#for flagSet in flagSets:
+	SH.writeQueueList(subf, inputList, dataSetName, yearTag, flagSets)
+	#subf.close()
+	
+	print("------------------------------------------------------------")
+	print("Submission ready, to run use:")
+	print("pushd ../ && condor_submit MakeNtuple_LPC/"+condorSubmitFile)
 
+def main():
+	# options
+	parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+	parser.add_argument("--directory", "-d", default="Output", help="working directory for condor submission")
 
+	# handle unknown arguments that are used for condor submission
+	main_args, extra_args = parser.parse_known_args()
+	directory = main_args.directory
 
-#####################Create a workspace (remove existing directory)############
-if os.path.exists(odir+dataSetName+"_"+yearTag):
-	print("removing existing directory "+odir+dataSetName+"_"+yearTag)
-	shutil.rmtree(odir+dataSetName+"_"+yearTag)
-os.mkdir(odir+dataSetName+"_"+yearTag)
-os.mkdir(odir+dataSetName+"_"+yearTag+"/src")
-os.mkdir(odir+dataSetName+"_"+yearTag+"/log")
-os.mkdir(odir+dataSetName+"_"+yearTag+"/out")
+	#print("main_args: {0}".format(main_args))
+	#print("extra_args: {0}".format(extra_args))
+	
+	generateSubmission(directory, extra_args)
 
-
-####################Create submission script in src directory##################
-subf = open(odir+dataSetName+"_"+yearTag+"/src/submit.sh","w")
-SH.writeSubmissionBase( subf, dataSetName, yearTag )
-flagSets = SH.processFlags_Split(runFlags)
-#SH.writeQueueList( subf, inputList, dataSetName, yearTag, runFlags )
-#for flagSet in flagSets:
-SH.writeQueueList(subf, inputList, dataSetName, yearTag, flagSets)
-#subf.close()
-
-print("submission ready, to run use:")
-print("pushd ../ && condor_submit MakeNtuple_LPC/Output/"+dataSetName+"_"+yearTag+"/src/submit.sh")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+if __name__ == "__main__":
+    main()
