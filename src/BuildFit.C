@@ -569,6 +569,9 @@ else cout << "Nominal signal cross section: " << xsec_norm << endl;
     cout << "+ Adding shape systematics" << endl;
     for(int s = 0; s < Nsys; s++){  
       Systematic& sys = systematics[s];
+      cout<< " ---Systematic: "<<sys.Label()<< endl;
+      if(sys.Label() == "BTAGHF_SF") continue;
+      if(sys.Label() == "BTAGLF_SF") continue;
       if(shapeToNorm.Contains(sys)){ 
         CONFIG.AddShapeSysAsNorm(sys,cb,FIT);
         continue;
