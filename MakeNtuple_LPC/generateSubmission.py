@@ -45,7 +45,7 @@ SH.writeQueueList(subf, inputList, dataSetName, yearTag, flagSets)
 
 print("submission ready, to run use:")
 print("pushd ../ && condor_submit MakeNtuple_LPC/Output/"+dataSetName+"_"+yearTag+"/src/submit.sh")
-
+print("")
 
 
 
