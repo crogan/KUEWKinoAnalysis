@@ -512,7 +512,7 @@ if __name__ == "__main__":
         f_csv.write('sample,clusterid,totaljobs')
         f_csv.write('\n')
 
-    # don't submit jobs if --dry-run is used
+    # don't submit jobs if --dry-run or --count are used
     if not DRY_RUN and not COUNT:
         for f in submit_list:
             sample_handle = f.split("/")
@@ -561,8 +561,8 @@ if __name__ == "__main__":
     print "total condor jobs:       {0}".format(total_jobs)
     print "----------------------------"
 
-    if DRY_RUN:
-        print "The option --dry-run was used; no jobs were submitted."
+    if DRY_RUN or COUNT:
+        print "No jobs were submitted."
     else:
         print "Congrats... your jobs were submitted!"
 
