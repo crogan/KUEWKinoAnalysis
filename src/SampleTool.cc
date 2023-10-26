@@ -384,6 +384,7 @@ void SampleTool::InitProcMap(){
     // --- Signal --- //
     // -------------- //
 
+
     ////InitSMS("T2bW", m_Path+"Summer16_102X_SMS/SMS-T2bW_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 1., true);
     ////InitSMS("T2bW", m_Path+"Summer16_102X_SMS/SMS-T2bW_X05_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 1., true);
     ////InitSMS("T2bW", m_Path+"Summer16_102X_SMS/SMS-T2bW_X05_dM-10to80_2Lfilter_mWMin-0p1_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", (3.*0.1086)*(3.*0.1086), true, true);
@@ -416,6 +417,7 @@ void SampleTool::InitProcMap(){
     ////InitSMS("T2cc", m_Path+"Summer16_102X_SMS/SMS-T2cc_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 1., true);
     //
     ////InitSMS("T1bbbb", m_Path+"Summer16_102X_SMS/SMS-T1bbbb_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 1., true);
+
   
     ////InitSMS("T1ttbb", m_Path+"Summer16_102X_SMS/SMS-T1ttbb_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 1., true);
     //
@@ -578,7 +580,22 @@ void SampleTool::InitProcMap(){
     list += m_Path + "Fall17_102X/QCD_HT500to700_TuneCP5_13TeV-madgraph-pythia8_Fall17_102X.root";
     list += m_Path + "Fall17_102X/QCD_HT700to1000_TuneCP5_13TeV-madgraph-pythia8_Fall17_102X.root";
     m_Proc[m_iYear][QCD] = pair<vector<string>,string>(list, "KUAnalysis");
-    
+  
+    ///2017 debugging samples
+    //"old" ntuples
+    Process debug1("debug1", kBkg);
+    list.clear();
+    list += m_Path + "debug_std/DYJetsToLL_M-4to50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8_all_std.root";
+    list += m_Path + "debug_std/DYJetsToLL_M-50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8_all_std.root";	
+    m_Proc[m_iYear][debug1] = pair<vector<string>,string>(list, "KUAnalysis");
+
+   //"new" ntuples
+    Process debug2("debug2", kBkg);
+    list.clear();
+    list += m_Path + "debug_slm/DYJetsToLL_M-4to50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8_all_slm.root";
+    list += m_Path + "debug_slm/DYJetsToLL_M-50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8_all_slm.root";
+    m_Proc[m_iYear][debug2] = pair<vector<string>,string>(list, "KUAnalysis");
+
     // -------------- //
     // --- Signal --- //
     // -------------- //
@@ -606,11 +623,11 @@ void SampleTool::InitProcMap(){
     ////InitSMS("TChiWZ", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., false, true);
     ////InitSMS("TChiWZ", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_mC1-325to1000_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., false, true);
     InitSMS("TChiWZ", m_Path+"Fall17_102X_SMS/TChiWZ_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
+
     //
     //InitSMS("TChipmWW", m_Path+"Fall17_102X_SMS/SMS-TChipmWW_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
     //InitSMS("TChipmWW", m_Path+"Fall17_102X_SMS/SMS-TChipmWW_WWTo2LNu_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true, true);
     //InitSMS("TChipmWW", m_Path+"Fall17_102X_SMS/SMS-TChipmWW_dM-3to50_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
-
     ////InitSMS("TSlepSlep", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 2.77, true);
     ////InitSMS("TSlepSlep", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Fall17_102X.root", 2.77, true);
     ////InitSMS("TSlepSlep", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_mSlep-500To1300_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 2.77, true);
@@ -618,9 +635,11 @@ void SampleTool::InitProcMap(){
 
     //InitSMS("T2bb", m_Path+"Fall17_102X_SMS/SMS-T2bb_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
 
+
     //InitSMS("T2cc", m_Path+"Fall17_102X_SMS/SMS-T2cc_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
     //
     //InitSMS("T1bbbb", m_Path+"Fall17_102X_SMS/SMS-T1bbbb_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
+
   
     //InitSMS("T1ttbb", m_Path+"Fall17_102X_SMS/SMS-T1ttbb_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
     //
@@ -820,6 +839,11 @@ void SampleTool::InitProcMap(){
     // -------------- //
     // --- Signal --- //
     // -------------- //
+	
+   //adding 2018 t2bw
+    InitSMS("T2bW", m_Path+"Autumn18_102X_SMS/SMS-T2bW_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 1., true);
+    InitSMS("T2bW", m_Path+"Autumn18_102X_SMS/SMS-T2bW_X05_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 1., true);
+
 
     //InitSMS("T2tt", m_Path+"Autumn18_102X_SMS/SMS-T2tt_dM-10to80_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 1., true);
     ////InitSMS("T2tt", m_Path+"Autumn18_102X_SMS/SMS-T2tt_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 1., true);

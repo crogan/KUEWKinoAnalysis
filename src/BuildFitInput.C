@@ -63,7 +63,9 @@ int main(int argc, char* argv[]) {
   bool doSys = false;
 
   bool maskSR = false;
-  
+ 
+  bool debugVerbosity = false;
+ 
   for(int i = 0; i < argc; i++){
     if(strncmp(argv[i],"--help", 6) == 0){
       bprint = true;
@@ -312,6 +314,7 @@ int main(int argc, char* argv[]) {
 
       // event loop
       for(int e = 0; e < Nentry; e += SKIP){
+//	cout<<"in event loop with Nentry "<<e<<", "<<Nentry<<"\n";
 	base->GetEntry(e);
 
 	if((e/SKIP)%(std::max(1, int(Nentry/SKIP/10))) == 0)
@@ -373,20 +376,28 @@ int main(int argc, char* argv[]) {
 	  
 	LepList list_a;
 	LepList list_b;
+
         std::vector<TLorentzVector> tlv_a;
         std::vector<TLorentzVector> tlv_b;
         double lep_pt,lep_eta,lep_phi,lep_m;
 	  
 	int index;
+
 	  
 	for(int i = 0; i < base->Nlep_a; i++){
 	  index = (*base->index_lep_a)[i];
-	    
+//	  std::cout<<"processing a lepton of index, Nlep_a(i): "<<i<<", "<<index<<"\n";   
 	  int PDGID = base->PDGID_lep->at(index);
 	    
 	  LepID id;
+
           // "precalc"
 	  if(base->LepQual_lep->at(index) == 2)
+	//debugging assume index problem has been fixed.. this will not work with older ntuples (applied in A and B)
+//	  if(base->ID_lep->at(index*2) < 3 ||
+	//    if(base->ID_lep->at(index) < 3 ||
+//	     base->MiniIso_lep->at(index)*base->PT_lep->at(index) >= 4. ||
+//	     base->RelIso_lep->at(index)*base->PT_lep->at(index) >= 4.)
 	    id = kBronze;
 	  else if(base->LepQual_lep->at(index) == 1)
 	    id = kSilver;
@@ -407,10 +418,17 @@ int main(int argc, char* argv[]) {
 	    flavor = kElectron;
 	  else
 	    flavor = kMuon;
-	  LepCharge charge = (base->Charge_lep->at(index) > 0 ? kPos : kNeg);
+	  LepCharge charge = (base->Charge_lep->at(index) > 0 ? kPos : kNeg)
+
 	  LepSource source = LepSource(base->SourceID_lep->at(index));
 	  //LepSource source = LepSource(base->ID_lep->at(index*2+1)); // fix for old ntuple version
 	    
+
+	//  LepSource source = LepSource(base->SourceID_lep->at(index));
+	//  LepSource source = LepSource(base->ID_lep->at(index*2+1)); // fix for current ntuple version (this is the one turned on in master)
+	  
+	
+
 	  list_a += Lep(flavor, charge, id, source);
 
 	  lep_pt = base->PT_lep->at(index);
@@ -425,12 +443,19 @@ int main(int argc, char* argv[]) {
 	}
 	for(int i = 0; i < base->Nlep_b; i++){
 	  index = (*base->index_lep_b)[i];
+  //	  std::cout<<"processing a lepton of index, Nlep_b(i): "<<i<<", "<<index<<"\n";
 	  
 	  int PDGID = base->PDGID_lep->at(index);
 
 	  LepID id;
+
           // "precalc"
 	  if(base->LepQual_lep->at(index) == 2)
+//	  if(base->ID_lep->at(index*2) < 3 || //index fixed for newly produced ntuples
+	 //   if(base->ID_lep->at(index) < 3 ||
+//	     base->MiniIso_lep->at(index)*base->PT_lep->at(index) >= 4. ||
+//	     base->RelIso_lep->at(index)*base->PT_lep->at(index) >= 4.)
+
 	    id = kBronze;
 	  else if(base->LepQual_lep->at(index) == 1)
 	    id = kSilver;
@@ -451,11 +476,20 @@ int main(int argc, char* argv[]) {
 	    flavor = kElectron;
 	  else
 	    flavor = kMuon;
+
+	
 	  LepCharge charge = (base->Charge_lep->at(index) > 0 ? kPos : kNeg);
+
 	  LepSource source = LepSource(base->SourceID_lep->at(index));
 	  //LepSource source = LepSource(base->ID_lep->at(index*2+1)); // fix for old ntuple version
 	  
 	  list_b += Lep(flavor, charge, id, source);
+
+
+	//  LepSource source = LepSource(base->SourceID_lep->at(index));
+	//  LepSource source = LepSource(base->ID_lep->at(index*2+1)); // fix for current ntuple version
+	//  list_b += Lep(flavor, charge, id, source);
+	
 
 	  lep_pt = base->PT_lep->at(index);
           lep_eta = base->Eta_lep->at(index);
@@ -542,12 +576,12 @@ int main(int argc, char* argv[]) {
 	if(!is_data){
 	  weight = (setLumi ? lumi : ST.Lumi())*base->weight*sample_weight;
 	}
-	
 	// systematics loop
 	// do down sys first
 	string correct_sys = "";
 	for(int is = 0; is < Nsys; is++){
 	  Systematic& sys = systematics[is];
+//	  std::cout<<"systemtatics list "<< systematics[is].Label()<<"\n";
 	  if(!(!sys)){
 	    if(sys.IsUp()){
 	      sys.Down();
@@ -566,6 +600,7 @@ int main(int argc, char* argv[]) {
           MuF_weight = 1.;
           if(!(!sys) && is_data) continue;      
 
+
            //trig on the fly
 	    //trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
             //if(is_FastSim)
@@ -573,6 +608,15 @@ int main(int argc, char* argv[]) {
             //	  m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
            //trig ntuples
             trig_weight = base->MetTrigSFweight; 
+
+//remnant from master merge		
+//	    trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
+//            if(is_FastSim)
+//	      trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0)*
+//		m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
+
+
+
 
             if(sys.Label().find("MET_TRIG") != std::string::npos && proc.Name() != "QCD")
             {
@@ -721,6 +765,8 @@ int main(int argc, char* argv[]) {
 	  
 	
 	  double RISR  = base->RISR;
+        //weight fixing for debug samples
+        //weight = 1.;		
 
 	  if(Fakes.GetN() > 0 && is_bkg){
 	    VS flabels = Fakes.GetFakeLabels(2); // processes w/ up to 2 "fake" leps
@@ -733,10 +779,17 @@ int main(int argc, char* argv[]) {
 	      
 	      FITBuilder.AddEvent(weight/double(Nf), Mperp, RISR,
 				  Categories[eindex], proc.FakeProcess(flabels[fl]), sys);
+		if(debugVerbosity){
+			std::cout<<"Adding fakes event:"<<e<<" weight: "<<weight/double(Nf)<<" Mperp:"<<Mperp<<" RISR:"<<RISR<<" gammaT:"<<gammaT<<" PTISR:"<<PTISR<<" Cat:"<<Categories[eindex].Label()<<"  flabel:"<<flabels[fl]<<"\n";
+		}
 	    }
 	  } else {
+		//std::cout<<"adding event "<< weight <<" "<< Mperp <<" "<< RISR <<" "<<Categories[eindex].Label()<<" "<<proc.Name()<<" "<<sys.Label()<<"\n";
 	    FITBuilder.AddEvent(weight, Mperp, RISR,
 				Categories[eindex], proc, sys);
+		if(debugVerbosity){
+			std::cout<<"Adding event:"<<e<<" weight: "<<weight<<" Mperp:"<<Mperp<<" RISR:"<<RISR<<" gammaT:"<<gammaT<<" PTISR:"<<PTISR<<" Cat:"<<Categories[eindex].Label()<<" sysLabel:"<<sys.Label()<<"\n";
+		}
 	  }
 	  
 	  // dummy data

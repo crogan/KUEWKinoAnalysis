@@ -1300,6 +1300,7 @@ template <>
 double AnalysisBase<SUSYNANOBase>::GetMuFWeight(int updown){
   if(IsData())
     return 1.;
+  if(nLHEScaleWeight == 0) return 1.;
   if(updown > 0)
     return LHEScaleWeight[5];
   else if(updown < 0) 
@@ -1312,6 +1313,7 @@ template <>
 double AnalysisBase<SUSYNANOBase>::GetMuRWeight(int updown){
   if(IsData())
     return 1.;
+  if(nLHEScaleWeight == 0) return 1.;
   if(updown > 0)
     return LHEScaleWeight[7];
   else if(updown < 0) 
@@ -2786,8 +2788,10 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetElectrons(){
     } // end lepton id
 
     // Lepton quality
+    // matching old BFI qual logic exactly
+    /*
     if(lep.ParticleID() >= kMedium &&
-       (lep.RelIso() < 4. && lep.MiniIso() < 4.)){
+       (lep.RelIso()*lep.Pt() < 4. && lep.MiniIso()*lep.Pt() < 4.)){
       if(lep.SIP3D() < 2.)
 	lep.SetLepQual(kGold);
       else
@@ -2795,6 +2799,14 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetElectrons(){
     } else {
       lep.SetLepQual(kBronze);
     }
+    */
+     //its okay to cut on kMedium for elecs, they are either tight(4) or loose(2&1) - this makes the logic identical to old BFI
+     if(lep.ParticleID() < kMedium || lep.MiniIso()*lep.Pt() >= 4. || lep.RelIso()*lep.Pt() >= 4.)
+	    lep.SetLepQual(kBronze);
+	  else if(lep.SIP3D() > 2.)
+	    lep.SetLepQual(kSilver);
+	  else
+	    lep.SetLepQual(kGold);
 
     list.push_back(lep);
   }
@@ -2829,8 +2841,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetMuons(){
     lep.SetPtEtaPhiM(Muon_pt[i], Muon_eta[i],
 		     Muon_phi[i], std::max(float(0.),Muon_mass[i]));
     lep.SetPDGID( (Muon_charge[i] < 0. ? 13 : -13) );
-    lep.SetCharge( (Muon_charge[i] < 0. ? -1 : 1) );
-
+    lep.SetCharge( (Muon_charge[i] < 0. ? -1 : 1) );	
     lep.SetDxy(Muon_dxy[i]);
     lep.SetDxyErr(Muon_dxyErr[i]);
     lep.SetDz(Muon_dz[i]);
@@ -2861,8 +2872,9 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetMuons(){
     }
 
     // Lepton quality
+    /*
     if(lep.ParticleID() >= kMedium &&
-       (lep.RelIso() < 4. && lep.MiniIso() < 4.)){
+       (lep.RelIso()*lep.Pt() < 4. && lep.MiniIso()*lep.Pt() < 4.)){
       if(lep.SIP3D() < 2.)
 	lep.SetLepQual(kGold);
       else
@@ -2870,6 +2882,14 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetMuons(){
     } else {
       lep.SetLepQual(kBronze);
     }
+    */
+    if(lep.ParticleID() < kMedium || lep.MiniIso()*lep.Pt() >= 4. || lep.RelIso()*lep.Pt() >= 4.)
+            lep.SetLepQual(kBronze);
+          else if(lep.SIP3D() > 2.)
+            lep.SetLepQual(kSilver);
+          else
+            lep.SetLepQual(kGold);
+
     
     list.push_back(lep);
   }
