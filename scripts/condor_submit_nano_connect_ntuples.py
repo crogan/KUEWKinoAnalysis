@@ -541,7 +541,8 @@ if __name__ == "__main__":
             print "sample: {0}".format(f)
             print(" - number of root files  = {0}".format(n_root_files))
             print(" - number of jobs        = {0}".format(n_jobs))
-            if CSV:
+            # make sure that "clusterid" has been filled to avoid key error
+            if not DRY_RUN and not COUNT and CSV:
                 f_csv.write("{0}".format(f+","+input_info[f]["clusterid"].replace('.\n','')+",{0}".format(n_jobs)+'\n'))
 
     # Close csv file
