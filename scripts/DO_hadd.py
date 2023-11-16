@@ -8,7 +8,11 @@ import subprocess
 # After hadd finishes and ready to copy to LPC:
 #    nohup xrdcp --parallel 4 -f ../../../NTUPLES/HADD/Summer16_102X/* root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v1/Summer16_102X/ > xrdcp_Summer16_102X.debug 2>&1 &
 
-if __name__ == "__main__":
+def main():
+    # start time
+    start_time = time.time()
+    print("DO_hadd.py: Start... go go go!")
+    print("------------------------------")
 
     argv_pos = 1
 
@@ -130,3 +134,19 @@ if __name__ == "__main__":
         print("Finished Merging Files")
     else:
         print("Note: "+str(len(hadd_big_processes))+" hadd jobs may still be running!")
+    
+    print("------------------------------")
+    # end time
+    end_time = time.time()
+    print("DO_hadd.py: End... all done!")
+
+    # total time in seconds
+    total_time_seconds = end_time - start_time
+    # total time in hours
+    total_time_hours = total_time_seconds / 3600
+    
+    print("Total time: {0:.2f} seconds = {1:.2f} hours".format(total_time_seconds, total_time_hours))
+
+
+if __name__ == "__main__":
+    main()
