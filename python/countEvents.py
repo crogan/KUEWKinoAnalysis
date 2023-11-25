@@ -18,8 +18,9 @@ ROOT.gROOT.SetBatch(ROOT.kTRUE)
 # Tell ROOT not to be in charge of memory, fix issue of histograms being deleted when ROOT file is closed:
 ROOT.TH1.AddDirectory(False)
 
-# count events in a ROOT file
-def countEvents(root_file):
+# count total events in a ROOT file
+# iterate over entries in EventCount tree
+def countTotalEvents(root_file):
     result = 0
     tree_name = "EventCount"
     chain = ROOT.TChain(tree_name)
@@ -29,8 +30,16 @@ def countEvents(root_file):
         chain.GetEntry(i)
         n_events = chain.Nevent
         result += n_events
-        #print("n_events = {0}".format(n_events))
-    return result
+    return int(result)
+
+# count saved events in a ROOT file
+# use the number of entries in the KUAnalysis tree
+def countSavedEvents(root_file):
+    tree_name = "KUAnalysis"
+    chain = ROOT.TChain(tree_name)
+    chain.Add(root_file)
+    n_events = chain.GetEntries()
+    return int(n_events)
 
 # process directory containing ROOT files
 def processDir(directory, pattern, csv, eos, verbose):
@@ -44,11 +53,12 @@ def processDir(directory, pattern, csv, eos, verbose):
         print("verbose: {0}".format(verbose))
         print("----------------------------")
     
-    total_event_count = 0
+    root_files = []
     base_file_names = []
     output_data = []
     n_events_map = {}
-    root_files = []
+    sum_total_events = 0
+    sum_saved_events = 0
     
     # get ROOT files
     # - if pattern is set, then require file name to contain pattern
@@ -65,23 +75,32 @@ def processDir(directory, pattern, csv, eos, verbose):
     if verbose:
         print("Found {0} ROOT files:".format(n_root_files))
     
+    # headers for csv
+    output_data.append(["sample", "total_events", "saved_events"])
+
     # count events
     for root_file in root_files:
         base_name = os.path.basename(root_file)
         base_file_names.append(base_name)
-        n_events = countEvents(root_file)
-        n_events_map[base_name] = n_events
-        output_data.append([base_name, n_events])
-        total_event_count += n_events
+        n_total_events = countTotalEvents(root_file)
+        n_saved_events = countSavedEvents(root_file)
+        n_events_map[base_name] = {}
+        n_events_map[base_name]["n_total_events"] = n_total_events
+        n_events_map[base_name]["n_saved_events"] = n_saved_events
+        output_data.append([base_name, n_total_events, n_saved_events])
+        sum_total_events += n_total_events
+        sum_saved_events += n_saved_events
         if verbose:
             print(" - {0}".format(base_name))
 
     # print results
-    print("Number of events:")
+    print("Sample: total events, saved events")
     for base_name in base_file_names:
-        n_events = n_events_map[base_name]
-        print("{0}: {1}".format(base_name, n_events))
-    print("Total event count: {0}".format(total_event_count))
+        n_total_events = n_events_map[base_name]["n_total_events"]
+        n_saved_events = n_events_map[base_name]["n_saved_events"]
+        print("{0}: {1}, {2}".format(base_name, n_total_events, n_saved_events))
+    print("Sum of total events from all samples: {0}".format(sum_total_events))
+    print("Sum of saved events from all samples: {0}".format(sum_saved_events))
     
     # if csv file name is set, then save data to csv
     if csv:
