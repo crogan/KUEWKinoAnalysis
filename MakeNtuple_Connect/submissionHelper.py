@@ -42,7 +42,9 @@ def writeSubmissionBase(subf, sampleDir, dataSetName, yearTag):
 	subf.write("log = ./MakeNtuple_Connect/"+sampleDir+"/log/job.log\n")
 	#subf.write("transfer_input_files = /uscms/home/z374f439/nobackup/whatever_you_want/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2,MakeNtuple_Connect/config.tgz\n")
 	#update path of sandbox for connect
-	subf.write("transfer_input_files = /ospool/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2, MakeNtuple_Connect/config.tgz\n")
+	#subf.write("transfer_input_files = /ospool/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2, MakeNtuple_Connect/config.tgz\n")
+	#update to use HTTP protocol
+	subf.write("transfer_input_files = https://stash.osgconnect.net/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2, https://stash.osgconnect.net/cms-user/mlazarovits/CMSSW_10_6_5/src/KUEWKinoAnalysis/MakeNtuple_Connect/config.tgz\n")
 	subf.write("should_transfer_files = YES\n")
 	subf.write("when_to_transfer_output = ON_EXIT\n")
 	outputFile = dataSetName+"_"+yearTag+".$(Process).root"
