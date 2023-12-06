@@ -48,9 +48,9 @@ def main():
         #"SMS-T2tt_mStop-400to1200_TuneCP2_13TeV-madgraphMLM-pythia8",
     ]
     redo_list = [
-        "TTZToLLNuNu_M-10_TuneCP5_13TeV-amcatnlo-pythia8_Fall17_102X",
-        "TTTT_TuneCP5_13TeV-amcatnlo-pythia8_Fall17_102X",
-        "TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8_Fall17_102X",
+        #"TTZToLLNuNu_M-10_TuneCP5_13TeV-amcatnlo-pythia8_Fall17_102X",
+        #"TTTT_TuneCP5_13TeV-amcatnlo-pythia8_Fall17_102X",
+        #"TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8_Fall17_102X",
     ]
 
     if os.path.exists("scripts/startup_C.so") is False:
