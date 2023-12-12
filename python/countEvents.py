@@ -6,10 +6,18 @@ import ROOT
 import argparse
 import tools
 
-# TODO
+#
+# Count the number of "total" and "saved" events for all ROOT files in a directory.
+# Print the results and save results to a csv file.
+#
+# Example syntax:
+# python python/countEvents.py --directory <path_to_directory> --csv <path_to_csv>
+#
 
+# TODO
 # DONE
 # - Update get_eos_file_list() to use a pattern
+# - Sort sample names alphabetically for printing and csv
 
 # Make sure ROOT.TFile.Open(fileURL) does not seg fault when $ is in sys.argv (e.g. $ passed in as argument)
 ROOT.PyConfig.IgnoreCommandLineOptions = True
@@ -69,12 +77,15 @@ def processDir(directory, pattern, csv, eos, verbose):
             root_files = glob.glob("{0}/*{1}*.root".format(directory, pattern))
         else:
             root_files = glob.glob("{0}/*.root".format(directory))
-        
+
+    # sort ROOT files alphabetically    
+    root_files.sort()
     n_root_files = len(root_files)
 
     if verbose:
+        #print("ROOT files: {0}".format(root_files))
         print("Found {0} ROOT files:".format(n_root_files))
-    
+
     # headers for csv
     output_data.append(["sample", "total_events", "saved_events"])
 
@@ -102,7 +113,7 @@ def processDir(directory, pattern, csv, eos, verbose):
     print("Sum of total events from all samples: {0}".format(sum_total_events))
     print("Sum of saved events from all samples: {0}".format(sum_saved_events))
     
-    # if csv file name is set, then save data to csv
+    # if csv file name is set, then save data to csv file
     if csv:
         tools.writeCSV(csv, output_data)
 
