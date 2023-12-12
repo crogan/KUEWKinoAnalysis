@@ -68,6 +68,17 @@ def getChain(input_files, num_files):
     
     return chain
 
+# get a list of subdirectories in a directory
+def get_subdirectories(directory):
+    subdirectories = [d for d in os.listdir(directory) if os.path.isdir(os.path.join(directory, d))]
+    return subdirectories
+
+# count files in a directory matching a pattern
+def count_files_with_pattern(directory, pattern):
+    files = glob.glob(os.path.join(directory, pattern))
+    n_files = len(files)
+    return n_files
+
 # get list of local files
 def get_file_list(dir_):
     file_list_tmp = [os.path.join(dir_, f) for f in os.listdir(dir_) if (os.path.isfile(os.path.join(dir_, f)) and ('.root' in f))]

@@ -6,8 +6,15 @@ import ROOT
 import argparse
 import tools
 
-# TODO
+#
+# Count the number of "total" and "saved" events for all ROOT files in a directory.
+# Print the results and save results to a csv file.
+#
+# Example syntax:
+# python python/countEvents.py --directory <path_to_directory> --csv <path_to_csv>
+#
 
+# TODO
 # DONE
 # - Update get_eos_file_list() to use a pattern
 
