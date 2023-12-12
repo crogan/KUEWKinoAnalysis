@@ -15,9 +15,9 @@ import tools
 #
 
 # TODO
-# - Sort sample names alphabetically for printing and csv
 # DONE
 # - Update get_eos_file_list() to use a pattern
+# - Sort sample names alphabetically for printing and csv
 
 # Make sure ROOT.TFile.Open(fileURL) does not seg fault when $ is in sys.argv (e.g. $ passed in as argument)
 ROOT.PyConfig.IgnoreCommandLineOptions = True
@@ -77,12 +77,15 @@ def processDir(directory, pattern, csv, eos, verbose):
             root_files = glob.glob("{0}/*{1}*.root".format(directory, pattern))
         else:
             root_files = glob.glob("{0}/*.root".format(directory))
-        
+
+    # sort ROOT files alphabetically    
+    root_files.sort()
     n_root_files = len(root_files)
 
     if verbose:
+        #print("ROOT files: {0}".format(root_files))
         print("Found {0} ROOT files:".format(n_root_files))
-    
+
     # headers for csv
     output_data.append(["sample", "total_events", "saved_events"])
 

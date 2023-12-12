@@ -20,8 +20,9 @@ def processDir(directory, pattern, csv):
     #print("subdirectories: {0}".format(subdirectories))
     
     # headers for csv
-    output_data.append(["samples", "n_files"])
+    output_data.append(["sample", "n_files"])
 
+    print("Sample: number of files")
     for subdirectory in subdirectories:
         path = "{0}/{1}".format(directory, subdirectory)
         # get the number of files in the subdirectory
