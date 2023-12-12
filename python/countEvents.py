@@ -15,6 +15,7 @@ import tools
 #
 
 # TODO
+# - Sort sample names alphabetically for printing and csv
 # DONE
 # - Update get_eos_file_list() to use a pattern
 
@@ -109,7 +110,7 @@ def processDir(directory, pattern, csv, eos, verbose):
     print("Sum of total events from all samples: {0}".format(sum_total_events))
     print("Sum of saved events from all samples: {0}".format(sum_saved_events))
     
-    # if csv file name is set, then save data to csv
+    # if csv file name is set, then save data to csv file
     if csv:
         tools.writeCSV(csv, output_data)
 
