@@ -69,14 +69,13 @@ def processDir(directory, pattern, csv, eos, verbose):
     sum_saved_events = 0
     
     # get ROOT files
-    # - if pattern is set, then require file name to contain pattern
     if eos:
+        # Note: for eos, files are assumed to be ROOT files; don't use pattern = "*.root"
+        # Note: for eos, the pattern is requried to be a substring of the file name
         root_files = tools.get_eos_file_list(directory, pattern)
     else:
-        if pattern:
-            root_files = glob.glob("{0}/*{1}*.root".format(directory, pattern))
-        else:
-            root_files = glob.glob("{0}/*.root".format(directory))
+        # Note: for glob, the pattern is passed to glob
+        root_files = tools.get_file_list_glob(directory, pattern)
 
     # sort ROOT files alphabetically    
     root_files.sort()
@@ -121,7 +120,7 @@ def run():
     # options
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("--directory",  "-d", default="",                               help="directory containing ROOT files (required)")
-    parser.add_argument("--pattern",    "-p", default="",                               help="pattern for root file names (optional)")
+    parser.add_argument("--pattern",    "-p", default="*.root",                         help="pattern for root file names (optional)")
     parser.add_argument("--csv",        "-c", default="",                               help="output csv file name (optional)")
     parser.add_argument("--eos",        "-e", default = False,  action = "store_true",  help="run over ROOT files on EOS")
     parser.add_argument("--verbose",    "-v", default = False,  action = "store_true",  help="verbose flag to print more things")
