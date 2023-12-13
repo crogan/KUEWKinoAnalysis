@@ -114,7 +114,9 @@ def write_sh_single(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,
     fsrc.write('+RequiresCVMFS = True \n')
     #fsrc.write('+RequiresSharedFS = True \n')
 
-    transfer_input = 'transfer_input_files = https://stash.osgconnect.net/cms-user/'+USER+TARGET.replace('/ospool/cms-user/'+USER,'')+'config.tgz,https://stash.osgconnect.net/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
+    # Hardcode config.tgz path for caleb's "ospool" area.
+    #transfer_input = 'transfer_input_files = https://stash.osgconnect.net/cms-user/'+USER+TARGET.replace('/ospool/cms-user/'+USER,'')+'config.tgz,https://stash.osgconnect.net/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
+    transfer_input = 'transfer_input_files = https://stash.osgconnect.net/cms-user/caleb/ntuple_configs/Autumn18_102X/config.tgz,https://stash.osgconnect.net/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
     fsrc.write(transfer_input)
 
     fsrc.write('should_transfer_files = YES\n')
@@ -128,6 +130,7 @@ def write_sh_single(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,
     fsrc.write(transfer_out_remap)
     
     fsrc.write('+ProjectName="cms.org.ku"\n')
+
     fsrc.write('+REQUIRED_OS="rhel7"\n')
     fsrc.write('queue')
     fsrc.close()
@@ -175,7 +178,9 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
     fsrc.write('Requirements = (Machine != "red-node000.unl.edu" && Machine != "ncm*.hpc.itc.rwth-aachen.de" && Machine != "*mh-epyc7662-8.t2.ucsd.edu" && Machine != "*sdsc-88.t2.ucsd.edu")\n')
     fsrc.write('request_memory = 2 GB \n')
 
-    transfer_input = 'transfer_input_files = https://stash.osgconnect.net/cms-user/'+USER+TARGET.replace('/ospool/cms-user/'+USER,'')+'config.tgz,https://stash.osgconnect.net/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
+    # Hardcode config.tgz path for caleb's "ospool" area.
+    #transfer_input = 'transfer_input_files = https://stash.osgconnect.net/cms-user/'+USER+TARGET.replace('/ospool/cms-user/'+USER,'')+'config.tgz,https://stash.osgconnect.net/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
+    transfer_input = 'transfer_input_files = https://stash.osgconnect.net/cms-user/caleb/ntuple_configs/Autumn18_102X/config.tgz,https://stash.osgconnect.net/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
     fsrc.write(transfer_input)
 
     fsrc.write('should_transfer_files = YES\n')
