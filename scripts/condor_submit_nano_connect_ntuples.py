@@ -52,7 +52,7 @@ def create_filelist(rootlist, dataset, filetag):
 
     return listlist
 
-def write_sh_single(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
+def write_sh_single(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n,NAME):
     srcfile = srcfile.replace('.submit','_single.submit')
     ofile = ofile.replace('_$(ItemIndex)_$(Step)','_0_0')
     outfile = outfile.replace('_$(ItemIndex)_$(Step)','_0_0')
@@ -114,7 +114,7 @@ def write_sh_single(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,
     fsrc.write('+RequiresCVMFS = True \n')
     #fsrc.write('+RequiresSharedFS = True \n')
 
-    transfer_input = 'transfer_input_files = https://stash.osgconnect.net/cms-user/'+USER+TARGET.replace('/ospool/cms-user/'+USER,'')+'config.tgz,https://stash.osgconnect.net/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
+    transfer_input = 'transfer_input_files = https://stash.osgconnect.net/cms-user/'+USER+"/"+NAME+"/"+'config.tgz,https://stash.osgconnect.net/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
     fsrc.write(transfer_input)
 
     fsrc.write('should_transfer_files = YES\n')
@@ -132,7 +132,7 @@ def write_sh_single(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,
     fsrc.write('queue')
     fsrc.close()
 
-def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
+def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n,NAME):
     fsrc = open(srcfile,'w')
     fsrc.write('universe = vanilla \n')
     fsrc.write('executable = '+jobEXE+" \n")
@@ -174,8 +174,7 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
     fsrc.write('log = '+loglog+" \n")
     fsrc.write('Requirements = (Machine != "red-node000.unl.edu" && Machine != "ncm*.hpc.itc.rwth-aachen.de" && Machine != "*mh-epyc7662-8.t2.ucsd.edu" && Machine != "*sdsc-88.t2.ucsd.edu")\n')
     fsrc.write('request_memory = 2 GB \n')
-
-    transfer_input = 'transfer_input_files = https://stash.osgconnect.net/cms-user/'+USER+TARGET.replace('/ospool/cms-user/'+USER,'')+'config.tgz,https://stash.osgconnect.net/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
+    transfer_input = 'transfer_input_files = https://stash.osgconnect.net/cms-user/'+USER+"/"+NAME+"/"+'config.tgz,https://stash.osgconnect.net/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
     fsrc.write(transfer_input)
 
     fsrc.write('should_transfer_files = YES\n')
@@ -486,8 +485,8 @@ if __name__ == "__main__":
             errfile = os.path.join(errdir, dataset+'_'+filetag, file_name.split('/')[-1])
 
             script_name = srcdir+'_'.join([dataset, filetag])+'.submit'
-            write_sh(script_name, overlist_name, file_name+'.root', logfile, outfile, errfile, dataset, filetag, SPLIT)
-            write_sh_single(script_name, overlist_name, file_name+'.root', logfile, outfile, errfile, dataset, filetag, SPLIT)
+            write_sh(script_name, overlist_name, file_name+'.root', logfile, outfile, errfile, dataset, filetag, SPLIT, NAME)
+            write_sh_single(script_name, overlist_name, file_name+'.root', logfile, outfile, errfile, dataset, filetag, SPLIT, NAME)
     
     if VERBOSE:
         print("Created area for log files")
@@ -500,6 +499,9 @@ if __name__ == "__main__":
         os.system("tar -C "+config+"/../ -czf "+TARGET+"/config.tgz config")
         if VERBOSE:
             print("Created tar ball")
+
+    os.system("mkdir -p /ospool/cms-user/"+USER+"/"+NAME)
+    os.system("cp "+TARGET+"/config.tgz /ospool/cms-user/"+USER+"/"+NAME+"/config.tgz")
 
     submit_dir  = srcdir        
     submit_list = [os.path.join(submit_dir, f) for f in os.listdir(submit_dir) if (os.path.isfile(os.path.join(submit_dir, f)) and ('.submit' in f) and ('_single' not in f))]
