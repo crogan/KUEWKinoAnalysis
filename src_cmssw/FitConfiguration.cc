@@ -920,7 +920,7 @@ void FitConfiguration::AddSJetNormSys(const string& label, VS& procs, ch::Combin
   cb.SetFlag("filters-use-regex", false);
 }
 
-void FitConfiguration::AddShapeSysAsNorm(const Systematic& sys, ch::CombineHarvester& cb, FitReader& FIT){
+void FitConfiguration::AddShapeSysAsNorm(const Systematic& sys, ch::CombineHarvester& cb, FitReader& FIT, std::string name, double scale ){
   cb.SetFlag("filters-use-regex", true);
 
   ProcessList processes = FIT.GetProcesses();
@@ -969,9 +969,15 @@ void FitConfiguration::AddShapeSysAsNorm(const Systematic& sys, ch::CombineHarve
       //err = 1. + err/2./nom;
        err =1. + (up-dn)/(up+dn);
 //     cout << "2 err: " << err << endl;
-      if(err > 0.)
+      	string label = "norm_"+sys.Label();
+	if(name != "")
+		label = "norm_"+name;
+		
+	if(scale > 0.)
+		err *= scale;
+	if(err > 0.)
       cb.cp().process(VS().a(p.Name())).bin(VS().a(c.FullLabel()))
-	.AddSyst(cb, "norm_"+sys.Label(), "lnN", SystMap<>::init(err));
+	.AddSyst(cb, label, "lnN", SystMap<>::init(err));
 
     }
   }

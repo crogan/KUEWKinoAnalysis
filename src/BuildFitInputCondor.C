@@ -119,6 +119,9 @@ int main(int argc, char* argv[]) {
     if(strncmp(argv[i],"++sys", 5) == 0){
       BuildFitInputCmd += "++sys ";
     }
+    if(strncmp(argv[i],"++treesys",9) ==0){
+      BuildFitInputCmd += "++treesys ";
+    }
     if(strncmp(argv[i],"-maskSR", 7) == 0){
       BuildFitInputCmd += "-maskSR ";
     }
@@ -142,7 +145,16 @@ int main(int argc, char* argv[]) {
     } 
     if(strncmp(argv[i],"--connect", 9) == 0){
       connect = true;
-    } 
+    }
+    if(strncmp(argv[i],"-treeName", 9) == 0){
+        i++;
+	BuildFitInputCmd += "-treeName " + string(argv[i]) + " ";
+    }
+    if(strncmp(argv[i],"-treeSysName", 12) ==0){
+        i++;
+	BuildFitInputCmd += "-treeSysName " + string(argv[i]) + " ";
+    }
+ 
   }
       
   if((proc_to_add.size() == 0) &&

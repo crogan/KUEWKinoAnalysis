@@ -547,7 +547,7 @@ CONFIG.AddSJetNormSys("DB",DB,cb, processes);
 */
 
 ///PRINT TABLE OF ALL SYSTS AND MAP
-  cb.PrintSysts();
+//  cb.PrintSysts();
 
  using ch::syst::SystMap;
   using ch::syst::era;
@@ -569,12 +569,44 @@ else cout << "Nominal signal cross section: " << xsec_norm << endl;
     cout << "+ Adding shape systematics" << endl;
     for(int s = 0; s < Nsys; s++){  
       Systematic& sys = systematics[s];
-      cout<< " ---Systematic: "<<sys.Label()<< endl;
-      if(sys.Label() == "BTAGHF_SF") continue;
+       cout<< " -- Assessing Systematic: "<<sys.Label()<< endl;
+      /*if(sys.Label() == "BTAGHF_SF") continue;
       if(sys.Label() == "BTAGLF_SF") continue;
-      if(shapeToNorm.Contains(sys)){ 
-        CONFIG.AddShapeSysAsNorm(sys,cb,FIT);
-        continue;
+      if(sys.Label() == "MuF_SF") continue;
+      if(sys.Label() == "MuR_SF") continue;
+      if(sys.Label() == "PDF_SF") continue;
+      //if(sys.Label() == "MET_TRIG_SF") continue;
+      if(sys.Label() == "elID_SF") continue;
+      if(sys.Label() == "elIso_SF") continue;
+      if(sys.Label() == "elSIP_SF") continue;
+      if(sys.Label() == "elVL_SF") continue;
+      if(sys.Label() == "muID_SF") continue;
+      if(sys.Label() == "muIso_SF") continue;
+      if(sys.Label() == "muID_SF") continue;
+      if(sys.Label() == "muIso_SF") continue; 
+      if(sys.Label() == "muSIP_SF") continue;
+      if(sys.Label() == "muVL_SF") continue;
+      if(sys.Label() == "JESUncer_Total") continue;
+      if(sys.Label() == "JERUncer_Total") continue;
+      if(sys.Label() == "METUncer_UnClust") continue;
+*/
+        cout<<" Systematic passed allowed criteria " << endl;
+      //cout<< "Systematic adding as norm: "<<sys.Label()<< endl;
+      if(shapeToNorm.Contains(sys)){
+	cout<< "Systematic adding as norm: "<<sys.Label()<< endl; 
+	
+	//fix ME!!!!!! //hax for systematic duplication
+	/*if( (sys.Label() == "BTAGHF_SF") || (sys.Label() == "BTAGLF_SF") ||(sys.Label() == "JESUncer_Total") || (sys.Label() == "JERUncer_Total") || (sys.Label() == "METUncer_UnClust") ){
+        	std::cout<<" sys duplication! \n";
+	CONFIG.AddShapeSysAsNorm(sys,cb,FIT,sys.Label()+"_1",1./sqrt(2.));
+	CONFIG.AddShapeSysAsNorm(sys,cb,FIT,sys.Label()+"_2",1./sqrt(2.));
+      	} 
+	else{
+	*/
+	    CONFIG.AddShapeSysAsNorm(sys,cb,FIT);
+//	} 
+
+	continue;
       }
       ProcessList proc_sys;
 

@@ -29,7 +29,7 @@ public:
   ProcessList Get(ProcessType type) const;
   
   int NTrees(const Process& proc);
-  TChain* Tree(const Process& proc, int itree = -1); // remember to delete TChain!
+  TChain* Tree(const Process& proc, int itree = -1, std::string treeName=""); // remember to delete TChain!
   string TreeName(const Process& proc, int itree);
   string FileName(const Process& proc, int itree);
   
