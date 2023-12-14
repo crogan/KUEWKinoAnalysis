@@ -497,11 +497,10 @@ if __name__ == "__main__":
         #print "creating tarball from: ", TARGET
         os.system("sleep 10") # sleep so copy command(s) can catch up...
         os.system("tar -C "+config+"/../ -czf "+TARGET+"/config.tgz config")
+        os.system("mkdir -p /ospool/cms-user/"+USER+"/"+NAME)
+        os.system("cp "+TARGET+"/config.tgz /ospool/cms-user/"+USER+"/"+NAME+"/config.tgz")
         if VERBOSE:
             print("Created tar ball")
-
-    os.system("mkdir -p /ospool/cms-user/"+USER+"/"+NAME)
-    os.system("cp "+TARGET+"/config.tgz /ospool/cms-user/"+USER+"/"+NAME+"/config.tgz")
 
     submit_dir  = srcdir        
     submit_list = [os.path.join(submit_dir, f) for f in os.listdir(submit_dir) if (os.path.isfile(os.path.join(submit_dir, f)) and ('.submit' in f) and ('_single' not in f))]
