@@ -15,9 +15,11 @@ import tools
 #
 
 # TODO
+# - Add "--sms" option; for signal, count events for a specific mass point
 # DONE
 # - Update get_eos_file_list() to use a pattern
 # - Sort sample names alphabetically for printing and csv
+# - Make event count class
 
 # Make sure ROOT.TFile.Open(fileURL) does not seg fault when $ is in sys.argv (e.g. $ passed in as argument)
 ROOT.PyConfig.IgnoreCommandLineOptions = True
@@ -26,96 +28,99 @@ ROOT.gROOT.SetBatch(ROOT.kTRUE)
 # Tell ROOT not to be in charge of memory, fix issue of histograms being deleted when ROOT file is closed:
 ROOT.TH1.AddDirectory(False)
 
-# count total events in a ROOT file
-# iterate over entries in EventCount tree
-def countTotalEvents(root_file):
-    result = 0
-    tree_name = "EventCount"
-    chain = ROOT.TChain(tree_name)
-    chain.Add(root_file)
-    n_entries = chain.GetEntries()
-    for i in range(n_entries):
-        chain.GetEntry(i)
-        n_events = chain.Nevent
-        result += n_events
-    return int(result)
+class EventCount:
+    def __init__(self, event_count_tree="EventCount", analysis_tree="KUAnalysis"):
+        self.event_count_tree   = event_count_tree
+        self.analysis_tree      = analysis_tree
 
-# count saved events in a ROOT file
-# use the number of entries in the KUAnalysis tree
-def countSavedEvents(root_file):
-    tree_name = "KUAnalysis"
-    chain = ROOT.TChain(tree_name)
-    chain.Add(root_file)
-    n_events = chain.GetEntries()
-    return int(n_events)
+    # count total events in a ROOT file
+    # iterate over entries in the event count tree
+    def countTotalEvents(self, root_file):
+        result = 0
+        chain = ROOT.TChain(self.event_count_tree)
+        chain.Add(root_file)
+        n_entries = chain.GetEntries()
+        for i in range(n_entries):
+            chain.GetEntry(i)
+            n_events = chain.Nevent
+            result += n_events
+        return int(result)
 
-# process directory containing ROOT files
-def processDir(directory, pattern, csv, eos, verbose):
-    if verbose:
-        print("Counting events.")
-        print("----------------------------")
-        print("directory: {0}".format(directory))
-        print("pattern: {0}".format(pattern))
-        print("csv: {0}".format(csv))
-        print("eos: {0}".format(eos))
-        print("verbose: {0}".format(verbose))
-        print("----------------------------")
-    
-    root_files = []
-    base_file_names = []
-    output_data = []
-    n_events_map = {}
-    sum_total_events = 0
-    sum_saved_events = 0
-    
-    # get ROOT files
-    # - if pattern is set, then require file name to contain pattern
-    if eos:
-        root_files = tools.get_eos_file_list(directory, pattern)
-    else:
-        if pattern:
-            root_files = glob.glob("{0}/*{1}*.root".format(directory, pattern))
-        else:
-            root_files = glob.glob("{0}/*.root".format(directory))
+    # count saved events in a ROOT file
+    # use the number of entries in the analysis tree
+    def countSavedEvents(self, root_file):
+        chain = ROOT.TChain(self.analysis_tree)
+        chain.Add(root_file)
+        n_events = chain.GetEntries()
+        return int(n_events)
 
-    # sort ROOT files alphabetically    
-    root_files.sort()
-    n_root_files = len(root_files)
-
-    if verbose:
-        #print("ROOT files: {0}".format(root_files))
-        print("Found {0} ROOT files:".format(n_root_files))
-
-    # headers for csv
-    output_data.append(["sample", "total_events", "saved_events"])
-
-    # count events
-    for root_file in root_files:
-        base_name = os.path.basename(root_file)
-        base_file_names.append(base_name)
-        n_total_events = countTotalEvents(root_file)
-        n_saved_events = countSavedEvents(root_file)
-        n_events_map[base_name] = {}
-        n_events_map[base_name]["n_total_events"] = n_total_events
-        n_events_map[base_name]["n_saved_events"] = n_saved_events
-        output_data.append([base_name, n_total_events, n_saved_events])
-        sum_total_events += n_total_events
-        sum_saved_events += n_saved_events
+    # process directory containing ROOT files
+    def processDir(self, directory, pattern, csv, eos, verbose):
         if verbose:
-            print(" - {0}".format(base_name))
+            print("Counting events.")
+            print("----------------------------")
+            print("directory: {0}".format(directory))
+            print("pattern: {0}".format(pattern))
+            print("csv: {0}".format(csv))
+            print("eos: {0}".format(eos))
+            print("verbose: {0}".format(verbose))
+            print("----------------------------")
+        
+        root_files = []
+        base_file_names = []
+        output_data = []
+        n_events_map = {}
+        sum_total_events = 0
+        sum_saved_events = 0
+        
+        # get ROOT files
+        # - if pattern is set, then require file name to contain pattern
+        if eos:
+            root_files = tools.get_eos_file_list(directory, pattern)
+        else:
+            if pattern:
+                root_files = glob.glob("{0}/*{1}*.root".format(directory, pattern))
+            else:
+                root_files = glob.glob("{0}/*.root".format(directory))
 
-    # print results
-    print("Sample: total events, saved events")
-    for base_name in base_file_names:
-        n_total_events = n_events_map[base_name]["n_total_events"]
-        n_saved_events = n_events_map[base_name]["n_saved_events"]
-        print("{0}: {1}, {2}".format(base_name, n_total_events, n_saved_events))
-    print("Sum of total events from all samples: {0}".format(sum_total_events))
-    print("Sum of saved events from all samples: {0}".format(sum_saved_events))
-    
-    # if csv file name is set, then save data to csv file
-    if csv:
-        tools.writeCSV(csv, output_data)
+        # sort ROOT files alphabetically    
+        root_files.sort()
+        n_root_files = len(root_files)
+
+        if verbose:
+            #print("ROOT files: {0}".format(root_files))
+            print("Found {0} ROOT files:".format(n_root_files))
+
+        # headers for csv
+        output_data.append(["sample", "total_events", "saved_events"])
+
+        # count events
+        for root_file in root_files:
+            base_name = os.path.basename(root_file)
+            base_file_names.append(base_name)
+            n_total_events = self.countTotalEvents(root_file)
+            n_saved_events = self.countSavedEvents(root_file)
+            n_events_map[base_name] = {}
+            n_events_map[base_name]["n_total_events"] = n_total_events
+            n_events_map[base_name]["n_saved_events"] = n_saved_events
+            output_data.append([base_name, n_total_events, n_saved_events])
+            sum_total_events += n_total_events
+            sum_saved_events += n_saved_events
+            if verbose:
+                print(" - {0}".format(base_name))
+
+        # print results
+        print("Sample: total events, saved events")
+        for base_name in base_file_names:
+            n_total_events = n_events_map[base_name]["n_total_events"]
+            n_saved_events = n_events_map[base_name]["n_saved_events"]
+            print("{0}: {1}, {2}".format(base_name, n_total_events, n_saved_events))
+        print("Sum of total events from all samples: {0}".format(sum_total_events))
+        print("Sum of saved events from all samples: {0}".format(sum_saved_events))
+        
+        # if csv file name is set, then save data to csv file
+        if csv:
+            tools.writeCSV(csv, output_data)
 
 def run():
     # options
@@ -138,11 +143,12 @@ def run():
         print("ERROR: 'directory' is not set. Please provide a directory using the -d option.")
         return
     
-    processDir(directory, pattern, csv, eos, verbose)
+    event_count = EventCount()
+
+    event_count.processDir(directory, pattern, csv, eos, verbose)
 
 def main():
     run()
 
 if __name__ == "__main__":
     main()
-
