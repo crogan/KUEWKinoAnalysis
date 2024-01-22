@@ -17,13 +17,14 @@ import tools
 #
 
 # TODO
-# - Instead of passing an analysis tree for an SMS mass point as an option,
-#   we need to store these for each sample in a json file, as the mass points are different for every signal sample.
+#
 # DONE
 # - Update get_eos_file_list() to use a pattern
 # - Sort sample names alphabetically for printing and csv
 # - Make event count class
 # - Add "--sms" option; for signal, count events for a specific mass point
+# - Instead of passing an analysis tree for an SMS mass point as an option,
+#   we need to store these for each sample in a json file, as the mass points are different for every signal sample.
 
 # Make sure ROOT.TFile.Open(fileURL) does not seg fault when $ is in sys.argv (e.g. $ passed in as argument)
 ROOT.PyConfig.IgnoreCommandLineOptions = True
