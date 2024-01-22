@@ -135,10 +135,11 @@ class EventCount:
                     self.SetAnalysisTree(tree)
                 else:
                     # We cannot assign a valid analysis tree
-                    tree = ""
+                    tree = "FIXME"
                     self.SetAnalysisTree(tree)
-                    print(Fore.RED + "ERROR: The base name '{0}' is not in the analysis tree map (json file)!".format(base_name) + Fore.RESET)
-                    print(Fore.RED + "ERROR: Cannot assign analysis tree for this signal sample; it needs to be added to the analysis tree map (json file)." + Fore.RESET)
+                    print(Fore.RED + "ERROR: The base name '{0}' is not in the analysis tree map (from the json file)!".format(base_name) + Fore.RESET)
+                    print(Fore.RED + " - We cannot assign analysis tree for this signal sample!" + Fore.RESET)
+                    print(Fore.RED + " - To fix this error, please add this sample and an analysis tree (choose a valid mass point) to this file: {0}".format(self.analysis_tree_file) + Fore.RESET)
             n_total_events = self.countTotalEvents(root_file)
             n_saved_events = self.countSavedEvents(root_file)
             n_events_map[base_name] = {}
