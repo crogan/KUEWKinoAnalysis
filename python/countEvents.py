@@ -2,6 +2,7 @@
 
 import os
 import glob
+import json
 import ROOT
 import argparse
 import tools
@@ -15,11 +16,13 @@ import tools
 #
 
 # TODO
-# - Add "--sms" option; for signal, count events for a specific mass point
+# - Instead of passing an analysis tree for an SMS mass point as an option,
+#   we need to store these for each sample in a json file, as the mass points are different for every signal sample.
 # DONE
 # - Update get_eos_file_list() to use a pattern
 # - Sort sample names alphabetically for printing and csv
 # - Make event count class
+# - Add "--sms" option; for signal, count events for a specific mass point
 
 # Make sure ROOT.TFile.Open(fileURL) does not seg fault when $ is in sys.argv (e.g. $ passed in as argument)
 ROOT.PyConfig.IgnoreCommandLineOptions = True
@@ -29,15 +32,35 @@ ROOT.gROOT.SetBatch(ROOT.kTRUE)
 ROOT.TH1.AddDirectory(False)
 
 class EventCount:
-    def __init__(self, event_count_tree="EventCount", analysis_tree="KUAnalysis"):
+    def __init__(self, event_count_tree="EventCount", analysis_tree="KUAnalysis", analysis_tree_file=""):
         self.event_count_tree   = event_count_tree
         self.analysis_tree      = analysis_tree
+        self.analysis_tree_file = analysis_tree_file
+        self.analysis_tree_map  = {}
+
+        # Load the analysis tree file if it is set
+        if self.analysis_tree_file:
+            with open(analysis_tree_file, 'r') as f:
+                self.analysis_tree_map = json.load(f)
+
+    def GetEventCountTree(self):
+        return self.event_count_tree
+    
+    def SetEventCountTree(self, event_count_tree):
+        self.event_count_tree = event_count_tree
+    
+    def GetAnalysisTree(self):
+        return self.analysis_tree
+    
+    def SetAnalysisTree(self, analysis_tree):
+        self.analysis_tree = analysis_tree
 
     # count total events in a ROOT file
     # iterate over entries in the event count tree
     def countTotalEvents(self, root_file):
         result = 0
-        chain = ROOT.TChain(self.event_count_tree)
+        tree = self.GetEventCountTree()
+        chain = ROOT.TChain(tree)
         chain.Add(root_file)
         n_entries = chain.GetEntries()
         for i in range(n_entries):
@@ -49,13 +72,14 @@ class EventCount:
     # count saved events in a ROOT file
     # use the number of entries in the analysis tree
     def countSavedEvents(self, root_file):
-        chain = ROOT.TChain(self.analysis_tree)
+        tree = self.GetAnalysisTree()
+        chain = ROOT.TChain(tree)
         chain.Add(root_file)
         n_events = chain.GetEntries()
         return int(n_events)
 
     # process directory containing ROOT files
-    def processDir(self, directory, pattern, csv, eos, verbose):
+    def processDir(self, directory, pattern, csv, sms, eos, verbose):
         if verbose:
             print("Counting events.")
             print("----------------------------")
@@ -98,6 +122,12 @@ class EventCount:
         for root_file in root_files:
             base_name = os.path.basename(root_file)
             base_file_names.append(base_name)
+            if sms:
+                if base_name in self.analysis_tree_map:
+                    tree = self.analysis_tree_map[base_name]
+                    self.SetAnalysisTree(tree)
+                else:
+                    print("ERROR: The base name '{0}' is not in the analysis tree map.")
             n_total_events = self.countTotalEvents(root_file)
             n_saved_events = self.countSavedEvents(root_file)
             n_events_map[base_name] = {}
@@ -128,7 +158,6 @@ def run():
     parser.add_argument("--directory",  "-d", default="",                               help="directory containing ROOT files (required)")
     parser.add_argument("--pattern",    "-p", default="",                               help="pattern for root file names (optional)")
     parser.add_argument("--csv",        "-c", default="",                               help="output csv file name (optional)")
-    parser.add_argument("--tree",       "-t", default="",                               help="analysis tree name (required for signal)")
     parser.add_argument("--sms",        "-s", default = False,  action = "store_true",  help="run over signal sample (optional)")
     parser.add_argument("--eos",        "-e", default = False,  action = "store_true",  help="run over ROOT files on EOS")
     parser.add_argument("--verbose",    "-v", default = False,  action = "store_true",  help="verbose flag to print more things")
@@ -137,29 +166,26 @@ def run():
     directory   = options.directory
     pattern     = options.pattern
     csv         = options.csv
-    tree        = options.tree
     sms         = options.sms
     eos         = options.eos
     verbose     = options.verbose
+
+    analysis_tree_file = "json/EventCount/AnalysisTrees_2018_SMS.json"
 
     # check that directory is set
     if not directory:
         print("ERROR: 'directory' is not set. Please provide a directory using the -d option.")
         return
     
-    # if we are running over signal, check that an analysis tree is specified
     if sms:
-        if not tree:
-            print("ERROR: 'tree' is not set, but --sms was used. Please provide an analysis tree name using the -t option.")
-            print(" - An analysis tree name is required for signal, and you need to choose a mass point (for example, SMS_1000_500).")
-            return
+        print("Using the analysis tree file '{0}'.".format(analysis_tree_file))
 
     if sms:
-        event_count = EventCount(event_count_tree="EventCount", analysis_tree=tree)
+        event_count = EventCount(event_count_tree="EventCount", analysis_tree="", analysis_tree_file=analysis_tree_file)
     else:
         event_count = EventCount()
 
-    event_count.processDir(directory, pattern, csv, eos, verbose)
+    event_count.processDir(directory, pattern, csv, sms, eos, verbose)
 
 def main():
     run()
