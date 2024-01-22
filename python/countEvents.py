@@ -5,6 +5,7 @@ import glob
 import json
 import ROOT
 import argparse
+from colorama import Fore, Back, Style
 import tools
 
 #
@@ -81,7 +82,7 @@ class EventCount:
     # process directory containing ROOT files
     def processDir(self, directory, pattern, csv, sms, eos, verbose):
         if verbose:
-            print("Counting events.")
+            print(Fore.GREEN + "Counting events." + Fore.RESET)
             print("----------------------------")
             print("directory: {0}".format(directory))
             print("pattern: {0}".format(pattern))
@@ -114,7 +115,7 @@ class EventCount:
 
         if verbose:
             #print("ROOT files: {0}".format(root_files))
-            print("Found {0} ROOT files:".format(n_root_files))
+            print(Fore.GREEN + "Found {0} ROOT files:".format(n_root_files) + Fore.RESET)
 
         # headers for csv
         headers = []
@@ -133,7 +134,7 @@ class EventCount:
                     tree = self.analysis_tree_map[base_name]
                     self.SetAnalysisTree(tree)
                 else:
-                    print("ERROR: The base name '{0}' is not in the analysis tree map.")
+                    print(Fore.RED + "ERROR: The base name '{0}' is not in the analysis tree map!".format(base_name) + Fore.RESET)
             n_total_events = self.countTotalEvents(root_file)
             n_saved_events = self.countSavedEvents(root_file)
             n_events_map[base_name] = {}
@@ -192,15 +193,16 @@ def run():
     eos         = options.eos
     verbose     = options.verbose
 
-    analysis_tree_file = "json/EventCount/AnalysisTrees_2018_SMS.json"
+    # json file for SMS to map sample ROOT files to analysis trees
+    analysis_tree_file = "json/EventCount/AnalysisTrees_2018_SMS_test.json"
 
     # check that directory is set
     if not directory:
-        print("ERROR: 'directory' is not set. Please provide a directory using the -d option.")
+        print(Fore.RED + "ERROR: 'directory' is not set. Please provide a directory using the -d option." + Fore.RESET)
         return
     
     if sms:
-        print("Using the analysis tree file '{0}'.".format(analysis_tree_file))
+        print(Fore.GREEN + "Using the analysis tree file '{0}'.".format(analysis_tree_file) + Fore.RESET)
 
     if sms:
         event_count = EventCount(event_count_tree="EventCount", analysis_tree="", analysis_tree_file=analysis_tree_file)
