@@ -86,6 +86,7 @@ class EventCount:
             print("directory: {0}".format(directory))
             print("pattern: {0}".format(pattern))
             print("csv: {0}".format(csv))
+            print("sms: {0}".format(sms))
             print("eos: {0}".format(eos))
             print("verbose: {0}".format(verbose))
             print("----------------------------")
@@ -116,7 +117,12 @@ class EventCount:
             print("Found {0} ROOT files:".format(n_root_files))
 
         # headers for csv
-        output_data.append(["sample", "total_events", "saved_events"])
+        headers = []
+        if sms:
+            headers = ["sample", "total_events", "analysis_tree", "saved_events"]
+        else:
+            headers = ["sample", "total_events", "saved_events"]
+        output_data.append(headers)
 
         # count events
         for root_file in root_files:
@@ -133,18 +139,34 @@ class EventCount:
             n_events_map[base_name] = {}
             n_events_map[base_name]["n_total_events"] = n_total_events
             n_events_map[base_name]["n_saved_events"] = n_saved_events
-            output_data.append([base_name, n_total_events, n_saved_events])
+            if sms:
+                n_events_map[base_name]["analysis_tree"] = self.analysis_tree
+            row = []
+            if sms:
+                row = [base_name, n_total_events, self.analysis_tree, n_saved_events]
+            else:
+                row = [base_name, n_total_events, n_saved_events]
+            output_data.append(row)
             sum_total_events += n_total_events
             sum_saved_events += n_saved_events
             if verbose:
                 print(" - {0}".format(base_name))
 
         # print results
-        print("Sample: total events, saved events")
+        if sms:
+            print("Sample: total events, analysis tree: saved events")
+        else:
+            print("Sample: total events, saved events")
         for base_name in base_file_names:
+            analysis_tree   = ""
             n_total_events = n_events_map[base_name]["n_total_events"]
             n_saved_events = n_events_map[base_name]["n_saved_events"]
-            print("{0}: {1}, {2}".format(base_name, n_total_events, n_saved_events))
+            if sms:
+                analysis_tree = n_events_map[base_name]["analysis_tree"]
+            if sms:
+                print("{0}: {1}, {2}: {3}".format(base_name, n_total_events, analysis_tree, n_saved_events))
+            else:
+                print("{0}: {1}, {2}".format(base_name, n_total_events, n_saved_events))
         print("Sum of total events from all samples: {0}".format(sum_total_events))
         print("Sum of saved events from all samples: {0}".format(sum_saved_events))
         
