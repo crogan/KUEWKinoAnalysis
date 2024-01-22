@@ -199,7 +199,7 @@ def run():
     verbose     = options.verbose
 
     # json file for SMS to map sample ROOT files to analysis trees
-    analysis_tree_file = "json/EventCount/AnalysisTrees_2018_SMS_test.json"
+    analysis_tree_file = "json/EventCount/AnalysisTrees_2018_SMS.json"
 
     # check that directory is set
     if not directory:
