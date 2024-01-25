@@ -61,11 +61,14 @@ int main(int argc, char* argv[]) {
   double lumi;
 
   bool doSys = false;
-
+  bool doTreeSys = false;
   bool maskSR = false;
  
   bool debugVerbosity = false;
- 
+  bool debugData = true;
+
+  string treeLoad = "";
+  string treeSysName ="";
   for(int i = 0; i < argc; i++){
     if(strncmp(argv[i],"--help", 6) == 0){
       bprint = true;
@@ -129,6 +132,9 @@ int main(int argc, char* argv[]) {
     if(strncmp(argv[i],"++sys", 5) == 0){
       doSys = true;
     }
+    if(strncmp(argv[i],"++treesys",9) ==0){
+      doTreeSys = true;
+    }
     if(strncmp(argv[i],"-lumi", 5) == 0){
       i++;
       setLumi = true;
@@ -142,6 +148,15 @@ int main(int argc, char* argv[]) {
     if(strncmp(argv[i],"-maskSR", 7) == 0){
       maskSR = true;
     }
+    if(strncmp(argv[i],"-treeName", 9) == 0){
+ 	i++;
+	treeLoad = std::string(argv[i]);
+	
+    } 
+    if(strncmp(argv[i],"-treeSysName", 12) ==0){
+	 i++;
+	  treeSysName = std::string(argv[i]);	
+	}
   }
       
   if((proc_to_add.size() == 0) &&
@@ -231,8 +246,53 @@ int main(int argc, char* argv[]) {
   SF.AddBtagFolder("./BtagSF");
 
   Systematics systematics(1);
-  if(doSys)
-    systematics += SYS.GetWeightSystematics();
+ // Systematics nominalTreeSys(1);
+  //Systematics treeSysList;//associated sys which contain Up or Down
+   Systematic treeSys(treeSysName); 
+   if(doTreeSys){
+	size_t found = treeLoad.find("Down");
+	if(found != std::string::npos){
+		std::cout<<"set "<<treeSysName<<" to Down\n";
+		treeSys.Down();
+	}
+	else{
+		std::cout<<"set "<<treeSysName<<" to Up\n";
+		treeSys.Up();
+	}
+	size_t found_default = treeLoad.find("default");
+	if(found_default != std::string::npos){
+		treeLoad = "KUAnalysis";
+		Systematics inputSys(0);
+		inputSys += treeSys;
+		systematics = inputSys;
+	}
+   }
+//std::vector<std::string> TreesToProcess;//list of tree names to process
+  //TreesToProcess.push_back("KUAnalysis");
+  //TreesToProcess.push_back(treeLoad);
+//  if(doSys)
+ //   systematics += SYS.GetWeightSystematics();
+
+ // if(doTreeSys){
+  //  treeSysList = SYS.GetTreeSystematics();
+  //  std::vector<std::string> tmp;
+  //  tmp = SYS.GetTreeSystematicsNames();
+  //  TreesToProcess.insert(TreesToProcess.end(),tmp.begin(),tmp.end());
+   
+ // }
+  std::cout<<"Processing these trees:\n";
+//  for(int t=0; t<TreesToProcess.size(); t++){
+	//std::cout<<TreesToProcess[t]<<" ";
+	std::cout<<treeLoad<<" ";
+      
+ // }
+ // std::cout<<"checking systematic scope\n";
+ // for(int t=0; t<treeSysList.GetN(); t++){
+	/// std::cout<<" tree systematic "<<treeSysList[t].Label() <<" is: up="<<treeSysList[t].IsUp()<<" down="<<treeSysList[t].IsDown()<<"\n";
+ // }
+
+ std::cout<<"\n";
+  	
 
   FitInputBuilder FITBuilder(extrahist);
 
@@ -278,7 +338,7 @@ int main(int argc, char* argv[]) {
     bool is_bkg    = (proc.Type() == kBkg);
     bool is_signal = (proc.Type() == kSig);
 
-    int Nsys = (is_data ? 1 : systematics.GetN());
+    int Nsys = (is_data ? 1 : systematics.GetN()); //weight systematics
     
     int Nfile = ST.NTrees(proc);
 
@@ -297,14 +357,45 @@ int main(int argc, char* argv[]) {
       if(is_signal)
 	sample_weight *= SF.GetX20BRSF(file, tree);
       
-      cout << "   Processing file " << file << " w/ tree " << tree << endl;
+      cout << "   Processing file " << file << endl; //<< " w/ tree " << tree << endl;
       cout << "      Sample weight is " << sample_weight << endl;
       if(is_FastSim)
 	cout << "      Is FastSim" << endl;
       if(do_FilterDilepton)
 	cout << "      Filter Out dilepton events" << endl;
-    
-      TChain* chain = ST.Tree(proc, f);
+  //  int treeSysCtr=0;
+  //  for(int itree=0; itree<TreesToProcess.size(); itree++){ ///begin tree loop   
+	 
+//	tree = TreesToProcess[itree]; //rename this guy
+//	std::cout<<"Processing Tree: "<<TreesToProcess[itree]<<"\n";  
+	
+//    TChain* chain = ST.Tree(proc, f);
+	//debug dev testing
+//	TChain* chain = ST.Tree(proc, f, "KUAnalysis_JESUncer_TotalUp");
+	
+	//TChain* chain = ST.Tree(proc, f, TreesToProcess[itree]);
+	TChain* chain;
+	if( doTreeSys ){
+		chain = ST.Tree(proc, f, treeLoad);
+	}
+	else{
+		chain = ST.Tree(proc, f);
+	}
+
+	//set up the correct systematic to use
+	//always process the nominal kuanalysis tree first
+	//replace with nominal systematics if not nominal tree
+//	if(doTreeSys && (TreesToProcess[itree] != "KUAnalysis")){
+//		systematics = nominalTreeSys;
+//		std::cout<<"replacing syslist with "<<nominalTreeSys[0].Label()<<" is: up="<<nominalTreeSys[0].IsUp()<<" down="<<nominalTreeSys[0].IsDown()<<"\n";
+//		
+//	}
+//	if( itree >= 1 ){
+//		if( itree %2 != 0 ) treeSysList[treeSysCtr].Up();
+//		if( itree %2 == 0 ) treeSysList[treeSysCtr].Down();
+//		 std::cout<<" this tree systematic "<<treeSysList[treeSysCtr].Label() <<" is: up="<<treeSysList[treeSysCtr].IsUp()<<" down="<<treeSysList[treeSysCtr].IsDown()<<"\n";
+//	}
+	
 
       ReducedBase* base = new ReducedBase(chain);
 
@@ -392,33 +483,33 @@ int main(int argc, char* argv[]) {
 	  LepID id;
 
           // "precalc"
-	  if(base->LepQual_lep->at(index) == 2)
+//	  if(base->LepQual_lep->at(index) == 2)
 	//debugging assume index problem has been fixed.. this will not work with older ntuples (applied in A and B)
 //	  if(base->ID_lep->at(index*2) < 3 ||
 	//    if(base->ID_lep->at(index) < 3 ||
 //	     base->MiniIso_lep->at(index)*base->PT_lep->at(index) >= 4. ||
 //	     base->RelIso_lep->at(index)*base->PT_lep->at(index) >= 4.)
+//	    id = kBronze;
+//	  else if(base->LepQual_lep->at(index) == 1)
+//	    id = kSilver;
+//	  else
+//	    id = kGold;
+          // "on the fly"
+          if(base->ID_lep->at(index) < 3 ||
+	     base->MiniIso_lep->at(index)*base->PT_lep->at(index) >= 4. ||
+	     base->RelIso_lep->at(index)*base->PT_lep->at(index) >= 4.)
 	    id = kBronze;
-	  else if(base->LepQual_lep->at(index) == 1)
+	  else if(base->SIP3D_lep->at(index) > 2.)
 	    id = kSilver;
 	  else
 	    id = kGold;
-          // "on the fly"
-          //if(base->ID_lep->at(index) < 3 ||
-	  //   base->MiniIso_lep->at(index)*base->PT_lep->at(index) >= 4. ||
-	  //   base->RelIso_lep->at(index)*base->PT_lep->at(index) >= 4.)
-	  //  id = kBronze;
-	  //else if(base->SIP3D_lep->at(index) > 2.)
-	  //  id = kSilver;
-	  //else
-	  //  id = kGold;
 	  
 	  LepFlavor flavor;
 	  if(abs(PDGID) == 11)
 	    flavor = kElectron;
 	  else
 	    flavor = kMuon;
-	  LepCharge charge = (base->Charge_lep->at(index) > 0 ? kPos : kNeg)
+	  LepCharge charge = (base->Charge_lep->at(index) > 0 ? kPos : kNeg);
 
 	  LepSource source = LepSource(base->SourceID_lep->at(index));
 	  //LepSource source = LepSource(base->ID_lep->at(index*2+1)); // fix for old ntuple version
@@ -450,26 +541,26 @@ int main(int argc, char* argv[]) {
 	  LepID id;
 
           // "precalc"
-	  if(base->LepQual_lep->at(index) == 2)
+	 // if(base->LepQual_lep->at(index) == 2)
 //	  if(base->ID_lep->at(index*2) < 3 || //index fixed for newly produced ntuples
 	 //   if(base->ID_lep->at(index) < 3 ||
 //	     base->MiniIso_lep->at(index)*base->PT_lep->at(index) >= 4. ||
 //	     base->RelIso_lep->at(index)*base->PT_lep->at(index) >= 4.)
 
+	 //   id = kBronze;
+	//  else if(base->LepQual_lep->at(index) == 1)
+	//    id = kSilver;
+//	  else
+//	    id = kGold;
+          // "on the fly"
+          if(base->ID_lep->at(index) < 3 ||
+	     base->MiniIso_lep->at(index)*base->PT_lep->at(index) >= 4. ||
+	     base->RelIso_lep->at(index)*base->PT_lep->at(index) >= 4.)
 	    id = kBronze;
-	  else if(base->LepQual_lep->at(index) == 1)
+	  else if(base->SIP3D_lep->at(index) > 2.)
 	    id = kSilver;
 	  else
 	    id = kGold;
-          // "on the fly"
-          //if(base->ID_lep->at(index) < 3 ||
-	  //   base->MiniIso_lep->at(index)*base->PT_lep->at(index) >= 4. ||
-	  //   base->RelIso_lep->at(index)*base->PT_lep->at(index) >= 4.)
-	  //  id = kBronze;
-	  //else if(base->SIP3D_lep->at(index) > 2.)
-	  //  id = kSilver;
-	  //else
-	  //  id = kGold;
 	 
           LepFlavor flavor;
 	  if(abs(PDGID) == 11)
@@ -573,16 +664,41 @@ int main(int argc, char* argv[]) {
         double MuR_weight = 1.;
         double MuF_weight = 1.;
 
+	//lep sf
+	double elID_weight = 1.;
+        double elIso_weight = 1.;
+        double elSIP_weight = 1.;
+	double elVL_weight = 1.;
+	
+	double muID_weight = 1.;
+        double muIso_weight = 1.;
+        double muSIP_weight = 1.;
+        double muVL_weight = 1.;
+        double SF_weight = 1.;
+
+	
 	if(!is_data){
 	  weight = (setLumi ? lumi : ST.Lumi())*base->weight*sample_weight;
 	}
 	// systematics loop
 	// do down sys first
 	string correct_sys = "";
-	for(int is = 0; is < Nsys; is++){
-	  Systematic& sys = systematics[is];
-//	  std::cout<<"systemtatics list "<< systematics[is].Label()<<"\n";
-	  if(!(!sys)){
+	
+	//for(int is = 0; is < Nsys; is++){
+	//  Systematic& sys = systematics[is];
+	//  Systematic sys = treeSys;
+	   Systematic sys;
+	   if(doTreeSys){
+		sys = treeSys;
+          }
+	 else{//do default
+		sys = systematics[0];
+	 }
+//	  std::cout<<"systemtatics list "<< systematics[is].Label()<<" isUp:"<<systematics[is].IsUp()<<" isDown:"<<systematics[is].IsDown()<<"\n";
+//  	            std::cout<<"systemtatics list "<< sys.Label()<<" isUp:"<<sys.IsUp()<<" isDown:"<<sys.IsDown()<<"\n";
+
+	/* 
+	 if(!(!sys)  ){
 	    if(sys.IsUp()){
 	      sys.Down();
 	      is--;
@@ -590,7 +706,7 @@ int main(int argc, char* argv[]) {
 	      sys.Up();
 	    }
 	  }
-	  
+	 */
 
 	  btag_weight = 1.;
 	  PU_weight = 1.;
@@ -598,8 +714,9 @@ int main(int argc, char* argv[]) {
           PDF_weight = 1.;
           MuR_weight = 1.;
           MuF_weight = 1.;
-          if(!(!sys) && is_data) continue;      
-
+         
+	// if(!(!sys) && is_data) continue;      
+//	if(is_data) continue;no more loop  dont continue
 
            //trig on the fly
 	    //trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
@@ -720,34 +837,132 @@ int main(int argc, char* argv[]) {
 	  //
 	    if(sys == Systematic("PDF_SF"))
 	      if(sys.IsUp())
-	        PDF_weight *= base->PDFweight_up;
+	        PDF_weight = base->PDFweight_up;
 	      else
-	        PDF_weight *= base->PDFweight_down;
+	        PDF_weight = base->PDFweight_down;
 	    else 
-	      PDF_weight *= base->PDFweight;
+	      PDF_weight = base->PDFweight;
 
 	    if(sys == Systematic("MuR_SF"))
 	      if(sys.IsUp())
-	        MuR_weight *= base->MuRweight_up;
+	        MuR_weight = base->MuRweight_up;
 	      else
-	        MuR_weight *= base->MuRweight_down;
+	        MuR_weight = base->MuRweight_down;
 	    else 
-	      MuR_weight *= base->MuRweight;
+	      MuR_weight = base->MuRweight;
 
 	    if(sys == Systematic("MuF_SF"))
 	      if(sys.IsUp())
-	        MuF_weight *= base->MuFweight_up;
+	        MuF_weight = base->MuFweight_up;
 	      else
-	        MuF_weight *= base->MuFweight_down;
+	        MuF_weight = base->MuFweight_down;
 	    else 
-	      MuF_weight *= base->MuFweight;
+	      MuF_weight = base->MuFweight;
+	 
+	   if(sys == Systematic("elID_SF"))
+		if(sys.IsUp())
+		  elID_weight =base->elIDSFweight_up;
+		else
+		  elID_weight =base->elIDSFweight_down;
+	   else
+	     elID_weight =base->elIDSFweight;
+	  
+           if(sys == Systematic("elIso_SF"))
+                if(sys.IsUp())
+                  elIso_weight =base->elISOSFweight_up;
+                else
+                  elIso_weight =base->elISOSFweight_down;
+           else
+             elIso_weight =base->elISOSFweight;
+
+	   if(sys == Systematic("elSIP_SF"))
+                if(sys.IsUp())
+                  elSIP_weight =base->elSIPSFweight_up;
+                else
+                  elSIP_weight =base->elSIPSFweight_down;
+           else
+             elSIP_weight =base->elSIPSFweight;
+		 
+	  if(sys == Systematic("elVL_SF"))
+                if(sys.IsUp())
+                  elVL_weight =base->elVLSFweight_up;
+                else
+                  elVL_weight =base->elVLSFweight_down;
+           else
+             elVL_weight =base->elVLSFweight;
 
 
-	  weight *= btag_weight*PU_weight;
+	  if(sys == Systematic("muID_SF"))
+                if(sys.IsUp())
+                  muID_weight =base->muIDSFweight_up;
+                else
+                  muID_weight =base->muIDSFweight_down;
+           else
+             muID_weight =base->muIDSFweight;
+
+           if(sys == Systematic("muIso_SF"))
+                if(sys.IsUp())
+                  muIso_weight =base->muISOSFweight_up;
+                else
+                  muIso_weight =base->muISOSFweight_down;
+           else
+             muIso_weight =base->muISOSFweight;
+
+           if(sys == Systematic("muSIP_SF"))
+                if(sys.IsUp())
+                  muSIP_weight =base->muSIPSFweight_up;
+                else
+                  muSIP_weight =base->muSIPSFweight_down;
+           else
+             muSIP_weight =base->muSIPSFweight;
+
+          if(sys == Systematic("muVL_SF"))
+                if(sys.IsUp())
+                  muVL_weight =base->muVLSFweight_up;
+                else
+                  muVL_weight =base->muVLSFweight_down;
+           else
+             muVL_weight =base->muVLSFweight;
+
+
+
+
+
+	//  weight *= btag_weight*PU_weight;
 	  //if(MuR_weight == 0.) MuR_weight = 1.;
 	  //if(MuF_weight == 0.) MuF_weight = 1.;
 	  //weight *= btag_weight*PU_weight*PDF_weight*MuR_weight*MuF_weight;
 	  //weight *= btag_weight*PU_weight*trig_weight;
+	 // if(btag_weight*PU_weight*trig_weight*PDF_weight*MuR_weight*MuF_weight*elID_weight*elIso_weight*elSIP_weight*elVL_weight*muID_weight*muIso_weight*muSIP_weight*muVL_weight)
+	 // weight = 1.;
+
+	//check for SF nans
+	if( isnan( btag_weight ) ) std::cout<<"NaN SF 1!!\n";
+ 	if( isnan( PU_weight  ) ) std::cout<<"NaN SF 2!!\n";
+	if( isnan( trig_weight	 ) ) std::cout<<"NaN SF 3!!\n";
+	if( isnan( PDF_weight  ) ) std::cout<<"NaN SF 4!!\n";
+	if( isnan( MuR_weight  ) ) std::cout<<"NaN SF 5!!\n";
+	if( isnan( MuF_weight  ) ) std::cout<<"NaN SF 6!!\n";
+	if( isnan( elID_weight  ) ) std::cout<<"NaN SF 7!!\n";
+	if( isnan( elIso_weight  ) ) std::cout<<"NaN SF 8!!\n";
+	if( isnan( elSIP_weight  ) ) std::cout<<"NaN SF 9!!\n";
+	if( isnan( elVL_weight  ) ) std::cout<<"NaN SF 10!!\n";
+	if( isnan( muID_weight  ) ) std::cout<<"NaN SF 11!!\n";
+	if( isnan( muIso_weight  ) ) std::cout<<"NaN SF 12!!\n";
+	if( isnan( muSIP_weight  ) ) std::cout<<"NaN SF 13!!\n";
+	if( isnan( muVL_weight  ) ) std::cout<<"NaN SF 14!!\n";
+	
+	SF_weight *= btag_weight*PU_weight*trig_weight*PDF_weight*MuR_weight*MuF_weight*elID_weight*elIso_weight*elSIP_weight*elVL_weight*muID_weight*muIso_weight*muSIP_weight*muVL_weight;
+	if( SF_weight<0.) SF_weight = 0.;
+	if( isnan( SF_weight )) SF_weight = 0.;	
+ 
+	weight *= SF_weight;
+	 
+	 //if( weight < 0 ) weight = 0.;
+	  //if(weight > 3 ){
+	//	std::cout<<"Event "<<e<<" Large weight! "<<weight<<"\n";
+	//	std::cout<<"btag:"<<btag_weight<<" PU:"<<PU_weight<<" TRG:"<<trig_weight<<" PDF:"<<PDF_weight<<" MuR:"<<MuR_weight<<" MuF:"<<MuF_weight<<" eID:"<<elID_weight<<" eIso:"<<elIso_weight<<" eSip:"<<elSIP_weight<<" eVL:"<<elVL_weight<<" muID:"<<muID_weight<<" muIso:"<<muIso_weight<<" muSip:"<<muSIP_weight<<" muVL:"<<muVL_weight<<std::endl;
+	//	}
 	  if(is_data) weight = 1.;
 	  
 	  LepList Fakes  = list_a.GetFakes();
@@ -777,18 +992,53 @@ int main(int argc, char* argv[]) {
 	      // 	FITBuilder.AddEvent(weight/double(Nf), Mperp, RISR,
 	      // 			    Categories[eindex], FITBuilder.FakeProcess(flabels[fl]), sys);
 	      
-	      FITBuilder.AddEvent(weight/double(Nf), Mperp, RISR,
-				  Categories[eindex], proc.FakeProcess(flabels[fl]), sys);
+             // if(TreesToProcess[itree] == "KUAnalysis"){
+	     // FITBuilder.AddEvent(weight/double(Nf), Mperp, RISR,
+	//			  Categories[eindex], proc.FakeProcess(flabels[fl]), sys);
+          //     }
+	     // if(doTreeSys && (TreesToProcess[itree] != "KUAnalysis")){
+	        if(doTreeSys){
+		//	FITBuilder.AddEvent(weight/double(Nf), Mperp, RISR,
+               //                   Categories[eindex], proc.FakeProcess(flabels[fl]), treeSysList[treeSysCtr]);
+			FITBuilder.AddEvent(weight/double(Nf), Mperp, RISR, Categories[eindex], proc.FakeProcess(flabels[fl]), treeSys);
+		}
+		else{
+			
+			FITBuilder.AddEvent(weight/double(Nf), Mperp, RISR, Categories[eindex], proc.FakeProcess(flabels[fl]), sys);
+		 }
+
+	//	}
 		if(debugVerbosity){
 			std::cout<<"Adding fakes event:"<<e<<" weight: "<<weight/double(Nf)<<" Mperp:"<<Mperp<<" RISR:"<<RISR<<" gammaT:"<<gammaT<<" PTISR:"<<PTISR<<" Cat:"<<Categories[eindex].Label()<<"  flabel:"<<flabels[fl]<<"\n";
 		}
 	    }
 	  } else {
 		//std::cout<<"adding event "<< weight <<" "<< Mperp <<" "<< RISR <<" "<<Categories[eindex].Label()<<" "<<proc.Name()<<" "<<sys.Label()<<"\n";
-	    FITBuilder.AddEvent(weight, Mperp, RISR,
-				Categories[eindex], proc, sys);
+	     // if(TreesToProcess[itree] == "KUAnalysis"){
+	//	FITBuilder.AddEvent(weight, Mperp, RISR,
+	//			Categories[eindex], proc, sys);
+	//	}
+	     // if(doTreeSys && (TreesToProcess[itree] != "KUAnalysis")){
+	        if(doTreeSys){
+	//	 FITBuilder.AddEvent(weight, Mperp, RISR,
+          //                      Categories[eindex], proc,treeSysList[treeSysCtr]);
+          	 FITBuilder.AddEvent(weight, Mperp, RISR, Categories[eindex], proc, treeSys);
+		}
+		else{
+			  FITBuilder.AddEvent(weight, Mperp, RISR,Categories[eindex], proc, sys);
+ 		 }
+
 		if(debugVerbosity){
 			std::cout<<"Adding event:"<<e<<" weight: "<<weight<<" Mperp:"<<Mperp<<" RISR:"<<RISR<<" gammaT:"<<gammaT<<" PTISR:"<<PTISR<<" Cat:"<<Categories[eindex].Label()<<" sysLabel:"<<sys.Label()<<"\n";
+		}
+		if(debugData){
+			//std::cout<< Categories[eindex].FullLabel() << "\n";
+			if( (RISR > 0.95) && (Categories[eindex].FullLabel() == "Ch1L_elpm_bron_1jge1svS_ge1jISR_PTISR0_gamT0_SVeta1"))
+			std::cout<<"Adding event:"<<e<<" "<<base->luminum<<" "<<base->runnum <<" weight: "<<weight<<" Mperp:"<<Mperp<<" RISR:"<<RISR<<" gammaT:"<<gammaT<<" PTISR:"<<PTISR<<" Cat:"<<Categories[eindex].FullLabel()<<" sysLabel:"<<sys.Label()<<"\n";
+			if( base->luminum == 468 && base->runnum ==317640 && PTISR==1012.03){
+			std::cout<<"FOUND MIGRATED EVENT!\n";
+			std::cout<<"Adding event:"<<e<<" "<<base->luminum<<" "<<base->runnum <<" weight: "<<weight<<" Mperp:"<<Mperp<<" RISR:"<<RISR<<" gammaT:"<<gammaT<<" PTISR:"<<PTISR<<" Cat:"<<Categories[eindex].FullLabel()<<" sysLabel:"<<sys.Label()<<"\n";
+			}
 		}
 	  }
 	  
@@ -796,12 +1046,18 @@ int main(int argc, char* argv[]) {
 	  // if(!addData && is_bkg && (title.find("QCD") == string::npos) && !sys)
 	  //   FITBuilder.AddEvent(weight, Mperp, RISR,
 	  // 			Categories[eindex], data_obs, sys);
-	}
+
+	   //if(itree>0) break; //jump out of loop, dont duplicate entries on tree sys
+//	   if(doTreeSys) break;//removed nsys loop so no break
+//	}//end Nsys loop
       }
+	//manage tree SYS ctr
+//	if( itree>=1 && itree%2 ==0 ) treeSysCtr++;
       delete base;
       delete chain;
       if(ifile != -1)
         break;
+//	}//end itree loop 
     }
   }
 

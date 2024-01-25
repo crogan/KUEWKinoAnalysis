@@ -350,9 +350,9 @@ void copyAndUpdateTrees(TFile* ifile, std::string ofilename, std::vector<std::st
 }
 //void processBFI(){
 int main(){	
-	std::string path16 = "/uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis/BFI_B20-101_BKG16_DATA16_Ldef/BFI_B20-101_BKG16_DATA16_Ldef.root";	
-	std::string path17 = "/uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis/BFI_B20-101_BKG17_DATA17_Ldef/BFI_B20-101_BKG17_DATA17_Ldef.root"; 
-	std::string path18 = "/uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis/BFI_B20-101_BKG18_DATA18_Ldef/BFI_B20-101_BKG18_DATA18_Ldef.root";
+	std::string path16 = "/uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis_NewNtuples/BFI_B109/oof/BFS_B109_BKG16_DATA16_TChiWZ16_SYS_Ldef.root";	
+	std::string path17 = "/uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis_NewNtuples/BFI_B109/oof/BFS_B109_BKG17_DATA17_TChiWZ17_SYS_Ldef.root"; 
+	std::string path18 = "/uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis_NewNtuples/BFI_B109/oof/BFS_B109_BKG18_DATA18_TChiWZ18_SYS_Ldef.root";
 
 	TFile* f16 = TFile::Open(path16.c_str());
 	TFile* f17 = TFile::Open(path17.c_str());
@@ -360,16 +360,16 @@ int main(){
 
 
 	//copy Cat tree, update procc tree and write it to output
-	std::vector<std::string> sys_strings_to_register16 = {"_BTAGHF16_SFDown","_BTAGHF16_SFUp","_BTAGLF16_SFDown","_BTAGLF16_SFUp"};
+	std::vector<std::string> sys_strings_to_register16 = {"_BTAGHF16_SFDown","_BTAGHF16_SFUp","_BTAGLF16_SFDown","_BTAGLF16_SFUp","_MuF16_SFDown", "_MuF16_SFUp", "_MuR16_SFDown", "_MuR16_SFUp", "_PDF16_SFDown", "_PDF16_SFUp", "_MET_TRIG16_SFDown", "_MET_TRIG16_SFUp", "_elID16_SFDown", "_elID16_SFUp", "_elIso16_SFDown", "_elIso16_SFUp", "_elSIP16_SFDown", "_elSIP16_SFUp", "_elVL16_SFDown", "_elVL16_SFUp", "_muID16_SFDown", "_muID16_SFUp", "_muIso16_SFDown", "_muIso16_SFUp", "_muSIP16_SFDown", "_muSIP16_SFUp", "_muVL16_SFDown", "_muVL16_SFUp","_JESUncer16_TotalDown", "_JESUncer16_TotalUp", "_JERUncer16_TotalDown", "_JERUncer16_TotalUp", "_METUncer16_UnClustDown", "_METUncer16_UnClustUp"    };
 	copyAndUpdateTrees(f16, "outputTest16.root", sys_strings_to_register16);
 
 	//Repeat the whole tree writing process for 2017
-	std::vector<std::string> sys_strings_to_register17 = {"_BTAGHF17_SFDown","_BTAGHF17_SFUp","_BTAGLF17_SFDown","_BTAGLF17_SFUp"};
+	std::vector<std::string> sys_strings_to_register17 = {"_BTAGHF17_SFDown","_BTAGHF17_SFUp","_BTAGLF17_SFDown","_BTAGLF17_SFUp","_MuF17_SFDown", "_MuF17_SFUp", "_MuR17_SFDown", "_MuR17_SFUp", "_PDF17_SFDown", "_PDF17_SFUp", "_MET_TRIG17_SFDown", "_MET_TRIG17_SFUp", "_elID17_SFDown", "_elID17_SFUp", "_elIso17_SFDown", "_elIso17_SFUp", "_elSIP17_SFDown", "_elSIP17_SFUp", "_elVL17_SFDown", "_elVL17_SFUp", "_muID17_SFDown", "_muID17_SFUp", "_muIso17_SFDown", "_muIso17_SFUp", "_muSIP17_SFDown", "_muSIP17_SFUp", "_muVL17_SFDown", "_muVL17_SFUp","_JESUncer17_TotalDown", "_JESUncer17_TotalUp", "_JERUncer17_TotalDown", "_JERUncer17_TotalUp", "_METUncer17_UnClustDown", "_METUncer17_UnClustUp" };
         copyAndUpdateTrees(f17, "outputTest17.root", sys_strings_to_register17);
 
-	std::vector<std::string> sys_strings_to_register18 = {"_BTAGHF18_SFDown","_BTAGHF18_SFUp","_BTAGLF18_SFDown","_BTAGLF18_SFUp"};
-        copyAndUpdateTrees(f18, "outputTest18.root", sys_strings_to_register18);
-	
+	std::vector<std::string> sys_strings_to_register18 = {"_BTAGHF18_SFDown","_BTAGHF18_SFUp","_BTAGLF18_SFDown","_BTAGLF18_SFUp","_MuF18_SFDown", "_MuF18_SFUp", "_MuR18_SFDown", "_MuR18_SFUp", "_PDF18_SFDown", "_PDF18_SFUp", "_MET_TRIG18_SFDown", "_MET_TRIG18_SFUp", "_elID18_SFDown", "_elID18_SFUp", "_elIso18_SFDown", "_elIso18_SFUp", "_elSIP18_SFDown", "_elSIP18_SFUp", "_elVL18_SFDown", "_elVL18_SFUp", "_muID18_SFDown", "_muID18_SFUp", "_muIso18_SFDown", "_muIso18_SFUp", "_muSIP18_SFDown", "_muSIP18_SFUp", "_muVL18_SFDown", "_muVL18_SFUp","_JESUncer18_TotalDown", "_JESUncer18_TotalUp", "_JERUncer18_TotalDown", "_JERUncer18_TotalUp", "_METUncer18_UnClustDown", "_METUncer18_UnClustUp" };
+	copyAndUpdateTrees(f18, "outputTest18.root", sys_strings_to_register18);
+
 
 
 	f16 = TFile::Open(path16.c_str());//open to get tlist of category keys to loop over

@@ -943,18 +943,27 @@ void FitConfiguration::AddShapeSysAsNorm(const Systematic& sys, ch::CombineHarve
     Process p = processes[ip];
     
     if(!FIT.HasSystematic(p, sys))
+    {
+  //    std::cout<<"Has continue\n";
       continue;
+    }
 
     for(int ic = 0; ic < Ncat; ic++){
       Category c = categories[ic];
 
       if(!FIT.IsThere(c, p) ||
-	 !FIT.IsThere(c, p, sys))
+	 !FIT.IsThere(c, p, sys)){
+//	std::cout<<"is there continue\n";
 	continue;
+
+	}
       
       double nom = FIT.Integral(c, p);
 //cout << "nom: " << nom << endl;
-      if(nom <= 0.) continue;
+      if(nom <= 0.){
+//	std::cout<<"nom <=0 continue\n";
+	 continue;
+	}
 //cout << "cat: " << c.FullLabel() << " proc: " << p.Name() << " sys: " << sys.Label() << endl;      
       double up  = FIT.Integral(c, p, sys.Up());
 //cout << "up: " << up << endl;     
@@ -970,14 +979,17 @@ void FitConfiguration::AddShapeSysAsNorm(const Systematic& sys, ch::CombineHarve
        err =1. + (up-dn)/(up+dn);
 //     cout << "2 err: " << err << endl;
       	string label = "norm_"+sys.Label();
+//	std::cout<<"label: "<<label<<"\n";
 	if(name != "")
 		label = "norm_"+name;
 		
 	if(scale > 0.)
 		err *= scale;
-	if(err > 0.)
+	if(err > 0.){
+//	  std::cout<<"err > 0 adding systematic\n";
       cb.cp().process(VS().a(p.Name())).bin(VS().a(c.FullLabel()))
 	.AddSyst(cb, label, "lnN", SystMap<>::init(err));
+	}
 
     }
   }

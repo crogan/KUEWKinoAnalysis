@@ -344,6 +344,10 @@ Systematics SystematicsTool::GetWeightSystematics() const {
   list += "MuF_SF";
   list += "MuR_SF";
   list += "PDF_SF";
+ 
+  //list += "JESUncer_Total";
+  //list += "JERUncer_Total";
+  //list += "METUncer_UnClust";   
 
   list += "MET_TRIG_SF";
  
