@@ -56,6 +56,22 @@ class EventCount:
     
     def SetAnalysisTree(self, analysis_tree):
         self.analysis_tree = analysis_tree
+    
+    def GetMatchingKey(self, base_name):
+        result = ""
+        # Note: in the list of keys, duplicates are removed
+        keys = list(self.analysis_tree_map.keys())
+        matches = [key for key in keys if key in base_name]
+        n_matches = len(matches)
+        #print("keys: {0}".format(keys))
+        #print("n_matches: {0}, matches: {1}".format(n_matches, matches))
+        if n_matches == 1:
+            result = matches[0]
+        elif n_matches == 0:
+            print(Fore.RED + "ERROR: No matching key found for the base name '{0}'.".format(base_name) + Fore.RESET)
+        elif n_matches > 1:
+            print(Fore.RED + "ERROR: There are {0} matching keys found for the base name '{1}'.".format(n_matches, base_name) + Fore.RESET)
+        return result
 
     # count total events in a ROOT file
     # iterate over entries in the event count tree
@@ -116,7 +132,7 @@ class EventCount:
 
         if verbose:
             #print("ROOT files: {0}".format(root_files))
-            print(Fore.GREEN + "Found {0} ROOT files:".format(n_root_files) + Fore.RESET)
+            print(Fore.GREEN + "Found {0} ROOT files with these base names:".format(n_root_files) + Fore.RESET)
 
         # headers for csv
         headers = []
@@ -129,17 +145,19 @@ class EventCount:
         # count events
         for root_file in root_files:
             base_name = os.path.basename(root_file)
+            base_name = base_name.replace(".root", "")
             base_file_names.append(base_name)
             if sms:
-                if base_name in self.analysis_tree_map:
-                    tree = self.analysis_tree_map[base_name]
+                key = self.GetMatchingKey(base_name)
+                if key in self.analysis_tree_map:
+                    tree = self.analysis_tree_map[key]
                     self.SetAnalysisTree(tree)
                 else:
                     # We cannot assign a valid analysis tree
                     tree = "FIXME"
                     self.SetAnalysisTree(tree)
                     print(Fore.RED + "ERROR: The base name '{0}' is not in the analysis tree map (from the json file)!".format(base_name) + Fore.RESET)
-                    print(Fore.RED + " - We cannot assign analysis tree for this signal sample!" + Fore.RESET)
+                    print(Fore.RED + " - We cannot assign an analysis tree for this signal sample!" + Fore.RESET)
                     print(Fore.RED + " - To fix this error, please add this sample and an analysis tree (choose a valid mass point) to this file: {0}".format(self.analysis_tree_file) + Fore.RESET)
             n_total_events = self.countTotalEvents(root_file)
             n_saved_events = self.countSavedEvents(root_file)
