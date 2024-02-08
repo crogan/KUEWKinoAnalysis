@@ -348,27 +348,56 @@ void copyAndUpdateTrees(TFile* ifile, std::string ofilename, std::vector<std::st
         delete ofile;
 
 }
+
+void ProcessVariations(std::pair<std::string,std::string> input_sys_pair,std::pair<std::string,std::string> out_sys16, std::pair<std::string,std::string> out_sys17, std::pair<std::string,std::string> out_sys18,  TDirectoryFile* dir16 , TDirectoryFile* dir17,  TDirectoryFile* dir18, TFile*  fout16, TFile*  fout17, TFile*  fout18  ){
+	
+	std::set<std::string> procSet16 = getProcSet_updn( dir16, input_sys_pair);
+        std::set<std::string> procSet17 = getProcSet_updn( dir17, input_sys_pair);
+        std::set<std::string> procSet18 = getProcSet_updn( dir18, input_sys_pair);
+        std::set<std::string>superset = createSuperSet( procSet16, procSet17, procSet18);
+        createPogVariations( dir16, dir17, dir18, superset, procSet16, procSet17, procSet18, input_sys_pair, out_sys16, fout16);
+	createPogVariations( dir17, dir16, dir18, superset, procSet17, procSet16, procSet18, input_sys_pair, out_sys17, fout17);
+	createPogVariations( dir18, dir16, dir17, superset, procSet18, procSet16, procSet17, input_sys_pair, out_sys18, fout18);
+
+
+}
+
+
 //void processBFI(){
 int main(){	
-	std::string path16 = "/uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis_NewNtuples/BFI_B109/oof/BFS_B109_BKG16_DATA16_TChiWZ16_SYS_Ldef.root";	
-	std::string path17 = "/uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis_NewNtuples/BFI_B109/oof/BFS_B109_BKG17_DATA17_TChiWZ17_SYS_Ldef.root"; 
-	std::string path18 = "/uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis_NewNtuples/BFI_B109/oof/BFS_B109_BKG18_DATA18_TChiWZ18_SYS_Ldef.root";
+	//std::string path16 = "/uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis_NewNtuples/BFI_B109/oof/BFS_B109_BKG16_DATA16_TChiWZ16_SYS_Ldef.root";	
+	//std::string path17 = "/uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis_NewNtuples/BFI_B109/oof/BFS_B109_BKG17_DATA17_TChiWZ17_SYS_Ldef.root"; 
+	//std::string path18 = "/uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis_NewNtuples/BFI_B109/oof/BFS_B109_BKG18_DATA18_TChiWZ18_SYS_Ldef.root";
+	std::string path16 = "/uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis_NewNtuples/BFI_B116/BFS_B116_BKG16_DATA16_SYS16.root";
+	std::string path17 = "/uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis_NewNtuples/BFI_B116/BFS_B116_BKG17_DATA17_SYS17.root";
+	std::string path18 = "/uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis_NewNtuples/BFI_B116/BFS_B116_BKG18_DATA18_SYS18.root";
 
 	TFile* f16 = TFile::Open(path16.c_str());
 	TFile* f17 = TFile::Open(path17.c_str());
 	TFile* f18 = TFile::Open(path18.c_str());
 
+	std::string outname16 = "BFI_B116_BKG16_DATA16_SYSYEAR16.root";
+	std::string outname17 = "BFI_B116_BKG17_DATA17_SYSYEAR17.root";
+	std::string outname18 = "BFI_B116_BKG18_DATA18_SYSYEAR18.root";
+
 
 	//copy Cat tree, update procc tree and write it to output
-	std::vector<std::string> sys_strings_to_register16 = {"_BTAGHF16_SFDown","_BTAGHF16_SFUp","_BTAGLF16_SFDown","_BTAGLF16_SFUp","_MuF16_SFDown", "_MuF16_SFUp", "_MuR16_SFDown", "_MuR16_SFUp", "_PDF16_SFDown", "_PDF16_SFUp", "_MET_TRIG16_SFDown", "_MET_TRIG16_SFUp", "_elID16_SFDown", "_elID16_SFUp", "_elIso16_SFDown", "_elIso16_SFUp", "_elSIP16_SFDown", "_elSIP16_SFUp", "_elVL16_SFDown", "_elVL16_SFUp", "_muID16_SFDown", "_muID16_SFUp", "_muIso16_SFDown", "_muIso16_SFUp", "_muSIP16_SFDown", "_muSIP16_SFUp", "_muVL16_SFDown", "_muVL16_SFUp","_JESUncer16_TotalDown", "_JESUncer16_TotalUp", "_JERUncer16_TotalDown", "_JERUncer16_TotalUp", "_METUncer16_UnClustDown", "_METUncer16_UnClustUp"    };
-	copyAndUpdateTrees(f16, "outputTest16.root", sys_strings_to_register16);
+	//pop these out for now
+	//"_MuF16_SFDown", "_MuF16_SFUp", "_MuR16_SFDown", "_MuR16_SFUp", "_PDF16_SFDown", "_PDF16_SFUp", "_MET_TRIG16_SFDown", "_MET_TRIG16_SFUp"
+	//"_elID16_SFDown", "_elID16_SFUp", "_elIso16_SFDown", "_elIso16_SFUp", "_elSIP16_SFDown", "_elSIP16_SFUp", "_elVL16_SFDown", "_elVL16_SFUp", "_muID16_SFDown", "_muID16_SFUp", "_muIso16_SFDown", "_muIso16_SFUp", "_muSIP16_SFDown", "_muSIP16_SFUp", "_muVL16_SFDown", "_muVL16_SFUp"
+	std::vector<std::string> sys_strings_to_register16 = {"_BTAGHF16_SFDown","_BTAGHF16_SFUp","_BTAGLF16_SFDown","_BTAGLF16_SFUp","_JESUncer16_TotalDown", "_JESUncer16_TotalUp", "_JERUncer16_TotalDown", "_JERUncer16_TotalUp", "_METUncer16_UnClustDown", "_METUncer16_UnClustUp"    };
+	copyAndUpdateTrees(f16, outname16 , sys_strings_to_register16);
 
 	//Repeat the whole tree writing process for 2017
-	std::vector<std::string> sys_strings_to_register17 = {"_BTAGHF17_SFDown","_BTAGHF17_SFUp","_BTAGLF17_SFDown","_BTAGLF17_SFUp","_MuF17_SFDown", "_MuF17_SFUp", "_MuR17_SFDown", "_MuR17_SFUp", "_PDF17_SFDown", "_PDF17_SFUp", "_MET_TRIG17_SFDown", "_MET_TRIG17_SFUp", "_elID17_SFDown", "_elID17_SFUp", "_elIso17_SFDown", "_elIso17_SFUp", "_elSIP17_SFDown", "_elSIP17_SFUp", "_elVL17_SFDown", "_elVL17_SFUp", "_muID17_SFDown", "_muID17_SFUp", "_muIso17_SFDown", "_muIso17_SFUp", "_muSIP17_SFDown", "_muSIP17_SFUp", "_muVL17_SFDown", "_muVL17_SFUp","_JESUncer17_TotalDown", "_JESUncer17_TotalUp", "_JERUncer17_TotalDown", "_JERUncer17_TotalUp", "_METUncer17_UnClustDown", "_METUncer17_UnClustUp" };
-        copyAndUpdateTrees(f17, "outputTest17.root", sys_strings_to_register17);
+	//"_MuF17_SFDown", "_MuF17_SFUp", "_MuR17_SFDown", "_MuR17_SFUp", "_PDF17_SFDown", "_PDF17_SFUp", "_MET_TRIG17_SFDown", "_MET_TRIG17_SFUp"
+	//"_elID17_SFDown", "_elID17_SFUp", "_elIso17_SFDown", "_elIso17_SFUp", "_elSIP17_SFDown", "_elSIP17_SFUp", "_elVL17_SFDown", "_elVL17_SFUp", "_muID17_SFDown", "_muID17_SFUp", "_muIso17_SFDown", "_muIso17_SFUp", "_muSIP17_SFDown", "_muSIP17_SFUp", "_muVL17_SFDown", "_muVL17_SFUp"
+	std::vector<std::string> sys_strings_to_register17 = {"_BTAGHF17_SFDown","_BTAGHF17_SFUp","_BTAGLF17_SFDown","_BTAGLF17_SFUp","_JESUncer17_TotalDown", "_JESUncer17_TotalUp", "_JERUncer17_TotalDown", "_JERUncer17_TotalUp", "_METUncer17_UnClustDown", "_METUncer17_UnClustUp" };
+        copyAndUpdateTrees(f17, outname17 , sys_strings_to_register17);
 
-	std::vector<std::string> sys_strings_to_register18 = {"_BTAGHF18_SFDown","_BTAGHF18_SFUp","_BTAGLF18_SFDown","_BTAGLF18_SFUp","_MuF18_SFDown", "_MuF18_SFUp", "_MuR18_SFDown", "_MuR18_SFUp", "_PDF18_SFDown", "_PDF18_SFUp", "_MET_TRIG18_SFDown", "_MET_TRIG18_SFUp", "_elID18_SFDown", "_elID18_SFUp", "_elIso18_SFDown", "_elIso18_SFUp", "_elSIP18_SFDown", "_elSIP18_SFUp", "_elVL18_SFDown", "_elVL18_SFUp", "_muID18_SFDown", "_muID18_SFUp", "_muIso18_SFDown", "_muIso18_SFUp", "_muSIP18_SFDown", "_muSIP18_SFUp", "_muVL18_SFDown", "_muVL18_SFUp","_JESUncer18_TotalDown", "_JESUncer18_TotalUp", "_JERUncer18_TotalDown", "_JERUncer18_TotalUp", "_METUncer18_UnClustDown", "_METUncer18_UnClustUp" };
-	copyAndUpdateTrees(f18, "outputTest18.root", sys_strings_to_register18);
+	//"_MuF18_SFDown", "_MuF18_SFUp", "_MuR18_SFDown", "_MuR18_SFUp", "_PDF18_SFDown", "_PDF18_SFUp", "_MET_TRIG18_SFDown", "_MET_TRIG18_SFUp"
+	//"_elID18_SFDown", "_elID18_SFUp", "_elIso18_SFDown", "_elIso18_SFUp", "_elSIP18_SFDown", "_elSIP18_SFUp", "_elVL18_SFDown", "_elVL18_SFUp", "_muID18_SFDown", "_muID18_SFUp", "_muIso18_SFDown", "_muIso18_SFUp", "_muSIP18_SFDown", "_muSIP18_SFUp", "_muVL18_SFDown", "_muVL18_SFUp"
+	std::vector<std::string> sys_strings_to_register18 = {"_BTAGHF18_SFDown","_BTAGHF18_SFUp","_BTAGLF18_SFDown","_BTAGLF18_SFUp","_JESUncer18_TotalDown", "_JESUncer18_TotalUp", "_JERUncer18_TotalDown", "_JERUncer18_TotalUp", "_METUncer18_UnClustDown", "_METUncer18_UnClustUp" };
+	copyAndUpdateTrees(f18, outname18 , sys_strings_to_register18);
 
 
 
@@ -391,9 +420,9 @@ int main(){
 
 	//open and close all inputs and outputs each iteration to reduce time complexity significantly
 	std::cout<<"Opening ROOT File\n";
-	fout16 = new TFile("outputTest16.root", "UPDATE");
-	fout17 = new TFile("outputTest17.root", "UPDATE");
-	fout18 = new TFile("outputTest18.root", "UPDATE");
+	fout16 = new TFile(outname16.c_str(), "UPDATE");
+	fout17 = new TFile(outname17.c_str(), "UPDATE");
+	fout18 = new TFile(outname18.c_str(), "UPDATE");
 
 //	if( !(f16->IsOpen()) ){
 		f16 = TFile::Open(path16.c_str());
@@ -508,6 +537,44 @@ int main(){
         out_sys_pair.first = "_BTAGLF18_SFDown";
         out_sys_pair.second = "_BTAGLF18_SFUp";
 	createPogVariations( dir18, dir16, dir17, superset, procSet18, procSet16, procSet17, sys_string_pair, out_sys_pair, fout18);
+
+	//do other variatons 
+	//MUF	
+/*
+	 ProcessVariations(std::make_pair("_MuF_SFDown","_MuF_SFUp"),
+	 std::make_pair("_MuF16_SFDown","_MuF16_SFUp"),
+	 std::make_pair("_MuF17_SFDown","_MuF17_SFUp"),
+	 std::make_pair("_MuF18_SFDown","_MuF18_SFUp"), dir16 , dir17, dir18, fout16, fout17, fout18  );
+
+	//MUR
+	ProcessVariations(std::make_pair("_MuR_SFDown","_MuR_SFUp"),
+         std::make_pair("_MuR16_SFDown","_MuR16_SFUp"), 
+         std::make_pair("_MuR17_SFDown","_MuR17_SFUp"),
+         std::make_pair("_MuR18_SFDown","_MuR18_SFUp"), dir16 , dir17, dir18, fout16, fout17, fout18  );
+	
+	//PDF
+	ProcessVariations(std::make_pair("_PDF_SFDown","_PDF_SFUp"),
+         std::make_pair("_PDF16_SFDown","_PDF16_SFUp"), 
+         std::make_pair("_PDF17_SFDown","_PDF17_SFUp"),
+         std::make_pair("_PDF18_SFDown","_PDF18_SFUp"), dir16 , dir17, dir18, fout16, fout17, fout18  );
+*/	
+
+	//JES
+	ProcessVariations(std::make_pair("_JESUncer_TotalDown","_JESUncer_TotalUp"),
+         std::make_pair("_JESUncer16_TotalDown","_JESUncer16_TotalUp"),
+         std::make_pair("_JESUncer17_TotalDown","_JESUncer17_TotalUp"),
+         std::make_pair("_JESUncer18_TotalDown","_JESUncer18_TotalUp"), dir16 , dir17, dir18, fout16, fout17, fout18  );
+
+	//JER
+	ProcessVariations(std::make_pair("_JERUncer_TotalDown","_JERUncer_TotalUp"),
+         std::make_pair("_JERUncer16_TotalDown","_JERUncer16_TotalUp"),
+         std::make_pair("_JERUncer17_TotalDown","_JERUncer17_TotalUp"),
+         std::make_pair("_JERUncer18_TotalDown","_JERUncer18_TotalUp"), dir16 , dir17, dir18, fout16, fout17, fout18  );
+
+	ProcessVariations(std::make_pair("_METUncer_UnClustDown","_METUncer_UnClustUp"),
+         std::make_pair("_METUncer16_UnClustDown","_METUncer16_UnClustUp"),
+         std::make_pair("_METUncer17_UnClustDown","_METUncer17_UnClustUp"),
+         std::make_pair("_METUncer18_UnClustDown","_METUncer18_UnClustUp"), dir16 , dir17, dir18, fout16, fout17, fout18  );
 	
 
 	//Close all inputs and outputs each iteration

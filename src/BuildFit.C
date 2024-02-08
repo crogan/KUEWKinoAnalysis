@@ -570,26 +570,26 @@ else cout << "Nominal signal cross section: " << xsec_norm << endl;
     for(int s = 0; s < Nsys; s++){  
       Systematic& sys = systematics[s];
        cout<< " -- Assessing Systematic: "<<sys.Label()<< endl;
-      /*if(sys.Label() == "BTAGHF_SF") continue;
-      if(sys.Label() == "BTAGLF_SF") continue;
-      if(sys.Label() == "MuF_SF") continue;
-      if(sys.Label() == "MuR_SF") continue;
-      if(sys.Label() == "PDF_SF") continue;
-      //if(sys.Label() == "MET_TRIG_SF") continue;
-      if(sys.Label() == "elID_SF") continue;
-      if(sys.Label() == "elIso_SF") continue;
-      if(sys.Label() == "elSIP_SF") continue;
-      if(sys.Label() == "elVL_SF") continue;
-      if(sys.Label() == "muID_SF") continue;
-      if(sys.Label() == "muIso_SF") continue;
-      if(sys.Label() == "muID_SF") continue;
-      if(sys.Label() == "muIso_SF") continue; 
-      if(sys.Label() == "muSIP_SF") continue;
-      if(sys.Label() == "muVL_SF") continue;
-      if(sys.Label() == "JESUncer_Total") continue;
+      //if(sys.Label() == "BTAGHF_SF") continue;//allow correlated factor
+      //if(sys.Label() == "BTAGLF_SF") continue;
+      //if(sys.Label() == "MuF_SF") continue;//for now do not year split
+      //if(sys.Label() == "MuR_SF") continue;
+      //if(sys.Label() == "PDF_SF") continue;
+      //if(sys.Label() == "MET_TRIG_SF") continue; //not ready for primetime
+      //if(sys.Label() == "elID_SF") continue;//do not year split
+      //if(sys.Label() == "elIso_SF") continue;
+      //if(sys.Label() == "elSIP_SF") continue;
+      //if(sys.Label() == "elVL_SF") continue;
+      //if(sys.Label() == "muID_SF") continue;
+      //if(sys.Label() == "muIso_SF") continue;
+      //if(sys.Label() == "muID_SF") continue;
+      //if(sys.Label() == "muIso_SF") continue; 
+      //if(sys.Label() == "muSIP_SF") continue;
+      //if(sys.Label() == "muVL_SF") continue;
+      if(sys.Label() == "JESUncer_Total") continue;//no correlated factor
       if(sys.Label() == "JERUncer_Total") continue;
       if(sys.Label() == "METUncer_UnClust") continue;
-*/
+
         cout<<" Systematic passed allowed criteria " << endl;
       //cout<< "Systematic adding as norm: "<<sys.Label()<< endl;
       if(shapeToNorm.Contains(sys)){
@@ -603,8 +603,13 @@ else cout << "Nominal signal cross section: " << xsec_norm << endl;
       	} 
 	else{
 	*/
+	if( (sys.Label() == "BTAGHF_SF") || (sys.Label() == "BTAGLF_SF") ){
+	    CONFIG.AddShapeSysAsNorm(sys,cb,FIT,sys.Label()+"_corr");
+
+	}
+	else{
 	    CONFIG.AddShapeSysAsNorm(sys,cb,FIT);
-//	} 
+	} 
 
 	continue;
       }
