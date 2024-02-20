@@ -678,8 +678,16 @@ int main(int argc, char* argv[]) {
 
 	
 	if(!is_data){
-	  weight = (setLumi ? lumi : ST.Lumi())*base->weight*sample_weight;
-	}
+	  if(year == 2018){//adjust lumi in 2018
+		//if event is subject to veto, give preHEM lumi
+		// if event is not vetoed by HEM, give full lumi
+		weight = (setLumi ? lumi : ST.HEMLumi( base->HEM_Veto ))*base->weight*sample_weight;
+	  }//end year check
+	  else{// else do what we used to do
+		weight = (setLumi ? lumi : ST.Lumi())*base->weight*sample_weight;
+	  }//end else other years
+	}//end if is data check
+
 	// systematics loop
 	// do down sys first
 	string correct_sys = "";
@@ -824,13 +832,13 @@ int main(int argc, char* argv[]) {
           */
 
 	  // turn off PU systematics for now
-	  // if(sys == Systematic("PU_SF"))
-	  //   if(sys.IsUp())
-	  // 	PU_weight = base->PUweight_up;
-	  //   else
-	  // 	PU_weight = base->PUweight_down;
-	  // else
-	  //   PU_weight = base->PUweight;
+	   if(sys == Systematic("PU_SF"))
+	     if(sys.IsUp())
+	   	PU_weight = base->PUweight_up;
+	     else
+	   	PU_weight = base->PUweight_down;
+	   else
+	     PU_weight = base->PUweight;
 
 	  //
 	  // PDF systematics
@@ -955,6 +963,8 @@ int main(int argc, char* argv[]) {
 	//hack for build 110 - remove METtrig SF
 	//build 115 everything but mettriiger, with 0 suppression
 	trig_weight=1.;	
+	//hack PU weight to be off
+	//PU_weight=1.;
 	SF_weight *= btag_weight*PU_weight*trig_weight*PDF_weight*MuR_weight*MuF_weight*elID_weight*elIso_weight*elSIP_weight*elVL_weight*muID_weight*muIso_weight*muSIP_weight*muVL_weight;
 	if( SF_weight<0.) SF_weight = 0.;
 	if( isnan( SF_weight )) SF_weight = 0.;	

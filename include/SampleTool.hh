@@ -24,6 +24,7 @@ public:
   SampleTool& SetYear(int year);
 
   double Lumi();
+  double HEMLumi(bool HEM_Veto);
 
   ProcessList Get(const string& name) const;
   ProcessList Get(ProcessType type) const;
@@ -48,7 +49,7 @@ private:
   static bool m_ProcInit;
   static std::map<Process, pair<vector<string>,string> > m_Proc[3];
   static double m_Lumi[3];
-
+  static double m_HEMLumi[2];
   // signal only
   void InitSignalProc(const Process& proc);
   static std::map<Process, bool> m_SProcInit[3]; // checked combined normalizations already?

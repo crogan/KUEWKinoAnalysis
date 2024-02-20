@@ -368,17 +368,23 @@ int main(){
 	//std::string path16 = "/uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis_NewNtuples/BFI_B109/oof/BFS_B109_BKG16_DATA16_TChiWZ16_SYS_Ldef.root";	
 	//std::string path17 = "/uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis_NewNtuples/BFI_B109/oof/BFS_B109_BKG17_DATA17_TChiWZ17_SYS_Ldef.root"; 
 	//std::string path18 = "/uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis_NewNtuples/BFI_B109/oof/BFS_B109_BKG18_DATA18_TChiWZ18_SYS_Ldef.root";
-	std::string path16 = "/uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis_NewNtuples/BFI_B116/BFS_B116_BKG16_DATA16_SYS16.root";
-	std::string path17 = "/uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis_NewNtuples/BFI_B116/BFS_B116_BKG17_DATA17_SYS17.root";
-	std::string path18 = "/uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis_NewNtuples/BFI_B116/BFS_B116_BKG18_DATA18_SYS18.root";
+	
+//	std::string path16 = "/uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis_NewNtuples/BFI_B116/BFS_B116_BKG16_DATA16_SYS16.root";
+//	std::string path17 = "/uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis_NewNtuples/BFI_B116/BFS_B116_BKG17_DATA17_SYS17.root";
+//	std::string path18 = "/uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis_NewNtuples/BFI_B116/BFS_B116_BKG18_DATA18_SYS18.root";
+
+	std::string path16 = "/uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis_NewNtuples/BFI_B117/BFS_B117_BKG16_DATA16_SYS16.root";
+        std::string path17 = "/uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis_NewNtuples/BFI_B117/BFS_B117_BKG17_DATA17_SYS17.root";
+        std::string path18 = "/uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis_NewNtuples/BFI_B117/BFS_B117_BKG18_DATA18_SYS18.root";
+
 
 	TFile* f16 = TFile::Open(path16.c_str());
 	TFile* f17 = TFile::Open(path17.c_str());
 	TFile* f18 = TFile::Open(path18.c_str());
 
-	std::string outname16 = "BFI_B116_BKG16_DATA16_SYSYEAR16.root";
-	std::string outname17 = "BFI_B116_BKG17_DATA17_SYSYEAR17.root";
-	std::string outname18 = "BFI_B116_BKG18_DATA18_SYSYEAR18.root";
+	std::string outname16 = "BFI_B117_BKG16_DATA16_SYSYEAR16.root";
+	std::string outname17 = "BFI_B117_BKG17_DATA17_SYSYEAR17.root";
+	std::string outname18 = "BFI_B117_BKG18_DATA18_SYSYEAR18.root";
 
 
 	//copy Cat tree, update procc tree and write it to output
