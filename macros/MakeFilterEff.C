@@ -7,7 +7,7 @@
 #include "TTree.h"
 
 void DO_FILE(string filename, string filetag);
-// example syntax: root -l 'macros/MakeFilterEff.C++("test_list.txt","Summer16_102X")'
+// example syntax: root -l 'macros/MakeFilterEff.C++("test_list.txt","Fall17_102X")' // yes '_SMS' is not used here
 // where list is list of filter eff text files
 //     ls ../ListMaker/GeneratorInterface/Core/test/Fall17_102X_SMS/** > test_list.txt
 

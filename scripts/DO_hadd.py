@@ -3,12 +3,22 @@ from glob import glob as glob
 from subprocess import Popen as pop
 import subprocess
 
-if __name__ == "__main__":
+# Example submission:
+#    nohup python scripts/DO_hadd.py -idir ../../../NTUPLES/Processing/Summer16_102X/ -odir ../../../NTUPLES/HADD/Summer16_102X/ > HADD_logs/HADD_Summer16_102X.debug 2>&1 &
+# After hadd finishes and ready to copy to LPC:
+#    nohup xrdcp --parallel 4 -f ../../../NTUPLES/HADD/Summer16_102X/* root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v1/Summer16_102X/ > xrdcp_Summer16_102X.debug 2>&1 &
+
+def main():
+    # start time
+    start_time = time.time()
+    print("DO_hadd.py: Start... go go go!")
+    print("------------------------------")
 
     argv_pos = 1
 
     OUT_DIR = "dum"
     IN_DIR = "dum"
+    redo = False
     
     if '-odir' in sys.argv:
         p = sys.argv.index('-odir')
@@ -18,6 +28,9 @@ if __name__ == "__main__":
         p = sys.argv.index('-idir')
         IN_DIR = sys.argv[p+1]
         argv_pos += 2
+    if '--redo' in sys.argv:
+        redo = True
+        argv_pos += 1
 
     if not len(sys.argv) > 1 or '-h' in sys.argv or '--help' in sys.argv or OUT_DIR == "dum" or IN_DIR == "dum":
         print "Usage: %s [-idir /path/input_dir] [-odir /path/output_dir]" % sys.argv[0]
@@ -33,8 +46,11 @@ if __name__ == "__main__":
 
     skip_list = [
         #"SMS-T2tt_mStop-400to1200_TuneCP2_13TeV-madgraphMLM-pythia8",
-        #"TTTo2L2Nu_TuneCP5_PSweights_13TeV-powheg-pythia8_Summer16_102X",
-        "TTToSemiLeptonic_TuneCP5_PSweights_13TeV-powheg-pythia8_Summer16_102X",
+    ]
+    redo_list = [
+        #"TTZToLLNuNu_M-10_TuneCP5_13TeV-amcatnlo-pythia8_Fall17_102X",
+        #"TTTT_TuneCP5_13TeV-amcatnlo-pythia8_Fall17_102X",
+        #"TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8_Fall17_102X",
     ]
 
     if os.path.exists("scripts/startup_C.so") is False:
@@ -50,6 +66,11 @@ if __name__ == "__main__":
         if skip:
             continue
 
+        if redo and target not in redo_list:
+            continue
+        if redo and target not in os.listdir(IN_DIR):
+            continue
+
         #print target
         #haddcmd = "hadd -f "+OUT_DIR+"/"+target+".root "
         #for i in range(0,10):
@@ -58,9 +79,9 @@ if __name__ == "__main__":
             #os.system("LD_PRELOAD=scripts/startup_C.so hadd -f -j 4 "+IN_DIR+"/"+target+"/"+target+"_"+str(i)+".root "+IN_DIR+"/"+target+"/"+target+"_"+str(i)+"/*.root")
 
         hadd_sml_processes = []
-        if os.path.exists("HADD_logs/"+"/"+target) is True:
-            os.system("rm -r HADD_logs/"+"/"+target)
-        os.system("mkdir -p HADD_logs/"+"/"+target)
+        if os.path.exists("HADD_logs/"+target) is True:
+            os.system("rm -r HADD_logs/"+target)
+        os.system("mkdir -p HADD_logs/"+target)
         for i in range(0,10):
             os.system("mkdir -p "+IN_DIR+"/"+target+"/"+target+"_"+str(i))
             for f in glob(os.path.join(IN_DIR+"/"+target+"/"+target+"_*"+str(i)+".root")):
@@ -86,7 +107,7 @@ if __name__ == "__main__":
                         err_log = open("HADD_logs/"+"/"+target+".err","a")
                         err_log.write(err)
                         err_log.close()
-                    hadd_big_processes.pop(target,None)
+                    del hadd_big_processes[target]
                 elif len(hadd_big_processes) < 10:
                     tmp_pop = pop("hadd -f "+OUT_DIR+"/"+target+".root "+IN_DIR+"/"+target+"/*.root",stdout=subprocess.PIPE,stderr=subprocess.PIPE,shell=True)
                     hadd_big_processes[str(target)] = tmp_pop
@@ -98,6 +119,7 @@ if __name__ == "__main__":
 
     for target, hadd_big in hadd_big_processes.items():
         if hadd_big.poll() is not None:
+            print("Waiting on big hadd job")
             hadd_big.wait()
             out,err = hadd_big.communicate()
             if err != "":
@@ -106,8 +128,25 @@ if __name__ == "__main__":
                 err_log.write(err)
                 err_log.close()
             if hadd_big.poll() is None:
-                hadd_big_processes.pop(target,None)
+                #hadd_big_processes.pop(target,None)
+                del hadd_big_processes[target]
     if len(hadd_big_processes) == 0:
         print("Finished Merging Files")
     else:
-        print("Possible Error! Some hadd jobs may still be running!")
+        print("Note: "+str(len(hadd_big_processes))+" hadd jobs may still be running!")
+    
+    print("------------------------------")
+    # end time
+    end_time = time.time()
+    print("DO_hadd.py: End... all done!")
+
+    # total time in seconds
+    total_time_seconds = end_time - start_time
+    # total time in hours
+    total_time_hours = total_time_seconds / 3600
+    
+    print("Total time: {0:.2f} seconds = {1:.2f} hours".format(total_time_seconds, total_time_hours))
+
+
+if __name__ == "__main__":
+    main()

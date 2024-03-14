@@ -33,7 +33,9 @@
 using namespace std;
 using namespace RestFrames;
 
-string path_to_lists = "/uscms/home/z374f439/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis/samples/NANO/";
+bool connect = true;
+
+string path_to_lists = "";
 
 std::string get_str_between_two_str(const std::string &s, const std::string &start_delim, const std::string &stop_delim)
 {
@@ -88,7 +90,9 @@ bool find_file(string input_dataset, string input_filetag)
 double getTot(string input_dataset, string input_filetag, string EventCountFile, bool weight, bool ntuple)
 {
   string filename = "";
-  if(ntuple)
+  if(ntuple && connect)
+    filename = "/stash/user/zflowers/NTUPLES/HADD/"+input_filetag+"/"+input_dataset+"_"+input_filetag+".root";
+  if(ntuple && !connect)
     filename = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v0/"+input_filetag+"/"+input_dataset+"_"+input_filetag+".root";
   else
     filename = EventCountFile;
@@ -259,17 +263,22 @@ void CheckWeights(){
    RestFrames::SetStyle();
    cout << std::fixed;
 
+   if(connect)
+     path_to_lists = "/stash/user/zflowers/CMSSW_10_6_5/src/KUEWKinoAnalysis/samples/NANO/";
+   else
+     path_to_lists = "/uscms/home/z374f439/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis/samples/NANO/";
+
    //vector<string> datasets_list = {
     //"GluGluHToWWToLNuQQ_M125_NNPDF31_TuneCP5_PSweights_13TeV_powheg_JHUGen710_pythia8",
     //"TTJets_HT-600to800_TuneCP5_13TeV-madgraphMLM-pythia8",
    //};
    vector<string> filetags = {
     "Summer16_102X",
-    //"Fall17_102X",
-    //"Autumn18_102X",
-    //"Summer16_102X_SMS",
-    //"Fall17_102X_SMS",
-    //"Autumn18_102X_SMS",
+    "Fall17_102X",
+    "Autumn18_102X",
+    "Summer16_102X_SMS",
+    "Fall17_102X_SMS",
+    "Autumn18_102X_SMS",
    };
    //vector<string> datasets_list;
    //std::map<std::string,double> XS_map = XS.InitMap_Xsec_BKG();
@@ -284,7 +293,10 @@ void CheckWeights(){
    for(int t = 0; t < int(filetags[t].size()); t++)
    {
     string eventcount = "root/EventCount/EventCount_NANO_"+filetags[t]+".root";
-    gSystem->Exec(("xrdfs root://cmseos.fnal.gov/ ls /store/group/lpcsusylep/NTUPLES_v0/"+filetags[t]+"/ > checkfile.txt").c_str());
+    if(connect)
+      gSystem->Exec(("ls /stash/user/zflowers/NTUPLES/HADD/"+filetags[t]+"/ > checkfile.txt").c_str());
+    else
+      gSystem->Exec(("xrdfs root://cmseos.fnal.gov/ ls /store/group/lpcsusylep/NTUPLES_v0/"+filetags[t]+"/ > checkfile.txt").c_str());
     ifstream tagfile;
     tagfile.open("samples/NANO/"+filetags[t]+"/Tags.list");
     while (!tagfile.eof())

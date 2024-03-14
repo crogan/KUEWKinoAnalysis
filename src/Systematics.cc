@@ -321,11 +321,9 @@ Systematics SystematicsTool::GetWeightSystematics() const {
   //list += "PU_SF"; // turn off for now
   list += "BTAGHF_SF";
   list += "BTAGLF_SF";
-  //list += "MET_TRIG_0L";
-  //list += "MET_TRIG_1L_el";
-  //list += "MET_TRIG_1L_mu";
-  //list += "MET_TRIG_2L3L_el";
-  //list += "MET_TRIG_2L3L_mu";
+  //list += "MET_TRIG_SF"; // default
+  ////list += "MET_TRIG_el";
+  ////list += "MET_TRIG_mu";
 
   return list;
 }

@@ -2,6 +2,10 @@
 
 import os, sys, commands, time
 
+# Example submission: 
+#  python scripts/condor_submit_nano_connect_ntuples.py -split 10 -list samples/NANO/Lists/Fall17_102X.list --sys --slim --csv 
+#
+#  python scripts/condor_submit_nano_connect_ntuples.py -split 20 -list samples/NANO/Lists/Fall17_102X.list --sys --slim --verbose --csv && python scripts/condor_submit_nano_connect_ntuples.py -split 30 -list samples/NANO/Lists/Fall17_102X_SMS_FastSim_Quick.list --sys --slim --sms --fastsim --verbose --csv && python scripts/condor_submit_nano_connect_ntuples.py -split 10 -list samples/NANO/Lists/Fall17_102X_Data_MET.list --slim --data --verbose --csv 
 
 # ----------------------------------------------------------- #
 # Parameters
@@ -15,7 +19,7 @@ RESTFRAMES  = './scripts/setup_RestFrames_connect.sh'
 CMSSW_SETUP = './scripts/cmssw_setup_connect.sh'
 TREE        = "Events"
 USER        = os.environ['USER']
-OUT_BASE    = "/stash/user/"+USER+"/NTUPLES/Processing"
+OUT_BASE    = "/ospool/cms-user/"+USER+"/NTUPLES/Processing"
 LIST        = "default.list"
 QUEUE       = ""
 SPLIT       = 1
@@ -48,7 +52,7 @@ def create_filelist(rootlist, dataset, filetag):
 
     return listlist
 
-def write_sh_single(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
+def write_sh_single(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n,NAME):
     srcfile = srcfile.replace('.submit','_single.submit')
     ofile = ofile.replace('_$(ItemIndex)_$(Step)','_0_0')
     outfile = outfile.replace('_$(ItemIndex)_$(Step)','_0_0')
@@ -80,6 +84,10 @@ def write_sh_single(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,
         fsrc.write('--data ')
     if SYS == 1 and DO_DATA != 1:
         fsrc.write('--sys ')
+    if FASTSIM == 1 and DO_DATA != 1: # note that technically FS should only be needed for SMS but not requiring it here
+        fsrc.write('--fastsim ')
+    if SLIM == 1:
+        fsrc.write('--slim ')
     fsrc.write('-dataset='+dataset+" ")
     fsrc.write('-filetag='+filetag+" ")
     fsrc.write('-eventcount='+EVTCNT+" ")
@@ -87,6 +95,7 @@ def write_sh_single(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,
     fsrc.write('-json='+JSON+" ")
     fsrc.write('-pu='+PUFOLD+" ")
     fsrc.write('-btag='+BTAGFOLD+" ")
+    fsrc.write('-lep='+LEPFOLD+" ")
     fsrc.write('-jme='+JMEFOLD+" ")
     fsrc.write('-svfile='+SVFILE+" ")
     fsrc.write('-metfile='+METFILE+" ")
@@ -99,13 +108,13 @@ def write_sh_single(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,
     fsrc.write('output = '+outlog+" \n")
     fsrc.write('error = '+errlog+" \n")
     fsrc.write('log = '+loglog+" \n")
-    fsrc.write('Requirements = (Machine != "red-node000.unl.edu" && Machine != "ncm*.hpc.itc.rwth-aachen.de" && Machine != "*mh-epyc7662-8.t2.ucsd.edu" && Machine != "*sdsc-88.t2.ucsd.edu")\n')
+    fsrc.write('Requirements = (Machine != "red-node000.unl.edu" && Machine != "ncm*.hpc.itc.rwth-aachen.de" && Machine != "*mh-epyc7662-8.t2.ucsd.edu" && Machine != "*sdsc-88.t2.ucsd.edu" && Machine != "*beowulf.cluster")\n')
     fsrc.write('request_memory = 2 GB \n')
     #fsrc.write('priority = 10 \n')
     fsrc.write('+RequiresCVMFS = True \n')
     #fsrc.write('+RequiresSharedFS = True \n')
 
-    transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/stash/user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
+    transfer_input = 'transfer_input_files = https://stash.osgconnect.net/cms-user/'+USER+"/"+NAME+"/"+'config.tgz,https://stash.osgconnect.net/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
     fsrc.write(transfer_input)
 
     fsrc.write('should_transfer_files = YES\n')
@@ -123,7 +132,7 @@ def write_sh_single(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,
     fsrc.write('queue')
     fsrc.close()
 
-def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
+def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n,NAME):
     fsrc = open(srcfile,'w')
     fsrc.write('universe = vanilla \n')
     fsrc.write('executable = '+jobEXE+" \n")
@@ -138,6 +147,10 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
         fsrc.write('--data ')
     if SYS == 1 and DO_DATA != 1:
         fsrc.write('--sys ')
+    if FASTSIM == 1 and DO_DATA != 1: # note that technically FS should only be needed for SMS but not requiring it here
+        fsrc.write('--fastsim ')
+    if SLIM == 1:
+        fsrc.write('--slim ')
     fsrc.write('-dataset='+dataset+" ")
     fsrc.write('-filetag='+filetag+" ")
     fsrc.write('-eventcount='+EVTCNT+" ")
@@ -145,6 +158,7 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
     fsrc.write('-json='+JSON+" ")
     fsrc.write('-pu='+PUFOLD+" ")
     fsrc.write('-btag='+BTAGFOLD+" ")
+    fsrc.write('-lep='+LEPFOLD+" ")
     fsrc.write('-jme='+JMEFOLD+" ")
     fsrc.write('-svfile='+SVFILE+" ")
     fsrc.write('-metfile='+METFILE+" ")
@@ -160,8 +174,7 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
     fsrc.write('log = '+loglog+" \n")
     fsrc.write('Requirements = (Machine != "red-node000.unl.edu" && Machine != "ncm*.hpc.itc.rwth-aachen.de" && Machine != "*mh-epyc7662-8.t2.ucsd.edu" && Machine != "*sdsc-88.t2.ucsd.edu")\n')
     fsrc.write('request_memory = 2 GB \n')
-
-    transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/stash/user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
+    transfer_input = 'transfer_input_files = https://stash.osgconnect.net/cms-user/'+USER+"/"+NAME+"/"+'config.tgz,https://stash.osgconnect.net/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
     fsrc.write(transfer_input)
 
     fsrc.write('should_transfer_files = YES\n')
@@ -176,6 +189,7 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
     
     fsrc.write('+ProjectName="cms.org.ku"\n')
     fsrc.write('+REQUIRED_OS="rhel7"\n')
+    fsrc.write('periodic_release = (HoldReasonCode == 12 && HoldReasonSubCode == 256 || HoldReasonCode == 13 && HoldReasonSubCode == 2)\n')
     #fsrc.write('priority = 10 \n')
     fsrc.write('+RequiresCVMFS = True \n')
     #fsrc.write('+RequiresSharedFS = True \n')
@@ -184,7 +198,7 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
 
 if __name__ == "__main__":
     if not len(sys.argv) > 1 or '-h' in sys.argv or '--help' in sys.argv:
-        print "Usage: %s [-q queue] [-tree treename] [-list listfile.list] [-split S] [--sms] [--data] [--sys] [--dry-run] [--verbose] [--count]" % sys.argv[0]
+        print "Usage: %s [-q queue] [-tree treename] [-list listfile.list] [-split S] [--sms] [--data] [--sys] [--fastsim] [--slim] [--dry-run] [--verbose] [--count] [--csv]" % sys.argv[0]
         sys.exit(1)
 
     argv_pos    = 1
@@ -193,7 +207,10 @@ if __name__ == "__main__":
     DRY_RUN     = 0
     COUNT       = 0
     VERBOSE     = 0
+    CSV         = 0
     SYS         = 0
+    FASTSIM     = 0
+    SLIM        = 0
   
     if '-q' in sys.argv:
         p = sys.argv.index('-q')
@@ -226,8 +243,18 @@ if __name__ == "__main__":
     if '--verbose' in sys.argv:
         VERBOSE = 1
         argv_pos += 1
+    if '--csv' in sys.argv:
+        VERBOSE = 1
+        CSV = 1
+        argv_pos += 1
     if '--sys' in sys.argv:
         SYS = 1
+        argv_pos += 1
+    if '--fastsim' in sys.argv:
+        FASTSIM = 1
+        argv_pos += 1
+    if '--slim' in sys.argv:
+        SLIM = 1
         argv_pos += 1
         
     if SPLIT <= 1:
@@ -242,6 +269,12 @@ if __name__ == "__main__":
     
     if SYS:
         print " --- Processing SYS"
+
+    if FASTSIM:
+        print " --- Processing FastSim"
+
+    if SLIM:
+        print " --- Processing Slim"
 
     if COUNT:
         print " --- Only Counting (No Processing)"
@@ -283,42 +316,69 @@ if __name__ == "__main__":
     if not COUNT:
 
         # make EventCount file
+        if VERBOSE:
+            print("making EventCount file")
         os.system("hadd "+config+"EventCount.root root/EventCount/*.root > /dev/null")
         EVTCNT = "./config/EventCount.root"
 
         # make FilterEff file 
+        if VERBOSE:
+            print("making FilterEff file")
         os.system("hadd "+config+"FilterEff.root root/FilterEff/*.root > /dev/null")
         FILTEREFF = "./config/FilterEff.root"
 
         # make json file
+        if VERBOSE:
+            print("making json file")
         os.system("cat json/GoodRunList/*.txt > "+config+"GRL_JSON.txt")
         os.system("echo -n $(tr -d '\n' < "+config+"GRL_JSON.txt) > "+config+"GRL_JSON.txt")
         JSON = "./config/GRL_JSON.txt"
 
         # copy PU root files
+        if VERBOSE:
+            print("making Pileup file")
         os.system("cp -r root/PU "+config+".")
         PUFOLD = "./config/PU/"
 
         # copy BTAG SF files
+        if VERBOSE:
+            print("making BTAG file")
         os.system("cp -r root/BtagSF "+config+".")
         os.system("cp -r csv/BtagSF/* "+config+"BtagSF/.")
         BTAGFOLD = "./config/BtagSF/"
 
+        # copy LEP SF files
+        if VERBOSE:
+            print("making LEP file")
+        os.system("cp -r root/LepSF "+config+".")
+        LEPFOLD = "./config/LepSF/"
+
         # copy JME files
+        if VERBOSE:
+            print("making JME file")
         os.system("cp -r data/JME "+config+".")
         JMEFOLD = "./config/JME/"
 
         # copy MET trigger files
+        if VERBOSE:
+            print("making Trigger file")
         os.system("cp -r csv/METTrigger "+config+".")
         METFILE = "./config/METTrigger/Parameters.csv"
 
         # copy Prefire files
+        if VERBOSE:
+            print("making Prefire file")
         os.system("cp -r root/Prefire "+config+".")
         PREFIREFILE = "./config/Prefire/Prefire.root"
 
         # copy SV NN model
+        if VERBOSE:
+            print("making SV file")
         os.system("cat json/lwtnn/nano_train_model.json > "+config+"NNmodel.json")
         SVFILE = "./config/NNmodel.json"
+
+        if VERBOSE:
+            print("Setting up working area...")
         
         os.system("cp "+EXE+" "+config+".")
         os.system("cp "+RESTFRAMES+" "+config+".")
@@ -347,8 +407,6 @@ if __name__ == "__main__":
                 continue
 
             flist = flist.strip('\n\r')
-            clean_inputlist.append(flist)
-            input_info[flist] = {}
 
             listfile = LIST
             listname = listfile.split("/")
@@ -378,8 +436,10 @@ if __name__ == "__main__":
             n_jobs              = SPLIT * n_root_files
             total_root_files    += n_root_files
             
-            input_info[flist]["n_root_files"]   = n_root_files
-            input_info[flist]["n_jobs"]         = n_jobs
+            input_info[dataset+'_'+filetag] = {}
+            clean_inputlist.append(dataset+'_'+filetag)
+            input_info[dataset+'_'+filetag]["n_root_files"]   = n_root_files
+            input_info[dataset+'_'+filetag]["n_jobs"]         = n_jobs
 
             if len(datasetlist) == 0:
                 datasetlist.append((dataset,filetag,rootlist))
@@ -398,6 +458,9 @@ if __name__ == "__main__":
 
             p = datasetlist.index(tagtuple[0])
             datasetlist[p][2].extend(rootlist)
+
+    if VERBOSE:
+        print("Created area for output root files")
 
     for (dataset,filetag,rootlist) in datasetlist:
         if not COUNT:
@@ -422,26 +485,54 @@ if __name__ == "__main__":
             errfile = os.path.join(errdir, dataset+'_'+filetag, file_name.split('/')[-1])
 
             script_name = srcdir+'_'.join([dataset, filetag])+'.submit'
-            write_sh(script_name, overlist_name, file_name+'.root', logfile, outfile, errfile, dataset, filetag, SPLIT)
-            write_sh_single(script_name, overlist_name, file_name+'.root', logfile, outfile, errfile, dataset, filetag, SPLIT)
+            write_sh(script_name, overlist_name, file_name+'.root', logfile, outfile, errfile, dataset, filetag, SPLIT, NAME)
+            write_sh_single(script_name, overlist_name, file_name+'.root', logfile, outfile, errfile, dataset, filetag, SPLIT, NAME)
+    
+    if VERBOSE:
+        print("Created area for log files")
 
     if not COUNT:
         #print listdir
         os.system("cp -r "+listdir+" "+config)
         #print "creating tarball from: ", TARGET
+        os.system("sleep 10") # sleep so copy command(s) can catch up...
         os.system("tar -C "+config+"/../ -czf "+TARGET+"/config.tgz config")
+        os.system("mkdir -p /ospool/cms-user/"+USER+"/"+NAME)
+        os.system("cp "+TARGET+"/config.tgz /ospool/cms-user/"+USER+"/"+NAME+"/config.tgz")
+        if VERBOSE:
+            print("Created tar ball")
 
     submit_dir  = srcdir        
-    submit_list = [os.path.join(submit_dir, f) for f in os.listdir(submit_dir) if (os.path.isfile(os.path.join(submit_dir, f)) and ('.submit' in f))]
+    submit_list = [os.path.join(submit_dir, f) for f in os.listdir(submit_dir) if (os.path.isfile(os.path.join(submit_dir, f)) and ('.submit' in f) and ('_single' not in f))]
     #n_samples   = len(submit_list)
     total_jobs  = SPLIT * total_root_files
 
-    # don't submit jobs if --dry-run is used
+    # Prep csv file
+    if CSV:
+        csv_name = LIST.split("/")[-1].split(".")[0]
+        f_csv = open("{0}".format(TARGET)+"/"+csv_name+".csv",'w')
+        f_csv.write('sample,clusterid,totaljobs')
+        f_csv.write('\n')
+
+    # don't submit jobs if --dry-run or --count are used
     if not DRY_RUN and not COUNT:
         for f in submit_list:
-            if '_single' not in f:
-                print "submitting: {0}".format(f)
+            sample_handle = f.split("/")
+            sample_handle = sample_handle[-1]
+            sample_handle = sample_handle.replace(".submit",'')
+            print "submitting: {0}".format(f)
+            if CSV:
+                os.system('condor_submit '+f+' | tee '+sample_handle+'.txt')
+                with open(sample_handle+'.txt','r') as sample_submit_file:
+                    lines = sample_submit_file.read()
+                    clusterid_index = lines.find('cluster ')
+                    if clusterid_index != -1:
+                        clusterid = lines[clusterid_index+len('cluster '):]
+                        input_info[sample_handle]["clusterid"] = clusterid
+                os.system('rm '+sample_handle+'.txt')
+            else:
                 os.system('condor_submit ' + f)
+            
     
     # Number of ROOT files and jobs per sample 
     if VERBOSE:
@@ -452,6 +543,13 @@ if __name__ == "__main__":
             print "sample: {0}".format(f)
             print(" - number of root files  = {0}".format(n_root_files))
             print(" - number of jobs        = {0}".format(n_jobs))
+            # make sure that "clusterid" has been filled to avoid key error
+            if not DRY_RUN and not COUNT and CSV:
+                f_csv.write("{0}".format(f+","+input_info[f]["clusterid"].replace('.\n','')+",{0}".format(n_jobs)+'\n'))
+
+    # Close csv file
+    if CSV:
+         f_csv.close()
     
     # Summary Info
     print "----------------------------"
@@ -466,8 +564,8 @@ if __name__ == "__main__":
     print "total condor jobs:       {0}".format(total_jobs)
     print "----------------------------"
 
-    if DRY_RUN:
-        print "The option --dry-run was used; no jobs were submitted."
+    if DRY_RUN or COUNT:
+        print "No jobs were submitted."
     else:
         print "Congrats... your jobs were submitted!"
 

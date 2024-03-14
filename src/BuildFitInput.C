@@ -63,7 +63,9 @@ int main(int argc, char* argv[]) {
   bool doSys = false;
 
   bool maskSR = false;
-  
+ 
+  bool debugVerbosity = false;
+ 
   for(int i = 0; i < argc; i++){
     if(strncmp(argv[i],"--help", 6) == 0){
       bprint = true;
@@ -312,6 +314,7 @@ int main(int argc, char* argv[]) {
 
       // event loop
       for(int e = 0; e < Nentry; e += SKIP){
+//	cout<<"in event loop with Nentry "<<e<<", "<<Nentry<<"\n";
 	base->GetEntry(e);
 
 	if((e/SKIP)%(std::max(1, int(Nentry/SKIP/10))) == 0)
@@ -373,16 +376,22 @@ int main(int argc, char* argv[]) {
 	  
 	LepList list_a;
 	LepList list_b;
-	  
+	std::vector<TLorentzVector> tlv_a;
+	std::vector<TLorentzVector> tlv_b; 		  
+	double lep_pt,lep_eta,lep_phi,lep_m;
+
 	int index;
+
 	  
 	for(int i = 0; i < base->Nlep_a; i++){
 	  index = (*base->index_lep_a)[i];
-	    
+//	  std::cout<<"processing a lepton of index, Nlep_a(i): "<<i<<", "<<index<<"\n";   
 	  int PDGID = base->PDGID_lep->at(index);
 	    
 	  LepID id;
+	//debugging assume index problem has been fixed.. this will not work with older ntuples (applied in A and B)
 	  if(base->ID_lep->at(index*2) < 3 ||
+	//    if(base->ID_lep->at(index) < 3 ||
 	     base->MiniIso_lep->at(index)*base->PT_lep->at(index) >= 4. ||
 	     base->RelIso_lep->at(index)*base->PT_lep->at(index) >= 4.)
 	    id = kBronze;
@@ -396,18 +405,31 @@ int main(int argc, char* argv[]) {
 	  else
 	    flavor = kMuon;
 	  LepCharge charge = (base->Charge_lep->at(index) > 0 ? kPos : kNeg);
-	  //LepSource source = LepSource(base->SourceID_lep->at(index));
-	  LepSource source = LepSource(base->ID_lep->at(index*2+1)); // fix for current ntuple version
-	    
+	//  LepSource source = LepSource(base->SourceID_lep->at(index));
+	  LepSource source = LepSource(base->ID_lep->at(index*2+1)); // fix for current ntuple version (this is the one turned on in master)
+	  
+	
 	  list_a += Lep(flavor, charge, id, source);
+
+	  lep_pt = base->PT_lep->at(index);
+	  lep_eta = base->Eta_lep->at(index);
+	  lep_phi = base->Phi_lep->at(index);
+	  lep_m = base->M_lep->at(index);
+
+          TLorentzVector tlv;
+	  tlv.SetPtEtaPhiM(lep_pt,lep_eta,lep_phi,lep_m);
+	  tlv_a.push_back(tlv);
+	
 	}
 	for(int i = 0; i < base->Nlep_b; i++){
 	  index = (*base->index_lep_b)[i];
+  //	  std::cout<<"processing a lepton of index, Nlep_b(i): "<<i<<", "<<index<<"\n";
 	  
 	  int PDGID = base->PDGID_lep->at(index);
 
 	  LepID id;
-	  if(base->ID_lep->at(index*2) < 3 ||
+	  if(base->ID_lep->at(index*2) < 3 || //index fixed for newly produced ntuples
+	 //   if(base->ID_lep->at(index) < 3 ||
 	     base->MiniIso_lep->at(index)*base->PT_lep->at(index) >= 4. ||
 	     base->RelIso_lep->at(index)*base->PT_lep->at(index) >= 4.)
 	    id = kBronze;
@@ -420,12 +442,55 @@ int main(int argc, char* argv[]) {
 	    flavor = kElectron;
 	  else
 	    flavor = kMuon;
+
+	
 	  LepCharge charge = (base->Charge_lep->at(index) > 0 ? kPos : kNeg);
-	  //LepSource source = LepSource(base->SourceID_lep->at(index));
+	//  LepSource source = LepSource(base->SourceID_lep->at(index));
 	  LepSource source = LepSource(base->ID_lep->at(index*2+1)); // fix for current ntuple version
-	  
 	  list_b += Lep(flavor, charge, id, source);
+	
+	  lep_pt = base->PT_lep->at(index);
+          lep_eta = base->Eta_lep->at(index);
+          lep_phi = base->Phi_lep->at(index);
+          lep_m = base->M_lep->at(index);
+
+          TLorentzVector tlv;
+          tlv.SetPtEtaPhiM(lep_pt,lep_eta,lep_phi,lep_m);
+          tlv_b.push_back(tlv);
+
 	}
+	//loop over both lep lists and form all OSSF pairs
+	//calculate all combinations mass. veto any event in j/psi window and break
+	bool jpsi=false;
+	bool upsilon=false;
+	
+	//need at least 2 Leps to try this
+	if( base->Nlep >= 2 ){
+	for( int i=0; i<list_a.GetN(); i++){
+		for( int j=0; j<list_b.GetN(); j++){
+			if(  (list_a[i].Flavor() == list_b[j].Flavor()) && (list_a[i].Charge() != list_b[j].Charge()) ){
+				//OSSF pair calculate mass indexed by list_a(b)
+				TLorentzVector tlv_ab = tlv_a[i] + tlv_b[j];
+				//std::cout<<"MASS= "<<tlv_ab.M()<<"\n";	
+				if( tlv_ab.M() < 3.2 && tlv_ab.M() > 3.0 ){
+					//jpsi is present, veto event
+					jpsi=true;
+				// 	std::cout<<"tlv_ab M: "<<tlv_ab.M()<<" ";
+				//	std::cout<<"found jpsi \n";	
+				}
+				//if( tlv_ab.M() < 10.5 && tlv_ab.M() > 9.0){
+				//	upsilon=true;
+				//	std::cout<<"tlv_ab M: "<<tlv_ab.M()<<" ";
+				//	std::cout<<"found upsilon \n";
+				//}
+			}	
+			if(jpsi || upsilon) break;
+		}
+		if(jpsi || upsilon) break;
+	}
+	}//end 2L check
+	//veto event if flag flipped
+	if(jpsi || upsilon) continue;
 
 	// SV eta
 	double SVmaxeta = 1.; // 1 is fine b/c less than 1.5 cutoff
@@ -453,48 +518,6 @@ int main(int argc, char* argv[]) {
 
 	if(eindex < 0){
 	  continue;
-	  if(Nlep > 3)
-	    continue;
-	  if(base->PTISR < 250. && Nlep >= 2)
-	    continue;
-	  if(base->PTISR < 400. && Nlep < 2)
-	    continue;
-
-	  int Nbron = 0;
-	  int Nslvr = 0;
-	  for(int i = 0; i < Nlep; i++){
-	    if(i < base->Nlep_a){
-	      if(list_a[i].ID() == kBronze)
-		Nbron++;
-	      if(list_a[i].ID() == kSilver)
-		Nslvr++;
-	    } else {
-	      if(list_b[i-base->Nlep_a].ID() == kBronze)
-		Nbron++;
-	      if(list_b[i-base->Nlep_a].ID() == kSilver)
-		Nslvr++;
-	    }
-	  }
-	  if(Nbron >= 2)
-	    continue;
-	  if(Nbron+Nslvr >= 3)
-	    continue;
-	  
-	  cout << "Nlep = " << Nlep << " PTISR = " << base->PTISR << " NjetS = " << NjetS << " NSV = " << NSV << endl;
-	  for(int i = 0; i < Nlep; i++){
-	    if(i < base->Nlep_a)
-	      cout << list_a[i].ID() << " " << list_a[i].IDLabel() << " " << list_a[i].Charge() << " a" << endl;
-	    else
-	      cout << list_b[i-base->Nlep_a].ID() << " " << list_b[i-base->Nlep_a].IDLabel() << " " << list_b[i-base->Nlep_a].Charge() << " b" << endl;
-	    //     int Nlep     = base->Nlep;
-	    // int NjetS    = base->Njet_S;
-	    // int NbjetS   = base->Nbjet_S;
-	    // int NjetISR  = base->Njet_ISR;
-	    // int NbjetISR = base->Nbjet_ISR;
-	    // int NSV      = base->NSV_S;
-	  }
-   	  
-	  continue;
 	}
 
 	double PTISR = base->PTISR;
@@ -507,12 +530,12 @@ int main(int argc, char* argv[]) {
 	if(!is_data){
 	  weight = (setLumi ? lumi : ST.Lumi())*base->weight*sample_weight;
 	}
-	
 	// systematics loop
 	// do down sys first
 	string correct_sys = "";
 	for(int is = 0; is < Nsys; is++){
 	  Systematic& sys = systematics[is];
+//	  std::cout<<"systemtatics list "<< systematics[is].Label()<<"\n";
 	  if(!(!sys)){
 	    if(sys.IsUp()){
 	      sys.Down();
@@ -526,90 +549,51 @@ int main(int argc, char* argv[]) {
 	  btag_weight = 1.;
 	  PU_weight = 1.;
 	  trig_weight = 1.;
-          if(!(!sys) && is_data) continue;
-	    
-	  // HERE BE DRAGONS
+          if(!(!sys) && is_data) continue;      
 
-	  //                         ^    ^
-	  //                        / \  //\
-	  //          |\___/|      /   \//  .\
-	  //          /O  O  \__  /    //  | \ \
-	  //         /     /  \/_/    //   |  \  \
-	  //         @___@'    \/_   //    |   \   \ 
-	  //            |       \/_ //     |    \    \ 
-	  //            |        \///      |     \     \ 
-	  //           _|_ /   )  //       |      \     _\
-	  //          '/,_ _ _/  ( ; -.    |    _ _\.-~        .-~~~^-.
-	  //          ,-{        _      `-.|.-~-.           .~         `.
-	  //           '/\      /                 ~-. _ .-~      .-~^-.  \
-	  //              `.   {            }                   /      \  \
-	  //            .----~-.\        \-'                 .~         \  `. \^-.
-	  //           ///.----..>    c   \             _ -~             `.  ^-`   ^-_
-	  //             ///-._ _ _ _ _ _ _}^ - - - - ~                     ~--,   .-~
-	  //                                                                   /.-'
-	  //         
-
+		
 	    trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
             if(is_FastSim)
 	      trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0)*
 		m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
-//cout << "event " << e << endl;
-//cout << "  sys: " << sys.Label() << endl;
-//cout << "    nom: " << trig_weight << endl;
-/*         
-           if(base->Nlep == 0) correct_sys = "MET_TRIG_0L";
-           else if(base->Nele == 1 && base->Nmu == 0) correct_sys = "MET_TRIG_1L_el";
-           else if(base->Nele == 0 && base->Nmu == 1) correct_sys = "MET_TRIG_1L_mu";
-           else if(base->Nlep > 1 && base->Nmu == 0) correct_sys = "MET_TRIG_2L3L_el";
-           else if(base->Nlep > 1 && base->Nmu > 0) correct_sys = "MET_TRIG_2L3L_mu";
-           if(!(!sys) && sys.Label() != correct_sys && sys.Label().find("MET_TRIG") != std::string::npos) continue;
-*/
-
-if(sys.Label().find("MET_TRIG") != std::string::npos)
-{
-  if(sys.Label() != correct_sys && correct_sys != "") continue;
-  string scat = Categories[eindex].FullLabel();
-  if(sys.Label() == "MET_TRIG_0L")
-	if(scat.find("0L") == std::string::npos)
-		continue;
-  if(sys.Label() == "MET_TRIG_1L_mu")
-        if(scat.find("1L") == std::string::npos ||
-           (scat.find("_mu") == std::string::npos && scat.find("_lp") == std::string::npos && scat.find("_lm") == std::string::npos))
-                continue;
-  if(sys.Label() == "MET_TRIG_1L_el")
-	if(scat.find("1L") == std::string::npos ||
-	   (scat.find("_el") == std::string::npos && scat.find("_lp") == std::string::npos && scat.find("_lm") == std::string::npos))
-		continue;
-
-  if(sys.Label() == "MET_TRIG_2L3L_el")
-	if((scat.find("2L") == std::string::npos && scat.find("3L") == std::string::npos) ||
-	   (scat.find("elel") == std::string::npos && scat.find("_ll") == std::string::npos && scat.find("3L") == std::string::npos &&
-            scat.find("_noZ") == std::string::npos && scat.find("_Zstar") == std::string::npos && scat.find("_SS") == std::string::npos))
-		continue;
-
-  if(sys.Label() == "MET_TRIG_2L3L_mu")
-	if((scat.find("2L") == std::string::npos && scat.find("3L") == std::string::npos) ||
-	   (scat.find("elmu") == std::string::npos && scat.find("mumu") == std::string::npos && scat.find("_ll") == std::string::npos && scat.find("3L") == std::string::npos &&
-            scat.find("_noZ") == std::string::npos && scat.find("_Zstar") == std::string::npos && scat.find("_SS") == std::string::npos))
-		continue;
-  
-  correct_sys = sys.Label();
 
 
-	        if(sys.IsUp())
-	          if(is_FastSim)
-	            trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1)*
-	              m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1);
-	          else
-	            trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1);
-	        else
-	          if(is_FastSim)
-	            trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1)*
-	              m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
-	          else
-	            trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
 
-}
+            if(sys.Label().find("MET_TRIG") != std::string::npos && proc.Name() != "QCD")
+            {
+             /* 
+              if(sys.Label() != correct_sys && correct_sys != "") continue;
+              string scat = Categories[eindex].FullLabel();
+            
+              if(sys.Label() == "MET_TRIG_el")
+            	if((scat.find("0L") == std::string::npos) && 
+                       (scat.find("1L") == std::string::npos || (scat.find("_el") == std::string::npos && scat.find("_lp") == std::string::npos && scat.find("_lm") == std::string::npos)) &&
+                       ((scat.find("2L") == std::string::npos && scat.find("3L") == std::string::npos) || (scat.find("elel") == std::string::npos && scat.find("_ll") == std::string::npos && 
+                       scat.find("_noZ") == std::string::npos && scat.find("_Zstar") == std::string::npos && scat.find("_SS") == std::string::npos)))
+            		continue;
+            
+              if(sys.Label() == "MET_TRIG_mu")
+            	if((scat.find("0L") != std::string::npos) || 
+                       (scat.find("1L") == std::string::npos || (scat.find("_mu") == std::string::npos && scat.find("_lp") == std::string::npos && scat.find("_lm") == std::string::npos)) &&
+                       ((scat.find("2L") == std::string::npos && scat.find("3L") == std::string::npos) || (scat.find("mumu") == std::string::npos && scat.find("elmu") == std::string::npos && scat.find("_ll") == std::string::npos && 
+                       scat.find("_noZ") == std::string::npos && scat.find("_Zstar") == std::string::npos && scat.find("_SS") == std::string::npos)))
+            		continue;
+              */
+            	        if(sys.IsUp())
+            	          if(is_FastSim)
+            	            trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1)*
+            	              m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1);
+            	          else
+            	            trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1);
+            	        else
+            	          if(is_FastSim)
+            	            trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1)*
+            	              m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
+            	          else
+            	            trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
+            
+            }
+
 	      
 	  //
 	  // BTAG systematics from the ntuples
@@ -670,7 +654,6 @@ if(sys.Label().find("MET_TRIG") != std::string::npos)
 
 	  weight *= btag_weight*PU_weight;
 	  //weight *= btag_weight*PU_weight*trig_weight;
-
 	  if(is_data) weight = 1.;
 	  
 	  LepList Fakes  = list_a.GetFakes();
@@ -688,6 +671,8 @@ if(sys.Label().find("MET_TRIG") != std::string::npos)
 	  
 	
 	  double RISR  = base->RISR;
+        //weight fixing for debug samples
+        //weight = 1.;		
 
 	  if(Fakes.GetN() > 0 && is_bkg){
 	    VS flabels = Fakes.GetFakeLabels(2); // processes w/ up to 2 "fake" leps
@@ -700,10 +685,17 @@ if(sys.Label().find("MET_TRIG") != std::string::npos)
 	      
 	      FITBuilder.AddEvent(weight/double(Nf), Mperp, RISR,
 				  Categories[eindex], proc.FakeProcess(flabels[fl]), sys);
+		if(debugVerbosity){
+			std::cout<<"Adding fakes event:"<<e<<" weight: "<<weight/double(Nf)<<" Mperp:"<<Mperp<<" RISR:"<<RISR<<" gammaT:"<<gammaT<<" PTISR:"<<PTISR<<" Cat:"<<Categories[eindex].Label()<<"  flabel:"<<flabels[fl]<<"\n";
+		}
 	    }
 	  } else {
+		//std::cout<<"adding event "<< weight <<" "<< Mperp <<" "<< RISR <<" "<<Categories[eindex].Label()<<" "<<proc.Name()<<" "<<sys.Label()<<"\n";
 	    FITBuilder.AddEvent(weight, Mperp, RISR,
 				Categories[eindex], proc, sys);
+		if(debugVerbosity){
+			std::cout<<"Adding event:"<<e<<" weight: "<<weight<<" Mperp:"<<Mperp<<" RISR:"<<RISR<<" gammaT:"<<gammaT<<" PTISR:"<<PTISR<<" Cat:"<<Categories[eindex].Label()<<" sysLabel:"<<sys.Label()<<"\n";
+		}
 	  }
 	  
 	  // dummy data

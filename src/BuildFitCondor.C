@@ -55,6 +55,9 @@ int main(int argc, char* argv[]) {
   int  year    = 2017;
   double xsec_norm = -999.0;
 
+  bool chanMask = false;
+  string chanMaskMethod;
+
   bool doMCstats = false;
 
   bool doSepChan = false;
@@ -146,6 +149,11 @@ int main(int argc, char* argv[]) {
     if(strncmp(argv[i],"+MCstats", 8) == 0){
       doMCstats = true;
     }
+    if(strncmp(argv[i],"--maskChannels", 14) == 0){
+      chanMask = true;
+      i++;
+      chanMaskMethod += string(argv[i]);
+    }
     if(strncmp(argv[i],"-sepchan", 8) == 0){
       doSepChan = true;
     }
@@ -203,6 +211,7 @@ int main(int argc, char* argv[]) {
     cout << "   +MCstats            adds autoMCStats uncertainties" << endl;
     cout << "   -sepchan            make datacards for each group of channels separately" << endl;
     cout << "   --workspace(-w)     also build workspaces (note: faster not to, and run message)" << endl;
+    cout << "   --maskChannels      mask channels of model independent signal region (superbins)" << endl;
     cout << "Example: ./BuildFitCondor.x ++bkg +proc T2tt ++cat ++chan --connect -o name_of_BuildFit_output_folder/ -i name_of_BFI_root_file.root " << endl;
 
     return 0;
@@ -286,6 +295,8 @@ int main(int argc, char* argv[]) {
     BuildFitCmd += "-sepchan ";
   if(connect)
     BuildFitCmd += "--connect ";
+  if(chanMask)
+    BuildFitCmd += "--maskChannels "+chanMaskMethod+" ";
   BuildFitCmd += Form("--setXsec %f ", xsec_norm);
  
   string SrcFold = OutputFold+"/src/";
