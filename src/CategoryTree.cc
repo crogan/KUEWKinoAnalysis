@@ -1814,6 +1814,7 @@ CategoryTree CategoryTreeTool::GetCategories_2L() const {
   
 }
 
+/*
 CategoryTree CategoryTreeTool::GetCategories_2L_plotFormat() const {
   CategoryTree CT_0j(VS().a("_0j"), "0J", "0J", kJ, true);
   CategoryTree CT_1j(VS().a("_1j"), "1J", "1J", kJ, true);
@@ -1827,7 +1828,22 @@ CategoryTree CategoryTreeTool::GetCategories_2L_plotFormat() const {
   return CT_2L;
   
 }
+*/
 
+CategoryTree CategoryTreeTool::GetCategories_2L_plotFormat() const {
+  CategoryTree CT_Z(VS().a("Zstar"), "Z*", "Z*", kL_sup, true);
+  CategoryTree CT_noZ(VS().a("noZ"), "noZ*", "noZ*", kL_sup, true);
+  CategoryTree CT_SS(VS().a("SS"), "SS", "SS", kL_sup, true);
+  CategoryTree CT_OS(VS().a("OS"),"OS","OS",kL_sup,true);
+
+  CategoryTree CT_2L(VS().a("Ch2L"), "2L", "2L", kL, true);
+  CT_2L.AddSubCategory(CT_Z);
+  CT_2L.AddSubCategory(CT_noZ);
+  CT_2L.AddSubCategory(CT_OS);
+  CT_2L.AddSubCategory(CT_SS);
+
+  return CT_2L;
+}
 
 
 CategoryTree CategoryTreeTool::GetCategories_3L() const {
