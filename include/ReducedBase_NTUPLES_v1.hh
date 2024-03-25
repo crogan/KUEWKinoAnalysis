@@ -405,9 +405,9 @@ inline ReducedBase::ReducedBase(TTree *tree) : fChain(0)
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("root://cmseos.fnal.gov//store/group/lpcsusylep/NTUPLES_v1/Fall17_102X/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("root://cmseos.fnal.gov//store/group/lpcsusylep/NTUPLES_v2/Fall17_102X/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
       if (!f || !f->IsOpen()) {
-         f = new TFile("root://cmseos.fnal.gov//store/group/lpcsusylep/NTUPLES_v1/Fall17_102X/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
+         f = new TFile("root://cmseos.fnal.gov//store/group/lpcsusylep/NTUPLES_v2/Fall17_102X/TTJets_SingleLeptFromT_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root");
       }
       f->GetObject("KUAnalysis",tree);
 
