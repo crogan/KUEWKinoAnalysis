@@ -668,7 +668,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	double PTISR = base->PTISR;
-	double PTISR_to_HT = PTISR*2.-150.;
+        double HT = base->HT_eta5;
 	double weight = 1.;
 	double btag_weight = 1.;
 	double PU_weight = 1.;
@@ -740,18 +740,18 @@ int main(int argc, char* argv[]) {
 //	if(is_data) continue;no more loop  dont continue
 
            //trig on the fly
-	    //trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
-            //if(is_FastSim)
-	    //  trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0)*
-            //	  m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
+	    trig_weight = m_METTriggerTool.Get_SF(base->MET, HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
+            if(is_FastSim)
+	      trig_weight = m_METTriggerTool.Get_EFF(base->MET, HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0)*
+            	  m_METTriggerTool.Get_SF(base->MET, HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
            //trig ntuples
-            trig_weight = base->MetTrigSFweight; 
+           // trig_weight = base->MetTrigSFweight; 
 
 //remnant from master merge		
-//	    trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
+//	    trig_weight = m_METTriggerTool.Get_SF(base->MET, HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
 //            if(is_FastSim)
-//	      trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0)*
-//		m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
+//	      trig_weight = m_METTriggerTool.Get_EFF(base->MET, HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0)*
+//		m_METTriggerTool.Get_SF(base->MET, HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
 
 
 
@@ -777,25 +777,23 @@ int main(int argc, char* argv[]) {
             		continue;
               */
               //trig on the fly
-              /*
             	        if(sys.IsUp())
             	          if(is_FastSim)
-            	            trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1)*
-            	              m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1);
+            	            trig_weight = m_METTriggerTool.Get_EFF(base->MET, HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1)*
+            	              m_METTriggerTool.Get_SF(base->MET, HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1);
             	          else
-            	            trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1);
+            	            trig_weight = m_METTriggerTool.Get_SF(base->MET, HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1);
             	        else
             	          if(is_FastSim)
-            	            trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1)*
-            	              m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
+            	            trig_weight = m_METTriggerTool.Get_EFF(base->MET, HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1)*
+            	              m_METTriggerTool.Get_SF(base->MET, HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
             	          else
-            	            trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
-              */
+            	            trig_weight = m_METTriggerTool.Get_SF(base->MET, HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
              //trig ntuples
-            	if(sys.IsUp())
-                 trig_weight = base->MetTrigSFweight_up;
-                else
-                 trig_weight = base->MetTrigSFweight_down;
+           // 	if(sys.IsUp())
+           //      trig_weight = base->MetTrigSFweight_up;
+           //     else
+           //      trig_weight = base->MetTrigSFweight_down;
              
             
             }
@@ -975,7 +973,7 @@ int main(int argc, char* argv[]) {
 
 	//hack for build 110 - remove METtrig SF
 	//build 115 everything but mettriiger, with 0 suppression
-	trig_weight=1.;	
+	//trig_weight=1.;	
 	//hack PU weight to be off
 	//PU_weight=1.;
 	SF_weight *= btag_weight*PU_weight*trig_weight*PDF_weight*MuR_weight*MuF_weight*elID_weight*elIso_weight*elSIP_weight*elVL_weight*muID_weight*muIso_weight*muSIP_weight*muVL_weight;
