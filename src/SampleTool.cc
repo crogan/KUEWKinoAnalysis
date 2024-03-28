@@ -315,13 +315,13 @@ void SampleTool::InitSMS(const string& prefix, const string& filename, double we
   }
   file->Close();
   //register signal sys trees as different procs
-  std::vector<std::string> sysTrees = {"JESUncer_TotalUp", "JESUncer_TotalDown","JERUncer_TotalUp", "JERUncer_TotalDown", "METUncer_UnClustUp", "METUncer_UnClustDown", "METUncer_GenMET"};
+/*  std::vector<std::string> sysTrees = {"JESUncer_TotalUp", "JESUncer_TotalDown","JERUncer_TotalUp", "JERUncer_TotalDown", "METUncer_UnClustUp", "METUncer_UnClustDown", "METUncer_GenMET"};
   for(int i=0; i< sysTrees.size(); i++){
     std::cout<<"Initializing SMS treesys: "<<prefix.c_str()<< "_"<<sysTrees.at(i)<<"\n";
     InitSMS_treeSys(sysTrees.at(i), prefix, filename, weight, FS, DL);
     break;
   }
-
+*/
 }
 void SampleTool::InitProcMap(){
   m_ProcInit = true;
