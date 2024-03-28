@@ -28,9 +28,9 @@ public:
 
   bool DileptonEvent(ReducedBase* base);
 
-  void AddBtagFolder(const string& btagfold);
-  double GetBtagSFWeight(ReducedBase* base, int year,  bool fastsim, bool HForLF, int updown = 0, ParticleIDType tag = kMedium);
-
+  void AddBtagFolder( const string& btagfold, const string& proc_rootfile, int year=1);
+  //double GetBtagSFWeight(ReducedBase* base, int year,  bool fastsim, bool HForLF, int updown = 0, ParticleIDType tag = kMedium);
+  double GetBtagSFWeight( std::vector<double>& PT_jet, int year, bool fastsim, bool HForLF, int updown,ParticleIDType tag = kMedium,  double v2_weight=1. );
   
 
 private:

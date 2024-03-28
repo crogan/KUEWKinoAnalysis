@@ -80,19 +80,33 @@ bool ScaleFactorTool::DileptonEvent(ReducedBase* base){
 
 }
 
-void ScaleFactorTool::AddBtagFolder(const string& btagfold){
-  m_BtagSFTool.BuildMap(btagfold);
+void ScaleFactorTool::AddBtagFolder(const string& btagfold, const string& proc_rootfile, int year){
+  m_BtagSFTool.BuildMap(btagfold, proc_rootfile, year);
 }  
+                        
+//double ScaleFactorTool::GetBtagSFWeight(ReducedBase* base, int year, bool fastsim, bool HForLF, int updown, ParticleIDType tag){
+double ScaleFactorTool::GetBtagSFWeight( std::vector<double>& PT_jet, int year, bool fastsim, bool HForLF, int updown, ParticleIDType tag, double v2_weight ){ 
 
-double ScaleFactorTool::GetBtagSFWeight(ReducedBase* base, int year, bool fastsim, bool HForLF, int updown, ParticleIDType tag){
- 
-  int Njet = base->Njet;
-  int iflavor;
+  //std::cout<<"IN OTF FUNCTION\n"; 
+//  int Njet = base->Njet;
+  int iflavor=-1;
   double EFF, SF, PT;
 
   double probMC   = 1.;
   double probDATA = 1.;
-  
+
+  double w_f0, w_f1, w_f2;
+
+  std::cout<<"SF btag otf called year:"<< year <<" fastsim:"<< fastsim << " HForLF:"<< HForLF <<" updown:"<< updown <<" tag:"<< tag<<"\n";
+ //reverse engineer calculations to find flavor
+  std::cout<<"PT_jet vec size "<<PT_jet.size()<<"Target v2 weight "<<v2_weight<<"\n"; 
+  std::cout<<"The PT of the jets are: \n";
+  for( int i=0; i<PT_jet.size(); i++){
+	std::cout<<PT_jet.at(i)<<"\n";	
+  }
+
+
+/*  
   for(int i = 0; i < Njet; i++){
     if(abs(base->Flavor_jet->at(i)) == 5)
       iflavor = 0;
@@ -101,8 +115,8 @@ double ScaleFactorTool::GetBtagSFWeight(ReducedBase* base, int year, bool fastsi
     else
       iflavor = 2;
 
-
-   
+    std::cout<<"Processing iflavor: "<<iflavor<<"\n";  
+ 
     if(HForLF && iflavor == 2)
       continue;
     if(!HForLF && iflavor != 2)
@@ -113,8 +127,8 @@ double ScaleFactorTool::GetBtagSFWeight(ReducedBase* base, int year, bool fastsi
     EFF = m_BtagSFTool.EFF(PT, year, iflavor, fastsim);
     SF  = m_BtagSFTool.SF(PT, year, iflavor, updown);
 
-//    std::cout << "year: "<< year<< " fastsim: " << fastsim << " HForLF: " << HForLF << " updown: "<< updown <<"\n";
-//    std::cout << "iflavor:" <<iflavor << " PT:  " << PT << " EFF: " << EFF << " SF: " << SF << " base:  " << base->BtagID_jet->at(i) << std::endl;
+    std::cout << "year: "<< year<< " fastsim: " << fastsim << " HForLF: " << HForLF << " updown: "<< updown <<"\n";
+    std::cout << "iflavor:" <<iflavor << " PT:  " << PT << " EFF: " << EFF << " SF: " << SF << " base:  " << base->BtagID_jet->at(i) << std::endl;
     if(fastsim)
       SF *= m_BtagSFTool.SF(PT, year, iflavor, updown, fastsim);
 
@@ -129,7 +143,9 @@ double ScaleFactorTool::GetBtagSFWeight(ReducedBase* base, int year, bool fastsi
 
   if(probMC <= 0. || probDATA <= 0.)
     return 1.;
- 
+ */
+
+
   return probDATA/probMC;
 
 }
