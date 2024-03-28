@@ -343,6 +343,10 @@ int main(int argc, char* argv[]) {
     int Nfile = ST.NTrees(proc);
 
     cout << "Processing " << Nfile << " files for process " << title << endl;
+    cout <<" The proc is: "<< proc.Name() << endl;
+    for(int f =0; f<Nfile; f++){
+     cout<< ST.FileName(proc,f) << " " << ST.TreeName(proc,f) << endl;
+    }
 
     for(int f = 0; f < Nfile; f++){
       if(ifile != -1)
@@ -381,7 +385,7 @@ int main(int argc, char* argv[]) {
 	else{
 		chain = ST.Tree(proc, f);
 	}
-
+        cout<<" Chain Name "<< chain->GetName() << endl;
 	//set up the correct systematic to use
 	//always process the nominal kuanalysis tree first
 	//replace with nominal systematics if not nominal tree
@@ -964,7 +968,7 @@ int main(int argc, char* argv[]) {
 	//build 115 everything but mettriiger, with 0 suppression
 	trig_weight=1.;	
 	//hack PU weight to be off
-	//PU_weight=1.;
+	PU_weight=1.;
 	SF_weight *= btag_weight*PU_weight*trig_weight*PDF_weight*MuR_weight*MuF_weight*elID_weight*elIso_weight*elSIP_weight*elVL_weight*muID_weight*muIso_weight*muSIP_weight*muVL_weight;
 	if( SF_weight<0.) SF_weight = 0.;
 	if( isnan( SF_weight )) SF_weight = 0.;	
