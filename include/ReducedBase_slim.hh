@@ -859,6 +859,9 @@ inline void ReducedBase::Init(TTree *tree)
    fChain->SetBranchStatus("PT_SV", 1);
    fChain->SetBranchStatus("Eta_SV", 1);
    fChain->SetBranchStatus("Phi_SV", 1);
+
+   fChain->SetBranchStatus("genNsusy",1);
+   fChain->SetBranchStatus("genPDGID_susy",1);
   
  
 }

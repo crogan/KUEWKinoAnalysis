@@ -34,7 +34,7 @@ using namespace std;
 int main(int argc, char* argv[]) {
   int ifile = -1;
   //string NtuplePath = "root://xrootd.unl.edu//store/user/zflowers/crogan/";
-  string NtuplePath = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v1/";
+  string NtuplePath = "root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/";
   string OutFile    = "BuildFitInput_output.root";
 
   bool doSigFile = false;
@@ -357,6 +357,7 @@ int main(int argc, char* argv[]) {
       bool is_FastSim = ST.IsFastSim(proc, f);
       bool do_FilterDilepton = ST.FilterDilepton(proc, f);
       double sample_weight = ST.GetSampleWeight(proc, f);
+      SleptonFlavor do_FilterSleptons = ST.FilterSleptons(proc, f);
 
       if(is_signal)
 	sample_weight *= SF.GetX20BRSF(file, tree);
@@ -367,6 +368,11 @@ int main(int argc, char* argv[]) {
 	cout << "      Is FastSim" << endl;
       if(do_FilterDilepton)
 	cout << "      Filter Out dilepton events" << endl;
+      if(do_FilterSleptons == kSmu)
+        cout << "      Filter out events containing smuons" << endl;
+      if(do_FilterSleptons == kSel)
+        cout << "      Filter out events containing selectrons" << endl;
+
   //  int treeSysCtr=0;
   //  for(int itree=0; itree<TreesToProcess.size(); itree++){ ///begin tree loop   
 	 
@@ -427,6 +433,13 @@ int main(int argc, char* argv[]) {
 	if(do_FilterDilepton)
 	  if(SF.DileptonEvent(base))
 	    continue;
+
+	//std::cout << "BEFORE genNsusy: " << base->genNsusy << std::endl;
+        if(do_FilterSleptons == kSmu && SF.SleptonEvent(*(base->genPDGID_susy)) == kSmu)
+         continue;
+
+	if(do_FilterSleptons == kSel && SF.SleptonEvent(*(base->genPDGID_susy)) == kSel)
+         continue;
 	
 	// apply trigger to data and FullSim events
 	if(!base->METORtrigger && !is_FastSim)
@@ -659,7 +672,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	double PTISR = base->PTISR;
-	double PTISR_to_HT = PTISR*2.-150.;
+        double HT = base->HT_eta5;
 	double weight = 1.;
 	double btag_weight = 1.;
 	double PU_weight = 1.;
@@ -731,18 +744,18 @@ int main(int argc, char* argv[]) {
 //	if(is_data) continue;no more loop  dont continue
 
            //trig on the fly
-	    //trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
-            //if(is_FastSim)
-	    //  trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0)*
-            //	  m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
+	    trig_weight = m_METTriggerTool.Get_SF(base->MET, HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
+            if(is_FastSim)
+	      trig_weight = m_METTriggerTool.Get_EFF(base->MET, HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0)*
+            	  m_METTriggerTool.Get_SF(base->MET, HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
            //trig ntuples
-            trig_weight = base->MetTrigSFweight; 
+           // trig_weight = base->MetTrigSFweight; 
 
 //remnant from master merge		
-//	    trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
+//	    trig_weight = m_METTriggerTool.Get_SF(base->MET, HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
 //            if(is_FastSim)
-//	      trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0)*
-//		m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
+//	      trig_weight = m_METTriggerTool.Get_EFF(base->MET, HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0)*
+//		m_METTriggerTool.Get_SF(base->MET, HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
 
 
 
@@ -768,25 +781,23 @@ int main(int argc, char* argv[]) {
             		continue;
               */
               //trig on the fly
-              /*
             	        if(sys.IsUp())
             	          if(is_FastSim)
-            	            trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1)*
-            	              m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1);
+            	            trig_weight = m_METTriggerTool.Get_EFF(base->MET, HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1)*
+            	              m_METTriggerTool.Get_SF(base->MET, HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1);
             	          else
-            	            trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1);
+            	            trig_weight = m_METTriggerTool.Get_SF(base->MET, HT, year, (base->Nele > 0), (base->Nmu > 0), false, 1);
             	        else
             	          if(is_FastSim)
-            	            trig_weight = m_METTriggerTool.Get_EFF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1)*
-            	              m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
+            	            trig_weight = m_METTriggerTool.Get_EFF(base->MET, HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1)*
+            	              m_METTriggerTool.Get_SF(base->MET, HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
             	          else
-            	            trig_weight = m_METTriggerTool.Get_SF(base->MET, PTISR_to_HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
-              */
+            	            trig_weight = m_METTriggerTool.Get_SF(base->MET, HT, year, (base->Nele > 0), (base->Nmu > 0), false, -1);
              //trig ntuples
-            	if(sys.IsUp())
-                 trig_weight = base->MetTrigSFweight_up;
-                else
-                 trig_weight = base->MetTrigSFweight_down;
+           // 	if(sys.IsUp())
+           //      trig_weight = base->MetTrigSFweight_up;
+           //     else
+           //      trig_weight = base->MetTrigSFweight_down;
              
             
             }
@@ -966,7 +977,7 @@ int main(int argc, char* argv[]) {
 
 	//hack for build 110 - remove METtrig SF
 	//build 115 everything but mettriiger, with 0 suppression
-	trig_weight=1.;	
+	//trig_weight=1.;	
 	//hack PU weight to be off
 	PU_weight=1.;
 	SF_weight *= btag_weight*PU_weight*trig_weight*PDF_weight*MuR_weight*MuF_weight*elID_weight*elIso_weight*elSIP_weight*elVL_weight*muID_weight*muIso_weight*muSIP_weight*muVL_weight;
