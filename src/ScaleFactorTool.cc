@@ -80,9 +80,38 @@ bool ScaleFactorTool::DileptonEvent(ReducedBase* base){
 
 }
 
+
 void ScaleFactorTool::AddBtagFolder(const string& btagfold, const string& proc_rootfile, int year){
   m_BtagSFTool.BuildMap(btagfold, proc_rootfile, year);
-}  
+}
+SleptonFlavor ScaleFactorTool::SleptonEvent(std::vector<int> &genPDGID_susy){
+
+  int Nsmu = 0;
+  int Nsel = 0;
+
+  //std::cout << "CRASH?\n" << std::endl;
+  //std::cout << "WITHIN genNsusy: " << genPDGID_susy.size() << std::endl;
+  for(int i = 0; i < genPDGID_susy.size() ; i++){
+    if(abs(genPDGID_susy.at(i)) == 1000013 || abs(genPDGID_susy.at(i)) == 2000013) Nsmu++;
+    //std::cout << "HERE?\n" << std::endl;
+    //std::cout << "pdgId: \n" << base->genPDGID_susy->at(i) << std::endl;
+    if(abs(genPDGID_susy.at(i)) == 1000011 || abs(genPDGID_susy.at(i)) == 2000011) Nsel++;
+  }
+
+  if(Nsmu >= 2)
+    return kSmu;
+
+  if(Nsel >= 2)
+    return kSel;
+
+  return kSmuSel;
+
+}
+
+//
+//void ScaleFactorTool::AddBtagFolder(const string& btagfold){
+//  m_BtagSFTool.BuildMap(btagfold);
+//}  
                         
 //double ScaleFactorTool::GetBtagSFWeight(ReducedBase* base, int year, bool fastsim, bool HForLF, int updown, ParticleIDType tag){
 double ScaleFactorTool::GetBtagSFWeight( std::vector<double>& PT_jet, int year, bool fastsim, bool HForLF, int updown, ParticleIDType tag, double v2_weight ){ 
