@@ -60,6 +60,10 @@ public:
 				    const ProcessList&  procs,
 				    const Systematic&   sys = Systematic::Default()) const;
 
+  vector<double> IntegrateMperp(const FitBin fitBin, const vector<double> histVec) const;
+  TH1D* IntegrateMperp(const TString& name, const FitBin fitBin, TH1D* hist) const;
+  double CalculateZbi(double Nsig, double Nbkg, double deltaNbkg = 0.2);
+
   bool IsFilled2D(const Category&   cat,
 		  const Process&    proc,
 		  const Systematic& sys = Systematic::Default()) const;
