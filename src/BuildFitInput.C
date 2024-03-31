@@ -742,12 +742,18 @@ int main(int argc, char* argv[]) {
          
 	// if(!(!sys) && is_data) continue;      
 //	if(is_data) continue;no more loop  dont continue
+	  // std::cout<<"about to do met trig"<<std::endl;
 
-           //trig on the fly
-	    trig_weight = m_METTriggerTool.Get_SF(base->MET, HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
+           //trig on the fly	    trig_weight = m_METTriggerTool.Get_SF(base->MET, HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
+//also debug
+	  //  trig_weight = m_METTriggerTool.Get_SF(base->MET, HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
+
+/* DEBUGGGIN FS met trig
             if(is_FastSim)
 	      trig_weight = m_METTriggerTool.Get_EFF(base->MET, HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0)*
             	  m_METTriggerTool.Get_SF(base->MET, HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
+*/
+
            //trig ntuples
            // trig_weight = base->MetTrigSFweight; 
 

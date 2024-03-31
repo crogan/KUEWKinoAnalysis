@@ -386,7 +386,9 @@ void WriteScriptConnect(const string& src_name,
   file << "Requirements = (Machine != \"red-node000.unl.edu\") && (Machine != \"red-c2325.unl.edu\")" << endl;
   file << "request_memory = 4 GB" << endl;
   //file << "transfer_input_files = /uscms/home/z374f439/nobackup/whatever_you_want/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2,"+command.substr(command.find("output ")+7,command.find("input")-10-command.find("output "))+"/config_BuildFit.tgz" << endl;
-  file << "transfer_input_files = https://stash.osgconnect.net/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2,"+command.substr(command.find("output ")+7,command.find("input")-10-command.find("output "))+"/config_BuildFit.tgz" << endl;
+  //file << "transfer_input_files = https://stash.osgconnect.net/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2,"+command.substr(command.find("output ")+7,command.find("input")-10-command.find("output "))+"/config_BuildFit.tgz" << endl;
+  file << "transfer_input_files = /ospool/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2, /home/jsingera/jsingera/CMSSW_10_6_5/src/KUEWKinoAnalysis_treeSysDev/scripts/cmssw_setup_connect.sh,"+command.substr(command.find("output ")+7,command.find("input")-10-command.find("output "))+"/config_BuildFit.tgz" << endl;
+
   file << "should_transfer_files = YES" << endl;
   file << "when_to_transfer_output = ON_EXIT" << endl;
   file << "transfer_output_files = datacards" << endl;

@@ -211,7 +211,7 @@ int SampleTool::YearMap(int year){
 
   return ydef;
 }
-void SampleTool::InitSMS_treeSys(const string& treeSys, const string& prefix, const string& filename, double weight, bool FS, bool DL){
+void SampleTool::InitSMS_treeSys(const string& treeSys, const string& prefix, const string& filename, double weight, bool FS, bool DL, SleptonFlavor kFlavor){
    //duplicate initSMS but this time load tree sys as a separate process
    if(gSystem->AccessPathName(filename.c_str())) return;
   TFile* file = TFile::Open(filename.c_str(), "READ");
@@ -234,14 +234,15 @@ void SampleTool::InitSMS_treeSys(const string& treeSys, const string& prefix, co
       continue;
     sscanf(name.c_str(), "SMS_%d_%d", &M0, &M1);
     
-    std::cout<<"scanning "<<name.c_str()<<"\n";
-    std::cout<<"found: "<<M0<<" "<<M1<<"\n";
+  //  std::cout<<"scanning "<<name.c_str()<<"\n";
+  //  std::cout<<"found: "<<M0<<" "<<M1<<"\n";
     const std::string uscore = "_";
     const std::string newlit = treeSys;
     const std::string new_prefix = ((prefix+uscore)+newlit);
-    std::cout<<"loading new prefix "<< new_prefix.c_str()<< std::endl;    
+  //  std::cout<<"loading new prefix "<< new_prefix.c_str()<< std::endl;    
 
     Process proc(Form("%s_%d", new_prefix.c_str(), 10000*M0+M1), kSig);
+//    Process proc(Form("%s_%d", prefix.c_str(), 10000*M0+M1), kSig);
     files.clear();
     if(m_Proc[m_iYear].count(proc) == 0){
       files += filename;
@@ -249,18 +250,20 @@ void SampleTool::InitSMS_treeSys(const string& treeSys, const string& prefix, co
       m_SProcInit[m_iYear][proc] = false;
       m_SProcFS[m_iYear][proc] = std::map<string,bool>();
       m_SProcDL[m_iYear][proc] = std::map<string,bool>();
+      m_SProcSlepFlavor[m_iYear][proc] = std::map<string,SleptonFlavor>();
       m_SProcW[m_iYear][proc] = std::map<string,double>();
       m_SProcFS[m_iYear][proc][filename] = FS;
       m_SProcDL[m_iYear][proc][filename] = DL;
+      m_SProcSlepFlavor[m_iYear][proc][filename] = kFlavor;
       m_SProcW[m_iYear][proc][filename] = weight;
     } else {
       m_Proc[m_iYear][proc].first.push_back(filename);
       m_SProcFS[m_iYear][proc][filename] = FS;
       m_SProcDL[m_iYear][proc][filename] = DL;
+      m_SProcSlepFlavor[m_iYear][proc][filename] = kFlavor;
       m_SProcW[m_iYear][proc][filename] = weight;
     }
-
-
+ 
   }
   file->Close();
 
@@ -315,13 +318,13 @@ void SampleTool::InitSMS(const string& prefix, const string& filename, double we
   }
   file->Close();
   //register signal sys trees as different procs
-/*  std::vector<std::string> sysTrees = {"JESUncer_TotalUp", "JESUncer_TotalDown","JERUncer_TotalUp", "JERUncer_TotalDown", "METUncer_UnClustUp", "METUncer_UnClustDown", "METUncer_GenMET"};
+ /* std::vector<std::string> sysTrees = {"JESUncer_TotalUp"};//, "JESUncer_TotalDown","JERUncer_TotalUp", "JERUncer_TotalDown", "METUncer_UnClustUp", "METUncer_UnClustDown", "METUncer_GenMET"};
   for(int i=0; i< sysTrees.size(); i++){
     std::cout<<"Initializing SMS treesys: "<<prefix.c_str()<< "_"<<sysTrees.at(i)<<"\n";
-    InitSMS_treeSys(sysTrees.at(i), prefix, filename, weight, FS, DL);
-    break;
-  }
-*/
+    InitSMS_treeSys(sysTrees.at(i), prefix, filename, weight, FS, DL, kFlavor);
+  //  break;
+  }*/
+
 }
 void SampleTool::InitProcMap(){
   m_ProcInit = true;
