@@ -65,7 +65,7 @@ int main(int argc, char* argv[]) {
   bool maskSR = false;
  
   bool debugVerbosity = false;
-  bool debugData = true;
+  bool debugData =false;
 
   string treeLoad = "";
   string treeSysName ="";
@@ -243,7 +243,7 @@ int main(int argc, char* argv[]) {
   //m_METTriggerTool.BuildMap("csv/METTrigger/Parameters.csv");
 
   ScaleFactorTool SF;
-  //SF.AddBtagFolder("./BtagSF");
+  SF.AddBtagFolder("./BtagSF");
 
   Systematics systematics(1);
  // Systematics nominalTreeSys(1);
@@ -351,7 +351,7 @@ int main(int argc, char* argv[]) {
       string tree = ST.TreeName(proc, f);
 
      //init Bmap here for per file processing
-      SF.AddBtagFolder("./BtagSF", file, year );
+//      SF.AddBtagFolder("./BtagSF", file, year );
 
       bool is_FastSim = ST.IsFastSim(proc, f);
       bool do_FilterDilepton = ST.FilterDilepton(proc, f);
@@ -826,7 +826,7 @@ int main(int argc, char* argv[]) {
 	double otfn,otfu,otfd;
 	
 	if( e < 50 ){
-	 std::cout<<e<<" njet for this event: "<< base->Njet<<"\n";
+	/* std::cout<<e<<" njet for this event: "<< base->Njet<<"\n";
 
 	 std::cout<<e<<" base btagHF_SF (n,u,d) "<<base->BtagHFSFweight<<" "<< base->BtagHFSFweight_up <<" "<< base->BtagHFSFweight_down <<"\n";
 	 std::cout<<e<<" base btagLF_SF (n,u,d) "<<base->BtagLFSFweight<<" "<< base->BtagLFSFweight_up <<" "<< base->BtagLFSFweight_down <<"\n";
@@ -838,6 +838,7 @@ int main(int argc, char* argv[]) {
 //	 otfu = SF.GetBtagSFWeight(base->PT_jet, year, is_FastSim, false, 1,kMedium,base->BtagLFSFweight );
 //	 otfd = SF.GetBtagSFWeight(base->PT_jet, year, is_FastSim, false, -1,kMedium,base->BtagLFSFweight );
 	 std::cout<<e<<" otf  btagLF_SF (n,u,d) "<<otfn<<" "<< otfu<<" "<< otfd<<"\n";
+  	*/
 	}
 
 	  //
