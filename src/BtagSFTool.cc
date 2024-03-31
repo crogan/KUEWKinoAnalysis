@@ -99,7 +99,7 @@ void BtagSFTool::SetEfficiencies(const std::string& rootfile, const std::string&
   }
 //efficiency hack - load the normal root file for other years
 //but the specified year/process load the file from the ntuple
-std::cout<<"opening original rootfile: "<<rootfile<<"\n";
+std::cout<<"opening original BTAG rootfile: "<<rootfile<<"\n";
   TFile* input = new TFile(rootfile.c_str(),"READ");
   if(!input->IsOpen())
     return;
@@ -120,7 +120,7 @@ std::cout<<"opening original rootfile: "<<rootfile<<"\n";
   //create the TEffs from ntuple
   //Histograms/hist_btag_flavor0_den
   //Histograms/hist_btag_flavor0_num
-  
+ /* commenting this out, in favor of additional SF 
   TEfficiency *flav0, *flav1, *flav2;
   TH1D *f0n, *f0d, *f1n, *f1d, *f2n, *f2d;
   if (proc_rootfile != ""){
@@ -137,7 +137,8 @@ std::cout<<"opening original rootfile: "<<rootfile<<"\n";
   flav1 = new TEfficiency(*f1n,*f1d);
   flav2 = new TEfficiency(*f2n,*f2d);
   std::cout<<" TEffciency created for year "<<year<<" \n";
-  }
+  
+  }*/
 
    ///fill all data structures normally
   for(int i = 0; i < 3; i++){
@@ -150,6 +151,7 @@ std::cout<<"opening original rootfile: "<<rootfile<<"\n";
   }
 
   //overwrite the indicated eff datastructure
+  /*
   if( proc_rootfile != ""){
   if( year == 2016 ){
 	std::cout<<"overwriting 2016 TEfficiency\n";
@@ -179,11 +181,11 @@ std::cout<<"opening original rootfile: "<<rootfile<<"\n";
         m_BtagEff2018_FastSim[2] = flav2;
   }
   }
-  
+  */
   input->Close();
-  if( proc_rootfile != ""){
+  /*if( proc_rootfile != ""){
   input2->Close();
-  }
+  }*/
 }
 
 void BtagSFTool::SetSFs(const std::string& csvfile, int year, bool FastSim){
