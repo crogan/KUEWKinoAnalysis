@@ -3,6 +3,9 @@
 
 #include "lwtnn/LightweightNeuralNetwork.hh"
 //#include "/cvmfs/cms.cern.ch/slc7_amd64_gcc700/external/lwtnn/2.4-gnimlf3/include/lwtnn/LightweightNeuralNetwork.hh"
+//#include "lwtnn/parse_json.hh"
+#include "/cvmfs/cms.cern.ch/slc7_amd64_gcc700/external/lwtnn/2.4-gnimlf3/include/lwtnn/parse_json.hh"
+
 #include "Particle.hh"
 #include <map>
 #include <memory>

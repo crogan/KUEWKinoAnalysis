@@ -46,7 +46,11 @@ private:
 
   int YearMap(int year);
 
+//  void InitSMS(const string& prefix, const string& filename, double weight = 1., bool FS = false, bool DL = false);
+  void InitSMS_treeSys(const string& treeSys, const string& prefix, const string& filename, double weight=1., bool FS=false, bool DL=false, SleptonFlavor kFlavor = kSmuSel);
+
   void InitSMS(const string& prefix, const string& filename, double weight = 1., bool FS = false, bool DL = false, SleptonFlavor kFlavor = kSmuSel);
+
   void InitProcMap();
   static bool m_ProcInit;
   static std::map<Process, pair<vector<string>,string> > m_Proc[3];
