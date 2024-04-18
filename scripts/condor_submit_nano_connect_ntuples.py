@@ -113,8 +113,14 @@ def write_sh_single(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,
     #fsrc.write('priority = 10 \n')
     fsrc.write('+RequiresCVMFS = True \n')
     #fsrc.write('+RequiresSharedFS = True \n')
-
-    transfer_input = 'transfer_input_files = https://stash.osgconnect.net/cms-user/'+USER+"/"+NAME+"/"+'config.tgz,https://stash.osgconnect.net/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
+    if USE_URL:
+        # Warning: The stash.osgconnect.net endpoint has been decommissioned.
+        # CMS connect is working on implementing an OSDF endpoint solution.
+        transfer_input = 'transfer_input_files = https://stash.osgconnect.net/cms-user/'+USER+"/"+NAME+"/"+'config.tgz,https://stash.osgconnect.net/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
+    else:
+        transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/ospool/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
+    if VERBOSE:
+        print(transfer_input)
     fsrc.write(transfer_input)
 
     fsrc.write('should_transfer_files = YES\n')
@@ -174,7 +180,14 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n,NAME)
     fsrc.write('log = '+loglog+" \n")
     fsrc.write('Requirements = (Machine != "red-node000.unl.edu" && Machine != "ncm*.hpc.itc.rwth-aachen.de" && Machine != "*mh-epyc7662-8.t2.ucsd.edu" && Machine != "*sdsc-88.t2.ucsd.edu")\n')
     fsrc.write('request_memory = 2 GB \n')
-    transfer_input = 'transfer_input_files = https://stash.osgconnect.net/cms-user/'+USER+"/"+NAME+"/"+'config.tgz,https://stash.osgconnect.net/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
+    if USE_URL:
+        # Warning: The stash.osgconnect.net endpoint has been decommissioned.
+        # CMS connect is working on implementing an OSDF endpoint solution.
+        transfer_input = 'transfer_input_files = https://stash.osgconnect.net/cms-user/'+USER+"/"+NAME+"/"+'config.tgz,https://stash.osgconnect.net/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
+    else:
+        transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/ospool/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
+    if VERBOSE:
+        print(transfer_input)
     fsrc.write(transfer_input)
 
     fsrc.write('should_transfer_files = YES\n')
@@ -204,6 +217,7 @@ if __name__ == "__main__":
     argv_pos    = 1
     DO_SMS      = 0
     DO_DATA     = 0
+    USE_URL     = 0
     DRY_RUN     = 0
     COUNT       = 0
     VERBOSE     = 0
