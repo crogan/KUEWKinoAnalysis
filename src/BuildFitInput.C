@@ -65,7 +65,7 @@ int main(int argc, char* argv[]) {
   bool maskSR = false;
  
   bool debugVerbosity = false;
-  bool debugData = true;
+  bool debugData =false;
 
   string treeLoad = "";
   string treeSysName ="";
@@ -353,6 +353,9 @@ int main(int argc, char* argv[]) {
         f = ifile;
       string file = ST.FileName(proc, f);
       string tree = ST.TreeName(proc, f);
+
+     //init Bmap here for per file processing
+//      SF.AddBtagFolder("./BtagSF", file, year );
 
       bool is_FastSim = ST.IsFastSim(proc, f);
       bool do_FilterDilepton = ST.FilterDilepton(proc, f);
@@ -828,6 +831,25 @@ int main(int argc, char* argv[]) {
 	        btag_weight *= base->BtagLFSFweight_down;
 	    else 
 	      btag_weight *= base->BtagLFSFweight;
+
+	//btag checking
+	double otfn,otfu,otfd;
+	
+	if( e < 50 ){
+	/* std::cout<<e<<" njet for this event: "<< base->Njet<<"\n";
+
+	 std::cout<<e<<" base btagHF_SF (n,u,d) "<<base->BtagHFSFweight<<" "<< base->BtagHFSFweight_up <<" "<< base->BtagHFSFweight_down <<"\n";
+	 std::cout<<e<<" base btagLF_SF (n,u,d) "<<base->BtagLFSFweight<<" "<< base->BtagLFSFweight_up <<" "<< base->BtagLFSFweight_down <<"\n";
+//	 otfn = SF.GetBtagSFWeight(base->PT_jet, year, is_FastSim, true, 0, kMedium,base->BtagHFSFweight);
+//         otfu = SF.GetBtagSFWeight(base->PT_jet, year, is_FastSim, true, 1, kMedium,base->BtagHFSFweight_up );
+//	 otfn = SF.GetBtagSFWeight(base->PT_jet, year, is_FastSim, true, -1,kMedium,base->BtagHFSFweight_down );
+ 	 std::cout<<e<<" otf  btagHF_SF (n,u,d) "<<otfn<<" "<< otfu<<" "<< otfd <<"\n";	      
+//	 otfn = SF.GetBtagSFWeight(base->PT_jet, year, is_FastSim, false, 0,kMedium,base->BtagLFSFweight );
+//	 otfu = SF.GetBtagSFWeight(base->PT_jet, year, is_FastSim, false, 1,kMedium,base->BtagLFSFweight );
+//	 otfd = SF.GetBtagSFWeight(base->PT_jet, year, is_FastSim, false, -1,kMedium,base->BtagLFSFweight );
+	 std::cout<<e<<" otf  btagLF_SF (n,u,d) "<<otfn<<" "<< otfu<<" "<< otfd<<"\n";
+  	*/
+	}
 
 	  //
 	  // BTAG systematics on the fly (needs jet collection in reduced ntuples)
