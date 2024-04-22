@@ -504,6 +504,8 @@ cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
   ttbar += "ttbar";
   SystDict smtt;
  // ttbar += "ST";
+  
+//turn of sig norm sys for b128
   bool applyTtbarToSig = true;
   std::cout<<"Applying ttbar Systematics to Signal: "<< applyTtbarToSig <<"\n";
    CONFIG.initSystDictTtbar(smtt);
