@@ -51,6 +51,49 @@ ProcessList SampleTool::Get(const string& name) const {
 
   return list;
 }
+ProcessList SampleTool::GetStrictSignalMatch( const string& name) const {
+  ProcessList list;
+  bool isSigSysProc= false;
+  std::string token1,token2,token3;
+  //look for up down or GenMET, if they are in the string its a sig sys process
+  if(name.find("Up") != std::string::npos || name.find("Down") != std::string::npos || name.find("GenMET") != std::string::npos){
+    isSigSysProc = true;
+  }
+  bool isThisProcSys=false;
+  std::string thisprocname;
+  //cout<<" processing string: "<<name<<" isSigSysProc="<<isSigSysProc<<"\n";
+  for(auto p = m_Proc[m_iYear].begin(); p != m_Proc[m_iYear].end(); p++){
+    thisprocname = p->first.Name();
+    if(thisprocname.find("Up") != std::string::npos || thisprocname.find("Down") != std::string::npos || thisprocname.find("GenMET") != std::string::npos){
+     isThisProcSys = true;
+    }
+	//tokenize name if sys
+	//std::string nameCopy = name;
+   if(isThisProcSys){
+	std::stringstream iss(name);
+	std::getline(iss,token1,'_');
+	std::getline(iss,token2,'_');
+	std::getline(iss,token3,'_');
+	//std::cout<<"got tokens "<<token1<<" "<<token2<<" "<<token3<<" \n";
+   }
+   // cout<<"perform comparisons for:"<<thisprocname<<" isThisProcSys="<<isThisProcSys<<"\n";
+    //if it is not signal sys then so should be the proc
+    if(!isSigSysProc &&  !isThisProcSys ){
+      if(p->first.Name().find(name) != std::string::npos)
+        list += p->first;
+    }
+    //if it is a singal sys then the the proc must also be
+    if(isSigSysProc && isThisProcSys ){
+      //if(p->first.Name().find(name) != std::string::npos)
+      	if(p->first.Name().find(token1) != std::string::npos &&p->first.Name().find(token2) != std::string::npos && p->first.Name().find(token3) != std::string::npos)
+	list += p->first;
+    }
+	//reset this proc flag
+      isThisProcSys=false;
+  }
+
+  return list;
+}
 
 ProcessList SampleTool::Get(ProcessType type) const {
   ProcessList list;
@@ -238,11 +281,16 @@ void SampleTool::InitSMS_treeSys(const string& treeSys, const string& prefix, co
   //  std::cout<<"found: "<<M0<<" "<<M1<<"\n";
     const std::string uscore = "_";
     const std::string newlit = treeSys;
-    const std::string new_prefix = ((prefix+uscore)+newlit);
+   // const std::string new_prefix = ((prefix+uscore)+newlit);
   //  std::cout<<"loading new prefix "<< new_prefix.c_str()<< std::endl;    
-
-    Process proc(Form("%s_%d", new_prefix.c_str(), 10000*M0+M1), kSig);
-//    Process proc(Form("%s_%d", prefix.c_str(), 10000*M0+M1), kSig);
+    
+      std::string new_prefix = Form("%s_%d", prefix.c_str(), 10000*M0+M1);
+      std::string newtreesys = std::string(treeSys);
+      new_prefix = new_prefix+"_"+newtreesys;
+    // std::cout<<"created process prefix "<< new_prefix<<"\n";
+   // Process proc(Form("%s_%d", new_prefix.c_str(), 10000*M0+M1), kSig);
+   	Process proc(new_prefix,kSig);
+    //Process proc(Form("%s_%d", prefix.c_str(), 10000*M0+M1), kSig);
     files.clear();
     if(m_Proc[m_iYear].count(proc) == 0){
       files += filename;
@@ -318,12 +366,13 @@ void SampleTool::InitSMS(const string& prefix, const string& filename, double we
   }
   file->Close();
   //register signal sys trees as different procs
- /* std::vector<std::string> sysTrees = {"JESUncer_TotalUp"};//, "JESUncer_TotalDown","JERUncer_TotalUp", "JERUncer_TotalDown", "METUncer_UnClustUp", "METUncer_UnClustDown", "METUncer_GenMET"};
+  std::vector<std::string> sysTrees = {"JESUncer_TotalUp", "JESUncer_TotalDown","JERUncer_TotalUp", "JERUncer_TotalDown", "METUncer_UnClustUp", "METUncer_UnClustDown", "METUncer_GenMET"};
+
   for(int i=0; i< sysTrees.size(); i++){
     std::cout<<"Initializing SMS treesys: "<<prefix.c_str()<< "_"<<sysTrees.at(i)<<"\n";
     InitSMS_treeSys(sysTrees.at(i), prefix, filename, weight, FS, DL, kFlavor);
-  //  break;
-  }*/
+//    break;
+  }
 
 }
 void SampleTool::InitProcMap(){
@@ -503,6 +552,7 @@ void SampleTool::InitProcMap(){
     ////InitSMS("TChiWZ", m_Path+"Summer16_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 1., false, true);
     ////InitSMS("TChiWZ", m_Path+"Summer16_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_mC1-325to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 1., false, true);
     InitSMS("TChiWZ", m_Path+"Summer16_102X_SMS/TChiWZ_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 1., true);
+    InitSMS("TChiWZ", m_Path+"Summer16_102X_SMS/SMS-TChiWZ_dM-60to90_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root",1.,true);
     ////InitSMS("TChiWZ", m_Path+"Summer16_102X_SMS/SMS-TChiWZ_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 1., true);
     //
     ////InitSMS("TChipmWW", m_Path+"Summer16_102X_SMS/SMS-TChipmWW_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 1., true);
@@ -748,6 +798,7 @@ void SampleTool::InitProcMap(){
     ////InitSMS("TChiWZ", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_mC1-325to1000_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., false, true);
    
     InitSMS("TChiWZ", m_Path+"Fall17_102X_SMS/TChiWZ_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
+    InitSMS("TChiWZ", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_dM-60to90_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root",1.,true);
   
     //
     //InitSMS("TChipmWW", m_Path+"Fall17_102X_SMS/SMS-TChipmWW_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
@@ -1007,6 +1058,7 @@ void SampleTool::InitProcMap(){
     ////InitSMS("TChiWZ", m_Path+"Autumn18_102X_SMS/SMS-TChiWZ_ZToLL_mZMin-0p1_mC1-325to1000_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 1., false, true);
     
     InitSMS("TChiWZ", m_Path+"Autumn18_102X_SMS/TChiWZ_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 1., true);
+    InitSMS("TChiWZ", m_Path+"Autumn18_102X_SMS/SMS-TChiWZ_dM-60to90_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root",1.,true);
    /*
 	//
     ////InitSMS("TChipmWW", m_Path+"Autumn18_102X_SMS/SMS-TChipmWW_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 1., true);

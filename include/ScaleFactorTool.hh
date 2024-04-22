@@ -34,10 +34,12 @@ public:
   //double GetBtagSFWeight(ReducedBase* base, int year,  bool fastsim, bool HForLF, int updown = 0, ParticleIDType tag = kMedium);
   double GetBtagSFWeight( std::vector<double>& PT_jet, int year, bool fastsim, bool HForLF, int updown,ParticleIDType tag = kMedium,  double v2_weight=1. );
   
+  void init_bLambda();  
+  std::vector<double> GetbLambdas(std::string proc, std::string filename, int year);
 
 private:
   BtagSFTool m_BtagSFTool;
-
+  std::map<std::string, double> bLambdas{};
 };
 
 #endif

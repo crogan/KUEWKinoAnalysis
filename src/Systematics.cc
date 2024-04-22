@@ -317,7 +317,8 @@ Systematics SystematicsTool::GetConvertedSystematics() const {
   list += "PDF_SF";
 
   list += "MET_TRIG_SF";
- 
+  list += "prefire_SF";
+
  list += "elID_SF";
   list += "elIso_SF";
   list += "elSIP_SF";
@@ -330,6 +331,7 @@ Systematics SystematicsTool::GetConvertedSystematics() const {
   list += "JESUncer_Total";
   list += "JERUncer_Total";
   list += "METUncer_UnClust";
+  list += "METUncer_GenMET";
 
 return list;
 }
@@ -350,6 +352,7 @@ Systematics SystematicsTool::GetWeightSystematics() const {
   //list += "METUncer_UnClust";   
 
   list += "MET_TRIG_SF";
+  list += "prefire_SF";
  
  list += "elID_SF";
   list += "elIso_SF";
@@ -400,7 +403,7 @@ std::vector<std::string> SystematicsTool::GetTreeSystematicsNames() const {
   list.push_back("KUAnalysis_JERUncer_TotalDown");
   list.push_back("KUAnalysis_METUncer_UnClustUp");
   list.push_back("KUAnalysis_METUncer_UnClustDown");
-
+  
 
 //  list.push_back("KUAnalysis_METUncer_GenMETUp");
 //  list.push_back("KUAnalysis_METUncer_GenMETDown");
@@ -421,7 +424,7 @@ Systematics SystematicsTool::GetTreeSystematics() const {
   list += "JERUncer_Total"; 
   list += "METUncer_UnClust";
 
-//  list += "METUncer_GenMET";
+  list += "METUncer_GenMET";
 
  return list;
 }

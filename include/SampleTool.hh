@@ -29,7 +29,8 @@ public:
 
   ProcessList Get(const string& name) const;
   ProcessList Get(ProcessType type) const;
-  
+  ProcessList GetStrictSignalMatch( const string& name) const;
+ 
   int NTrees(const Process& proc);
   TChain* Tree(const Process& proc, int itree = -1, std::string treeName=""); // remember to delete TChain!
   string TreeName(const Process& proc, int itree);

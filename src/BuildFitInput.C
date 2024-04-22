@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <dirent.h>
 #include <vector>
+#include <cmath>
 
 // ROOT includes
 #include <TROOT.h>
@@ -46,7 +47,7 @@ int main(int argc, char* argv[]) {
   bool addSig  = false;
   bool addData = false;
   bool extrahist = false;
-  
+  bool sigProc = false; 
   vector<string> proc_to_add;
 
   CategoryTool CT;
@@ -157,6 +158,10 @@ int main(int argc, char* argv[]) {
 	 i++;
 	  treeSysName = std::string(argv[i]);	
 	}
+    
+    if(strncmp(argv[i],"+SMS", 4)==0){
+ 	sigProc = true;     
+    }
   }
       
   if((proc_to_add.size() == 0) &&
@@ -212,6 +217,8 @@ int main(int argc, char* argv[]) {
   if(addSig){
     cout << "Adding all signal processes" << endl;
     samples += ST.Get(kSig);
+    //samples += ST.GetStrictSignalMatch( kSig);
+
   }
   if(addData){
     cout << "Adding all data for year " << year << endl;
@@ -219,8 +226,15 @@ int main(int argc, char* argv[]) {
   }
   for(int p = 0; p < int(proc_to_add.size()); p++){
     cout << "Adding processes that match \"" << proc_to_add[p] << "\"" << endl;
-    samples += ST.Get(proc_to_add[p]);
-  }
+    //samples += ST.Get(proc_to_add[p]);
+    //if its signal do strict match
+    if(sigProc){
+     samples += ST.GetStrictSignalMatch(proc_to_add[p]);
+    }else{
+    //otherwise do the normal thing 
+     samples += ST.Get(proc_to_add[p]); 
+    }
+  } 
 
   if(Categories.GetN() == 0)
     Categories += CT.GetCategories(maskSR);
@@ -239,16 +253,21 @@ int main(int argc, char* argv[]) {
   SystematicsTool SYS;
   
   METTriggerTool m_METTriggerTool;
+  //if you run interactively, use csv/METTrigger path
+  //for batch runs the csv file will be copied in the base directory
   m_METTriggerTool.BuildMap("Parameters.csv");
   //m_METTriggerTool.BuildMap("csv/METTrigger/Parameters.csv");
 
   ScaleFactorTool SF;
   SF.AddBtagFolder("./BtagSF");
+  SF.init_bLambda();
 
   Systematics systematics(1);
  // Systematics nominalTreeSys(1);
   //Systematics treeSysList;//associated sys which contain Up or Down
+  //this is the tree loading for bkg, ill do a separate one for signals
    Systematic treeSys(treeSysName); 
+
    if(doTreeSys){
 	size_t found = treeLoad.find("Down");
 	if(found != std::string::npos){
@@ -267,6 +286,8 @@ int main(int argc, char* argv[]) {
 		systematics = inputSys;
 	}
    }
+   
+
 //std::vector<std::string> TreesToProcess;//list of tree names to process
   //TreesToProcess.push_back("KUAnalysis");
   //TreesToProcess.push_back(treeLoad);
@@ -301,7 +322,7 @@ int main(int argc, char* argv[]) {
 
   // sample (process) loop
   int Nsample = samples.GetN();
-  for(int s = 0; s < Nsample; s++){
+ /* for(int s = 0; s < Nsample; s++){
     Process proc = samples[s];
     if(doSigFile && proc.Type() == kSig){
       bool keep = false;
@@ -315,6 +336,14 @@ int main(int argc, char* argv[]) {
 	continue;
     }
     cout << "processing sample " << proc.Name() << endl;
+  }*/
+  //debugging loop
+  if(sigProc){
+    cout<<"Samples for processing: \n";
+    for(int s = 0; s< Nsample; s++){
+	cout<< samples[s].Name() << " ";
+    }
+    cout<<"\n";
   }
 
   for(int s = 0; s < Nsample; s++){
@@ -331,7 +360,8 @@ int main(int argc, char* argv[]) {
       if(!keep)
 	continue;
     }
-    
+    //cout << "kSig ="<<kSig<<" \n";
+    cout << "processing sample " << proc.Name() << endl;
     string title = proc.Name();
 
     bool is_data   = (proc.Type() == kData);
@@ -356,7 +386,21 @@ int main(int argc, char* argv[]) {
 
      //init Bmap here for per file processing
 //      SF.AddBtagFolder("./BtagSF", file, year );
-
+     double blambda0;
+     double blambda12;
+     std::vector<double> blams;
+     if(proc.Name() != "ttbar" && !sigProc){
+     blams = SF.GetbLambdas(proc.Name(), file, year);
+     blambda0 = blams[0];
+     blambda12 = blams[1];
+     }
+     else{
+	std::cout<<"signal or ttbar detected, setting blambda = 1\n";
+	blambda0=1.;
+	blambda12 =1.;
+     }
+     
+	
       bool is_FastSim = ST.IsFastSim(proc, f);
       bool do_FilterDilepton = ST.FilterDilepton(proc, f);
       double sample_weight = ST.GetSampleWeight(proc, f);
@@ -695,6 +739,9 @@ int main(int argc, char* argv[]) {
         double muSIP_weight = 1.;
         double muVL_weight = 1.;
         double SF_weight = 1.;
+	double prefire_weight = 1.;
+	double blambda0_weight = 1.;
+	double blambda1_weight = 1.;
 
 	
 	if(!is_data){
@@ -742,20 +789,25 @@ int main(int argc, char* argv[]) {
           PDF_weight = 1.;
           MuR_weight = 1.;
           MuF_weight = 1.;
-         
+	  prefire_weight = 1.;
+          blambda0_weight = 1.;
+          blambda1_weight = 1.;
+
 	// if(!(!sys) && is_data) continue;      
 //	if(is_data) continue;no more loop  dont continue
 	  // std::cout<<"about to do met trig"<<std::endl;
 
            //trig on the fly	    trig_weight = m_METTriggerTool.Get_SF(base->MET, HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
-//also debug
-	  //  trig_weight = m_METTriggerTool.Get_SF(base->MET, HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
 
-/* DEBUGGGIN FS met trig
+         //  cout<<"Calling Get_SF with args: "<<base->MET<<" "<< HT<<" "<< year<<" "<< (base->Nele) <<" "<< (base->Nmu)<<"\n";
+	
+	    trig_weight = m_METTriggerTool.Get_SF(base->MET, HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
+
+
             if(is_FastSim)
 	      trig_weight = m_METTriggerTool.Get_EFF(base->MET, HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0)*
             	  m_METTriggerTool.Get_SF(base->MET, HT, year, (base->Nele > 0), (base->Nmu > 0), false, 0);
-*/
+
 
            //trig ntuples
            // trig_weight = base->MetTrigSFweight; 
@@ -831,6 +883,9 @@ int main(int argc, char* argv[]) {
 	        btag_weight *= base->BtagLFSFweight_down;
 	    else 
 	      btag_weight *= base->BtagLFSFweight;
+
+
+	 
 
 	//btag checking
 	double otfn,otfu,otfd;
@@ -975,7 +1030,19 @@ int main(int argc, char* argv[]) {
            else
              muVL_weight =base->muVLSFweight;
 
-
+	if(sys == Systematic("prefire_SF"))
+             if(sys.IsUp()){
+                prefire_weight = base->PrefireWeight_up;
+	//	std::cout<<"apply prefire up:"<< prefire_weight<<"\n";
+		}
+             else{
+                prefire_weight = base->PrefireWeight_down;
+	//	std::cout<<"apply prefire down:"<< prefire_weight<<"\n";
+		}
+           else{
+             prefire_weight = base->PrefireWeight;
+	 //    std::cout<<"apply prefire nom:"<< prefire_weight<<"\n";
+	   }
 
 
 
@@ -1002,13 +1069,14 @@ int main(int argc, char* argv[]) {
 	if( isnan( muIso_weight  ) ) std::cout<<"NaN SF 12!!\n";
 	if( isnan( muSIP_weight  ) ) std::cout<<"NaN SF 13!!\n";
 	if( isnan( muVL_weight  ) ) std::cout<<"NaN SF 14!!\n";
-
+	if( isnan( prefire_weight) ) std::cout<<"Nan SF 15!!\n";
 	//hack for build 110 - remove METtrig SF
 	//build 115 everything but mettriiger, with 0 suppression
 	//trig_weight=1.;	
 	//hack PU weight to be off
 	PU_weight=1.;
-	SF_weight *= btag_weight*PU_weight*trig_weight*PDF_weight*MuR_weight*MuF_weight*elID_weight*elIso_weight*elSIP_weight*elVL_weight*muID_weight*muIso_weight*muSIP_weight*muVL_weight;
+	SF_weight *= btag_weight*PU_weight*trig_weight*PDF_weight*MuR_weight*MuF_weight*elID_weight*elIso_weight*elSIP_weight*elVL_weight*muID_weight*muIso_weight*muSIP_weight*muVL_weight*prefire_weight;
+//	std::cout<<"Prefire weight= "<<prefire_weight<<" SF_weight="<< SF_weight<<"\n";
 	if( SF_weight<0.) SF_weight = 0.;
 	if( isnan( SF_weight )) SF_weight = 0.;	
  
@@ -1023,8 +1091,19 @@ int main(int argc, char* argv[]) {
 	//SF_weight *= elID_weight*elIso_weight*elSIP_weight*elVL_weight*muID_weight*muIso_weight*muSIP_weight*muVL_weight;
 
 	//build 115 everything but mettriiger, with 0 suppression
+	
+	// get the by processi
+	double Njet_nob = NjetS+NjetISR - Nbjet;
+	blambda0_weight= pow(blambda0,Nbjet);
+	blambda1_weight= pow(blambda12,Njet_nob);
+	//if(Nbjet == 0) blambda0_weight=1.;
+	//if(Njet_nob == 0) blambda1_weight=1.;
+	
+	double blambda_combined_weight = blambda0_weight* blambda1_weight;
+	//std::cout<<"btag correction: "<<blambda_combined_weight<<" "<<Njet_nob<<" "<<Nbjet<<"\n";
 
 	weight *= SF_weight;
+	weight *= blambda_combined_weight;
 	 
 	 //if( weight < 0 ) weight = 0.;
 	  //if(weight > 3 ){

@@ -920,11 +920,21 @@ void FitConfiguration::AddSJetNormSys(const string& label, VS& procs, ch::Combin
   cb.SetFlag("filters-use-regex", false);
 }
 
-void FitConfiguration::AddShapeSysAsNorm(const Systematic& sys, ch::CombineHarvester& cb, FitReader& FIT, std::string name, double scale ){
+//void FitConfiguration::AddShapeSysAsNorm(const Systematic& sys, ch::CombineHarvester& cb, FitReader& FIT, std::string name, double scale, ProcessType procSet ){
+void FitConfiguration::AddShapeSysAsNorm(const Systematic& sys, ch::CombineHarvester& cb, FitReader& FIT, ProcessList& plist, std::string name, double scale, ProcessType ptype){
+  
   cb.SetFlag("filters-use-regex", true);
 
-  ProcessList processes = FIT.GetProcesses();
-  processes = processes.Filter(kBkg);
+ // ProcessList processes = FIT.GetProcesses();
+  ProcessList processes = plist;
+  //processes = processes.Filter(kBkg);
+  //processes = processes.Filter(procSet);
+//  processes = processes.Filter("TChiWZ_3000270");
+  //if kSig then remove the genMET procs
+//  if(procSet == kSig ){
+//	processes = processes.Remove("METUncer_GenMET");
+//  }
+
   CategoryList categories = FIT.GetCategories();
   VS channels = FIT.GetChannels();
 
@@ -944,7 +954,7 @@ void FitConfiguration::AddShapeSysAsNorm(const Systematic& sys, ch::CombineHarve
     
     if(!FIT.HasSystematic(p, sys))
     {
-  //    std::cout<<"Has continue\n";
+      std::cout<<"Has continue\n";
       continue;
     }
 
@@ -961,7 +971,7 @@ void FitConfiguration::AddShapeSysAsNorm(const Systematic& sys, ch::CombineHarve
       double nom = FIT.Integral(c, p);
 //cout << "nom: " << nom << endl;
       if(nom <= 0.){
-//	std::cout<<"nom <=0 continue\n";
+	std::cout<<"nom <=0 continue\n";
 	 continue;
 	}
 //cout << "cat: " << c.FullLabel() << " proc: " << p.Name() << " sys: " << sys.Label() << endl;      
@@ -979,21 +989,36 @@ void FitConfiguration::AddShapeSysAsNorm(const Systematic& sys, ch::CombineHarve
        err =1. + (up-dn)/(up+dn);
 //     cout << "2 err: " << err << endl;
       	string label = "norm_"+sys.Label();
-//	std::cout<<"label: "<<label<<"\n";
+	std::cout<<"label: "<<label<<"\n";
+//
 	if(name != "")
 		label = "norm_"+name;
 		
 	if(scale > 0.)
 		err *= scale;
 	if(err > 0.){
-//	  std::cout<<"err > 0 adding systematic\n";
-      cb.cp().process(VS().a(p.Name())).bin(VS().a(c.FullLabel()))
-	.AddSyst(cb, label, "lnN", SystMap<>::init(err));
+	 // std::cout<<"err > 0 adding systematic\n";
+//	std::cout<<"pname "<<p.Name()<<" bin "<<c.FullLabel()<<"err "<<err <<"\n";
+//	std::cout<<"trimming name";
+//	std::string testName = "TChiWZ_";
+	if(ptype == 0){
+		cb.cp().process(VS().a(p.Name())).bin(VS().a(c.FullLabel()))
+		.AddSyst(cb, label, "lnN", SystMap<>::init(err));
 	}
+	if(ptype == 1){
+		//tokenize signal name for data card association
+		std::stringstream iss(p.Name());
+		std::string token;
+		std::getline(iss,token,'_');
+		token = token+"_";
+		cb.cp().process(VS().a(token)).bin(VS().a(c.FullLabel()))
+		.AddSyst(cb, label, "lnN", SystMap<>::init(err));
+	}
+	
 
-    }
-  }
-  
+    }//if err > 0
+  }//end cat loop
+ }//end proc loop 
   cb.SetFlag("filters-use-regex", false);
 }
 

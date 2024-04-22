@@ -24,6 +24,7 @@ public:
   Process(const string& title, ProcessType type);
   Process(const Process& proc); // shallow copy
 
+ 
   const Process& operator = (const Process&); // shallow copy
   
   virtual ~Process();
