@@ -1011,6 +1011,7 @@ void FitConfiguration::AddShapeSysAsNorm(const Systematic& sys, ch::CombineHarve
 		std::string token;
 		std::getline(iss,token,'_');
 		token = token+"_";
+		label = token+label;
 		cb.cp().process(VS().a(token)).bin(VS().a(c.FullLabel()))
 		.AddSyst(cb, label, "lnN", SystMap<>::init(err));
 	}
