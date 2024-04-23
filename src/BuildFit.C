@@ -608,8 +608,8 @@ else cout << "Nominal signal cross section: " << xsec_norm << endl;
 	    //apply these to signal, but not bkg because those will have year dependent labels added at bpog step
 	    CONFIG.AddShapeSysAsNorm(sys,cb,FIT,signals,sys.Label(), 1., kSig);
 	}
-	    //make separate sytematic for  bkg, but not genMET
-	    if( sys.Label() != "METUncer_GenMET")
+	    //make separate sytematic for  bkg, but not genMET. also reject correlated systematic for JES JER MET
+	    if( sys.Label() != "METUncer_GenMET" && sys.Label() != "JESUncer_Total" && sys.Label() != "JERUncer_Total" && sys.Label() != "METUncer_UnClust")
 	    CONFIG.AddShapeSysAsNorm(sys,cb,FIT,backgrounds,sys.Label(),1.,kBkg);
 	    
 		
