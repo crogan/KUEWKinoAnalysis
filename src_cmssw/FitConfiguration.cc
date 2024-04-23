@@ -48,8 +48,8 @@ void FitConfiguration::AddCommonSys(ch::CombineHarvester& cb, ProcessList& proce
   cb.SetFlag("filters-use-regex", true);
 
   // signal xsec uncertainty
-  cb.cp().signals()
-    .AddSyst(cb, "sig_xsec", "lnN", SystMap<>::init(1.05));
+//  cb.cp().signals()
+//    .AddSyst(cb, "sig_xsec", "lnN", SystMap<>::init(1.05));
   
   cb.SetFlag("filters-use-regex", false);
 }
