@@ -98,6 +98,7 @@ TH1D* checkForNominal( TDirectoryFile* tdir, std::string hname, std::pair<std::s
 	//if( tdir->Get( hname.c_str()) ){
 	if( tdir->FindKey( hname.c_str()) ){
 		h = (TH1D*) tdir->Get( hname.c_str() );
+	//	std::cout<<"found nominal\n";
 		return h;
 	}
 	else{
@@ -109,7 +110,7 @@ TH1D* checkForNominal( TDirectoryFile* tdir, std::string hname, std::pair<std::s
 			h = (TH1D*) tdir->Get( (hname+sys_string_pair.second).c_str() );
 		}
 		else{
-			std::cout<<"Can not find a hist!\n";
+	//		std::cout<<"Can not find a hist!\n";
 		}
 		h = (TH1D*) h->Clone();
 		h->SetTitle( hname.c_str() );
@@ -120,6 +121,44 @@ TH1D* checkForNominal( TDirectoryFile* tdir, std::string hname, std::pair<std::s
 		}
 		return h;
 	}
+
+}
+//check if histogram exists (variation specifically, the nominal check is for the non primary sets
+TH1D* checkForHist( TDirectoryFile* tdir, std::string hname, std::string sys_string, std::string other_sys ){
+	TH1D* h;
+	int nbinsx;
+	 if( tdir->FindKey( (hname+sys_string).c_str()) ){
+                         h = (TH1D*) tdir->Get( (hname+sys_string).c_str() );
+                	 return h;
+	}
+	else if(tdir->FindKey( (hname).c_str())){
+                
+                
+         //               std::cout<<"Can not find a hist!\n";
+                
+		h = (TH1D*) tdir->Get( hname.c_str());
+                h = (TH1D*) h->Clone();
+                h->SetTitle( (hname+sys_string).c_str() );
+                h->SetName( (hname+sys_string).c_str() );
+                nbinsx = h->GetNbinsX();
+                for(int i=1; i<=nbinsx; i++){
+                        h->SetBinContent(i,1e-8);
+                }
+                return h;
+	}
+	else if(tdir->FindKey( (hname+other_sys).c_str())){
+		 h = (TH1D*) tdir->Get( (hname+other_sys).c_str());
+                h = (TH1D*) h->Clone();
+                h->SetTitle( (hname+sys_string).c_str() );
+                h->SetName( (hname+sys_string).c_str() );
+                nbinsx = h->GetNbinsX();
+                for(int i=1; i<=nbinsx; i++){
+                        h->SetBinContent(i,1e-8);
+                }
+                return h;
+	}
+	//std::cout<<"Can not find a hist!\n";
+	return NULL;
 
 }
 void createPogVariations( TDirectoryFile* f_primary, TDirectoryFile* f_secondary1, TDirectoryFile* f_secondary2, 
@@ -153,17 +192,21 @@ void createPogVariations( TDirectoryFile* f_primary, TDirectoryFile* f_secondary
 	//CASE1 all three processes exist
 		if( is_in_primary && is_in_secondary1 && is_in_secondary2 ){
 			//do first then second
-			//TH1D* bdn = (TH1D*) f_primary->Get( (proc+sys_string_pair.first).c_str() );
-			//TH1D* bup = (TH1D*) f_primary->Get( (proc+sys_string_pair.second).c_str() );
-			TH1D* bdn = checkForNominal( f_primary, proc, sys_string_pair );
-                        TH1D* bup = checkForNominal( f_primary, proc, sys_string_pair );
+		//	TH1D* bdn = (TH1D*) f_primary->Get( (proc+sys_string_pair.first).c_str() );
+		//	TH1D* bup = (TH1D*) f_primary->Get( (proc+sys_string_pair.second).c_str() );
+			//TH1D* bdn = checkForNominal( f_primary, proc, sys_string_pair );
+                       // TH1D* bup = checkForNominal( f_primary, proc, sys_string_pair );
+		//	TH1D* bdn = checkForNominal( f_primary, proc
+			TH1D* bdn = checkForHist( f_primary, proc, sys_string_pair.first, sys_string_pair.second);
+			TH1D* bup = checkForHist( f_primary, proc, sys_string_pair.second, sys_string_pair.first);
+			
 
-//			std::cout<<" getting: "<< proc+sys_string_pair.first<<"\n";
-//			std::cout<<" newdn name "<<bdn->GetName()<<"\n";
+	//		std::cout<<" getting: "<< proc+sys_string_pair.first<<"\n";
+	//		std::cout<<" newdn name "<<bdn->GetName()<<"\n";
 
 			TH1D* newdn = (TH1D*) bdn->Clone();
 			TH1D* newup = (TH1D*) bup->Clone();
-//			std::cout<<" newdn name "<<bdn->GetName()<<"\n";
+	//		std::cout<<" newdn name "<<bdn->GetName()<<"\n";
 			//get the other years
 			//TH1D* sec1 = (TH1D*) f_secondary1->Get( proc.c_str() );
 			//TH1D* sec2 = (TH1D*) f_secondary2->Get( proc.c_str() );
@@ -194,10 +237,12 @@ void createPogVariations( TDirectoryFile* f_primary, TDirectoryFile* f_secondary
 		}//end case 1
 	//CASE2 exists in primary but not one or both secondaries .. this is a more general implementation of case 1
 		if( is_in_primary && !(is_in_secondary1 && is_in_secondary2) ){
-			//TH1D* bdn = (TH1D*) f_primary->Get( (proc+sys_string_pair.first).c_str() );
-                        //TH1D* bup = (TH1D*) f_primary->Get( (proc+sys_string_pair.second).c_str() );
-			TH1D* bdn = checkForNominal( f_primary, proc, sys_string_pair );
-                        TH1D* bup = checkForNominal( f_primary, proc, sys_string_pair );
+		//	TH1D* bdn = (TH1D*) f_primary->Get( (proc+sys_string_pair.first).c_str() );
+                  //      TH1D* bup = (TH1D*) f_primary->Get( (proc+sys_string_pair.second).c_str() );
+			//TH1D* bdn = checkForNominal( f_primary, proc, sys_string_pair );
+                        //TH1D* bup = checkForNominal( f_primary, proc, sys_string_pair );
+                        TH1D* bdn = checkForHist( f_primary, proc, sys_string_pair.first, sys_string_pair.second);
+                        TH1D* bup = checkForHist( f_primary, proc, sys_string_pair.second, sys_string_pair.first);
 
 			TH1D* newdn = (TH1D*) bdn->Clone();
                         TH1D* newup = (TH1D*) bup->Clone();
