@@ -94,7 +94,7 @@ def get_file_list_glob(directory, pattern="*.root"):
 # get list of ROOT files on EOS
 # - if pattern is set, require that pattern is in base name
 def get_eos_file_list(path, pattern="", eosurl="root://cmseos.fnal.gov"):
-    debug = False
+    debug = True
     output = [] 
     with eosls(path, "", eosurl) as files:
         for f in files:
@@ -121,10 +121,16 @@ def get_eos_file_list(path, pattern="", eosurl="root://cmseos.fnal.gov"):
 
 # eosls command using xrdfs
 def eosls(path, option="", eosurl="root://cmseos.fnal.gov"):
-    return os.popen("xrdfs %s ls %s %s" % (eosurl, option, path))
+    debug = True
+    command = "xrdfs %s ls %s %s" % (eosurl, option, path)
+    if debug:
+        print(command)
+    return os.popen(command)
 
 # eosrm command using xrdfs
 def eosrm(path, option="", eosurl="root://cmseos.fnal.gov"):
-    return os.popen("xrdfs %s rm %s %s" % (eosurl, option, path))
-
-
+    debug = True
+    command = "xrdfs %s rm %s %s" % (eosurl, option, path)
+    if debug:
+        print(command)
+    return os.popen(command)
