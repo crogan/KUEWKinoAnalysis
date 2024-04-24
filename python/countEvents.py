@@ -205,6 +205,7 @@ def run():
     parser.add_argument("--directory",  "-d", default="",                               help="directory containing ROOT files (required)")
     parser.add_argument("--pattern",    "-p", default="",                               help="pattern for root file names (optional)")
     parser.add_argument("--csv",        "-c", default="",                               help="output csv file name (optional)")
+    parser.add_argument("--year",       "-y", default="",                               help="year of data taking (optional)")
     parser.add_argument("--sms",        "-s", default = False,  action = "store_true",  help="run over signal sample (optional)")
     parser.add_argument("--eos",        "-e", default = False,  action = "store_true",  help="run over ROOT files on EOS")
     parser.add_argument("--verbose",    "-v", default = False,  action = "store_true",  help="verbose flag to print more things")
@@ -213,19 +214,29 @@ def run():
     directory   = options.directory
     pattern     = options.pattern
     csv         = options.csv
+    year        = options.year
     sms         = options.sms
     eos         = options.eos
     verbose     = options.verbose
 
-    # json file for SMS to map sample ROOT files to analysis trees
-    analysis_tree_file = "json/EventCount/AnalysisTrees_2018_SMS.json"
+    # valid years of data taking
+    valid_years = ["2016", "2017", "2018"]
 
-    # check that directory is set
+    # Check that the directory is set.
     if not directory:
         print(Fore.RED + "ERROR: 'directory' is not set. Please provide a directory using the -d option." + Fore.RESET)
         return
     
+    # json file for SMS to map sample ROOT files to analysis trees
+    analysis_tree_file = ""
+    
     if sms:
+        # Check that the user entered a valid year.
+        if year not in valid_years:
+            print(Fore.RED + "ERROR: The year '{0}' is not valid. Please provide a valid year {1} using the -y option.".format(year, valid_years) + Fore.RESET)
+            return
+        # Assign analysis_tree_file based on the year.
+        analysis_tree_file = "json/EventCount/AnalysisTrees_{0}_SMS.json".format(year)
         print(Fore.GREEN + "Using the analysis tree file '{0}'.".format(analysis_tree_file) + Fore.RESET)
 
     if sms:
