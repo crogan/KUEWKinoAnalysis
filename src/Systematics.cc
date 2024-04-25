@@ -333,6 +333,19 @@ Systematics SystematicsTool::GetConvertedSystematics() const {
   list += "METUncer_UnClust";
   list += "METUncer_GenMET";
 
+  list += "JESUncer16_Total";
+  list += "JERUncer16_Total";
+  list += "METUncer16_UnClust";
+   
+  list += "JESUncer17_Total";
+  list += "JERUncer17_Total";
+  list += "METUncer17_UnClust";
+
+ list += "JESUncer18_Total";
+  list += "JERUncer18_Total";
+  list += "METUncer18_UnClust";
+
+
 return list;
 }
 

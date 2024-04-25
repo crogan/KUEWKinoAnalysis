@@ -924,8 +924,8 @@ void FitConfiguration::AddSJetNormSys(const string& label, VS& procs, ch::Combin
 void FitConfiguration::AddShapeSysAsNorm(const Systematic& sys, ch::CombineHarvester& cb, FitReader& FIT, ProcessList& plist, std::string name, double scale, ProcessType ptype){
   
   cb.SetFlag("filters-use-regex", true);
-
- // ProcessList processes = FIT.GetProcesses();
+   //std::cout<<"in shape to norm\n";
+  // ProcessList processes = FIT.GetProcesses();
   ProcessList processes = plist;
   //processes = processes.Filter(kBkg);
   //processes = processes.Filter(procSet);
@@ -954,7 +954,7 @@ void FitConfiguration::AddShapeSysAsNorm(const Systematic& sys, ch::CombineHarve
     
     if(!FIT.HasSystematic(p, sys))
     {
-      std::cout<<"Has continue\n";
+     // std::cout<<"Has continue\n";
       continue;
     }
 
@@ -971,7 +971,7 @@ void FitConfiguration::AddShapeSysAsNorm(const Systematic& sys, ch::CombineHarve
       double nom = FIT.Integral(c, p);
 //cout << "nom: " << nom << endl;
       if(nom <= 0.){
-	std::cout<<"nom <=0 continue\n";
+//	std::cout<<"nom <=0 continue\n";
 	 continue;
 	}
 //cout << "cat: " << c.FullLabel() << " proc: " << p.Name() << " sys: " << sys.Label() << endl;      
@@ -980,7 +980,7 @@ void FitConfiguration::AddShapeSysAsNorm(const Systematic& sys, ch::CombineHarve
  double dn  = FIT.Integral(c, p, sys.Down());
 //cout << "down: " << dn << endl;     
       double err = up - dn;
-//     cout << "up: " << up << " down: " << dn << " err: " << err << endl; 
+ //    cout << "up: " << up << " down: " << dn << " err: " << err << endl; 
 //      if(fabs(err) < fabs(up-nom)) err = up - nom;
 //      if(fabs(err) < fabs(nom-dn)) err = nom - dn;
 
@@ -989,7 +989,7 @@ void FitConfiguration::AddShapeSysAsNorm(const Systematic& sys, ch::CombineHarve
        err =1. + (up-dn)/(up+dn);
 //     cout << "2 err: " << err << endl;
       	string label = "norm_"+sys.Label();
-	std::cout<<"label: "<<label<<"\n";
+//	std::cout<<"label: "<<label<<"\n";
 //
 	if(name != "")
 		label = "norm_"+name;
@@ -997,7 +997,7 @@ void FitConfiguration::AddShapeSysAsNorm(const Systematic& sys, ch::CombineHarve
 	if(scale > 0.)
 		err *= scale;
 	if(err > 0.){
-	 // std::cout<<"err > 0 adding systematic\n";
+//	 std::cout<<"err > 0 adding systematic\n";
 //	std::cout<<"pname "<<p.Name()<<" bin "<<c.FullLabel()<<"err "<<err <<"\n";
 //	std::cout<<"trimming name";
 //	std::string testName = "TChiWZ_";
