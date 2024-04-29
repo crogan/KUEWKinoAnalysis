@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
 import os, sys, commands, time
+from colorama import Fore, Back, Style
 
 # Example submission: 
 #  python scripts/condor_submit_nano_connect_ntuples.py -split 10 -list samples/NANO/Lists/Fall17_102X.list --sys --slim --csv 
@@ -579,7 +580,7 @@ if __name__ == "__main__":
     print "----------------------------"
 
     if DRY_RUN or COUNT:
-        print "No jobs were submitted."
+        print("No jobs were submitted.")
     else:
-        print "Congrats... your jobs were submitted!"
+        print(Fore.GREEN + "Congrats... your jobs were submitted!" + Fore.RESET)
 
