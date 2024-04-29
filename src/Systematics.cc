@@ -333,14 +333,20 @@ Systematics SystematicsTool::GetConvertedSystematics() const {
   list += "METUncer_UnClust";
   list += "METUncer_GenMET";
 
+  list += "BTAGHF16_SF";
+  list += "BTAGLF16_SF"; 
   list += "JESUncer16_Total";
   list += "JERUncer16_Total";
   list += "METUncer16_UnClust";
    
+  list += "BTAGHF17_SF";
+  list += "BTAGLF17_SF";
   list += "JESUncer17_Total";
   list += "JERUncer17_Total";
   list += "METUncer17_UnClust";
 
+ list += "BTAGHF18_SF";
+  list += "BTAGLF18_SF";
  list += "JESUncer18_Total";
   list += "JERUncer18_Total";
   list += "METUncer18_UnClust";
