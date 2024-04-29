@@ -48,7 +48,7 @@ def writeCSV(output_file, data):
 
 # get chain from list of ROOT files
 def getChain(input_files, num_files):
-    verbose = True
+    verbose = False
     
     # use num_files as max if it is not negative
     if num_files >= 0:
@@ -94,7 +94,7 @@ def get_file_list_glob(directory, pattern="*.root"):
 # get list of ROOT files on EOS
 # - if pattern is set, require that pattern is in base name
 def get_eos_file_list(path, pattern="", eosurl="root://cmseos.fnal.gov"):
-    debug = True
+    debug = False
     output = [] 
     with eosls(path, "", eosurl) as files:
         for f in files:
