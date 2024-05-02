@@ -94,6 +94,8 @@ string AnalysisBase<Base>::GetEntry(int entry){
   Base::ClearEvent();
   Base::fChain->GetEntry(entry);
   m_SampleIndex = GetSampleIndex();
+
+  if(m_SampleIndex == -1) return "-1";//stop ntuple hack - pass on the -1 to skip the event in reduced base
   
   return m_IndexToSample[m_SampleIndex];
 }
@@ -1244,6 +1246,10 @@ int AnalysisBase<SUSYNANOBase>::GetSampleIndex(){
 	  MP = mass;
     }
   }
+ /* stop ntuple hack */
+ // Reject sparticle masses we dont need to reduce grid size
+ if( MP > 1000) return -1;
+ if( (MP-MC) > 300) return -1; 
   
   int hash = 100000*MP + MC;
   if(m_HashToIndex.count(hash) == 0){

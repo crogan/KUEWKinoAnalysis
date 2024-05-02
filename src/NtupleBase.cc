@@ -66,6 +66,7 @@ void NtupleBase<Base>::WriteNtuple(const string& filename, int ichunk, int nchun
       cout << " event = " << i << " : [" << N0 << " , " << N1 << "]" << endl;
     
     sample = AnalysisBase<Base>::GetEntry(i);
+    if(sample == "-1" ) continue; //stop hack, if we get a -1 ignore the event and dont make an SMS tree
     
     if(m_Label2Tree.count(sample) == 0){
       m_Label2Tree[sample] = std::vector<TTree*>();
