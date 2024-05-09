@@ -610,11 +610,15 @@ else cout << "Nominal signal cross section: " << xsec_norm << endl;
 	    CONFIG.AddShapeSysAsNorm(sys,cb,FIT,signals,sys.Label(), 1., kSig);
 	}
 	    //make separate sytematic for  bkg, but not genMET. also reject correlated systematic for JES JER MET
-	    if( sys.Label() != "METUncer_GenMET" && sys.Label() != "JESUncer_Total" && sys.Label() != "JERUncer_Total" && sys.Label() != "METUncer_UnClust")
-	    CONFIG.AddShapeSysAsNorm(sys,cb,FIT,backgrounds,sys.Label(),1.,kBkg);
+	    if( sys.Label() != "METUncer_GenMET" && sys.Label() != "JESUncer_Total" && sys.Label() != "JERUncer_Total" && sys.Label() != "METUncer_UnClust"){
+	    	if( (sys.Label().find("16") != std::string::npos) || (sys.Label().find("17") != std::string::npos) || (sys.Label().find("18") != std::string::npos) ){
+			std::cout<<"found year split special systematic "<< sys.Label() <<"\n";
+		  CONFIG.AddCombinedShapeSysAsNorm(sys,cb,FIT,backgrounds,sys.Label(),1.,kBkg);
+		}else{
+		  CONFIG.AddShapeSysAsNorm(sys,cb,FIT,backgrounds,sys.Label(),1.,kBkg);
 	    
-		
-
+		}
+	    }
 	continue;
       }
       ProcessList proc_sys;

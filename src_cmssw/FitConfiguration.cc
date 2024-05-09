@@ -919,6 +919,104 @@ void FitConfiguration::AddSJetNormSys(const string& label, VS& procs, ch::Combin
    
   cb.SetFlag("filters-use-regex", false);
 }
+void FitConfiguration::AddCombinedShapeSysAsNorm(const Systematic& sys, ch::CombineHarvester& cb, FitReader& FIT, ProcessList& plist, std::string name, double scale, ProcessType ptype){
+  cb.SetFlag("filters-use-regex", true);
+  
+  ProcessList processes = plist;
+  int Nproc = processes.GetN();
+  ProcessList validProcesses;
+
+  for(int ip = 0; ip < Nproc; ip++){
+    Process p = processes[ip]; 
+    if(FIT.HasSystematic(p, sys))
+    {
+	validProcesses += p;
+    }
+  }
+  int NvalidProc = validProcesses.GetN();
+
+   string label = "norm_"+sys.Label();
+//      std::cout<<"label: "<<label<<"\n";
+//
+    if(name != "")
+      label = "norm_"+name;
+
+
+	
+  CategoryList categories = FIT.GetCategories();
+  VS channels = FIT.GetChannels();
+  int Ncat  = categories.GetN();
+
+  // prepare channels/categories
+  map<string,CategoryList> chanMap;
+  for(auto c : channels)
+    chanMap[c] = categories.Filter(c);
+  categories.Clear();
+  for(auto c : channels)
+    categories += chanMap[c];
+
+  std::vector<double> nomInt{};
+  std::vector<double> upInt{};
+  std::vector<double> dnInt{};
+  double nomInt_tot=0.; 
+  double upInt_tot=0.;
+  double dnInt_tot=0.;
+  //loop over categories, aggregate process integrals present in that category
+  for(int ic = 0; ic < Ncat; ic++){
+      Category c = categories[ic];
+      for(int ip = 0; ip < NvalidProc; ip++){
+	 Process p =validProcesses[ip];
+
+  
+      if(!FIT.IsThere(c, p) ||
+         !FIT.IsThere(c, p, sys)){
+//      std::cout<<"is there continue\n";
+        continue;
+
+        }
+
+      double nom = FIT.Integral(c, p);
+	//cout << "nom: " << nom << endl;
+         if(nom <= 0.){
+	//      std::cout<<"nom <=0 continue\n";
+         continue;
+        }
+        double up  = FIT.Integral(c, p, sys.Up());
+	//cout << "up: " << up << endl;     
+	 double dn  = FIT.Integral(c, p, sys.Down());
+	//cout << "down: " << dn << endl;
+	nomInt.push_back(nom);
+	upInt.push_back(up);
+	dnInt.push_back(dn);
+	}//end proc loop
+
+	//add up all integrals to compute err
+	for(int i=0; i<nomInt.size(); i++){
+		nomInt_tot += nomInt[i];
+		upInt_tot += upInt[i];
+		dnInt_tot += dnInt[i];
+	}
+	double err = 1. + (upInt_tot-dnInt_tot)/(upInt_tot+dnInt_tot);
+	std::cout<<"Cat combined Integrals (nom,up,dn,err) "<< nomInt_tot <<" "<< upInt_tot <<" "<< dnInt_tot<<" "<< err <<"\n";
+	//add the nuisance for this cat
+	if( err> 0.01 && err<1.99 ){
+		cb.cp().backgrounds().bin(VS().a(c.FullLabel())).AddSyst(cb, label, "lnN", SystMap<>::init(err));
+	}
+	else{
+		std::cout<<"bad err value continue\n";
+	}
+	//reset parameters for next category
+	nomInt.clear();
+	upInt.clear();
+	dnInt.clear();
+	nomInt_tot=0.;
+	upInt_tot=0.;
+	dnInt_tot=0.;
+
+  }//end cat loop
+
+  cb.SetFlag("filters-use-regex", false);
+}
 
 //void FitConfiguration::AddShapeSysAsNorm(const Systematic& sys, ch::CombineHarvester& cb, FitReader& FIT, std::string name, double scale, ProcessType procSet ){
 void FitConfiguration::AddShapeSysAsNorm(const Systematic& sys, ch::CombineHarvester& cb, FitReader& FIT, ProcessList& plist, std::string name, double scale, ProcessType ptype){
@@ -987,6 +1085,12 @@ void FitConfiguration::AddShapeSysAsNorm(const Systematic& sys, ch::CombineHarve
 //     cout << "1 err: " << err << endl;
       //err = 1. + err/2./nom;
        err =1. + (up-dn)/(up+dn);
+
+	//safety check on very small or very large err
+	if( err < 0.01  || err > 1.99 ){
+		std::cout<<"continue err bad "<<err<<"\n";
+		continue;
+	} 
 //     cout << "2 err: " << err << endl;
       	string label = "norm_"+sys.Label();
 //	std::cout<<"label: "<<label<<"\n";
