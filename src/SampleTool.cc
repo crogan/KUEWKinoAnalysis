@@ -568,11 +568,18 @@ void SampleTool::InitProcMap(){
     InitSMS("TChiWZ", m_Path+"Summer16_102X_SMS/SMS-TChiWZ_dM-60to90_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root",1.,true);
     InitSMS("HinoN2C1", m_Path+"Summer16_102X_SMS/TChiWZ_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 0.2352, true);
     InitSMS("HinoN2C1",  m_Path+"Summer16_102X_SMS/SMS-TChiWZ_dM-60to90_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root",0.2352,true);
+
+    InitSMS("WZhighdM", m_Path+"Summer16_102X_SMS/SMS-TChiWZ_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root",1.,true);
+    InitSMS("HinohighdM", m_Path+"Summer16_102X_SMS/SMS-TChiWZ_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root",0.2352,true);
+
     ////InitSMS("TChiWZ", m_Path+"Summer16_102X_SMS/SMS-TChiWZ_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 1., true);
     //
     ////InitSMS("TChipmWW", m_Path+"Summer16_102X_SMS/SMS-TChipmWW_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 1., true);
     InitSMS("TChipmWW", m_Path+"Summer16_102X_SMS/SMS-TChipmWW_dM-3to50_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 1., true);
     InitSMS("TChipmWW", m_Path+"Summer16_102X_SMS/SMS-TChipmWW_dM-60to90_genHT-160_genMET-80_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root",1.,true);    
+
+    InitSMS("WWhighdM", m_Path+"Summer16_102X_SMS/SMS-TChipmWW_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root",1.,true);
+
 ////InitSMS("TChipmWW", m_Path+"Summer16_102X_SMS/SMS-TChipmWW_WWTo2LNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 1., true, true);
 
     ////InitSMS("TSlepSlep", m_Path+"Summer16_102X_SMS/SMS-TSlepSlep_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_102X.root", 2.77, true);
@@ -838,11 +845,24 @@ void SampleTool::InitProcMap(){
     InitSMS("TChiWZ", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_dM-60to90_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root",1.,true);
     InitSMS("HinoN2C1", m_Path+"Fall17_102X_SMS/TChiWZ_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 0.2352, true);
     InitSMS("HinoN2C1", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_dM-60to90_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root",0.2352,true);
+
+    InitSMS("WZhighdM", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X_1.root",1.,true);
+    InitSMS("WZhighdM", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X_2.root",1.,true);
+    InitSMS("WZhighdM", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X_3.root",1.,true);
+
+    InitSMS("HinohighdM", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X_1.root",0.2352,true);
+    InitSMS("HinohighdM", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X_2.root",0.2352,true);
+    InitSMS("HinohighdM", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X_3.root",0.2352,true);
+
+
     //
     //InitSMS("TChipmWW", m_Path+"Fall17_102X_SMS/SMS-TChipmWW_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
     //InitSMS("TChipmWW", m_Path+"Fall17_102X_SMS/SMS-TChipmWW_WWTo2LNu_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true, true);
     InitSMS("TChipmWW", m_Path+"Fall17_102X_SMS/SMS-TChipmWW_dM-3to50_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
-    InitSMS("TChipmWW", m_Path+"Fall17_102X_SMS/SMS-TChipmWW_dM-60to90_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);
+    InitSMS("TChipmWW", m_Path+"Fall17_102X_SMS/SMS-TChipmWW_dM-60to90_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 1., true);	
+    
+    InitSMS("WWhighdM", m_Path+"Fall17_102X_SMS/SMS-TChipmWW_TuneCP2_13TeV-madgraphMLM-pythia8_1.root",1.,true);
+    InitSMS("WWhighdM", m_Path+"Fall17_102X_SMS/SMS-TChipmWW_TuneCP2_13TeV-madgraphMLM-pythia8_2.root",1.,true);
 
     ////InitSMS("TSlepSlep", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Fall17_102X.root", 2.77, true);
     ////InitSMS("TSlepSlep", m_Path+"Fall17_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Fall17_102X.root", 2.77, true);
@@ -1120,6 +1140,29 @@ void SampleTool::InitProcMap(){
     InitSMS("HinoN2C1",m_Path+"Autumn18_102X_SMS/TChiWZ_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 0.2352, true);
     InitSMS("HinoN2C1", m_Path+"Autumn18_102X_SMS/SMS-TChiWZ_dM-60to90_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root",0.2352,true);
 
+    InitSMS("WZhighdM", m_Path+"Autumn18_102X_SMS/SMS-TChiWZ_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X_0.root",1.,true);
+    InitSMS("WZhighdM", m_Path+"Autumn18_102X_SMS/SMS-TChiWZ_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X_1.root",1.,true);
+    InitSMS("WZhighdM", m_Path+"Autumn18_102X_SMS/SMS-TChiWZ_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X_2.root",1.,true);
+    InitSMS("WZhighdM", m_Path+"Autumn18_102X_SMS/SMS-TChiWZ_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X_3.root",1.,true);
+    InitSMS("WZhighdM", m_Path+"Autumn18_102X_SMS/SMS-TChiWZ_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X_4.root",1.,true);
+    InitSMS("WZhighdM", m_Path+"Autumn18_102X_SMS/SMS-TChiWZ_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X_5.root",1.,true);
+    InitSMS("WZhighdM", m_Path+"Autumn18_102X_SMS/SMS-TChiWZ_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X_6.root",1.,true);
+    InitSMS("WZhighdM", m_Path+"Autumn18_102X_SMS/SMS-TChiWZ_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X_7.root",1.,true);
+    InitSMS("WZhighdM", m_Path+"Autumn18_102X_SMS/SMS-TChiWZ_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X_8.root",1.,true);
+    InitSMS("WZhighdM", m_Path+"Autumn18_102X_SMS/SMS-TChiWZ_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X_9.root",1.,true);
+ 
+    InitSMS("HinohighdM", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X_0.root",0.2352,true);
+    InitSMS("HinohighdM", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X_1.root",0.2352,true);
+    InitSMS("HinohighdM", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X_2.root",0.2352,true);
+    InitSMS("HinohighdM", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X_3.root",0.2352,true);
+    InitSMS("HinohighdM", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X_4.root",0.2352,true);
+    InitSMS("HinohighdM", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X_5.root",0.2352,true);
+    InitSMS("HinohighdM", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X_6.root",0.2352,true);
+    InitSMS("HinohighdM", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X_7.root",0.2352,true);
+    InitSMS("HinohighdM", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X_8.root",0.2352,true);
+    InitSMS("HinohighdM", m_Path+"Fall17_102X_SMS/SMS-TChiWZ_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X_9.root",0.2352,true);
+
+
    /*
 	//
     ////InitSMS("TChipmWW", m_Path+"Autumn18_102X_SMS/SMS-TChipmWW_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 1., true);
@@ -1127,6 +1170,17 @@ void SampleTool::InitProcMap(){
     InitSMS("TChipmWW", m_Path+"Autumn18_102X_SMS/SMS-TChipmWW_dM-3to50_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 1., true);
     InitSMS("TChipmWW", m_Path+"Autumn18_102X_SMS/SMS-TChipmWW_dM-60to90_genHT-160_genMET-80_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root",1.,true);
     ////InitSMS("TChipmWW", m_Path+"Autumn18_102X_SMS/SMS-TChipmWW_WWTo2LNu_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 1., true, true);
+
+    InitSMS("WWhighdM", m_Path+"Autumn18_102X_SMS/SMS-TChipmWW_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X_0.root",1.,true);
+    InitSMS("WWhighdM", m_Path+"Autumn18_102X_SMS/SMS-TChipmWW_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X_1.root",1.,true);
+    InitSMS("WWhighdM", m_Path+"Autumn18_102X_SMS/SMS-TChipmWW_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X_2.root",1.,true);
+    InitSMS("WWhighdM", m_Path+"Autumn18_102X_SMS/SMS-TChipmWW_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X_3.root",1.,true);
+    InitSMS("WWhighdM", m_Path+"Autumn18_102X_SMS/SMS-TChipmWW_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X_4.root",1.,true);
+    InitSMS("WWhighdM", m_Path+"Autumn18_102X_SMS/SMS-TChipmWW_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X_5.root",1.,true);
+    InitSMS("WWhighdM", m_Path+"Autumn18_102X_SMS/SMS-TChipmWW_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X_6.root",1.,true);
+    InitSMS("WWhighdM", m_Path+"Autumn18_102X_SMS/SMS-TChipmWW_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X_7.root",1.,true);
+    InitSMS("WWhighdM", m_Path+"Autumn18_102X_SMS/SMS-TChipmWW_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X_8.root",1.,true);
+    InitSMS("WWhighdM", m_Path+"Autumn18_102X_SMS/SMS-TChipmWW_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X_9.root",1.,true);
 
     ////InitSMS("TSlepSlep", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X.root", 2.77, true);
     ////InitSMS("TSlepSlep", m_Path+"Autumn18_102X_SMS/SMS-TSlepSlep_TuneCP2_13TeV-madgraphMLM-pythia8_ext_Autumn18_102X.root", 2.77, true);
