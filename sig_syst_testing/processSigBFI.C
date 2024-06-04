@@ -142,6 +142,7 @@ void createHistograms( TDirectoryFile* dir, TFile* fout, std::string sigName, st
 		TH1D *hvar;
                 hvar =  (TH1D*) dir->Get(varHist.c_str());
 		TH1D* newUp = (TH1D*) hvar->Clone();
+		if(newUp == NULL) return;
         //        newUp->SetName( (sigName+"_METUncer_GenMETUp_"+gridPoint).c_str() );
         //        newUp->SetTitle( ("h1D_"+sigName+"_METUncer_GenMETUp_"+gridPoint+"_"+dirName).c_str() );
 	        newUp->SetName( (sigName+"_"+gridPoint+"_METUncer_GenMETUp").c_str() );
@@ -207,7 +208,13 @@ void createGenMETVariations( TDirectoryFile* dir, TFile* fout  ){
 		 iss >> sigNumber;
 		 nomNumberSet.insert(sigNumber);
     	}
-	
+	//no nominal bugs and only 1 genmet histogram fix
+	if(sigName == ""){
+	for(auto& str : genMET_sigs){
+		std::istringstream iss(str);
+                std::getline(iss, sigName, '_');
+	}
+	}
 	
 	//std::cout<<"\n Found this GenMET set \n";
 	 for (auto& str : genMET_sigs){
