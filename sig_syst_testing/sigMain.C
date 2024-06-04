@@ -49,6 +49,8 @@ int main(int argc, char *argv[] ){
          while((key=(TKey*)nextkey())){ //category loop///////////////////
                 testCat = key->GetName();
 
+	//testcat debug
+	// testCat ="Ch1L_elpm_bron_ge4jS_ge1jISR_PTISR0_gamT0";
         //open and close all inputs and outputs each iteration to reduce time complexity significantly
         std::cout<<"Opening ROOT File\n";
         f = new TFile(fpath.c_str(), "UPDATE");
@@ -65,6 +67,7 @@ int main(int argc, char *argv[] ){
 
 	f->Close();
 	delete f;
+	//break;//debug  break
 	}
 	
 	/*std::vector<std::string> subproc_list{"JESUncer_TotalUp", "JESUncer_TotalDown", "JERUncer_TotalUp", "JERUncer_TotalDown", "METUncer_UnClustUp", "METUncer_UnClustDown", "METUncer_GenMETUp", "METUncer_GenMETDown" };
