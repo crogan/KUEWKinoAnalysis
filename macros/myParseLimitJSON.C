@@ -770,7 +770,7 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
   string ylabel = "m_{P} - M_{ #tilde{#chi}^{0}_{1}} [GeV]";
 
   if(ptype == kTChiWZ){
-    xlabel = "m_{#tilde{#chi}^{#pm}_{1}} [GeV]";
+    xlabel = "m_{(#tilde{#chi}^{0}_{2}, #tilde{#chi}^{#pm}_{1} )} [GeV]";
     ylabel = "m_{#tilde{#chi}^{#pm}_{1}} - m_{#tilde{#chi}^{0}_{1}} [GeV]";
   }
   if(ptype == kT2tt || ptype == kT2bW){
@@ -871,15 +871,17 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
   l.SetTextAlign(11);
   l.SetTextSize(0.04);
   l.SetTextFont(42);
-  l.DrawLatex(0.16, 0.95,"#bf{#it{CMS}} work-in-progress");
+  l.DrawLatex(0.16, 0.95,"#bf{#it{CMS}}");
   l.SetTextSize(0.05);
 
   // SMS info
   string SMS;
+  string SMS2="";
   if(ptype == kTChiWZ){
-    SMS =  "pp #rightarrow #tilde{#chi}_{2}^{0} #tilde{#chi}_{1}^{#pm}; ";
-    SMS += "#tilde{#chi}_{2}^{0} #rightarrow Z*#tilde{#chi}_{1}^{0}, ";
-    SMS += "#tilde{#chi}_{1}^{#pm} #rightarrow W*#tilde{#chi}_{1}^{0}";
+    SMS =  "pp #rightarrow #tilde{#chi}_{2}^{0} #tilde{#chi}_{1}^{#pm} ";
+    
+    SMS2 = "#tilde{#chi}_{2}^{0} #rightarrow Z*#tilde{#chi}_{1}^{0}, ";
+    SMS2 += "#tilde{#chi}_{1}^{#pm} #rightarrow W*#tilde{#chi}_{1}^{0}";
   }
   if(ptype == kT2tt){
     SMS =  "pp #rightarrow #tilde{t} #tilde{t}; ";
@@ -910,7 +912,7 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
   l.SetTextSize(0.035);
   l.SetTextFont(42);
   l.DrawLatex(0.18, 0.87,SMS.c_str());
-  
+  if(SMS2 != "") l.DrawLatex(0.18,0.85,SMS2.c_str());
   return can;
 }
 

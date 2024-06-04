@@ -1084,7 +1084,14 @@ void FitConfiguration::AddShapeSysAsNorm(const Systematic& sys, ch::CombineHarve
 
 //     cout << "1 err: " << err << endl;
       //err = 1. + err/2./nom;
-       err =1. + (up-dn)/(up+dn);
+      double fractionalError = (up-dn)/(up+dn);
+      //double GenMETscale=1.;
+      //if( sys.Label() == "METUncer_GenMET" ){
+		//std::cout<<"rescaling GenMET from with scale: "<<GenMETscale<<" "<<fractionalError<<" ";
+//		fractionalError = GenMETscale*fractionalError;	
+		//std::cout<<fractionalError<<"\n";
+//	} 
+      err =1. + fractionalError;
 
 	//safety check on very small or very large err
 	if( err < 0.01  || err > 1.99 ){
