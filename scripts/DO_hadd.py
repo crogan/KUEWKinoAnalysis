@@ -72,7 +72,8 @@ def main():
         if redo and target not in os.listdir(IN_DIR):
             continue
 
-        #print target
+        print "Target: %s" % (target)
+        
         #haddcmd = "hadd -f "+OUT_DIR+"/"+target+".root "
         #for i in range(0,10):
             #os.system("mkdir -p "+IN_DIR+"/"+target+"/"+target+"_"+str(i))
