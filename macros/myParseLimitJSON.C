@@ -33,7 +33,7 @@ double popdouble(std::string& line);
 std::string popstring(std::string& line);
 
 enum LimitType { kObs, kExp, kExpUp, kExpDn };
-enum PlotType { kTChiWZ, kT2tt, kT2bW, kT2bb, kTSlSl, kT2cc, kTChiWW};
+enum PlotType { kTChiWZ, kT2tt, kT2bW, kT2bb, kTSlSl, kT2cc, kTChiWW, kHN2C1};
 
 TCanvas* Plot2DHist_MCvMP(const string& can, TH2D* hist, PlotType ptype);
 TCanvas* Plot2DHist_dMvMP(const string& can, TH2D* hist, PlotType ptype);
@@ -501,27 +501,31 @@ void myParseLimitJSON(const string& json, bool inclObs = false, PlotType ptype =
   /////////////
   // dM vs. MP
   /////////////
-  TH2D*   hist_exp_dM = limit_def->Get2DHist_dMvMP("h_exp_dM", kExp);
+ // TH2D*   hist_exp_dM = limit_def->Get2DHist_dMvMP("h_exp_dM", kExp);
+  TH2D*   hist_exp_dM = limit_def->Get2DHist_dMvMP("", kObs);
+  hist_exp_dM->SetStats(false);
   TGraph* gr_exp_dM   = limit_def->Get2DContour_dMvMP(kExp);
   TGraph* gr_exp_dM_up   = limit_def->Get2DContour_dMvMP(kExpUp);
   TGraph* gr_exp_dM_dn   = limit_def->Get2DContour_dMvMP(kExpDn);
   TGraph* gr_exp_dM_obs   = limit_def->Get2DContour_dMvMP(kObs);
   
+  gStyle->SetOptStat(0);
+  gROOT->ForceStyle(); 
   TCanvas* can_dM = Plot2DHist_dMvMP("can_dM", hist_exp_dM, ptype);
   can_dM->cd();
   
-  gr_exp_dM->SetLineColor(7043);
+  gr_exp_dM->SetLineColor(kMagenta+2);
   gr_exp_dM->SetLineWidth(5);
   gr_exp_dM->SetLineStyle(1);
   gr_exp_dM->Draw("same C");
 
   gr_exp_dM_up->SetMarkerColor(kWhite);
-  gr_exp_dM_up->SetLineColor(7043);
+  gr_exp_dM_up->SetLineColor(kMagenta+1);
   gr_exp_dM_up->SetLineWidth(4);
   gr_exp_dM_up->SetLineStyle(7);
   gr_exp_dM_up->Draw("same C");
   gr_exp_dM_dn->SetMarkerColor(kWhite);
-  gr_exp_dM_dn->SetLineColor(7043);
+  gr_exp_dM_dn->SetLineColor(kMagenta+1);
   gr_exp_dM_dn->SetLineWidth(4);
   gr_exp_dM_dn->SetLineStyle(7);
   gr_exp_dM_dn->Draw("same C");
@@ -531,11 +535,58 @@ void myParseLimitJSON(const string& json, bool inclObs = false, PlotType ptype =
   gr_exp_dM_obs->SetLineStyle(1);
   if(inclObs) gr_exp_dM_obs->Draw("same C");
 
+
+  
+
   l.SetTextAlign(12);
   l.SetTextSize(0.035);
   l.SetTextFont(42);
+  double lgap =0.842- 0.83;
+  double expobsgap= 0.83 - 0.78;
+  double xlgap = 0.22-0.18;
+  double xlinetotext= 0.23-0.18;
+  if(ptype == kTChiWZ){
+    double exppos = 0.25;
+     l.DrawLatex(0.23, exppos,"expected #pm 1 #sigma_{expm}");
+  line->SetLineColor(kMagenta+2);
+  line->SetLineWidth(2);
+  line->SetLineStyle(1);
+  line->DrawLineNDC(0.18, exppos, 0.22, exppos);
+  line->SetLineStyle(3);
+  line->DrawLineNDC(0.18, exppos+lgap, 0.22, exppos+lgap);
+  line->DrawLineNDC(0.18, exppos-lgap, 0.22, exppos-lgap);
+
+  l.DrawLatex(0.23, exppos-expobsgap,"observed");
+  line->SetLineColor(kBlack);
+  line->SetLineWidth(2);
+  line->SetLineStyle(1);
+  line->DrawLineNDC(0.18, exppos-expobsgap, 0.22, exppos-expobsgap);
+
+  }
+  else if(ptype == kHN2C1 ){
+	double exppos = 0.76;
+ 	double xpos =0.5;
+
+     l.DrawLatex(xpos+xlinetotext, exppos,"expected #pm 1 #sigma_{expm}");
+  line->SetLineColor(kMagenta+2);
+  line->SetLineWidth(2);
+  line->SetLineStyle(1);
+  line->DrawLineNDC(xpos, exppos, xpos+xlgap, exppos);
+  line->SetLineStyle(3);
+  line->DrawLineNDC(xpos, exppos+lgap, xpos+xlgap, exppos+lgap);
+  line->DrawLineNDC(xpos, exppos-lgap,xpos+xlgap, exppos-lgap);
+
+  l.DrawLatex(xpos+xlinetotext, exppos-expobsgap,"observed");
+  line->SetLineColor(kBlack);
+  line->SetLineWidth(2);
+  line->SetLineStyle(1);
+  line->DrawLineNDC(xpos, exppos-expobsgap, xpos+xlgap, exppos-expobsgap);
+	
+  }
+  else{
+
   l.DrawLatex(0.23, 0.83,"expected #pm 1 #sigma_{expm}");
-  line->SetLineColor(7043);
+  line->SetLineColor(kMagenta+2);
   line->SetLineWidth(2);
   line->SetLineStyle(1);
   line->DrawLineNDC(0.18, 0.83, 0.22, 0.83);
@@ -548,7 +599,7 @@ void myParseLimitJSON(const string& json, bool inclObs = false, PlotType ptype =
   line->SetLineWidth(2);
   line->SetLineStyle(1);
   line->DrawLineNDC(0.18, 0.78, 0.22, 0.78);
- 
+} 
   TFile* out = new TFile(outfile.c_str(),"RECREATE");
   out->WriteTObject(can_MC);
   out->WriteTObject(can_dM);
@@ -769,13 +820,15 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
   string xlabel = "m_{P} [GeV]";
   string ylabel = "m_{P} - M_{ #tilde{#chi}^{0}_{1}} [GeV]";
 
-  if(ptype == kTChiWZ){
+  if(ptype == kTChiWZ || ptype == kHN2C1){
     xlabel = "m_{(#tilde{#chi}^{0}_{2}, #tilde{#chi}^{#pm}_{1} )} [GeV]";
-    ylabel = "m_{#tilde{#chi}^{#pm}_{1}} - m_{#tilde{#chi}^{0}_{1}} [GeV]";
+    //ylabel = "m_{#tilde{#chi}^{#pm}_{1}} - m_{#tilde{#chi}^{0}_{1}} [GeV]";
+    ylabel = "#Delta m(#tilde{#chi}^{#pm}_{1}, #tilde{#chi}^{0}_{1}) [GeV]"; 
   }
   if(ptype == kT2tt || ptype == kT2bW){
     xlabel = "m_{ #tilde{t}} [GeV]";
-    ylabel = "m_{ #tilde{t}} - m_{#tilde{#chi}^{0}_{1}} [GeV]";
+    //ylabel = "m_{ #tilde{t}} - m_{#tilde{#chi}^{0}_{1}} [GeV]";
+    ylabel = "#Delta m(#tilde{t}, #tilde{#chi}^{0}_{1}) [GeV]";
   }
   if(ptype == kT2bb){
     xlabel = "m_{ #tilde{b}} [GeV]";
@@ -787,11 +840,15 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
   }
   if(ptype == kTSlSl){
     xlabel = "m_{ #tilde{#it{l}}} [GeV]";
-    ylabel = "m_{#tilde{#it{l}}} - m_{#tilde{#chi}^{0}_{1}} [GeV]";
+   // ylabel = "m_{#tilde{#it{l}}} - m_{#tilde{#chi}^{0}_{1}} [GeV]";
+   ylabel = "#Delta m( ) [GeV]";
+
  }
   if(ptype == kTChiWW){
     xlabel = "m_{#tilde{#chi}^{#pm}_{1}} [GeV]";
     ylabel = "m_{#tilde{#chi}^{#pm}_{1}} - m_{#tilde{#chi}^{0}_{1}} [GeV]";
+//    ylabel = "#Delta m( ) [GeV]";
+
  }
   
   can->SetLeftMargin(0.15);
@@ -824,7 +881,9 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
     if(ptype == kT2cc)
       xsec = g_Xsec.GetXsec_SMS("T2cc", MP);
     if(ptype == kTChiWW)
-      xsec = g_Xsec.GetXsec_SMS("TChipmWW", MP);   
+      xsec = g_Xsec.GetXsec_SMS("TChipmWW", MP);  
+    if(ptype == kHN2C1)
+      xsec = g_Xsec.GetXsec_SMS("HinoN2C1", MP); 
  
     for(int y = 0; y < Ny; y++){
       if(hist->GetBinContent(x+1,y+1) > 0.){
@@ -853,8 +912,31 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
   hist->GetZaxis()->SetTitleOffset(1.15);
   hist->GetZaxis()->SetLabelFont(42);
   hist->GetZaxis()->SetLabelSize(0.045);
-  hist->GetZaxis()->SetTitle("95% C.L. cross-section U.L. [fb]");
+  //hist->GetZaxis()->SetTitle("95% C.L. cross-section U.L. [fb]");
+  hist->GetZaxis()->SetTitle("95% C.L. #sigma #times BF U.L. [fb]");
+  if(ptype == kTChiWZ){
+	hist->GetXaxis()->SetRangeUser(125.,430.);
+	hist->GetYaxis()->SetRangeUser(3.,90.);
+	hist->SetMaximum(5000.);
+        hist->SetMinimum(50.);
+  }
+  if(ptype == kHN2C1){
+	hist->GetXaxis()->SetRangeUser(120.,275);
+        hist->GetYaxis()->SetRangeUser(3.,90.);
+        hist->SetMaximum(5000.);
+        hist->SetMinimum(50.);
+  }
+  if(ptype == kT2tt){
+	hist->GetXaxis()->SetRangeUser(500.,875.);
+        hist->GetYaxis()->SetRangeUser(10.,80.);
+        hist->SetMaximum(1000.);
+        hist->SetMinimum(1.);
+  }
+
+   
   hist->Draw("COLZ");
+   
+
 
   TLatex l;
   l.SetTextFont(42);
@@ -871,17 +953,27 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
   l.SetTextAlign(11);
   l.SetTextSize(0.04);
   l.SetTextFont(42);
-  l.DrawLatex(0.16, 0.95,"#bf{#it{CMS}}");
+  l.DrawLatex(0.16, 0.95,"#bf{CMS}");
   l.SetTextSize(0.05);
 
   // SMS info
   string SMS;
   string SMS2="";
+  string SMS3="";
   if(ptype == kTChiWZ){
     SMS =  "pp #rightarrow #tilde{#chi}_{2}^{0} #tilde{#chi}_{1}^{#pm} ";
     
-    SMS2 = "#tilde{#chi}_{2}^{0} #rightarrow Z*#tilde{#chi}_{1}^{0}, ";
+    SMS2 = "#tilde{#chi}_{2}^{0} #rightarrow Z*#tilde{#chi}_{1}^{0},  ";
     SMS2 += "#tilde{#chi}_{1}^{#pm} #rightarrow W*#tilde{#chi}_{1}^{0}";
+    SMS3 = "(Wino)";
+  }
+  if(ptype == kHN2C1){
+    SMS =  "pp #rightarrow #tilde{#chi}_{2}^{0} #tilde{#chi}_{1}^{#pm} ";
+
+    SMS2 = "#tilde{#chi}_{2}^{0} #rightarrow Z*#tilde{#chi}_{1}^{0},  ";
+    SMS2 += "#tilde{#chi}_{1}^{#pm} #rightarrow W*#tilde{#chi}_{1}^{0}";
+    SMS3 = "(Higgsino)";
+
   }
   if(ptype == kT2tt){
     SMS =  "pp #rightarrow #tilde{t} #tilde{t}; ";
@@ -911,8 +1003,20 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
 
   l.SetTextSize(0.035);
   l.SetTextFont(42);
-  l.DrawLatex(0.18, 0.87,SMS.c_str());
-  if(SMS2 != "") l.DrawLatex(0.18,0.85,SMS2.c_str());
+  if( ptype == kTChiWZ ){
+	l.DrawLatex(0.18,0.36, SMS.c_str());
+	l.DrawLatex(0.33,0.36, SMS3.c_str());
+	l.DrawLatex(0.18,0.30, SMS2.c_str());
+  }
+  else if( ptype == kHN2C1 ){
+	l.DrawLatex(0.5,0.87, SMS.c_str());
+        l.DrawLatex(0.65,0.87, SMS3.c_str());
+        l.DrawLatex(0.5,0.81, SMS2.c_str());	
+  }
+  else{
+    l.DrawLatex(0.18, 0.87,SMS.c_str());
+  }
+  //if(SMS2 != "") l.DrawLatex(0.18,0.85,SMS2.c_str());
   return can;
 }
 
