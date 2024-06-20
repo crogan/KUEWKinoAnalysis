@@ -21,10 +21,10 @@ import shutil
 #mem="request_memory = 4000 MB"
 
 #BF_dir = "BF_B135_bugfix16_T2tt_MCstats"
-BF_dir = "BF_B135_bugfix16_TChipmWW_MCstats"
-cpu="request_cpus = 4"
-disk="request_disk = 2400000 KB"
-mem="request_memory = 4000 MB"
+#BF_dir = "BF_B135_bugfix16_TChipmWW_MCstats"
+#cpu="request_cpus = 4"
+#disk="request_disk = 2400000 KB"
+#mem="request_memory = 4000 MB"
 
 
 #BF_dir = "BF_B135_bugfix16_TSlepSlepEL_MCstats"  
@@ -35,11 +35,11 @@ mem="request_memory = 4000 MB"
 #BF_dir = "BF_B135_bugfix16_TSlepSlepmuLR_MCstats" 
 #BF_dir = "BF_B135_bugfix16_TSlepSlepmueL_MCstats"
 #BF_dir = "BF_B135_bugfix16_TSlepSlepmueR_MCstats" 
-#BF_dir = "BF_B135_bugfix16_TSlepSleptot_MCstats"
+BF_dir = "BF_B135_bugfix16_TSlepSleptot_MCstats"
 
-#cpu="request_cpus = 4"
-#disk="request_disk = 1500000 KB"
-#mem="request_memory = 4000 MB"
+cpu="request_cpus = 4"
+disk="request_disk = 1500000 KB"
+mem="request_memory = 4000 MB"
 
 
 
@@ -69,6 +69,8 @@ logSet = set(logs)
 subDiff = subSet.difference(logSet)
 print("Analyzing:", BF_dir)
 print("found", len(subDiff), "missing jobs")
+
+#exit()
 print("generating resubmission scripts for this job list:")
 print(subDiff)
 
@@ -111,7 +113,7 @@ for key in subDiff:
 	aggfile.write(line)
 
 aggfile.close()
-os.chmod(resub_agg_file, 777)
+os.chmod(resub_agg_file, 0o0777)
 print("done, to launch datacards do this:")
 print("./"+BF_dir+"/condor_resubmit.sh")
 	

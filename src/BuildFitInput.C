@@ -255,8 +255,8 @@ int main(int argc, char* argv[]) {
   METTriggerTool m_METTriggerTool;
   //if you run interactively, use csv/METTrigger path
   //for batch runs the csv file will be copied in the base directory
-  m_METTriggerTool.BuildMap("Parameters.csv");
-  //m_METTriggerTool.BuildMap("csv/METTrigger/Parameters.csv");
+//  m_METTriggerTool.BuildMap("Parameters.csv");
+  m_METTriggerTool.BuildMap("csv/METTrigger/Parameters.csv");
 
   ScaleFactorTool SF;
   SF.AddBtagFolder("./BtagSF");
@@ -742,7 +742,7 @@ int main(int argc, char* argv[]) {
 	double prefire_weight = 1.;
 	double blambda0_weight = 1.;
 	double blambda1_weight = 1.;
-
+	double evt_debug_weight =1.;
 	
 	if(!is_data){
 	  if(year == 2018){//adjust lumi in 2018
@@ -754,7 +754,7 @@ int main(int argc, char* argv[]) {
 		weight = (setLumi ? lumi : ST.Lumi())*base->weight*sample_weight;
 	  }//end else other years
 	}//end if is data check
-
+	evt_debug_weight = weight;
 	// systematics loop
 	// do down sys first
 	string correct_sys = "";
@@ -1177,6 +1177,7 @@ int main(int argc, char* argv[]) {
 
 		if(debugVerbosity){
 			std::cout<<"Adding event:"<<e<<" weight: "<<weight<<" Mperp:"<<Mperp<<" RISR:"<<RISR<<" gammaT:"<<gammaT<<" PTISR:"<<PTISR<<" Cat:"<<Categories[eindex].Label()<<" sysLabel:"<<sys.Label()<<"\n";
+			std::cout<<"evt weight:"<<evt_debug_weight<<" SFweight: "<<SF_weight<<" lambda weight: "<<blambda_combined_weight<<"\n";
 		}
 		if(debugData){
 			//std::cout<< Categories[eindex].FullLabel() << "\n";
