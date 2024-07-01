@@ -25,7 +25,8 @@ rootFile=
 
 # path to python script
 #pythonScript=scripts/GetTreeVariables.py
-pythonScript=/home/caleb/bin/GetTreeVariables.py
+#pythonScript=/home/$USER/bin/GetTreeVariables.py
+pythonScript=/uscms/home/$USER/bin/GetTreeVariables.py
 
 # options that require an argument should have a colon after the letter
 while getopts n:d:o:t:r: option
@@ -80,7 +81,12 @@ outputFileClean="$outputName"_variables_clean.txt
 # -i : input root file
 # -t : tree in root file that you wish to print 
 # -d : directory in root file (optional) 
-python $pythonScript -i $rootFile -t $treeName -d $dirName > $outputFile
+if [[ -z "$dirName" ]]
+then
+    python $pythonScript -i $rootFile -t $treeName > $outputFile
+else
+    python $pythonScript -i $rootFile -t $treeName -d $dirName > $outputFile
+fi
 
 # cleaned output (one line per variable) to file
 grep Br $outputFile > $outputFileClean
