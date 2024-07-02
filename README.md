@@ -29,7 +29,6 @@ so that they are run at the beginning of every new terminal session:
 ```
 source /cvmfs/cms.cern.ch/cmsset_default.sh
 source /cvmfs/cms.cern.ch/crab3/crab.sh
-export SCRAM_ARCH=slc7_amd64_gcc700
 ```    
 Once these commands are added to `~/.bash_profile` or `~/.bashrc` for the first time,
 you can then source whichever file was modified to apply these changes.
@@ -38,22 +37,16 @@ source ~/.bash_profile
 source ~/.bashrc
 ```
 
-Note that assigning this SCRAM_ARCH (slc7_amd64_gcc700) is required before
-checking out CMSSW_10_6_5 so that the framework can compile successfully.
-For this use case, SCRAM_ARCH does matter!
-Compile errors have been observed in KUEWKinoAnalysis
-when SCRAM_ARCH is not set before checking out CMSSW_10_6_5.
-
 ### Setup CMSSW area
-Checkout CMSSW_10_6_5.
+Checkout CMSSW_13_3_1.
 ```
-cmsrel CMSSW_10_6_5
-cd CMSSW_10_6_5/src
+cmsrel CMSSW_13_3_1
+cd CMSSW_13_3_1/src
 cmsenv
 ```
     
 ### Checkout required packages
-Download these repos in the `CMSSW_10_6_5/src` directory.
+Download these repos in the `CMSSW_13_3_1/src` directory.
 Use the KU branch of HiggsAnalysis, the connect branch of CombineHarvester, and the master branch of KUEWKinoAnalysis.
 ```
 git clone -b KU https://github.com/zflowers/HiggsAnalysis-CombinedLimit.git HiggsAnalysis/CombinedLimit
@@ -62,7 +55,7 @@ git clone -b master https://github.com/crogan/KUEWKinoAnalysis.git KUEWKinoAnaly
 ```
 
 ### Setup RestFrames
-Setup the RestFrames framework in the `CMSSW_10_6_5/src` directory.
+Setup the RestFrames framework in the `CMSSW_13_3_1/src` directory.
 ```
 wget --no-check-certificate http://stash.osgconnect.net/+zflowers/RestFrames_vNew.tar
 tar -xvf RestFrames_vNew.tar
@@ -74,7 +67,7 @@ cd ..
 ```
 
 ### Build/compile
-Build the CMSSW packages from the `CMSSW_10_6_5/src` directory.
+Build the CMSSW packages from the `CMSSW_13_3_1/src` directory.
 ```
 scram b -j8
 ```
