@@ -18,7 +18,6 @@
 #include "BtagSFTool.hh"
 #include "LepSFTool.hh"
 #include "JMETool.hh"
-#include "SVDiscrTool.hh"
 #include "METTriggerTool.hh"
 #include "PrefireTool.hh"
 
@@ -44,7 +43,6 @@ public:
   void AddBtagFolder(const string& btagfold);
   void AddLepFolder(const string& lepfold);
   void AddJMEFolder(const string& jmefold);
-  void AddSVDiscrFile(const string& svfile);
   void AddMETTriggerFile(const string& csvfile);
   void AddPrefireFile(const string& prefirefile);
   #ifdef _CMSSW_
@@ -96,7 +94,6 @@ public:
   virtual ParticleList GetGenJets();
   virtual ParticleList GetElectrons();
   virtual ParticleList GetMuons();
-  virtual ParticleList GetSVs(const TVector3& PV);
 
   virtual TVector3 GetAltMET();
   
@@ -169,7 +166,6 @@ private:
   BtagSFTool      m_BtagSFTool;
   LepSFTool       m_LepSFTool;
   JMETool         m_JMETool;
-  SVDiscrTool     m_SVDiscrTool;
   SystematicsTool m_SysTool;
   METTriggerTool  m_METTriggerTool;
   PrefireTool     m_PrefireTool;

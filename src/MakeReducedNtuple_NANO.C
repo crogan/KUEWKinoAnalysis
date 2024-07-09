@@ -18,7 +18,7 @@
 #include <TLorentzVector.h>
 
 #include "ReducedNtuple.hh"
-#include "SUSYNANOBase.hh"
+#include "NANORun3.hh"
 
 using namespace std;
 using std::vector;
@@ -43,7 +43,6 @@ int main(int argc, char* argv[]) {
   char BTAGFOLD[400];
   char LEPFOLD[400];
   char JMEFOLD[400];
-  char SVFILE[400];
   char METTRIGFILE[400];
   char PREFIREFILE[400];
 
@@ -108,7 +107,6 @@ int main(int argc, char* argv[]) {
     if (strncmp(argv[i],"-btag",5)==0)   sscanf(argv[i],"-btag=%s", BTAGFOLD);
     if (strncmp(argv[i],"-lep",4)==0)   sscanf(argv[i],"-lep=%s", LEPFOLD);
     if (strncmp(argv[i],"-jme",4)==0)   sscanf(argv[i],"-jme=%s", JMEFOLD);
-    if (strncmp(argv[i],"-svfile",7)==0)   sscanf(argv[i],"-svfile=%s", SVFILE);
     if (strncmp(argv[i],"-metfile",8)==0)   sscanf(argv[i],"-metfile=%s", METTRIGFILE);
     if (strncmp(argv[i],"-prefirefile",12)==0)   sscanf(argv[i],"-prefirefile=%s", PREFIREFILE);
     
@@ -183,7 +181,7 @@ int main(int argc, char* argv[]) {
     cout << "   Adding file " << filenames[i] << endl;
   }
 
-  ReducedNtuple<SUSYNANOBase>* ntuple = new ReducedNtuple<SUSYNANOBase>(chain);
+  ReducedNtuple<NANORun3>* ntuple = new ReducedNtuple<NANORun3>(chain);
 
   ntuple->AddLabels(string(DataSet),string(FileTag));
   ntuple->AddEventCountFile(string(EventCount));
@@ -192,7 +190,6 @@ int main(int argc, char* argv[]) {
   ntuple->AddBtagFolder(string(BTAGFOLD));
   ntuple->AddLepFolder(string(LEPFOLD));
   ntuple->AddJMEFolder(string(JMEFOLD));
-  ntuple->AddSVDiscrFile(string(SVFILE));
   ntuple->AddMETTriggerFile(string(METTRIGFILE));
   ntuple->AddPrefireFile(string(PREFIREFILE));
   #ifdef _CMSSW_

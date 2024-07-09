@@ -6,8 +6,7 @@
 #include "TMatrixDSym.h"
 #include "TVectorD.h"
 
-#include "StopNtupleTree.hh"
-#include "SUSYNANOBase.hh"
+#include "NANORun3.hh"
 #include "Leptonic.hh"
 
 using namespace std;
@@ -159,11 +158,6 @@ template <class Base>
 void AnalysisBase<Base>::AddJMEFolder(const string& jmefold){
   m_JMETool.BuildMap(jmefold);
   m_JMETool.BuildJERMap(jmefold);
-}
-
-template <class Base>
-void AnalysisBase<Base>::AddSVDiscrFile(const string& svfile){
-  m_SVDiscrTool.CreateNN(svfile);
 }
 
 template <class Base>
@@ -415,11 +409,6 @@ bool AnalysisBase<Base>::GetEMutrigger(){
 }
 
 template <class Base>
-ParticleList AnalysisBase<Base>::GetSVs(const TVector3& PV){
-  return ParticleList();
-}
-
-template <class Base>
 ParticleList AnalysisBase<Base>::GetJetsMET(TVector3& MET, int id){
   return ParticleList();
 }
@@ -569,355 +558,62 @@ void AnalysisBase<Base>::MomTensorCalc(vector<TLorentzVector>& input, vector<dou
 } 
 
 /////////////////////////////////////////////////
-// StopNtupleTree specific methods
+// NANORun3 specific methods
 /////////////////////////////////////////////////
 
 template <>
-int AnalysisBase<StopNtupleTree>::GetSampleIndex(){
-  if(!m_DoSMS){
-    if(m_Nsample == 0){
-      m_IndexToSample[0]  = "KUAnalysis";
-      m_IndexToXsec[0]    = m_XsecTool.GetXsec_BKG(m_DataSet);
-      m_IndexToNevent[0]  = m_NeventTool.GetNevent_BKG(m_DataSet, m_FileTag);
-      m_IndexToNweight[0] = m_NeventTool.GetNweight_BKG(m_DataSet, m_FileTag);
-      m_Nsample++;
-    }
-    return 0;
-  }
-  
-  int MP = 0;
-  int MC = 0;
-  int Ngen = genDecayPdgIdVec->size();
-  int PDGID;
-  for(int i = 0; i < Ngen; i++){
-    PDGID = fabs(genDecayPdgIdVec->at(i));
-    if(PDGID > 1000000 && PDGID < 3000000){
-      int mass = int(genDecayLVec->at(i).M()+0.5);
-      if(PDGID == 1000022)
-	MC = mass;
-      else
-	if(mass > MP)
-	  MP = mass;
-    }
-  }
-  
-  int hash = 100000*MP + MC;
-  if(m_HashToIndex.count(hash) == 0){
-    m_HashToIndex[hash] = m_Nsample;
-    m_IndexToSample[m_Nsample]  = std::string(Form("SMS_%d_%d", MP, MC));
-    m_IndexToXsec[m_Nsample]    = m_XsecTool.GetXsec_SMS(m_DataSet, MP);
-    m_IndexToNevent[m_Nsample]  = m_NeventTool.GetNevent_SMS(m_DataSet, m_FileTag, MP, MC);
-    m_IndexToNweight[m_Nsample] = m_NeventTool.GetNweight_SMS(m_DataSet, m_FileTag, MP, MC);
-  
-    m_Nsample++;
-  }
-
-  return m_HashToIndex[hash];
-}
-
-
-template <>
-double AnalysisBase<StopNtupleTree>::GetEventWeight(){
-  if(m_IndexToNweight[m_SampleIndex] > 0.)
-    return (m_USEFLOAT ? evtWeight_f : evtWeight_d)*m_IndexToXsec[m_SampleIndex]/m_IndexToNweight[m_SampleIndex];
-  else
-    return 0.;
-}
-
-template <>
-TVector3 AnalysisBase<StopNtupleTree>::GetMET(){
-  TVector3 vmet;
-  if(m_USEFLOAT)
-    vmet.SetPtEtaPhi(met_f,0.0,metphi_f);
-  else
-    vmet.SetPtEtaPhi(met_d,0.0,metphi_d);
-  return vmet;
-}
-
-template <>
-double AnalysisBase<StopNtupleTree>::Get_LHE_HT(){
-  return 0.;
-}
-
-template <>
-double AnalysisBase<StopNtupleTree>::Get_LHE_HTIncoming(){
-  return 0.;
-}
-
-template <>
-TVector3 AnalysisBase<StopNtupleTree>::GetGenMET(){
-  TVector3 vmet;
-  vmet.SetPtEtaPhi(genmet,0.0,genmetphi);
-  return vmet;
-}
-
-template <>
-ParticleList AnalysisBase<StopNtupleTree>::GetJets(int id){
-  ParticleList list;
-
-  int Njet = jetsLVec->size();
-  for(int i = 0; i < Njet; i++){
-    TLorentzVector JET = (*jetsLVec)[i];
-    Particle jet;
-    float mass = JET.M();
-    if(std::isnan(mass))
-      mass = 0;
-    if(std::isinf(mass))
-      mass = 0;
-    if(mass < 0.)
-      mass = 0.;
-    jet.SetPtEtaPhiM( JET.Pt(), JET.Eta(), JET.Phi(), mass );
-    jet.SetBtag((*recoJetsBtag_0)[i]);
-
-    if(jet.Btag() > 0.9535)
-      jet.SetParticleID(kTight);
-    else if(jet.Btag() > 0.8484) 
-      jet.SetParticleID(kMedium);
-    else if(jet.Btag() > 0.5426)
-      jet.SetParticleID(kLoose);
-
-    jet.SetPDGID( (*recoJetsFlavor)[i] );
-      
-    list.push_back(jet);
-  }
-
-  return list;
-}
-
-template <>
-ParticleList AnalysisBase<StopNtupleTree>::GetElectrons(){
-  ParticleList list;
-
-  int N = elesLVec->size();
-  for(int i = 0; i < N; i++){
-    Particle lep;
-    lep.SetVectM((*elesLVec)[i].Vect(),std::max(0.,(*elesLVec)[i].M()));
-    lep.SetPDGID( (elesCharge->at(i) < 0. ? 11 : -11) );
-    lep.SetCharge( (elesCharge->at(i) < 0. ? -1 : 1) );
-     
-    if(tightElectronID->at(i))
-      lep.SetParticleID(kTight);
-    else if(mediumElectronID->at(i))
-      lep.SetParticleID(kMedium);
-    else if(looseElectronID->at(i))
-      lep.SetParticleID(kLoose);
-    else if(vetoElectronID->at(i))
-      lep.SetParticleID(kVeryLoose);
-     
-    lep.SetRelIso(elesRelIso->at(i));
-    lep.SetMiniIso(elesMiniIso->at(i));
-
-    list.push_back(lep);
-  }
-
-  return list;
-
-}
-
-template <>
-ParticleList AnalysisBase<StopNtupleTree>::GetMuons(){
-  ParticleList list;
-
-  int N = muonsLVec->size();
-  for(int i = 0; i < N; i++){
-    Particle lep;
-    lep.SetVectM((*muonsLVec)[i].Vect(),std::max(0.,(*muonsLVec)[i].M()));
-    lep.SetPDGID( (muonsCharge->at(i) < 0. ? 13 : -13) );
-    lep.SetCharge( (muonsCharge->at(i) < 0. ? -1 : 1) );
-     
-    if(muonsFlagTight->at(i))
-      lep.SetParticleID(kTight);
-    else if(muonsFlagMedium->at(i))
-      lep.SetParticleID(kMedium);
-     
-    lep.SetRelIso(muonsRelIso->at(i));
-    lep.SetMiniIso(muonsMiniIso->at(i));
-
-    list.push_back(lep);
-  }
-
-  return list;
-}
-
-template <>
-ParticleList AnalysisBase<StopNtupleTree>::GetGenElectrons(){
-  ParticleList list;
-  
-  int N = genDecayPdgIdVec->size();
-  int PDGID;
-  for(int i = 0; i < N; i++){
-    PDGID = genDecayPdgIdVec->at(i);
-    if(abs(PDGID) == 11){
-      Particle lep;
-      
-      lep.SetPDGID(PDGID);
-      int mom = genDecayMomRefVec->at(i);
-      if(mom >= 0 && mom < N)
-	lep.SetMomPDGID(genDecayPdgIdVec->at(mom));
-      lep.SetCharge( (PDGID > 0 ? -1 : 1) );
-      lep.SetVectM((*genDecayLVec)[i].Vect(),max(0.,(*genDecayLVec)[i].M()));
-
-      list.push_back(lep);
-    }
-  }
-
-  return list;
-}
-
-template <>
-ParticleList AnalysisBase<StopNtupleTree>::GetGenMuons(){
-  ParticleList list;
-  
-  int N = genDecayPdgIdVec->size();
-  int PDGID;
-  for(int i = 0; i < N; i++){
-    PDGID = genDecayPdgIdVec->at(i);
-    if(abs(PDGID) == 13){
-      Particle lep;
-      
-      lep.SetPDGID(PDGID);
-      int mom = genDecayMomRefVec->at(i);
-      if(mom >= 0 && mom < N)
-	lep.SetMomPDGID(genDecayPdgIdVec->at(mom));
-      lep.SetCharge( (PDGID > 0 ? -1 : 1) );
-      lep.SetVectM((*genDecayLVec)[i].Vect(),std::max(0.,(*genDecayLVec)[i].M()));
-
-      list.push_back(lep);
-    }
-  }
-
-  return list;
-}
-
-template <>
-ParticleList AnalysisBase<StopNtupleTree>::GetGenNeutrinos(){
-  ParticleList list;
-  
-  int N = genDecayPdgIdVec->size();
-  int PDGID;
-  for(int i = 0; i < N; i++){
-    PDGID = genDecayPdgIdVec->at(i);
-    if(abs(PDGID) == 12 || abs(PDGID) == 14 || abs(PDGID) == 16){
-      Particle lep;
-      
-      lep.SetPDGID(PDGID);
-      int mom = genDecayMomRefVec->at(i);
-      if(mom >= 0 && mom < N)
-	lep.SetMomPDGID(genDecayPdgIdVec->at(mom));
-      lep.SetVectM((*genDecayLVec)[i].Vect(),(*genDecayLVec)[i].M());
-
-      list.push_back(lep);
-    }
-  }
-
-  return list;
-}
-
-template <>
-ParticleList AnalysisBase<StopNtupleTree>::GetGenBosons(){
-  ParticleList list;
-  
-  int N = genDecayPdgIdVec->size();
-  int PDGID;
-  for(int i = 0; i < N; i++){
-    PDGID = genDecayPdgIdVec->at(i);
-    if(abs(PDGID) == 23 || abs(PDGID) == 24 || abs(PDGID) == 25){
-      Particle p;
-      
-      p.SetPDGID(PDGID);
-      int mom = genDecayMomRefVec->at(i);
-      if(mom >= 0 && mom < N)
-	p.SetMomPDGID(genDecayPdgIdVec->at(mom));
-      p.SetVectM((*genDecayLVec)[i].Vect(),(*genDecayLVec)[i].M());
-
-      list.push_back(p);
-    }
-  }
-
-  return list;
-}
-
-template <>
-ParticleList AnalysisBase<StopNtupleTree>::GetGenSparticles(){
-  ParticleList list;
-  
-  int N = genDecayPdgIdVec->size();
-  int PDGID;
-  for(int i = 0; i < N; i++){
-    PDGID = genDecayPdgIdVec->at(i);
-    if(abs(PDGID) >= 1000000 && abs(PDGID) < 3000000){
-      Particle p;
-      
-      p.SetPDGID(PDGID);
-      int mom = genDecayMomRefVec->at(i);
-      if(mom >= 0 && mom < N)
-	p.SetMomPDGID(genDecayPdgIdVec->at(mom));
-      p.SetVectM((*genDecayLVec)[i].Vect(),(*genDecayLVec)[i].M());
-
-      list.push_back(p);
-    }
-  }
-
-  return list;
-}
-
-/////////////////////////////////////////////////
-// SUSYNANOBase specific methods
-/////////////////////////////////////////////////
-
-template <>
-int AnalysisBase<SUSYNANOBase>::GetRunNum(){
+int AnalysisBase<NANORun3>::GetRunNum(){
   return run;
 }
 
 template <>
-int AnalysisBase<SUSYNANOBase>::GetLumiNum(){
+int AnalysisBase<NANORun3>::GetLumiNum(){
   return luminosityBlock;
 }
 
 template <>
-long AnalysisBase<SUSYNANOBase>::GetEventNum(){
+long AnalysisBase<NANORun3>::GetEventNum(){
   return event;
 }
 
 template <>
-bool AnalysisBase<SUSYNANOBase>::PassEventFilter(){
+bool AnalysisBase<NANORun3>::PassEventFilter(){
   int year = 2016;
   if(m_FileTag.find("17") != std::string::npos)
     year = 2017;
   if(m_FileTag.find("18") != std::string::npos)
     year = 2018;
-
-  if(year == 2016){
-    return Flag_goodVertices &&
-      (IsFastSim() ? true : Flag_globalSuperTightHalo2016Filter) &&
-      Flag_HBHENoiseFilter &&
-      Flag_HBHENoiseIsoFilter &&
-      Flag_EcalDeadCellTriggerPrimitiveFilter &&
-      Flag_BadPFMuonFilter;
-  }
-  if(year == 2017){
-    return Flag_goodVertices &&
-      (IsFastSim() ? true : Flag_globalSuperTightHalo2016Filter) &&
-      Flag_HBHENoiseFilter &&
-      Flag_HBHENoiseIsoFilter &&
-      Flag_EcalDeadCellTriggerPrimitiveFilter &&
-      Flag_BadPFMuonFilter;
-  }
-  if(year == 2018){
-    return Flag_goodVertices &&
-      (IsFastSim() ? true : Flag_globalSuperTightHalo2016Filter) &&
-      Flag_HBHENoiseFilter &&
-      Flag_HBHENoiseIsoFilter &&
-      Flag_EcalDeadCellTriggerPrimitiveFilter &&
-      Flag_BadPFMuonFilter;
-  }
+//
+//  if(year == 2016){
+//    return Flag_goodVertices &&
+//      (IsFastSim() ? true : Flag_globalSuperTightHalo2016Filter) &&
+//      Flag_HBHENoiseFilter &&
+//      Flag_HBHENoiseIsoFilter &&
+//      Flag_EcalDeadCellTriggerPrimitiveFilter &&
+//      Flag_BadPFMuonFilter;
+//  }
+//  if(year == 2017){
+//    return Flag_goodVertices &&
+//      (IsFastSim() ? true : Flag_globalSuperTightHalo2016Filter) &&
+//      Flag_HBHENoiseFilter &&
+//      Flag_HBHENoiseIsoFilter &&
+//      Flag_EcalDeadCellTriggerPrimitiveFilter &&
+//      Flag_BadPFMuonFilter;
+//  }
+//  if(year == 2018){
+//    return Flag_goodVertices &&
+//      (IsFastSim() ? true : Flag_globalSuperTightHalo2016Filter) &&
+//      Flag_HBHENoiseFilter &&
+//      Flag_HBHENoiseIsoFilter &&
+//      Flag_EcalDeadCellTriggerPrimitiveFilter &&
+//      Flag_BadPFMuonFilter;
+//  }
   
   return true;
 }
 
 template<>
-bool AnalysisBase<SUSYNANOBase>::FastSimEventVeto(const ParticleList& GenJets){
+bool AnalysisBase<NANORun3>::FastSimEventVeto(const ParticleList& GenJets){
 
   ParticleList jets;
   for(int i = 0; i < nJet; i++){
@@ -946,7 +642,7 @@ bool AnalysisBase<SUSYNANOBase>::FastSimEventVeto(const ParticleList& GenJets){
 }
 
 template<>
-double AnalysisBase<SUSYNANOBase>::EGvalue(int jetIndex, int updown){
+double AnalysisBase<NANORun3>::EGvalue(int jetIndex, int updown){
   double PhotonMinPt = 20.;
   double PhotonMaxPt = 500.;
   double PhotonMinEta = 2.;
@@ -983,7 +679,7 @@ double AnalysisBase<SUSYNANOBase>::EGvalue(int jetIndex, int updown){
 }
 
 template<>
-double AnalysisBase<SUSYNANOBase>::GetPrefireWeight(int updown){
+double AnalysisBase<NANORun3>::GetPrefireWeight(int updown){
   int year = 2016;
   if(m_FileTag.find("17") != std::string::npos)
     year = 2017;
@@ -1015,12 +711,12 @@ double AnalysisBase<SUSYNANOBase>::GetPrefireWeight(int updown){
 }
 
 template <>
-int AnalysisBase<SUSYNANOBase>::GetNPV(){
+int AnalysisBase<NANORun3>::GetNPV(){
   return nOtherPV+1;
 }
 
 template <>
-int AnalysisBase<SUSYNANOBase>::GetNPUtrue(){
+int AnalysisBase<NANORun3>::GetNPUtrue(){
   if(!IsData())
     return Pileup_nPU;
   
@@ -1028,13 +724,14 @@ int AnalysisBase<SUSYNANOBase>::GetNPUtrue(){
 }
 
 template <>
-bool AnalysisBase<SUSYNANOBase>::GetMETtrigger(){
+bool AnalysisBase<NANORun3>::GetMETtrigger(){
   int year = 2016;
   if(m_FileTag.find("17") != std::string::npos)
     year = 2017;
   if(m_FileTag.find("18") != std::string::npos)
     year = 2018;
 
+/*
   if(year == 2016)
     return (HLT_PFMET120_PFMHT120_IDTight ||
 	    HLT_PFMETNoMu120_PFMHTNoMu120_IDTight);
@@ -1044,18 +741,20 @@ bool AnalysisBase<SUSYNANOBase>::GetMETtrigger(){
 	    HLT_PFMETNoMu120_PFMHTNoMu120_IDTight ||
 	    HLT_PFMET120_PFMHT120_IDTight_PFHT60 ||
 	    HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60);
+*/
 
   return 0;
 }
   
 template <>
-bool AnalysisBase<SUSYNANOBase>::GetMETHTtrigger(){
+bool AnalysisBase<NANORun3>::GetMETHTtrigger(){
   int year = 2016;
   if(m_FileTag.find("17") != std::string::npos)
     year = 2017;
   if(m_FileTag.find("18") != std::string::npos)
     year = 2018;
 
+/*
   if(year == 2016)
     return (HLT_PFHT300_PFMET100 ||
 	    HLT_PFHT300_PFMET110);
@@ -1067,18 +766,19 @@ bool AnalysisBase<SUSYNANOBase>::GetMETHTtrigger(){
 	    HLT_PFHT700_PFMET95_PFMHT95_IDTight ||
 	    HLT_PFHT800_PFMET75_PFMHT75_IDTight ||
 	    HLT_PFHT800_PFMET85_PFMHT85_IDTight);
-
+*/
   return 0;
 }
 
 template <>
-bool AnalysisBase<SUSYNANOBase>::GetMETORtrigger(){
+bool AnalysisBase<NANORun3>::GetMETORtrigger(){
   int year = 2016;
   if(m_FileTag.find("17") != std::string::npos)
     year = 2017;
   if(m_FileTag.find("18") != std::string::npos)
     year = 2018;
 
+/*
   if(year == 2016)
     return (HLT_PFMETNoMu90_PFMHTNoMu90_IDTight ||
 	    HLT_PFMETNoMu100_PFMHTNoMu100_IDTight ||
@@ -1102,34 +802,37 @@ bool AnalysisBase<SUSYNANOBase>::GetMETORtrigger(){
 	    HLT_PFMET120_PFMHT120_IDTight_PFHT60 ||
 	    HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60);
 
+*/
   return 0;
 }
 
 template <>
-bool AnalysisBase<SUSYNANOBase>::GetSingleElectrontrigger(){
+bool AnalysisBase<NANORun3>::GetSingleElectrontrigger(){
   int year = 2016;
   if(m_FileTag.find("17") != std::string::npos)
     year = 2017;
   if(m_FileTag.find("18") != std::string::npos)
     year = 2018;
 
+/*
   if(year == 2016)
     return (HLT_Ele27_WPTight_Gsf);
   if(year == 2017 ||
      year == 2018)
     return (HLT_Ele32_WPTight_Gsf);
-
+*/
   return 0;
 }
 
 template <>
-bool AnalysisBase<SUSYNANOBase>::GetSingleMuontrigger(){
+bool AnalysisBase<NANORun3>::GetSingleMuontrigger(){
   int year = 2016;
   if(m_FileTag.find("17") != std::string::npos)
     year = 2017;
   if(m_FileTag.find("18") != std::string::npos)
     year = 2018;
 
+/*
   if(year == 2016)
     return (HLT_IsoMu24 ||
             HLT_IsoTkMu24);
@@ -1137,63 +840,66 @@ bool AnalysisBase<SUSYNANOBase>::GetSingleMuontrigger(){
      year == 2018)
     return (HLT_IsoMu24 ||
             HLT_IsoTkMu24);
-
+*/
   return 0;
 }
 
 template <>
-bool AnalysisBase<SUSYNANOBase>::GetDoubleElectrontrigger(){
+bool AnalysisBase<NANORun3>::GetDoubleElectrontrigger(){
   int year = 2016;
   if(m_FileTag.find("17") != std::string::npos)
     year = 2017;
   if(m_FileTag.find("18") != std::string::npos)
     year = 2018;
 
+/*
   if(year == 2016)
     return (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL);
   if(year == 2017 ||
      year == 2018)
     return (HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL);
-
+*/
   return 0;
 }
 
 template <>
-bool AnalysisBase<SUSYNANOBase>::GetDoubleMuontrigger(){
+bool AnalysisBase<NANORun3>::GetDoubleMuontrigger(){
   int year = 2016;
   if(m_FileTag.find("17") != std::string::npos)
     year = 2017;
   if(m_FileTag.find("18") != std::string::npos)
     year = 2018;
 
+/*
   if(year == 2016)
     return (HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL);
   if(year == 2017 ||
      year == 2018)
     return (HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL);
-
+*/
   return 0;
 }
 
 template <>
-bool AnalysisBase<SUSYNANOBase>::GetEMutrigger(){
+bool AnalysisBase<NANORun3>::GetEMutrigger(){
   int year = 2016;
   if(m_FileTag.find("17") != std::string::npos)
     year = 2017;
   if(m_FileTag.find("18") != std::string::npos)
     year = 2018;
 
+/*
   if(year == 2016)
     return (HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ);
   if(year == 2017 ||
      year == 2018)
     return (HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ);
-
+*/
   return 0;
 }
 
 template <>
-std::pair<int,int> AnalysisBase<SUSYNANOBase>::GetSUSYMasses(){
+std::pair<int,int> AnalysisBase<NANORun3>::GetSUSYMasses(){
   if(!IsData()){
     int MP = 0;
     int MC = 0;
@@ -1217,7 +923,7 @@ std::pair<int,int> AnalysisBase<SUSYNANOBase>::GetSUSYMasses(){
 }
 
 template <>
-int AnalysisBase<SUSYNANOBase>::GetSampleIndex(){
+int AnalysisBase<NANORun3>::GetSampleIndex(){
   if(!m_DoSMS){
     if(m_Nsample == 0){
       m_IndexToSample[0]  = "KUAnalysis";
@@ -1261,7 +967,7 @@ int AnalysisBase<SUSYNANOBase>::GetSampleIndex(){
 
 
 template <>
-double AnalysisBase<SUSYNANOBase>::GetEventWeight(){
+double AnalysisBase<NANORun3>::GetEventWeight(){
   if(IsData())
     return 1.;
   
@@ -1279,7 +985,7 @@ double AnalysisBase<SUSYNANOBase>::GetEventWeight(){
 }
 
 template <>
-double AnalysisBase<SUSYNANOBase>::GetPUWeight(int updown){
+double AnalysisBase<NANORun3>::GetPUWeight(int updown){
   if(IsData())
     return 1.;
 
@@ -1297,7 +1003,7 @@ double AnalysisBase<SUSYNANOBase>::GetPUWeight(int updown){
 // [6] is muR=2.0 muF=0.5 ; [7] is muR=2.0 muF=1.0 ; [8] is muR=2.0 muF=2.0 ;
 
 template <>
-double AnalysisBase<SUSYNANOBase>::GetMuFWeight(int updown){
+double AnalysisBase<NANORun3>::GetMuFWeight(int updown){
   if(IsData())
     return 1.;
   if(nLHEScaleWeight == 0) return 1.;
@@ -1310,7 +1016,7 @@ double AnalysisBase<SUSYNANOBase>::GetMuFWeight(int updown){
 }
 
 template <>
-double AnalysisBase<SUSYNANOBase>::GetMuRWeight(int updown){
+double AnalysisBase<NANORun3>::GetMuRWeight(int updown){
   if(IsData())
     return 1.;
   if(nLHEScaleWeight == 0) return 1.;
@@ -1326,7 +1032,7 @@ double AnalysisBase<SUSYNANOBase>::GetMuRWeight(int updown){
 #ifdef _CMSSW_
 
 template<>
-void AnalysisBase<SUSYNANOBase>::AddLHAPDF(){
+void AnalysisBase<NANORun3>::AddLHAPDF(){
   if(IsData() || IsSMS())
     return;
   int year = 2016;
@@ -1341,7 +1047,7 @@ void AnalysisBase<SUSYNANOBase>::AddLHAPDF(){
 #endif
 
 template <>
-double AnalysisBase<SUSYNANOBase>::GetPDFWeight(int updown){
+double AnalysisBase<NANORun3>::GetPDFWeight(int updown){
   if(IsData() || IsSMS())
     return 1.;
   int year = 2016;
@@ -1353,7 +1059,7 @@ double AnalysisBase<SUSYNANOBase>::GetPDFWeight(int updown){
 }
 
 template <>
-double AnalysisBase<SUSYNANOBase>::GetBtagSFWeight(const ParticleList& jets, bool HForLF, int updown, ParticleIDType tag){
+double AnalysisBase<NANORun3>::GetBtagSFWeight(const ParticleList& jets, bool HForLF, int updown, ParticleIDType tag){
   if(IsData())
     return 1.;
 
@@ -1406,7 +1112,7 @@ double AnalysisBase<SUSYNANOBase>::GetBtagSFWeight(const ParticleList& jets, boo
 }
 
 template <>
-double AnalysisBase<SUSYNANOBase>::GetElIDSFWeight(const ParticleList& els, int updown){
+double AnalysisBase<NANORun3>::GetElIDSFWeight(const ParticleList& els, int updown){
   if(IsData())
     return 1.;
 
@@ -1474,7 +1180,7 @@ double AnalysisBase<SUSYNANOBase>::GetElIDSFWeight(const ParticleList& els, int 
 }
 
 template <>
-double AnalysisBase<SUSYNANOBase>::GetElISOSFWeight(const ParticleList& els, int updown){
+double AnalysisBase<NANORun3>::GetElISOSFWeight(const ParticleList& els, int updown){
   if(IsData())
     return 1.;
 
@@ -1542,7 +1248,7 @@ double AnalysisBase<SUSYNANOBase>::GetElISOSFWeight(const ParticleList& els, int
 }
 
 template <>
-double AnalysisBase<SUSYNANOBase>::GetElSIPSFWeight(const ParticleList& els, int updown){
+double AnalysisBase<NANORun3>::GetElSIPSFWeight(const ParticleList& els, int updown){
   if(IsData())
     return 1.;
 
@@ -1612,7 +1318,7 @@ double AnalysisBase<SUSYNANOBase>::GetElSIPSFWeight(const ParticleList& els, int
 }
 
 template <>
-double AnalysisBase<SUSYNANOBase>::GetElVLIDSFWeight(const ParticleList& els, int updown){
+double AnalysisBase<NANORun3>::GetElVLIDSFWeight(const ParticleList& els, int updown){
    if(IsData())
     return 1.;
 
@@ -1674,7 +1380,7 @@ double AnalysisBase<SUSYNANOBase>::GetElVLIDSFWeight(const ParticleList& els, in
 }
 
 template <>
-double AnalysisBase<SUSYNANOBase>::GetMuIDSFWeight(const ParticleList& mus, int updown){
+double AnalysisBase<NANORun3>::GetMuIDSFWeight(const ParticleList& mus, int updown){
    if(IsData())
     return 1.;
 
@@ -1742,7 +1448,7 @@ double AnalysisBase<SUSYNANOBase>::GetMuIDSFWeight(const ParticleList& mus, int 
 }
 
 template <>
-double AnalysisBase<SUSYNANOBase>::GetMuISOSFWeight(const ParticleList& mus, int updown){
+double AnalysisBase<NANORun3>::GetMuISOSFWeight(const ParticleList& mus, int updown){
   if(IsData())
     return 1.;
 
@@ -1810,7 +1516,7 @@ double AnalysisBase<SUSYNANOBase>::GetMuISOSFWeight(const ParticleList& mus, int
 }
 
 template <>
-double AnalysisBase<SUSYNANOBase>::GetMuSIPSFWeight(const ParticleList& mus, int updown){
+double AnalysisBase<NANORun3>::GetMuSIPSFWeight(const ParticleList& mus, int updown){
   if(IsData())
     return 1.;
 
@@ -1880,7 +1586,7 @@ double AnalysisBase<SUSYNANOBase>::GetMuSIPSFWeight(const ParticleList& mus, int
 }
 
 template <>
-double AnalysisBase<SUSYNANOBase>::GetMuVLIDSFWeight(const ParticleList& mus, int updown){
+double AnalysisBase<NANORun3>::GetMuVLIDSFWeight(const ParticleList& mus, int updown){
   if(IsData())
     return 1.;
 
@@ -1942,7 +1648,7 @@ double AnalysisBase<SUSYNANOBase>::GetMuVLIDSFWeight(const ParticleList& mus, in
 }
 
 template <>
-double AnalysisBase<SUSYNANOBase>::GetMETTriggerSFWeight(double MET, double HT, int Nele, int Nmu, int updown){
+double AnalysisBase<NANORun3>::GetMETTriggerSFWeight(double MET, double HT, int Nele, int Nmu, int updown){
   if(IsData())
     return 1.;
 
@@ -1967,7 +1673,7 @@ double AnalysisBase<SUSYNANOBase>::GetMETTriggerSFWeight(double MET, double HT, 
 }
 
 template <>
-int AnalysisBase<SUSYNANOBase>::GetMETTriggerSFCurve(double HT, int Nele, int Nmu){
+int AnalysisBase<NANORun3>::GetMETTriggerSFCurve(double HT, int Nele, int Nmu){
 
   int year = 2016;
   if(m_FileTag.find("17") != std::string::npos)
@@ -1979,12 +1685,12 @@ int AnalysisBase<SUSYNANOBase>::GetMETTriggerSFCurve(double HT, int Nele, int Nm
 }
 
 template <>
-bool AnalysisBase<SUSYNANOBase>::IsGoodEvent(){
+bool AnalysisBase<NANORun3>::IsGoodEvent(){
   return m_JSONTool.IsGood(run, luminosityBlock);
 }
 
 template <>
-TVector3 AnalysisBase<SUSYNANOBase>::GetGenMET(){
+TVector3 AnalysisBase<NANORun3>::GetGenMET(){
   if(IsData())
     return TVector3();
   
@@ -1994,7 +1700,7 @@ TVector3 AnalysisBase<SUSYNANOBase>::GetGenMET(){
 }
 
 template <>
-TVector3 AnalysisBase<SUSYNANOBase>::GetPV(bool& good){
+TVector3 AnalysisBase<NANORun3>::GetPV(bool& good){
   good = false;
   TVector3 PV(0.,0.,0.);
   
@@ -2017,7 +1723,7 @@ TVector3 AnalysisBase<SUSYNANOBase>::GetPV(bool& good){
 }
 
 template <>
-void AnalysisBase<SUSYNANOBase>::InitializeHistograms(vector<TH1D*>& histos){
+void AnalysisBase<NANORun3>::InitializeHistograms(vector<TH1D*>& histos){
   // nPU
   TH1D* h_nPU = new TH1D("hist_NPU", "hist_NPU", 75, 0., 75.);
   histos.push_back(h_nPU);
@@ -2055,7 +1761,7 @@ void AnalysisBase<SUSYNANOBase>::InitializeHistograms(vector<TH1D*>& histos){
 }
 
 template <>
-void AnalysisBase<SUSYNANOBase>::BookHistograms(vector<TH1D*>& histos){
+void AnalysisBase<NANORun3>::BookHistograms(vector<TH1D*>& histos){
   int year = 2017;
   if(m_FileTag.find("16") != std::string::npos)
     year = 2016;
@@ -2100,7 +1806,7 @@ void AnalysisBase<SUSYNANOBase>::BookHistograms(vector<TH1D*>& histos){
 }
 
 template <>
-ParticleList AnalysisBase<SUSYNANOBase>::GetGenJets(){
+ParticleList AnalysisBase<NANORun3>::GetGenJets(){
   ParticleList list;
   if(IsData())
     return list;
@@ -2133,7 +1839,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetGenJets(){
 }
 
 template <>
-ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET, int id){
+ParticleList AnalysisBase<NANORun3>::GetJetsMET(TVector3& MET, int id){
   int year = 2017;
   if(m_FileTag.find("16") != std::string::npos)
     year = 2016;
@@ -2198,7 +1904,8 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET, int id){
       // JER recipe based on https://github.com/cms-nanoAOD/nanoAOD-tools/blob/master/python/postprocessing/modules/jme/jetmetUncertainties.py
      
       double smearFactor = 1.;
-      double JER = m_JMETool.GetJERFactor(year, Jet_pt[i], Jet_eta[i], fixedGridRhoFastjetAll); // using this for rho based on: https://github.com/cms-nanoAOD/nanoAOD-tools/blob/0127d46a973e894d97e9a16bd3939f421b2b689e/python/postprocessing/modules/jme/jetmetUncertainties.py#L49
+      //double JER = m_JMETool.GetJERFactor(year, Jet_pt[i], Jet_eta[i], fixedGridRhoFastjetAll); // using this for rho based on: https://github.com/cms-nanoAOD/nanoAOD-tools/blob/0127d46a973e894d97e9a16bd3939f421b2b689e/python/postprocessing/modules/jme/jetmetUncertainties.py#L49
+      double JER = m_JMETool.GetJERFactor(year, Jet_pt[i], Jet_eta[i], Rho_fixedGridRhoFastjetAll); // need to check this rho for UL and Run3
       double SF = m_JMETool.GetJERSFFactor(year,Jet_eta[i],0);
 
       if(DO_JER)
@@ -2332,19 +2039,19 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET, int id){
   if(!passID)
     return ParticleList();
   
-  if(year == 2017)
-    MET.SetPtEtaPhi(METFixEE2017_pt,0.0,METFixEE2017_phi);
-  else
+  //if(year == 2017)
+  //  MET.SetPtEtaPhi(METFixEE2017_pt,0.0,METFixEE2017_phi);
+  //else
     MET.SetPtEtaPhi(MET_pt,0.0,MET_phi);
   
   deltaMET.SetZ(0.);
   MET += deltaMET;
   
   if(CurrentSystematic() == Systematic("METUncer_UnClust")){
-    if(year == 2017)
-      deltaMET.SetXYZ(delta*METFixEE2017_MetUnclustEnUpDeltaX,
-		      delta*METFixEE2017_MetUnclustEnUpDeltaY, 0.);
-    else
+    //if(year == 2017)
+    //  deltaMET.SetXYZ(delta*METFixEE2017_MetUnclustEnUpDeltaX,
+    //    	      delta*METFixEE2017_MetUnclustEnUpDeltaY, 0.);
+    //else
       deltaMET.SetXYZ(delta*MET_MetUnclustEnUpDeltaX,
 		      delta*MET_MetUnclustEnUpDeltaY, 0.);
     MET += deltaMET;
@@ -2357,7 +2064,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetJetsMET(TVector3& MET, int id){
 }
 
 template <>
-TVector3 AnalysisBase<SUSYNANOBase>::GetMET(){
+TVector3 AnalysisBase<NANORun3>::GetMET(){
   TVector3 MET;
   GetJetsMET(MET);
 
@@ -2365,7 +2072,7 @@ TVector3 AnalysisBase<SUSYNANOBase>::GetMET(){
 }
 
 template <>
-TVector3 AnalysisBase<SUSYNANOBase>::GetAltMET(){
+TVector3 AnalysisBase<NANORun3>::GetAltMET(){
   TVector3 MET;
   MET.SetPtEtaPhi(MET_pt,0.0,MET_phi);
 
@@ -2373,23 +2080,23 @@ TVector3 AnalysisBase<SUSYNANOBase>::GetAltMET(){
 }
 
 template <>
-double AnalysisBase<SUSYNANOBase>::Get_LHE_HT(){
+double AnalysisBase<NANORun3>::Get_LHE_HT(){
   return LHE_HT;
 }
 
 template <>
-double AnalysisBase<SUSYNANOBase>::Get_LHE_HTIncoming(){
+double AnalysisBase<NANORun3>::Get_LHE_HTIncoming(){
   return LHE_HTIncoming;
 }
 
 template <>
-ParticleList AnalysisBase<SUSYNANOBase>::GetJets(int id){
+ParticleList AnalysisBase<NANORun3>::GetJets(int id){
   TVector3 dum;
   return GetJetsMET(dum, id);
 }
 
 template <>
-ParticleList AnalysisBase<SUSYNANOBase>::GetElectrons(){
+ParticleList AnalysisBase<NANORun3>::GetElectrons(){
   int year = 2017;
   if(m_FileTag.find("16") != std::string::npos)
     year = 2016;
@@ -2432,9 +2139,10 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetElectrons(){
     // FO baseline criteria
     if(Electron_lostHits[i] == 0 && Electron_convVeto[i]){
 
-      double mva = Electron_mvaFall17V1noIso[i];
-      if(year == 2016 || year == 2018)
-	mva = Electron_mvaFall17V2noIso[i];
+//      double mva = Electron_mvaFall17V1noIso[i];
+//      if(year == 2016 || year == 2018)
+//	mva = Electron_mvaFall17V2noIso[i];
+	double mva = Electron_mvaNoIso[i];
 
 
       // convert to raw MVA output
@@ -2811,12 +2519,61 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetElectrons(){
     list.push_back(lep);
   }
 
+  // Adding the lowpt electrons here
+
+  int N1 = nLowPtElectron;
+  for(int i = 0; i < N1; i++){
+    // baseline lepton definition
+    if(LowPtElectron_pt[i] < 1. || LowPtElectron_pt[i] >= 5. || fabs(Electron_eta[i]) > 2.5)
+      continue;
+    if(LowPtElectron_convVeto[i] == 0)
+      continue;
+    if(fabs(LowPtElectron_dxy[i]) >= 0.05 || fabs(LowPtElectron_dz[i]) >= 0.1)
+      continue;
+    if(LowPtElectron_ID[i] < 1.6) // need to tune after feedback from Brady
+      continue;
+    //if(LowPtElectron_dxyErr[i] < 1.e-8 || LowPtElectron_dzErr[i] < 1.e-8)
+    //continue;
+    float dxysig1 = LowPtElectron_dxy[i]/LowPtElectron_dxyErr[i];
+    float dzsig1 = LowPtElectron_dz[i]/LowPtElectron_dzErr[i];
+    float ip3d1 = sqrt(LowPtElectron_dxy[i]*LowPtElectron_dxy[i]+LowPtElectron_dz[i]*LowPtElectron_dz[i]);
+    float ipsig1 = sqrt(dxysig1*dxysig1+ dzsig1*dzsig1);
+    //if (ipsig1 >= 8)
+    //continue;
+
+      //if(Electron_pfRelIso03_all[i]*Electron_pt[i] >= 20. + 300./Electron_pt[i])
+      //continue;
+
+    Particle lep;
+    lep.SetPtEtaPhiM(LowPtElectron_pt[i], LowPtElectron_eta[i],
+		     LowPtElectron_phi[i], std::max(LowPtElectron_mass[i],float(1.e-6)));
+    lep.SetPDGID( (LowPtElectron_charge[i] < 0. ? 11 : -11) );
+    lep.SetCharge( (LowPtElectron_charge[i] < 0. ? -1 : 1) );
+
+    lep.SetDxy(LowPtElectron_dxy[i]);
+    lep.SetDxyErr(LowPtElectron_dxyErr[i]);
+    lep.SetDz(LowPtElectron_dz[i]);
+    lep.SetDzErr(LowPtElectron_dzErr[i]);
+    lep.SetIP3D(ip3d1);
+    lep.SetSIP3D(ipsig1);
+
+    lep.SetRelIso(LowPtElectron_miniPFRelIso_all[i]);
+    lep.SetMiniIso(LowPtElectron_miniPFRelIso_all[i]);
+    lep.SetParticleID(kMedium);
+    //if (LowPtElectron_pt[i] < 3.0 || (LowPtElectron_pt[i] >= 3.0 && LowPtElectron_embeddedID[i] >=6))
+    //  lep.SetParticleID(kTight);
+    if (LowPtElectron_pt[i] < 3.0 || (LowPtElectron_pt[i] >= 3.0 && LowPtElectron_ID[i] >=4)) // need to tune after feedback from Brady
+      lep.SetParticleID(kTight);
+ 
+    list.push_back(lep);
+  }
+
   return list;
 
 }
 
 template <>
-ParticleList AnalysisBase<SUSYNANOBase>::GetMuons(){
+ParticleList AnalysisBase<NANORun3>::GetMuons(){
   int year = 2017;
   if(m_FileTag.find("16") != std::string::npos)
     year = 2016;
@@ -2898,60 +2655,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetMuons(){
 }
 
 template <>
-ParticleList AnalysisBase<SUSYNANOBase>::GetSVs(const TVector3& PV){
-  ParticleList list;
-  
-  int N = nSV;
-  for(int i = 0; i < N; i++){
-    if(SV_chi2[i] < 0.)
-      continue;
-    if(SV_pt[i] >= 20. || SV_pt[i] < 2.)
-      continue;
-    if(fabs(SV_eta[i]) >= 2.4)
-      continue;
-
-    TVector3 xSV;
-    xSV.SetXYZ(SV_x[i],SV_y[i],SV_z[i]);
-
-    Particle SV;
-    SV.SetPtEtaPhiM(SV_pt[i],SV_eta[i],SV_phi[i],SV_mass[i]);
-
-    SV.SetDxy(fabs((xSV-PV).Pt()));
-    SV.SetD3d(SV_dlen[i]);
-    SV.SetD3dSig(fabs(SV_dlenSig[i]));
-    SV.SetCosTheta((xSV-PV).Unit().Dot(SV.Vect().Unit()));
-    SV.SetNdof(SV_ndof[i]);
-
-    std::map<std::string, double> probs = m_SVDiscrTool.PROB(SV);
-
-    SV.SetProbB(probs["prob_isB"]); 
-    SV.SetProbC(probs["prob_isC"]); 
-
-    // if((xSV-PV).Unit().Dot(SV.Vect().Unit()) <= 0.98)
-    //   continue;
-    
-    // if(SB_pt[i] < 20. && SB_dlenSig[i] > 4. &&
-    //    SB_dxy[i] < 3. && SB_DdotP[i] > 0.98 &&
-    //    SB_ntracks[i] >= 3){
-
-    // dxy cut
-    // if(fabs((xSV-PV).Pt()) >= 3.)
-    //   continue;
-
-    // if(SV_dlenSig[i] <= 4.)
-    //   continue;
-    // if(SV_ndof[i] < 1.8) // replacement for ntracks cut...
-    //   continue;
-
-    if(probs["prob_isB"] > 0.3)
-      list.push_back(SV);
-  }
-  
-  return list;
-}
-
-template <>
-ParticleList AnalysisBase<SUSYNANOBase>::GetGenElectrons(){
+ParticleList AnalysisBase<NANORun3>::GetGenElectrons(){
   ParticleList list;
 
   if(IsData())
@@ -3003,7 +2707,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetGenElectrons(){
 }
 
 template <>
-ParticleList AnalysisBase<SUSYNANOBase>::GetGenMuons(){
+ParticleList AnalysisBase<NANORun3>::GetGenMuons(){
   ParticleList list;
 
   if(IsData())
@@ -3057,7 +2761,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetGenMuons(){
 
 
 template <>
-ParticleList AnalysisBase<SUSYNANOBase>::GetGenNeutrinos(){
+ParticleList AnalysisBase<NANORun3>::GetGenNeutrinos(){
   ParticleList list;
 
   if(IsData())
@@ -3085,7 +2789,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetGenNeutrinos(){
 }
 
 template <>
-ParticleList AnalysisBase<SUSYNANOBase>::GetGenBosons(){
+ParticleList AnalysisBase<NANORun3>::GetGenBosons(){
   ParticleList list;
 
   if(IsData())
@@ -3113,7 +2817,7 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetGenBosons(){
 }
 
 template <>
-ParticleList AnalysisBase<SUSYNANOBase>::GetGenSparticles(){
+ParticleList AnalysisBase<NANORun3>::GetGenSparticles(){
   ParticleList list;
 
   if(IsData())
@@ -3140,6 +2844,5 @@ ParticleList AnalysisBase<SUSYNANOBase>::GetGenSparticles(){
   return list;
 }
 
-template class AnalysisBase<StopNtupleTree>;
-template class AnalysisBase<SUSYNANOBase>;
+template class AnalysisBase<NANORun3>;
 

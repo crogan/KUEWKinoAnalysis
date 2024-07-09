@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 
-import os, sys, commands, time
+import os, sys, time
 from colorama import Fore, Back, Style
 
 # Example submission: 
@@ -20,7 +20,9 @@ RESTFRAMES  = './scripts/setup_RestFrames_connect.sh'
 CMSSW_SETUP = './scripts/cmssw_setup_connect.sh'
 TREE        = "Events"
 USER        = os.environ['USER']
-OUT_BASE    = "/ospool/cms-user/"+USER+"/NTUPLES/Processing"
+#OUT_BASE    = "/ospool/cms-user/"+USER+"/NTUPLES/Processing"
+OUT_BASE    = "/uscms/home/"+USER+"/nobackup/NTUPLES/Processing"
+#/uscms/home/z374f439/nobackup/CMSSW_13_3_1/src/SUSYCascades
 LIST        = "default.list"
 QUEUE       = ""
 SPLIT       = 1
@@ -98,7 +100,6 @@ def write_sh_single(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,
     fsrc.write('-btag='+BTAGFOLD+" ")
     fsrc.write('-lep='+LEPFOLD+" ")
     fsrc.write('-jme='+JMEFOLD+" ")
-    fsrc.write('-svfile='+SVFILE+" ")
     fsrc.write('-metfile='+METFILE+" ")
     fsrc.write('-prefirefile='+PREFIREFILE+" ")
     fsrc.write('-split=1,'+str(n)+'\n')
@@ -119,7 +120,8 @@ def write_sh_single(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,
         # CMS connect is working on implementing an OSDF endpoint solution.
         transfer_input = 'transfer_input_files = https://stash.osgconnect.net/cms-user/'+USER+"/"+NAME+"/"+'config.tgz,https://stash.osgconnect.net/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
     else:
-        transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/ospool/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
+        #transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/ospool/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
+        transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/uscms/home/zflowers/whatever_you_want/sandbox-CMSSW_13_3_1.tar.bz2\n'
     if VERBOSE:
         print(transfer_input)
     fsrc.write(transfer_input)
@@ -167,7 +169,6 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n,NAME)
     fsrc.write('-btag='+BTAGFOLD+" ")
     fsrc.write('-lep='+LEPFOLD+" ")
     fsrc.write('-jme='+JMEFOLD+" ")
-    fsrc.write('-svfile='+SVFILE+" ")
     fsrc.write('-metfile='+METFILE+" ")
     fsrc.write('-prefirefile='+PREFIREFILE+" ")
     splitstring = '-split=%s,%d\n' % ('$$([$(Step)+1])', n)
@@ -186,7 +187,8 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n,NAME)
         # CMS connect is working on implementing an OSDF endpoint solution.
         transfer_input = 'transfer_input_files = https://stash.osgconnect.net/cms-user/'+USER+"/"+NAME+"/"+'config.tgz,https://stash.osgconnect.net/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
     else:
-        transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/ospool/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
+        #transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/ospool/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
+        transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/uscms/home/zflowers/whatever_you_want/sandbox-CMSSW_13_3_1.tar.bz2\n'
     if VERBOSE:
         print(transfer_input)
     fsrc.write(transfer_input)
@@ -212,7 +214,7 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n,NAME)
 
 if __name__ == "__main__":
     if not len(sys.argv) > 1 or '-h' in sys.argv or '--help' in sys.argv:
-        print "Usage: %s [-q queue] [-tree treename] [-list listfile.list] [-split S] [--sms] [--data] [--sys] [--fastsim] [--slim] [--dry-run] [--verbose] [--count] [--csv]" % sys.argv[0]
+        print (f"Usage: {sys.argv(0)} [-q queue] [-tree treename] [-list listfile.list] [-split S] [--sms] [--data] [--sys] [--fastsim] [--slim] [--dry-run] [--verbose] [--count] [--csv]")
         sys.exit(1)
 
     argv_pos    = 1
@@ -275,24 +277,24 @@ if __name__ == "__main__":
     if SPLIT <= 1:
         SPLIT = 1
     
-    print " --- Preparing condor submission to create ntuples."
+    print (" --- Preparing condor submission to create ntuples.")
     if DO_DATA:
-        print " --- Processing Data"
+        print (" --- Processing Data")
 
     if DO_SMS:
-        print " --- Processing SMS"
+        print (" --- Processing SMS")
     
     if SYS:
-        print " --- Processing SYS"
+        print (" --- Processing SYS")
 
     if FASTSIM:
-        print " --- Processing FastSim"
+        print (" --- Processing FastSim")
 
     if SLIM:
-        print " --- Processing Slim"
+        print (" --- Processing Slim")
 
     if COUNT:
-        print " --- Only Counting (No Processing)"
+        print (" --- Only Counting (No Processing)")
 
     # input sample list
     listfile = LIST
@@ -386,12 +388,6 @@ if __name__ == "__main__":
         os.system("cp -r root/Prefire "+config+".")
         PREFIREFILE = "./config/Prefire/Prefire.root"
 
-        # copy SV NN model
-        if VERBOSE:
-            print("making SV file")
-        os.system("cat json/lwtnn/nano_train_model.json > "+config+"NNmodel.json")
-        SVFILE = "./config/NNmodel.json"
-
         if VERBOSE:
             print("Setting up working area...")
         
@@ -410,7 +406,7 @@ if __name__ == "__main__":
     clean_inputlist = []
     input_info      = {}
 
-    knowntags = ["Fall17_94X","Autumn18_102X","Summer16_94X","Fall17_102X","Summer16_102X","Summer20UL16_102X","Summer20UL16APV_102X","Summer20UL17_102X","Summer20UL18_102X","RunIISummer20UL17NanoAODv9"]
+    knowntags = ["Fall17_94X","Autumn18_102X","Summer16_94X","Fall17_102X","Summer16_102X","Summer20UL16_102X","Summer20UL16APV_102X","Summer20UL17_102X","Summer20UL18_102X","RunIISummer20UL17NanoAODv9","Summer22_130X","Summer22_EE_130X","Summer23_130X","Summer23_BPix_130X"]
     
     n_samples = 0
     with open(listfile,'r') as mylist:
@@ -512,8 +508,10 @@ if __name__ == "__main__":
         #print "creating tarball from: ", TARGET
         os.system("sleep 10") # sleep so copy command(s) can catch up...
         os.system("tar -C "+config+"/../ -czf "+TARGET+"/config.tgz config")
-        os.system("mkdir -p /ospool/cms-user/"+USER+"/"+NAME)
-        os.system("cp "+TARGET+"/config.tgz /ospool/cms-user/"+USER+"/"+NAME+"/config.tgz")
+        #os.system("mkdir -p /ospool/cms-user/"+USER+"/"+NAME)
+        #os.system("cp "+TARGET+"/config.tgz /ospool/cms-user/"+USER+"/"+NAME+"/config.tgz")
+        os.system("mkdir -p /uscms/home/"+USER+"/"+NAME)
+        os.system("cp "+TARGET+"/config.tgz /uscms/home/"+USER+"/"+NAME+"/config.tgz")
         if VERBOSE:
             print("Created tar ball")
 
@@ -525,7 +523,7 @@ if __name__ == "__main__":
     # Prep csv file
     if CSV:
         csv_name = LIST.split("/")[-1].split(".")[0]
-        f_csv = open("{0}".format(TARGET)+"/"+csv_name+".csv",'w')
+        f_csv = open(TARGET+"/"+csv_name+".csv",'w')
         f_csv.write('sample,clusterid,totaljobs')
         f_csv.write('\n')
 
@@ -535,7 +533,7 @@ if __name__ == "__main__":
             sample_handle = f.split("/")
             sample_handle = sample_handle[-1]
             sample_handle = sample_handle.replace(".submit",'')
-            print "submitting: {0}".format(f)
+            print (f"submitting: {f}")
             if CSV:
                 os.system('condor_submit '+f+' | tee '+sample_handle+'.txt')
                 with open(sample_handle+'.txt','r') as sample_submit_file:
@@ -555,29 +553,29 @@ if __name__ == "__main__":
             n_root_files    = input_info[f]["n_root_files"] 
             n_jobs          = input_info[f]["n_jobs"] 
             n_jobs = SPLIT * n_root_files
-            print "sample: {0}".format(f)
-            print(" - number of root files  = {0}".format(n_root_files))
-            print(" - number of jobs        = {0}".format(n_jobs))
+            print(f"sample: {f}")
+            print(f" - number of root files  = {0}".format(n_root_files))
+            print(f" - number of jobs        = {0}".format(n_jobs))
             # make sure that "clusterid" has been filled to avoid key error
             if not DRY_RUN and not COUNT and CSV:
-                f_csv.write("{0}".format(f+","+input_info[f]["clusterid"].replace('.\n','')+",{0}".format(n_jobs)+'\n'))
+                f_csv.write(f"{0}".format(f+","+input_info[f]["clusterid"].replace('.\n','')+",{0}".format(n_jobs)+'\n'))
 
     # Close csv file
     if CSV:
          f_csv.close()
     
     # Summary Info
-    print "----------------------------"
-    print "Condor Submission Info"
-    print "----------------------------"
-    print "sample list:             {0}".format(LIST)
-    print "working directory:       {0}".format(TARGET)
-    print "output directory:        {0}".format(OUT_DIR)
-    print "number of samples:       {0}".format(n_samples)
-    print "split:                   {0}".format(SPLIT)
-    print "total input root files:  {0}".format(total_root_files)
-    print "total condor jobs:       {0}".format(total_jobs)
-    print "----------------------------"
+    print ("----------------------------")
+    print ("Condor Submission Info")
+    print ("----------------------------")
+    print (f"sample list:             {LIST}")
+    print (f"working directory:       {TARGET}")
+    print (f"output directory:        {OUT_DIR}")
+    print (f"number of samples:       {n_samples}")
+    print (f"split:                   {SPLIT}")
+    print (f"total input root files:  {total_root_files}")
+    print (f"total condor jobs:       {total_jobs}")
+    print ("----------------------------")
 
     if DRY_RUN or COUNT:
         print("No jobs were submitted.")

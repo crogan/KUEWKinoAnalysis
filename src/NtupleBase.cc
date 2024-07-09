@@ -1,8 +1,8 @@
 #include <TFile.h>
 
 #include "NtupleBase.hh"
-#include "StopNtupleTree.hh"
 #include "SUSYNANOBase.hh"
+#include "NANORun3.hh"
 
 template <class Base>
 NtupleBase<Base>::NtupleBase(TTree* tree)
@@ -171,7 +171,5 @@ void NtupleBase<Base>::WriteNtuple(const string& filename, int ichunk, int nchun
   
 }
 
-template class NtupleBase<StopNtupleTree>;
-template class NtupleBase<SUSYNANOBase>;
-
+template class NtupleBase<NANORun3>;
 
