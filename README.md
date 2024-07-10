@@ -62,13 +62,20 @@ Download this repos in the `CMSSW_13_3_1/src` directory.
 Setup the RestFrames framework in the `CMSSW_13_3_1/src` directory.
 You'll copy the tar ball from the area below and unpack it
 ```
-cp /uscms/home/z374f439/nobackup/RestFrames_vNewest.tar 
-tar -xvf RestFrames_vNew.tar
+cp /uscms/home/z374f439/nobackup/RestFrames_vNewest.tar ./
+tar -xvf RestFrames_vNewest.tar
 cd RestFrames
 ./configure --prefix=$CMSSW_BASE/src/restframe_build
 make -j8
 make install
 cd ..
+```
+
+### CMS Connect
+If running on CMS connect then the tar ball to copy is
+```
+
+cp /ospool/cms-user/zflowers/RestFrames_vNewest.tar ./
 ```
 
 ### Build/compile
