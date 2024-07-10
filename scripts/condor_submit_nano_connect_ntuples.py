@@ -121,9 +121,8 @@ def write_sh_single(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,
         transfer_input = 'transfer_input_files = https://stash.osgconnect.net/cms-user/'+USER+"/"+NAME+"/"+'config.tgz,https://stash.osgconnect.net/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
     else:
         #transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/ospool/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
-        transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/uscms/home/zflowers/whatever_you_want/sandbox-CMSSW_13_3_1.tar.bz2\n'
-    if VERBOSE:
-        print(transfer_input)
+        #transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/uscms/home/zflowers/whatever_you_want/sandbox-CMSSW_13_3_1.tar.bz2\n'
+        transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/ospool/cms-user/zflowers/public/sandbox-CMSSW_13_3_1.tar.bz2\n'
     fsrc.write(transfer_input)
 
     fsrc.write('should_transfer_files = YES\n')
@@ -188,7 +187,8 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n,NAME)
         transfer_input = 'transfer_input_files = https://stash.osgconnect.net/cms-user/'+USER+"/"+NAME+"/"+'config.tgz,https://stash.osgconnect.net/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
     else:
         #transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/ospool/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
-        transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/uscms/home/zflowers/whatever_you_want/sandbox-CMSSW_13_3_1.tar.bz2\n'
+        #transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/uscms/home/zflowers/whatever_you_want/sandbox-CMSSW_13_3_1.tar.bz2\n'
+        transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/ospool/cms-user/zflowers/public/sandbox-CMSSW_13_3_1.tar.bz2\n'
     if VERBOSE:
         print(transfer_input)
     fsrc.write(transfer_input)

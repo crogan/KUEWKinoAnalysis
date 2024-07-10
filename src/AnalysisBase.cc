@@ -730,18 +730,21 @@ bool AnalysisBase<NANORun3>::GetMETtrigger(){
     year = 2017;
   if(m_FileTag.find("18") != std::string::npos)
     year = 2018;
+  if(m_FileTag.find("22") != std::string::npos)
+    year = 2022;
+  if(m_FileTag.find("23") != std::string::npos)
+    year = 2023;
+  if(m_FileTag.find("24") != std::string::npos)
+    year = 2024;
 
-/*
   if(year == 2016)
     return (HLT_PFMET120_PFMHT120_IDTight ||
 	    HLT_PFMETNoMu120_PFMHTNoMu120_IDTight);
-  if(year == 2017 ||
-     year == 2018)
+  if(year == 2017 || year == 2018 || year == 2022 || year == 2023 || year == 2024)
     return (HLT_PFMET120_PFMHT120_IDTight ||
 	    HLT_PFMETNoMu120_PFMHTNoMu120_IDTight ||
 	    HLT_PFMET120_PFMHT120_IDTight_PFHT60 ||
 	    HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60);
-*/
 
   return 0;
 }
@@ -753,8 +756,13 @@ bool AnalysisBase<NANORun3>::GetMETHTtrigger(){
     year = 2017;
   if(m_FileTag.find("18") != std::string::npos)
     year = 2018;
+  if(m_FileTag.find("22") != std::string::npos)
+    year = 2022;
+  if(m_FileTag.find("23") != std::string::npos)
+    year = 2023;
+  if(m_FileTag.find("24") != std::string::npos)
+    year = 2024;
 
-/*
   if(year == 2016)
     return (HLT_PFHT300_PFMET100 ||
 	    HLT_PFHT300_PFMET110);
@@ -766,7 +774,6 @@ bool AnalysisBase<NANORun3>::GetMETHTtrigger(){
 	    HLT_PFHT700_PFMET95_PFMHT95_IDTight ||
 	    HLT_PFHT800_PFMET75_PFMHT75_IDTight ||
 	    HLT_PFHT800_PFMET85_PFMHT85_IDTight);
-*/
   return 0;
 }
 
