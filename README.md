@@ -47,18 +47,22 @@ cmsenv
     
 ### Checkout required packages
 Download this repos in the `CMSSW_13_3_1/src` directory.
- Use the KU branch of HiggsAnalysis, the connect branch of CombineHarvester, and the master branch of SUSYCascades.
+<!--- Use the KU branch of HiggsAnalysis, the connect branch of CombineHarvester, and the master branch of SUSYCascades.
 ```
  git clone -b KU https://github.com/zflowers/HiggsAnalysis-CombinedLimit.git HiggsAnalysis/CombinedLimit
  git clone -b connect https://github.com/zflowers/CombineHarvester.git CombineHarvester
-git clone -b master https://github.com/ku-cms/SUSYCascades.git SUSYCascades
+ git clone -b master https://github.com/ku-cms/SUSYCascades.git SUSYCascades
+```
+--->
+```
+ git clone -b master https://github.com/ku-cms/SUSYCascades.git SUSYCascades
 ```
 
 ### Setup RestFrames
 Setup the RestFrames framework in the `CMSSW_13_3_1/src` directory.
 You'll copy the tar ball from the area below and unpack it
 ```
-wget --no-check-certificate http://stash.osgconnect.net/+zflowers/RestFrames_vNew.tar
+cp /uscms/home/z374f439/nobackup/RestFrames_vNewest.tar 
 tar -xvf RestFrames_vNew.tar
 cd RestFrames
 ./configure --prefix=$CMSSW_BASE/src/restframe_build
@@ -82,7 +86,7 @@ cd SUSYCascades
 source scripts/setup_RestFrames_connect.sh
 make clean && make cmssw -j8
 ```
-
+<!---
  ### Running combineTool.py on cms connect syntax
  To run text2workspace (T2W):
  Go to the directory with the datacard for a given mass point
@@ -107,3 +111,5 @@ make clean && make cmssw -j8
  
  Note that the second step only should be ran after the jobs in the first step finish
  The input file is just the entire directory that the workspace lives in
+--->
+
