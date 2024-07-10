@@ -8,7 +8,7 @@ CMSSW-dependent build
 In order for the SUSYCascades package to build the `BuildFit.x` executable,
 the user must make sure that **CMSSW** is available and include the **SUSYCascades** package
 in the correct location in the **CMSSW** directory structure.
-[ You will also need the **CombineHarvester** and **HiggsAnalysis** **CMSSW** packages.
+<!--- You will also need the **CombineHarvester** and **HiggsAnalysis** **CMSSW** packages.
 These packages must be included in the **CMSSW** directory structure as:
 ```
 - CMSSW_Z_Y_X
@@ -17,7 +17,7 @@ These packages must be included in the **CMSSW** directory structure as:
     - HiggsAnalysis
     - SUSYCascades
  ```
-]: #
+--->
 You can setup a **CMSSW** area and checkout the required packages by performing the terminal commands below. 
 These instructions are for bash users.
 Bash is recommended, as framework scripts for other shells are not created/supported.
