@@ -58,17 +58,11 @@ Download this repos in the `CMSSW_13_3_1/src` directory.
  git clone -b master https://github.com/ku-cms/SUSYCascades.git SUSYCascades
 ```
 
-### Setup RestFrames
-Setup the RestFrames framework in the `CMSSW_13_3_1/src` directory.
-You'll copy the tar ball from the area below and unpack it
+### FNAL LPC
+If running on lxplus then the tar ball to copy is
 ```
+
 cp /uscms/home/z374f439/nobackup/RestFrames_vNewest.tar ./
-tar -xvf RestFrames_vNewest.tar
-cd RestFrames
-./configure --prefix=$CMSSW_BASE/src/restframe_build
-make -j8
-make install
-cd ..
 ```
 
 ### CMS Connect
@@ -83,6 +77,18 @@ If running on lxplus then the tar ball to copy is
 ```
 
 cp /afs/cern.ch/user/z/zflowers/storage/public/RestFrames_vNewest.tar ./
+```
+
+### Setup RestFrames
+Setup the RestFrames framework in the `CMSSW_13_3_1/src` directory.
+You'll copy the tar ball from the area below and unpack it
+```
+tar -xvf RestFrames_vNewest.tar
+cd RestFrames
+./configure --prefix=$CMSSW_BASE/src/restframe_build
+make -j8
+make install
+cd ..
 ```
 
 ### Build/compile
