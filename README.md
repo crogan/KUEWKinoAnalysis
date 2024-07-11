@@ -78,6 +78,13 @@ If running on CMS connect then the tar ball to copy is
 cp /ospool/cms-user/zflowers/RestFrames_vNewest.tar ./
 ```
 
+### LXPlus
+If running on lxplus then the tar ball to copy is
+```
+
+cp /afs/cern.ch/user/z/zflowers/storage/public/RestFrames_vNewest.tar ./
+```
+
 ### Build/compile
 Build the CMSSW packages from the `CMSSW_13_3_1/src` directory.
 ```
