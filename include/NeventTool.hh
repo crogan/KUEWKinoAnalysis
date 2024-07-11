@@ -3,10 +3,15 @@
 
 #include <iostream>
 #include <string>
+#include <fstream>
 #include <map>
 
 #include "TFile.h"
 #include "TTree.h"
+#include "TSystem.h"
+
+bool check_dataset_file(std::string dataset_name);
+std::string get_str_between_two_str(const std::string &s, const std::string &start_delim, const std::string &stop_delim);
 
 class NeventTool {
 
@@ -22,6 +27,8 @@ public:
   double GetNweight_BKG(const std::string& dataset, const std::string& filetag) const;
   double GetNweight_SMS(const std::string& dataset, const std::string& filetag, int MP, int MC) const;
   double GetFilterEff(const std::string& dataset, const std::string& filetag, int lumiblock = -1) const;
+
+  int EventsInDAS(const std::string& u_dataset = "", const std::string& u_filetag = "");
 
 private:
   static std::map<std::pair<std::string,std::string>,double> m_Label2Nevent_BKG;

@@ -219,6 +219,8 @@ int main(int argc, char* argv[]) {
     }
   }
 
+  int DASEvents = 0;
+
   cout << "MAX NGEN " << maxNGEN << endl;
 
   TFile* fout = new TFile(string(outputFileName).c_str(),"RECREATE");
@@ -230,6 +232,7 @@ int main(int argc, char* argv[]) {
   tout->Branch("dataset", &dataset);
   tout->Branch("MP", &MP);
   tout->Branch("MC", &MC);
+  tout->Branch("DASEvents", &DASEvents);
   if(DO_SMS){
     int Nmass = masses.size();
     for(int i = 0; i < Nmass; i++){

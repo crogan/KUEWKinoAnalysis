@@ -266,6 +266,64 @@ std::map<std::pair<std::string,std::string>,std::map<std::pair<int,int>,double> 
   return Label2Nweight;
 }
 
+std::string get_str_between_two_str(const std::string &s, const std::string &start_delim, const std::string &stop_delim)
+{
+ unsigned first_delim_pos = s.find(start_delim);
+ unsigned end_pos_of_first_delim = first_delim_pos + start_delim.length();
+ unsigned last_delim_pos = s.find_first_of(stop_delim, end_pos_of_first_delim);
+ return s.substr(end_pos_of_first_delim,last_delim_pos - end_pos_of_first_delim);
+}
+
+bool check_dataset_file(std::string dataset_name)
+{
+ std::ifstream testfile(dataset_name);
+ if(testfile.peek() == std::ifstream::traits_type::eof())
+ {
+  testfile.close();
+  return false;
+ }
+ testfile.close();
+ return true;
+}
+
+int NeventTool::EventsInDAS(const std::string& u_dataset, const std::string& u_filetag)
+{
+ std::string dataset = u_dataset;
+ std::string filetag = u_filetag;
+ if(filetag.find("_SMS") != std::string::npos)
+   filetag.erase(filetag.length()-4);
+ filetag.erase(filetag.length()-5);
+ double Events = 0.;
+ gSystem->Exec(("dasgoclient -query=\"dataset=/"+dataset+"/*"+filetag+"*NanoAODv12*"+"*/NANO*\" >> datasets_"+filetag+"_"+dataset+".txt").c_str());
+ if(!check_dataset_file("datasets_"+filetag+"_"+dataset+".txt"))
+   gSystem->Exec(("dasgoclient -query=\"dataset=/"+dataset+"/*"+filetag+"*NanoAODv7*"+"*/NANO*\" >> datasets_"+filetag+"_"+dataset+".txt").c_str());
+ if(!check_dataset_file("datasets_"+filetag+"_"+dataset+".txt"))
+   gSystem->Exec(("dasgoclient -query=\"dataset=/"+dataset+"/*"+filetag+"*NanoAODv4*"+"*/NANO*\" >> datasets_"+filetag+"_"+dataset+".txt").c_str());
+ if(!check_dataset_file("datasets_"+filetag+"_"+dataset+".txt"))
+   gSystem->Exec(("dasgoclient -query=\"dataset=/"+dataset+"/*"+filetag+"*NanoAOD*"+"*/NANO*\" >> datasets_"+filetag+"_"+dataset+".txt").c_str());
+ std::ifstream infile("datasets_"+filetag+"_"+dataset+".txt");
+
+ string dataset_fullname = "";
+ while(getline(infile,dataset_fullname))
+ {
+  gSystem->Exec(("dasgoclient -query=\"file dataset="+dataset_fullname+"\" -json >> "+filetag+"_"+dataset+".json").c_str());
+ }
+ infile.close();
+ infile.open(filetag+"_"+dataset+".json");
+ string line = "";
+ while(getline(infile,line))
+ {
+  if(line.find("nevents") != std::string::npos)
+  {
+   string events_string = get_str_between_two_str(line,"nevents\":",",");
+   Events += std::stod(events_string);
+  }
+ }
+ gSystem->Exec("rm datasets_*.txt");
+ gSystem->Exec("rm *.json");
+ return Events;
+}
+
 std::map<std::string,std::map<int,double> > NeventTool::InitMap_FilterEff(){
   std::map<std::string,std::map<int,double> > Label2FilterEff;
 
