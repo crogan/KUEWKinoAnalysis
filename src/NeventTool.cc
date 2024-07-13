@@ -35,6 +35,7 @@ void NeventTool::BuildMap(const std::string& rootfile){
 
   m_Tree->SetMakeClass(1);
   m_Tree->SetBranchAddress("Nevent", &m_Nevent, &b_m_Nevent);
+  m_Tree->SetBranchAddress("NDAS", &m_NDAS, &b_m_NDAS);
   m_Tree->SetBranchAddress("Nweight", &m_Nweight, &b_m_Nweight);
   m_Tree->SetBranchAddress("dataset", &m_dataset, &b_m_dataset);
   m_Tree->SetBranchAddress("filetag", &m_filetag, &b_m_filetag);

@@ -3,6 +3,7 @@
 #include "NtupleBase.hh"
 #include "SUSYNANOBase.hh"
 #include "NANORun3.hh"
+#include "NeventTool.hh"
 
 template <class Base>
 NtupleBase<Base>::NtupleBase(TTree* tree)
@@ -134,16 +135,21 @@ void NtupleBase<Base>::WriteNtuple(const string& filename, int ichunk, int nchun
   
   string dataset = string(AnalysisBase<Base>::GetDataSet());
   string filetag = string(AnalysisBase<Base>::GetFileTag());
+  int NDAS = 0;
   double Nevent;
   double Nweight = 0.;
   int MP;
   int MC;
+  tout->Branch("NDAS", &NDAS);
   tout->Branch("Nevent", &Nevent);
   tout->Branch("Nweight", &Nweight);
   tout->Branch("filetag", &filetag);
   tout->Branch("dataset", &dataset);
   tout->Branch("MP", &MP);
   tout->Branch("MC", &MC);
+  // add DAS count
+  NeventTool eventTool;
+  NDAS = eventTool.EventsInDAS(dataset, filetag);
   int Nmass = m_masses.size();
   for(int i = 0; i < Nmass; i++){
     Nevent = m_mapNevent[m_masses[i]];
@@ -151,6 +157,7 @@ void NtupleBase<Base>::WriteNtuple(const string& filename, int ichunk, int nchun
     MC = m_masses[i].second;
     tout->Fill();
   }
+
   tout->Write("",TObject::kOverwrite);
   delete tout;
 

@@ -15,8 +15,8 @@ cmssw_setup() {
     basedir=$PWD
     rel=$(dirname $(tar -tvjf "$1" | head -1 | awk '{print $NF}'))
     #rel=$(echo CMSSW_*)
-    arch=$(ls $rel/.SCRAM/|grep slc)
-    old_release_top=$(awk -F= '/RELEASETOP/ {print $2}' $rel/.SCRAM/slc*/Environment)
+    arch=$(ls $rel/.SCRAM/|grep el)
+    old_release_top=$(awk -F= '/RELEASETOP/ {print $2}' $rel/.SCRAM/*/Environment)
     tmp=$basedir/$rel
     echo "old_release_top = $old_release_top"
     
@@ -27,7 +27,7 @@ cmssw_setup() {
     mkdir cmssw-tmp
     cd cmssw-tmp
     scramv1 project -f CMSSW $rel
-    new_release_top=$(awk -F= '/RELEASETOP/ {print $2}' $rel/.SCRAM/slc*/Environment)
+    new_release_top=$(awk -F= '/RELEASETOP/ {print $2}' $rel/.SCRAM/Environment)
     cd $rel
     echo ">>> preparing sandbox release $rel"
     for i in bin lib python src; do

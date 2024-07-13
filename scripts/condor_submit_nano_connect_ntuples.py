@@ -17,12 +17,12 @@ RUN_DIR     = pwd
 jobEXE      = "execute_script.sh"
 EXE         = "MakeReducedNtuple_NANO.x"
 RESTFRAMES  = './scripts/setup_RestFrames_connect.sh'
-CMSSW_SETUP = './scripts/cmssw_setup_connect.sh'
+#CMSSW_SETUP = './scripts/cmssw_setup_connect.sh'
+CMSSW_SETUP = './scripts/cmssw_setup_connect_el9.sh'
 TREE        = "Events"
 USER        = os.environ['USER']
-#OUT_BASE    = "/ospool/cms-user/"+USER+"/NTUPLES/Processing"
-OUT_BASE    = "/uscms/home/"+USER+"/nobackup/NTUPLES/Processing"
-#/uscms/home/z374f439/nobackup/CMSSW_13_3_1/src/SUSYCascades
+OUT_BASE    = "/ospool/cms-user/"+USER+"/NTUPLES/Processing"
+#OUT_BASE    = "/uscms/home/"+USER+"/nobackup/NTUPLES/Processing"
 LIST        = "default.list"
 QUEUE       = ""
 SPLIT       = 1
@@ -121,8 +121,7 @@ def write_sh_single(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,
         transfer_input = 'transfer_input_files = https://stash.osgconnect.net/cms-user/'+USER+"/"+NAME+"/"+'config.tgz,https://stash.osgconnect.net/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
     else:
         #transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/ospool/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
-        #transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/uscms/home/zflowers/whatever_you_want/sandbox-CMSSW_13_3_1.tar.bz2\n'
-        transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/ospool/cms-user/zflowers/public/sandbox-CMSSW_13_3_1.tar.bz2\n'
+        transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/ospool/cms-user/zflowers/public/sandbox-CMSSW_13_3_1-el9.tar.bz2\n'
     fsrc.write(transfer_input)
 
     fsrc.write('should_transfer_files = YES\n')
@@ -136,7 +135,7 @@ def write_sh_single(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,
     fsrc.write(transfer_out_remap)
     
     fsrc.write('+ProjectName="cms.org.ku"\n')
-    fsrc.write('+REQUIRED_OS="rhel7"\n')
+    fsrc.write('MY.SingularityImage = "/cvmfs/singularity.opensciencegrid.org/cmssw/cms:rhel9"\n')
     fsrc.write('queue')
     fsrc.close()
 
@@ -187,8 +186,7 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n,NAME)
         transfer_input = 'transfer_input_files = https://stash.osgconnect.net/cms-user/'+USER+"/"+NAME+"/"+'config.tgz,https://stash.osgconnect.net/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
     else:
         #transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/ospool/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
-        #transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/uscms/home/zflowers/whatever_you_want/sandbox-CMSSW_13_3_1.tar.bz2\n'
-        transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/ospool/cms-user/zflowers/public/sandbox-CMSSW_13_3_1.tar.bz2\n'
+        transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/ospool/cms-user/zflowers/public/sandbox-CMSSW_13_3_1-el9.tar.bz2\n'
     if VERBOSE:
         print(transfer_input)
     fsrc.write(transfer_input)
@@ -204,11 +202,11 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n,NAME)
     fsrc.write(transfer_out_remap)
     
     fsrc.write('+ProjectName="cms.org.ku"\n')
-    fsrc.write('+REQUIRED_OS="rhel7"\n')
     fsrc.write('periodic_release = (HoldReasonCode == 12 && HoldReasonSubCode == 256 || HoldReasonCode == 13 && HoldReasonSubCode == 2)\n')
     #fsrc.write('priority = 10 \n')
     fsrc.write('+RequiresCVMFS = True \n')
     #fsrc.write('+RequiresSharedFS = True \n')
+    fsrc.write('MY.SingularityImage = "/cvmfs/singularity.opensciencegrid.org/cmssw/cms:rhel9"\n')
     fsrc.write('queue '+str(n)+' from '+ifile+'\n')
     fsrc.close()
 
@@ -508,10 +506,8 @@ if __name__ == "__main__":
         #print "creating tarball from: ", TARGET
         os.system("sleep 10") # sleep so copy command(s) can catch up...
         os.system("tar -C "+config+"/../ -czf "+TARGET+"/config.tgz config")
-        #os.system("mkdir -p /ospool/cms-user/"+USER+"/"+NAME)
-        #os.system("cp "+TARGET+"/config.tgz /ospool/cms-user/"+USER+"/"+NAME+"/config.tgz")
-        os.system("mkdir -p /uscms/home/"+USER+"/"+NAME)
-        os.system("cp "+TARGET+"/config.tgz /uscms/home/"+USER+"/"+NAME+"/config.tgz")
+        os.system("mkdir -p /ospool/cms-user/"+USER+"/"+NAME)
+        os.system("cp "+TARGET+"/config.tgz /ospool/cms-user/"+USER+"/"+NAME+"/config.tgz")
         if VERBOSE:
             print("Created tar ball")
 

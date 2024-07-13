@@ -54,6 +54,7 @@ private:
   double m_efficiency;
   
   double m_Nevent;
+  int m_NDAS;
   double m_Nweight;
   std::string* m_dataset;
   std::string* m_filetag;
@@ -61,6 +62,7 @@ private:
   int m_MC;
   TBranch* b_m_lumiblock;  
   TBranch* b_m_efficiency; 
+  TBranch* b_m_NDAS;  
   TBranch* b_m_Nevent;  
   TBranch* b_m_Nweight; 
   TBranch* b_m_dataset;

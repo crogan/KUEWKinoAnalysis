@@ -2537,7 +2537,7 @@ ParticleList AnalysisBase<NANORun3>::GetElectrons(){
       continue;
     if(fabs(LowPtElectron_dxy[i]) >= 0.05 || fabs(LowPtElectron_dz[i]) >= 0.1)
       continue;
-    if(LowPtElectron_ID[i] < 1.6) // need to tune after feedback from Brady
+    if(LowPtElectron_ID[i] < 1.4) // need to tune after feedback from Brady
       continue;
     //if(LowPtElectron_dxyErr[i] < 1.e-8 || LowPtElectron_dzErr[i] < 1.e-8)
     //continue;
@@ -2569,7 +2569,7 @@ ParticleList AnalysisBase<NANORun3>::GetElectrons(){
     lep.SetParticleID(kMedium);
     //if (LowPtElectron_pt[i] < 3.0 || (LowPtElectron_pt[i] >= 3.0 && LowPtElectron_embeddedID[i] >=6))
     //  lep.SetParticleID(kTight);
-    if (LowPtElectron_pt[i] < 3.0 || (LowPtElectron_pt[i] >= 3.0 && LowPtElectron_ID[i] >=4)) // need to tune after feedback from Brady
+    if (LowPtElectron_pt[i] < 3.0 || (LowPtElectron_pt[i] >= 3.0 && LowPtElectron_ID[i] >=1.4)) // need to tune after feedback from Brady
       lep.SetParticleID(kTight);
  
     list.push_back(lep);
