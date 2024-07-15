@@ -29,11 +29,11 @@ void MakePaperPlots() {
   CategoryTreeTool CTTool;
   
   // Add signals for plots here. NOTE: If signal is not in the input BFI file it will segfault!
-  VS sigs_flavorSep, sigs_SVonly, sigs_StopMultiJet;
-  sigs_flavorSep.a("TSlepSlep_2000190").a("TChiWZ_2500240");
-  sigs_SVonly.a("T2tt_5500540").a("T2tt_5000480");
-  sigs_StopMultiJet.a("T2tt_6000520").a("T2tt_6500570");
+  const VS sigs_flavorSep({"TSlepSlep_2000190", "TChiWZ_2500240"});
+  const VS sigs_SVonly({"T2tt_5500540", "T2tt_5000480"});
+  const VS sigs_StopMultiJet({"T2tt_6000520", "T2tt_6500570"});
 
+  // Pull plots
   MakePaperPlot(file, FITPlotter, CTTool.GetCategories_0L_Summary(), "stack_summary0L_Inv", kInv);
   MakePaperPlot(file, FITPlotter, CTTool.GetCategories_1L_plotFormat(), "stack_summary1L_Inv", kInv);
   MakePaperPlot(file, FITPlotter, CTTool.GetCategories_2L_plotFormat(), "stack_summary2L_Inv", kInv);
@@ -72,12 +72,14 @@ void MakePaperPlot(TFile *saveFile,
   vector<const CategoryTree*> CTs;
   categoryTree.GetListDepth(CTs, depth-2);
 
-  auto canvas = fitPlotter->Plot1Dstack(string(RmSpace(CTs[0]->GetPlainLabel(depth))+name.c_str()),
-                                          bkgs,
-                                          *CTs[0],
-                                          type,
-                                          true);
+  TCanvas *canvas = fitPlotter->Plot1Dstack(string(RmSpace(CTs[0]->GetPlainLabel(depth))+name.c_str()),
+					    bkgs,
+					    *CTs[0],
+					    type,
+					    true);
 
+  canvas->Update();
   saveFile->cd();
   canvas->Write();
+  //canvas->SaveAs((name+"_macro.C").c_str());
 }
