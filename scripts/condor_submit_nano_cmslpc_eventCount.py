@@ -103,6 +103,7 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag):
     fsrc.write('+RequiresCVMFS = True \n')
     fsrc.write('Requirements = HAS_SINGULARITY == True\n')
     fsrc.write('RequestCpus=ifthenelse(isUndefined(CpusUsage),1,MAX({RequestCpus+1 * 2, 32}))\n')
+    fsrc.write('periodic_hold = (CpusUsage >= ((RequestCpus) *5/4)) && (JobStatus == 2)\n')
     fsrc.write('periodic_release = (HoldReasonCode == 12 && HoldReasonSubCode == 256 || HoldReasonCode == 13 && HoldReasonSubCode == 2 || HoldReasonCode == 12 && HoldReasonSubCode == 2)\n')
     fsrc.write('+REQUIRED_OS="rhel9"\n')
     fsrc.write('job_lease_duration = 3600\n')
@@ -189,7 +190,7 @@ if __name__ == "__main__":
 
     datasetlist = []
 
-    knowntags = ["Fall17_94X","Autumn18_102X","Summer16_94X","Fall17_102X","Summer16_102X","Summer20UL16_102X","Summer20UL16APV_102X","Summer20UL17_102X","Summer20UL18_102X","RunIISummer20UL17NanoAODv9","Summer22_130X","Summer22_EE_130X","Summer23_130X","Summer23_BPix_130X"]
+    knowntags = ["Fall17_94X","Autumn18_102X","Summer16_94X","Fall17_102X","Summer16_102X","Summer20UL16_102X","Summer20UL16APV_102X","Summer20UL17_102X","Summer20UL18_102X","RunIISummer20UL17NanoAODv9","Summer22_130X","Summer22EE_130X","Summer23_130X","Summer23BPix_130X"]
     
     with open(listfile,'r') as mylist:
         inputlist = mylist.readlines()
