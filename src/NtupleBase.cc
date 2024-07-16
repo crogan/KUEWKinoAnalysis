@@ -1,4 +1,5 @@
 #include <TFile.h>
+#include <TError.h>
 
 #include "NtupleBase.hh"
 #include "SUSYNANOBase.hh"
@@ -34,7 +35,10 @@ void NtupleBase<Base>::WriteNtuple(const string& filename, int ichunk, int nchun
     nchunk = 1;
   }
 
+  std::cout << "Getting entries in tree" << std::endl;
+  gErrorIgnoreLevel = kFatal;
   Long64_t NTOT = Base::fChain->GetEntries();
+  gErrorIgnoreLevel = 0;
   cout << NTOT << endl;
   Long64_t N1, N0;
   if(nchunk >= NTOT){

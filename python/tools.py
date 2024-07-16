@@ -41,6 +41,8 @@ def readCSV(input_file):
 
 # write csv file: takes data matrix as input and outputs a csv file 
 def writeCSV(output_file, data):
+    csv_dir = output_file.split("/")[0:-1]
+    os.system(f"mkdir -p {csv_dir[0]}")
     with open(output_file, mode="w") as f:
         writer = csv.writer(f, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         for row in data:

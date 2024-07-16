@@ -57,6 +57,15 @@ class EventCount:
     def SetAnalysisTree(self, analysis_tree):
         self.analysis_tree = analysis_tree
     
+    def GetDASCount(self, root_file):
+        DAS_count = 0
+        tree = self.GetEventCountTree()
+        chain = ROOT.TChain(tree)
+        chain.Add(root_file)
+        chain.GetEntry(0)
+        DAS_count = chain.NDAS
+        return DAS_count
+
     def GetMatchingKey(self, base_name):
         result = ""
         # Note: in the list of keys, duplicates are removed
@@ -97,7 +106,7 @@ class EventCount:
         return int(n_events)
 
     # process directory containing ROOT files
-    def processDir(self, directory, pattern, csv, sms, eos, verbose):
+    def processDir(self, directory, pattern, csv, sms, eos, verbose, das):
         if verbose:
             print(Fore.GREEN + "Counting events." + Fore.RESET)
             print("----------------------------")
@@ -107,6 +116,7 @@ class EventCount:
             print("sms: {0}".format(sms))
             print("eos: {0}".format(eos))
             print("verbose: {0}".format(verbose))
+            print("das: {0}".format(das))
             print("----------------------------")
         
         root_files = []
@@ -115,6 +125,7 @@ class EventCount:
         n_events_map = {}
         sum_total_events = 0
         sum_saved_events = 0
+        sum_das_events = 0
         
         # get ROOT files
         # - if pattern is set, then require file name to contain pattern
@@ -177,6 +188,11 @@ class EventCount:
             if verbose:
                 print(" - {0}".format(base_name))
 
+        das_events = self.GetDASCount(root_files[0])
+        if(das_events == 0):
+            das_events = self.GetDASCount(root_files[1])
+        if(das_events == 0):
+            print("Couldn't get DAS events from file: ",root_files[0])
         # print results
         if sms:
             print("Sample: total events, analysis tree: saved events")
@@ -186,12 +202,21 @@ class EventCount:
             analysis_tree   = ""
             n_total_events = n_events_map[base_name]["n_total_events"]
             n_saved_events = n_events_map[base_name]["n_saved_events"]
-            if sms:
-                analysis_tree = n_events_map[base_name]["analysis_tree"]
-            if sms:
-                print("{0}: {1}, {2}: {3}".format(base_name, n_total_events, analysis_tree, n_saved_events))
-            else:
-                print("{0}: {1}, {2}".format(base_name, n_total_events, n_saved_events))
+            if verbose:
+                if sms:
+                    analysis_tree = n_events_map[base_name]["analysis_tree"]
+                if sms:
+                    print("{0}: {1}, DAS: {2}, {3}: {4}".format(base_name, n_total_events, das_events, analysis_tree, n_saved_events))
+                else:
+                    print("{0}: {1}, DAS: {2}, {2}".format(base_name, n_total_events, das_events, n_saved_events))
+        if(das_events != sum_total_events):
+            base_name = base_file_names[0]
+            das_percent = 100.*sum_total_events/das_events
+            base_name = base_name.split("_")
+            dataset = base_name[0]
+            for string in base_name[1:-3]:
+                dataset = dataset+"_"+string
+            print(f"{dataset} failed the DAS check and only processed {das_percent}% of the total dataset!")
         print("Sum of total events from all samples: {0}".format(sum_total_events))
         print("Sum of saved events from all samples: {0}".format(sum_saved_events))
         
@@ -209,6 +234,7 @@ def run():
     parser.add_argument("--sms",        "-s", default = False,  action = "store_true",  help="run over signal sample (optional)")
     parser.add_argument("--eos",        "-e", default = False,  action = "store_true",  help="run over ROOT files on EOS")
     parser.add_argument("--verbose",    "-v", default = False,  action = "store_true",  help="verbose flag to print more things")
+    parser.add_argument("--das",        "-w", default = False,  action = "store_true",  help="get DAS count")
 
     options     = parser.parse_args()
     directory   = options.directory
@@ -218,9 +244,10 @@ def run():
     sms         = options.sms
     eos         = options.eos
     verbose     = options.verbose
+    das         = options.das
 
     # valid years of data taking
-    valid_years = ["2016", "2017", "2018"]
+    valid_years = ["2016", "2017", "2018", "2022", "2023"]
 
     # Check that the directory is set.
     if not directory:
@@ -244,7 +271,7 @@ def run():
     else:
         event_count = EventCount()
 
-    event_count.processDir(directory, pattern, csv, sms, eos, verbose)
+    event_count.processDir(directory, pattern, csv, sms, eos, verbose, das)
 
 def main():
     run()

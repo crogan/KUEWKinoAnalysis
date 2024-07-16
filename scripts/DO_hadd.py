@@ -1,4 +1,4 @@
-import os, sys, commands, time
+import os, sys, time
 from glob import glob as glob
 from subprocess import Popen as pop
 import subprocess
@@ -33,12 +33,11 @@ def main():
         argv_pos += 1
 
     if not len(sys.argv) > 1 or '-h' in sys.argv or '--help' in sys.argv or OUT_DIR == "dum" or IN_DIR == "dum":
-        print "Usage: %s [-idir /path/input_dir] [-odir /path/output_dir]" % sys.argv[0]
-        print
+        print(f"Usage: {sys.argv[0]} [-idir /path/input_dir] [-odir /path/output_dir]")
         sys.exit(1)
 
-    print "Input Directory: %s" % (IN_DIR)
-    print "Output Directory: %s" % (OUT_DIR)
+    print(f"Input Directory: {IN_DIR}")
+    print(f"Output Directory: {OUT_DIR}")
         
     # create and organize output folders
     os.system("mkdir -p "+OUT_DIR)
@@ -46,7 +45,6 @@ def main():
 
     skip_list = [
         #"SMS-T2tt_mStop-400to1200_TuneCP2_13TeV-madgraphMLM-pythia8",
-        #"SMS-T2bW_X05_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X"
     ]
     redo_list = [
         #"TTZToLLNuNu_M-10_TuneCP5_13TeV-amcatnlo-pythia8_Fall17_102X",
@@ -54,10 +52,10 @@ def main():
         #"TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8_Fall17_102X",
     ]
 
-    if os.path.exists("scripts/startup_C.so") is False:
-        os.system("cd scripts && root.exe -b -l -q startup.C+ && cd ..")
+    #if os.path.exists("scripts/startup_C.so") is False:
+    #    os.system("cd scripts && root.exe -b -l -q startup.C+ && cd ..")
 
-    os.environ["LD_PRELOAD"] = os.environ["PWD"]+"/scripts/startup_C.so"
+    #os.environ["LD_PRELOAD"] = os.environ["PWD"]+"/scripts/startup_C.so"
     hadd_big_processes = {}
     for target in os.listdir(IN_DIR):
         skip = False
@@ -72,7 +70,7 @@ def main():
         if redo and target not in os.listdir(IN_DIR):
             continue
 
-        #print target
+        print(target)
         #haddcmd = "hadd -f "+OUT_DIR+"/"+target+".root "
         #for i in range(0,10):
             #os.system("mkdir -p "+IN_DIR+"/"+target+"/"+target+"_"+str(i))
@@ -95,7 +93,7 @@ def main():
             out,err = hadd_sml.communicate()
             if err != "":
                 err_log = open("HADD_logs/"+"/"+target+"/"+target+"_"+str(i)+".err","a")
-                err_log.write(err)
+                err_log.write(str(err))
                 err_log.close()
 
         if len(hadd_big_processes) >= 10:

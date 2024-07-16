@@ -4,9 +4,9 @@ import os, sys, time
 from colorama import Fore, Back, Style
 
 # Example submission: 
-#  python scripts/condor_submit_nano_connect_ntuples.py -split 10 -list samples/NANO/Lists/Fall17_102X.list --sys --slim --csv 
+#  python3 scripts/condor_submit_nano_connect_ntuples.py -split 10 -list samples/NANO/Lists/Fall17_102X.list --sys --slim --csv 
 #
-#  python scripts/condor_submit_nano_connect_ntuples.py -split 20 -list samples/NANO/Lists/Fall17_102X.list --sys --slim --verbose --csv && python scripts/condor_submit_nano_connect_ntuples.py -split 30 -list samples/NANO/Lists/Fall17_102X_SMS_FastSim_Quick.list --sys --slim --sms --fastsim --verbose --csv && python scripts/condor_submit_nano_connect_ntuples.py -split 10 -list samples/NANO/Lists/Fall17_102X_Data_MET.list --slim --data --verbose --csv 
+#  python3 scripts/condor_submit_nano_connect_ntuples.py -split 20 -list samples/NANO/Lists/Fall17_102X.list --sys --slim --verbose --csv && python3 scripts/condor_submit_nano_connect_ntuples.py -split 30 -list samples/NANO/Lists/Fall17_102X_SMS_FastSim_Quick.list --sys --slim --sms --fastsim --verbose --csv && python3 scripts/condor_submit_nano_connect_ntuples.py -split 10 -list samples/NANO/Lists/Fall17_102X_Data_MET.list --slim --data --verbose --csv 
 
 # ----------------------------------------------------------- #
 # Parameters
@@ -134,7 +134,11 @@ def write_sh_single(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,
     transfer_out_remap += '"\n'
     fsrc.write(transfer_out_remap)
     
+    fsrc.write('periodic_release = (HoldReasonCode == 12 && HoldReasonSubCode == 256 || HoldReasonCode == 13 && HoldReasonSubCode == 2 || HoldReasonCode == 12 && HoldReasonSubCode == 2)\n')
+    fsrc.write('RequestCpus=ifthenelse(isUndefined(CpusUsage),1,MAX({RequestCpus * 2, 32}))\n')
+    fsrc.write('+REQUIRED_OS="rhel9"\n')
     fsrc.write('+ProjectName="cms.org.ku"\n')
+    fsrc.write('Requirements = HAS_SINGULARITY == True\n')
     fsrc.write('MY.SingularityImage = "/cvmfs/singularity.opensciencegrid.org/cmssw/cms:rhel9"\n')
     fsrc.write('queue')
     fsrc.close()
@@ -202,12 +206,15 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n,NAME)
     fsrc.write(transfer_out_remap)
     
     fsrc.write('+ProjectName="cms.org.ku"\n')
-    fsrc.write('periodic_release = (HoldReasonCode == 12 && HoldReasonSubCode == 256 || HoldReasonCode == 13 && HoldReasonSubCode == 2)\n')
+    fsrc.write('RequestCpus=ifthenelse(isUndefined(CpusUsage),1,MAX({RequestCpus * 2, 32}))\n')
+    fsrc.write('+REQUIRED_OS="rhel9"\n')
+    fsrc.write('periodic_release = (HoldReasonCode == 12 && HoldReasonSubCode == 256 || HoldReasonCode == 13 && HoldReasonSubCode == 2 || HoldReasonCode == 12 && HoldReasonSubCode == 2)\n')
     #fsrc.write('priority = 10 \n')
     fsrc.write('+RequiresCVMFS = True \n')
     #fsrc.write('+RequiresSharedFS = True \n')
+    fsrc.write('Requirements = HAS_SINGULARITY == True\n')
     fsrc.write('MY.SingularityImage = "/cvmfs/singularity.opensciencegrid.org/cmssw/cms:rhel9"\n')
-    fsrc.write('queue '+str(n)+' from '+ifile+'\n')
+    fsrc.write('queue '+str(n)+' from '+ifile)
     fsrc.close()
 
 if __name__ == "__main__":
@@ -550,8 +557,8 @@ if __name__ == "__main__":
             n_jobs          = input_info[f]["n_jobs"] 
             n_jobs = SPLIT * n_root_files
             print(f"sample: {f}")
-            print(f" - number of root files  = {0}".format(n_root_files))
-            print(f" - number of jobs        = {0}".format(n_jobs))
+            print(f" - number of root files  = {n_root_files}")
+            print(f" - number of jobs        = {n_jobs}")
             # make sure that "clusterid" has been filled to avoid key error
             if not DRY_RUN and not COUNT and CSV:
                 f_csv.write(f"{0}".format(f+","+input_info[f]["clusterid"].replace('.\n','')+",{0}".format(n_jobs)+'\n'))

@@ -8,7 +8,8 @@
 *.pcm
 AutoDict*
 *.tgz
-
+*__pycache__*
 B*.sh
 BFI_B*/
 BF_B*/
+HADD_logs/

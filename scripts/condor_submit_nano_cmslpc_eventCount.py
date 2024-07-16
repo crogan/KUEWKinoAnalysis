@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-import os, sys, commands, time
+import os, sys, time
 
 
 # ----------------------------------------------------------- #
@@ -12,10 +12,12 @@ TEMP        = pwd
 jobEXE      = "execute_script_EventCount.sh"
 EXE         = "MakeEventCount_NANO.x"
 RESTFRAMES  = './scripts/setup_RestFrames_connect.sh'
-CMSSW_SETUP = './scripts/cmssw_setup_connect.sh'
+#CMSSW_SETUP = './scripts/cmssw_setup_connect.sh'
+CMSSW_SETUP = './scripts/cmssw_setup_connect_el9.sh'
 TREE        = "Events"
 USER        = os.environ['USER']
-OUT         = "/uscms/home/"+USER+"/nobackup/EventCount/root/"
+#OUT         = "/uscms/home/"+USER+"/nobackup/EventCount/root/"
+OUT    = "/ospool/cms-user/"+USER+"/NTUPLES/Processing"
 LIST        = "default.list"
 QUEUE       = ""
 MAXN        = 1
@@ -81,7 +83,8 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag):
     #fsrc.write('+RequiresSharedFS = True \n')
 
     if CONNECT is True:
-        transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/ospool/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
+        #transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/ospool/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
+        transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/ospool/cms-user/zflowers/public/sandbox-CMSSW_13_3_1-el9.tar.bz2\n'
     else:
         transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/uscms/home/z374f439/nobackup/whatever_you_want/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
     fsrc.write(transfer_input)
@@ -97,13 +100,15 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag):
     fsrc.write(transfer_out_remap)
     
     fsrc.write('+ProjectName="cms.org.ku"\n')
-    fsrc.write('+REQUIRED_OS="rhel7"\n')
+    fsrc.write('+RequiresCVMFS = True \n')
+    fsrc.write('Requirements = HAS_SINGULARITY == True\n')
+    fsrc.write('MY.SingularityImage = "/cvmfs/singularity.opensciencegrid.org/cmssw/cms:rhel9"\n')
     fsrc.write('queue from '+ifile+'\n')
     fsrc.close()
 
 if __name__ == "__main__":
     if not len(sys.argv) > 1 or '-h' in sys.argv or '--help' in sys.argv:
-        print "Usage: %s [-q queue] [-tree treename] [-list listfile.list] [--sms] [--connect]" % sys.argv[0]
+        print (f"Usage: {sys.argv(0)} [-q queue] [-tree treename] [-list listfile.list] [--sms] [--connect]")
         sys.exit(1)
 
     argv_pos = 1
@@ -130,10 +135,10 @@ if __name__ == "__main__":
         argv_pos += 1
     
     if DO_DATA:
-        print "Processing Data"
+        print ("Processing Data")
 
     if DO_SMS:
-        print "Processing as SMS"
+        print ("Processing as SMS")
 
     # input sample list
     listfile = LIST
@@ -143,9 +148,9 @@ if __name__ == "__main__":
     NAME = listname.replace(".list",'')
     NAME += "_EventCount"
     
-    print listname
-    print NAME
-    print RUN_DIR
+    print(listname)
+    print(NAME)
+    print(RUN_DIR)
         
     # create and organize output folders
     TARGET  = RUN_DIR+"/"+NAME+"/"
@@ -180,7 +185,7 @@ if __name__ == "__main__":
 
     datasetlist = []
 
-    knowntags = ["Fall17_94X","Autumn18_102X","Summer16_94X","Fall17_102X","Summer16_102X","Summer20UL16_102X","Summer20UL16APV_102X","Summer20UL17_102X","Summer20UL18_102X","RunIISummer20UL17NanoAODv9"]
+    knowntags = ["Fall17_94X","Autumn18_102X","Summer16_94X","Fall17_102X","Summer16_102X","Summer20UL16_102X","Summer20UL16APV_102X","Summer20UL17_102X","Summer20UL18_102X","RunIISummer20UL17NanoAODv9","Summer22_130X","Summer22_EE_130X","Summer23_130X","Summer23_BPix_130X"]
     
     with open(listfile,'r') as mylist:
         inputlist = mylist.readlines()
@@ -190,7 +195,7 @@ if __name__ == "__main__":
             if '#' in flist:
                 continue
             flist = flist.strip('\n\r')
-            print "Processing list from %s" % flist
+            print(f"Processing list from {flist}")
 
             listfile = LIST
             listname = listfile.split("/")
@@ -262,6 +267,6 @@ if __name__ == "__main__":
     submit_list = [os.path.join(submit_dir, f) for f in os.listdir(submit_dir) if (os.path.isfile(os.path.join(submit_dir, f)) and ('.submit' in f))]
 
     for f in submit_list:
-        print "submitting: ", f
+        print("submitting: ", f)
         os.system('condor_submit ' + f)
    

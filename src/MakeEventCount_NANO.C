@@ -133,7 +133,7 @@ int main(int argc, char* argv[]) {
   TBranch *b_genWeight;
   TBranch *b_luminosityBlock;
 
-  UInt_t  nGenPart;
+  Int_t   nGenPart;
   Float_t GenPart_mass[400];  
   Int_t   GenPart_pdgId[400];
   TBranch *b_nGenPart;
@@ -226,13 +226,17 @@ int main(int argc, char* argv[]) {
   TFile* fout = new TFile(string(outputFileName).c_str(),"RECREATE");
   TTree* tout = (TTree*) new TTree("EventCount", "EventCount");
   
+  int NDAS = 0;
+  tout->Branch("NDAS", &NDAS);
   tout->Branch("Nevent", &Nevent);
   tout->Branch("Nweight", &Nweight);
   tout->Branch("filetag", &filetag);
   tout->Branch("dataset", &dataset);
   tout->Branch("MP", &MP);
   tout->Branch("MC", &MC);
-  tout->Branch("DASEvents", &DASEvents);
+  // add DAS count
+  NeventTool eventTool;
+  NDAS = eventTool.EventsInDAS(dataset, filetag);
   if(DO_SMS){
     int Nmass = masses.size();
     for(int i = 0; i < Nmass; i++){
