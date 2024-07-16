@@ -1,0 +1,2 @@
+root://cmsxrootd.fnal.gov//store/mc/Run3Summer23BPixNanoAODv12/WWW_4F_TuneCP5_13p6TeV_amcatnlo-madspin-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_postBPix_v2-v2/30000/a68965b4-92ce-4333-8598-b3490058c6fc.root
+root://cmsxrootd.fnal.gov//store/mc/Run3Summer23BPixNanoAODv12/WWW_4F_TuneCP5_13p6TeV_amcatnlo-madspin-pythia8/NANOAODSIM/130X_mcRun3_2023_realistic_postBPix_v2-v2/30000/3d8d268d-dd12-40cf-aac6-1dc4e54b842b.root
