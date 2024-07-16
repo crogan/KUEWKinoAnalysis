@@ -295,18 +295,19 @@ int NeventTool::EventsInDAS(const std::string& u_dataset, const std::string& u_f
    filetag.erase(filetag.length()-4);
  filetag.erase(filetag.length()-5);
  double Events = 0.;
- gSystem->Exec(("dasgoclient -query=\"dataset=/"+dataset+"/*"+filetag+"*NanoAODv12*"+"*/NANO*\" >> datasets_"+filetag+"_"+dataset+".txt").c_str());
+ gSystem->Exec(("dasgoclient -query=\"dataset=/"+dataset+"/*"+filetag+"NanoAODv12*"+"/NANO*\" >> datasets_"+filetag+"_"+dataset+".txt").c_str());
  if(!check_dataset_file("datasets_"+filetag+"_"+dataset+".txt"))
-   gSystem->Exec(("dasgoclient -query=\"dataset=/"+dataset+"/*"+filetag+"*NanoAODv7*"+"*/NANO*\" >> datasets_"+filetag+"_"+dataset+".txt").c_str());
+   gSystem->Exec(("dasgoclient -query=\"dataset=/"+dataset+"/*"+filetag+"NanoAODv7*"+"/NANO*\" >> datasets_"+filetag+"_"+dataset+".txt").c_str());
  if(!check_dataset_file("datasets_"+filetag+"_"+dataset+".txt"))
-   gSystem->Exec(("dasgoclient -query=\"dataset=/"+dataset+"/*"+filetag+"*NanoAODv4*"+"*/NANO*\" >> datasets_"+filetag+"_"+dataset+".txt").c_str());
+   gSystem->Exec(("dasgoclient -query=\"dataset=/"+dataset+"/*"+filetag+"NanoAODv4*"+"/NANO*\" >> datasets_"+filetag+"_"+dataset+".txt").c_str());
  if(!check_dataset_file("datasets_"+filetag+"_"+dataset+".txt"))
-   gSystem->Exec(("dasgoclient -query=\"dataset=/"+dataset+"/*"+filetag+"*NanoAOD*"+"*/NANO*\" >> datasets_"+filetag+"_"+dataset+".txt").c_str());
+   gSystem->Exec(("dasgoclient -query=\"dataset=/"+dataset+"/*"+filetag+"NanoAOD*"+"/NANO*\" >> datasets_"+filetag+"_"+dataset+".txt").c_str());
  std::ifstream infile("datasets_"+filetag+"_"+dataset+".txt");
 
  string dataset_fullname = "";
  while(getline(infile,dataset_fullname))
  {
+  if(dataset_fullname.find("JMENano") != std::string::npos) continue;
   gSystem->Exec(("dasgoclient -query=\"file dataset="+dataset_fullname+"\" -json >> "+filetag+"_"+dataset+".json").c_str());
  }
  infile.close();

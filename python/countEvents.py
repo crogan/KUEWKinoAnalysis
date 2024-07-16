@@ -105,6 +105,34 @@ class EventCount:
         n_events = chain.GetEntries()
         return int(n_events)
 
+    def checkEventCountFile(self, filetag):
+        root_file = f"root/EventCount/EventCount_NANO_{filetag}.root"
+        tree = self.GetEventCountTree()
+        chain = ROOT.TChain(tree)
+        chain.Add(root_file)
+        n_entries = chain.GetEntries()
+        dataset_counts = {}
+        DAS_counts = {}
+        for i in range(n_entries):
+            chain.GetEntry(i)
+            if chain.dataset in dataset_counts:
+                dataset_counts[chain.dataset] += chain.Nevent
+                print(chain.Nevent)
+            else:
+                dataset_counts[chain.dataset] = chain.Nevent
+                print(chain.Nevent)
+            if chain.dataset in DAS_counts:
+                continue
+            else:
+                DAS_counts[chain.dataset] = chain.NDAS
+        for dataset in DAS_counts:
+            if DAS_counts[dataset] != dataset_counts[dataset]:
+                print(f"dataset: {dataset} has failed the check!")
+                perc = round(100.*dataset_counts[dataset]/DAS_counts[dataset],2)
+                print(f"dataset: {dataset} is at {perc}%")
+            else:
+                print(f"dataset: {dataset} passes the DAS check")
+
     # process directory containing ROOT files
     def processDir(self, directory, pattern, csv, sms, eos, verbose, das):
         if verbose:
@@ -235,6 +263,8 @@ def run():
     parser.add_argument("--eos",        "-e", default = False,  action = "store_true",  help="run over ROOT files on EOS")
     parser.add_argument("--verbose",    "-v", default = False,  action = "store_true",  help="verbose flag to print more things")
     parser.add_argument("--das",        "-w", default = False,  action = "store_true",  help="get DAS count")
+    parser.add_argument("--eventCount", "-t", default = False,  action = "store_true",  help="check event count file")
+    parser.add_argument("--filetag",    "-f", default = "",                             help="filetag for event count checking")
 
     options     = parser.parse_args()
     directory   = options.directory
@@ -245,33 +275,43 @@ def run():
     eos         = options.eos
     verbose     = options.verbose
     das         = options.das
+    eventCount  = options.eventCount
+    filetag     = options.filetag
 
     # valid years of data taking
     valid_years = ["2016", "2017", "2018", "2022", "2023"]
 
-    # Check that the directory is set.
-    if not directory:
-        print(Fore.RED + "ERROR: 'directory' is not set. Please provide a directory using the -d option." + Fore.RESET)
-        return
-    
-    # json file for SMS to map sample ROOT files to analysis trees
-    analysis_tree_file = ""
-    
-    if sms:
-        # Check that the user entered a valid year.
-        if year not in valid_years:
-            print(Fore.RED + "ERROR: The year '{0}' is not valid. Please provide a valid year {1} using the -y option.".format(year, valid_years) + Fore.RESET)
-            return
-        # Assign analysis_tree_file based on the year.
-        analysis_tree_file = "json/EventCount/AnalysisTrees_{0}_SMS.json".format(year)
-        print(Fore.GREEN + "Using the analysis tree file '{0}'.".format(analysis_tree_file) + Fore.RESET)
+    if eventCount:
+        if filetag == "":
+            print("asked to check event count but need to provide a filetag like: Summer23_130X")
+        else:
+            event_count = EventCount()
+            event_count.checkEventCountFile(filetag)
 
-    if sms:
-        event_count = EventCount(event_count_tree="EventCount", analysis_tree="", analysis_tree_file=analysis_tree_file)
     else:
-        event_count = EventCount()
+        # Check that the directory is set.
+        if not directory:
+            print(Fore.RED + "ERROR: 'directory' is not set. Please provide a directory using the -d option." + Fore.RESET)
+            return
+        
+        # json file for SMS to map sample ROOT files to analysis trees
+        analysis_tree_file = ""
+        
+        if sms:
+            # Check that the user entered a valid year.
+            if year not in valid_years:
+                print(Fore.RED + "ERROR: The year '{0}' is not valid. Please provide a valid year {1} using the -y option.".format(year, valid_years) + Fore.RESET)
+                return
+            # Assign analysis_tree_file based on the year.
+            analysis_tree_file = "json/EventCount/AnalysisTrees_{0}_SMS.json".format(year)
+            print(Fore.GREEN + "Using the analysis tree file '{0}'.".format(analysis_tree_file) + Fore.RESET)
 
-    event_count.processDir(directory, pattern, csv, sms, eos, verbose, das)
+        if sms:
+            event_count = EventCount(event_count_tree="EventCount", analysis_tree="", analysis_tree_file=analysis_tree_file)
+        else:
+            event_count = EventCount()
+
+            event_count.processDir(directory, pattern, csv, sms, eos, verbose, das)
 
 def main():
     run()
