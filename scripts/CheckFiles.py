@@ -15,19 +15,24 @@ def getMissingFiles(outputDir,nSplit,nList):
             baseTupleList.remove(Tuple)
     return baseTupleList
 
-def makeSubmitScript(Tuple,submitName,resubmit,skipClean):
-    newFileName = f"{submitName}_{Tuple[0]}_{Tuple[1]}.submit"
+def makeSubmitScript(tuple_pairs,submitName,resubmit,skipClean):
+    tuple_filelist = f"{submitName}_tuple.txt"
+    with open(tuple_filelist,'w') as tuple_file:
+        for tuple_pair in tuple_pairs:
+            tuple_file.write(f"{tuple_pair[0]},{tuple_pair[1]}\n")
+    newFileName = f"{submitName}_tuple.submit"
     os.system(f"cp {submitName}_single.submit {newFileName}")
     with open(newFileName,'r') as file:
         file_content = file.read()
-    file_content = file_content.replace("0_0",f"{Tuple[0]}_{Tuple[1]}")
-    file_content = file_content.replace("-split=1",f"-split={Tuple[1]+1}")
-    file_content = file_content.replace("X_0.list",f"X_{Tuple[0]}.list")
+    file_content = file_content.replace("0_0","$(list)_$(split)")
+    file_content = file_content.replace("-split=1","-split=$$([$(split)+1])")
+    file_content = file_content.replace("X_0.list","X_$(list).list")
+    file_content = file_content.replace("queue",f"queue list,split from {tuple_filelist}")
     with open(newFileName, 'w') as file:
         file.write(file_content)
     if resubmit:
         os.system(f"condor_submit {newFileName}")
-    if not skipClean:
+    if skipClean:
         os.system(f"rm {newFileName}")
 
 # Check condor jobs
@@ -39,6 +44,7 @@ def checkJobs(workingDir,outputDir,skipMissing,skipSmall,skipErr,resubmit,skipCl
         if "X.submit" not in file:
             continue
         DataSetName = file.split(".")[0]
+        resubmitFiles = []
         if(not skipMissing):
             with open(workingDir+"/src/"+DataSetName+".submit") as file:
                 file.seek(0,2)
@@ -55,17 +61,19 @@ def checkJobs(workingDir,outputDir,skipMissing,skipSmall,skipErr,resubmit,skipCl
             bash = "ls "+outputDir+DataSetName+" | wc -l"
             nJobsOutput = int(subprocess.check_output(['bash','-c', bash]).decode())
             resubmitFiles = getMissingFiles(outputDir+DataSetName,nSplit,numList)
-            print("Got missing files for dataset",DataSetName)
+            print(f"Got {len(resubmitFiles)} missing files for dataset {DataSetName}")
         if(not skipSmall):
-            bash = "find "+outputDir+DataSetName+" -type f -size -50k"
+            bash = "find "+outputDir+DataSetName+" -type f -size -10k"
             smallFiles = subprocess.check_output(['bash','-c', bash]).decode()
             smallFiles = smallFiles.split("\n")
             smallFiles.remove('')
+            num_small = 0
             for smallFile in smallFiles:
                 smallFile = smallFile.split(".root")[0]
                 Tuple = (int(smallFile.split("_")[-2]),int(smallFile.split("_")[-1]))
                 resubmitFiles.append(Tuple)
-            print("Got small files for dataset",DataSetName)
+                num_small = num_small+1
+            print(f"Got {num_small} small files for dataset {DataSetName}")
         if(not skipErr):
             bash = "grep -v -e \"Warning\" -e \"WARNING\" -e \"TTree::SetBranchStatus\" -e \"libXrdSecztn.so\" "+ workingDir +"/err/"+DataSetName+"/*.err"
             errorFiles = subprocess.check_output(['bash','-c',bash]).decode()
@@ -77,13 +85,12 @@ def checkJobs(workingDir,outputDir,skipMissing,skipSmall,skipErr,resubmit,skipCl
                 if Tuple not in resubmitFiles:
                     resubmitFiles.append(Tuple)
             print("Got error files for dataset",DataSetName)
-        if len(resubmitFiles) > maxResub:
+        if len(resubmitFiles) >= maxResub:
             print(f"You are about to make {len(resubmitFiles)} and resubmit {len(resubmitFiles)} jobs for dataset: {DataSetName}!")
             print(f"You should double check there are no issues with your condor submissions")
             print(f"If you are confident you want to resubmit, then you should rerun this script with -l {len(resubmitFiles)}")
         else:
-            for Tuple in resubmitFiles:
-                makeSubmitScript(Tuple,workingDir+"/src/"+DataSetName,resubmit,skipClean)
+            makeSubmitScript(resubmitFiles,workingDir+"/src/"+DataSetName,resubmit,skipClean)
 
 def main():
     # options

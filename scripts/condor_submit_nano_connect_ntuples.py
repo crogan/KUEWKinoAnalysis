@@ -135,8 +135,9 @@ def write_sh_single(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,
     fsrc.write(transfer_out_remap)
     
     fsrc.write('periodic_release = (HoldReasonCode == 12 && HoldReasonSubCode == 256 || HoldReasonCode == 13 && HoldReasonSubCode == 2 || HoldReasonCode == 12 && HoldReasonSubCode == 2)\n')
-    fsrc.write('RequestCpus=ifthenelse(isUndefined(CpusUsage),1,MAX({RequestCpus * 2, 32}))\n')
+    fsrc.write('RequestCpus=ifthenelse(isUndefined(CpusUsage),1,MAX({RequestCpus+1 * 2, 32}))\n')
     fsrc.write('+REQUIRED_OS="rhel9"\n')
+    fsrc.write('job_lease_duration = 3600\n')
     fsrc.write('+ProjectName="cms.org.ku"\n')
     fsrc.write('Requirements = HAS_SINGULARITY == True\n')
     fsrc.write('MY.SingularityImage = "/cvmfs/singularity.opensciencegrid.org/cmssw/cms:rhel9"\n')
@@ -206,8 +207,9 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n,NAME)
     fsrc.write(transfer_out_remap)
     
     fsrc.write('+ProjectName="cms.org.ku"\n')
-    fsrc.write('RequestCpus=ifthenelse(isUndefined(CpusUsage),1,MAX({RequestCpus * 2, 32}))\n')
+    fsrc.write('RequestCpus=ifthenelse(isUndefined(CpusUsage),1,MAX({RequestCpus+1 * 2, 32}))\n')
     fsrc.write('+REQUIRED_OS="rhel9"\n')
+    fsrc.write('job_lease_duration = 3600\n')
     fsrc.write('periodic_release = (HoldReasonCode == 12 && HoldReasonSubCode == 256 || HoldReasonCode == 13 && HoldReasonSubCode == 2 || HoldReasonCode == 12 && HoldReasonSubCode == 2)\n')
     #fsrc.write('priority = 10 \n')
     fsrc.write('+RequiresCVMFS = True \n')
@@ -340,7 +342,7 @@ if __name__ == "__main__":
         # make EventCount file
         if VERBOSE:
             print("making EventCount file")
-        os.system("hadd "+config+"EventCount.root root/EventCount/*.root > /dev/null")
+        os.system("hadd "+config+"EventCount.root root/EventCount/130X*.root > /dev/null")
         EVTCNT = "./config/EventCount.root"
 
         # make FilterEff file 
