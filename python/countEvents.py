@@ -115,23 +115,25 @@ class EventCount:
         DAS_counts = {}
         for i in range(n_entries):
             chain.GetEntry(i)
-            if chain.dataset in dataset_counts:
-                dataset_counts[chain.dataset] += chain.Nevent
-                print(chain.Nevent)
+            dataset = str(chain.dataset)
+            Nevent = int(chain.Nevent)
+            NDAS = int(chain.NDAS)
+            if dataset in dataset_counts:
+                dataset_counts[dataset] += Nevent
             else:
-                dataset_counts[chain.dataset] = chain.Nevent
-                print(chain.Nevent)
-            if chain.dataset in DAS_counts:
-                continue
-            else:
-                DAS_counts[chain.dataset] = chain.NDAS
+                dataset_counts[dataset] = Nevent
+            if dataset not in DAS_counts:
+                DAS_counts[dataset] = NDAS
         for dataset in DAS_counts:
             if DAS_counts[dataset] != dataset_counts[dataset]:
-                print(f"dataset: {dataset} has failed the check!")
-                perc = round(100.*dataset_counts[dataset]/DAS_counts[dataset],2)
-                print(f"dataset: {dataset} is at {perc}%")
+                if DAS_counts[dataset] > 0:
+                    print(Fore.RED + f"dataset: {dataset} has failed the check!" + Fore.RESET)
+                    perc = round(100.*dataset_counts[dataset]/DAS_counts[dataset],2)
+                    print(f"dataset: {dataset} is at {perc}%")
+                else:
+                    print(f"Got {DAS_counts[dataset]} events from the DAS check for {dataset}")
             else:
-                print(f"dataset: {dataset} passes the DAS check")
+                print(Fore.GREEN + f"dataset: {dataset} passes the DAS check" + Fore.RESET)
 
     # process directory containing ROOT files
     def processDir(self, directory, pattern, csv, sms, eos, verbose, das):
