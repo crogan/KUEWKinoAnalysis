@@ -193,8 +193,6 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n,NAME)
     else:
         #transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/ospool/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
         transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/ospool/cms-user/zflowers/public/sandbox-CMSSW_13_3_1-el9.tar.bz2\n'
-    if VERBOSE:
-        print(transfer_input)
     fsrc.write(transfer_input)
 
     fsrc.write('should_transfer_files = YES\n')
@@ -344,7 +342,7 @@ if __name__ == "__main__":
         # make EventCount file
         if VERBOSE:
             print("making EventCount file")
-        os.system("hadd "+config+"EventCount.root root/EventCount/130X*.root > /dev/null")
+        os.system("hadd "+config+"EventCount.root root/EventCount/*130X*.root > /dev/null")
         EVTCNT = "./config/EventCount.root"
 
         # make FilterEff file 

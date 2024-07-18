@@ -107,6 +107,9 @@ class EventCount:
 
     def checkEventCountFile(self, filetag):
         root_file = f"root/EventCount/EventCount_NANO_{filetag}.root"
+        if not os.path.isfile(root_file):
+            print(f"file: {root_file} does not exist!")
+            return
         tree = self.GetEventCountTree()
         chain = ROOT.TChain(tree)
         chain.Add(root_file)
