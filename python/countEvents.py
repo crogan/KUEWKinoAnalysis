@@ -14,6 +14,8 @@ import tools
 #
 # Example syntax:
 # python python/countEvents.py --directory <path_to_directory> --csv <path_to_csv>
+# For DAS check on connect
+# python3 python/countEvents.py -d ../../../NTUPLES/Processing/Summer23_130X/TTto2L2Nu_TuneCP5_13p6TeV_powheg-pythia8_Summer23_130X/ -y 2023 -w
 #
 
 # TODO
@@ -221,11 +223,12 @@ class EventCount:
             if verbose:
                 print(" - {0}".format(base_name))
 
-        das_events = self.GetDASCount(root_files[0])
-        if(das_events == 0):
-            das_events = self.GetDASCount(root_files[1])
-        if(das_events == 0):
-            print("Couldn't get DAS events from file: ",root_files[0])
+        if(das):
+            das_events = self.GetDASCount(root_files[0])
+            if(das_events == 0):
+                das_events = self.GetDASCount(root_files[1])
+            if(das_events == 0):
+                print("Couldn't get DAS events from file: ",root_files[0])
         # print results
         if sms:
             print("Sample: total events, analysis tree: saved events")
@@ -242,14 +245,17 @@ class EventCount:
                     print("{0}: {1}, DAS: {2}, {3}: {4}".format(base_name, n_total_events, das_events, analysis_tree, n_saved_events))
                 else:
                     print("{0}: {1}, DAS: {2}, {2}".format(base_name, n_total_events, das_events, n_saved_events))
-        if(das_events != sum_total_events):
+        if(das):
             base_name = base_file_names[0]
             das_percent = 100.*sum_total_events/das_events
             base_name = base_name.split("_")
             dataset = base_name[0]
             for string in base_name[1:-3]:
                 dataset = dataset+"_"+string
-            print(f"{dataset} failed the DAS check and only processed {das_percent}% of the total dataset!")
+            if(das_events == sum_total_events):
+                print(f"{dataset} passed the DAS check")
+            else:
+                print(f"{dataset} failed the DAS check and only processed {das_percent}% of the total dataset!")
         print("Sum of total events from all samples: {0}".format(sum_total_events))
         print("Sum of saved events from all samples: {0}".format(sum_saved_events))
         
@@ -315,8 +321,7 @@ def run():
             event_count = EventCount(event_count_tree="EventCount", analysis_tree="", analysis_tree_file=analysis_tree_file)
         else:
             event_count = EventCount()
-
-            event_count.processDir(directory, pattern, csv, sms, eos, verbose, das)
+        event_count.processDir(directory, pattern, csv, sms, eos, verbose, das)
 
 def main():
     run()

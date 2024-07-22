@@ -2531,7 +2531,7 @@ ParticleList AnalysisBase<NANORun3>::GetElectrons(){
   int N1 = nLowPtElectron;
   for(int i = 0; i < N1; i++){
     // baseline lepton definition
-    if(LowPtElectron_pt[i] < 1. || LowPtElectron_pt[i] >= 5. || fabs(Electron_eta[i]) > 2.5)
+    if(LowPtElectron_pt[i] < 1. || LowPtElectron_pt[i] >= 5. || fabs(LowPtElectron_eta[i]) > 2.5)
       continue;
     if(LowPtElectron_convVeto[i] == 0)
       continue;

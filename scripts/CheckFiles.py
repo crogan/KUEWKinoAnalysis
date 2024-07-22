@@ -37,6 +37,7 @@ def makeSubmitScript(tuple_pairs,submitName,resubmit,skipClean):
 
 # Check condor jobs
 def checkJobs(workingDir,outputDir,skipMissing,skipSmall,skipErr,resubmit,skipClean,maxResub):
+    grep_ignore = "-e \"Warning\" -e \"WARNING\" -e \"TTree::SetBranchStatus\" -e \"libXrdSecztn.so\" -e \"Phi_mpi_pi\" -e \"tar: stdout: write error\" -e \"INFO\" "
     print("Running over the directory '{0}'.".format(workingDir))
     print("------------------------------------------------------------")
     srcDir = os.listdir(workingDir+"/src/")
@@ -75,7 +76,7 @@ def checkJobs(workingDir,outputDir,skipMissing,skipSmall,skipErr,resubmit,skipCl
                 num_small = num_small+1
             print(f"Got {num_small} small files for dataset {DataSetName}")
         if(not skipErr):
-            bash = "grep -v -e \"Warning\" -e \"WARNING\" -e \"TTree::SetBranchStatus\" -e \"libXrdSecztn.so\" "+ workingDir +"/err/"+DataSetName+"/*.err"
+            bash = "grep -v "+grep_ignore+ workingDir +"/err/"+DataSetName+"/*.err"
             errorFiles = subprocess.check_output(['bash','-c',bash]).decode()
             errorFiles = errorFiles.split("\n")
             errorFiles.remove('')
@@ -89,8 +90,7 @@ def checkJobs(workingDir,outputDir,skipMissing,skipSmall,skipErr,resubmit,skipCl
             print(f"You are about to make {len(resubmitFiles)} and resubmit {len(resubmitFiles)} jobs for dataset: {DataSetName}!")
             print(f"You should double check there are no issues with your condor submissions")
             print(f"If you are confident you want to resubmit, then you should rerun this script with -l {len(resubmitFiles)}")
-        else:
-            makeSubmitScript(resubmitFiles,workingDir+"/src/"+DataSetName,resubmit,skipClean)
+        makeSubmitScript(resubmitFiles,workingDir+"/src/"+DataSetName,resubmit,skipClean)
 
 def main():
     # options
