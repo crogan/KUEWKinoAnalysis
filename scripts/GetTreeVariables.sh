@@ -3,24 +3,38 @@
 # Caleb J. Smith
 # February 7, 2019
 
+# print TTree variables to file
+
+# Example syntax for ROOT file
+#
+# Note: -d (directory in ROOT file) is optional
+#
+# GetTreeVariables.sh -n <root_tree_name> -d <root_dir_name> -o <output_name> -r <root_file>
+#
+
 # Arguments:
-# - name of tree
+# - name of tree in ROOT file
+# - name of directory in ROOT file (optional)
 # - output text file to save variables from tree
 # - input either a text file (listing root files) or root file
 treeName=
+dirName=
 outputName=
 textFile=
 rootFile=
 
 # path to python script
-pythonScript=scripts/GetTreeVariables.py
+#pythonScript=scripts/GetTreeVariables.py
+#pythonScript=/home/$USER/bin/GetTreeVariables.py
+pythonScript=/uscms/home/$USER/bin/GetTreeVariables.py
 
-# all options require values, hence we have a colon after each
-while getopts n:o:t:r: option
+# options that require an argument should have a colon after the letter
+while getopts n:d:o:t:r: option
 do
     case "${option}"
     in
     n) treeName=${OPTARG};;
+    d) dirName=${OPTARG};;
     o) outputName=${OPTARG};;
     t) textFile=${OPTARG};;
     r) rootFile=${OPTARG};;
@@ -66,7 +80,13 @@ outputFileClean="$outputName"_variables_clean.txt
 # output tree variables to file
 # -i : input root file
 # -t : tree in root file that you wish to print 
-python $pythonScript -i $rootFile -t $treeName > $outputFile
+# -d : directory in root file (optional) 
+if [[ -z "$dirName" ]]
+then
+    python $pythonScript -i $rootFile -t $treeName > $outputFile
+else
+    python $pythonScript -i $rootFile -t $treeName -d $dirName > $outputFile
+fi
 
 # cleaned output (one line per variable) to file
 grep Br $outputFile > $outputFileClean

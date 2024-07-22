@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 
-import os, sys, commands, time
+import os, sys, time
 from colorama import Fore, Back, Style
 
 # Example submission: 
@@ -18,9 +18,11 @@ jobEXE      = "execute_script.sh"
 EXE         = "MakeReducedNtuple_NANO.x"
 RESTFRAMES  = './scripts/setup_RestFrames_connect.sh'
 CMSSW_SETUP = './scripts/cmssw_setup_connect.sh'
+#CMSSW_SETUP = './scripts/cmssw_setup_connect_el9.sh'
 TREE        = "Events"
 USER        = os.environ['USER']
 OUT_BASE    = "/ospool/cms-user/"+USER+"/NTUPLES/Processing"
+#OUT_BASE    = "/uscms/home/"+USER+"/nobackup/NTUPLES/Processing"
 LIST        = "default.list"
 QUEUE       = ""
 SPLIT       = 1
@@ -60,12 +62,7 @@ def write_sh_single(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,
     errfile = errfile.replace('_$(ItemIndex)_$(Step)','_0_0')
     logfile = logfile.replace('_$(ItemIndex)_$(Step)','_0_0')
     ifile = ifile.replace('_list','_0')
-    if DO_SMS == 1:
-        ifile = ifile.replace(pwd+'/'+filetag+'_SMS','./config')
-    elif DO_DATA == 1:
-        ifile = ifile.replace(pwd+'/'+filetag+'_Data','./config')
-    else:
-        ifile = ifile.replace(pwd+'/'+filetag,'./config')
+    ifile = './config/list/'+(ifile.replace(pwd,'').split("/")[-2]+'/'+ifile.replace(pwd,'').split("/")[-1])
 
     fsrc = open(srcfile,'w')
     fsrc.write('# Note: For only submitting 1 job! \n')
@@ -136,6 +133,13 @@ def write_sh_single(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,
     
     fsrc.write('+ProjectName="cms.org.ku"\n')
     fsrc.write('+REQUIRED_OS="rhel7"\n')
+    #fsrc.write('job_lease_duration = 3600\n')
+    fsrc.write('periodic_release = (HoldReasonCode == 12 && HoldReasonSubCode == 256 || HoldReasonCode == 13 && HoldReasonSubCode == 2 || HoldReasonCode == 12 && HoldReasonSubCode == 2 || HoldReasonCode == 26 && HoldReasonSubCode == 120 && HoldReasonCode == 3 && HoldReasonSubCode == 0)\n')
+    fsrc.write('priority = 10 \n')
+    fsrc.write('+RequiresCVMFS = True \n')
+    #fsrc.write('+RequiresSharedFS = True \n')
+    fsrc.write('Requirements = HAS_SINGULARITY == True\n')
+    fsrc.write('MY.SingularityImage = "/cvmfs/singularity.opensciencegrid.org/cmssw/cms:rhel7"\n')
     fsrc.write('queue')
     fsrc.close()
 
@@ -203,16 +207,22 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n,NAME)
     
     fsrc.write('+ProjectName="cms.org.ku"\n')
     fsrc.write('+REQUIRED_OS="rhel7"\n')
-    fsrc.write('periodic_release = (HoldReasonCode == 12 && HoldReasonSubCode == 256 || HoldReasonCode == 13 && HoldReasonSubCode == 2)\n')
+    #fsrc.write('job_lease_duration = 3600\n')
+    #fsrc.write('RequestDisk = 1000000 \n')
+    fsrc.write('periodic_release = (HoldReasonCode == 12 && HoldReasonSubCode == 256 || HoldReasonCode == 13 && HoldReasonSubCode == 2 || HoldReasonCode == 12 && HoldReasonSubCode == 2 || HoldReasonCode == 26 && HoldReasonSubCode == 120 && HoldReasonCode == 3 && HoldReasonSubCode == 0)\n')
     #fsrc.write('priority = 10 \n')
     fsrc.write('+RequiresCVMFS = True \n')
     #fsrc.write('+RequiresSharedFS = True \n')
+    fsrc.write('Requirements = HAS_SINGULARITY == True\n')
+    fsrc.write('MY.SingularityImage = "/cvmfs/singularity.opensciencegrid.org/cmssw/cms:rhel7"\n')
+    #fsrc.write('priority = 10 \n')
     fsrc.write('queue '+str(n)+' from '+ifile+'\n')
     fsrc.close()
 
 if __name__ == "__main__":
     if not len(sys.argv) > 1 or '-h' in sys.argv or '--help' in sys.argv:
         print "Usage: %s [-q queue] [-tree treename] [-list listfile.list] [-split S] [--sms] [--data] [--sys] [--fastsim] [--slim] [--dry-run] [--verbose] [--count] [--csv]" % sys.argv[0]
+        #print (f"Usage: {sys.argv(0)} [-q queue] [-tree treename] [-list listfile.list] [-split S] [--sms] [--data] [--sys] [--fastsim] [--slim] [--dry-run] [--verbose] [--count] [--csv]")
         sys.exit(1)
 
     argv_pos    = 1

@@ -72,6 +72,12 @@ public:
 		       PlotType pType = kFull,
 		       bool do_ratio = false);
 
+  TCanvas* Plot1DstackPullRatio(const string& can_name,
+				const VS& proc,
+				const CategoryTree& CT,
+				PlotType pType = kFull,
+				bool do_ratio = false);
+  
   TCanvas* Plot2D(const string& can_name,
 		  const VS& proc,
 		  const CategoryTree& CT);
