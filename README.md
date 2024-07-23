@@ -69,7 +69,7 @@ cp /uscms/home/z374f439/nobackup/RestFrames_vNewest.tar ./
 If running on CMS connect then the tar ball to copy is
 ```
 
-cp /ospool/cms-user/zflowers/RestFrames_vNewest.tar ./
+cp /ospool/cms-user/zflowers/public/RestFrames_vNewest.tar ./
 ```
 
 ### LXPlus
