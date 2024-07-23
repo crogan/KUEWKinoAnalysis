@@ -36,7 +36,7 @@ def makeSubmitScript(tuple_pairs,submitName,resubmit,skipClean):
         os.system(f"rm {newFileName}")
 
 # Check condor jobs
-def checkJobs(workingDir,outputDir,skipMissing,skipSmall,skipErr,resubmit,skipClean,maxResub):
+def checkJobs(workingDir,outputDir,skipMissing,skipSmall,skipErr,skipOut,resubmit,skipClean,maxResub):
     grep_ignore = "-e \"Warning\" -e \"WARNING\" -e \"TTree::SetBranchStatus\" -e \"libXrdSecztn.so\" -e \"Phi_mpi_pi\" -e \"tar: stdout: write error\" -e \"INFO\" "
     print("Running over the directory '{0}'.".format(workingDir))
     print("------------------------------------------------------------")
@@ -86,6 +86,17 @@ def checkJobs(workingDir,outputDir,skipMissing,skipSmall,skipErr,resubmit,skipCl
                 if Tuple not in resubmitFiles:
                     resubmitFiles.append(Tuple)
             print("Got error files for dataset",DataSetName)
+        if(not skipOut):
+            bash = "grep \"Ntree 0\" "+ workingDir +"/out/"+DataSetName+"/*.out"
+            outFiles = subprocess.check_output(['bash','-c',bash]).decode()
+            outFiles = outFiles.split("\n")
+            outFiles.remove('')
+            for outFile in outFiles:
+                outFile = outFile.split(".out")[0]
+                Tuple = (int(outFile.split("_")[-2]),int(outFile.split("_")[-1]))
+                if Tuple not in resubmitFiles:
+                    resubmitFiles.append(Tuple)
+            print("Got out files for dataset",DataSetName)
         if len(resubmitFiles) >= maxResub:
             print(f"You are about to make {len(resubmitFiles)} and resubmit {len(resubmitFiles)} jobs for dataset: {DataSetName}!")
             print(f"You should double check there are no issues with your condor submissions")
@@ -101,6 +112,7 @@ def main():
     parser.add_argument("--skipMissing", "-m", action='store_true', help="skip checking missing files")
     parser.add_argument("--skipSmall", "-s", action='store_true', help="skip checking small files")
     parser.add_argument("--skipErr", "-e", action='store_true', help="skip checking err files")
+    parser.add_argument("--skipOut", "-u", action='store_true', help="skip checking out files")
     parser.add_argument("--skipClean", "-c", action='store_true', help="skip cleaning up new submission files")
     parser.add_argument("--maxResub", "-l", default=100, help="max number of jobs to resubmit")
 
@@ -111,10 +123,11 @@ def main():
     skipMissing = options.skipMissing
     skipSmall = options.skipSmall
     skipErr = options.skipErr
+    skipOut = options.skipOut
     skipClean = options.skipClean
     maxResub = options.maxResub
 
-    checkJobs(directory,output,skipMissing,skipSmall,skipErr,resubmit,skipClean,maxResub)
+    checkJobs(directory,output,skipMissing,skipSmall,skipErr,skipOut,resubmit,skipClean,maxResub)
 
 if __name__ == "__main__":
     main()

@@ -95,44 +95,46 @@ def main():
                 err_log = open("HADD_logs/"+"/"+target+"/"+target+"_"+str(i)+".err","a")
                 err_log.write(str(err))
                 err_log.close()
+        os.system(f"mkdir -p {OUT_DIR}/{target}")
+        os.system(f"mv {IN_DIR}/{target}/{target}_*.root {OUT_DIR}/{target}/")
 
-        if len(hadd_big_processes) >= 10:
-            for target, hadd_big in hadd_big_processes.items():
-                if hadd_big.poll() is not None:
-                    hadd_big.wait()
-                    out,err = hadd_big.communicate()
-                    if err != "":
-                        print("Outputting error to: HADD_logs/"+"/"+target+".err")
-                        err_log = open("HADD_logs/"+"/"+target+".err","a")
-                        err_log.write(err)
-                        err_log.close()
-                    del hadd_big_processes[target]
-                elif len(hadd_big_processes) < 10:
-                    tmp_pop = pop("hadd -f "+OUT_DIR+"/"+target+".root "+IN_DIR+"/"+target+"/*.root",stdout=subprocess.PIPE,stderr=subprocess.PIPE,shell=True)
-                    hadd_big_processes[str(target)] = tmp_pop
-            
-        else:
-            tmp_pop = pop("hadd -f "+OUT_DIR+"/"+target+".root "+IN_DIR+"/"+target+"/*.root",stdout=subprocess.PIPE,stderr=subprocess.PIPE,shell=True)
-            hadd_big_processes[str(target)] = tmp_pop
+    #    if len(hadd_big_processes) >= 10:
+    #        for target, hadd_big in hadd_big_processes.items():
+    #            if hadd_big.poll() is not None:
+    #                hadd_big.wait()
+    #                out,err = hadd_big.communicate()
+    #                if err != "":
+    #                    print("Outputting error to: HADD_logs/"+"/"+target+".err")
+    #                    err_log = open("HADD_logs/"+"/"+target+".err","a")
+    #                    err_log.write(err)
+    #                    err_log.close()
+    #                del hadd_big_processes[target]
+    #            elif len(hadd_big_processes) < 10:
+    #                tmp_pop = pop("hadd -f "+OUT_DIR+"/"+target+".root "+IN_DIR+"/"+target+"/*.root",stdout=subprocess.PIPE,stderr=subprocess.PIPE,shell=True)
+    #                hadd_big_processes[str(target)] = tmp_pop
+    #        
+    #    else:
+    #        tmp_pop = pop("hadd -f "+OUT_DIR+"/"+target+".root "+IN_DIR+"/"+target+"/*.root",stdout=subprocess.PIPE,stderr=subprocess.PIPE,shell=True)
+    #        hadd_big_processes[str(target)] = tmp_pop
         
 
-    for target, hadd_big in hadd_big_processes.items():
-        if hadd_big.poll() is not None:
-            print("Waiting on big hadd job")
-            hadd_big.wait()
-            out,err = hadd_big.communicate()
-            if err != "":
-                print("Outputting error to: HADD_logs/"+"/"+target+".err")
-                err_log = open("HADD_logs/"+"/"+target+".err","a")
-                err_log.write(err)
-                err_log.close()
-            if hadd_big.poll() is None:
-                #hadd_big_processes.pop(target,None)
-                del hadd_big_processes[target]
-    if len(hadd_big_processes) == 0:
-        print("Finished Merging Files")
-    else:
-        print("Note: "+str(len(hadd_big_processes))+" hadd jobs may still be running!")
+    #for target, hadd_big in hadd_big_processes.items():
+    #    if hadd_big.poll() is not None:
+    #        print("Waiting on big hadd job")
+    #        hadd_big.wait()
+    #        out,err = hadd_big.communicate()
+    #        if err != "":
+    #            print("Outputting error to: HADD_logs/"+"/"+target+".err")
+    #            err_log = open("HADD_logs/"+"/"+target+".err","a")
+    #            err_log.write(err)
+    #            err_log.close()
+    #        if hadd_big.poll() is None:
+    #            #hadd_big_processes.pop(target,None)
+    #            del hadd_big_processes[target]
+    #if len(hadd_big_processes) == 0:
+    #    print("Finished Merging Files")
+    #else:
+    #    print("Note: "+str(len(hadd_big_processes))+" hadd jobs may still be running!")
     
     print("------------------------------")
     # end time
