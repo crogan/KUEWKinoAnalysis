@@ -495,8 +495,8 @@ int event_count = 0;
 	    Nmu += 1;
 	  }
 	  LepCharge charge = (base->Charge_lep->at(index) > 0 ? kPos : kNeg);
-	  //LepSource source = LepSource(base->SourceID_lep->at(index));
-	  LepSource source = LepSource(base->ID_lep->at(index*2+1)); // fix for current ntuple version
+	  LepSource source = LepSource(base->SourceID_lep->at(index));
+	  //LepSource source = LepSource(base->ID_lep->at(index*2+1)); // fix for current ntuple version
 	    
 	  list_a += Lep(flavor, charge, id, source);
 	}
@@ -523,8 +523,8 @@ int event_count = 0;
 	    Nmu += 1;
 	  }
 	  LepCharge charge = (base->Charge_lep->at(index) > 0 ? kPos : kNeg);
-	  //LepSource source = LepSource(base->SourceID_lep->at(index));
-	  LepSource source = LepSource(base->ID_lep->at(index*2+1)); // fix for current ntuple version
+	  LepSource source = LepSource(base->SourceID_lep->at(index));
+	  //LepSource source = LepSource(base->ID_lep->at(index*2+1)); // fix for current ntuple version
 	  
 	  list_b += Lep(flavor, charge, id, source);
 	}

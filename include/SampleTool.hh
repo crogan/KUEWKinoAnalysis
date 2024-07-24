@@ -35,6 +35,8 @@ public:
   bool IsFastSim(const Process& proc, int itree);
   bool FilterDilepton(const Process& proc, int itree);
   double GetSampleWeight(const Process& proc, int itree);
+
+  static const int m_total_years = 10;
   
 private:
   string m_Path;
@@ -45,15 +47,15 @@ private:
   void InitSMS(const string& prefix, const string& filename, double weight = 1., bool FS = false, bool DL = false);
   void InitProcMap();
   static bool m_ProcInit;
-  static std::map<Process, pair<vector<string>,string> > m_Proc[3];
-  static double m_Lumi[3];
+  static std::map<Process, pair<vector<string>,string> > m_Proc[m_total_years];
+  static double m_Lumi[m_total_years];
 
   // signal only
   void InitSignalProc(const Process& proc);
-  static std::map<Process, bool> m_SProcInit[3]; // checked combined normalizations already?
-  static std::map<Process, std::map<string,bool> >   m_SProcFS[3]; // FastSim?
-  static std::map<Process, std::map<string,bool> >   m_SProcDL[3]; // di-lepton filter (ZToLL or dilepton filter);
-  static std::map<Process, std::map<string,double> > m_SProcW[3];  // some additional weight to apply
+  static std::map<Process, bool> m_SProcInit[m_total_years]; // checked combined normalizations already?
+  static std::map<Process, std::map<string,bool> >   m_SProcFS[m_total_years]; // FastSim?
+  static std::map<Process, std::map<string,bool> >   m_SProcDL[m_total_years]; // di-lepton filter (ZToLL or dilepton filter);
+  static std::map<Process, std::map<string,double> > m_SProcW[m_total_years];  // some additional weight to apply
   
   
 };

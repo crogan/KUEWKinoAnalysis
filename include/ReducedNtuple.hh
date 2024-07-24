@@ -229,6 +229,20 @@ private:
   vector<int> m_index_SV_S;
   vector<int> m_index_lep_ISR;
   vector<int> m_index_lep_S;
+
+  // Cascade
+  int m_c_Njet_a;
+  int m_c_Nbjet_a;
+  int m_c_Njet_b;
+  int m_c_Nbjet_b;
+  int m_c_Nlep_1a;
+  int m_c_Nlep_1b;
+  int m_c_Nlep_2b;
+  vector<int> m_c_index_jet_a;
+  vector<int> m_c_index_jet_b;
+  vector<int> m_c_index_lep_1a;
+  vector<int> m_c_index_lep_1b;
+  vector<int> m_c_index_lep_2b;
   
   vector<double> m_dphi_lep_S;
   vector<double> m_cos_lep_S;
@@ -353,38 +367,54 @@ private:
   double m_MISR;
   double m_RISR;
   double m_RISRT;
+
+  // Cascade variables
+  double  m_c_MX3a_S; 
+  double  m_c_MX3b_S;
+  double  m_c_MX3a_Vis;
+  double  m_c_MX3b_Vis;
+  double  m_c_MX2a_S;
+  double  m_c_MX2b_S;
+  double  m_c_MX2a_Vis;
+  double  m_c_MX2b_Vis;
  
   // RestFrames frames and friends
-  LabRecoFrame*     LAB;
-  DecayRecoFrame*   CM;
-  DecayRecoFrame*   S;
-  DecayRecoFrame*   X3a;
-  DecayRecoFrame*   X3b;
-  DecayRecoFrame*   X2a;
-  DecayRecoFrame*   X2b;
-  SelfAssemblingRecoFrame*   saJa;
-  SelfAssemblingRecoFrame*   saJb;
-  SelfAssemblingRecoFrame*   saLa;
-  SelfAssemblingRecoFrame*   saLb;
-  VisibleRecoFrame*   ISR;
-  VisibleRecoFrame*   Ja;
-  VisibleRecoFrame*   Jb;
-  VisibleRecoFrame*   La;
-  VisibleRecoFrame*   Lb;
-  InvisibleRecoFrame* X1a;
-  InvisibleRecoFrame* X1b;
+  LabRecoFrame*     LAB[2];
+  DecayRecoFrame*   CM[2];
+  DecayRecoFrame*   S[2];
+  DecayRecoFrame*   X3a[2];
+  DecayRecoFrame*   X3b[2];
+  DecayRecoFrame*   X2a[2];
+  DecayRecoFrame*   X2b[2];
+  SelfAssemblingRecoFrame*   saJa[2];
+  SelfAssemblingRecoFrame*   saJb[2];
+  SelfAssemblingRecoFrame*   saLa[2];
+  SelfAssemblingRecoFrame*   saLb[2];
+  SelfAssemblingRecoFrame*   saL2b[2];
+  VisibleRecoFrame*   ISR[2];
+  VisibleRecoFrame*   Ja[2];
+  VisibleRecoFrame*   Jb[2];
+  VisibleRecoFrame*   La[2];
+  VisibleRecoFrame*   Lb[2];
+  InvisibleRecoFrame* X1a[2];
+  InvisibleRecoFrame* X1b[2];
+  VisibleRecoFrame*   L2a[2];
+  VisibleRecoFrame*   L2b[2];
 
-  InvisibleGroup*       INV;
-  SetMassInvJigsaw*     InvM;
-  SetRapidityInvJigsaw* InvEta;
-  MinMassesSqInvJigsaw* InvSplit;
+  InvisibleGroup*       INV[2];
+  SetMassInvJigsaw*     InvM[2];
+  SetRapidityInvJigsaw* InvEta[2];
+  MinMassesSqInvJigsaw* InvSplit[2];
   
-  CombinatoricGroup*   COMB_J;
-  MinMassesCombJigsaw*   CombSplit_ISR;
-  MinMassesSqCombJigsaw* CombSplit_J;
+  CombinatoricGroup*   COMB_J[2];
+  MinMassesCombJigsaw*   CombSplit_ISR[2];
+  MinMassesSqCombJigsaw* CombSplit_J[2];
 
-  CombinatoricGroup*   COMB_L;
-  MinMassesSqCombJigsaw* CombSplit_L;
+  CombinatoricGroup*   COMB_L[2];
+  MinMassesSqCombJigsaw* CombSplit_L[2];
+
+  MinMassesSqCombJigsaw* CombSplit_L2[2];
+  MinMassesSqCombJigsaw* CombSplit_Lb[2];
  
 };
 

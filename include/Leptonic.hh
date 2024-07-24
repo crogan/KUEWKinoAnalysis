@@ -13,7 +13,7 @@
 using std::vector;
 using std::string;
 
-enum LepFlavor { kElectron, kMuon };
+enum class LepFlavor { kElectron, kMuon };
 enum LepCharge { kPos, kNeg };
 enum LepSource { kSignal, kTau, kHFB, kHFC, kLF, kFake };
 

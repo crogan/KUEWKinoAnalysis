@@ -186,6 +186,8 @@ int SampleTool::YearMap(int year){
     return ydef;
   if(year < 2019)
     return year - 2016;
+  if(year > 2021)
+    return 3+year-2022;
 
   return ydef;
 }
@@ -885,14 +887,47 @@ void SampleTool::InitProcMap(){
     m_Proc[m_iYear][data_obs] = pair<vector<string>,string>(list, "KUAnalysis");
 
   }
+  ///////////////////////////////////////////
+  ////////// 2023 BPix samples ///////////////////
+  ///////////////////////////////////////////
+  m_iYear = 4;
+  {
+    // ------------------ //
+    // --- Background --- //
+    // ------------------ //
+    
+    Process ttbar("ttbar", kBkg);
+    list.clear();
+    list += m_Path + "Summer23BPix_130X/TTto2L2Nu_TuneCP5_13p6TeV_powheg-pythia8_Summer23BPix_130X.root";
+    m_Proc[m_iYear][ttbar] = pair<vector<string>,string>(list, "KUAnalysis");
+    
+    // -------------- //
+    // --- Signal --- //
+    // -------------- //
+
+    InitSMS("Cascade", m_Path+"Summer23BPix_130X_SMS/SlepSnuCascade_MN1-220_MN2-260_MC1-240_TuneCP5_13p6TeV_madgraphMLM-pythia8_Summer23BPix_130X.root", 1., true);
+
+
+    // ------------ //
+    // --- Data --- //
+    // ------------ //
+
+    Process data_obs("data_obs", kData);
+    list.clear();
+      
+    //list += m_Path + "Summer23_130X_Data/_Summer23_130X.root";
+
+    m_Proc[m_iYear][data_obs] = pair<vector<string>,string>(list, "KUAnalysis");
+
+  }
 }  
 
 bool SampleTool::m_ProcInit = false;
 
-std::map<Process, pair<vector<string>,string> > SampleTool::m_Proc[3];
-std::map<Process, bool> SampleTool::m_SProcInit[3]; // checked combined normalizations already?
-std::map<Process, std::map<string,bool> >   SampleTool::m_SProcFS[3]; // FastSim?
-std::map<Process, std::map<string,bool> >   SampleTool::m_SProcDL[3]; // di-lepton filter (ZToLL or dilepton filter);
-std::map<Process, std::map<string,double> > SampleTool::m_SProcW[3];  // some additional weight to apply
+std::map<Process, pair<vector<string>,string> > SampleTool::m_Proc[SampleTool::m_total_years];
+std::map<Process, bool> SampleTool::m_SProcInit[SampleTool::m_total_years]; // checked combined normalizations already?
+std::map<Process, std::map<string,bool> >   SampleTool::m_SProcFS[SampleTool::m_total_years]; // FastSim?
+std::map<Process, std::map<string,bool> >   SampleTool::m_SProcDL[SampleTool::m_total_years]; // di-lepton filter (ZToLL or dilepton filter);
+std::map<Process, std::map<string,double> > SampleTool::m_SProcW[SampleTool::m_total_years];  // some additional weight to apply
 
-double SampleTool::m_Lumi[3];
+double SampleTool::m_Lumi[SampleTool::m_total_years];
