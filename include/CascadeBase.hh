@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Wed Jul 24 15:26:56 2024 by ROOT version 6.26/11
+// Tue Jul 30 11:53:30 2024 by ROOT version 6.26/11
 // from TTree KUAnalysis/KUAnalysis
 // found on file: local_test_root_files/Summer23BPix_130X/TTto2L2Nu_TuneCP5_13p6TeV_powheg-pythia8_Summer23BPix_130X.root
 //////////////////////////////////////////////////////////
@@ -14,7 +14,6 @@
 
 // Header file for the classes stored in the TTree if any.
 #include "vector"
-#include "vector"
 using std::vector;
 
 class CascadeBase {
@@ -26,6 +25,7 @@ public :
 
    // Declaration of leaf types
    Bool_t          event_skipped;
+   vector<bool>    *treeSkipped;
    Double_t        weight;
    Double_t        PUweight;
    Double_t        PUweight_up;
@@ -108,6 +108,7 @@ public :
    Double_t        HT_eta5;
    Double_t        HT_eta5_id;
    Int_t           Nele;
+   Int_t           Nlele;
    Int_t           Nmu;
    Int_t           Nlep;
    vector<double>  *PT_lep;
@@ -168,18 +169,21 @@ public :
    Int_t           Nlep_b;
    vector<int>     *index_lep_a;
    vector<int>     *index_lep_b;
-   Int_t           c_Njet_a;
-   Int_t           c_Nbjet_a;
-   vector<int>     *c_index_jet_a;
-   Int_t           c_Njet_b;
-   Int_t           c_Nbjet_b;
-   vector<int>     *c_index_jet_b;
-   Int_t           c_Nlep_1a;
-   vector<int>     *c_index_lep_1a;
-   Int_t           c_Nlep_1b;
-   vector<int>     *c_index_lep_1b;
-   Int_t           c_Nlep_2b;
-   vector<int>     *c_index_lep_2b;
+   vector<int>     *c_Njet_ISR;
+   vector<int>     *c_Nbjet_ISR;
+   vector<int>     *c_Njet_a;
+   vector<int>     *c_Nbjet_a;
+   vector<vector<int> > *c_index_jet_ISR;
+   vector<vector<int> > *c_index_jet_a;
+   vector<int>     *c_Njet_b;
+   vector<int>     *c_Nbjet_b;
+   vector<vector<int> > *c_index_jet_b;
+   vector<int>     *c_Nlep_1a;
+   vector<vector<int> > *c_index_lep_1a;
+   vector<int>     *c_Nlep_1b;
+   vector<vector<int> > *c_index_lep_1b;
+   vector<int>     *c_Nlep_2b;
+   vector<vector<int> > *c_index_lep_2b;
    Double_t        PTCM;
    Double_t        PzCM;
    Double_t        cosCM;
@@ -192,14 +196,14 @@ public :
    Double_t        EL_BoostT;
    Double_t        PTISR;
    Double_t        RISR;
-   Double_t        c_MX3a_S;
-   Double_t        c_MX3b_S;
-   Double_t        c_MX3a_Vis;
-   Double_t        c_MX3b_Vis;
-   Double_t        c_MX2a_S;
-   Double_t        c_MX2b_S;
-   Double_t        c_MX2a_Vis;
-   Double_t        c_MX2b_Vis;
+   vector<double>  *c_MX3a_S;
+   vector<double>  *c_MX3b_S;
+   vector<double>  *c_MX3a_Vis;
+   vector<double>  *c_MX3b_Vis;
+   vector<double>  *c_MX2a_S;
+   vector<double>  *c_MX2b_S;
+   vector<double>  *c_MX2a_Vis;
+   vector<double>  *c_MX2b_Vis;
    Double_t        MS;
    Double_t        PS;
    Double_t        cosS;
@@ -305,6 +309,7 @@ public :
 
    // List of branches
    TBranch        *b_event_skipped;   //!
+   TBranch        *b_treeSkipped;   //!
    TBranch        *b_weight;   //!
    TBranch        *b_PUweight;   //!
    TBranch        *b_PUweight_up;   //!
@@ -387,6 +392,7 @@ public :
    TBranch        *b_HT_eta5;   //!
    TBranch        *b_HT_eta5_id;   //!
    TBranch        *b_Nele;   //!
+   TBranch        *b_Nlele;   //!
    TBranch        *b_Nmu;   //!
    TBranch        *b_Nlep;   //!
    TBranch        *b_PT_lep;   //!
@@ -447,8 +453,11 @@ public :
    TBranch        *b_Nlep_b;   //!
    TBranch        *b_index_lep_a;   //!
    TBranch        *b_index_lep_b;   //!
+   TBranch        *b_c_Njet_ISR;   //!
+   TBranch        *b_c_Nbjet_ISR;   //!
    TBranch        *b_c_Njet_a;   //!
    TBranch        *b_c_Nbjet_a;   //!
+   TBranch        *b_c_index_jet_ISR;   //!
    TBranch        *b_c_index_jet_a;   //!
    TBranch        *b_c_Njet_b;   //!
    TBranch        *b_c_Nbjet_b;   //!
@@ -594,6 +603,7 @@ public :
 
 #endif
 
+#ifdef CascadeBase_cxx
 CascadeBase::CascadeBase(TTree *tree) : fChain(0) 
 {
 // if parameter tree is not specified (or zero), connect the file
@@ -645,6 +655,7 @@ void CascadeBase::Init(TTree *tree)
    // (once per file to be processed).
 
    // Set object pointer
+   treeSkipped = 0;
    PT_lep = 0;
    Eta_lep = 0;
    Phi_lep = 0;
@@ -689,11 +700,29 @@ void CascadeBase::Init(TTree *tree)
    dphiMET_jet_S = 0;
    index_lep_a = 0;
    index_lep_b = 0;
+   c_Njet_ISR = 0;
+   c_Nbjet_ISR = 0;
+   c_Njet_a = 0;
+   c_Nbjet_a = 0;
+   c_index_jet_ISR = 0;
    c_index_jet_a = 0;
+   c_Njet_b = 0;
+   c_Nbjet_b = 0;
    c_index_jet_b = 0;
+   c_Nlep_1a = 0;
    c_index_lep_1a = 0;
+   c_Nlep_1b = 0;
    c_index_lep_1b = 0;
+   c_Nlep_2b = 0;
    c_index_lep_2b = 0;
+   c_MX3a_S = 0;
+   c_MX3b_S = 0;
+   c_MX3a_Vis = 0;
+   c_MX3b_Vis = 0;
+   c_MX2a_S = 0;
+   c_MX2b_S = 0;
+   c_MX2a_Vis = 0;
+   c_MX2b_Vis = 0;
    genPT_lep = 0;
    genEta_lep = 0;
    genPhi_lep = 0;
@@ -727,6 +756,7 @@ void CascadeBase::Init(TTree *tree)
    fChain->SetMakeClass(1);
 
    fChain->SetBranchAddress("event_skipped", &event_skipped, &b_event_skipped);
+   fChain->SetBranchAddress("treeSkipped", &treeSkipped, &b_treeSkipped);
    fChain->SetBranchAddress("weight", &weight, &b_weight);
    fChain->SetBranchAddress("PUweight", &PUweight, &b_PUweight);
    fChain->SetBranchAddress("PUweight_up", &PUweight_up, &b_PUweight_up);
@@ -809,6 +839,7 @@ void CascadeBase::Init(TTree *tree)
    fChain->SetBranchAddress("HT_eta5", &HT_eta5, &b_HT_eta5);
    fChain->SetBranchAddress("HT_eta5_id", &HT_eta5_id, &b_HT_eta5_id);
    fChain->SetBranchAddress("Nele", &Nele, &b_Nele);
+   fChain->SetBranchAddress("Nlele", &Nlele, &b_Nlele);
    fChain->SetBranchAddress("Nmu", &Nmu, &b_Nmu);
    fChain->SetBranchAddress("Nlep", &Nlep, &b_Nlep);
    fChain->SetBranchAddress("PT_lep", &PT_lep, &b_PT_lep);
@@ -869,8 +900,11 @@ void CascadeBase::Init(TTree *tree)
    fChain->SetBranchAddress("Nlep_b", &Nlep_b, &b_Nlep_b);
    fChain->SetBranchAddress("index_lep_a", &index_lep_a, &b_index_lep_a);
    fChain->SetBranchAddress("index_lep_b", &index_lep_b, &b_index_lep_b);
+   fChain->SetBranchAddress("c_Njet_ISR", &c_Njet_ISR, &b_c_Njet_ISR);
+   fChain->SetBranchAddress("c_Nbjet_ISR", &c_Nbjet_ISR, &b_c_Nbjet_ISR);
    fChain->SetBranchAddress("c_Njet_a", &c_Njet_a, &b_c_Njet_a);
    fChain->SetBranchAddress("c_Nbjet_a", &c_Nbjet_a, &b_c_Nbjet_a);
+   fChain->SetBranchAddress("c_index_jet_ISR", &c_index_jet_ISR, &b_c_index_jet_ISR);
    fChain->SetBranchAddress("c_index_jet_a", &c_index_jet_a, &b_c_index_jet_a);
    fChain->SetBranchAddress("c_Njet_b", &c_Njet_b, &b_c_Njet_b);
    fChain->SetBranchAddress("c_Nbjet_b", &c_Nbjet_b, &b_c_Nbjet_b);
@@ -1031,3 +1065,4 @@ Int_t CascadeBase::Cut(Long64_t entry)
 // returns -1 otherwise.
    return 1;
 }
+#endif // #ifdef CascadeBase_cxx

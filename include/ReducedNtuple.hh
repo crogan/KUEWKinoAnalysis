@@ -16,6 +16,8 @@ public:
   virtual ~ReducedNtuple();
 
 private:
+  const static int m_aTrees=4; // Number of RJR analysis trees
+  vector<bool> m_treeSkipped;
   bool m_library_generated;
   TTree* InitOutputTree(const string& sample, bool do_slim = false);
   void FillOutputTree(TTree* tree, const Systematic& sys = Systematic::Default(), bool do_slim = false);
@@ -125,6 +127,7 @@ private:
   bool m_EMutrigger;  
   
   int m_Nele;
+  int m_Nlele;
   int m_Nmu;
   
   int m_Nlep;
@@ -230,20 +233,6 @@ private:
   vector<int> m_index_lep_ISR;
   vector<int> m_index_lep_S;
 
-  // Cascade
-  int m_c_Njet_a;
-  int m_c_Nbjet_a;
-  int m_c_Njet_b;
-  int m_c_Nbjet_b;
-  int m_c_Nlep_1a;
-  int m_c_Nlep_1b;
-  int m_c_Nlep_2b;
-  vector<int> m_c_index_jet_a;
-  vector<int> m_c_index_jet_b;
-  vector<int> m_c_index_lep_1a;
-  vector<int> m_c_index_lep_1b;
-  vector<int> m_c_index_lep_2b;
-  
   vector<double> m_dphi_lep_S;
   vector<double> m_cos_lep_S;
   vector<double> m_dphi_SV_S;
@@ -369,52 +358,69 @@ private:
   double m_RISRT;
 
   // Cascade variables
-  double  m_c_MX3a_S; 
-  double  m_c_MX3b_S;
-  double  m_c_MX3a_Vis;
-  double  m_c_MX3b_Vis;
-  double  m_c_MX2a_S;
-  double  m_c_MX2b_S;
-  double  m_c_MX2a_Vis;
-  double  m_c_MX2b_Vis;
+  vector<double>  m_c_MX3a_S; 
+  vector<double>  m_c_MX3b_S;
+  vector<double>  m_c_MX3a_Vis;
+  vector<double>  m_c_MX3b_Vis;
+  vector<double>  m_c_MX2a_S;
+  vector<double>  m_c_MX2b_S;
+  vector<double>  m_c_MX2a_Vis;
+  vector<double>  m_c_MX2b_Vis;
+
+  vector<int> m_c_Njet_ISR;
+  vector<int> m_c_Nbjet_ISR;
+  vector<int> m_c_Njet_a;
+  vector<int> m_c_Nbjet_a;
+  vector<int> m_c_Njet_b;
+  vector<int> m_c_Nbjet_b;
+  vector<int> m_c_Nlep_1a;
+  vector<int> m_c_Nlep_1b;
+  vector<int> m_c_Nlep_2b;
+  vector<vector<int>> m_c_index_jet_ISR;
+  vector<vector<int>> m_c_index_jet_a;
+  vector<vector<int>> m_c_index_jet_b;
+  vector<vector<int>> m_c_index_lep_1a;
+  vector<vector<int>> m_c_index_lep_1b;
+  vector<vector<int>> m_c_index_lep_2b;
+  
  
   // RestFrames frames and friends
-  LabRecoFrame*     LAB[2];
-  DecayRecoFrame*   CM[2];
-  DecayRecoFrame*   S[2];
-  DecayRecoFrame*   X3a[2];
-  DecayRecoFrame*   X3b[2];
-  DecayRecoFrame*   X2a[2];
-  DecayRecoFrame*   X2b[2];
-  SelfAssemblingRecoFrame*   saJa[2];
-  SelfAssemblingRecoFrame*   saJb[2];
-  SelfAssemblingRecoFrame*   saLa[2];
-  SelfAssemblingRecoFrame*   saLb[2];
-  SelfAssemblingRecoFrame*   saL2b[2];
-  VisibleRecoFrame*   ISR[2];
-  VisibleRecoFrame*   Ja[2];
-  VisibleRecoFrame*   Jb[2];
-  VisibleRecoFrame*   La[2];
-  VisibleRecoFrame*   Lb[2];
-  InvisibleRecoFrame* X1a[2];
-  InvisibleRecoFrame* X1b[2];
-  VisibleRecoFrame*   L2a[2];
-  VisibleRecoFrame*   L2b[2];
+  LabRecoFrame*     LAB[m_aTrees];
+  DecayRecoFrame*   CM[m_aTrees];
+  DecayRecoFrame*   S[m_aTrees];
+  DecayRecoFrame*   X3a[m_aTrees];
+  DecayRecoFrame*   X3b[m_aTrees];
+  DecayRecoFrame*   X2a[m_aTrees];
+  DecayRecoFrame*   X2b[m_aTrees];
+  SelfAssemblingRecoFrame*   saJa[m_aTrees];
+  SelfAssemblingRecoFrame*   saJb[m_aTrees];
+  SelfAssemblingRecoFrame*   saLa[m_aTrees];
+  SelfAssemblingRecoFrame*   saLb[m_aTrees];
+  SelfAssemblingRecoFrame*   saL2b[m_aTrees];
+  VisibleRecoFrame*   ISR[m_aTrees];
+  VisibleRecoFrame*   Ja[m_aTrees];
+  VisibleRecoFrame*   Jb[m_aTrees];
+  VisibleRecoFrame*   La[m_aTrees];
+  VisibleRecoFrame*   Lb[m_aTrees];
+  InvisibleRecoFrame* X1a[m_aTrees];
+  InvisibleRecoFrame* X1b[m_aTrees];
+  VisibleRecoFrame*   L2a[m_aTrees];
+  VisibleRecoFrame*   L2b[m_aTrees];
 
-  InvisibleGroup*       INV[2];
-  SetMassInvJigsaw*     InvM[2];
-  SetRapidityInvJigsaw* InvEta[2];
-  MinMassesSqInvJigsaw* InvSplit[2];
+  InvisibleGroup*       INV[m_aTrees];
+  SetMassInvJigsaw*     InvM[m_aTrees];
+  SetRapidityInvJigsaw* InvEta[m_aTrees];
+  MinMassesSqInvJigsaw* InvSplit[m_aTrees];
   
-  CombinatoricGroup*   COMB_J[2];
-  MinMassesCombJigsaw*   CombSplit_ISR[2];
-  MinMassesSqCombJigsaw* CombSplit_J[2];
+  CombinatoricGroup*   COMB_J[m_aTrees];
+  MinMassesCombJigsaw*   CombSplit_ISR[m_aTrees];
+  MinMassesSqCombJigsaw* CombSplit_J[m_aTrees];
 
-  CombinatoricGroup*   COMB_L[2];
-  MinMassesSqCombJigsaw* CombSplit_L[2];
+  CombinatoricGroup*   COMB_L[m_aTrees];
+  MinMassesSqCombJigsaw* CombSplit_L[m_aTrees];
 
-  MinMassesSqCombJigsaw* CombSplit_L2[2];
-  MinMassesSqCombJigsaw* CombSplit_Lb[2];
+  MinMassesSqCombJigsaw* CombSplit_L2[m_aTrees];
+  MinMassesSqCombJigsaw* CombSplit_Lb[m_aTrees];
  
 };
 
