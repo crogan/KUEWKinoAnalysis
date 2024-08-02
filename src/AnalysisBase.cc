@@ -2541,11 +2541,15 @@ ParticleList AnalysisBase<NANORun3>::GetElectrons(){
       continue;
     //if(LowPtElectron_dxyErr[i] < 1.e-8 || LowPtElectron_dzErr[i] < 1.e-8)
     //continue;
-    float dxysig1 = LowPtElectron_dxy[i]/LowPtElectron_dxyErr[i];
-    float dzsig1 = LowPtElectron_dz[i]/LowPtElectron_dzErr[i];
-    float ip3d1 = sqrt(LowPtElectron_dxy[i]*LowPtElectron_dxy[i]+LowPtElectron_dz[i]*LowPtElectron_dz[i]);
-    float ipsig1 = sqrt(dxysig1*dxysig1+ dzsig1*dzsig1);
-    //if (ipsig1 >= 8)
+    //below, sig means "sigma" not "significance"
+    float dxy = LowPtElectron_dxy[i];
+    float dz = LowPtElectron_dz[i];
+    float dxy_sig = LowPtElectron_dxyErr[i];
+    float dz_sig = LowPtElectron_dzErr[i];
+    float IP_3D = sqrt(dxy*dxy + dz*dz);
+    float IP_3D_sig = IP_3D*IP_3D / sqrt((dxy*dxy)*(dxy_sig*dxy_sig) + (dz*dz*)*(dz_sig*dz_sig));
+
+    //if (IP_3D_sig >= 8)
     //continue;
 
       //if(Electron_pfRelIso03_all[i]*Electron_pt[i] >= 20. + 300./Electron_pt[i])
