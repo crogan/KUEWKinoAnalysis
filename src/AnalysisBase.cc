@@ -2541,13 +2541,12 @@ ParticleList AnalysisBase<NANORun3>::GetElectrons(){
       continue;
     //if(LowPtElectron_dxyErr[i] < 1.e-8 || LowPtElectron_dzErr[i] < 1.e-8)
     //continue;
-    //below, sig means "sigma" not "significance"
     float dxy = LowPtElectron_dxy[i];
     float dz = LowPtElectron_dz[i];
-    float dxy_sig = LowPtElectron_dxyErr[i];
-    float dz_sig = LowPtElectron_dzErr[i];
+    float dxy_err = LowPtElectron_dxyErr[i];
+    float dz_err = LowPtElectron_dzErr[i];
     float IP_3D = sqrt(dxy*dxy + dz*dz);
-    float IP_3D_sig = IP_3D*IP_3D / sqrt((dxy*dxy)*(dxy_sig*dxy_sig) + (dz*dz*)*(dz_sig*dz_sig));
+    float SIP_3D = IP_3D*IP_3D / sqrt((dxy*dxy)*(dxy_err*dxy_err) + (dz*dz)*(dz_err*dz_err));
 
     //if (IP_3D_sig >= 8)
     //continue;
@@ -2565,8 +2564,8 @@ ParticleList AnalysisBase<NANORun3>::GetElectrons(){
     lep.SetDxyErr(LowPtElectron_dxyErr[i]);
     lep.SetDz(LowPtElectron_dz[i]);
     lep.SetDzErr(LowPtElectron_dzErr[i]);
-    lep.SetIP3D(ip3d1);
-    lep.SetSIP3D(ipsig1);
+    lep.SetIP3D(IP_3D);
+    lep.SetSIP3D(SIP_3D);
 
     lep.SetRelIso(LowPtElectron_miniPFRelIso_all[i]);
     lep.SetMiniIso(LowPtElectron_miniPFRelIso_all[i]);
