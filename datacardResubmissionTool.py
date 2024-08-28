@@ -14,6 +14,7 @@ import shutil
 #mem="request_memory = 4000 MB"
 
 
+#BF_dir = "BF_B135_bugfix16_TChipmWW_MCstats"
 #BF_dir = "BF_B135_bugfix16_TChiWZ_MCstats"
 #BF_dir = "BF_B135_bugfix16_HinoN2C1_MCstats"
 #cpu="request_cpus = 4"
@@ -22,9 +23,15 @@ import shutil
 
 #BF_dir = "BF_B135_bugfix16_T2tt_MCstats"
 #BF_dir = "BF_B135_bugfix16_TChipmWW_MCstats"
-#cpu="request_cpus = 4"
-#disk="request_disk = 2400000 KB"
-#mem="request_memory = 4000 MB"
+#BF_dir = "BF_B135_bugfix16_tthighdM_MCstats"
+##BF_dir = "BF_B136_WZhighdM"
+#BF_dir = "BF_B136_bWhighdM"
+#BF_dir = "BF_B136_WWhighdM"
+BF_dir = "BF_B136_T2bW"
+
+cpu="request_cpus = 4"
+disk="request_disk = 4500000 KB"
+mem="request_memory = 6000 MB"
 
 
 #BF_dir = "BF_B135_bugfix16_TSlepSlepEL_MCstats"  
@@ -35,11 +42,11 @@ import shutil
 #BF_dir = "BF_B135_bugfix16_TSlepSlepmuLR_MCstats" 
 #BF_dir = "BF_B135_bugfix16_TSlepSlepmueL_MCstats"
 #BF_dir = "BF_B135_bugfix16_TSlepSlepmueR_MCstats" 
-BF_dir = "BF_B135_bugfix16_TSlepSleptot_MCstats"
+#BF_dir = "BF_B135_bugfix16_TSlepSleptot_MCstats"
 
-cpu="request_cpus = 4"
-disk="request_disk = 1500000 KB"
-mem="request_memory = 4000 MB"
+#cpu="request_cpus = 4"
+#disk="request_disk = 1500000 KB"
+#mem="request_memory = 4000 MB"
 
 
 
@@ -47,19 +54,19 @@ mem="request_memory = 4000 MB"
 subs = glob.glob(BF_dir+"/src/*")
 #print(subs)
 for i,sub in enumerate(subs):
-	jN = sub.split("/")[-1]
-	jN = jN[:-3]
-	jN = jN.split("_")[-1]
-	subs[i] = jN
+    jN = sub.split("/")[-1]
+    jN = jN[:-3]
+    jN = jN.split("_")[-1]
+    subs[i] = jN
 
 #print(subs)
 
 logs = glob.glob(BF_dir+"/log/*.out")
 for i,log in enumerate(logs):
-	jN = log.split("/")[-1]
-        jN = jN[:-8]
-        jN = jN.split("_")[-1]
-        logs[i] = jN
+    jN = log.split("/")[-1]
+    jN = jN[:-8]
+    jN = jN.split("_")[-1]
+    logs[i] = jN
 
 #print(logs)
 
@@ -69,10 +76,12 @@ logSet = set(logs)
 subDiff = subSet.difference(logSet)
 print("Analyzing:", BF_dir)
 print("found", len(subDiff), "missing jobs")
-
 #exit()
+
 print("generating resubmission scripts for this job list:")
 print(subDiff)
+
+
 
 resub_directory = BF_dir+"/resub_src" 
 
@@ -88,29 +97,35 @@ print(mem)
 print("Generating resubmission scripts...")
 for key in subDiff:
 #	print("procesing #",key)
-	subfile = BF_dir+"/src/submit_"+key+".sh"
-	resubfile = BF_dir+"/resub_src/submit_"+key+".sh"
+    subfile = BF_dir+"/src/submit_"+key+".sh"
+    resubfile = BF_dir+"/resub_src/submit_"+key+".sh"
 #	print(subfile)
-	subIn = open(subfile,"r")
-	subOut = open(resubfile,"w")
-	lines = subIn.readlines()
-	for line in lines:
-		if( "request_memory" in line):
-			subOut.write(cpu+"\n")
-			subOut.write(disk+"\n")
-			subOut.write(mem+"\n")
+    subIn = open(subfile,"r")
+    subOut = open(resubfile,"w")
+    lines = subIn.readlines()
+    for line in lines:
+        if( "request_memory" in line):
+            subOut.write(cpu+"\n")
+            subOut.write(disk+"\n")
+            subOut.write(mem+"\n")
 
-		else:
-			subOut.write(line)
-	subIn.close()
-	subOut.close()
+        else:
+            if("queue" in line):
+                subOut.write("Requirements = HAS_SINGULARITY == True\n")
+                subOut.write("+ApptainerImage = \"/cvmfs/singularity.opensciencegrid.org/cmssw/cms:rhel7\"\n")
+                subOut.write("+ProjectName=\"cms.org.cern\"\n")
+                subOut.write("+DesiredOS=\"rhel7\"\n")
+                subOut.write("+RequiresCVMFS=True\n")
+            subOut.write(line)
+    subIn.close()
+    subOut.close()
 
 print("Generating submission aggregation script")
 resub_agg_file = BF_dir+"/condor_resubmit.sh"
 aggfile = open(resub_agg_file, "w")
 for key in subDiff:
-	line = "condor_submit "+BF_dir+"/resub_src/submit_"+key+".sh\n"
-	aggfile.write(line)
+    line = "condor_submit "+BF_dir+"/resub_src/submit_"+key+".sh\n"
+    aggfile.write(line)
 
 aggfile.close()
 os.chmod(resub_agg_file, 0o0777)

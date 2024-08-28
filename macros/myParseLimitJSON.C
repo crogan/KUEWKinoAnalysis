@@ -26,7 +26,7 @@
 //gSystem->Load("/home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/lib/libKUEWKino.so");
 using namespace std;
 using namespace RestFrames;
-
+//gStyle->SetPalette(kViridis);
 XsecTool g_Xsec;
 
 double popdouble(std::string& line);
@@ -192,8 +192,9 @@ public:
   }
 
   TGraph* Get2DContour_dMvMP(LimitType type = kExp){
+     gStyle->SetPalette(kViridis);
     TH2D* hist = Get2DHist_dMvMP("temp_2D", type);
-
+   gStyle->SetPalette(kViridis);
     int Nx = hist->GetNbinsX();
     int Ny = hist->GetNbinsY();
 
@@ -439,7 +440,7 @@ private:
 
 void myParseLimitJSON(const string& json, bool inclObs = false, PlotType ptype = kT2tt, const string& outfile="out.root"){
   RestFrames::SetStyle();
-  
+  gStyle->SetPalette(kViridis);  
   Limit* limit_def = new Limit(json);
   if(limit_def == NULL) return;
   TLatex l;
@@ -483,6 +484,7 @@ void myParseLimitJSON(const string& json, bool inclObs = false, PlotType ptype =
   l.SetTextAlign(12);
   l.SetTextSize(0.035);
   l.SetTextFont(42);
+ // l.SetTextColor(kWhite);
   l.DrawLatex(0.23, 0.83,"expected #pm 1 #sigma_{expm}");
   line->SetLineColor(7043);
   line->SetLineWidth(2);
@@ -491,9 +493,10 @@ void myParseLimitJSON(const string& json, bool inclObs = false, PlotType ptype =
   line->SetLineStyle(3);
   line->DrawLineNDC(0.18, 0.842, 0.22, 0.842);
   line->DrawLineNDC(0.18, 0.818, 0.22, 0.818);
-		    
+// l.SetTextColor(kWhite);		    
   l.DrawLatex(0.23, 0.78,"observed");
   line->SetLineColor(kBlack);
+//  line->SetLineColor(kWhite);
   line->SetLineWidth(2);
   line->SetLineStyle(1);
   line->DrawLineNDC(0.18, 0.78, 0.22, 0.78);
@@ -501,6 +504,7 @@ void myParseLimitJSON(const string& json, bool inclObs = false, PlotType ptype =
   /////////////
   // dM vs. MP
   /////////////
+  gStyle->SetPalette(kViridis);
  // TH2D*   hist_exp_dM = limit_def->Get2DHist_dMvMP("h_exp_dM", kExp);
   TH2D*   hist_exp_dM = limit_def->Get2DHist_dMvMP("", kObs);
   hist_exp_dM->SetStats(false);
@@ -510,11 +514,13 @@ void myParseLimitJSON(const string& json, bool inclObs = false, PlotType ptype =
   TGraph* gr_exp_dM_obs   = limit_def->Get2DContour_dMvMP(kObs);
   
   gStyle->SetOptStat(0);
-  gROOT->ForceStyle(); 
+  //gROOT->ForceStyle(); 
+  gStyle->SetPalette(kViridis);
   TCanvas* can_dM = Plot2DHist_dMvMP("can_dM", hist_exp_dM, ptype);
+  gStyle->SetPalette(kViridis);
   can_dM->cd();
-  
-  gr_exp_dM->SetLineColor(kMagenta+2);
+  gStyle->SetPalette(kViridis);
+  gr_exp_dM->SetLineColor(kMagenta);
   gr_exp_dM->SetLineWidth(5);
   gr_exp_dM->SetLineStyle(1);
   gr_exp_dM->Draw("same C");
@@ -531,6 +537,7 @@ void myParseLimitJSON(const string& json, bool inclObs = false, PlotType ptype =
   gr_exp_dM_dn->Draw("same C");
   gr_exp_dM_obs->SetMarkerColor(kWhite);
   gr_exp_dM_obs->SetLineColor(kBlack);
+ // gr_exp_dM_obs->SetLineColor(kWhite);
   gr_exp_dM_obs->SetLineWidth(4);
   gr_exp_dM_obs->SetLineStyle(1);
   if(inclObs) gr_exp_dM_obs->Draw("same C");
@@ -548,7 +555,7 @@ void myParseLimitJSON(const string& json, bool inclObs = false, PlotType ptype =
   if(ptype == kTChiWZ){
     double exppos = 0.25;
      l.DrawLatex(0.23, exppos,"expected #pm 1 #sigma_{expm}");
-  line->SetLineColor(kMagenta+2);
+  line->SetLineColor(kMagenta);
   line->SetLineWidth(2);
   line->SetLineStyle(1);
   line->DrawLineNDC(0.18, exppos, 0.22, exppos);
@@ -568,7 +575,7 @@ void myParseLimitJSON(const string& json, bool inclObs = false, PlotType ptype =
  	double xpos =0.5;
 
      l.DrawLatex(xpos+xlinetotext, exppos,"expected #pm 1 #sigma_{expm}");
-  line->SetLineColor(kMagenta+2);
+  line->SetLineColor(kMagenta);
   line->SetLineWidth(2);
   line->SetLineStyle(1);
   line->DrawLineNDC(xpos, exppos, xpos+xlgap, exppos);
@@ -586,7 +593,7 @@ void myParseLimitJSON(const string& json, bool inclObs = false, PlotType ptype =
   else{
 
   l.DrawLatex(0.23, 0.83,"expected #pm 1 #sigma_{expm}");
-  line->SetLineColor(kMagenta+2);
+  line->SetLineColor(kMagenta);
   line->SetLineWidth(2);
   line->SetLineStyle(1);
   line->DrawLineNDC(0.18, 0.83, 0.22, 0.83);
@@ -815,8 +822,10 @@ TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist, PlotType ptype){
 
 TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
 //gSystem->Load("/home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/lib/libKUEWKino.so");
+  gStyle->SetPalette(kViridis);
   TCanvas* can = (TCanvas*) new TCanvas(name.c_str(),name.c_str(),700.,600);
 
+  gStyle->SetPalette(kViridis);
   string xlabel = "m_{P} [GeV]";
   string ylabel = "m_{P} - M_{ #tilde{#chi}^{0}_{1}} [GeV]";
 
@@ -912,25 +921,27 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
   hist->GetZaxis()->SetTitleOffset(1.15);
   hist->GetZaxis()->SetLabelFont(42);
   hist->GetZaxis()->SetLabelSize(0.045);
-  //hist->GetZaxis()->SetTitle("95% C.L. cross-section U.L. [fb]");
-  hist->GetZaxis()->SetTitle("95% C.L. #sigma #times BF U.L. [fb]");
+//  hist->GetZaxis()->SetTitle("95% C.L. cross-section U.L. [fb]");
+hist->GetZaxis()->SetTitle("95% CL upper limit [fb]");
+
+ // hist->GetZaxis()->SetTitle("95% C.L. #sigma #times BF U.L. [fb]");
   if(ptype == kTChiWZ){
 	hist->GetXaxis()->SetRangeUser(125.,430.);
 	hist->GetYaxis()->SetRangeUser(3.,90.);
-	hist->SetMaximum(5000.);
-        hist->SetMinimum(50.);
+//	hist->SetMaximum(5000.);
+  //      hist->SetMinimum(50.);
   }
   if(ptype == kHN2C1){
 	hist->GetXaxis()->SetRangeUser(120.,275);
         hist->GetYaxis()->SetRangeUser(3.,90.);
-        hist->SetMaximum(5000.);
-        hist->SetMinimum(50.);
+  //      hist->SetMaximum(5000.);
+  //      hist->SetMinimum(50.);
   }
   if(ptype == kT2tt){
 	hist->GetXaxis()->SetRangeUser(500.,875.);
-        hist->GetYaxis()->SetRangeUser(10.,80.);
-        hist->SetMaximum(1000.);
-        hist->SetMinimum(1.);
+        hist->GetYaxis()->SetRangeUser(6.,80.);
+  //      hist->SetMaximum(1000.);
+    //    hist->SetMinimum(1.);
   }
 
    
@@ -954,6 +965,7 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
   l.SetTextSize(0.04);
   l.SetTextFont(42);
   l.DrawLatex(0.16, 0.95,"#bf{CMS}");
+  //l.DrawLatex(0.16, 0.95,"#bf{CMS} #it{Preliminary}");
   l.SetTextSize(0.05);
 
   // SMS info
@@ -1003,6 +1015,7 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
 
   l.SetTextSize(0.035);
   l.SetTextFont(42);
+ // l.SetTextColor(kWhite);
   if( ptype == kTChiWZ ){
 	l.DrawLatex(0.18,0.36, SMS.c_str());
 	l.DrawLatex(0.33,0.36, SMS3.c_str());

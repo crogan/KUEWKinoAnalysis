@@ -6,8 +6,10 @@ import glob
 import os
 import shutil
 
-BF_header = "BF_B135_bugfix16_"
-BF_footer = "_MCstats"
+#BF_header = "BF_B135_bugfix16_"
+#BF_footer = "_MCstats"
+BF_header = "BF_B136_"
+BF_footer = ""
 
 #SIG="TChipmWW"
 #SIG="TChiWZ"
@@ -25,9 +27,16 @@ BF_footer = "_MCstats"
 #SIG="TSlepSlepMUL"
 #SIG="TSlepSlepMUR"
 #SIG="TSlepSlepEL"
-SIG="TSlepSlepER"
+#SIG="TSlepSlepER"
 
-disk="request_disk = 18000000 KB"
+#SIG="TChipmWW"
+#SIG="tthighdM"
+#SIG="WZhighdM"
+#SIG="bWhighdM"
+#SIG="WWhighdM"
+SIG="T2bW"
+
+disk="request_disk = 20000000 KB"
 mem="request_memory = 4000 MB"
 cpu="request_cpus = 4"
 
@@ -70,6 +79,7 @@ print("found", len(subDiff), "missing jobs")
 print("generating resubmission scripts for this job list:")
 print(subDiff)
 
+#exit()
 print("Using these configurations:")
 print(cpu)
 print(disk)
@@ -86,6 +96,11 @@ subfile.write("arguments = $(ProcId)\n")
 subfile.write("output                = combine_task.$(ClusterId).$(ProcId).out\n")
 subfile.write("error                 = combine_task.$(ClusterId).$(ProcId).err\n")
 subfile.write("log                   = combine_task.$(ClusterId).log\n")
+subfile.write("Requirements = HAS_SINGULARITY == True\n")
+subfile.write("+ApptainerImage = \"/cvmfs/singularity.opensciencegrid.org/cmssw/cms:rhel7\"\n")
+subfile.write("+ProjectName=\"cms.org.cern\"\n")
+subfile.write("+DesiredOS=\"rhel7\"\n")
+subfile.write("+RequiresCVMFS=True\n")
 
 # Periodically retry the jobs every 10 minutes, up to a maximum of 5 retries.
 #periodic_release =  (NumJobStarts < 3) && ((CurrentTime - EnteredCurrentStatus) > 6s
@@ -126,13 +141,16 @@ shfile.write("cp ../../../FitInput_KUEWKino_2017.root .\n")
 shfile.write("\n")
 for i,gpt in enumerate(subDiff):
 
-	shfile.write("if [$1 -eq "+str(i)+" ]; then\n")
+	shfile.write("if [ $1 -eq "+str(i)+" ]; then\n")
 	shfile.write("  combine --cminDefaultMinimizerStrategy 0 -M AsymptoticLimits -d datacards/all/"+SIG+"/"+str(gpt)+"/datacard.txt -m "+str(gpt)+" -n .Test\n")
 	shfile.write("fi\n")
 
 shfile.write("mv *AsymptoticLimits*.root ../../../\n")
 shfile.close()
-
+os.chmod(BF_dir+"/condor_resub_lim.sh", 0o0777)
+print("Regenerating datacard tarball...")
+os.system("tar -czf "+BF_dir+"/datacards.tar.gz -C "+BF_dir+" datacards" )
+print("new tarball ready")
 print("Scripts ready! To run do this:")
 print("pushd "+BF_dir+"; condor_submit condor_resub_lim.sub; popd")
 

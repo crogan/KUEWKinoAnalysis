@@ -26,6 +26,8 @@ void WriteScriptConnect(const string& src_name,
 		 const string& command,
 		 const string& OutputFold);
 
+void MakeConnectTarball(const string& OutputFold);
+
 int main(int argc, char* argv[]) {
   int  maxN = 1;
   bool dryRun = false;
@@ -297,6 +299,9 @@ int main(int argc, char* argv[]) {
      procs.clear();
     }
   }
+  if(connect){
+   MakeConnectTarball(RootFold);
+  }
   condorsubmit.close();
 
   if(dryRun){
@@ -308,7 +313,19 @@ int main(int argc, char* argv[]) {
   }
   
 }
-
+void MakeConnectTarball(const string& OutputFold){
+  gSystem->Exec("mkdir -p config_BuildFitInput");
+  gSystem->Exec("mkdir -p config_BuildFitInput/BtagSF");
+  gSystem->Exec("cp BuildFitInput.x config_BuildFitInput/");
+  gSystem->Exec("cp scripts/cmssw_setup_connect.sh config_BuildFitInput/");
+  gSystem->Exec("cp scripts/setup_RestFrames_connect.sh config_BuildFitInput/");
+  gSystem->Exec("cp root/BtagSF/*.root config_BuildFitInput/BtagSF/.");
+  gSystem->Exec("cp csv/BtagSF/* config_BuildFitInput/BtagSF/.");
+  gSystem->Exec("tar -czf config_BuildFitInput.tgz config_BuildFitInput/");
+  gSystem->Exec(("mv config_BuildFitInput.tgz "+OutputFold+"/../").c_str());
+  gSystem->Exec("rm -r config_BuildFitInput/");
+  return;
+}
 void WriteScriptConnect(const string& src_name,
 		 const string& log_name,
 		 const string& command,
@@ -322,7 +339,7 @@ void WriteScriptConnect(const string& src_name,
    root_output = root_output.substr(pos, root_output.length()-pos);
   }
 //cout << "command: " << command << endl;
-  
+/* outsource testing to speed up submission
   gSystem->Exec("mkdir -p config_BuildFitInput");
   gSystem->Exec("mkdir -p config_BuildFitInput/BtagSF");
   gSystem->Exec("cp BuildFitInput.x config_BuildFitInput/");
@@ -333,7 +350,7 @@ void WriteScriptConnect(const string& src_name,
   gSystem->Exec("tar -czf config_BuildFitInput.tgz config_BuildFitInput/");
   gSystem->Exec(("mv config_BuildFitInput.tgz "+OutputFold+"/../").c_str());
   gSystem->Exec("rm -r config_BuildFitInput/");
-  
+*/ 
   file << "universe = vanilla" << endl;
   file << "executable = execute_script_BuildFitInput.sh" << endl;
   file << "getenv = True" << endl;
@@ -344,8 +361,8 @@ void WriteScriptConnect(const string& src_name,
   file << "log = "    << log_name << ".log" << endl;
   file << "Requirements = (Machine != \"red-node000.unl.edu\") && (Machine != \"red-c2325.unl.edu\")" << endl;
   file << "request_memory = 2 GB" << endl;
-  file << "transfer_input_files = /uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis_NewNtuples/csv/METTrigger/Parameters.csv,/uscms/home/z374f439/nobackup/whatever_you_want/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2,"+pwd+"/"+OutputFold+"/../config_BuildFitInput.tgz" << endl;
-  //file << "transfer_input_files = /home/jsingera/jsingera/CMSSW_10_6_5/src/KUEWKinoAnalysis_treeSysDev/csv/METTrigger/Parameters.csv,https://stash.osgconnect.net/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2,"+pwd+"/"+OutputFold+"/../config_BuildFitInput.tgz" << endl;
+//  file << "transfer_input_files = /uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis_NewNtuples/csv/METTrigger/Parameters.csv,/uscms/home/z374f439/nobackup/whatever_you_want/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2,"+pwd+"/"+OutputFold+"/../config_BuildFitInput.tgz" << endl;
+  file << "transfer_input_files = /home/jsingera/jsingera/CMSSW_10_6_5/src/KUEWKinoAnalysis_treeSysDev/csv/METTrigger/Parameters.csv,/ospool/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2,"+pwd+"/"+OutputFold+"/../config_BuildFitInput.tgz" << endl;
 
   file << "should_transfer_files = YES" << endl;
   file << "when_to_transfer_output = ON_EXIT" << endl;

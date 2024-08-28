@@ -255,8 +255,8 @@ int main(int argc, char* argv[]) {
   METTriggerTool m_METTriggerTool;
   //if you run interactively, use csv/METTrigger path
   //for batch runs the csv file will be copied in the base directory
-//  m_METTriggerTool.BuildMap("Parameters.csv");
-  m_METTriggerTool.BuildMap("csv/METTrigger/Parameters.csv");
+  m_METTriggerTool.BuildMap("Parameters.csv");
+//  m_METTriggerTool.BuildMap("csv/METTrigger/Parameters.csv");
 
   ScaleFactorTool SF;
   SF.AddBtagFolder("./BtagSF");
