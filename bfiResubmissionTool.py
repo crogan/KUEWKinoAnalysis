@@ -61,8 +61,8 @@ for i,sub in enumerate(subs):
 #print(subs)
 
 #logs = glob.glob(BF_dir+"/log/*.out")
-logs = glob.glob(BF_dir+"/*.root")
-#logs = glob.glob(BF_dir+"/root/*.root")
+#logs = glob.glob(BF_dir+"/*.root")
+logs = glob.glob(BF_dir+"/root/*.root")
 for i,log in enumerate(logs):
     jN = log.split("/")[-1]
    # jN = jN[:-8]

@@ -33,7 +33,7 @@ double popdouble(std::string& line);
 std::string popstring(std::string& line);
 
 enum LimitType { kObs, kExp, kExpUp, kExpDn };
-enum PlotType { kTChiWZ, kT2tt, kT2bW, kT2bb, kTSlSl, kT2cc, kTChiWW, kHN2C1};
+enum PlotType { kTChiWZ, kT2tt, kT2bW, kT2bb, kTSlSl, kT2cc, kTChiWW, kHN2C1, kTSlSnu};
 
 TCanvas* Plot2DHist_MCvMP(const string& can, TH2D* hist, PlotType ptype);
 TCanvas* Plot2DHist_dMvMP(const string& can, TH2D* hist, PlotType ptype);
@@ -610,10 +610,11 @@ void myParseLimitJSON(const string& json, bool inclObs = false, PlotType ptype =
   TFile* out = new TFile(outfile.c_str(),"RECREATE");
   out->WriteTObject(can_MC);
   out->WriteTObject(can_dM);
-  out->WriteTObject(hist_exp_dM);
+  out->WriteTObject(hist_exp_dM,"h2d");
   out->WriteTObject(gr_exp_dM,"gr_mid");
   out->WriteTObject(gr_exp_dM_up,"gr_up");
   out->WriteTObject(gr_exp_dM_dn,"gr_dn");
+  out->WriteTObject(gr_exp_dM_obs,"gr_obs");
   out->Close();
  
 }
@@ -732,6 +733,8 @@ TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist, PlotType ptype){
       xsec = g_Xsec.GetXsec_SMS("T2cc", MP);   
     if(ptype == kTChiWW)
       xsec = g_Xsec.GetXsec_SMS("TChipmWW",MP);
+    if(ptype == kTSlSnu)
+      xsec = g_Xsec.GetXsec_SMS("TChipmSlepSnu",MP);
 
     for(int y = 0; y < Ny; y++){
       if(hist->GetBinContent(x+1,y+1) > 0.){
@@ -812,6 +815,13 @@ TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist, PlotType ptype){
     SMS = "pp #rightarrow #tilde{#chi}_{1}^{#pm} #tilde{#chi}_{1}^{#mp}; ";
     SMS += "#tilde{#chi}_{1}^{#pm} #rightarrow W*#tilde{#chi}_{1}^{0}";
  }
+ if(ptype == kTSlSnu){
+    SMS = "pp #rightarrow #tilde{#chi}_{2}^{0} #tilde{#chi}_{1}^{#pm}; ";
+    SMS += "#tilde{#chi}_{2}^{0} #rightarrow #tilde{#it{l}} #it{l}; ";
+    SMS += "#tilde{#chi}_{1}^{#pm} #rightarrow #tilde{#nu} #it{l}; ";
+    SMS += "#tilde{#it{l}} #rightarrow #it{l} #tilde{#chi}_{1}^{0}; ";
+    SMS += "#tilde{#nu} #rightarrow #it{#nu} #tilde{#chi}_{1}^{0}; ";
+ }
 
   l.SetTextSize(0.035);
   l.SetTextFont(42);
@@ -841,11 +851,13 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
   }
   if(ptype == kT2bb){
     xlabel = "m_{ #tilde{b}} [GeV]";
-    ylabel = "m_{ #tilde{b}} - m_{#tilde{#chi}^{0}_{1}} [GeV]";
+    //ylabel = "m_{ #tilde{b}} - m_{#tilde{#chi}^{0}_{1}} [GeV]";
+    ylabel = "#Delta m(#tilde{b}, m_{#tilde{#chi}^{0}_{1}) [GeV]";
   }
     if(ptype == kT2cc){
     xlabel = "m_{ #tilde{t}} [GeV]";
-    ylabel = "m_{#tilde{#chi}^{0}_{1}} [GeV]";
+    //ylabel = "m_{#tilde{#chi}^{0}_{1}} [GeV]";
+    ylabel = "#Delta m(#tilde{t}, #tilde{#chi}^{0}_{1}) [GeV]";
   }
   if(ptype == kTSlSl){
     xlabel = "m_{ #tilde{#it{l}}} [GeV]";
@@ -855,10 +867,14 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
  }
   if(ptype == kTChiWW){
     xlabel = "m_{#tilde{#chi}^{#pm}_{1}} [GeV]";
-    ylabel = "m_{#tilde{#chi}^{#pm}_{1}} - m_{#tilde{#chi}^{0}_{1}} [GeV]";
+    ylabel = "#Delta m(#tilde{#chi}^{#pm}_{1}, #tilde{#chi}^{0}_{1}) [GeV]";
 //    ylabel = "#Delta m( ) [GeV]";
 
  }
+  if(ptype == kTSlSnu){
+    xlabel = "m_{(#tilde{#chi}^{0}_{2}, #tilde{#chi}^{#pm}_{1} )} [GeV]";
+    ylabel = "#Delta m(#tilde{#chi}^{#pm}_{1}, #tilde{#chi}^{0}_{1}) [GeV]";
+  }
   
   can->SetLeftMargin(0.15);
   can->SetRightMargin(0.2);
@@ -892,7 +908,9 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
     if(ptype == kTChiWW)
       xsec = g_Xsec.GetXsec_SMS("TChipmWW", MP);  
     if(ptype == kHN2C1)
-      xsec = g_Xsec.GetXsec_SMS("HinoN2C1", MP); 
+      xsec = g_Xsec.GetXsec_SMS("HinoN2C1", MP);
+    if(ptype == kTSlSnu)
+      xsec = g_Xsec.GetXsec_SMS("TChipmSlepSnu",MP); 
  
     for(int y = 0; y < Ny; y++){
       if(hist->GetBinContent(x+1,y+1) > 0.){
@@ -1011,6 +1029,14 @@ hist->GetZaxis()->SetTitle("95% CL upper limit [fb]");
     SMS = "pp #rightarrow #tilde{#chi}_{1}^{#pm}  #tilde{#chi}_{1}^{#mp}; ";
     SMS += "#tilde{#chi}_{1}^{#pm} #rightarrow W*#tilde{#chi}_{1}^{0}";
  }
+ if(ptype == kTSlSnu){
+   SMS = "pp #rightarrow #tilde{#chi}_{2}^{0} #tilde{#chi}_{1}^{#pm}; ";
+    SMS2 += "#tilde{#chi}_{2}^{0} #rightarrow #tilde{#it{l}} #it{l}; ";
+    SMS2 += "#tilde{#chi}_{1}^{#pm} #rightarrow #tilde{#nu} #it{l}; ";
+    SMS3 += "#tilde{#it{l}} #rightarrow #it{l} #tilde{#chi}_{1}^{0}; ";
+    SMS3 += "#tilde{#nu} #rightarrow #it{#nu} #tilde{#chi}_{1}^{0}; ";
+
+ }
 
 
   l.SetTextSize(0.035);
@@ -1026,6 +1052,12 @@ hist->GetZaxis()->SetTitle("95% CL upper limit [fb]");
         l.DrawLatex(0.65,0.87, SMS3.c_str());
         l.DrawLatex(0.5,0.81, SMS2.c_str());	
   }
+  else if( ptype == kTSlSnu ){
+        l.DrawLatex(0.5,0.87, SMS.c_str());
+        l.DrawLatex(0.65,0.87, SMS3.c_str());
+        l.DrawLatex(0.5,0.81, SMS2.c_str());
+  }
+
   else{
     l.DrawLatex(0.18, 0.87,SMS.c_str());
   }
