@@ -1,0 +1,474 @@
+
+[36mRestFrames v1.0.0 -- Developed by Christopher Rogan (crogan@cern.ch)
+                     Copyright (c) 2014-2019, Christopher Rogan
+                     http://RestFrames.com
+[0m
+
+Processing bCorrection.C("DB",2017,1,0,0)...
+DB
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WWTo2L2Nu_NNPDF31_TuneCP5_13TeV-powheg-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WWTo4Q_NNPDF31_TuneCP5_13TeV-powheg-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WWToLNuQQ_NNPDF31_TuneCP5_13TeV-powheg-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WZTo1L3Nu_13TeV_amcatnloFXFX_madspin_pythia8_v2_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ZZTo2L2Nu_13TeV_powheg_pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ZZTo2Q2Nu_TuneCP5_13TeV_amcatnloFXFX_madspin_pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ZZTo4L_13TeV_powheg_pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/GluGluHToZZTo4L_M125_13TeV_powheg2_JHUGenV7011_pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/GluGluHToTauTau_M125_13TeV_powheg_pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/GluGluHToWWTo2L2Nu_M125_13TeV_powheg2_JHUGenV714_pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/GluGluHToWWToLNuQQ_M125_NNPDF31_TuneCP5_PSweights_13TeV_powheg_JHUGen710_pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/GluGluHToZZTo2L2Nu_M125_TuneCP5_13TeV_powheg2_JHUGenV735_pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WminusH_HToBB_WToLNu_M125_13TeV_powheg_pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WplusH_HToBB_WToLNu_M125_13TeV_powheg_pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ZH_HToBB_ZToLL_M125_13TeV_powheg_pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ZH_HToBB_ZToNuNu_M125_13TeV_powheg_pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/VHToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_Fall17_102X.root
+opening original rootfile: ../BtagSF//BtagEff.root
+(pt,SF,effT,effP,lam,err): 25 0.952167 0.176984 0.14058 0.997563 1.1901e-05
+(pt,SF,effT,effP,lam,err): 35 0.943477 0.17006 0.142981 0.997873 1.53305e-05
+(pt,SF,effT,effP,lam,err): 45 0.936772 0.155015 0.130824 0.997941 1.75107e-05
+(pt,SF,effT,effP,lam,err): 55 0.931442 0.146473 0.125277 0.998076 2.04134e-05
+(pt,SF,effT,effP,lam,err): 65 0.927103 0.143362 0.124145 0.998155 2.42593e-05
+(pt,SF,effT,effP,lam,err): 77.5 0.922695 0.141735 0.125073 0.998306 2.46125e-05
+(pt,SF,effT,effP,lam,err): 92.5 0.918483 0.141449 0.126367 0.998383 3.19249e-05
+(pt,SF,effT,effP,lam,err): 110 0.914616 0.14284 0.12871 0.998407 3.66822e-05
+(pt,SF,effT,effP,lam,err): 130 0.911157 0.14559 0.132653 0.998472 5.00428e-05
+(pt,SF,effT,effP,lam,err): 155 0.907817 0.150525 0.137886 0.998435 5.78898e-05
+(pt,SF,effT,effP,lam,err): 185 0.904779 0.157976 0.145741 0.998409 8.58057e-05
+(pt,SF,effT,effP,lam,err): 225 0.901787 0.168294 0.156004 0.998314 0.000104846
+(pt,SF,effT,effP,lam,err): 275 0.899108 0.17737 0.167444 0.998569 0.000172742
+(pt,SF,effT,effP,lam,err): 350 0.896368 0.199086 0.183596 0.997607 0.000217109
+(pt,SF,effT,effP,lam,err): 500 0.893162 0.226225 0.227882 1.00029 0.000331894
+(pt,SF,effT,effP,lam,err): 700 0.890901 0.229503 0.249231 1.0036 0.000862053
+(pt,SF,effT,effP,lam,err): 900 0.8896 0.215339 0.233463 1.00323 0.00184391
+Process: DB 2017 flavor1 U/D:0 Fast:0 Mean lambda = 0.998919 +/- 0.0017389
+
+****************************************
+Minimizer is Linear
+Chi2                      =      2060.96
+NDf                       =           16
+p0                        =     0.997924   +/-   6.58798e-06 
+
+[36mRestFrames v1.0.0 -- Developed by Christopher Rogan (crogan@cern.ch)
+                     Copyright (c) 2014-2019, Christopher Rogan
+                     http://RestFrames.com
+[0m
+
+Processing bCorrection.C("DB",2017,2,0,0)...
+DB
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WWTo2L2Nu_NNPDF31_TuneCP5_13TeV-powheg-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WWTo4Q_NNPDF31_TuneCP5_13TeV-powheg-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WWToLNuQQ_NNPDF31_TuneCP5_13TeV-powheg-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WZTo1L1Nu2Q_13TeV_amcatnloFXFX_madspin_pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WZTo1L3Nu_13TeV_amcatnloFXFX_madspin_pythia8_v2_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WZTo3LNu_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ZZTo2L2Nu_13TeV_powheg_pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ZZTo2L2Q_13TeV_amcatnloFXFX_madspin_pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ZZTo2Q2Nu_TuneCP5_13TeV_amcatnloFXFX_madspin_pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ZZTo4L_13TeV_powheg_pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/GluGluHToZZTo4L_M125_13TeV_powheg2_JHUGenV7011_pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/GluGluHToTauTau_M125_13TeV_powheg_pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/GluGluHToWWTo2L2Nu_M125_13TeV_powheg2_JHUGenV714_pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/GluGluHToWWToLNuQQ_M125_NNPDF31_TuneCP5_PSweights_13TeV_powheg_JHUGen710_pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/GluGluHToZZTo2L2Nu_M125_TuneCP5_13TeV_powheg2_JHUGenV735_pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WminusH_HToBB_WToLNu_M125_13TeV_powheg_pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WplusH_HToBB_WToLNu_M125_13TeV_powheg_pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ZH_HToBB_ZToLL_M125_13TeV_powheg_pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ZH_HToBB_ZToNuNu_M125_13TeV_powheg_pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/VHToNonbb_M125_13TeV_amcatnloFXFX_madspin_pythia8_Fall17_102X.root
+opening original rootfile: ../BtagSF//BtagEff.root
+(pt,SF,effT,effP,lam,err): 25 1.19757 0.0323469 0.0378293 0.998829 4.91193e-06
+(pt,SF,effT,effP,lam,err): 35 1.24211 0.0280912 0.0366476 0.997772 7.97746e-06
+(pt,SF,effT,effP,lam,err): 45 1.26305 0.018659 0.0237719 0.998589 8.23496e-06
+(pt,SF,effT,effP,lam,err): 55 1.27337 0.0140503 0.0173424 0.999067 8.55575e-06
+(pt,SF,effT,effP,lam,err): 65 1.27805 0.0118819 0.0145477 0.999236 9.27054e-06
+(pt,SF,effT,effP,lam,err): 77.5 1.2794 0.010672 0.0128015 0.999389 8.60721e-06
+(pt,SF,effT,effP,lam,err): 92.5 1.27724 0.00996855 0.0116377 0.999526 1.02011e-05
+(pt,SF,effT,effP,lam,err): 110 1.27183 0.00965393 0.0110968 0.999598 1.07167e-05
+(pt,SF,effT,effP,lam,err): 130 1.26367 0.00978951 0.0110704 0.999654 1.34842e-05
+(pt,SF,effT,effP,lam,err): 155 1.25206 0.010245 0.0113552 0.999713 1.42522e-05
+(pt,SF,effT,effP,lam,err): 185 1.23752 0.0111052 0.012096 0.999758 1.92037e-05
+(pt,SF,effT,effP,lam,err): 225 1.21854 0.0126251 0.0130643 0.999901 2.08528e-05
+(pt,SF,effT,effP,lam,err): 275 1.19691 0.0143808 0.0148299 0.999909 3.01351e-05
+(pt,SF,effT,effP,lam,err): 350 1.17066 0.0182295 0.018083 1.00003 3.32812e-05
+(pt,SF,effT,effP,lam,err): 500 1.14439 0.0253518 0.0257798 0.999935 4.81227e-05
+(pt,SF,effT,effP,lam,err): 700 1.16794 0.03416 0.0324302 1.00031 0.000153084
+(pt,SF,effT,effP,lam,err): 900 1.26031 0.0471609 0.0382442 1.00257 0.000592168
+Process: DB 2017 flavor2 U/D:0 Fast:0 Mean lambda = 0.999634 +/- 0.000946493
+
+****************************************
+Minimizer is Linear
+Chi2                      =      46563.2
+NDf                       =           16
+p0                        =     0.999003   +/-   2.60879e-06 
+
+[36mRestFrames v1.0.0 -- Developed by Christopher Rogan (crogan@cern.ch)
+                     Copyright (c) 2014-2019, Christopher Rogan
+                     http://RestFrames.com
+[0m
+
+Processing bCorrection.C("ST",2017,1,0,0)...
+ST
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ST_t-channel_antitop_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ST_t-channel_top_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8_Fall17_102X.root
+
+[36mRestFrames v1.0.0 -- Developed by Christopher Rogan (crogan@cern.ch)
+                     Copyright (c) 2014-2019, Christopher Rogan
+                     http://RestFrames.com
+[0m
+
+Processing bCorrection.C("ST",2017,2,0,0)...
+ST
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ST_s-channel_4f_leptonDecays_TuneCP5_13TeV-amcatnlo-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ST_t-channel_antitop_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ST_t-channel_top_4f_inclusiveDecays_TuneCP5_13TeV-powhegV2-madspin-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ST_tW_antitop_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ST_tW_top_5f_inclusiveDecays_TuneCP5_13TeV-powheg-pythia8_Fall17_102X.root
+
+[36mRestFrames v1.0.0 -- Developed by Christopher Rogan (crogan@cern.ch)
+                     Copyright (c) 2014-2019, Christopher Rogan
+                     http://RestFrames.com
+[0m
+
+Processing bCorrection.C("TB",2017,1,0,0)...
+TB
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ZZZ_TuneCP5_13TeV-amcatnlo-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WZZ_TuneCP5_13TeV-amcatnlo-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WZG_TuneCP5_13TeV-amcatnlo-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WWZ_4F_TuneCP5_13TeV-amcatnlo-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WWW_4F_TuneCP5_13TeV-amcatnlo-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WWG_TuneCP5_13TeV-amcatnlo-pythia8_Fall17_102X.root
+opening original rootfile: ../BtagSF//BtagEff.root
+(pt,SF,effT,effP,lam,err): 25 0.952167 0.176984 0.170015 0.999517 3.59576e-05
+(pt,SF,effT,effP,lam,err): 35 0.943477 0.17006 0.158696 0.999091 4.47082e-05
+(pt,SF,effT,effP,lam,err): 45 0.936772 0.155015 0.14466 0.999105 5.14252e-05
+(pt,SF,effT,effP,lam,err): 55 0.931442 0.146473 0.137442 0.999169 5.99529e-05
+(pt,SF,effT,effP,lam,err): 65 0.927103 0.143362 0.134541 0.999143 7.03395e-05
+(pt,SF,effT,effP,lam,err): 77.5 0.922695 0.141735 0.134532 0.99926 7.01492e-05
+(pt,SF,effT,effP,lam,err): 92.5 0.918483 0.141449 0.133975 0.999191 8.79639e-05
+(pt,SF,effT,effP,lam,err): 110 0.914616 0.14284 0.137303 0.99937 9.74162e-05
+(pt,SF,effT,effP,lam,err): 130 0.911157 0.14559 0.140909 0.999442 0.00012646
+(pt,SF,effT,effP,lam,err): 155 0.907817 0.150525 0.14635 0.999478 0.000137569
+(pt,SF,effT,effP,lam,err): 185 0.904779 0.157976 0.152007 0.999218 0.00018747
+(pt,SF,effT,effP,lam,err): 225 0.901787 0.168294 0.163547 0.999343 0.000211531
+(pt,SF,effT,effP,lam,err): 275 0.899108 0.17737 0.175224 0.999688 0.000321119
+(pt,SF,effT,effP,lam,err): 350 0.896368 0.199086 0.194078 0.999216 0.000372818
+(pt,SF,effT,effP,lam,err): 500 0.893162 0.226225 0.234056 1.00137 0.000508258
+(pt,SF,effT,effP,lam,err): 700 0.890901 0.229503 0.237997 1.00153 0.00112436
+(pt,SF,effT,effP,lam,err): 900 0.8896 0.215339 0.243267 1.00504 0.00232698
+Process: TB 2017 flavor1 U/D:0 Fast:0 Mean lambda = 0.999892 +/- 0.00146809
+
+****************************************
+Minimizer is Linear
+Chi2                      =      114.739
+NDf                       =           16
+p0                        =     0.999277   +/-   1.90418e-05 
+
+[36mRestFrames v1.0.0 -- Developed by Christopher Rogan (crogan@cern.ch)
+                     Copyright (c) 2014-2019, Christopher Rogan
+                     http://RestFrames.com
+[0m
+
+Processing bCorrection.C("TB",2017,2,0,0)...
+TB
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ZZZ_TuneCP5_13TeV-amcatnlo-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WZZ_TuneCP5_13TeV-amcatnlo-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WZG_TuneCP5_13TeV-amcatnlo-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WWZ_4F_TuneCP5_13TeV-amcatnlo-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WWW_4F_TuneCP5_13TeV-amcatnlo-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WWG_TuneCP5_13TeV-amcatnlo-pythia8_Fall17_102X.root
+opening original rootfile: ../BtagSF//BtagEff.root
+(pt,SF,effT,effP,lam,err): 25 1.19757 0.0323469 0.0266551 1.0012 1.52386e-05
+(pt,SF,effT,effP,lam,err): 35 1.24211 0.0280912 0.0228651 1.00134 2.30669e-05
+(pt,SF,effT,effP,lam,err): 45 1.26305 0.018659 0.0182741 1.00011 2.56991e-05
+(pt,SF,effT,effP,lam,err): 55 1.27337 0.0140503 0.0173152 0.999075 2.92099e-05
+(pt,SF,effT,effP,lam,err): 65 1.27805 0.0118819 0.0174655 0.998396 3.33476e-05
+(pt,SF,effT,effP,lam,err): 77.5 1.2794 0.010672 0.017444 0.998048 3.15249e-05
+(pt,SF,effT,effP,lam,err): 92.5 1.27724 0.00996855 0.0170777 0.997969 3.68845e-05
+(pt,SF,effT,effP,lam,err): 110 1.27183 0.00965393 0.0166767 0.998034 3.72705e-05
+(pt,SF,effT,effP,lam,err): 130 1.26367 0.00978951 0.0160903 0.99829 4.34746e-05
+(pt,SF,effT,effP,lam,err): 155 1.25206 0.010245 0.0156235 0.998605 4.17443e-05
+(pt,SF,effT,effP,lam,err): 185 1.23752 0.0111052 0.0158109 0.998849 5.0784e-05
+(pt,SF,effT,effP,lam,err): 225 1.21854 0.0126251 0.0158193 0.99928 4.84352e-05
+(pt,SF,effT,effP,lam,err): 275 1.19691 0.0143808 0.0166491 0.999538 6.26678e-05
+(pt,SF,effT,effP,lam,err): 350 1.17066 0.0182295 0.0186687 0.999922 6.16679e-05
+(pt,SF,effT,effP,lam,err): 500 1.14439 0.0253518 0.026564 0.999815 8.15986e-05
+(pt,SF,effT,effP,lam,err): 700 1.16794 0.03416 0.0343055 0.999974 0.000236585
+(pt,SF,effT,effP,lam,err): 900 1.26031 0.0471609 0.0433265 1.00111 0.000856536
+Process: TB 2017 flavor2 U/D:0 Fast:0 Mean lambda = 0.999385 +/- 0.00109177
+
+****************************************
+Minimizer is Linear
+Chi2                      =      25732.4
+NDf                       =           16
+p0                        =     0.999854   +/-   8.2099e-06  
+
+[36mRestFrames v1.0.0 -- Developed by Christopher Rogan (crogan@cern.ch)
+                     Copyright (c) 2014-2019, Christopher Rogan
+                     http://RestFrames.com
+[0m
+
+Processing bCorrection.C("ZDY",2017,1,0,0)...
+ZDY
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/DYJetsToLL_M-4to50_HT-100to200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/DYJetsToLL_M-4to50_HT-200to400_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/DYJetsToLL_M-4to50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/DYJetsToLL_M-4to50_HT-600toInf_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/DYJetsToLL_M-50_HT-100to200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/DYJetsToLL_M-50_HT-1200to2500_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/DYJetsToLL_M-50_HT-200to400_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/DYJetsToLL_M-50_HT-2500toInf_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/DYJetsToLL_M-50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/DYJetsToLL_M-50_HT-600to800_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/DYJetsToLL_M-50_HT-70to100_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/DYJetsToLL_M-50_HT-800to1200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ZJetsToNuNu_HT-100To200_13TeV-madgraph_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ZJetsToNuNu_HT-1200To2500_13TeV-madgraph_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ZJetsToNuNu_HT-200To400_13TeV-madgraph_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ZJetsToNuNu_HT-2500ToInf_13TeV-madgraph_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ZJetsToNuNu_HT-400To600_13TeV-madgraph_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ZJetsToNuNu_HT-600To800_13TeV-madgraph_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ZJetsToNuNu_HT-800To1200_13TeV-madgraph_Fall17_102X.root
+opening original rootfile: ../BtagSF//BtagEff.root
+(pt,SF,effT,effP,lam,err): 25 0.952167 0.176984 0.143948 0.99778 1.34846e-05
+(pt,SF,effT,effP,lam,err): 35 0.943477 0.17006 0.151216 0.998505 1.84342e-05
+(pt,SF,effT,effP,lam,err): 45 0.936772 0.155015 0.14274 0.998941 2.14964e-05
+(pt,SF,effT,effP,lam,err): 55 0.931442 0.146473 0.137995 0.999219 2.4827e-05
+(pt,SF,effT,effP,lam,err): 65 0.927103 0.143362 0.136827 0.999363 2.88817e-05
+(pt,SF,effT,effP,lam,err): 77.5 0.922695 0.141735 0.137746 0.999589 2.8375e-05
+(pt,SF,effT,effP,lam,err): 92.5 0.918483 0.141449 0.139273 0.999763 3.51665e-05
+(pt,SF,effT,effP,lam,err): 110 0.914616 0.14284 0.142292 0.999937 3.82559e-05
+(pt,SF,effT,effP,lam,err): 130 0.911157 0.14559 0.146851 1.00015 4.92363e-05
+(pt,SF,effT,effP,lam,err): 155 0.907817 0.150525 0.154074 1.00045 5.36825e-05
+(pt,SF,effT,effP,lam,err): 185 0.904779 0.157976 0.161651 1.00049 7.51107e-05
+(pt,SF,effT,effP,lam,err): 225 0.901787 0.168294 0.171851 1.0005 8.8642e-05
+(pt,SF,effT,effP,lam,err): 275 0.899108 0.17737 0.182843 1.0008 0.000143424
+(pt,SF,effT,effP,lam,err): 350 0.896368 0.199086 0.194339 0.999257 0.000179055
+(pt,SF,effT,effP,lam,err): 500 0.893162 0.226225 0.206835 0.996727 0.000261096
+(pt,SF,effT,effP,lam,err): 700 0.890901 0.229503 0.218007 0.997984 0.000697644
+(pt,SF,effT,effP,lam,err): 900 0.8896 0.215339 0.221979 1.00117 0.00156299
+Process: ZDY 2017 flavor1 U/D:0 Fast:0 Mean lambda = 0.999448 +/- 0.00114773
+
+****************************************
+Minimizer is Linear
+Chi2                      =      11909.4
+NDf                       =           16
+p0                        =     0.998768   +/-   7.59794e-06 
+
+[36mRestFrames v1.0.0 -- Developed by Christopher Rogan (crogan@cern.ch)
+                     Copyright (c) 2014-2019, Christopher Rogan
+                     http://RestFrames.com
+[0m
+
+Processing bCorrection.C("ZDY",2017,2,0,0)...
+ZDY
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/DYJetsToLL_M-4to50_HT-100to200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/DYJetsToLL_M-4to50_HT-200to400_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/DYJetsToLL_M-4to50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/DYJetsToLL_M-4to50_HT-600toInf_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/DYJetsToLL_M-50_HT-100to200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/DYJetsToLL_M-50_HT-1200to2500_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/DYJetsToLL_M-50_HT-200to400_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/DYJetsToLL_M-50_HT-2500toInf_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/DYJetsToLL_M-50_HT-400to600_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/DYJetsToLL_M-50_HT-600to800_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/DYJetsToLL_M-50_HT-70to100_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/DYJetsToLL_M-50_HT-800to1200_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ZJetsToNuNu_HT-100To200_13TeV-madgraph_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ZJetsToNuNu_HT-1200To2500_13TeV-madgraph_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ZJetsToNuNu_HT-200To400_13TeV-madgraph_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ZJetsToNuNu_HT-2500ToInf_13TeV-madgraph_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ZJetsToNuNu_HT-400To600_13TeV-madgraph_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ZJetsToNuNu_HT-600To800_13TeV-madgraph_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/ZJetsToNuNu_HT-800To1200_13TeV-madgraph_Fall17_102X.root
+opening original rootfile: ../BtagSF//BtagEff.root
+(pt,SF,effT,effP,lam,err): 25 1.19757 0.0323469 0.0278605 1.00095 5.22466e-06
+(pt,SF,effT,effP,lam,err): 35 1.24211 0.0280912 0.0266982 1.00036 8.58582e-06
+(pt,SF,effT,effP,lam,err): 45 1.26305 0.018659 0.0189673 0.999915 8.9889e-06
+(pt,SF,effT,effP,lam,err): 55 1.27337 0.0140503 0.0145566 0.999857 9.2366e-06
+(pt,SF,effT,effP,lam,err): 65 1.27805 0.0118819 0.0124609 0.999834 9.76213e-06
+(pt,SF,effT,effP,lam,err): 77.5 1.2794 0.010672 0.0113044 0.999819 8.79869e-06
+(pt,SF,effT,effP,lam,err): 92.5 1.27724 0.00996855 0.010655 0.999805 1.00926e-05
+(pt,SF,effT,effP,lam,err): 110 1.27183 0.00965393 0.0104172 0.999788 1.02462e-05
+(pt,SF,effT,effP,lam,err): 130 1.26367 0.00978951 0.010689 0.999757 1.24957e-05
+(pt,SF,effT,effP,lam,err): 155 1.25206 0.010245 0.0114015 0.999701 1.2846e-05
+(pt,SF,effT,effP,lam,err): 185 1.23752 0.0111052 0.012355 0.999695 1.6833e-05
+(pt,SF,effT,effP,lam,err): 225 1.21854 0.0126251 0.0136207 0.999776 1.80397e-05
+(pt,SF,effT,effP,lam,err): 275 1.19691 0.0143808 0.0152472 0.999824 2.57741e-05
+(pt,SF,effT,effP,lam,err): 350 1.17066 0.0182295 0.0179742 1.00005 2.83246e-05
+(pt,SF,effT,effP,lam,err): 500 1.14439 0.0253518 0.0242688 1.00017 4.04923e-05
+(pt,SF,effT,effP,lam,err): 700 1.16794 0.03416 0.0323768 1.00032 0.000132784
+(pt,SF,effT,effP,lam,err): 900 1.26031 0.0471609 0.0414116 1.00166 0.00053035
+Process: ZDY 2017 flavor2 U/D:0 Fast:0 Mean lambda = 1.00007 +/- 0.000503809
+
+****************************************
+Minimizer is Linear
+Chi2                      =      34016.8
+NDf                       =           16
+p0                        =      1.00017   +/-   2.67703e-06 
+
+[36mRestFrames v1.0.0 -- Developed by Christopher Rogan (crogan@cern.ch)
+                     Copyright (c) 2014-2019, Christopher Rogan
+                     http://RestFrames.com
+[0m
+
+Processing bCorrection.C("QCD",2017,1,0,0)...
+QCD
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/QCD_HT1000to1500_TuneCP5_13TeV-madgraph-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/QCD_HT100to200_TuneCP5_13TeV-madgraph-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/QCD_HT1500to2000_TuneCP5_13TeV-madgraph-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/QCD_HT2000toInf_TuneCP5_13TeV-madgraph-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/QCD_HT200to300_TuneCP5_13TeV-madgraph-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/QCD_HT300to500_TuneCP5_13TeV-madgraph-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/QCD_HT500to700_TuneCP5_13TeV-madgraph-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/QCD_HT700to1000_TuneCP5_13TeV-madgraph-pythia8_Fall17_102X.root
+opening original rootfile: ../BtagSF//BtagEff.root
+(pt,SF,effT,effP,lam,err): 25 0.952167 0.176984 0.145028 0.99785 1.18777e-05
+(pt,SF,effT,effP,lam,err): 35 0.943477 0.17006 0.154604 0.998769 1.56546e-05
+(pt,SF,effT,effP,lam,err): 45 0.936772 0.155015 0.149282 0.999502 1.80828e-05
+(pt,SF,effT,effP,lam,err): 55 0.931442 0.146473 0.147481 1.00009 2.08993e-05
+(pt,SF,effT,effP,lam,err): 65 0.927103 0.143362 0.148861 1.00054 2.43682e-05
+(pt,SF,effT,effP,lam,err): 77.5 0.922695 0.141735 0.152182 1.0011 2.38899e-05
+(pt,SF,effT,effP,lam,err): 92.5 0.918483 0.141449 0.15656 1.00168 2.94824e-05
+(pt,SF,effT,effP,lam,err): 110 0.914616 0.14284 0.160508 1.00207 3.21617e-05
+(pt,SF,effT,effP,lam,err): 130 0.911157 0.14559 0.165234 1.00241 4.1947e-05
+(pt,SF,effT,effP,lam,err): 155 0.907817 0.150525 0.171377 1.00269 4.71539e-05
+(pt,SF,effT,effP,lam,err): 185 0.904779 0.157976 0.17977 1.00295 6.90884e-05
+(pt,SF,effT,effP,lam,err): 225 0.901787 0.168294 0.190757 1.00321 8.42064e-05
+(pt,SF,effT,effP,lam,err): 275 0.899108 0.17737 0.200448 1.00346 0.000138739
+(pt,SF,effT,effP,lam,err): 350 0.896368 0.199086 0.210511 1.00183 0.000174801
+(pt,SF,effT,effP,lam,err): 500 0.893162 0.226225 0.220633 0.999039 0.000253748
+(pt,SF,effT,effP,lam,err): 700 0.890901 0.229503 0.227175 0.999587 0.000680127
+(pt,SF,effT,effP,lam,err): 900 0.8896 0.215339 0.22801 1.00224 0.00153193
+Process: QCD 2017 flavor1 U/D:0 Fast:0 Mean lambda = 1.00112 +/- 0.00166678
+
+****************************************
+Minimizer is Linear
+Chi2                      =      55209.7
+NDf                       =           16
+p0                        =     0.999536   +/-   6.51757e-06 
+
+[36mRestFrames v1.0.0 -- Developed by Christopher Rogan (crogan@cern.ch)
+                     Copyright (c) 2014-2019, Christopher Rogan
+                     http://RestFrames.com
+[0m
+
+Processing bCorrection.C("QCD",2017,2,0,0)...
+QCD
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/QCD_HT1000to1500_TuneCP5_13TeV-madgraph-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/QCD_HT100to200_TuneCP5_13TeV-madgraph-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/QCD_HT1500to2000_TuneCP5_13TeV-madgraph-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/QCD_HT2000toInf_TuneCP5_13TeV-madgraph-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/QCD_HT200to300_TuneCP5_13TeV-madgraph-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/QCD_HT300to500_TuneCP5_13TeV-madgraph-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/QCD_HT500to700_TuneCP5_13TeV-madgraph-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/QCD_HT700to1000_TuneCP5_13TeV-madgraph-pythia8_Fall17_102X.root
+opening original rootfile: ../BtagSF//BtagEff.root
+(pt,SF,effT,effP,lam,err): 25 1.19757 0.0323469 0.0186973 1.00286 4.68997e-06
+(pt,SF,effT,effP,lam,err): 35 1.24211 0.0280912 0.0153013 1.00326 7.50536e-06
+(pt,SF,effT,effP,lam,err): 45 1.26305 0.018659 0.0113965 1.00198 7.79204e-06
+(pt,SF,effT,effP,lam,err): 55 1.27337 0.0140503 0.009729 1.00121 8.06187e-06
+(pt,SF,effT,effP,lam,err): 65 1.27805 0.0118819 0.00915623 1.00078 8.60206e-06
+(pt,SF,effT,effP,lam,err): 77.5 1.2794 0.010672 0.00894711 1.00049 7.82186e-06
+(pt,SF,effT,effP,lam,err): 92.5 1.27724 0.00996855 0.00886176 1.00031 9.0321e-06
+(pt,SF,effT,effP,lam,err): 110 1.27183 0.00965393 0.00884855 1.00022 9.24676e-06
+(pt,SF,effT,effP,lam,err): 130 1.26367 0.00978951 0.00910723 1.00018 1.13981e-05
+(pt,SF,effT,effP,lam,err): 155 1.25206 0.010245 0.00957223 1.00017 1.19147e-05
+(pt,SF,effT,effP,lam,err): 185 1.23752 0.0111052 0.0105065 1.00015 1.60107e-05
+(pt,SF,effT,effP,lam,err): 225 1.21854 0.0126251 0.0120129 1.00014 1.74984e-05
+(pt,SF,effT,effP,lam,err): 275 1.19691 0.0143808 0.013558 1.00017 2.52632e-05
+(pt,SF,effT,effP,lam,err): 350 1.17066 0.0182295 0.016103 1.00038 2.7924e-05
+(pt,SF,effT,effP,lam,err): 500 1.14439 0.0253518 0.0218466 1.00053 3.99388e-05
+(pt,SF,effT,effP,lam,err): 700 1.16794 0.03416 0.0327221 1.00026 0.000131173
+(pt,SF,effT,effP,lam,err): 900 1.26031 0.0471609 0.04222 1.00143 0.000525004
+Process: QCD 2017 flavor2 U/D:0 Fast:0 Mean lambda = 1.00085 +/- 0.00095282
+
+****************************************
+Minimizer is Linear
+Chi2                      =       247536
+NDf                       =           16
+p0                        =      1.00154   +/-   2.39504e-06 
+
+[36mRestFrames v1.0.0 -- Developed by Christopher Rogan (crogan@cern.ch)
+                     Copyright (c) 2014-2019, Christopher Rogan
+                     http://RestFrames.com
+[0m
+
+Processing bCorrection.C("Wjets",2017,1,0,0)...
+Wjets
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WJetsToLNu_Pt-100To250_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WJetsToLNu_Pt-250To400_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WJetsToLNu_Pt-400To600_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WJetsToLNu_Pt-50To100_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WJetsToLNu_Pt-600ToInf_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17_102X.root
+opening original rootfile: ../BtagSF//BtagEff.root
+(pt,SF,effT,effP,lam,err): 25 0.952167 0.176984 0.134416 0.997171 1.44727e-05
+(pt,SF,effT,effP,lam,err): 35 0.943477 0.17006 0.144615 0.997997 2.05215e-05
+(pt,SF,effT,effP,lam,err): 45 0.936772 0.155015 0.136157 0.998385 2.38873e-05
+(pt,SF,effT,effP,lam,err): 55 0.931442 0.146473 0.129854 0.998484 2.70397e-05
+(pt,SF,effT,effP,lam,err): 65 0.927103 0.143362 0.12765 0.998486 3.064e-05
+(pt,SF,effT,effP,lam,err): 77.5 0.922695 0.141735 0.126663 0.998465 2.87944e-05
+(pt,SF,effT,effP,lam,err): 92.5 0.918483 0.141449 0.125826 0.998326 3.35215e-05
+(pt,SF,effT,effP,lam,err): 110 0.914616 0.14284 0.126757 0.998191 3.51758e-05
+(pt,SF,effT,effP,lam,err): 130 0.911157 0.14559 0.130073 0.998173 4.60661e-05
+(pt,SF,effT,effP,lam,err): 155 0.907817 0.150525 0.135818 0.998183 5.27954e-05
+(pt,SF,effT,effP,lam,err): 185 0.904779 0.157976 0.143901 0.998173 7.81553e-05
+(pt,SF,effT,effP,lam,err): 225 0.901787 0.168294 0.153996 0.998043 9.49393e-05
+(pt,SF,effT,effP,lam,err): 275 0.899108 0.17737 0.162129 0.997817 0.000152873
+(pt,SF,effT,effP,lam,err): 350 0.896368 0.199086 0.175815 0.996438 0.00019112
+(pt,SF,effT,effP,lam,err): 500 0.893162 0.226225 0.192306 0.994377 0.000276944
+(pt,SF,effT,effP,lam,err): 700 0.890901 0.229503 0.200374 0.995004 0.000702542
+(pt,SF,effT,effP,lam,err): 900 0.8896 0.215339 0.205629 0.998331 0.0015727
+Process: Wjets 2017 flavor1 U/D:0 Fast:0 Mean lambda = 0.99765 +/- 0.00119693
+
+****************************************
+Minimizer is Linear
+Chi2                      =      4718.32
+NDf                       =           16
+p0                        =     0.997933   +/-   8.05073e-06 
+
+[36mRestFrames v1.0.0 -- Developed by Christopher Rogan (crogan@cern.ch)
+                     Copyright (c) 2014-2019, Christopher Rogan
+                     http://RestFrames.com
+[0m
+
+Processing bCorrection.C("Wjets",2017,2,0,0)...
+Wjets
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WJetsToLNu_Pt-100To250_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WJetsToLNu_Pt-250To400_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WJetsToLNu_Pt-400To600_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WJetsToLNu_Pt-50To100_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17_102X.root
+root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v2/Fall17_102X/WJetsToLNu_Pt-600ToInf_TuneCP5_13TeV-amcatnloFXFX-pythia8_Fall17_102X.root
+opening original rootfile: ../BtagSF//BtagEff.root
+(pt,SF,effT,effP,lam,err): 25 1.19757 0.0323469 0.0305193 1.00039 5.62348e-06
+(pt,SF,effT,effP,lam,err): 35 1.24211 0.0280912 0.0323009 0.998909 9.82418e-06
+(pt,SF,effT,effP,lam,err): 45 1.26305 0.018659 0.0231417 0.998764 1.0483e-05
+(pt,SF,effT,effP,lam,err): 55 1.27337 0.0140503 0.0172633 0.99909 1.06549e-05
+(pt,SF,effT,effP,lam,err): 65 1.27805 0.0118819 0.0142804 0.999313 1.10144e-05
+(pt,SF,effT,effP,lam,err): 77.5 1.2794 0.010672 0.0122429 0.99955 9.55299e-06
+(pt,SF,effT,effP,lam,err): 92.5 1.27724 0.00996855 0.0107585 0.999776 1.04376e-05
+(pt,SF,effT,effP,lam,err): 110 1.27183 0.00965393 0.00953269 1.00003 1.01596e-05
+(pt,SF,effT,effP,lam,err): 130 1.26367 0.00978951 0.00897501 1.00022 1.22559e-05
+(pt,SF,effT,effP,lam,err): 155 1.25206 0.010245 0.00950112 1.00019 1.28914e-05
+(pt,SF,effT,effP,lam,err): 185 1.23752 0.0111052 0.0105912 1.00013 1.74323e-05
+(pt,SF,effT,effP,lam,err): 225 1.21854 0.0126251 0.0120967 1.00012 1.89963e-05
+(pt,SF,effT,effP,lam,err): 275 1.19691 0.0143808 0.0133281 1.00021 2.69816e-05
+(pt,SF,effT,effP,lam,err): 350 1.17066 0.0182295 0.0159561 1.0004 2.9588e-05
+(pt,SF,effT,effP,lam,err): 500 1.14439 0.0253518 0.0220345 1.0005 4.18748e-05
+(pt,SF,effT,effP,lam,err): 700 1.16794 0.03416 0.030034 1.00074 0.000133902
+(pt,SF,effT,effP,lam,err): 900 1.26031 0.0471609 0.0394972 1.00221 0.000533815
+Process: Wjets 2017 flavor2 U/D:0 Fast:0 Mean lambda = 1.00003 +/- 0.000782638
+
+****************************************
+Minimizer is Linear
+Chi2                      =      40218.6
+NDf                       =           16
+p0                        =     0.999781   +/-   2.88866e-06 

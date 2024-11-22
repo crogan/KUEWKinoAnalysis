@@ -1,0 +1,10 @@
+Process: DB 2017 flavor1 U/D:0 Fast:0 Mean lambda = 0.998919 +/- 0.0017389
+Process: DB 2017 flavor2 U/D:0 Fast:0 Mean lambda = 0.999634 +/- 0.000946493
+Process: TB 2017 flavor1 U/D:0 Fast:0 Mean lambda = 0.999892 +/- 0.00146809
+Process: TB 2017 flavor2 U/D:0 Fast:0 Mean lambda = 0.999385 +/- 0.00109177
+Process: ZDY 2017 flavor1 U/D:0 Fast:0 Mean lambda = 0.999448 +/- 0.00114773
+Process: ZDY 2017 flavor2 U/D:0 Fast:0 Mean lambda = 1.00007 +/- 0.000503809
+Process: QCD 2017 flavor1 U/D:0 Fast:0 Mean lambda = 1.00112 +/- 0.00166678
+Process: QCD 2017 flavor2 U/D:0 Fast:0 Mean lambda = 1.00085 +/- 0.00095282
+Process: Wjets 2017 flavor1 U/D:0 Fast:0 Mean lambda = 0.99765 +/- 0.00119693
+Process: Wjets 2017 flavor2 U/D:0 Fast:0 Mean lambda = 1.00003 +/- 0.000782638

@@ -1,0 +1,47 @@
+Characterizing per year -----------------------
+Characterizing  TChipmWW16
+Npoints: 998  corr=1: 297  corr<1: 701  corr>1: 0
+Mean corr<1: 0.9911 +/- 0.0055
+MinCorr: 6260425 0.9705
+Finding points with large corrections (<0.95 or >1)
+N corr < 1: 0
+N corr > 1: 0
+Characterizing  TChipmWW17
+Npoints: 1031  corr=1: 1026  corr<1: 5  corr>1: 0
+Mean corr<1: 0.9809 +/- 0.0046
+MinCorr: 9500350 0.9723
+Finding points with large corrections (<0.95 or >1)
+N corr < 1: 0
+N corr > 1: 0
+Characterizing  TChipmWW18
+Npoints: 1052  corr=1: 947  corr<1: 105  corr>1: 0
+Mean corr<1: 0.9904 +/- 0.0054
+MinCorr: 10760225 0.9739
+Finding points with large corrections (<0.95 or >1)
+N corr < 1: 0
+N corr > 1: 0
+Characterizing combined -----------------------
+key not found 17! 1000015
+key not found 17! 1250040
+key not found 17! 1500065
+key not found 17! 1750090
+key not found 17! 2000115
+key not found 17! 2250140
+key not found 17! 2500165
+key not found 17! 2750190
+key not found 17! 3000215
+key not found 17! 3250240
+key not found 17! 3500265
+key not found 17! 3750290
+key not found 17! 4000315
+key not found 17! 4250340
+key not found 17! 4500365
+key not found 17! 4750390
+key not found 17! 5000415
+key not found 17! 5260440
+key not found 17! 5500465
+key not found 17! 5760490
+key not found 17! 6000516
+mean weighted correction < 1. : 0.9979 +/- 0.0014
+max correction: 1.0000
+min correction: 0.9938

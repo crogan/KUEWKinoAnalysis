@@ -219,19 +219,22 @@ int main(int argc, char* argv[]) {
   
   string Era = std::to_string(year);
   string Ana = "KUEWKino";
-
+  verbose=false;
   FitReader FIT(InputFile);
   if(verbose){
     cout << "Input file " << InputFile << " contains:" << endl;
-    FIT.PrintCategories();
+  //  FIT.PrintCategories();
     FIT.PrintProcesses();
   }
 
   ProcessList processes = FIT.GetProcesses().FilterOR(proc_to_add); 
   if(addBkg)
     processes += FIT.GetProcesses().Filter(kBkg);
-  if(addSig)
+  if(addSig){
     processes += FIT.GetProcesses().Filter(kSig);
+    //auto remove genMET
+    //processes = processes.Remove("METUncer_GenMET");
+    }
   processes = processes.RemoveOR(proc_to_rem);
 
   // keep only the process-by-process fakes
@@ -259,9 +262,9 @@ int main(int argc, char* argv[]) {
     systematics = FIT.GetSystematics().FilterOR(sys_to_add);
   if(systematics.GetN() > 0)
     systematics = systematics.RemoveOR(sys_to_rem);
-//cout << "systematics" << endl;
-//  for(int s = 0; s < systematics.GetN(); s++)
-//    cout << systematics[s].Label() << endl;
+cout << "systematics" << endl;
+  for(int s = 0; s < systematics.GetN(); s++)
+    cout << systematics[s].Label() << endl;
 
 CategoryTree CT_Fakes1L;
 vector<const CategoryTree*> catTrees;
@@ -280,6 +283,7 @@ map<string,VC> catBins;
   
   // prepare processes
   ProcessList signals = processes.Filter(kSig);
+  //signals = signals.Remove("METUncer_GenMET");
    std:cout<<"PLIST\n";
   signals.Print();
   ProcessList backgrounds = processes.Filter(kBkg); 
@@ -500,6 +504,8 @@ cb.AddProcesses({"*"}, {Ana}, {Era}, {ch}, {proc.Name()}, cats, false);
   ttbar += "ttbar";
   SystDict smtt;
  // ttbar += "ST";
+  
+//turn of sig norm sys for b128
   bool applyTtbarToSig = true;
   std::cout<<"Applying ttbar Systematics to Signal: "<< applyTtbarToSig <<"\n";
    CONFIG.initSystDictTtbar(smtt);
@@ -547,7 +553,7 @@ CONFIG.AddSJetNormSys("DB",DB,cb, processes);
 */
 
 ///PRINT TABLE OF ALL SYSTS AND MAP
-  cb.PrintSysts();
+//  cb.PrintSysts();
 
  using ch::syst::SystMap;
   using ch::syst::era;
@@ -569,12 +575,51 @@ else cout << "Nominal signal cross section: " << xsec_norm << endl;
     cout << "+ Adding shape systematics" << endl;
     for(int s = 0; s < Nsys; s++){  
       Systematic& sys = systematics[s];
-      cout<< " ---Systematic: "<<sys.Label()<< endl;
-      if(sys.Label() == "BTAGHF_SF") continue;
-      if(sys.Label() == "BTAGLF_SF") continue;
-      if(shapeToNorm.Contains(sys)){ 
-        CONFIG.AddShapeSysAsNorm(sys,cb,FIT);
-        continue;
+       cout<< " -- Assessing Systematic: "<<sys.Label()<< endl;
+      //if(sys.Label() == "BTAGHF_SF") continue;//allow correlated factor
+      //if(sys.Label() == "BTAGLF_SF") continue;
+      //if(sys.Label() == "MuF_SF") continue;//for now do not year split
+      //if(sys.Label() == "MuR_SF") continue;
+      //if(sys.Label() == "PDF_SF") continue;
+      //if(sys.Label() == "MET_TRIG_SF") continue; //not ready for primetime
+      //if(sys.Label() == "elID_SF") continue;//do not year split
+      //if(sys.Label() == "elIso_SF") continue;
+      //if(sys.Label() == "elSIP_SF") continue;
+      //if(sys.Label() == "elVL_SF") continue;
+      //if(sys.Label() == "muID_SF") continue;
+      //if(sys.Label() == "muIso_SF") continue;
+      //if(sys.Label() == "muID_SF") continue;
+      //if(sys.Label() == "muIso_SF") continue; 
+      //if(sys.Label() == "muSIP_SF") continue;
+      //if(sys.Label() == "muVL_SF") continue;
+      //if(sys.Label() == "JESUncer_Total") continue;//no correlated factor (this will be year labeled in the sys list)
+      //if(sys.Label() == "JERUncer_Total") continue;
+      //if(sys.Label() == "METUncer_UnClust") continue;
+
+        cout<<" Systematic passed allowed criteria " << endl;
+      //cout<< "Systematic adding as norm: "<<sys.Label()<< endl;
+      if(shapeToNorm.Contains(sys)){
+	cout<< "Systematic adding as norm: "<<sys.Label()<< endl; 
+	
+	if( (sys.Label() == "BTAGHF_SF") || (sys.Label() == "BTAGLF_SF") ){
+	    CONFIG.AddShapeSysAsNorm(sys,cb,FIT,backgrounds,sys.Label()+"_corr");
+	    continue;	    
+
+	}else if( (sys.Label() == "JESUncer_Total") || (sys.Label() == "JERUncer_Total") || (sys.Label() =="METUncer_UnClust") || (sys.Label() == "METUncer_GenMET")  ){
+	    //apply these to signal, but not bkg because those will have year dependent labels added at bpog step
+	    CONFIG.AddShapeSysAsNorm(sys,cb,FIT,signals,sys.Label(), 1., kSig);
+	}
+	    //make separate sytematic for  bkg, but not genMET. also reject correlated systematic for JES JER MET
+	    if( sys.Label() != "METUncer_GenMET" && sys.Label() != "JESUncer_Total" && sys.Label() != "JERUncer_Total" && sys.Label() != "METUncer_UnClust"){
+	    	if( (sys.Label().find("16") != std::string::npos) || (sys.Label().find("17") != std::string::npos) || (sys.Label().find("18") != std::string::npos) ){
+			std::cout<<"found year split special systematic "<< sys.Label() <<"\n";
+		  CONFIG.AddCombinedShapeSysAsNorm(sys,cb,FIT,backgrounds,sys.Label(),1.,kBkg);
+		}else{
+		  CONFIG.AddShapeSysAsNorm(sys,cb,FIT,backgrounds,sys.Label(),1.,kBkg);
+	    
+		}
+	    }
+	continue;
       }
       ProcessList proc_sys;
 
@@ -785,7 +830,7 @@ else cout << "Nominal signal cross section: " << xsec_norm << endl;
   {
    cmd = "combineTool.py -M T2W -i "+OutputFold+"datacards/*/*/*/datacard.txt -o workspace.root --parallel 4";
 
-   string cmd_condor = "combineTool.py -M T2W -i "+OutputFold+"datacards/*/*/*/datacard.txt -o workspace.root --job-mode connect --input-file "+OutputFold+InputFile+" --sub-opts='+ProjectName=\"cms.org.ku\" \n request_memory = 8 GB \n' ";
+   string cmd_condor = "combineTool.py -M T2W -i "+OutputFold+"datacards/*/*/*/datacard.txt -o workspace.root --job-mode connect --input-file "+OutputFold+InputFile+" --sub-opts='+ProjectName=\"cms.org.cern\" \n request_memory = 8 GB \n' ";
   }
 
   string cmd_condor_CERN = "--sub-opts='+JobFlavour=\"espresso\" \\n request_memory = 4 GB'";

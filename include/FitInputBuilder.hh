@@ -31,6 +31,8 @@ public:
 		const Systematic& sys = Systematic::Default());
 
   const Process& FakeProcess(const string& label);
+
+  //std::string AdjustSMSProcLabel( const Process
   
   void WriteFit(const string& outputroot);
   

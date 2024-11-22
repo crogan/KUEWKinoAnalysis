@@ -154,7 +154,6 @@ Systematics& Systematics::Add(const string& label){
   
   return *this;
 }
-
 Systematics& Systematics::Add(const Systematic& sys){
   if(Contains(sys))
     return *this;
@@ -307,10 +306,52 @@ SystematicsTool::~SystematicsTool() {}
 //get list to convert shape systematics to normalizations
 Systematics SystematicsTool::GetConvertedSystematics() const {
    Systematics list;
-   
+ 
+ // list += "PU_SF";  
+
   list += "BTAGHF_SF";
   list += "BTAGLF_SF";
+
+  list += "MuF_SF";
+  list += "MuR_SF";
+  list += "PDF_SF";
+
+  list += "MET_TRIG_SF";
+  list += "prefire_SF";
+
+ list += "elID_SF";
+  list += "elIso_SF";
+  list += "elSIP_SF";
+  list += "elVL_SF";
+  list += "muID_SF";
+  list += "muIso_SF";
+  list += "muSIP_SF";
+  list += "muVL_SF";
  
+  list += "JESUncer_Total";
+  list += "JERUncer_Total";
+  list += "METUncer_UnClust";
+  list += "METUncer_GenMET";
+
+  list += "BTAGHF16_SF";
+  list += "BTAGLF16_SF"; 
+  list += "JESUncer16_Total";
+  list += "JERUncer16_Total";
+  list += "METUncer16_UnClust";
+   
+  list += "BTAGHF17_SF";
+  list += "BTAGLF17_SF";
+  list += "JESUncer17_Total";
+  list += "JERUncer17_Total";
+  list += "METUncer17_UnClust";
+
+ list += "BTAGHF18_SF";
+  list += "BTAGLF18_SF";
+ list += "JESUncer18_Total";
+  list += "JERUncer18_Total";
+  list += "METUncer18_UnClust";
+
+
 return list;
 }
 
@@ -321,9 +362,25 @@ Systematics SystematicsTool::GetWeightSystematics() const {
   //list += "PU_SF"; // turn off for now
   list += "BTAGHF_SF";
   list += "BTAGLF_SF";
-  //list += "MET_TRIG_SF"; // default
-  ////list += "MET_TRIG_el";
-  ////list += "MET_TRIG_mu";
+  list += "MuF_SF";
+  list += "MuR_SF";
+  list += "PDF_SF";
+ 
+  //list += "JESUncer_Total";
+  //list += "JERUncer_Total";
+  //list += "METUncer_UnClust";   
+
+  list += "MET_TRIG_SF";
+  list += "prefire_SF";
+ 
+ list += "elID_SF";
+  list += "elIso_SF";
+  list += "elSIP_SF";
+  list += "elVL_SF";
+  list += "muID_SF";
+  list += "muIso_SF";
+  list += "muSIP_SF";
+  list += "muVL_SF";
 
   return list;
 }
@@ -355,14 +412,21 @@ Systematics SystematicsTool::GetWeightSystematics() const {
 //}
 
 // Default alternative tree systematics
-Systematics SystematicsTool::GetTreeSystematics() const {
+std::vector<std::string> SystematicsTool::GetTreeSystematicsNames() const {
   
-  Systematics list;
+  std::vector<std::string> list;
   
-  list += "JESUncer_Total";
-  list += "JERUncer_Total";
-  list += "METUncer_UnClust";
-  list += "METUncer_GenMET";
+  list.push_back("KUAnalysis_JESUncer_TotalUp");
+  list.push_back("KUAnalysis_JESUncer_TotalDown");
+  list.push_back("KUAnalysis_JERUncer_TotalUp");
+  list.push_back("KUAnalysis_JERUncer_TotalDown");
+  list.push_back("KUAnalysis_METUncer_UnClustUp");
+  list.push_back("KUAnalysis_METUncer_UnClustDown");
+  
+
+//  list.push_back("KUAnalysis_METUncer_GenMETUp");
+//  list.push_back("KUAnalysis_METUncer_GenMETDown");
+
   // list += "JESUncer_CorrelationGroupMPFInSitu";
   // list += "JESUncer_CorrelationGroupIntercalibration";
   // list += "JESUncer_CorrelationGroupbJES";
@@ -373,6 +437,17 @@ Systematics SystematicsTool::GetTreeSystematics() const {
 
   return list;
 }
+Systematics SystematicsTool::GetTreeSystematics() const {
+   Systematics list;
+  list += "JESUncer_Total";
+  list += "JERUncer_Total"; 
+  list += "METUncer_UnClust";
+
+  list += "METUncer_GenMET";
+
+ return list;
+}
+
 
 const Systematics& SystematicsTool::JESSystematics() const {
   return m_JESSys;
@@ -384,8 +459,8 @@ const Systematics& SystematicsTool::JERSystematics() const {
 
 const Systematics& SystematicsTool::MMSSystematics() const {
   return m_MMSSys;
-}
 
+}
 const Systematics& SystematicsTool::EESSystematics() const {
   return m_EESSys;
 }

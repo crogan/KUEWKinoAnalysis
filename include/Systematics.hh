@@ -116,6 +116,7 @@ public:
   //Systematics GetFakeShapeSystematics(CategoryTree CT, VS procs) const;
   
   Systematics GetTreeSystematics() const;
+   std::vector<std::string> GetTreeSystematicsNames() const;
 
   const Systematics& JESSystematics() const;
   const Systematics& JERSystematics() const;

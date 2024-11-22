@@ -1,0 +1,29 @@
+Characterizing per year -----------------------
+Characterizing  TChiWZ16
+Npoints: 394  corr=1: 252  corr<1: 142  corr>1: 0
+Mean corr<1: 0.9931 +/- 0.0053
+MinCorr: 4500325 0.9657
+Finding points with large corrections (<0.95 or >1)
+N corr < 1: 0
+N corr > 1: 0
+Characterizing  TChiWZ17
+Npoints: 1529  corr=1: 1406  corr<1: 123  corr>1: 0
+Mean corr<1: 0.9889 +/- 0.0075
+MinCorr: 3000280 0.9696
+Finding points with large corrections (<0.95 or >1)
+N corr < 1: 0
+N corr > 1: 0
+Characterizing  TChiWZ18
+Npoints: 1198  corr=1: 795  corr<1: 402  corr>1: 1
+Mean corr<1: 0.9866 +/- 0.0065
+Mean corr>1: 1.0082 +/- 0.0000
+MaxCorr: 5500520 1.0082
+MinCorr: 8260425 0.9557
+Finding points with large corrections (<0.95 or >1)
+N corr < 1: 0
+N corr > 1: 1
+    5500520 : 1.0082
+Characterizing combined -----------------------
+mean weighted correction < 1. : 0.9957 +/- 0.0030
+max correction: 1.0033
+min correction: 0.9820

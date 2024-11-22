@@ -503,7 +503,8 @@ void ParseLimitJSON(const string& json, TString name, bool inclObs = false, Plot
   ///////////////
   // dM vs. MP //
   ///////////////
-  TH2D*   hist_exp_dM   = limit_def->Get2DHist_dMvMP("h_exp_dM", kExp);
+//  TH2D*   hist_exp_dM   = limit_def->Get2DHist_dMvMP("h_exp_dM", kExp);
+  TH2D*   hist_exp_dM   = limit_def->Get2DHist_dMvMP("h_exp_dM", kObs);
   TGraph* gr_exp_dM     = limit_def->Get2DContour_dMvMP(kExp);
   TGraph* gr_exp_dM_up  = limit_def->Get2DContour_dMvMP(kExpUp);
   TGraph* gr_exp_dM_dn  = limit_def->Get2DContour_dMvMP(kExpDn);

@@ -1,0 +1,86 @@
+Characterizing per year -----------------------
+Characterizing  TChiWZ16
+Npoints: 394  corr=1: 252  corr<1: 142  corr>1: 0
+Mean corr<1: 0.9931 +/- 0.0053
+MinCorr: 4500325 0.9657
+Finding points with large corrections (<0.95 or >1)
+N corr < 1: 0
+N corr > 1: 0
+Characterizing  TChiWZ17
+Npoints: 1529  corr=1: 1406  corr<1: 123  corr>1: 0
+Mean corr<1: 0.9889 +/- 0.0075
+MinCorr: 3000280 0.9696
+Finding points with large corrections (<0.95 or >1)
+N corr < 1: 0
+N corr > 1: 0
+Characterizing  TChiWZ18
+Npoints: 1198  corr=1: 795  corr<1: 402  corr>1: 1
+Mean corr<1: 0.9866 +/- 0.0065
+Mean corr>1: 1.0082 +/- 0.0000
+MaxCorr: 5500520 1.0082
+MinCorr: 8260425 0.9557
+Finding points with large corrections (<0.95 or >1)
+N corr < 1: 0
+N corr > 1: 1
+    5500520 : 1.0082
+Characterizing combined -----------------------
+key not found 16! 2250001
+key not found 16! 2500001
+key not found 16! 2500025
+key not found 16! 2750001
+key not found 16! 2750025
+key not found 16! 2750050
+key not found 16! 3000001
+key not found 16! 3000025
+key not found 16! 3000050
+key not found 16! 3000075
+key not found 16! 3250025
+key not found 16! 3250050
+key not found 16! 3250075
+key not found 16! 3250100
+key not found 16! 3500050
+key not found 16! 3500075
+key not found 16! 3500100
+key not found 16! 3500125
+key not found 16! 3750075
+key not found 16! 3750100
+key not found 16! 3750125
+key not found 16! 3750150
+key not found 16! 4000100
+key not found 16! 4000125
+key not found 16! 4000150
+key not found 16! 4000175
+key not found 16! 4250125
+key not found 16! 4250150
+key not found 16! 4250175
+key not found 16! 4250200
+key not found 16! 4500175
+key not found 16! 4500200
+key not found 16! 4500225
+key not found 16! 4750175
+key not found 16! 4750200
+key not found 16! 4750225
+key not found 16! 4750250
+key not found 16! 5000200
+key not found 16! 5000225
+key not found 16! 5000250
+key not found 16! 5000275
+key not found 16! 5260250
+key not found 16! 5260275
+key not found 16! 5260300
+key not found 16! 5260325
+key not found 16! 5500250
+key not found 16! 5500275
+key not found 16! 5500300
+key not found 16! 5500325
+key not found 16! 5760300
+key not found 16! 5760325
+key not found 16! 5760350
+key not found 16! 5760375
+key not found 16! 6000300
+key not found 16! 6000325
+key not found 16! 6000350
+key not found 16! 6000375
+mean weighted correction < 1. : 0.9955 +/- 0.0031
+max correction: 1.0033
+min correction: 0.9820

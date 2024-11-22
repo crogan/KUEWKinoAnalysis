@@ -1,0 +1,23 @@
+Characterizing per year -----------------------
+Characterizing  TChipmSlepSnu16
+Npoints: 493  corr=1: 493  corr<1: 0  corr>1: 0
+Finding points with large corrections (<0.95 or >1)
+N corr < 1: 0
+N corr > 1: 0
+Characterizing  TChipmSlepSnu17
+Npoints: 493  corr=1: 485  corr<1: 8  corr>1: 0
+Mean corr<1: 0.9728 +/- 0.0142
+MinCorr: 3250175 0.9446
+Finding points with large corrections (<0.95 or >1)
+N corr < 1: 1
+    3250175 : 0.9446
+N corr > 1: 0
+Characterizing  TChipmSlepSnu18
+Npoints: 493  corr=1: 493  corr<1: 0  corr>1: 0
+Finding points with large corrections (<0.95 or >1)
+N corr < 1: 0
+N corr > 1: 0
+Characterizing combined -----------------------
+mean weighted correction < 1. : 0.9918 +/- 0.0043
+max correction: 1.0000
+min correction: 0.9833

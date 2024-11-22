@@ -26,14 +26,14 @@
 //gSystem->Load("/home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/lib/libKUEWKino.so");
 using namespace std;
 using namespace RestFrames;
-
+//gStyle->SetPalette(kViridis);
 XsecTool g_Xsec;
 
 double popdouble(std::string& line);
 std::string popstring(std::string& line);
 
 enum LimitType { kObs, kExp, kExpUp, kExpDn };
-enum PlotType { kTChiWZ, kT2tt, kT2bW, kT2bb, kTSlSl, kT2cc, kTChiWW};
+enum PlotType { kTChiWZ, kT2tt, kT2bW, kT2bb, kTSlSl, kT2cc, kTChiWW, kHN2C1, kTSlSnu};
 
 TCanvas* Plot2DHist_MCvMP(const string& can, TH2D* hist, PlotType ptype);
 TCanvas* Plot2DHist_dMvMP(const string& can, TH2D* hist, PlotType ptype);
@@ -157,6 +157,7 @@ public:
 	}
 	if(hist->GetBinContent(x+1,y+1) > 0. && b_zero){
 	  if(hist->GetBinContent(x+1,y+1) <= 1.){
+	//    std::cout<<x+1<<" "<<y+1<<" "<<hist->GetBinContent(x+1,y+1)<<" b_zero \n";
 	    X.push_back(hist->GetXaxis()->GetBinCenter(x+1));
 	    Y.push_back(hist->GetYaxis()->GetBinCenter(y+1));
 	    break;
@@ -166,6 +167,8 @@ public:
 	  }
 	}
 	if(hist->GetBinContent(x+1,y+1) <= 1. && b_on){
+//	  std::cout<<x+1<<" "<<y+1<<" "<<hist->GetBinContent(x+1,y+1)<<" b_on \n";
+
 	  X.push_back(hist->GetXaxis()->GetBinCenter(x+1));
 	  Y.push_back(hist->GetYaxis()->GetBinCenter(y+1));
 	  break;
@@ -179,6 +182,8 @@ public:
 	  b_on = true;
 	if(hist->GetBinContent(x+1,y+1) <= 1. &&
 	   hist->GetBinContent(x+1,y+1) > 0. && b_on){
+  //         std::cout<<x+1<<" "<<y+1<<" "<<hist->GetBinContent(x+1,y+1)<<" b_on 2 \n";
+
 	  X.push_back(hist->GetXaxis()->GetBinCenter(x+1));
 	  Y.push_back(hist->GetYaxis()->GetBinCenter(y+1));
 	  break;
@@ -192,8 +197,9 @@ public:
   }
 
   TGraph* Get2DContour_dMvMP(LimitType type = kExp){
+     gStyle->SetPalette(kViridis);
     TH2D* hist = Get2DHist_dMvMP("temp_2D", type);
-
+   gStyle->SetPalette(kViridis);
     int Nx = hist->GetNbinsX();
     int Ny = hist->GetNbinsY();
 
@@ -210,8 +216,10 @@ public:
 	}
 	if(hist->GetBinContent(x+1,y+1) > 0. && b_zero){
 	  if(hist->GetBinContent(x+1,y+1) <= 1.){
-	    X.push_back(hist->GetXaxis()->GetBinCenter(x+1));
-	    Y.push_back(hist->GetYaxis()->GetBinCenter(y+1));
+	                std::cout<<x+1<<" "<<y+1<<" "<<hist->GetBinContent(x+1,y+1)<<" b_zero \n";
+
+	    //X.push_back(hist->GetXaxis()->GetBinCenter(x+1));
+	    //Y.push_back(hist->GetYaxis()->GetBinCenter(y+1));
 	    break;
 	  } else {
 	    b_zero = false;
@@ -219,6 +227,8 @@ public:
 	  }
 	}
 	if(hist->GetBinContent(x+1,y+1) <= 1. && b_on){
+		            std::cout<<x+1<<" "<<y+1<<" "<<hist->GetBinContent(x+1,y+1)<<" b_on \n";
+
 	  X.push_back(hist->GetXaxis()->GetBinCenter(x+1));
 	  Y.push_back(hist->GetYaxis()->GetBinCenter(y+1));
 	  break;
@@ -232,6 +242,8 @@ public:
 	  b_on = true;
 	if(hist->GetBinContent(x+1,y+1) <= 1. &&
 	   hist->GetBinContent(x+1,y+1) > 0. && b_on){
+		            std::cout<<x+1<<" "<<y+1<<" "<<hist->GetBinContent(x+1,y+1)<<" b_on2 \n";
+
 	  X.push_back(hist->GetXaxis()->GetBinCenter(x+1));
 	  Y.push_back(hist->GetYaxis()->GetBinCenter(y+1));
 	  break;
@@ -328,6 +340,7 @@ public:
     return hist;
   }
 
+
   TH2D* Get2DHist_dMvMP(const string& name, LimitType type = kExp){
     bool b_inv = true;
     
@@ -413,6 +426,7 @@ public:
     return hist;
   }
 
+
 private:
   map<int,int> m_MP;
   map<int,int> m_MC;
@@ -439,7 +453,7 @@ private:
 
 void myParseLimitJSON(const string& json, bool inclObs = false, PlotType ptype = kT2tt, const string& outfile="out.root"){
   RestFrames::SetStyle();
-  
+  gStyle->SetPalette(kViridis);  
   Limit* limit_def = new Limit(json);
   if(limit_def == NULL) return;
   TLatex l;
@@ -483,7 +497,8 @@ void myParseLimitJSON(const string& json, bool inclObs = false, PlotType ptype =
   l.SetTextAlign(12);
   l.SetTextSize(0.035);
   l.SetTextFont(42);
-  l.DrawLatex(0.23, 0.83,"expected #pm 1 #sigma_{expm}");
+ // l.SetTextColor(kWhite);
+  l.DrawLatex(0.23, 0.83,"expected #pm 1 #sigma");
   line->SetLineColor(7043);
   line->SetLineWidth(2);
   line->SetLineStyle(1);
@@ -491,9 +506,10 @@ void myParseLimitJSON(const string& json, bool inclObs = false, PlotType ptype =
   line->SetLineStyle(3);
   line->DrawLineNDC(0.18, 0.842, 0.22, 0.842);
   line->DrawLineNDC(0.18, 0.818, 0.22, 0.818);
-		    
+// l.SetTextColor(kWhite);		    
   l.DrawLatex(0.23, 0.78,"observed");
   line->SetLineColor(kBlack);
+//  line->SetLineColor(kWhite);
   line->SetLineWidth(2);
   line->SetLineStyle(1);
   line->DrawLineNDC(0.18, 0.78, 0.22, 0.78);
@@ -501,45 +517,188 @@ void myParseLimitJSON(const string& json, bool inclObs = false, PlotType ptype =
   /////////////
   // dM vs. MP
   /////////////
-  TH2D*   hist_exp_dM = limit_def->Get2DHist_dMvMP("h_exp_dM", kExp);
+  gStyle->SetPalette(kViridis);
+ // TH2D*   hist_exp_dM = limit_def->Get2DHist_dMvMP("h_exp_dM", kExp);
+  TH2D*   hist_exp_dM = limit_def->Get2DHist_dMvMP("", kObs);
+  hist_exp_dM->SetStats(false);
   TGraph* gr_exp_dM   = limit_def->Get2DContour_dMvMP(kExp);
   TGraph* gr_exp_dM_up   = limit_def->Get2DContour_dMvMP(kExpUp);
   TGraph* gr_exp_dM_dn   = limit_def->Get2DContour_dMvMP(kExpDn);
   TGraph* gr_exp_dM_obs   = limit_def->Get2DContour_dMvMP(kObs);
   
+  gStyle->SetOptStat(0);
+  //gROOT->ForceStyle(); 
+  gStyle->SetPalette(kViridis);
   TCanvas* can_dM = Plot2DHist_dMvMP("can_dM", hist_exp_dM, ptype);
+  gStyle->SetPalette(kViridis);
   can_dM->cd();
-  
-  gr_exp_dM->SetLineColor(7043);
+  gStyle->SetPalette(kViridis);
+  gr_exp_dM->SetLineColor(kMagenta);
   gr_exp_dM->SetLineWidth(5);
   gr_exp_dM->SetLineStyle(1);
   gr_exp_dM->Draw("same C");
 
   gr_exp_dM_up->SetMarkerColor(kWhite);
-  gr_exp_dM_up->SetLineColor(7043);
+  gr_exp_dM_up->SetLineColor(kMagenta+1);
   gr_exp_dM_up->SetLineWidth(4);
   gr_exp_dM_up->SetLineStyle(7);
   gr_exp_dM_up->Draw("same C");
   gr_exp_dM_dn->SetMarkerColor(kWhite);
-  gr_exp_dM_dn->SetLineColor(7043);
+  gr_exp_dM_dn->SetLineColor(kMagenta+1);
   gr_exp_dM_dn->SetLineWidth(4);
   gr_exp_dM_dn->SetLineStyle(7);
   gr_exp_dM_dn->Draw("same C");
   gr_exp_dM_obs->SetMarkerColor(kWhite);
   gr_exp_dM_obs->SetLineColor(kBlack);
+ // gr_exp_dM_obs->SetLineColor(kWhite);
   gr_exp_dM_obs->SetLineWidth(4);
   gr_exp_dM_obs->SetLineStyle(1);
   if(inclObs) gr_exp_dM_obs->Draw("same C");
 
+
+  
+
   l.SetTextAlign(12);
   l.SetTextSize(0.035);
   l.SetTextFont(42);
-  l.DrawLatex(0.23, 0.83,"expected #pm 1 #sigma_{expm}");
-  line->SetLineColor(7043);
+  double lgap =0.842- 0.83;
+  double expobsgap= 0.83 - 0.78;
+  double xlgap = 0.22-0.18;
+  double xlinetotext= 0.23-0.18;
+  if(ptype == kTChiWZ){
+    double exppos = 0.25;
+     l.DrawLatex(0.23, exppos,"expected #pm 1 #sigma");
+  line->SetLineColor(kMagenta);
+  line->SetLineWidth(2);
+  line->SetLineStyle(1);
+  line->DrawLineNDC(0.18, exppos, 0.22, exppos);
+  line->SetLineStyle(3);
+  line->SetLineColor(kMagenta+1);
+
+  line->DrawLineNDC(0.18, exppos+lgap, 0.22, exppos+lgap);
+  line->DrawLineNDC(0.18, exppos-lgap, 0.22, exppos-lgap);
+
+  l.DrawLatex(0.23, exppos-expobsgap,"observed");
+  line->SetLineColor(kBlack);
+  line->SetLineWidth(2);
+  line->SetLineStyle(1);
+  line->DrawLineNDC(0.18, exppos-expobsgap, 0.22, exppos-expobsgap);
+
+  }
+  if(ptype == kT2bW){
+    double exppos = 0.25;
+     l.DrawLatex(0.23, exppos,"expected #pm 1 #sigma");
+  line->SetLineColor(kMagenta);
+  line->SetLineWidth(2);
+  line->SetLineStyle(1);
+  line->DrawLineNDC(0.18, exppos, 0.22, exppos);
+  line->SetLineStyle(3);
+  line->SetLineColor(kMagenta+1);
+
+  line->DrawLineNDC(0.18, exppos+lgap, 0.22, exppos+lgap);
+  line->DrawLineNDC(0.18, exppos-lgap, 0.22, exppos-lgap);
+
+  l.DrawLatex(0.23, exppos-expobsgap,"observed");
+  line->SetLineColor(kBlack);
+  line->SetLineWidth(2);
+  line->SetLineStyle(1);
+  line->DrawLineNDC(0.18, exppos-expobsgap, 0.22, exppos-expobsgap);
+
+  }
+
+  else if(ptype == kHN2C1){
+	double exppos = 0.76;
+ 	double xpos =0.5;
+
+     l.DrawLatex(xpos+xlinetotext, exppos,"expected #pm 1 #sigma");
+  line->SetLineColor(kMagenta);
+  line->SetLineWidth(2);
+  line->SetLineStyle(1);
+  line->DrawLineNDC(xpos, exppos, xpos+xlgap, exppos);
+  line->SetLineStyle(3);
+  line->SetLineColor(kMagenta+1);
+  line->DrawLineNDC(xpos, exppos+lgap, xpos+xlgap, exppos+lgap);
+  line->DrawLineNDC(xpos, exppos-lgap,xpos+xlgap, exppos-lgap);
+
+  l.DrawLatex(xpos+xlinetotext, exppos-expobsgap,"observed");
+  line->SetLineColor(kBlack);
+  line->SetLineWidth(2);
+  line->SetLineStyle(1);
+  line->DrawLineNDC(xpos, exppos-expobsgap, xpos+xlgap, exppos-expobsgap);
+	
+  }
+  else if(ptype == kTChiWW){
+        double exppos = 0.76;
+        double xpos =0.5;
+
+     l.DrawLatex(xpos+xlinetotext, exppos,"expected #pm 1 #sigma");
+  line->SetLineColor(kMagenta);
+  line->SetLineWidth(2);
+  line->SetLineStyle(1);
+  line->DrawLineNDC(xpos, exppos, xpos+xlgap, exppos);
+  line->SetLineStyle(3);
+  line->SetLineColor(kMagenta+1);
+  line->DrawLineNDC(xpos, exppos+lgap, xpos+xlgap, exppos+lgap);
+  line->DrawLineNDC(xpos, exppos-lgap,xpos+xlgap, exppos-lgap);
+
+  l.DrawLatex(xpos+xlinetotext, exppos-expobsgap,"observed");
+  line->SetLineColor(kBlack);
+  line->SetLineWidth(2);
+  line->SetLineStyle(1);
+  line->DrawLineNDC(xpos, exppos-expobsgap, xpos+xlgap, exppos-expobsgap);
+
+  }
+  else if(ptype == kTSlSnu){
+        double exppos = 0.7;
+        double xpos =0.54;
+
+     l.DrawLatex(xpos+xlinetotext, exppos,"expected #pm 1 #sigma");
+  line->SetLineColor(kMagenta);
+  line->SetLineWidth(2);
+  line->SetLineStyle(1);
+   
+  line->DrawLineNDC(xpos, exppos, xpos+xlgap, exppos);
+  line->SetLineStyle(3);
+  line->SetLineColor(kMagenta+1);
+  line->DrawLineNDC(xpos, exppos+lgap, xpos+xlgap, exppos+lgap);
+  line->DrawLineNDC(xpos, exppos-lgap,xpos+xlgap, exppos-lgap);
+
+  l.DrawLatex(xpos+xlinetotext, exppos-expobsgap,"observed");
+  line->SetLineColor(kBlack);
+  line->SetLineWidth(2);
+  line->SetLineStyle(1);
+  line->DrawLineNDC(xpos, exppos-expobsgap, xpos+xlgap, exppos-expobsgap);
+
+  }
+  else if(ptype == kT2cc){
+    double exppos = 0.7;
+     l.DrawLatex(0.23, exppos,"expected #pm 1 #sigma");
+  line->SetLineColor(kMagenta);
+  line->SetLineWidth(2);
+  line->SetLineStyle(1);
+  line->DrawLineNDC(0.18, exppos, 0.22, exppos);
+  line->SetLineStyle(3);
+  line->SetLineColor(kMagenta+1);
+  line->DrawLineNDC(0.18, exppos+lgap, 0.22, exppos+lgap);
+  line->DrawLineNDC(0.18, exppos-lgap, 0.22, exppos-lgap);
+
+  l.DrawLatex(0.23, exppos-expobsgap,"observed");
+  line->SetLineColor(kBlack);
+  line->SetLineWidth(2);
+  line->SetLineStyle(1);
+  line->DrawLineNDC(0.18, exppos-expobsgap, 0.22, exppos-expobsgap);
+
+  }
+
+  else{
+
+  l.DrawLatex(0.23, 0.83,"expected #pm 1 #sigma");
+  line->SetLineColor(kMagenta);
   line->SetLineWidth(2);
   line->SetLineStyle(1);
   line->DrawLineNDC(0.18, 0.83, 0.22, 0.83);
   line->SetLineStyle(3);
+  line->SetLineColor(kMagenta+1);
   line->DrawLineNDC(0.18, 0.842, 0.22, 0.842);
   line->DrawLineNDC(0.18, 0.818, 0.22, 0.818);
   
@@ -548,14 +707,15 @@ void myParseLimitJSON(const string& json, bool inclObs = false, PlotType ptype =
   line->SetLineWidth(2);
   line->SetLineStyle(1);
   line->DrawLineNDC(0.18, 0.78, 0.22, 0.78);
- 
+} 
   TFile* out = new TFile(outfile.c_str(),"RECREATE");
   out->WriteTObject(can_MC);
   out->WriteTObject(can_dM);
-  out->WriteTObject(hist_exp_dM);
+  out->WriteTObject(hist_exp_dM,"h2d");
   out->WriteTObject(gr_exp_dM,"gr_mid");
   out->WriteTObject(gr_exp_dM_up,"gr_up");
   out->WriteTObject(gr_exp_dM_dn,"gr_dn");
+  out->WriteTObject(gr_exp_dM_obs,"gr_obs");
   out->Close();
  
 }
@@ -674,6 +834,8 @@ TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist, PlotType ptype){
       xsec = g_Xsec.GetXsec_SMS("T2cc", MP);   
     if(ptype == kTChiWW)
       xsec = g_Xsec.GetXsec_SMS("TChipmWW",MP);
+    if(ptype == kTSlSnu)
+      xsec = g_Xsec.GetXsec_SMS("TChipmSlepSnu",MP);
 
     for(int y = 0; y < Ny; y++){
       if(hist->GetBinContent(x+1,y+1) > 0.){
@@ -703,6 +865,10 @@ TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist, PlotType ptype){
   hist->GetZaxis()->SetLabelFont(42);
   hist->GetZaxis()->SetLabelSize(0.045);
   hist->GetZaxis()->SetTitle("95% C.L. cross-section U.L. [fb]");
+  if(ptype == kTSlSnu){
+	hist->GetYaxis()->SetTitleOffset(1.23);
+	 hist->SetMinimum(10);
+  }
   hist->Draw("COLZ");
 
   TLatex l;
@@ -754,6 +920,13 @@ TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist, PlotType ptype){
     SMS = "pp #rightarrow #tilde{#chi}_{1}^{#pm} #tilde{#chi}_{1}^{#mp}; ";
     SMS += "#tilde{#chi}_{1}^{#pm} #rightarrow W*#tilde{#chi}_{1}^{0}";
  }
+ if(ptype == kTSlSnu){
+    SMS = "pp #rightarrow #tilde{#chi}_{2}^{0} #tilde{#chi}_{1}^{#pm}; ";
+    SMS += "#tilde{#chi}_{2}^{0} #rightarrow #tilde{#it{l}} #it{l}; ";
+    SMS += "#tilde{#chi}_{1}^{#pm} #rightarrow #tilde{#nu} #it{l}; ";
+    SMS += "#tilde{#it{l}} #rightarrow #it{l} #tilde{#chi}_{1}^{0}; ";
+    SMS += "#tilde{#nu} #rightarrow #it{#nu} #tilde{#chi}_{1}^{0}; ";
+ }
 
   l.SetTextSize(0.035);
   l.SetTextFont(42);
@@ -764,35 +937,52 @@ TCanvas* Plot2DHist_MCvMP(const string& name, TH2D* hist, PlotType ptype){
 
 TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
 //gSystem->Load("/home/t3-ku/mlazarov/Ewkinos/CMSSW_10_6_5/src/KUEWKinoAnalysis/lib/libKUEWKino.so");
+  gStyle->SetPalette(kViridis);
   TCanvas* can = (TCanvas*) new TCanvas(name.c_str(),name.c_str(),700.,600);
 
+  gStyle->SetPalette(kViridis);
   string xlabel = "m_{P} [GeV]";
   string ylabel = "m_{P} - M_{ #tilde{#chi}^{0}_{1}} [GeV]";
 
-  if(ptype == kTChiWZ){
-    xlabel = "m_{#tilde{#chi}^{#pm}_{1}} [GeV]";
-    ylabel = "m_{#tilde{#chi}^{#pm}_{1}} - m_{#tilde{#chi}^{0}_{1}} [GeV]";
+  if(ptype == kTChiWZ || ptype == kHN2C1){
+    xlabel = "m_{( #tilde{#chi}^{#pm}_{1}, #tilde{#chi}^{0}_{2})} [GeV]";
+    //ylabel = "m_{#tilde{#chi}^{#pm}_{1}} - m_{#tilde{#chi}^{0}_{1}} [GeV]";
+    ylabel = "#Delta m(#tilde{#chi}^{#pm}_{1}, #tilde{#chi}^{0}_{1}) [GeV]"; 
   }
   if(ptype == kT2tt || ptype == kT2bW){
     xlabel = "m_{ #tilde{t}} [GeV]";
-    ylabel = "m_{ #tilde{t}} - m_{#tilde{#chi}^{0}_{1}} [GeV]";
+    //ylabel = "m_{ #tilde{t}} - m_{#tilde{#chi}^{0}_{1}} [GeV]";
+    ylabel = "#Delta m(#tilde{t}, #tilde{#chi}^{0}_{1}) [GeV]";
   }
   if(ptype == kT2bb){
     xlabel = "m_{ #tilde{b}} [GeV]";
-    ylabel = "m_{ #tilde{b}} - m_{#tilde{#chi}^{0}_{1}} [GeV]";
+    //ylabel = "m_{ #tilde{b}} - m_{#tilde{#chi}^{0}_{1}} [GeV]";
+    ylabel = "#Delta m(#tilde{b}, m_{#tilde{#chi}^{0}_{1}) [GeV]";
   }
     if(ptype == kT2cc){
     xlabel = "m_{ #tilde{t}} [GeV]";
-    ylabel = "m_{#tilde{#chi}^{0}_{1}} [GeV]";
+    //ylabel = "m_{#tilde{#chi}^{0}_{1}} [GeV]";
+    ylabel = "#Delta m(#tilde{t}, #tilde{#chi}^{0}_{1}) [GeV]";
   }
   if(ptype == kTSlSl){
     xlabel = "m_{ #tilde{#it{l}}} [GeV]";
-    ylabel = "m_{#tilde{#it{l}}} - m_{#tilde{#chi}^{0}_{1}} [GeV]";
+   // ylabel = "m_{#tilde{#it{l}}} - m_{#tilde{#chi}^{0}_{1}} [GeV]";
+   ylabel = "#Delta m( ) [GeV]";
+
  }
   if(ptype == kTChiWW){
     xlabel = "m_{#tilde{#chi}^{#pm}_{1}} [GeV]";
-    ylabel = "m_{#tilde{#chi}^{#pm}_{1}} - m_{#tilde{#chi}^{0}_{1}} [GeV]";
+    ylabel = "#Delta m(#tilde{#chi}^{#pm}_{1}, #tilde{#chi}^{0}_{1}) [GeV]";
+//    ylabel = "#Delta m( ) [GeV]";
+
  }
+  if(ptype == kTSlSnu){
+    //xlabel = "m_{(#tilde{#chi}^{0}_{2}, #tilde{#chi}^{#pm}_{1} )} [GeV]";
+    //ylabel = "#Delta m(#tilde{#chi}^{#pm}_{1}, #tilde{#chi}^{0}_{1}) [GeV]";
+    xlabel = "m_{#tilde{#chi}^{#pm}_{1}} [GeV]";
+    ylabel = "#Delta m(#tilde{#chi}^{#pm}_{1}, #tilde{#chi}^{0}_{1}) [GeV]";
+
+  }
   
   can->SetLeftMargin(0.15);
   can->SetRightMargin(0.2);
@@ -824,7 +1014,11 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
     if(ptype == kT2cc)
       xsec = g_Xsec.GetXsec_SMS("T2cc", MP);
     if(ptype == kTChiWW)
-      xsec = g_Xsec.GetXsec_SMS("TChipmWW", MP);   
+      xsec = g_Xsec.GetXsec_SMS("TChipmWW", MP);  
+    if(ptype == kHN2C1)
+      xsec = g_Xsec.GetXsec_SMS("HinoN2C1", MP);
+    if(ptype == kTSlSnu)
+      xsec = g_Xsec.GetXsec_SMS("TChipmSlepSnu",MP); 
  
     for(int y = 0; y < Ny; y++){
       if(hist->GetBinContent(x+1,y+1) > 0.){
@@ -853,8 +1047,55 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
   hist->GetZaxis()->SetTitleOffset(1.15);
   hist->GetZaxis()->SetLabelFont(42);
   hist->GetZaxis()->SetLabelSize(0.045);
-  hist->GetZaxis()->SetTitle("95% C.L. cross-section U.L. [fb]");
+//  hist->GetZaxis()->SetTitle("95% C.L. cross-section U.L. [fb]");
+hist->GetZaxis()->SetTitle("95% CL upper limit [fb]");
+
+ // hist->GetZaxis()->SetTitle("95% C.L. #sigma #times BF U.L. [fb]");
+  if(ptype == kTChiWZ){
+	hist->GetXaxis()->SetRangeUser(100.,430.);
+	hist->GetYaxis()->SetRangeUser(3.,150.);
+//	hist->SetMaximum(5000.);
+  //      hist->SetMinimum(50.);
+  }
+  if(ptype == kHN2C1){
+	hist->GetXaxis()->SetRangeUser(100.,275);
+        hist->GetYaxis()->SetRangeUser(3.,140.);
+  //      hist->SetMaximum(5000.);
+        hist->SetMinimum(10.);
+  }
+  if(ptype == kT2tt){
+	hist->GetXaxis()->SetRangeUser(500.,875.);
+        hist->GetYaxis()->SetRangeUser(6.,80.);
+  //      hist->SetMaximum(1000.);
+        hist->SetMinimum(9.);
+  }
+  if(ptype == kTChiWW){
+	hist->GetXaxis()->SetRangeUser(100.,350.);
+        hist->GetYaxis()->SetRangeUser(5.,150.);	 
+	hist->SetMinimum(9.); 
+  }
+  if(ptype == kT2cc){
+	hist->GetXaxis()->SetRangeUser(200.,800.);
+        hist->GetYaxis()->SetRangeUser(10.,80.);
+	 hist->SetMinimum(1);
+        hist->SetMaximum(10000);
+  }
+  if(ptype == kT2bW){
+	hist->GetXaxis()->SetRangeUser(251.,775.);
+        hist->GetYaxis()->SetRangeUser(10.,170.);
+	 hist->SetMinimum(1);
+	hist->SetMaximum(10000);
+  }
+  if(ptype == kTSlSnu){
+	 hist->GetXaxis()->SetRangeUser(100.,695.);
+        hist->GetYaxis()->SetRangeUser(55.,400.);
+	hist->GetYaxis()->SetTitleOffset(1.23);
+         hist->SetMinimum(5);
+
+  }	
   hist->Draw("COLZ");
+   
+
 
   TLatex l;
   l.SetTextFont(42);
@@ -871,23 +1112,43 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
   l.SetTextAlign(11);
   l.SetTextSize(0.04);
   l.SetTextFont(42);
-  l.DrawLatex(0.16, 0.95,"#bf{#it{CMS}} work-in-progress");
+  l.DrawLatex(0.16, 0.95,"#bf{CMS}");
+  //l.DrawLatex(0.16, 0.95,"#bf{CMS} #it{Preliminary}");
   l.SetTextSize(0.05);
 
   // SMS info
   string SMS;
+  string SMS2="";
+  string SMS3="";
+  string SMS4="";
   if(ptype == kTChiWZ){
-    SMS =  "pp #rightarrow #tilde{#chi}_{2}^{0} #tilde{#chi}_{1}^{#pm}; ";
-    SMS += "#tilde{#chi}_{2}^{0} #rightarrow Z*#tilde{#chi}_{1}^{0}, ";
-    SMS += "#tilde{#chi}_{1}^{#pm} #rightarrow W*#tilde{#chi}_{1}^{0}";
+    SMS =  "pp #rightarrow #tilde{#chi}_{1}^{#pm} #tilde{#chi}_{2}^{0} ";
+    
+    SMS2 = "#tilde{#chi}_{1}^{#pm} #rightarrow W*#tilde{#chi}_{1}^{0},  ";
+    SMS2 += "#tilde{#chi}_{2}^{0} #rightarrow Z*#tilde{#chi}_{1}^{0}  ";
+    //SMS2 += "#tilde{#chi}_{1}^{#pm} #rightarrow W*#tilde{#chi}_{1}^{0}";
+    SMS3 = "(Wino)";
+    SMS4 = "m_{#tilde{#chi}_{1}^{0}} < 0";
+  }
+  if(ptype == kHN2C1){
+    SMS =  "pp #rightarrow #tilde{#chi}_{1}^{#pm} #tilde{#chi}_{2}^{0} ";
+    
+    SMS2 = "#tilde{#chi}_{1}^{#pm} #rightarrow W*#tilde{#chi}_{1}^{0},  ";
+    SMS2 += "#tilde{#chi}_{2}^{0} #rightarrow Z*#tilde{#chi}_{1}^{0}";
+  //  SMS2 += "#tilde{#chi}_{1}^{#pm} #rightarrow W*#tilde{#chi}_{1}^{0}";
+    SMS3 = "(Higgsino)";
+    SMS4 = "m_{#tilde{#chi}_{1}^{0}} < 0";
+
+
   }
   if(ptype == kT2tt){
-    SMS =  "pp #rightarrow #tilde{t} #tilde{t}; ";
+    SMS =  "pp #rightarrow #tilde{t} #bar{#tilde{t}}; ";
     SMS += "#tilde{t} #rightarrow t #tilde{#chi}_{1}^{0}";
   }
   if(ptype == kT2bW){
-    SMS =  "pp #rightarrow #tilde{t} #tilde{t}; ";
+    SMS =  "pp #rightarrow #tilde{t} #bar{#tilde{t}}; ";
     SMS += "#tilde{t} #rightarrow b #tilde{#chi}_{1}^{#pm}(W #tilde{#chi}_{1}^{0})";
+    SMS4 = "m_{#tilde{#chi}_{1}^{0}} < 0";
   }
   if(ptype == kT2bb){
     SMS =  "pp #rightarrow #tilde{b} #tilde{b}; ";
@@ -898,19 +1159,84 @@ TCanvas* Plot2DHist_dMvMP(const string& name, TH2D* hist, PlotType ptype){
     SMS += "#tilde{#it{l}}_{L/R} #rightarrow #it{l} #tilde{#chi}_{1}^{0}";
   }
     if(ptype == kT2cc){
-    SMS = "pp #rightarrow #tilde{t} #tilde{t}; ";
+    SMS = "pp #rightarrow #tilde{t} #bar{#tilde{t}}; ";
     SMS += "#tilde{t} #rightarrow c #tilde{#chi}_{1}^{0}";
  }
  if(ptype == kTChiWW){
-    SMS = "pp #rightarrow #tilde{#chi}_{1}^{#pm}  #tilde{#chi}_{1}^{#mp}; ";
-    SMS += "#tilde{#chi}_{1}^{#pm} #rightarrow W*#tilde{#chi}_{1}^{0}";
+    SMS = "pp #rightarrow #tilde{#chi}_{1}^{+}  #tilde{#chi}_{1}^{-} ";
+    SMS2 = "#tilde{#chi}_{1}^{#pm} #rightarrow W*#tilde{#chi}_{1}^{0}";
+    SMS3 = "(Wino)";
+    SMS4 = "m_{#tilde{#chi}_{1}^{0}} < 0";
  }
+ if(ptype == kTSlSnu){
+   SMS = "pp #rightarrow #tilde{#chi}_{1}^{+} #tilde{#chi}_{1}^{-}  (Wino)";
+    SMS2 = "#tilde{#chi}_{1}^{#pm} #rightarrow #tilde{#it{l}} #it{#nu},  ";
+    SMS3 = "#tilde{#chi}_{1}^{#pm} #rightarrow #tilde{#nu} #it{l},  ";
+    SMS2 += "#tilde{#it{l}} #rightarrow #it{l} #tilde{#chi}_{1}^{0}";
+    SMS3 += "#tilde{#nu} #rightarrow #it{#nu} #tilde{#chi}_{1}^{0}";
+    SMS4 = "m_{#tilde{#chi}_{1}^{0}} < 0";
+ }
+ 
 
 
   l.SetTextSize(0.035);
   l.SetTextFont(42);
-  l.DrawLatex(0.18, 0.87,SMS.c_str());
-  
+ // l.SetTextColor(kWhite);
+  if( ptype == kTChiWZ ){
+	l.DrawLatex(0.18,0.36, SMS.c_str());
+	l.DrawLatex(0.33,0.36, SMS3.c_str());
+	l.DrawLatex(0.18,0.30, SMS2.c_str());
+	l.SetTextAngle(65);
+        l.SetTextSize(0.03);
+        l.SetTextColor(kGray+2);
+        l.DrawLatex(0.18,0.81, SMS4.c_str());
+
+  }
+  else if( ptype == kT2bW ){
+        l.DrawLatex(0.18,0.30, SMS.c_str());
+        l.SetTextAngle(65);
+        l.SetTextSize(0.03);
+        l.SetTextColor(kGray+2);
+        l.DrawLatex(0.23,0.74, SMS4.c_str());
+
+  }
+  else if( ptype == kTChiWW){
+     l.DrawLatex(0.5,0.87, SMS.c_str());
+        l.DrawLatex(0.65,0.87, SMS3.c_str());
+        l.DrawLatex(0.5,0.81, SMS2.c_str());
+	 l.SetTextAngle(55);
+        l.SetTextSize(0.03);
+        l.SetTextColor(kGray+2);
+        l.DrawLatex(0.19,0.81, SMS4.c_str());
+
+
+  }
+  else if( ptype == kHN2C1 ){
+	l.DrawLatex(0.5,0.87, SMS.c_str());
+        l.DrawLatex(0.65,0.87, SMS3.c_str());
+        l.DrawLatex(0.5,0.81, SMS2.c_str());	
+        l.SetTextAngle(50);
+        l.SetTextSize(0.03);
+        l.SetTextColor(kGray+2);
+        l.DrawLatex(0.19,0.8, SMS4.c_str());
+
+  }
+  else if( ptype == kTSlSnu ){
+        l.DrawLatex(0.54,0.87, SMS.c_str());
+        l.DrawLatex(0.54,0.75, SMS3.c_str());
+        l.DrawLatex(0.54,0.81, SMS2.c_str());
+	l.SetTextAngle(55);
+	l.SetTextSize(0.03);
+	l.SetTextColor(kGray+2);
+	l.DrawLatex(0.28,0.6, SMS4.c_str());
+  }
+  else if( ptype == kT2cc ){
+	l.DrawLatex(0.18,0.75, SMS.c_str());
+  }
+  else{
+    l.DrawLatex(0.18, 0.87,SMS.c_str());
+  }
+  //if(SMS2 != "") l.DrawLatex(0.18,0.85,SMS2.c_str());
   return can;
 }
 

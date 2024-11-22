@@ -56,8 +56,8 @@ public:
   void AddSJetLeptonQualityNormSys(ch::CombineHarvester& cb, ProcessList& processes);
   void AddLeptonCategoryNormSys(ch::CombineHarvester& cb, ProcessList& processes);
 
-  void AddShapeSysAsNorm(const Systematic& sys, ch::CombineHarvester& cb, FitReader& FIT);
-
+ void AddShapeSysAsNorm(const Systematic& sys, ch::CombineHarvester& cb, FitReader& FIT, ProcessList& plist, std::string name="", double scale=1, ProcessType procSet=kBkg);
+ void AddCombinedShapeSysAsNorm(const Systematic& sys, ch::CombineHarvester& cb, FitReader& FIT, ProcessList& plist, std::string name="", double scale=1, ProcessType ptype=kBkg);
   void AddLNormSys(const string& label, VS& procs, ch::CombineHarvester& cb, ProcessList& processes, std::vector<std::string> Nlep, double errorInit);
   void AddNormHierarchy( SystDict& sm, VS& proc, ch::CombineHarvester& cb, ProcessList& processes, bool applyToSig=false);
   

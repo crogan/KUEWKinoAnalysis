@@ -146,8 +146,8 @@ void AnalysisBase<Base>::AddPUFolder(const string& pufold){
 }
 
 template <class Base>
-void AnalysisBase<Base>::AddBtagFolder(const string& btagfold){
-  m_BtagSFTool.BuildMap(btagfold);
+void AnalysisBase<Base>::AddBtagFolder(const string& btagfold, const string& proc_rootfile, int year){
+  m_BtagSFTool.BuildMap(btagfold, proc_rootfile, year);
 }
 
 template <class Base>
