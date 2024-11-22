@@ -22,7 +22,17 @@
 FitReader::FitReader(const string& inputfile,
 		     const string& otherfile,
 		     const string& otherfold)
-  : m_File(inputfile.c_str(), "READ") {
+  : m_File(inputfile.c_str(), "READ"),
+    cms1(8001, 0.24705882352941178, 0.5647058823529412, 0.8549019607843137),  //blue
+    cms2(8002, 1., 0.6627450980392157, 0.054901960784313725),                 // gold
+    cms3(8003, 0.7411764705882353, 0.12156862745098039, 0.00392156862745098), //red
+    cms4(8004, 0.5803921568627451, 0.6431372549019608, 0.6352941176470588),   // grey
+    cms5(8005, 0.5137254901960784, 0.17647058823529413, 0.7137254901960784),  // purple
+    cms6(8006, 0.6627450980392157, 0.4196078431372549, 0.34901960784313724),  // brown
+    cms7(8007, 0.9058823529411765, 0.38823529411764707, 0.),                  // orange
+    cms8(8008, 0.7254901960784313, 0.6745098039215687, 0.4392156862745098),   // tan
+    cms9(8009, 0.44313725490196076, 0.4588235294117647, 0.5058823529411764),  // charcoal
+    cms10(8010, 0.5725490196078431, 0.8549019607843137, 0.8666666666666667) { // light blue
 
   
   if(otherfile != ""){
@@ -58,7 +68,12 @@ void FitReader::ReadProcesses(){
   for(int i = 0; i < N; i++){
     tree->GetEntry(i);
     Process p = m_ProcBranch.GetProcess();
+
   //  std::cout<<"assessing subproc "<<p.Name()<<" ";
+
+
+    //std::cout << p.Name() << endl;
+
     if((p.Name().find("Up") != std::string::npos) ||
        (p.Name().find("Down") != std::string::npos)){
       ProcSys += p;
@@ -153,7 +168,7 @@ double FitReader::Integral(const Category&   cat,
   const TH1D* hist = GetHistogram(cat, proc, sys);
   if(!hist)
     return 0.;
-//cout << "Integral end " << hist->Integral() << endl;
+  //cout << "Integral end " << hist->Integral() << endl;
   return hist->Integral();
 }
 
@@ -205,7 +220,9 @@ TH1D* FitReader::GetAddedHist(const string&       name,
     for(int c = 0; c < Nc; c++){
       if(!IsFilled(cats[c], procs[p], sys))
 	continue;
-	//if(procs[p].Name() != "total_background" && name.find("plothist_0_") != std::string::npos && p == 0) cout << cats[c].Label()+"_"+cats[c].GetLabel() << " " << procs[p].Name() << endl;  
+      //if(procs[p].Name() != "total_background" && name.find("plothist_0_") != std::string::npos && p == 0) 
+      //if(procs[p].Name() == "QCD" && name.find("plothist_0_") != std::string::npos && p == 0)
+      //cout << cats[c].Label()+"_"+cats[c].GetLabel() << " " << procs[p].Name() << endl;  
   if(!hist){
 	hist = (TH1D*) GetHistogram(cats[c], procs[p], sys)->Clone(name.c_str());
       } else {
@@ -267,12 +284,14 @@ vector<double> FitReader::GetAddedHistValues(const CategoryList& cats,
 const TH1D* FitReader::GetHistogram(const Category&   cat,
 				    const Process&    proc,
 				    const Systematic& sys) const {
-  if(!IsFilled(cat, proc, sys))
+  if(!IsFilled(cat, proc, sys)){
     return nullptr;
-  if(!sys){
+  }
+  if(!sys) {
+    //cout << proc.Name() << endl;
     return m_ProcHist[proc][cat];
   } else {
-//cout << "GetHistogram end" << endl;
+    //cout << "GetHistogram end" << endl;
     return (sys.IsUp() ? m_ProcHistSys[proc][sys][cat].first :
 	    m_ProcHistSys[proc][sys][cat].second);
   }
@@ -297,18 +316,76 @@ const TH2D* FitReader::GetHistogram2D(const Category&   cat,
   }
 }
 
+vector<double> FitReader::IntegrateMperp(const FitBin fitBin, const vector<double> histVec) const{
+  int NR = fitBin.NRBins();
+  int index = 0;
+  vector<double> results;
+
+  for(int r = 0; r < NR; r++){
+    int NM = fitBin.NMBins(r);
+    double sum = 0;
+    for(int m = 0; m < NM; m++){
+      sum += histVec[index+m];
+    }
+    index += NM;
+    results.push_back(sum);
+  }
+
+  return results;
+}
+
+TH1D* FitReader::IntegrateMperp(const TString& name, const FitBin fitBin, TH1D* hist) const{
+
+  if(!hist){
+    //cout << "no histogram" << endl;
+    return nullptr;
+
+  }
+
+  int NR = fitBin.NRBins();
+  int index = 0;
+  int bins = hist->GetNbinsX();
+
+  TH1D* results = new TH1D(name, name, NR,0.,1.);
+
+  for(int r = 0; r < NR; r++){
+    int NM = fitBin.NMBins(r);
+    double sum = 0;
+    for(int m = 0; m < NM; m++){
+      sum += hist->GetBinContent(index+m+1);
+    }
+    index += NM;
+    results->SetBinContent(r+1,sum);
+  }
+
+  delete hist;
+  return results;
+}
+
+double FitReader::CalculateZbi(double Nsig, double Nbkg, double deltaNbkg){
+  double Nobs = Nsig+Nbkg;
+  double tau = 1./Nbkg/(deltaNbkg*deltaNbkg);
+  double aux = Nbkg*tau;
+  double Pvalue = TMath::BetaIncomplete(1./(1.+tau),Nobs,aux+1.);
+  double sigma = sqrt(2.)*TMath::ErfcInverse(Pvalue*2);
+
+  return (isnan(sigma))?0:sigma;
+
+}
+
 bool FitReader::IsFilled(const Category&   cat,
 			 const Process&    proc,
 			 const Systematic& sys) const {
-//cout << "IsFilled" << endl;
+  //cout << "IsFilled" << endl;
   if(!sys){
-    if(m_ProcHist.count(proc) == 0)
+    if(m_ProcHist.count(proc) == 0){
       m_ProcHist[proc] = map<Category,TH1D*>();
+    }
     if(m_ProcHist[proc].count(cat) == 0){
       string shist = cat.Label()+"_"+cat.GetLabel()+"/"+proc.Name();
       if(!m_FilePtr){ //if there is no file pointer, just take histogram from original file
 	m_ProcHist[proc][cat] = (TH1D*) m_File.Get(shist.c_str());
-      } else {
+      } else { 
 	if(proc.Type() == kData){ //if there is another file, and the histogram is data, get the info from the TGraphAsymmErrors
 	  TGraphAsymmErrors* gr = (TGraphAsymmErrors*)m_FilePtr->Get((m_FileFold+cat.Label()+"_"+cat.GetLabel()+"/data").c_str());
 	  if(gr == nullptr){ 
@@ -322,6 +399,8 @@ bool FitReader::IsFilled(const Category&   cat,
 	      m_ProcHist[proc][cat]->SetBinError(i+1,gr->GetErrorY(i));
 	    }
 	  }
+	} else if (proc.Type() == kSig){
+	  m_ProcHist[proc][cat] = (TH1D*) m_File.Get(shist.c_str());
 	} else { //else if there is another file but it's not data, just get the histogram	  
 	  m_ProcHist[proc][cat] = (TH1D*) m_FilePtr->Get((m_FileFold+shist).c_str());
 	}
@@ -331,21 +410,21 @@ bool FitReader::IsFilled(const Category&   cat,
     
   //else if there is a systematic in the function args
   } else {
-//cout << "do IsFilled w sys" << endl;
+    //cout << "do IsFilled w sys" << endl;
     if(m_ProcHistSys.count(proc) == 0)
       m_ProcHistSys[proc] = map<Systematic,map<Category,pair<TH1D*,TH1D*> > >();
-//cout << "proc count: " << m_ProcHistSys.count(proc) << endl;   
- if(m_ProcHistSys[proc].count(sys) == 0)
+    //cout << "proc count: " << m_ProcHistSys.count(proc) << endl;   
+    if(m_ProcHistSys[proc].count(sys) == 0)
       m_ProcHistSys[proc][sys] = map<Category,pair<TH1D*,TH1D*> >();
-//cout << "sys count: " << m_ProcHistSys[proc].count(sys) << endl;   
-//cout << "cat count: " << m_ProcHistSys[proc][sys].count(cat) << endl;   
+    //cout << "sys count: " << m_ProcHistSys[proc].count(sys) << endl;   
+    //cout << "cat count: " << m_ProcHistSys[proc][sys].count(cat) << endl;   
     if(m_ProcHistSys[proc][sys].count(cat) == 0){
       m_ProcHistSys[proc][sys][cat] = pair<TH1D*,TH1D*>(nullptr,nullptr);
-       
+      
       string label = cat.Label()+"_"+cat.GetLabel();
       string shistUp   = label+"/"+proc.Name()+"_"+sys.Label()+"Up";
       string shistDown = label+"/"+proc.Name()+"_"+sys.Label()+"Down";
-   m_ProcHistSys[proc][sys][cat].first  = (TH1D*) m_File.Get(shistUp.c_str());
+      m_ProcHistSys[proc][sys][cat].first  = (TH1D*) m_File.Get(shistUp.c_str());
       m_ProcHistSys[proc][sys][cat].second = (TH1D*) m_File.Get(shistDown.c_str());
     }
 
@@ -378,7 +457,6 @@ bool FitReader::IsThere(const Category&   cat,
       } else
 	return false;
  //   }
-
     return m_ProcHist[proc][cat];
     
   } else {

@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
-import os, sys, commands, time
+import os, sys, time
+from colorama import Fore, Back, Style
 
 # Example submission: 
 #  python scripts/condor_submit_nano_connect_ntuples.py -split 10 -list samples/NANO/Lists/Fall17_102X.list --sys --slim --csv 
@@ -17,9 +18,11 @@ jobEXE      = "execute_script.sh"
 EXE         = "MakeReducedNtuple_NANO.x"
 RESTFRAMES  = './scripts/setup_RestFrames_connect.sh'
 CMSSW_SETUP = './scripts/cmssw_setup_connect.sh'
+#CMSSW_SETUP = './scripts/cmssw_setup_connect_el9.sh'
 TREE        = "Events"
 USER        = os.environ['USER']
 OUT_BASE    = "/ospool/cms-user/"+USER+"/NTUPLES/Processing"
+#OUT_BASE    = "/uscms/home/"+USER+"/nobackup/NTUPLES/Processing"
 LIST        = "default.list"
 QUEUE       = ""
 SPLIT       = 1
@@ -52,19 +55,14 @@ def create_filelist(rootlist, dataset, filetag):
 
     return listlist
 
-def write_sh_single(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
+def write_sh_single(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n,NAME):
     srcfile = srcfile.replace('.submit','_single.submit')
     ofile = ofile.replace('_$(ItemIndex)_$(Step)','_0_0')
     outfile = outfile.replace('_$(ItemIndex)_$(Step)','_0_0')
     errfile = errfile.replace('_$(ItemIndex)_$(Step)','_0_0')
     logfile = logfile.replace('_$(ItemIndex)_$(Step)','_0_0')
     ifile = ifile.replace('_list','_0')
-    if DO_SMS == 1:
-        ifile = ifile.replace(pwd+'/'+filetag+'_SMS','./config')
-    elif DO_DATA == 1:
-        ifile = ifile.replace(pwd+'/'+filetag+'_Data','./config')
-    else:
-        ifile = ifile.replace(pwd+'/'+filetag,'./config')
+    ifile = './config/list/'+(ifile.replace(pwd,'').split("/")[-2]+'/'+ifile.replace(pwd,'').split("/")[-1])
 
     fsrc = open(srcfile,'w')
     fsrc.write('# Note: For only submitting 1 job! \n')
@@ -113,8 +111,14 @@ def write_sh_single(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,
     #fsrc.write('priority = 10 \n')
     fsrc.write('+RequiresCVMFS = True \n')
     #fsrc.write('+RequiresSharedFS = True \n')
-
-    transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/ospool/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
+    if USE_URL:
+        # Warning: The stash.osgconnect.net endpoint has been decommissioned.
+        # CMS connect is working on implementing an OSDF endpoint solution.
+        transfer_input = 'transfer_input_files = https://stash.osgconnect.net/cms-user/'+USER+"/"+NAME+"/"+'config.tgz,https://stash.osgconnect.net/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
+    else:
+        transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/ospool/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
+    if VERBOSE:
+        print(transfer_input)
     fsrc.write(transfer_input)
 
     fsrc.write('should_transfer_files = YES\n')
@@ -129,10 +133,17 @@ def write_sh_single(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,
     
     fsrc.write('+ProjectName="cms.org.ku"\n')
     fsrc.write('+REQUIRED_OS="rhel7"\n')
+    #fsrc.write('job_lease_duration = 3600\n')
+    fsrc.write('periodic_release = (HoldReasonCode == 12 && HoldReasonSubCode == 256 || HoldReasonCode == 13 && HoldReasonSubCode == 2 || HoldReasonCode == 12 && HoldReasonSubCode == 2 || HoldReasonCode == 26 && HoldReasonSubCode == 120 && HoldReasonCode == 3 && HoldReasonSubCode == 0)\n')
+    fsrc.write('priority = 10 \n')
+    fsrc.write('+RequiresCVMFS = True \n')
+    #fsrc.write('+RequiresSharedFS = True \n')
+    fsrc.write('Requirements = HAS_SINGULARITY == True\n')
+    fsrc.write('MY.SingularityImage = "/cvmfs/singularity.opensciencegrid.org/cmssw/cms:rhel7"\n')
     fsrc.write('queue')
     fsrc.close()
 
-def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
+def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n,NAME):
     fsrc = open(srcfile,'w')
     fsrc.write('universe = vanilla \n')
     fsrc.write('executable = '+jobEXE+" \n")
@@ -174,8 +185,14 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
     fsrc.write('log = '+loglog+" \n")
     fsrc.write('Requirements = (Machine != "red-node000.unl.edu" && Machine != "ncm*.hpc.itc.rwth-aachen.de" && Machine != "*mh-epyc7662-8.t2.ucsd.edu" && Machine != "*sdsc-88.t2.ucsd.edu")\n')
     fsrc.write('request_memory = 2 GB \n')
-
-    transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/ospool/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
+    if USE_URL:
+        # Warning: The stash.osgconnect.net endpoint has been decommissioned.
+        # CMS connect is working on implementing an OSDF endpoint solution.
+        transfer_input = 'transfer_input_files = https://stash.osgconnect.net/cms-user/'+USER+"/"+NAME+"/"+'config.tgz,https://stash.osgconnect.net/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
+    else:
+        transfer_input = 'transfer_input_files = '+TARGET+'config.tgz,/ospool/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2\n'
+    if VERBOSE:
+        print(transfer_input)
     fsrc.write(transfer_input)
 
     fsrc.write('should_transfer_files = YES\n')
@@ -190,20 +207,28 @@ def write_sh(srcfile,ifile,ofile,logfile,outfile,errfile,dataset,filetag,n):
     
     fsrc.write('+ProjectName="cms.org.ku"\n')
     fsrc.write('+REQUIRED_OS="rhel7"\n')
+    #fsrc.write('job_lease_duration = 3600\n')
+    #fsrc.write('RequestDisk = 1000000 \n')
+    fsrc.write('periodic_release = (HoldReasonCode == 12 && HoldReasonSubCode == 256 || HoldReasonCode == 13 && HoldReasonSubCode == 2 || HoldReasonCode == 12 && HoldReasonSubCode == 2 || HoldReasonCode == 26 && HoldReasonSubCode == 120 && HoldReasonCode == 3 && HoldReasonSubCode == 0)\n')
     #fsrc.write('priority = 10 \n')
     fsrc.write('+RequiresCVMFS = True \n')
     #fsrc.write('+RequiresSharedFS = True \n')
+    fsrc.write('Requirements = HAS_SINGULARITY == True\n')
+    fsrc.write('MY.SingularityImage = "/cvmfs/singularity.opensciencegrid.org/cmssw/cms:rhel7"\n')
+    #fsrc.write('priority = 10 \n')
     fsrc.write('queue '+str(n)+' from '+ifile+'\n')
     fsrc.close()
 
 if __name__ == "__main__":
     if not len(sys.argv) > 1 or '-h' in sys.argv or '--help' in sys.argv:
         print "Usage: %s [-q queue] [-tree treename] [-list listfile.list] [-split S] [--sms] [--data] [--sys] [--fastsim] [--slim] [--dry-run] [--verbose] [--count] [--csv]" % sys.argv[0]
+        #print (f"Usage: {sys.argv(0)} [-q queue] [-tree treename] [-list listfile.list] [-split S] [--sms] [--data] [--sys] [--fastsim] [--slim] [--dry-run] [--verbose] [--count] [--csv]")
         sys.exit(1)
 
     argv_pos    = 1
     DO_SMS      = 0
     DO_DATA     = 0
+    USE_URL     = 0
     DRY_RUN     = 0
     COUNT       = 0
     VERBOSE     = 0
@@ -485,8 +510,8 @@ if __name__ == "__main__":
             errfile = os.path.join(errdir, dataset+'_'+filetag, file_name.split('/')[-1])
 
             script_name = srcdir+'_'.join([dataset, filetag])+'.submit'
-            write_sh(script_name, overlist_name, file_name+'.root', logfile, outfile, errfile, dataset, filetag, SPLIT)
-            write_sh_single(script_name, overlist_name, file_name+'.root', logfile, outfile, errfile, dataset, filetag, SPLIT)
+            write_sh(script_name, overlist_name, file_name+'.root', logfile, outfile, errfile, dataset, filetag, SPLIT, NAME)
+            write_sh_single(script_name, overlist_name, file_name+'.root', logfile, outfile, errfile, dataset, filetag, SPLIT, NAME)
     
     if VERBOSE:
         print("Created area for log files")
@@ -497,6 +522,8 @@ if __name__ == "__main__":
         #print "creating tarball from: ", TARGET
         os.system("sleep 10") # sleep so copy command(s) can catch up...
         os.system("tar -C "+config+"/../ -czf "+TARGET+"/config.tgz config")
+        os.system("mkdir -p /ospool/cms-user/"+USER+"/"+NAME)
+        os.system("cp "+TARGET+"/config.tgz /ospool/cms-user/"+USER+"/"+NAME+"/config.tgz")
         if VERBOSE:
             print("Created tar ball")
 
@@ -512,7 +539,7 @@ if __name__ == "__main__":
         f_csv.write('sample,clusterid,totaljobs')
         f_csv.write('\n')
 
-    # don't submit jobs if --dry-run is used
+    # don't submit jobs if --dry-run or --count are used
     if not DRY_RUN and not COUNT:
         for f in submit_list:
             sample_handle = f.split("/")
@@ -541,7 +568,8 @@ if __name__ == "__main__":
             print "sample: {0}".format(f)
             print(" - number of root files  = {0}".format(n_root_files))
             print(" - number of jobs        = {0}".format(n_jobs))
-            if CSV:
+            # make sure that "clusterid" has been filled to avoid key error
+            if not DRY_RUN and not COUNT and CSV:
                 f_csv.write("{0}".format(f+","+input_info[f]["clusterid"].replace('.\n','')+",{0}".format(n_jobs)+'\n'))
 
     # Close csv file
@@ -561,8 +589,8 @@ if __name__ == "__main__":
     print "total condor jobs:       {0}".format(total_jobs)
     print "----------------------------"
 
-    if DRY_RUN:
-        print "The option --dry-run was used; no jobs were submitted."
+    if DRY_RUN or COUNT:
+        print("No jobs were submitted.")
     else:
-        print "Congrats... your jobs were submitted!"
+        print(Fore.GREEN + "Congrats... your jobs were submitted!" + Fore.RESET)
 

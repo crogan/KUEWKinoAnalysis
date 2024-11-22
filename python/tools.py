@@ -48,7 +48,7 @@ def writeCSV(output_file, data):
 
 # get chain from list of ROOT files
 def getChain(input_files, num_files):
-    verbose = True
+    verbose = False
     
     # use num_files as max if it is not negative
     if num_files >= 0:
@@ -67,6 +67,17 @@ def getChain(input_files, num_files):
         chain.Add(f)
     
     return chain
+
+# get a list of subdirectories in a directory
+def get_subdirectories(directory):
+    subdirectories = [d for d in os.listdir(directory) if os.path.isdir(os.path.join(directory, d))]
+    return subdirectories
+
+# count files in a directory matching a pattern
+def count_files_with_pattern(directory, pattern):
+    files = glob.glob(os.path.join(directory, pattern))
+    n_files = len(files)
+    return n_files
 
 # get list of local files
 def get_file_list(dir_):
@@ -110,10 +121,16 @@ def get_eos_file_list(path, pattern="", eosurl="root://cmseos.fnal.gov"):
 
 # eosls command using xrdfs
 def eosls(path, option="", eosurl="root://cmseos.fnal.gov"):
-    return os.popen("xrdfs %s ls %s %s" % (eosurl, option, path))
+    debug = True
+    command = "xrdfs %s ls %s %s" % (eosurl, option, path)
+    if debug:
+        print(command)
+    return os.popen(command)
 
 # eosrm command using xrdfs
 def eosrm(path, option="", eosurl="root://cmseos.fnal.gov"):
-    return os.popen("xrdfs %s rm %s %s" % (eosurl, option, path))
-
-
+    debug = True
+    command = "xrdfs %s rm %s %s" % (eosurl, option, path)
+    if debug:
+        print(command)
+    return os.popen(command)

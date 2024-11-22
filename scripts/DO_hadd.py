@@ -8,7 +8,11 @@ import subprocess
 # After hadd finishes and ready to copy to LPC:
 #    nohup xrdcp --parallel 4 -f ../../../NTUPLES/HADD/Summer16_102X/* root://cmseos.fnal.gov//store/user/lpcsusylep/NTUPLES_v1/Summer16_102X/ > xrdcp_Summer16_102X.debug 2>&1 &
 
-if __name__ == "__main__":
+def main():
+    # start time
+    start_time = time.time()
+    print("DO_hadd.py: Start... go go go!")
+    print("------------------------------")
 
     argv_pos = 1
 
@@ -42,11 +46,12 @@ if __name__ == "__main__":
 
     skip_list = [
         #"SMS-T2tt_mStop-400to1200_TuneCP2_13TeV-madgraphMLM-pythia8",
+        #"SMS-T2bW_X05_dM-10to80_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8_Autumn18_102X"
     ]
     redo_list = [
-        "TTZToLLNuNu_M-10_TuneCP5_13TeV-amcatnlo-pythia8_Fall17_102X",
-        "TTTT_TuneCP5_13TeV-amcatnlo-pythia8_Fall17_102X",
-        "TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8_Fall17_102X",
+        #"TTZToLLNuNu_M-10_TuneCP5_13TeV-amcatnlo-pythia8_Fall17_102X",
+        #"TTTT_TuneCP5_13TeV-amcatnlo-pythia8_Fall17_102X",
+        #"TTTT_TuneCP5_PSweights_13TeV-amcatnlo-pythia8_Fall17_102X",
     ]
 
     if os.path.exists("scripts/startup_C.so") is False:
@@ -130,3 +135,19 @@ if __name__ == "__main__":
         print("Finished Merging Files")
     else:
         print("Note: "+str(len(hadd_big_processes))+" hadd jobs may still be running!")
+    
+    print("------------------------------")
+    # end time
+    end_time = time.time()
+    print("DO_hadd.py: End... all done!")
+
+    # total time in seconds
+    total_time_seconds = end_time - start_time
+    # total time in hours
+    total_time_hours = total_time_seconds / 3600
+    
+    print("Total time: {0:.2f} seconds = {1:.2f} hours".format(total_time_seconds, total_time_hours))
+
+
+if __name__ == "__main__":
+    main()

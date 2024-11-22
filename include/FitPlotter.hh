@@ -72,6 +72,12 @@ public:
 		       PlotType pType = kFull,
 		       bool do_ratio = false);
 
+  TCanvas* Plot1DstackPullRatio(const string& can_name,
+				const VS& proc,
+				const CategoryTree& CT,
+				PlotType pType = kFull,
+				bool do_ratio = false);
+  
   TCanvas* Plot2D(const string& can_name,
 		  const VS& proc,
 		  const CategoryTree& CT);
@@ -124,14 +130,14 @@ private:
   void DrawRM(const FitBin& fitbin, TCanvas* can, TPad* pad, TPad* pad_ratio = nullptr);
   void DrawRM(const FitBin& fitbin, TCanvas* can, TPad* pad, VS labels, TPad* pad_ratio = nullptr);
   void DrawRM(vector<CategoryList> cats, TCanvas* can, TPad* pad, VS labels, TPad* pad_ratio = nullptr);
-  double CalculateZbi(double Nsig, double Nbkg, double deltaNbkg = 0.2);
+  //double CalculateZbi(double Nsig, double Nbkg, double deltaNbkg = 0.2);
 
   ProcessList FetchProcs(VS proc_list);
   VS FetchLabels(VS categories);
   VS FetchCats(VS categories);
 
-  vector<double> IntegrateMperp(const FitBin fitBin, const vector<double> histVec) const;
-  TH1D* IntegrateMperp(const TString& name, const FitBin fitBin, TH1D* hist) const;
+  //vector<double> IntegrateMperp(const FitBin fitBin, const vector<double> histVec) const;
+  //TH1D* IntegrateMperp(const TString& name, const FitBin fitBin, TH1D* hist) const;
 
   VS AddPrefix(const string& pre, const VS& post) const;
 
