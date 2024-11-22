@@ -31,17 +31,14 @@
 #SIG=TSlepSlepMUR
 #SIG=TSlepSlepEL
 #SIG=TSlepSlepER
-#SIG=T2bb
-#SIG=T2cc
-#SIG=TSlepSnu
-#SIG=WZhighdM
-#SIG=WWhighdM
 #SIG=tthighdM
 SIG=T2bW
-#BFI_B130_TSlepSnu161718_SYS.root
+#BFI_B135_bugfix16_tthighdM161718_SYS161718.root
 #BFI_B130_TSlepSleptot161718_SYS.root
-BuildID=B130
-iFILE=/uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis_NewNtuples/BFI_${BuildID}/BFI_${BuildID}_${SIG}161718_SYS.root
+#BuildID=B130
+BuildID=B135_bugfix16
+#iFILE=/uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis_NewNtuples/BFI_${BuildID}/BFI_${BuildID}_${SIG}161718_SYS.root
+iFILE=/home/jsingera/jsingera/CMSSW_10_6_5/src/KUEWKinoAnalysis_treeSysDev/BFI_B135_bugfix16/BFI_B135_bugfix16_${SIG}161718_SYS161718.root
 testFILE=BFI_${BuildID}_${SIG}161718_SYSFull
 cp ${iFILE} ${testFILE}.root
 ./sig.x ${testFILE}.root

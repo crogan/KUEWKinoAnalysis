@@ -1,7 +1,7 @@
 import glob
 import os
 import shutil
-
+import math
 #print(glob.glob("/home/adam/*"))
 
 
@@ -27,17 +27,23 @@ import shutil
 ##BF_dir = "BF_B136_WZhighdM"
 #BF_dir = "BF_B136_bWhighdM"
 #BF_dir = "BF_B136_WWhighdM"
-#BF_dir = "BF_B136_T2bW"
-#BF_dir="BF_B130_TChiWZ_Ch0L"
-#BF_dir="BF_B130_TChiWZ_Ch1L"
-#BF_dir="BF_B130_TChiWZ_Ch2L"
-BF_dir="BF_B130_TChiWZ_Ch3L"
+#BF_dir = "BF_B136_T2bW"#
+BF_dir = "BF_B135_bugfix16_T2bW_MCstats"
+#BF_dir = "BF_B135_bugfix16_T2bb_MCstats"
+#BF_dir = "BF_B135_bugfix16_T2cc_MCstats"
+#BF_dir = "BF_B135_bugfix16_TSlepSnu_MCstats"
+#BF_dir = "BF_B135_bugfix16_tthighdM_MCstats"
+#BF_dir = "BF_B135_bugfix16_WZhighdM_MCstats"
+#BF_dir = "BF_B135_bugfix16_WWhighdM_MCstats"
 
 cpu="request_cpus = 4"
 disk="request_disk = 4500000 KB"
 mem="request_memory = 6000 MB"
 
-
+#limitJobs = True
+limitJobs = False
+maxMP = 600
+maxdM = 300
 #BF_dir = "BF_B135_bugfix16_TSlepSlepEL_MCstats"  
 #BF_dir = "BF_B135_bugfix16_TSlepSlepER_MCstats" 
 #BF_dir = "BF_B135_bugfix16_TSlepSlepMUL_MCstats" 
@@ -52,6 +58,35 @@ mem="request_memory = 6000 MB"
 #disk="request_disk = 1500000 KB"
 #mem="request_memory = 4000 MB"
 
+def getMasses( masspoint ):
+    #print("assessing masspoint", masspoint)
+    MP = math.trunc( float(masspoint)/10000. ) 
+    MP10k = MP*10000
+    MC = int(masspoint) - MP10k
+    dM = MP - MC
+    return [MP,MC,dM]
+def jobLimiter(BF_dir, maxMP, maxdM, jobList ):
+    reducedJobList = []
+    for key in jobList:
+        subfile = BF_dir+"/src/submit_"+key+".sh"
+        subIn = open(subfile,"r")
+        lines = subIn.readlines()
+        for line in lines:
+            if( "Arguments" in line):
+            #signal i hope is always the last one 
+                sig = line.split(' ')[-2]
+                masspoint = sig.split('_')[-1]
+                #print("scanning Args:", sig, masspoint)
+                masses = getMasses(masspoint)
+                if( (masses[0] <= maxMP) and (masses[2] <= maxdM) ):
+                    #print("saving masspoint",sig, masspoint, masses[0], masses[2])
+                    reducedJobList.append(key)
+                break
+
+    
+    print("using jobLimiter: subDiff reduction-", len(jobList),"->",len(reducedJobList))
+    print("used limits MP<=",maxMP,"dM<=",maxdM)
+    return reducedJobList
 
 
 
@@ -79,6 +114,10 @@ logSet = set(logs)
 
 subDiff = subSet.difference(logSet)
 print("Analyzing:", BF_dir)
+if(limitJobs):
+    subDiff = jobLimiter(BF_dir, maxMP, maxdM, subDiff )
+
+#exit()
 print("found", len(subDiff), "missing jobs")
 #exit()
 

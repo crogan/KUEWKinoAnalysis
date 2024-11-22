@@ -1,0 +1,96 @@
+
+
+SIG=tthighdM16
+#python bfiResubmissionTool.py BFI_B135_bugfix16_tthighdM_SYS/BFI_B135_bugfix16_tthighdM16_JERUncer_TotalDown ${SIG}
+#python bfiResubmissionTool.py BFI_B135_bugfix16_tthighdM_SYS/BFI_B135_bugfix16_tthighdM16_JERUncer_TotalUp ${SIG}
+#python bfiResubmissionTool.py BFI_B135_bugfix16_tthighdM_SYS/BFI_B135_bugfix16_tthighdM16_JESUncer_TotalDown ${SIG}
+#python bfiResubmissionTool.py BFI_B135_bugfix16_tthighdM_SYS/BFI_B135_bugfix16_tthighdM16_JESUncer_TotalUp ${SIG}
+#python bfiResubmissionTool.py BFI_B135_bugfix16_tthighdM_SYS/BFI_B135_bugfix16_tthighdM16_METUncer_GenMET ${SIG}
+#python bfiResubmissionTool.py BFI_B135_bugfix16_tthighdM_SYS/BFI_B135_bugfix16_tthighdM16_METUncer_UnClustDown ${SIG}
+#python bfiResubmissionTool.py BFI_B135_bugfix16_tthighdM_SYS/BFI_B135_bugfix16_tthighdM16_METUncer_UnClustUp ${SIG}
+
+SIG=tthighdM17
+#python bfiResubmissionTool.py BFI_B135_bugfix16_tthighdM_SYS/BFI_B135_bugfix16_tthighdM17_JERUncer_TotalDown ${SIG}
+#python bfiResubmissionTool.py BFI_B135_bugfix16_tthighdM_SYS/BFI_B135_bugfix16_tthighdM17_JERUncer_TotalUp ${SIG}
+#python bfiResubmissionTool.py BFI_B135_bugfix16_tthighdM_SYS/BFI_B135_bugfix16_tthighdM17_JESUncer_TotalDown ${SIG}
+#python bfiResubmissionTool.py BFI_B135_bugfix16_tthighdM_SYS/BFI_B135_bugfix16_tthighdM17_JESUncer_TotalUp ${SIG}
+#python bfiResubmissionTool.py BFI_B135_bugfix16_tthighdM_SYS/BFI_B135_bugfix16_tthighdM17_METUncer_GenMET ${SIG}
+#python bfiResubmissionTool.py BFI_B135_bugfix16_tthighdM_SYS/BFI_B135_bugfix16_tthighdM17_METUncer_UnClustDown ${SIG}
+#python bfiResubmissionTool.py BFI_B135_bugfix16_tthighdM_SYS/BFI_B135_bugfix16_tthighdM17_METUncer_UnClustUp ${SIG}
+
+SIG=tthighdM18
+#python bfiResubmissionTool.py BFI_B135_bugfix16_tthighdM_SYS/BFI_B135_bugfix16_tthighdM18_JERUncer_TotalDown ${SIG}
+#python bfiResubmissionTool.py BFI_B135_bugfix16_tthighdM_SYS/BFI_B135_bugfix16_tthighdM18_JERUncer_TotalUp ${SIG}
+#python bfiResubmissionTool.py BFI_B135_bugfix16_tthighdM_SYS/BFI_B135_bugfix16_tthighdM18_JESUncer_TotalDown ${SIG}
+#python bfiResubmissionTool.py BFI_B135_bugfix16_tthighdM_SYS/BFI_B135_bugfix16_tthighdM18_JESUncer_TotalUp ${SIG}
+#python bfiResubmissionTool.py BFI_B135_bugfix16_tthighdM_SYS/BFI_B135_bugfix16_tthighdM18_METUncer_GenMET ${SIG}
+#python bfiResubmissionTool.py BFI_B135_bugfix16_tthighdM_SYS/BFI_B135_bugfix16_tthighdM18_METUncer_UnClustDown ${SIG}
+#python bfiResubmissionTool.py BFI_B135_bugfix16_tthighdM_SYS/BFI_B135_bugfix16_tthighdM18_METUncer_UnClustUp ${SIG}
+
+
+#BFI_B135_bugfix16_T2bW17_NOM
+SIG=T2bW17
+python bfiResubmissionTool.py BFI_B135_bugfix16_T2bW17_NOM ${SIG}
+
+
+SIG=T2bW16
+#python bfiResubmissionTool.py BFI_B135_bugfix16_T2bW_SYS/BFI_B135_bugfix16_T2bW16_JERUncer_TotalUp ${SIG}
+#python bfiResubmissionTool.py BFI_B135_bugfix16_T2bW_SYS/BFI_B135_bugfix16_T2bW16_JESUncer_TotalUp ${SIG}
+#python bfiResubmissionTool.py BFI_B135_bugfix16_T2bW_SYS/BFI_B135_bugfix16_T2bW16_METUncer_UnClustUp ${SIG}
+SIG=T2bW17
+#python bfiResubmissionTool.py BFI_B135_bugfix16_T2bW_SYS/BFI_B135_bugfix16_T2bW17_JERUncer_TotalUp ${SIG}
+#python bfiResubmissionTool.py BFI_B135_bugfix16_T2bW_SYS/BFI_B135_bugfix16_T2bW17_JESUncer_TotalUp ${SIG}
+#python bfiResubmissionTool.py BFI_B135_bugfix16_T2bW_SYS/BFI_B135_bugfix16_T2bW17_METUncer_UnClustUp ${SIG}
+SIG=T2bW18
+#python bfiResubmissionTool.py BFI_B135_bugfix16_T2bW_SYS/BFI_B135_bugfix16_T2bW18_JERUncer_TotalUp ${SIG}
+#python bfiResubmissionTool.py BFI_B135_bugfix16_T2bW_SYS/BFI_B135_bugfix16_T2bW18_JESUncer_TotalUp ${SIG}
+#python bfiResubmissionTool.py BFI_B135_bugfix16_T2bW_SYS/BFI_B135_bugfix16_T2bW18_METUncer_UnClustUp ${SIG}
+
+
+SIG=WZhighdM16
+python bfiResubmissionTool.py BFI_B135_bugfix16_WZhighdM16_NOM ${SIG}
+SIG=WZhighdM17
+python bfiResubmissionTool.py BFI_B135_bugfix16_WZhighdM17_NOM ${SIG}
+SIG=WZhighdM18
+python bfiResubmissionTool.py BFI_B135_bugfix16_WZhighdM18_NOM ${SIG}
+
+
+SIG=WWhighdM16
+python bfiResubmissionTool.py BFI_B135_bugfix16_WWhighdM16_NOM ${SIG}
+SIG=WWhighdM17
+python bfiResubmissionTool.py BFI_B135_bugfix16_WWhighdM17_NOM ${SIG}
+SIG=WWhighdM18
+python bfiResubmissionTool.py BFI_B135_bugfix16_WWhighdM18_NOM ${SIG}
+
+
+SIG=WZhighdM16
+#python bfiResubmissionTool.py BFI_B135_bugfix16_WZhighdM_SYS/BFI_B135_bugfix16_WZhighdM16_JERUncer_TotalUp ${SIG}
+#python bfiResubmissionTool.py BFI_B135_bugfix16_WZhighdM_SYS/BFI_B135_bugfix16_WZhighdM16_JESUncer_TotalUp ${SIG}
+#python bfiResubmissionTool.py BFI_B135_bugfix16_WZhighdM_SYS/BFI_B135_bugfix16_WZhighdM16_METUncer_UnClustUp ${SIG}
+
+SIG=WZhighdM17
+#python bfiResubmissionTool.py BFI_B135_bugfix16_WZhighdM_SYS/BFI_B135_bugfix16_WZhighdM17_JERUncer_TotalUp ${SIG}
+#python bfiResubmissionTool.py BFI_B135_bugfix16_WZhighdM_SYS/BFI_B135_bugfix16_WZhighdM17_JESUncer_TotalUp ${SIG}
+#python bfiResubmissionTool.py BFI_B135_bugfix16_WZhighdM_SYS/BFI_B135_bugfix16_WZhighdM17_METUncer_UnClustUp ${SIG}
+
+SIG=WZhighdM18
+#python bfiResubmissionTool.py BFI_B135_bugfix16_WZhighdM_SYS/BFI_B135_bugfix16_WZhighdM18_JERUncer_TotalUp ${SIG}
+#python bfiResubmissionTool.py BFI_B135_bugfix16_WZhighdM_SYS/BFI_B135_bugfix16_WZhighdM18_JESUncer_TotalUp ${SIG}
+#python bfiResubmissionTool.py BFI_B135_bugfix16_WZhighdM_SYS/BFI_B135_bugfix16_WZhighdM18_METUncer_UnClustUp ${SIG}
+
+SIG=WWhighdM16
+#python bfiResubmissionTool.py BFI_B135_bugfix16_WWhighdM_SYS/BFI_B135_bugfix16_WWhighdM16_JERUncer_TotalUp ${SIG}
+#python bfiResubmissionTool.py BFI_B135_bugfix16_WWhighdM_SYS/BFI_B135_bugfix16_WWhighdM16_JESUncer_TotalUp ${SIG}
+#python bfiResubmissionTool.py BFI_B135_bugfix16_WWhighdM_SYS/BFI_B135_bugfix16_WWhighdM16_METUncer_UnClustUp ${SIG}
+
+SIG=WWhighdM17
+#python bfiResubmissionTool.py BFI_B135_bugfix16_WWhighdM_SYS/BFI_B135_bugfix16_WWhighdM17_JERUncer_TotalUp ${SIG}
+#python bfiResubmissionTool.py BFI_B135_bugfix16_WWhighdM_SYS/BFI_B135_bugfix16_WWhighdM17_JESUncer_TotalUp ${SIG}
+#python bfiResubmissionTool.py BFI_B135_bugfix16_WWhighdM_SYS/BFI_B135_bugfix16_WWhighdM17_METUncer_UnClustUp ${SIG}
+
+SIG=WWhighdM18
+#python bfiResubmissionTool.py BFI_B135_bugfix16_WWhighdM_SYS/BFI_B135_bugfix16_WWhighdM18_JERUncer_TotalUp ${SIG}
+#python bfiResubmissionTool.py BFI_B135_bugfix16_WWhighdM_SYS/BFI_B135_bugfix16_WWhighdM18_JESUncer_TotalUp ${SIG}
+#python bfiResubmissionTool.py BFI_B135_bugfix16_WWhighdM_SYS/BFI_B135_bugfix16_WWhighdM18_METUncer_UnClustUp ${SIG}
+
+

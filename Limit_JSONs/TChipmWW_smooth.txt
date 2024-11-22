@@ -1,0 +1,1013 @@
+100 [4, 6, 8, 10, 20, 30, 40, 50, 60, 70, 80, 85, 90]
+125 [4, 6, 8, 10, 15, 25, 35, 45, 60, 70, 80, 85, 90]
+150 [4, 6, 8, 10, 20, 30, 40, 50, 60, 70, 80, 85, 90]
+175 [4, 6, 8, 10, 15, 25, 35, 45, 60, 70, 80, 85, 90]
+200 [4, 6, 8, 10, 20, 30, 40, 50, 60, 70, 80, 85, 90]
+225 [4, 6, 8, 10, 15, 25, 35, 45, 60, 70, 80, 85, 90]
+250 [4, 6, 8, 10, 20, 30, 40, 50, 60, 70, 80, 85, 90]
+275 [4, 6, 8, 10, 15, 25, 35, 45, 60, 70, 80, 85, 90]
+300 [4, 6, 8, 10, 20, 30, 40, 50, 60, 70, 80, 85, 90]
+325 [4, 6, 8, 10, 15, 25, 35, 45, 60, 70, 80, 85, 90]
+350 [4, 6, 8, 10, 20, 30, 40, 50, 60, 70, 80, 85, 90]
+375 [4, 6, 8, 10, 15, 25, 35, 45, 70, 80, 85, 90]
+400 [4, 6, 8, 10, 20, 40, 50, 60, 70, 80, 90]
+425 [4, 6, 8, 10, 15, 25, 35, 45, 60, 70, 80, 85, 90]
+450 [4, 6, 8, 10, 20, 30, 40, 50, 60, 70, 80, 85, 90]
+475 [4, 6, 8, 10, 15, 25, 35, 45, 60, 70, 80, 85, 90]
+500 [4, 6, 8, 10, 20, 30, 40, 50, 60, 70, 80, 85, 90]
+526 [4, 6, 8, 10, 16, 26, 36, 46, 61, 71, 81, 86, 91]
+550 [4, 6, 8, 10, 20, 30, 40, 50, 60, 70, 80, 85, 90]
+576 [4, 6, 8, 10, 16, 26, 36, 46, 60, 71, 81, 86, 91]
+600 [4, 6, 8, 10, 20, 30, 40, 50, 60, 70, 80, 84, 90]
+Smoothing Mp axis--------------------------
+MPsmooth  600 4 0 100
+found snaps: [100, 4] [125, 4] [150, 4]
+found snaps: [125, 4] [150, 4] [175, 4]
+found snaps: [150, 4] [175, 4] [200, 4]
+found snaps: [175, 4] [200, 4] [225, 4]
+found snaps: [200, 4] [225, 4] [250, 4]
+found snaps: [225, 4] [250, 4] [275, 4]
+found snaps: [250, 4] [275, 4] [300, 4]
+found snaps: [275, 4] [300, 4] [325, 4]
+found snaps: [300, 4] [325, 4] [350, 4]
+found non-monotic obs
+3000296.0 3250321.0 3500346.0
+2.841785680420633 4.533585870014447 3.9640597107452806
+adjusted to: 3.402922695582957
+found snaps: [325, 4] [350, 4] [375, 4]
+found snaps: [350, 4] [375, 4] [400, 4]
+found snaps: [375, 4] [400, 4] [425, 4]
+found non-monotic obs
+3750371.0 4000396.0 4250421.0
+7.283100010365482 7.95831163767987 7.5877888907671815
+adjusted to: 7.435444450566331
+found snaps: [400, 4] [425, 4] [450, 4]
+found snaps: [425, 4] [450, 4] [475, 4]
+found non-monotic obs
+4250421.0 4500446.0 4750471.0
+7.5877888907671815 12.102525508154566 11.830291848932768
+adjusted to: 9.709040369849975
+found snaps: [450, 4] [475, 4] [500, 4]
+found snaps: [475, 4] [500, 4] [526, 4]
+found snaps: [500, 4] [526, 4] [550, 4]
+found non-monotic obs
+5000496.0 5260522.0 5500546.0
+15.054835982000574 18.597484793318692 17.057762397070235
+adjusted to: 16.056299189535405
+found snaps: [526, 4] [550, 4] [576, 4]
+found snaps: [550, 4] [576, 4] [600, 4]
+MPsmooth  600 6 0 100
+found snaps: [100, 6] [125, 6] [150, 6]
+found non-monotic obs
+1000094.0 1250119.0 1500144.0
+0.2918963532921582 0.2461521955889234 0.5034341025740352
+adjusted to: 0.39766522793309667
+found snaps: [125, 6] [150, 6] [175, 6]
+found snaps: [150, 6] [175, 6] [200, 6]
+found snaps: [175, 6] [200, 6] [225, 6]
+found snaps: [200, 6] [225, 6] [250, 6]
+found snaps: [225, 6] [250, 6] [275, 6]
+found snaps: [250, 6] [275, 6] [300, 6]
+found snaps: [275, 6] [300, 6] [325, 6]
+found snaps: [300, 6] [325, 6] [350, 6]
+found snaps: [325, 6] [350, 6] [375, 6]
+found snaps: [350, 6] [375, 6] [400, 6]
+found snaps: [375, 6] [400, 6] [425, 6]
+found non-monotic obs
+3750369.0 4000394.0 4250419.0
+5.280078423414961 7.216044197607816 6.981887662674296
+adjusted to: 6.130983043044629
+found snaps: [400, 6] [425, 6] [450, 6]
+found snaps: [425, 6] [450, 6] [475, 6]
+found snaps: [450, 6] [475, 6] [500, 6]
+found snaps: [475, 6] [500, 6] [526, 6]
+found snaps: [500, 6] [526, 6] [550, 6]
+found snaps: [526, 6] [550, 6] [576, 6]
+found snaps: [550, 6] [576, 6] [600, 6]
+found non-monotic obs
+5500544.0 5760570.0 6000594.0
+18.452902007258494 25.72225516553116 24.824726604388534
+adjusted to: 21.638814305823516
+MPsmooth  600 8 0 100
+found snaps: [100, 8] [125, 8] [150, 8]
+found snaps: [125, 8] [150, 8] [175, 8]
+found snaps: [150, 8] [175, 8] [200, 8]
+found snaps: [175, 8] [200, 8] [225, 8]
+found non-monotic obs
+1750167.0 2000192.0 2250217.0
+0.7447372926585278 1.4712369353261707 1.3526737675233087
+adjusted to: 1.0487055300909183
+found snaps: [200, 8] [225, 8] [250, 8]
+found snaps: [225, 8] [250, 8] [275, 8]
+found snaps: [250, 8] [275, 8] [300, 8]
+found snaps: [275, 8] [300, 8] [325, 8]
+found snaps: [300, 8] [325, 8] [350, 8]
+found snaps: [325, 8] [350, 8] [375, 8]
+found snaps: [350, 8] [375, 8] [400, 8]
+found snaps: [375, 8] [400, 8] [425, 8]
+found non-monotic obs
+3750367.0 4000392.0 4250417.0
+6.173883071504104 8.444554405944126 8.369836690859294
+adjusted to: 7.271859881181699
+found snaps: [400, 8] [425, 8] [450, 8]
+found snaps: [425, 8] [450, 8] [475, 8]
+found snaps: [450, 8] [475, 8] [500, 8]
+found snaps: [475, 8] [500, 8] [526, 8]
+found snaps: [500, 8] [526, 8] [550, 8]
+found snaps: [526, 8] [550, 8] [576, 8]
+found snaps: [550, 8] [576, 8] [600, 8]
+MPsmooth  600 10 0 100
+found snaps: [100, 10] [125, 10] [150, 10]
+found snaps: [125, 10] [150, 10] [175, 10]
+found snaps: [150, 10] [175, 10] [200, 10]
+found snaps: [175, 10] [200, 10] [225, 10]
+found snaps: [200, 10] [225, 10] [250, 10]
+found snaps: [225, 10] [250, 10] [275, 10]
+found snaps: [250, 10] [275, 10] [300, 10]
+found snaps: [275, 10] [300, 10] [325, 10]
+found snaps: [300, 10] [325, 10] [350, 10]
+found snaps: [325, 10] [350, 10] [375, 10]
+found snaps: [350, 10] [375, 10] [400, 10]
+found snaps: [375, 10] [400, 10] [425, 10]
+found snaps: [400, 10] [425, 10] [450, 10]
+found non-monotic obs
+4000390.0 4250415.0 4500440.0
+8.28566706316591 9.53821866019454 9.03873268760483
+adjusted to: 8.662199875385369
+found snaps: [425, 10] [450, 10] [475, 10]
+found snaps: [450, 10] [475, 10] [500, 10]
+found snaps: [475, 10] [500, 10] [526, 10]
+found snaps: [500, 10] [526, 10] [550, 10]
+found snaps: [526, 10] [550, 10] [576, 10]
+found snaps: [550, 10] [576, 10] [600, 10]
+MPsmooth  600 15 0 100
+found snaps: [-1, -1] [125, 15] [-1, -1]
+found snaps: [125, 15] [-1, -1] [175, 15]
+found snaps: [-1, -1] [175, 15] [-1, -1]
+found snaps: [175, 15] [-1, -1] [225, 15]
+found snaps: [-1, -1] [225, 15] [-1, -1]
+found snaps: [225, 15] [-1, -1] [275, 15]
+found snaps: [-1, -1] [275, 15] [-1, -1]
+found snaps: [275, 15] [-1, -1] [325, 15]
+found snaps: [-1, -1] [325, 15] [-1, -1]
+found snaps: [325, 15] [-1, -1] [375, 15]
+found snaps: [-1, -1] [375, 15] [-1, -1]
+found snaps: [375, 15] [-1, -1] [425, 15]
+found snaps: [-1, -1] [425, 15] [-1, -1]
+found snaps: [425, 15] [-1, -1] [475, 15]
+found snaps: [-1, -1] [475, 15] [-1, -1]
+found snaps: [475, 15] [-1, -1] [526, 16]
+found snaps: [-1, -1] [526, 16] [-1, -1]
+found snaps: [526, 16] [-1, -1] [576, 16]
+found snaps: [-1, -1] [576, 16] [-1, -1]
+MPsmooth  600 16 0 100
+found snaps: [-1, -1] [125, 15] [-1, -1]
+found snaps: [125, 15] [-1, -1] [175, 15]
+found snaps: [-1, -1] [175, 15] [-1, -1]
+found snaps: [175, 15] [-1, -1] [225, 15]
+found snaps: [-1, -1] [225, 15] [-1, -1]
+found snaps: [225, 15] [-1, -1] [275, 15]
+found snaps: [-1, -1] [275, 15] [-1, -1]
+found snaps: [275, 15] [-1, -1] [325, 15]
+found snaps: [-1, -1] [325, 15] [-1, -1]
+found snaps: [325, 15] [-1, -1] [375, 15]
+found snaps: [-1, -1] [375, 15] [-1, -1]
+found snaps: [375, 15] [-1, -1] [425, 15]
+found snaps: [-1, -1] [425, 15] [-1, -1]
+found snaps: [425, 15] [-1, -1] [475, 15]
+found snaps: [-1, -1] [475, 15] [-1, -1]
+found snaps: [475, 15] [-1, -1] [526, 16]
+found snaps: [-1, -1] [526, 16] [-1, -1]
+found snaps: [526, 16] [-1, -1] [576, 16]
+found snaps: [-1, -1] [576, 16] [-1, -1]
+MPsmooth  600 20 0 100
+found snaps: [100, 20] [-1, -1] [150, 20]
+found snaps: [-1, -1] [150, 20] [-1, -1]
+found snaps: [150, 20] [-1, -1] [200, 20]
+found snaps: [-1, -1] [200, 20] [-1, -1]
+found snaps: [200, 20] [-1, -1] [250, 20]
+found snaps: [-1, -1] [250, 20] [-1, -1]
+found snaps: [250, 20] [-1, -1] [300, 20]
+found snaps: [-1, -1] [300, 20] [-1, -1]
+found snaps: [300, 20] [-1, -1] [350, 20]
+found snaps: [-1, -1] [350, 20] [-1, -1]
+found snaps: [350, 20] [-1, -1] [400, 20]
+found snaps: [-1, -1] [400, 20] [-1, -1]
+found snaps: [400, 20] [-1, -1] [450, 20]
+found snaps: [-1, -1] [450, 20] [-1, -1]
+found snaps: [450, 20] [-1, -1] [500, 20]
+found snaps: [-1, -1] [500, 20] [-1, -1]
+found snaps: [500, 20] [-1, -1] [550, 20]
+found snaps: [-1, -1] [550, 20] [-1, -1]
+found snaps: [550, 20] [-1, -1] [600, 20]
+MPsmooth  600 25 0 100
+found snaps: [-1, -1] [125, 25] [-1, -1]
+found snaps: [125, 25] [-1, -1] [175, 25]
+found snaps: [-1, -1] [175, 25] [-1, -1]
+found snaps: [175, 25] [-1, -1] [225, 25]
+found snaps: [-1, -1] [225, 25] [-1, -1]
+found snaps: [225, 25] [-1, -1] [275, 25]
+found snaps: [-1, -1] [275, 25] [-1, -1]
+found snaps: [275, 25] [-1, -1] [325, 25]
+found snaps: [-1, -1] [325, 25] [-1, -1]
+found snaps: [325, 25] [-1, -1] [375, 25]
+found snaps: [-1, -1] [375, 25] [-1, -1]
+found snaps: [375, 25] [-1, -1] [425, 25]
+found snaps: [-1, -1] [425, 25] [-1, -1]
+found snaps: [425, 25] [-1, -1] [475, 25]
+found snaps: [-1, -1] [475, 25] [-1, -1]
+found snaps: [475, 25] [-1, -1] [526, 26]
+found snaps: [-1, -1] [526, 26] [-1, -1]
+found snaps: [526, 26] [-1, -1] [576, 26]
+found snaps: [-1, -1] [576, 26] [-1, -1]
+MPsmooth  600 26 0 100
+found snaps: [-1, -1] [125, 25] [-1, -1]
+found snaps: [125, 25] [-1, -1] [175, 25]
+found snaps: [-1, -1] [175, 25] [-1, -1]
+found snaps: [175, 25] [-1, -1] [225, 25]
+found snaps: [-1, -1] [225, 25] [-1, -1]
+found snaps: [225, 25] [-1, -1] [275, 25]
+found snaps: [-1, -1] [275, 25] [-1, -1]
+found snaps: [275, 25] [-1, -1] [325, 25]
+found snaps: [-1, -1] [325, 25] [-1, -1]
+found snaps: [325, 25] [-1, -1] [375, 25]
+found snaps: [-1, -1] [375, 25] [-1, -1]
+found snaps: [375, 25] [-1, -1] [425, 25]
+found snaps: [-1, -1] [425, 25] [-1, -1]
+found snaps: [425, 25] [-1, -1] [475, 25]
+found snaps: [-1, -1] [475, 25] [-1, -1]
+found snaps: [475, 25] [-1, -1] [526, 26]
+found snaps: [-1, -1] [526, 26] [-1, -1]
+found snaps: [526, 26] [-1, -1] [576, 26]
+found snaps: [-1, -1] [576, 26] [-1, -1]
+MPsmooth  600 30 0 100
+found snaps: [100, 30] [-1, -1] [150, 30]
+found snaps: [-1, -1] [150, 30] [-1, -1]
+found snaps: [150, 30] [-1, -1] [200, 30]
+found snaps: [-1, -1] [200, 30] [-1, -1]
+found snaps: [200, 30] [-1, -1] [250, 30]
+found snaps: [-1, -1] [250, 30] [-1, -1]
+found snaps: [250, 30] [-1, -1] [300, 30]
+found snaps: [-1, -1] [300, 30] [-1, -1]
+found snaps: [300, 30] [-1, -1] [350, 30]
+found snaps: [-1, -1] [350, 30] [-1, -1]
+found snaps: [350, 30] [-1, -1] [-1, -1]
+found snaps: [-1, -1] [-1, -1] [-1, -1]
+found snaps: [-1, -1] [-1, -1] [450, 30]
+found snaps: [-1, -1] [450, 30] [-1, -1]
+found snaps: [450, 30] [-1, -1] [500, 30]
+found snaps: [-1, -1] [500, 30] [-1, -1]
+found snaps: [500, 30] [-1, -1] [550, 30]
+found snaps: [-1, -1] [550, 30] [-1, -1]
+found snaps: [550, 30] [-1, -1] [600, 30]
+MPsmooth  600 35 0 100
+found snaps: [-1, -1] [125, 35] [-1, -1]
+found snaps: [125, 35] [-1, -1] [175, 35]
+found snaps: [-1, -1] [175, 35] [-1, -1]
+found snaps: [175, 35] [-1, -1] [225, 35]
+found snaps: [-1, -1] [225, 35] [-1, -1]
+found snaps: [225, 35] [-1, -1] [275, 35]
+found snaps: [-1, -1] [275, 35] [-1, -1]
+found snaps: [275, 35] [-1, -1] [325, 35]
+found snaps: [-1, -1] [325, 35] [-1, -1]
+found snaps: [325, 35] [-1, -1] [375, 35]
+found snaps: [-1, -1] [375, 35] [-1, -1]
+found snaps: [375, 35] [-1, -1] [425, 35]
+found snaps: [-1, -1] [425, 35] [-1, -1]
+found snaps: [425, 35] [-1, -1] [475, 35]
+found snaps: [-1, -1] [475, 35] [-1, -1]
+found snaps: [475, 35] [-1, -1] [526, 36]
+found snaps: [-1, -1] [526, 36] [-1, -1]
+found snaps: [526, 36] [-1, -1] [576, 36]
+found snaps: [-1, -1] [576, 36] [-1, -1]
+MPsmooth  600 36 0 100
+found snaps: [-1, -1] [125, 35] [-1, -1]
+found snaps: [125, 35] [-1, -1] [175, 35]
+found snaps: [-1, -1] [175, 35] [-1, -1]
+found snaps: [175, 35] [-1, -1] [225, 35]
+found snaps: [-1, -1] [225, 35] [-1, -1]
+found snaps: [225, 35] [-1, -1] [275, 35]
+found snaps: [-1, -1] [275, 35] [-1, -1]
+found snaps: [275, 35] [-1, -1] [325, 35]
+found snaps: [-1, -1] [325, 35] [-1, -1]
+found snaps: [325, 35] [-1, -1] [375, 35]
+found snaps: [-1, -1] [375, 35] [-1, -1]
+found snaps: [375, 35] [-1, -1] [425, 35]
+found snaps: [-1, -1] [425, 35] [-1, -1]
+found snaps: [425, 35] [-1, -1] [475, 35]
+found snaps: [-1, -1] [475, 35] [-1, -1]
+found snaps: [475, 35] [-1, -1] [526, 36]
+found snaps: [-1, -1] [526, 36] [-1, -1]
+found snaps: [526, 36] [-1, -1] [576, 36]
+found snaps: [-1, -1] [576, 36] [-1, -1]
+MPsmooth  600 40 0 100
+found snaps: [100, 40] [-1, -1] [150, 40]
+found snaps: [-1, -1] [150, 40] [-1, -1]
+found snaps: [150, 40] [-1, -1] [200, 40]
+found snaps: [-1, -1] [200, 40] [-1, -1]
+found snaps: [200, 40] [-1, -1] [250, 40]
+found snaps: [-1, -1] [250, 40] [-1, -1]
+found snaps: [250, 40] [-1, -1] [300, 40]
+found snaps: [-1, -1] [300, 40] [-1, -1]
+found snaps: [300, 40] [-1, -1] [350, 40]
+found snaps: [-1, -1] [350, 40] [-1, -1]
+found snaps: [350, 40] [-1, -1] [400, 40]
+found snaps: [-1, -1] [400, 40] [-1, -1]
+found snaps: [400, 40] [-1, -1] [450, 40]
+found snaps: [-1, -1] [450, 40] [-1, -1]
+found snaps: [450, 40] [-1, -1] [500, 40]
+found snaps: [-1, -1] [500, 40] [-1, -1]
+found snaps: [500, 40] [-1, -1] [550, 40]
+found snaps: [-1, -1] [550, 40] [-1, -1]
+found snaps: [550, 40] [-1, -1] [600, 40]
+MPsmooth  600 45 0 100
+found snaps: [-1, -1] [125, 45] [-1, -1]
+found snaps: [125, 45] [-1, -1] [175, 45]
+found snaps: [-1, -1] [175, 45] [-1, -1]
+found snaps: [175, 45] [-1, -1] [225, 45]
+found snaps: [-1, -1] [225, 45] [-1, -1]
+found snaps: [225, 45] [-1, -1] [275, 45]
+found snaps: [-1, -1] [275, 45] [-1, -1]
+found snaps: [275, 45] [-1, -1] [325, 45]
+found snaps: [-1, -1] [325, 45] [-1, -1]
+found snaps: [325, 45] [-1, -1] [375, 45]
+found snaps: [-1, -1] [375, 45] [-1, -1]
+found snaps: [375, 45] [-1, -1] [425, 45]
+found snaps: [-1, -1] [425, 45] [-1, -1]
+found snaps: [425, 45] [-1, -1] [475, 45]
+found snaps: [-1, -1] [475, 45] [-1, -1]
+found snaps: [475, 45] [-1, -1] [526, 46]
+found snaps: [-1, -1] [526, 46] [-1, -1]
+found snaps: [526, 46] [-1, -1] [576, 46]
+found snaps: [-1, -1] [576, 46] [-1, -1]
+MPsmooth  600 46 0 100
+found snaps: [-1, -1] [125, 45] [-1, -1]
+found snaps: [125, 45] [-1, -1] [175, 45]
+found snaps: [-1, -1] [175, 45] [-1, -1]
+found snaps: [175, 45] [-1, -1] [225, 45]
+found snaps: [-1, -1] [225, 45] [-1, -1]
+found snaps: [225, 45] [-1, -1] [275, 45]
+found snaps: [-1, -1] [275, 45] [-1, -1]
+found snaps: [275, 45] [-1, -1] [325, 45]
+found snaps: [-1, -1] [325, 45] [-1, -1]
+found snaps: [325, 45] [-1, -1] [375, 45]
+found snaps: [-1, -1] [375, 45] [-1, -1]
+found snaps: [375, 45] [-1, -1] [425, 45]
+found snaps: [-1, -1] [425, 45] [-1, -1]
+found snaps: [425, 45] [-1, -1] [475, 45]
+found snaps: [-1, -1] [475, 45] [-1, -1]
+found snaps: [475, 45] [-1, -1] [526, 46]
+found snaps: [-1, -1] [526, 46] [-1, -1]
+found snaps: [526, 46] [-1, -1] [576, 46]
+found snaps: [-1, -1] [576, 46] [-1, -1]
+MPsmooth  600 50 0 100
+found snaps: [100, 50] [-1, -1] [150, 50]
+found snaps: [-1, -1] [150, 50] [-1, -1]
+found snaps: [150, 50] [-1, -1] [200, 50]
+found snaps: [-1, -1] [200, 50] [-1, -1]
+found snaps: [200, 50] [-1, -1] [250, 50]
+found snaps: [-1, -1] [250, 50] [-1, -1]
+found snaps: [250, 50] [-1, -1] [300, 50]
+found snaps: [-1, -1] [300, 50] [-1, -1]
+found snaps: [300, 50] [-1, -1] [350, 50]
+found snaps: [-1, -1] [350, 50] [-1, -1]
+found snaps: [350, 50] [-1, -1] [400, 50]
+found snaps: [-1, -1] [400, 50] [-1, -1]
+found snaps: [400, 50] [-1, -1] [450, 50]
+found snaps: [-1, -1] [450, 50] [-1, -1]
+found snaps: [450, 50] [-1, -1] [500, 50]
+found snaps: [-1, -1] [500, 50] [-1, -1]
+found snaps: [500, 50] [-1, -1] [550, 50]
+found snaps: [-1, -1] [550, 50] [-1, -1]
+found snaps: [550, 50] [-1, -1] [600, 50]
+MPsmooth  600 60 0 100
+found snaps: [100, 60] [125, 60] [150, 60]
+found snaps: [125, 60] [150, 60] [175, 60]
+found non-monotic obs
+1250065.0 1500090.0 1750115.0
+0.6134476476752201 1.83172281043262 1.7322676421468048
+adjusted to: 1.1728576449110124
+found snaps: [150, 60] [175, 60] [200, 60]
+found snaps: [175, 60] [200, 60] [225, 60]
+found non-monotic obs
+1750115.0 2000140.0 2250165.0
+1.7322676421468048 4.7861135927912315 3.0070162451645217
+adjusted to: 2.3696419436556635
+found snaps: [200, 60] [225, 60] [250, 60]
+found snaps: [225, 60] [250, 60] [275, 60]
+found snaps: [250, 60] [275, 60] [300, 60]
+found snaps: [275, 60] [300, 60] [325, 60]
+found non-monotic obs
+2750215.0 3000240.0 3250265.0
+7.907955568393823 7.998997526728377 7.045692378441585
+adjusted to: 7.476823973417703
+found snaps: [300, 60] [325, 60] [350, 60]
+found non-monotic obs
+3000240.0 3250265.0 3500290.0
+7.476823973417703 7.045692378441585 9.990839486280278
+adjusted to: 8.73383172984899
+found snaps: [325, 60] [350, 60] [-1, -1]
+found snaps: [350, 60] [-1, -1] [400, 60]
+found snaps: [-1, -1] [400, 60] [425, 60]
+found snaps: [400, 60] [425, 60] [450, 60]
+found snaps: [425, 60] [450, 60] [475, 60]
+found snaps: [450, 60] [475, 60] [500, 60]
+found non-monotic obs
+4500390.0 4750415.0 5000440.0
+16.00179537657882 23.092148882741274 17.670296640692758
+adjusted to: 16.83604600863579
+found snaps: [475, 60] [500, 60] [526, 61]
+found snaps: [500, 60] [526, 61] [550, 60]
+found non-monotic obs
+5000440.0 5260465.0 5500490.0
+17.670296640692758 28.03924578484457 23.008978670578482
+adjusted to: 20.33963765563562
+found snaps: [526, 61] [550, 60] [576, 60]
+found snaps: [550, 60] [576, 60] [600, 60]
+MPsmooth  600 61 0 100
+found snaps: [100, 60] [125, 60] [150, 60]
+found snaps: [125, 60] [150, 60] [175, 60]
+found snaps: [150, 60] [175, 60] [200, 60]
+found snaps: [175, 60] [200, 60] [225, 60]
+found snaps: [200, 60] [225, 60] [250, 60]
+found snaps: [225, 60] [250, 60] [275, 60]
+found snaps: [250, 60] [275, 60] [300, 60]
+found non-monotic obs
+2500190.0 2750215.0 3000240.0
+4.235655940850643 7.907955568393823 7.476823973417703
+adjusted to: 5.856239957134173
+found snaps: [275, 60] [300, 60] [325, 60]
+found snaps: [300, 60] [325, 60] [350, 60]
+found snaps: [325, 60] [350, 60] [-1, -1]
+found snaps: [350, 60] [-1, -1] [400, 60]
+found snaps: [-1, -1] [400, 60] [425, 60]
+found snaps: [400, 60] [425, 60] [450, 60]
+found snaps: [425, 60] [450, 60] [475, 60]
+found snaps: [450, 60] [475, 60] [500, 60]
+found snaps: [475, 60] [500, 60] [526, 61]
+found snaps: [500, 60] [526, 61] [550, 60]
+found snaps: [526, 61] [550, 60] [576, 60]
+found snaps: [550, 60] [576, 60] [600, 60]
+MPsmooth  600 70 0 100
+found snaps: [100, 70] [125, 70] [150, 70]
+found snaps: [125, 70] [150, 70] [175, 70]
+found non-monotic obs
+1250055.0 1500080.0 1750105.0
+1.226273713249443 1.544491960571357 1.295726031626352
+adjusted to: 1.2609998724378975
+found snaps: [150, 70] [175, 70] [200, 70]
+found snaps: [175, 70] [200, 70] [225, 70]
+found snaps: [200, 70] [225, 70] [250, 70]
+found non-monotic obs
+2000130.0 2250155.0 2500180.0
+3.0034659354488515 5.3252347987245825 4.662765475841564
+adjusted to: 3.8331157056452074
+found snaps: [225, 70] [250, 70] [275, 70]
+found snaps: [250, 70] [275, 70] [300, 70]
+found snaps: [275, 70] [300, 70] [325, 70]
+found snaps: [300, 70] [325, 70] [350, 70]
+found snaps: [325, 70] [350, 70] [375, 70]
+found snaps: [350, 70] [375, 70] [400, 70]
+found snaps: [375, 70] [400, 70] [425, 70]
+found non-monotic obs
+3750305.0 4000330.0 4250355.0
+12.962816359542416 18.695922212950244 17.355686691693183
+adjusted to: 15.1592515256178
+found snaps: [400, 70] [425, 70] [450, 70]
+found non-monotic obs
+4000330.0 4250355.0 4500380.0
+15.1592515256178 17.355686691693183 14.964613043014168
+adjusted to: 15.061932284315983
+found snaps: [425, 70] [450, 70] [475, 70]
+found non-monotic obs
+4250355.0 4500380.0 4750405.0
+15.061932284315983 14.964613043014168 15.448628587909218
+adjusted to: 15.2552804361126
+found snaps: [450, 70] [475, 70] [500, 70]
+found snaps: [475, 70] [500, 70] [526, 71]
+found snaps: [500, 70] [526, 71] [550, 70]
+found non-monotic obs
+5000430.0 5260455.0 5500480.0
+21.454104123060993 24.39426818187999 17.15793409735324
+adjusted to: 19.306019110207117
+found snaps: [526, 71] [550, 70] [576, 71]
+found non-monotic obs
+5260455.0 5500480.0 5760505.0
+19.306019110207117 17.15793409735324 37.29057239723412
+adjusted to: 28.29829575372062
+found snaps: [550, 70] [576, 71] [600, 70]
+MPsmooth  600 71 0 100
+found snaps: [100, 70] [125, 70] [150, 70]
+found snaps: [125, 70] [150, 70] [175, 70]
+found snaps: [150, 70] [175, 70] [200, 70]
+found snaps: [175, 70] [200, 70] [225, 70]
+found snaps: [200, 70] [225, 70] [250, 70]
+found snaps: [225, 70] [250, 70] [275, 70]
+found snaps: [250, 70] [275, 70] [300, 70]
+found snaps: [275, 70] [300, 70] [325, 70]
+found snaps: [300, 70] [325, 70] [350, 70]
+found snaps: [325, 70] [350, 70] [375, 70]
+found snaps: [350, 70] [375, 70] [400, 70]
+found snaps: [375, 70] [400, 70] [425, 70]
+found non-monotic obs
+3750305.0 4000330.0 4250355.0
+12.962816359542416 15.1592515256178 15.061932284315983
+adjusted to: 14.0123743219292
+found snaps: [400, 70] [425, 70] [450, 70]
+found snaps: [425, 70] [450, 70] [475, 70]
+found snaps: [450, 70] [475, 70] [500, 70]
+found snaps: [475, 70] [500, 70] [526, 71]
+found non-monotic obs
+4750405.0 5000430.0 5260455.0
+15.448628587909218 21.454104123060993 19.306019110207117
+adjusted to: 17.37732384905817
+found snaps: [500, 70] [526, 71] [550, 70]
+found snaps: [526, 71] [550, 70] [576, 71]
+found snaps: [550, 70] [576, 71] [600, 70]
+MPsmooth  600 80 0 100
+found snaps: [100, 80] [125, 80] [150, 80]
+found non-monotic obs
+1000020.0 1250045.0 1500070.0
+0.37417025339527576 1.7264912856630248 1.5996049621894852
+adjusted to: 0.9868876077923805
+found snaps: [125, 80] [150, 80] [175, 80]
+found snaps: [150, 80] [175, 80] [200, 80]
+found snaps: [175, 80] [200, 80] [225, 80]
+found non-monotic obs
+1750095.0 2000120.0 2250145.0
+3.1594170541828794 5.098334262474815 4.626036918720072
+adjusted to: 3.8927269864514757
+found snaps: [200, 80] [225, 80] [250, 80]
+found snaps: [225, 80] [250, 80] [275, 80]
+found snaps: [250, 80] [275, 80] [300, 80]
+found snaps: [275, 80] [300, 80] [325, 80]
+found snaps: [300, 80] [325, 80] [350, 80]
+found snaps: [325, 80] [350, 80] [375, 80]
+found snaps: [350, 80] [375, 80] [400, 80]
+found snaps: [375, 80] [400, 80] [425, 80]
+found snaps: [400, 80] [425, 80] [450, 80]
+found snaps: [425, 80] [450, 80] [475, 80]
+found non-monotic obs
+4250345.0 4500370.0 4750395.0
+15.88051259811262 19.568222121582995 18.85884796416228
+adjusted to: 17.369680281137448
+found snaps: [450, 80] [475, 80] [500, 80]
+found snaps: [475, 80] [500, 80] [526, 81]
+found snaps: [500, 80] [526, 81] [550, 80]
+found non-monotic obs
+5000420.0 5260445.0 5500470.0
+21.27722603320778 29.383281953463587 22.646812072292512
+adjusted to: 21.962019052750144
+found snaps: [526, 81] [550, 80] [576, 81]
+found non-monotic obs
+5260445.0 5500470.0 5760495.0
+21.962019052750144 22.646812072292512 22.01136900553485
+adjusted to: 21.986694029142498
+found snaps: [550, 80] [576, 81] [600, 80]
+MPsmooth  600 81 0 100
+found snaps: [100, 80] [125, 80] [150, 80]
+found snaps: [125, 80] [150, 80] [175, 80]
+found snaps: [150, 80] [175, 80] [200, 80]
+found snaps: [175, 80] [200, 80] [225, 80]
+found snaps: [200, 80] [225, 80] [250, 80]
+found snaps: [225, 80] [250, 80] [275, 80]
+found snaps: [250, 80] [275, 80] [300, 80]
+found snaps: [275, 80] [300, 80] [325, 80]
+found snaps: [300, 80] [325, 80] [350, 80]
+found snaps: [325, 80] [350, 80] [375, 80]
+found snaps: [350, 80] [375, 80] [400, 80]
+found snaps: [375, 80] [400, 80] [425, 80]
+found snaps: [400, 80] [425, 80] [450, 80]
+found snaps: [425, 80] [450, 80] [475, 80]
+found snaps: [450, 80] [475, 80] [500, 80]
+found snaps: [475, 80] [500, 80] [526, 81]
+found snaps: [500, 80] [526, 81] [550, 80]
+found snaps: [526, 81] [550, 80] [576, 81]
+found snaps: [550, 80] [576, 81] [600, 80]
+MPsmooth  600 84 0 100
+found snaps: [100, 85] [125, 85] [150, 85]
+found snaps: [125, 85] [150, 85] [175, 85]
+found snaps: [150, 85] [175, 85] [200, 85]
+found snaps: [175, 85] [200, 85] [225, 85]
+found snaps: [200, 85] [225, 85] [250, 85]
+found snaps: [225, 85] [250, 85] [275, 85]
+found non-monotic obs
+2250140.0 2500165.0 2750190.0
+6.825729057827548 7.234522987682194 5.73425176570503
+adjusted to: 6.279990411766288
+found snaps: [250, 85] [275, 85] [300, 85]
+found non-monotic obs
+2500165.0 2750190.0 3000215.0
+6.279990411766288 5.73425176570503 8.282246526619394
+adjusted to: 7.281118469192841
+found snaps: [275, 85] [300, 85] [325, 85]
+found snaps: [300, 85] [325, 85] [350, 85]
+found snaps: [325, 85] [350, 85] [375, 85]
+found snaps: [350, 85] [375, 85] [-1, -1]
+found snaps: [375, 85] [-1, -1] [425, 85]
+found snaps: [-1, -1] [425, 85] [450, 85]
+found snaps: [425, 85] [450, 85] [475, 85]
+found non-monotic obs
+4250340.0 4500365.0 4750390.0
+21.046122793234915 21.170984930656097 19.52671894519786
+adjusted to: 20.286420869216386
+found snaps: [450, 85] [475, 85] [500, 85]
+found non-monotic obs
+4500365.0 4750390.0 5000415.0
+20.286420869216386 19.52671894519786 22.341550087030985
+adjusted to: 21.313985478123683
+found snaps: [475, 85] [500, 85] [-1, -1]
+found snaps: [500, 85] [-1, -1] [550, 85]
+found snaps: [-1, -1] [550, 85] [-1, -1]
+found snaps: [550, 85] [-1, -1] [600, 84]
+MPsmooth  600 85 0 100
+found snaps: [100, 85] [125, 85] [150, 85]
+found snaps: [125, 85] [150, 85] [175, 85]
+found snaps: [150, 85] [175, 85] [200, 85]
+found snaps: [175, 85] [200, 85] [225, 85]
+found snaps: [200, 85] [225, 85] [250, 85]
+found non-monotic obs
+2000115.0 2250140.0 2500165.0
+3.314366465969273 6.825729057827548 6.279990411766288
+adjusted to: 4.797178438867781
+found snaps: [225, 85] [250, 85] [275, 85]
+found snaps: [250, 85] [275, 85] [300, 85]
+found snaps: [275, 85] [300, 85] [325, 85]
+found snaps: [300, 85] [325, 85] [350, 85]
+found snaps: [325, 85] [350, 85] [375, 85]
+found snaps: [350, 85] [375, 85] [-1, -1]
+found snaps: [375, 85] [-1, -1] [425, 85]
+found snaps: [-1, -1] [425, 85] [450, 85]
+found snaps: [425, 85] [450, 85] [475, 85]
+found non-monotic obs
+4250340.0 4500365.0 4750390.0
+21.046122793234915 20.286420869216386 21.313985478123683
+adjusted to: 21.1800541356793
+found snaps: [450, 85] [475, 85] [500, 85]
+found snaps: [475, 85] [500, 85] [526, 86]
+found snaps: [500, 85] [526, 86] [550, 85]
+found non-monotic obs
+5000415.0 5260440.0 5500465.0
+22.341550087030985 36.11302371927594 26.10548826683943
+adjusted to: 24.223519176935206
+found snaps: [526, 86] [550, 85] [576, 86]
+found snaps: [550, 85] [576, 86] [600, 84]
+MPsmooth  600 86 0 100
+found snaps: [100, 85] [125, 85] [150, 85]
+found snaps: [125, 85] [150, 85] [175, 85]
+found snaps: [150, 85] [175, 85] [200, 85]
+found snaps: [175, 85] [200, 85] [225, 85]
+found snaps: [200, 85] [225, 85] [250, 85]
+found snaps: [225, 85] [250, 85] [275, 85]
+found snaps: [250, 85] [275, 85] [300, 85]
+found snaps: [275, 85] [300, 85] [325, 85]
+found snaps: [300, 85] [325, 85] [350, 85]
+found snaps: [325, 85] [350, 85] [375, 85]
+found snaps: [350, 85] [375, 85] [-1, -1]
+found snaps: [375, 85] [-1, -1] [425, 85]
+found snaps: [-1, -1] [425, 85] [450, 85]
+found snaps: [425, 85] [450, 85] [475, 85]
+found snaps: [450, 85] [475, 85] [500, 85]
+found snaps: [475, 85] [500, 85] [526, 86]
+found snaps: [500, 85] [526, 86] [550, 85]
+found snaps: [526, 86] [550, 85] [576, 86]
+found snaps: [550, 85] [576, 86] [-1, -1]
+MPsmooth  600 90 0 100
+found snaps: [100, 90] [125, 90] [150, 90]
+found non-monotic obs
+1000010.0 1250035.0 1500060.0
+0.29284236885519976 1.5813901783726978 1.4366459367423285
+adjusted to: 0.8647441527987642
+found snaps: [125, 90] [150, 90] [175, 90]
+found snaps: [150, 90] [175, 90] [200, 90]
+found snaps: [175, 90] [200, 90] [225, 90]
+found snaps: [200, 90] [225, 90] [250, 90]
+found snaps: [225, 90] [250, 90] [275, 90]
+found snaps: [250, 90] [275, 90] [300, 90]
+found snaps: [275, 90] [300, 90] [325, 90]
+found snaps: [300, 90] [325, 90] [350, 90]
+found snaps: [325, 90] [350, 90] [375, 90]
+found snaps: [350, 90] [375, 90] [400, 90]
+found snaps: [375, 90] [400, 90] [425, 90]
+found non-monotic obs
+3750285.0 4000310.0 4250335.0
+17.2163575713387 22.041357126751894 20.67205057245257
+adjusted to: 18.944204071895633
+found snaps: [400, 90] [425, 90] [450, 90]
+found snaps: [425, 90] [450, 90] [475, 90]
+found snaps: [450, 90] [475, 90] [500, 90]
+found snaps: [475, 90] [500, 90] [526, 91]
+found non-monotic obs
+4750385.0 5000410.0 5260435.0
+30.360030727496195 36.60983866150225 30.43505599249246
+adjusted to: 30.39754335999433
+found snaps: [500, 90] [526, 91] [550, 90]
+found non-monotic obs
+5000410.0 5260435.0 5500460.0
+30.39754335999433 30.43505599249246 28.15432328574568
+adjusted to: 29.275933322870003
+found snaps: [526, 91] [550, 90] [576, 91]
+found non-monotic obs
+5260435.0 5500460.0 5760485.0
+29.275933322870003 28.15432328574568 35.3656040390297
+adjusted to: 32.320768680949854
+found snaps: [550, 90] [576, 91] [600, 90]
+MPsmooth  600 91 0 100
+found snaps: [100, 90] [125, 90] [150, 90]
+found snaps: [125, 90] [150, 90] [175, 90]
+found snaps: [150, 90] [175, 90] [200, 90]
+found snaps: [175, 90] [200, 90] [225, 90]
+found snaps: [200, 90] [225, 90] [250, 90]
+found snaps: [225, 90] [250, 90] [275, 90]
+found snaps: [250, 90] [275, 90] [300, 90]
+found snaps: [275, 90] [300, 90] [325, 90]
+found snaps: [300, 90] [325, 90] [350, 90]
+found snaps: [325, 90] [350, 90] [375, 90]
+found snaps: [350, 90] [375, 90] [400, 90]
+found snaps: [375, 90] [400, 90] [425, 90]
+found snaps: [400, 90] [425, 90] [450, 90]
+found snaps: [425, 90] [450, 90] [475, 90]
+found snaps: [450, 90] [475, 90] [500, 90]
+found snaps: [475, 90] [500, 90] [526, 91]
+found non-monotic obs
+4750385.0 5000410.0 5260435.0
+30.360030727496195 30.39754335999433 29.275933322870003
+adjusted to: 29.8179820251831
+found snaps: [500, 90] [526, 91] [550, 90]
+found non-monotic obs
+5000410.0 5260435.0 5500460.0
+29.8179820251831 29.275933322870003 32.320768680949854
+adjusted to: 31.069375353066476
+found snaps: [526, 91] [550, 90] [576, 91]
+found snaps: [550, 90] [576, 91] [600, 90]
+Smoothing dM axis--------------------------
+continue on DMAXIS smooth 4 0 1
+continue on DMAXIS smooth 6 0 1
+continue on DMAXIS smooth 8 0 1
+continue on DMAXIS smooth 10 0 1
+continue on DMAXIS smooth 20 0 1
+continue on DMAXIS smooth 30 0 1
+continue on DMAXIS smooth 40 0 1
+continue on DMAXIS smooth 50 0 1
+continue on DMAXIS smooth 60 0 1
+continue on DMAXIS smooth 70 0 1
+continue on DMAXIS smooth 80 0 1
+continue on DMAXIS smooth 85 0 1
+continue on DMAXIS smooth 90 0 1
+continue on DMAXIS smooth 4 0 1
+continue on DMAXIS smooth 6 0 1
+continue on DMAXIS smooth 8 0 1
+continue on DMAXIS smooth 10 0 1
+continue on DMAXIS smooth 15 0 1
+continue on DMAXIS smooth 25 0 1
+continue on DMAXIS smooth 35 0 1
+continue on DMAXIS smooth 45 0 1
+continue on DMAXIS smooth 60 0 1
+continue on DMAXIS smooth 70 0 1
+continue on DMAXIS smooth 80 0 1
+continue on DMAXIS smooth 85 0 1
+continue on DMAXIS smooth 90 0 1
+continue on DMAXIS smooth 4 0 1
+continue on DMAXIS smooth 6 0 1
+continue on DMAXIS smooth 8 0 1
+continue on DMAXIS smooth 10 0 1
+continue on DMAXIS smooth 20 0 1
+continue on DMAXIS smooth 30 0 1
+continue on DMAXIS smooth 40 0 1
+continue on DMAXIS smooth 50 0 1
+continue on DMAXIS smooth 60 0 1
+continue on DMAXIS smooth 70 0 1
+continue on DMAXIS smooth 80 0 1
+continue on DMAXIS smooth 85 0 1
+continue on DMAXIS smooth 90 0 1
+continue on DMAXIS smooth 4 0 1
+continue on DMAXIS smooth 6 0 1
+continue on DMAXIS smooth 8 0 1
+continue on DMAXIS smooth 10 0 1
+continue on DMAXIS smooth 15 0 1
+continue on DMAXIS smooth 25 0 1
+continue on DMAXIS smooth 35 0 1
+continue on DMAXIS smooth 45 0 1
+continue on DMAXIS smooth 60 0 1
+continue on DMAXIS smooth 70 0 1
+continue on DMAXIS smooth 80 0 1
+continue on DMAXIS smooth 85 0 1
+continue on DMAXIS smooth 90 0 1
+continue on DMAXIS smooth 4 0 1
+continue on DMAXIS smooth 6 0 1
+continue on DMAXIS smooth 8 0 1
+continue on DMAXIS smooth 10 0 1
+continue on DMAXIS smooth 20 0 1
+continue on DMAXIS smooth 30 0 1
+continue on DMAXIS smooth 40 0 1
+continue on DMAXIS smooth 50 0 1
+continue on DMAXIS smooth 60 0 1
+continue on DMAXIS smooth 70 0 1
+continue on DMAXIS smooth 80 0 1
+continue on DMAXIS smooth 85 0 1
+continue on DMAXIS smooth 90 0 1
+continue on DMAXIS smooth 4 0 1
+continue on DMAXIS smooth 6 0 1
+continue on DMAXIS smooth 8 0 1
+continue on DMAXIS smooth 10 0 1
+continue on DMAXIS smooth 15 0 1
+continue on DMAXIS smooth 25 0 1
+continue on DMAXIS smooth 35 0 1
+continue on DMAXIS smooth 45 0 1
+continue on DMAXIS smooth 60 0 1
+continue on DMAXIS smooth 70 0 1
+continue on DMAXIS smooth 80 0 1
+continue on DMAXIS smooth 85 0 1
+continue on DMAXIS smooth 90 0 1
+continue on DMAXIS smooth 4 0 1
+continue on DMAXIS smooth 6 0 1
+continue on DMAXIS smooth 8 0 1
+continue on DMAXIS smooth 10 0 1
+continue on DMAXIS smooth 20 0 1
+continue on DMAXIS smooth 30 0 1
+continue on DMAXIS smooth 40 0 1
+continue on DMAXIS smooth 50 0 1
+continue on DMAXIS smooth 60 0 1
+continue on DMAXIS smooth 70 0 1
+continue on DMAXIS smooth 80 0 1
+continue on DMAXIS smooth 85 0 1
+continue on DMAXIS smooth 90 0 1
+continue on DMAXIS smooth 4 0 1
+continue on DMAXIS smooth 6 0 1
+continue on DMAXIS smooth 8 0 1
+continue on DMAXIS smooth 10 0 1
+continue on DMAXIS smooth 15 0 1
+continue on DMAXIS smooth 25 0 1
+continue on DMAXIS smooth 35 0 1
+continue on DMAXIS smooth 45 0 1
+continue on DMAXIS smooth 60 0 1
+continue on DMAXIS smooth 70 0 1
+continue on DMAXIS smooth 80 0 1
+continue on DMAXIS smooth 85 0 1
+continue on DMAXIS smooth 90 0 1
+continue on DMAXIS smooth 4 0 1
+continue on DMAXIS smooth 6 0 1
+continue on DMAXIS smooth 8 0 1
+continue on DMAXIS smooth 10 0 1
+continue on DMAXIS smooth 20 0 1
+continue on DMAXIS smooth 30 0 1
+continue on DMAXIS smooth 40 0 1
+continue on DMAXIS smooth 50 0 1
+continue on DMAXIS smooth 60 0 1
+continue on DMAXIS smooth 70 0 1
+continue on DMAXIS smooth 80 0 1
+continue on DMAXIS smooth 85 0 1
+continue on DMAXIS smooth 90 0 1
+continue on DMAXIS smooth 4 0 1
+continue on DMAXIS smooth 6 0 1
+continue on DMAXIS smooth 8 0 1
+continue on DMAXIS smooth 10 0 1
+continue on DMAXIS smooth 15 0 1
+continue on DMAXIS smooth 25 0 1
+continue on DMAXIS smooth 35 0 1
+continue on DMAXIS smooth 45 0 1
+continue on DMAXIS smooth 60 0 1
+continue on DMAXIS smooth 70 0 1
+continue on DMAXIS smooth 80 0 1
+continue on DMAXIS smooth 85 0 1
+continue on DMAXIS smooth 90 0 1
+continue on DMAXIS smooth 4 0 1
+continue on DMAXIS smooth 6 0 1
+continue on DMAXIS smooth 8 0 1
+continue on DMAXIS smooth 10 0 1
+continue on DMAXIS smooth 20 0 1
+continue on DMAXIS smooth 30 0 1
+continue on DMAXIS smooth 40 0 1
+continue on DMAXIS smooth 50 0 1
+continue on DMAXIS smooth 60 0 1
+continue on DMAXIS smooth 70 0 1
+continue on DMAXIS smooth 80 0 1
+continue on DMAXIS smooth 85 0 1
+continue on DMAXIS smooth 90 0 1
+continue on DMAXIS smooth 4 0 1
+continue on DMAXIS smooth 6 0 1
+continue on DMAXIS smooth 8 0 1
+continue on DMAXIS smooth 10 0 1
+continue on DMAXIS smooth 15 0 1
+continue on DMAXIS smooth 25 0 1
+continue on DMAXIS smooth 35 0 1
+continue on DMAXIS smooth 45 0 1
+continue on DMAXIS smooth 70 0 1
+continue on DMAXIS smooth 80 0 1
+continue on DMAXIS smooth 85 0 1
+continue on DMAXIS smooth 90 0 1
+continue on DMAXIS smooth 4 0 1
+continue on DMAXIS smooth 6 0 1
+continue on DMAXIS smooth 8 0 1
+continue on DMAXIS smooth 10 0 1
+continue on DMAXIS smooth 20 0 1
+continue on DMAXIS smooth 40 0 1
+continue on DMAXIS smooth 50 0 1
+continue on DMAXIS smooth 60 0 1
+continue on DMAXIS smooth 70 0 1
+continue on DMAXIS smooth 80 0 1
+continue on DMAXIS smooth 90 0 1
+continue on DMAXIS smooth 4 0 1
+continue on DMAXIS smooth 6 0 1
+continue on DMAXIS smooth 8 0 1
+continue on DMAXIS smooth 10 0 1
+continue on DMAXIS smooth 15 0 1
+continue on DMAXIS smooth 25 0 1
+continue on DMAXIS smooth 35 0 1
+continue on DMAXIS smooth 45 0 1
+continue on DMAXIS smooth 60 0 1
+continue on DMAXIS smooth 70 0 1
+continue on DMAXIS smooth 80 0 1
+continue on DMAXIS smooth 85 0 1
+continue on DMAXIS smooth 90 0 1
+continue on DMAXIS smooth 4 0 1
+continue on DMAXIS smooth 6 0 1
+continue on DMAXIS smooth 8 0 1
+continue on DMAXIS smooth 10 0 1
+continue on DMAXIS smooth 20 0 1
+continue on DMAXIS smooth 30 0 1
+continue on DMAXIS smooth 40 0 1
+continue on DMAXIS smooth 50 0 1
+continue on DMAXIS smooth 60 0 1
+continue on DMAXIS smooth 70 0 1
+continue on DMAXIS smooth 80 0 1
+continue on DMAXIS smooth 85 0 1
+continue on DMAXIS smooth 90 0 1
+continue on DMAXIS smooth 4 0 1
+continue on DMAXIS smooth 6 0 1
+continue on DMAXIS smooth 8 0 1
+continue on DMAXIS smooth 10 0 1
+continue on DMAXIS smooth 15 0 1
+continue on DMAXIS smooth 25 0 1
+continue on DMAXIS smooth 35 0 1
+continue on DMAXIS smooth 45 0 1
+continue on DMAXIS smooth 60 0 1
+continue on DMAXIS smooth 70 0 1
+continue on DMAXIS smooth 80 0 1
+continue on DMAXIS smooth 85 0 1
+continue on DMAXIS smooth 90 0 1
+continue on DMAXIS smooth 4 0 1
+continue on DMAXIS smooth 6 0 1
+continue on DMAXIS smooth 8 0 1
+continue on DMAXIS smooth 10 0 1
+continue on DMAXIS smooth 20 0 1
+continue on DMAXIS smooth 30 0 1
+continue on DMAXIS smooth 40 0 1
+continue on DMAXIS smooth 50 0 1
+continue on DMAXIS smooth 60 0 1
+continue on DMAXIS smooth 70 0 1
+continue on DMAXIS smooth 80 0 1
+continue on DMAXIS smooth 85 0 1
+continue on DMAXIS smooth 90 0 1
+continue on DMAXIS smooth 4 0 1
+continue on DMAXIS smooth 6 0 1
+continue on DMAXIS smooth 8 0 1
+continue on DMAXIS smooth 10 0 1
+continue on DMAXIS smooth 16 0 1
+continue on DMAXIS smooth 26 0 1
+continue on DMAXIS smooth 36 0 1
+continue on DMAXIS smooth 46 0 1
+continue on DMAXIS smooth 61 0 1
+continue on DMAXIS smooth 71 0 1
+continue on DMAXIS smooth 81 0 1
+continue on DMAXIS smooth 86 0 1
+continue on DMAXIS smooth 91 0 1
+continue on DMAXIS smooth 4 0 1
+continue on DMAXIS smooth 6 0 1
+continue on DMAXIS smooth 8 0 1
+continue on DMAXIS smooth 10 0 1
+continue on DMAXIS smooth 20 0 1
+continue on DMAXIS smooth 30 0 1
+continue on DMAXIS smooth 40 0 1
+continue on DMAXIS smooth 50 0 1
+continue on DMAXIS smooth 60 0 1
+continue on DMAXIS smooth 70 0 1
+continue on DMAXIS smooth 80 0 1
+continue on DMAXIS smooth 85 0 1
+continue on DMAXIS smooth 90 0 1
+continue on DMAXIS smooth 4 0 1
+continue on DMAXIS smooth 6 0 1
+continue on DMAXIS smooth 8 0 1
+continue on DMAXIS smooth 10 0 1
+continue on DMAXIS smooth 16 0 1
+continue on DMAXIS smooth 26 0 1
+continue on DMAXIS smooth 36 0 1
+continue on DMAXIS smooth 46 0 1
+continue on DMAXIS smooth 60 0 1
+continue on DMAXIS smooth 71 0 1
+continue on DMAXIS smooth 81 0 1
+continue on DMAXIS smooth 86 0 1
+continue on DMAXIS smooth 91 0 1
+continue on DMAXIS smooth 4 0 1
+continue on DMAXIS smooth 6 0 1
+continue on DMAXIS smooth 8 0 1
+continue on DMAXIS smooth 10 0 1
+continue on DMAXIS smooth 20 0 1
+continue on DMAXIS smooth 30 0 1
+continue on DMAXIS smooth 40 0 1
+continue on DMAXIS smooth 50 0 1
+continue on DMAXIS smooth 60 0 1
+continue on DMAXIS smooth 70 0 1
+continue on DMAXIS smooth 80 0 1
+continue on DMAXIS smooth 84 0 1
+continue on DMAXIS smooth 90 0 1

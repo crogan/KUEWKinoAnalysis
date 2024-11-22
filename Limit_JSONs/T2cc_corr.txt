@@ -1,0 +1,43 @@
+Characterizing per year -----------------------
+Characterizing  T2cc16
+Npoints: 312  corr=1: 24  corr<1: 288  corr>1: 0
+Mean corr<1: 0.9753 +/- 0.0116
+MinCorr: 10521032 0.9316
+Finding points with large corrections (<0.95 or >1)
+N corr < 1: 17
+    10761006 : 0.942
+    10521000 : 0.9479
+    9760946 : 0.9445
+    9260906 : 0.9319
+    8000720 : 0.9496
+    9000870 : 0.9425
+    10520990 : 0.9426
+    10761064 : 0.9461
+    8000740 : 0.9483
+    10521032 : 0.9316
+    10241016 : 0.9392
+    8760846 : 0.9393
+    9500880 : 0.9499
+    9000850 : 0.9432
+    6500600 : 0.9413
+    8500840 : 0.9475
+    8500820 : 0.9393
+N corr > 1: 0
+Characterizing  T2cc17
+Npoints: 312  corr=1: 269  corr<1: 43  corr>1: 0
+Mean corr<1: 0.9950 +/- 0.0050
+MinCorr: 9260876 0.9673
+Finding points with large corrections (<0.95 or >1)
+N corr < 1: 0
+N corr > 1: 0
+Characterizing  T2cc18
+Npoints: 312  corr=1: 305  corr<1: 7  corr>1: 0
+Mean corr<1: 0.9975 +/- 0.0021
+MinCorr: 5000470 0.9928
+Finding points with large corrections (<0.95 or >1)
+N corr < 1: 0
+N corr > 1: 0
+Characterizing combined -----------------------
+mean weighted correction < 1. : 0.9932 +/- 0.0031
+max correction: 1.0000
+min correction: 0.9819

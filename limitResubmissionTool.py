@@ -6,10 +6,10 @@ import glob
 import os
 import shutil
 
-#BF_header = "BF_B135_bugfix16_"
-#BF_footer = "_MCstats"
-BF_header = "BF_B136_"
-BF_footer = ""
+BF_header = "BF_B135_bugfix16_"
+BF_footer = "_MCstats"
+#BF_header = "BF_B136_"
+#BF_footer = ""
 
 #SIG="TChipmWW"
 #SIG="TChiWZ"
@@ -35,6 +35,9 @@ BF_footer = ""
 #SIG="bWhighdM"
 #SIG="WWhighdM"
 SIG="T2bW"
+#SIG="T2bb"
+#SIG="T2cc"
+#SIG="TSlepSnu"
 
 disk="request_disk = 20000000 KB"
 mem="request_memory = 4000 MB"
