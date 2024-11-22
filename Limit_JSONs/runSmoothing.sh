@@ -7,8 +7,13 @@
 #SIG='TChiWZ'
 #SIG='TChipmWW'
 #SIG='TSlepSlep'
-
-sigArray=("T2tt" "T2cc" "T2bW" "TChiWZ" "TChipmWW" "TSlepSnu")
+#SIG='TChiWZSuper'
+#SIG='TChipmWWSuper'
+#SIG='T2ttSuper'
+#sigArray=("T2tt" "T2cc" "T2bW" "TChiWZ" "TChipmWW" "TSlepSnu" "TChiWZSuper" "TChipmWWSuper" "T2ttSuper")
+#sigArray=("T2ttSuper" "T2bW")
+#sigArray=("TChiWZSuper")
+sigArray=("T2bW")
 for i in ${sigArray[@]};
 do
         echo $i

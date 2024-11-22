@@ -1,8 +1,9 @@
 
 
 ###############################################
-SIGMODE=$1 #T2bW=1 TSlepSnu=2 T2tt=3 TChiWZ=4 HinoN2C1=5 TChipmWW=6 T2cc=7
-SRCMODE=$2
+SIGMODE=$1 #T2bW=1 TSlepSnu=2 T2tt=3 TChiWZ=4 HinoN2C1=5 TChipmWW=6 T2cc=7 TChipmWWSuper=8 TChiWZSuper=9 HinoN2C1Super=10 #T2ttSuper=11
+
+SRCMODE=$2 #original=1 xseccorrected=2 xsec+smooth=3
 
 SIG=x
 ENUM=y
@@ -48,6 +49,31 @@ then
   SIG=T2cc
   ENUM=kT2cc
 fi
+
+if [ ${SIGMODE} -eq 8 ]
+then
+  SIG=TChipmWWSuper
+  ENUM=kTChiWW
+fi
+
+if [ ${SIGMODE} -eq 9 ]
+then
+  SIG=TChiWZSuper
+  ENUM=kTChiWZ
+fi
+
+if [ ${SIGMODE} -eq 10 ]
+then
+  SIG=HinoN2C1Super
+  ENUM=kHN2C1
+fi
+
+if [ ${SIGMODE} -eq 11 ]
+then
+  SIG=T2ttSuper
+  ENUM=kT2tt
+fi
+
 #SIG=TSlepSleptot
 #SIG=TSlepSlepmueL
 #SIG=TSlepSlepmueR

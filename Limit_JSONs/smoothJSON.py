@@ -101,18 +101,26 @@ def makeMonotonic(json_object, keyLw, keyMd, keyHi):
 			json_object[keyMd][jkey] = (beforeVal +afterVal)/2.
 	
 
-def smoothMPaxis( json_object, MpSet, dMSet, grid):
+def smoothMPaxis( json_object, MpSet, dMSet, grid, lowCut, dmcut):
 	
+	mpCut= []
+	for mp in MpSet:
+		if mp > lowCut:# and mp < highcut:
+			mpCut.append(mp)
 	for dM in dMSet:
-		for i, mp in enumerate(MpSet):
-			if(i>0 and i<(len(MpSet)-1)):
+		print("MPsmooth ",mp,dM, lowCut,dmcut)
+		if dM > dmcut:
+			print("continue on MPAXIS smooth dm",dM,dmcut)
+			continue
+		for i, mp in enumerate(mpCut):
+			if(i>0 and i<(len(mpCut)-1)):
 #				print("assess dM",dM)
 #				print( MpSet[i-1] )
 #				print( MpSet[i] )
 #				print( MpSet[i+1] )	
-				snapLw = gridSnap(MpSet[i-1], dM, grid)
-				snapMd = gridSnap(MpSet[i], dM, grid)
-				snapHi = gridSnap(MpSet[i+1], dM, grid)
+				snapLw = gridSnap(mpCut[i-1], dM, grid)
+				snapMd = gridSnap(mpCut[i], dM, grid)
+				snapHi = gridSnap(mpCut[i+1], dM, grid)
 				print("found snaps:",snapLw,snapMd,snapHi)
 				
 				if( snapLw[0] == -1 or snapMd[0] == -1 or snapHi[0] == -1):
@@ -127,10 +135,13 @@ def smoothMPaxis( json_object, MpSet, dMSet, grid):
 				makeMonotonic(json_object, keyLw,keyMd,keyHi)
 
 				
-def smoothdMaxis( json_object, grid ):
+def smoothdMaxis( json_object, grid, lowCut, highCut):
 	
 	for mp in grid:
 		for i, dm in enumerate(grid[mp]):
+			if( dm < lowCut or dm > highCut):
+				print("continue on DMAXIS smooth", dm, lowCut, highCut)
+				continue
 			if(i>0 and i<(len(grid[mp])-1)):
 #				print("assess mp", mp)
 #				print(grid[mp][i-1])
@@ -146,6 +157,29 @@ def smoothdMaxis( json_object, grid ):
 INPUT=sys.argv[1]
 OUTPUT=sys.argv[2]	
 j = loadJSON(INPUT)
+
+CUT_MP = 0
+CUT_DM = 0
+CUT_DMAXIS_DM_UP = 9999
+#CUT_MP_UP = 9999
+CUT_MPAXIS_DM_UP = 9999
+#specialCuts
+if "TChiWZ" in INPUT:
+	CUT_MP = 160
+	CUT_DM = 5
+	CUT_DMAXIS_DM_UP = 80
+	#CUT_MPAXIS_DM_UP = 110
+if "T2bW" in INPUT:
+	CUT_DM = 30
+if "T2cc" in INPUT:
+	CUT_DM = 20
+if "T2tt" in INPUT:
+	CUT_DM = 25
+if "WW" in INPUT:
+	#CUT_MP=130
+	CUT_MPAXIS_DM_UP = 100
+	CUT_DMAXIS_DM_UP = 1 #skip dm smoothing in extension
+	
 #j = loadJSON( "B135_bugfix16_TChiWZ_limit.json")
 #jout = "B135_bugfix16_TChiWZ_limit_smooth.json"
 #OUTPUT=jout
@@ -162,9 +196,14 @@ gridMpSet = getGridMpSet( grid)
 #print( griddMSet )
 #print( gridMpSet )
 print("Smoothing Mp axis--------------------------")
-smoothMPaxis(j, gridMpSet, griddMSet, grid)
+smoothMPaxis(j, gridMpSet, griddMSet, grid,CUT_MP, CUT_MPAXIS_DM_UP)
 print("Smoothing dM axis--------------------------")
-smoothdMaxis( j, grid )
+smoothdMaxis( j, grid,CUT_DM, CUT_DMAXIS_DM_UP )
+
+#order change?
+#smoothdMaxis(j,grid,CUT_DM, CUT_DMAXIS_DM_UP)
+#smoothMPaxis(j,gridMpSet,griddMSet, grid, CUT_MP, CUT_MPAXIS_DM_UP)
+
 with open( OUTPUT, "w") as out_data_file:
 	json.dump(j, out_data_file,indent=4)
 	out_data_file.close() 

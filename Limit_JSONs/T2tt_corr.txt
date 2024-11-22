@@ -1,0 +1,22 @@
+Characterizing per year -----------------------
+Characterizing  T2tt16
+Npoints: 296  corr=1: 296  corr<1: 0  corr>1: 0
+Finding points with large corrections (<0.95 or >1)
+N corr < 1: 0
+N corr > 1: 0
+Characterizing  T2tt17
+Npoints: 296  corr=1: 20  corr<1: 276  corr>1: 0
+Mean corr<1: 0.9856 +/- 0.0057
+MinCorr: 8000740 0.9565
+Finding points with large corrections (<0.95 or >1)
+N corr < 1: 0
+N corr > 1: 0
+Characterizing  T2tt18
+Npoints: 296  corr=1: 296  corr<1: 0  corr>1: 0
+Finding points with large corrections (<0.95 or >1)
+N corr < 1: 0
+N corr > 1: 0
+Characterizing combined -----------------------
+mean weighted correction < 1. : 0.9957 +/- 0.0017
+max correction: 1.0000
+min correction: 0.9869

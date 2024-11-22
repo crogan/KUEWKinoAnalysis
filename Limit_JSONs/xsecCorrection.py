@@ -10,10 +10,12 @@ import sys
 
 #datastructure
 # dictionary[ mass_point ] = correction factor
-filesToIgnore = ["SMS-T2bW_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",
-"SMS-T2tt_mStop-400to1200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",
-"SMS-T2bW_TuneCP2_13TeV-madgraphMLM-pythia8",
-"SMS-T2tt_mStop-400to1200_TuneCP2_13TeV-madgraphMLM-pythia8"]#,
+#filesToIgnore =[]
+filesToIgnore = ["SMS-T2bW_TuneCUETP8M1_13TeV-madgraphMLM-pythia8"]#,
+
+#"SMS-T2tt_mStop-400to1200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",
+#"SMS-T2bW_TuneCP2_13TeV-madgraphMLM-pythia8",
+#"SMS-T2tt_mStop-400to1200_TuneCP2_13TeV-madgraphMLM-pythia8"]#,
 #"SMS-T2bW_X05_dM-90to170_genHT-160_genMET-80_mWMin-0p1_TuneCUETP8M1_13TeV-madgraphMLM-pythia8",
 #"SMS-T2bW_X05_dM-90to170_genHT-160_genMET-80_mWMin-0p1_TuneCP2_13TeV-madgraphMLM-pythia8"]
 
@@ -51,9 +53,13 @@ def loadCSV( csvname, signal ):
 	return corr_dict	  
 
 def loadSignal( signal ):
-	csv16 = loadCSV("EOS_2016_SMS.csv",signal)
-	csv17 = loadCSV("EOS_2017_SMS.csv",signal)
-	csv18 = loadCSV("EOS_2018_SMS.csv",signal)
+	#csv16 = loadCSV("EOS_2016_SMS.csv",signal)
+	#csv17 = loadCSV("EOS_2017_SMS.csv",signal)
+	#csv18 = loadCSV("EOS_2018_SMS.csv",signal)
+	csv16 = loadCSV("EOS_2016_SMS_NEW_10_15_2024.csv",signal)
+	csv17 = loadCSV("EOS_2017_SMS_NEW_10_11_2024.csv",signal)
+	csv18 = loadCSV("EOS_2018_SMS_NEW_10_11_2024.csv",signal)
+
 	return [csv16,csv17,csv18]
 
 

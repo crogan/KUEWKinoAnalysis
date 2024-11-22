@@ -28,19 +28,20 @@ import math
 #BF_dir = "BF_B136_bWhighdM"
 #BF_dir = "BF_B136_WWhighdM"
 #BF_dir = "BF_B136_T2bW"#
-#BF_dir = "BF_B135_bugfix16_T2bW_MCstats"
+BF_dir = "BF_B135_bugfix16_T2bW_MCstats"
 #BF_dir = "BF_B135_bugfix16_T2bb_MCstats"
 #BF_dir = "BF_B135_bugfix16_T2cc_MCstats"
 #BF_dir = "BF_B135_bugfix16_TSlepSnu_MCstats"
+#BF_dir = "BF_B135_bugfix16_tthighdM_MCstats"
 #BF_dir = "BF_B135_bugfix16_WZhighdM_MCstats"
-BF_dir = "BF_B135_bugfix16_WWhighdM_MCstats"
+#BF_dir = "BF_B135_bugfix16_WWhighdM_MCstats"
 
 cpu="request_cpus = 4"
 disk="request_disk = 4500000 KB"
 mem="request_memory = 6000 MB"
 
-limitJobs = True
-#limitJobs = False
+#limitJobs = True
+limitJobs = False
 maxMP = 600
 maxdM = 300
 #BF_dir = "BF_B135_bugfix16_TSlepSlepEL_MCstats"  
