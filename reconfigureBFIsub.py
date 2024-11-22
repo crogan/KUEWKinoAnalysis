@@ -47,7 +47,10 @@ subfile.write("log = ./log/BFI.$(ClusterId).log\n")
 subfile.write("request_memory = 2 GB\n")
 subfile.write("request_cpus = 2\n")
 subfile.write("request_disk = 300000\n")
-subfile.write("transfer_input_files = /home/jsingera/jsingera/CMSSW_10_6_5/src/KUEWKinoAnalysis_treeSysDev/csv/METTrigger/Parameters.csv,/ospool/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2,/ospool/cms-user/jsingera/CMSSW_10_6_5/src/KUEWKinoAnalysis_treeSysDev/"+BFI_dir+"/config_BuildFitInput.tgz\n")
+#for LPC
+subfile.write("transfer_input_files = /uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis_NewNtuples/csv/METTrigger/Parameters.csv,/uscms/home/z374f439/nobackup/whatever_you_want/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2,/uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis_NewNtuples/"+BFI_dir+"/config_BuildFitInput.tgz\n")
+
+#subfile.write("transfer_input_files = /home/jsingera/jsingera/CMSSW_10_6_5/src/KUEWKinoAnalysis_treeSysDev/csv/METTrigger/Parameters.csv,/ospool/cms-user/zflowers/public/sandbox-CMSSW_10_6_5-6403d6f.tar.bz2,/ospool/cms-user/jsingera/CMSSW_10_6_5/src/KUEWKinoAnalysis_treeSysDev/"+BFI_dir+"/config_BuildFitInput.tgz\n")
 subfile.write("should_transfer_files = YES\n")
 subfile.write("when_to_transfer_output = ON_EXIT\n")
 subfile.write("transfer_output_files =  \n")

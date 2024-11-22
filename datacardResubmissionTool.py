@@ -27,7 +27,11 @@ import shutil
 ##BF_dir = "BF_B136_WZhighdM"
 #BF_dir = "BF_B136_bWhighdM"
 #BF_dir = "BF_B136_WWhighdM"
-BF_dir = "BF_B136_T2bW"
+#BF_dir = "BF_B136_T2bW"
+#BF_dir="BF_B130_TChiWZ_Ch0L"
+#BF_dir="BF_B130_TChiWZ_Ch1L"
+#BF_dir="BF_B130_TChiWZ_Ch2L"
+BF_dir="BF_B130_TChiWZ_Ch3L"
 
 cpu="request_cpus = 4"
 disk="request_disk = 4500000 KB"

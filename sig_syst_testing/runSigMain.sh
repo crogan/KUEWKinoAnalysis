@@ -30,7 +30,15 @@
 #SIG=TSlepSlepMUL 
 #SIG=TSlepSlepMUR
 #SIG=TSlepSlepEL
-SIG=TSlepSlepER
+#SIG=TSlepSlepER
+#SIG=T2bb
+#SIG=T2cc
+#SIG=TSlepSnu
+#SIG=WZhighdM
+#SIG=WWhighdM
+#SIG=tthighdM
+SIG=T2bW
+#BFI_B130_TSlepSnu161718_SYS.root
 #BFI_B130_TSlepSleptot161718_SYS.root
 BuildID=B130
 iFILE=/uscms/home/janguian/nobackup/CMSSW_10_6_5/src/KUEWKinoAnalysis_NewNtuples/BFI_${BuildID}/BFI_${BuildID}_${SIG}161718_SYS.root
